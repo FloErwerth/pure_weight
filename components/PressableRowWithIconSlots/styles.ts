@@ -24,9 +24,7 @@ export const styles = StyleSheet.create({
     paddingRight: 16,
   },
   icon: {
-    padding: 20,
-    width: 1,
-    height: 1,
+    padding: 5,
   },
   iconCorrection: {
     left: -12.5,
