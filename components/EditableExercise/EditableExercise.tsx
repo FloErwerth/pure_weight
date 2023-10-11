@@ -4,7 +4,6 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { ExerciseMetaData } from "../../store/types";
 import { EditableExerciseTheme, styles } from "./styles";
 import { HStack } from "../HStack/HStack";
-import { VStack } from "../VStack/VStack";
 import { Center } from "../Center/Center";
 
 interface EditableExerciseProps {
