@@ -3,7 +3,7 @@ import { styles } from "./styles";
 import { PropsWithChildren } from "react";
 
 interface VStackProps extends PropsWithChildren {
-  style: StyleProp<ViewStyle>;
+  style?: StyleProp<ViewStyle>;
 }
 
 export function VStack({ children, style }: VStackProps) {

@@ -7,6 +7,8 @@ import { EditableExercise } from "../../../components/EditableExercise/EditableE
 import { editTrainingDay } from "../../../store/reducer";
 import { ExerciseMetaData } from "../../../store/types";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { HStack } from "../../../components/HStack/HStack";
+import { VStack } from "../../../components/VStack/VStack";
 
 interface ExerciseMetaDataDisplayProps {
   showEdit: boolean;
@@ -33,36 +35,34 @@ export const ExerciseMetaDataDisplay = ({ showEdit, setShowEdit }: ExerciseMetaD
   );
 
   return (
-    <>
-      <View>
-        <View style={{ width: showEdit ? "100%" : "auto" }}>
-          {showEdit ? (
-            <EditableExercise theme={"Inline"} exercise={exerciseMetaData} onConfirmEdit={handleUpdateMetaData} onCancel={() => setShowEdit(false)} />
-          ) : (
-            <>
-              <Text style={trainStyles.exerciseName}>{exerciseMetaData?.name}</Text>
-              <View>
-                <Text style={trainStyles.exerciseMetaText}>{exerciseMetaData?.weight} kg</Text>
-                <Text style={trainStyles.exerciseMetaText}>&#x30FB;</Text>
-                <Text style={trainStyles.exerciseMetaText}>{exerciseMetaData?.sets} sets</Text>
-                <Text style={trainStyles.exerciseMetaText}>&#x30FB;</Text>
-                <Text style={trainStyles.exerciseMetaText}>{exerciseMetaData?.reps} reps</Text>
-                {exerciseMetaData?.pause && (
-                  <>
-                    <Text style={trainStyles.exerciseMetaText}>&#x30FB;</Text>
-                    <Text style={trainStyles.exerciseMetaText}>{exerciseMetaData.pause} min</Text>
-                  </>
-                )}
-              </View>
-            </>
-          )}
-        </View>
-        {!showEdit && (
-          <Pressable onPress={() => setShowEdit(true)} style={{ width: 50, alignItems: "center", justifyContent: "center" }}>
-            <MaterialCommunityIcons name="pencil" size={20} />
-          </Pressable>
+    <HStack style={{ justifyContent: "space-between" }}>
+      <VStack style={{ width: showEdit ? "100%" : "auto" }}>
+        {showEdit ? (
+          <EditableExercise theme={"Inline"} exercise={exerciseMetaData} onConfirmEdit={handleUpdateMetaData} onCancel={() => setShowEdit(false)} />
+        ) : (
+          <>
+            <Text style={trainStyles.exerciseName}>{exerciseMetaData?.name}</Text>
+            <HStack>
+              <Text style={trainStyles.exerciseMetaText}>{exerciseMetaData?.weight} kg</Text>
+              <Text style={trainStyles.exerciseMetaText}>&#x30FB;</Text>
+              <Text style={trainStyles.exerciseMetaText}>{exerciseMetaData?.sets} sets</Text>
+              <Text style={trainStyles.exerciseMetaText}>&#x30FB;</Text>
+              <Text style={trainStyles.exerciseMetaText}>{exerciseMetaData?.reps} reps</Text>
+              {exerciseMetaData?.pause && (
+                <>
+                  <Text style={trainStyles.exerciseMetaText}>&#x30FB;</Text>
+                  <Text style={trainStyles.exerciseMetaText}>{exerciseMetaData.pause} min</Text>
+                </>
+              )}
+            </HStack>
+          </>
         )}
-      </View>
-    </>
+      </VStack>
+      {!showEdit && (
+        <Pressable onPress={() => setShowEdit(true)} style={{ width: 50, alignItems: "center", justifyContent: "center" }}>
+          <MaterialCommunityIcons name="pencil" size={20} />
+        </Pressable>
+      )}
+    </HStack>
   );
 };

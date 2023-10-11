@@ -8,6 +8,7 @@ import { useAppSelector } from "../../store";
 import { getTrainingIndex } from "../../store/selectors";
 import { PlainExerciseData } from "../../store/types";
 import { EditNoteModal } from "./components/EditNoteModal";
+import { HStack } from "../HStack/HStack";
 
 interface SetInputRowProps {
   edited: boolean;
@@ -65,7 +66,7 @@ export const SetInputRow = ({ onSetDone, edited, setIndex, metaData, onEdit }: S
 
   return (
     <>
-      <View style={styles.stack}>
+      <HStack style={styles.stack}>
         <Text style={{ ...styles.set, flex: 0.15 }}>{setIndex}</Text>
         <View style={{ flex: 0.4 }}>
           <View>
@@ -107,7 +108,7 @@ export const SetInputRow = ({ onSetDone, edited, setIndex, metaData, onEdit }: S
           <View style={styles.box}></View>
         )}
         <EditNoteModal note={note} showModal={showModal} onDoneEdit={handleConfirmNoteModal} onCancel={() => setShowModal(false)} />
-      </View>
+      </HStack>
     </>
   );
 };

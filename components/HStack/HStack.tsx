@@ -3,7 +3,7 @@ import { styles } from "./styles";
 import { PropsWithChildren } from "react";
 
 interface HStackProps extends PropsWithChildren {
-  style: StyleProp<ViewStyle>;
+  style?: StyleProp<ViewStyle>;
 }
 
 export function HStack({ children, style }: HStackProps) {
