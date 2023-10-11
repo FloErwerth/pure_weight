@@ -1,7 +1,9 @@
-import {Text, View, Pressable} from "react-native";
+import { Text, View } from "react-native";
 import { styles } from "./styles";
 import { PropsWithChildren } from "react";
 import { Modal } from "../Modal/Modal";
+import { HStack } from "../HStack/HStack";
+import { Button } from "../Button/Button";
 
 interface TrainingNotDoneModalProps extends PropsWithChildren {
   onConfirm?: () => void;
@@ -17,14 +19,10 @@ export const AlertModal = ({ onConfirm, onCancel, isVisible, content, title, chi
         <Text>{title}</Text>
         <Text style={styles.text}>{content}</Text>
         {children}
-        <View style={styles.buttons}>
-          <Pressable style={styles.button} onPress={onCancel}>
-            <Text>Cancel</Text>
-          </Pressable>
-          <Pressable style={styles.button} onPress={onConfirm}>
-            <Text>Confirm</Text>
-          </Pressable>
-        </View>
+        <HStack style={styles.buttons}>
+          <Button title="Cancel" theme="secondary" onPress={onCancel} />
+          <Button title="Confirm" theme="primary" onPress={onConfirm} />
+        </HStack>
       </View>
     </Modal>
   );

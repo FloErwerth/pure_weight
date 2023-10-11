@@ -3,6 +3,9 @@ import { useCallback, useMemo, useRef, useState } from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { ExerciseMetaData } from "../../store/types";
 import { EditableExerciseTheme, styles } from "./styles";
+import { HStack } from "../HStack/HStack";
+import { VStack } from "../VStack/VStack";
+import { Center } from "../Center/Center";
 
 interface EditableExerciseProps {
   exercise: ExerciseMetaData;
@@ -26,36 +29,36 @@ export const EditableExercise = ({ exercise, onConfirmEdit, onCancel, theme }: E
 
   return (
     <View style={classes.wrapper}>
-      <View style={classes.headerWrapper}>
+      <HStack style={classes.headerWrapper}>
         <TextInput ref={inputRef} value={name} onChangeText={setName} style={classes.title} />
-        <View style={classes.buttons}>
+        <HStack style={classes.buttons}>
           <Pressable onPress={onCancel}>
             <MaterialCommunityIcons color={"rgb(64,64,64)"} name="cancel" size={26}></MaterialCommunityIcons>
           </Pressable>
           <Pressable onPress={handleConfirm}>
             <MaterialCommunityIcons color={"rgb(64,64,64)"} name="check" size={26}></MaterialCommunityIcons>
           </Pressable>
-        </View>
-      </View>
+        </HStack>
+      </HStack>
       <View style={classes.inputWrapper}>
-        <View style={{ gap: 10, justifyContent: "space-between" }}>
-          <View style={{ width: "25%" }}>
+        <HStack style={{ gap: 10, justifyContent: "space-between" }}>
+          <Center style={{ width: "25%" }}>
             <TextInput inputMode="decimal" style={{ backgroundColor: "lightgrey", alignSelf: "stretch", padding: 10, borderRadius: 8 }} onChangeText={setWeight} value={weight}></TextInput>
             <Text>Weight</Text>
-          </View>
-          <View style={{ width: "25%" }}>
+          </Center>
+          <Center style={{ width: "25%" }}>
             <TextInput inputMode="decimal" style={{ backgroundColor: "lightgrey", alignSelf: "stretch", padding: 10, borderRadius: 8 }} onChangeText={setSets} value={sets}></TextInput>
             <Text>Sets</Text>
-          </View>
-          <View style={{ width: "25%" }}>
+          </Center>
+          <Center style={{ width: "25%" }}>
             <TextInput inputMode="decimal" style={{ backgroundColor: "lightgrey", alignSelf: "stretch", padding: 10, borderRadius: 8 }} onChangeText={setReps} value={reps}></TextInput>
             <Text>Reps</Text>
-          </View>
-          <View style={{ width: "25%" }}>
+          </Center>
+          <Center style={{ width: "25%" }}>
             <TextInput inputMode="decimal" style={{ backgroundColor: "lightgrey", alignSelf: "stretch", padding: 10, borderRadius: 8 }} onChangeText={setPause} value={pause}></TextInput>
             <Text>Pause</Text>
-          </View>
-        </View>
+          </Center>
+        </HStack>
       </View>
     </View>
   );

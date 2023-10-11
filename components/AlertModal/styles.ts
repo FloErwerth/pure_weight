@@ -9,6 +9,9 @@ export const styles = StyleSheet.create({
     alignItems: "center",
     gap: 20,
   },
+  primary: {
+    backgroundColor: "lightblue",
+  },
   buttons: {
     gap: 20,
     alignSelf: "stretch",

@@ -14,6 +14,8 @@ import { SiteNavigationButtons } from "../../components/SiteNavigationButtons/Si
 import { EditableExercise } from "../../components/EditableExercise/EditableExercise";
 import { PressableRowWithIconSlots } from "../../components/PressableRowWithIconSlots/PressableRowWithIconSlots";
 import { AlertModal } from "../../components/AlertModal/AlertModal";
+import { Center } from "../../components/Center/Center";
+import { VStack } from "../../components/VStack/VStack";
 
 const errorText = { ["workoutNameEmpty"]: "A workout name is required", ["createdExercisesEmpty"]: "The training requires at least 1 exercise" };
 
@@ -134,8 +136,8 @@ export default function Index() {
     <>
       <SafeAreaView style={styles.wrapper}>
         <SiteNavigationButtons disabled={editedExerciseIndex !== undefined} handleBack={handleNavigateHome} handleConfirm={handleConfirm} titleFontSize={30} title={title} />
-        <View style={styles.center}>
-          <View style={styles.stack}>
+        <Center style={styles.center}>
+          <VStack style={styles.stack}>
             <PlainInput value={workoutName} setValue={handleSetWorkoutName} fontSize={30} placeholder="Workout name" />
             <View style={styles.contentWrapper}>
               <Text style={styles.errorBox}>{createdExerciseErrorText}</Text>
@@ -150,8 +152,8 @@ export default function Index() {
                 </View>
               </KeyboardAwareScrollView>
             </View>
-          </View>
-        </View>
+          </VStack>
+        </Center>
       </SafeAreaView>
       {Alert}
     </>

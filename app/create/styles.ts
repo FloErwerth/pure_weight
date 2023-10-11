@@ -2,6 +2,7 @@ import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
   stack: {
+    padding: 15,
     justifyContent: "space-between",
     alignItems: "center",
     flex: 1,
@@ -47,7 +48,6 @@ export const styles = StyleSheet.create({
   },
   contentWrapper: {
     flex: 1,
-    padding: 10,
     backgroundColor: "transparent",
     alignSelf: "stretch",
   },
