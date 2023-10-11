@@ -20,8 +20,8 @@ export const AlertModal = ({ onConfirm, onCancel, isVisible, content, title, chi
         <Text style={styles.text}>{content}</Text>
         {children}
         <HStack style={styles.buttons}>
-          <Button title="Cancel" theme="secondary" onPress={onCancel} />
-          <Button title="Confirm" theme="primary" onPress={onConfirm} />
+          <Button style={{ button: { flex: 1 } }} title="Cancel" theme="secondary" onPress={onCancel} />
+          <Button style={{ button: { flex: 1 } }} title="Confirm" theme="primary" onPress={onConfirm} />
         </HStack>
       </View>
     </Modal>

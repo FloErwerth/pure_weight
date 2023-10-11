@@ -1,6 +1,5 @@
 import { createAction, createReducer } from "@reduxjs/toolkit/src";
 import { AppState, DoneExerciseData, ExerciseMetaData, TrainingDay } from "./types";
-import { getDateTodayIso } from "../utils/date";
 
 export const setState = createAction<AppState>("set_state");
 export const addTrainingDay = createAction<TrainingDay>("add_training_day");
@@ -33,14 +32,10 @@ export const storeReducer = createReducer<AppState>({ trainingDayIndex: 0, train
       state.editedExerciseIndex = action.payload;
     })
     .addCase(addExerciseDataEntry, (state, action) => {
-      if (state.trainingDays && state.trainingDayIndex && state.exerciseIndex !== undefined) {
+      if (state.trainingDays && state.trainingDayIndex !== undefined && state.exerciseIndex !== undefined) {
         const data = state.trainingDays[state.trainingDayIndex]?.exercises[state.exerciseIndex]?.doneExerciseEntries;
-        if (data[getDateTodayIso()]) {
-          const numberOfEntries = Object.keys(data[getDateTodayIso()]).length;
-          data[getDateTodayIso()][numberOfEntries] = action.payload;
-        } else {
-          state.trainingDays[state.trainingDayIndex].exercises[state.exerciseIndex].doneExerciseEntries = { [getDateTodayIso()]: { 0: action.payload } };
-        }
+        const numberOfEntries = Object.keys(data).length;
+        data[numberOfEntries] = action.payload;
       }
     })
     .addCase(setSetIndex, (state, action) => {

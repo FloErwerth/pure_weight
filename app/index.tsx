@@ -48,7 +48,6 @@ export default function Main() {
     },
     [dispatch, handleNavigateToCreateTraining],
   );
-
   return (
     <SafeAreaView style={styles.view}>
       <View style={styles.center}>

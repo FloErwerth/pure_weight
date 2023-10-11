@@ -1,17 +1,20 @@
 import { PropsWithChildren, useMemo } from "react";
-import { Pressable, Text } from "react-native";
+import { Pressable, Text, TextStyle, ViewStyle } from "react-native";
 import { styles } from "./styles";
+
 export type ButtonThemes = "primary" | "secondary" | "ghost";
 interface ButtonProps extends PropsWithChildren {
   onPress?: () => void;
   title?: string;
-  theme: ButtonThemes;
+  disabled?: boolean;
+  theme?: ButtonThemes;
+  style?: { button?: ViewStyle; text?: TextStyle };
 }
-export const Button = ({ onPress, children, theme, title }: ButtonProps) => {
-  const style = useMemo(() => styles(theme), [theme]);
+export const Button = ({ onPress, children, theme = "primary", title, disabled, style }: ButtonProps) => {
+  const internalStyles = useMemo(() => styles(theme, disabled), [disabled, theme]);
   return (
-    <Pressable style={[style.button, style.wrapper]} onPress={onPress}>
-      <Text style={[style.text, style.commonText]}>{title}</Text>
+    <Pressable style={[internalStyles.button, style?.button, theme !== "ghost" && internalStyles.wrapper]} onPress={onPress}>
+      {title && <Text style={[internalStyles.text, internalStyles.commonText, style?.text]}>{title}</Text>}
       {children}
     </Pressable>
   );

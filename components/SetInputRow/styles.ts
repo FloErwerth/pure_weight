@@ -2,8 +2,8 @@ import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
   stack: {
-    gap: 20,
-    marginBottom: 10,
+    alignItems: "center",
+    alignSelf: "stretch",
   },
   set: {
     alignSelf: "center",
@@ -16,7 +16,7 @@ export const styles = StyleSheet.create({
     height: 30,
   },
   confirmButton: {
-    width: 20,
+    width: 40,
     alignItems: "center",
     justifyContent: "center",
   },

@@ -28,19 +28,19 @@ const themes: Record<ButtonThemes, Record<"button" | "text", ViewStyle | TextSty
     button: {
       backgroundColor: "transparent",
       borderColor: "transparent",
+      padding: 0,
     },
     text: {
       color: "black",
+      padding: 0,
     },
   },
 };
 
-export const styles = (theme: ButtonThemes) =>
+export const styles = (theme: ButtonThemes, disabled: boolean = false) =>
   StyleSheet.create({
     wrapper: {
-      flex: 1,
       padding: 10,
-      width: 100,
     },
     commonText: {
       textAlign: "center",

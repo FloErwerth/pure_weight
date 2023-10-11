@@ -1,4 +1,4 @@
-import { Text, Pressable, TextInput, View } from "react-native";
+import { Text, TextInput, View } from "react-native";
 import { styles } from "./styles";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigate } from "../../utils/navigate";
@@ -9,13 +9,15 @@ import { getTrainingIndex } from "../../store/selectors";
 import { PlainExerciseData } from "../../store/types";
 import { EditNoteModal } from "./components/EditNoteModal";
 import { HStack } from "../HStack/HStack";
+import { Button } from "../Button/Button";
+import { Center } from "../Center/Center";
 
 interface SetInputRowProps {
   edited: boolean;
   setIndex: number;
   metaData: PlainExerciseData;
-  onSetDone: (plainExerciseData: PlainExerciseData) => void;
   onEdit: () => void;
+  onSetDone?: (plainExerciseData: PlainExerciseData) => void;
 }
 export const SetInputRow = ({ onSetDone, edited, setIndex, metaData, onEdit }: SetInputRowProps) => {
   const navigate = useNavigate();
@@ -57,8 +59,6 @@ export const SetInputRow = ({ onSetDone, edited, setIndex, metaData, onEdit }: S
     }
   }, [edited, onEdit]);
 
-  console.log(note);
-
   if (trainingIndex === undefined) {
     navigate(Routes.HOME);
     return null;
@@ -67,47 +67,43 @@ export const SetInputRow = ({ onSetDone, edited, setIndex, metaData, onEdit }: S
   return (
     <>
       <HStack style={styles.stack}>
-        <Text style={{ ...styles.set, flex: 0.15 }}>{setIndex}</Text>
-        <View style={{ flex: 0.4 }}>
-          <View>
-            <TextInput
-              onFocus={handleOnFocus}
-              value={weight}
-              onChangeText={setWeight}
-              style={{
-                width: "100%",
-                textAlign: "center",
-                flex: 1,
-              }}
-              inputMode="decimal"
-            ></TextInput>
-          </View>
-        </View>
-        <View style={{ flex: 0.4 }}>
+        <Center style={{ flex: 0.55, height: 50 }}>
+          <Text style={{ padding: 10 }}>{setIndex}</Text>
+        </Center>
+        <Center style={{ flex: 0.55, height: 50 }}>
           <TextInput
+            style={{ padding: 10, borderRadius: 3, backgroundColor: "#ddd" }}
+            onFocus={handleOnFocus}
+            value={weight}
+            onChangeText={setWeight}
+            textAlign="center"
+            inputMode="decimal"
+          ></TextInput>
+        </Center>
+        <Center style={{ flex: 0.55, height: 50 }}>
+          <TextInput
+            style={{ padding: 10, borderRadius: 3, backgroundColor: "#ddd" }}
             onFocus={handleOnFocus}
             value={reps}
             onChangeText={setReps}
             returnKeyType="next"
-            style={{
-              width: "100%",
-              textAlign: "center",
-              flex: 1,
-            }}
+            textAlign="center"
             inputMode="decimal"
           ></TextInput>
-        </View>
-        <Pressable onPress={handleShowModal}>
-          <Text>{note ? "Show note" : "Add note"}</Text>
-        </Pressable>
-        {edited ? (
-          <Pressable style={styles.confirmButton} onPress={handleSetDone}>
-            <MaterialCommunityIcons size={24} style={{ width: 24, color: "white", opacity: edited ? 1 : 0 }} name="check-bold" />
-          </Pressable>
-        ) : (
-          <View style={styles.box}></View>
-        )}
-        <EditNoteModal note={note} showModal={showModal} onDoneEdit={handleConfirmNoteModal} onCancel={() => setShowModal(false)} />
+        </Center>
+        <Center style={{ flex: 1, height: 50 }}>
+          <Button title={note ? "Show note" : "Add note"} style={{ button: { backgroundColor: "#ddd", borderRadius: 3, padding: 10 } }} theme="ghost" onPress={handleShowModal} />
+        </Center>
+        <Center style={{ flex: 0.6, height: 50 }}>
+          {edited && onSetDone ? (
+            <Button theme="ghost" style={{ button: { width: 40, padding: 7, backgroundColor: "#ddd", borderRadius: 3 } }} onPress={handleSetDone}>
+              <MaterialCommunityIcons size={24} style={{ width: 24, color: "black", opacity: edited ? 1 : 0 }} name="check-bold" />
+            </Button>
+          ) : (
+            <View style={styles.box}></View>
+          )}
+          <EditNoteModal note={note} showModal={showModal} onDoneEdit={handleConfirmNoteModal} onCancel={() => setShowModal(false)} />
+        </Center>
       </HStack>
     </>
   );

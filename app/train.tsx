@@ -1,7 +1,6 @@
-import { useAppDispatch } from "../store";
+import { useAppDispatch, useAppSelector } from "../store";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { trainStyles } from "./trainStyles";
 import { DoneExerciseData, PlainExerciseData } from "../store/types";
 import { addExerciseDataEntry, setExerciseIndex, setSelectedDay, setSetIndex } from "../store/reducer";
@@ -11,9 +10,13 @@ import { useNavigate } from "../utils/navigate";
 import { Routes } from "../types/routes";
 import { SiteNavigationButtons } from "../components/SiteNavigationButtons/SiteNavigationButtons";
 import { ExerciseMetaDataDisplay } from "./components/train/ExerciseMetaDataDisplay";
-import { TrainingHeader } from "./components/train/TrainingHeader";
-import { LayoutAnimation, Pressable, Text, View } from "react-native";
+import { LayoutAnimation, View } from "react-native";
 import { Inputs } from "./components/train/Inputs";
+import { Button } from "../components/Button/Button";
+import { HStack } from "../components/HStack/HStack";
+import { getNumberOfSets } from "../store/selectors";
+import { PreviousTraining } from "../components/PreviousTraining/PreviousTraining";
+import { VStack } from "../components/VStack/VStack";
 
 function Train() {
   const { showPreviousExercise, hasNextExercise, previousExerciseName, nextExerciseName, exerciseMetaData, currentExerciseIndex, currentSetIndex, selectedTrainingName, extractedNumberOfSets } =
@@ -23,6 +26,7 @@ function Train() {
   const [showEdit, setShowEdit] = useState(false);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const numberOfSets = useAppSelector(getNumberOfSets);
 
   const previousDoneExercisesThisSession = useMemo(() => {
     if (exerciseMetaData?.name) {
@@ -32,9 +36,8 @@ function Train() {
   }, [doneSetsThisExercise, exerciseMetaData?.name]);
 
   const isDone = useMemo(() => {
-    const numberOfSets = Object.values(doneSetsThisExercise).length;
-    return parseInt(extractedNumberOfSets ?? "-1") === numberOfSets;
-  }, [doneSetsThisExercise, extractedNumberOfSets]);
+    return numberOfSets === Object.values(doneSetsThisExercise).length;
+  }, [doneSetsThisExercise, numberOfSets]);
   const handleSetDone = useCallback(
     ({ weight, reps, note }: PlainExerciseData, setIndex?: number) => {
       if (setIndex) {
@@ -62,9 +65,7 @@ function Train() {
   }, [dispatch, currentExerciseIndex]);
 
   const handleSaveTrainingData = useCallback(() => {
-    if (Object.values(doneSetsThisExercise).length > 0) {
-      dispatch(addExerciseDataEntry(doneSetsThisExercise));
-    }
+    dispatch(addExerciseDataEntry(doneSetsThisExercise));
   }, [dispatch, doneSetsThisExercise]);
 
   const handleReset = useCallback(() => {
@@ -100,14 +101,12 @@ function Train() {
       if (!isDone) {
         setShowAlert(true);
         return;
-      } else {
-        dispatch(addExerciseDataEntry(doneSetsThisExercise));
-        return;
       }
+      handleDone();
     } else {
       handleNavigateToNextExercise();
     }
-  }, [hasNextExercise, doneSetsThisExercise, isDone, dispatch, handleNavigateToNextExercise]);
+  }, [hasNextExercise, isDone, handleDone, handleNavigateToNextExercise]);
 
   const handleCloseButton = useCallback(() => {
     if (!isDone && Object.values(doneSetsThisExercise).length > 0) {
@@ -120,7 +119,6 @@ function Train() {
   useEffect(() => {
     LayoutAnimation.configureNext({ duration: 250, create: { duration: 125, type: "easeInEaseOut", property: "opacity" }, delete: { duration: 125, type: "easeInEaseOut", property: "opacity" } });
   }, [showEdit]);
-
   return (
     <>
       <SafeAreaView style={trainStyles.wrapper}>
@@ -128,24 +126,14 @@ function Train() {
           <SiteNavigationButtons disabled={showEdit} handleBack={handleCloseButton} titleFontSize={30} title={selectedTrainingName} />
         </View>
         <ExerciseMetaDataDisplay showEdit={showEdit} setShowEdit={setShowEdit} />
-        <TrainingHeader disabled={showEdit} />
-        <KeyboardAwareScrollView keyboardShouldPersistTaps="handled">
-          <Inputs doneSetsThisExercise={doneSetsThisExercise} handleSetDone={handleSetDone} />
-        </KeyboardAwareScrollView>
-        <View style={trainStyles.buttons}>
-          <View style={{ flex: 1 }}>
-            {showPreviousExercise && (
-              <Pressable disabled={showEdit} onPress={handlePreviousExercise}>
-                <Text disabled={showEdit}>{previousExerciseName}</Text>
-              </Pressable>
-            )}
-          </View>
-          <View style={{ flex: 1 }}>
-            <Pressable disabled={showEdit} onPress={handleNextOrDone}>
-              <Text>{hasNextExercise ? nextExerciseName : "Done"}</Text>
-            </Pressable>
-          </View>
-        </View>
+        <VStack style={{ flex: 1, gap: 40 }}>
+          {!showEdit && <Inputs doneSetsThisExercise={doneSetsThisExercise} handleSetDone={handleSetDone} />}
+          <PreviousTraining />
+        </VStack>
+        <HStack style={trainStyles.buttons}>
+          <View style={{ flex: 1 }}>{showPreviousExercise && <Button title={previousExerciseName} theme="secondary" disabled={showEdit} onPress={handlePreviousExercise} />}</View>
+          <Button theme="primary" title={hasNextExercise ? nextExerciseName : "Done"} disabled={showEdit} onPress={handleNextOrDone} />
+        </HStack>
       </SafeAreaView>
       <AlertModal
         title="Your training is not complete"

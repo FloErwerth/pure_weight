@@ -1,18 +1,14 @@
-import { IsoDate } from "../types/date";
-
 export type TrainingDay = {
   name: string;
-  exercises: ({ doneExerciseEntries: ExercideDataEntry } & ExerciseMetaData)[];
+  exercises: ({ doneExerciseEntries: { [entry: string]: DoneExerciseData } } & ExerciseMetaData)[];
 };
 
-export type ExercideDataEntry = {
-  [date: IsoDate]: { [entry: string]: DoneExerciseData };
-};
 export type PlainExerciseData = {
   weight: string;
   reps: string;
   note?: string;
 };
+
 export type DoneExerciseData = {
   [set: string]: PlainExerciseData;
 };

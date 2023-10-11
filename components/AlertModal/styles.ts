@@ -13,10 +13,11 @@ export const styles = StyleSheet.create({
     backgroundColor: "lightblue",
   },
   buttons: {
-    gap: 20,
     alignSelf: "stretch",
-    marginLeft: 20,
-    marginRight: 20,
+    justifyContent: "space-around",
+    marginLeft: 10,
+    gap: 20,
+    marginRight: 10,
   },
   button: {
     flex: 1,

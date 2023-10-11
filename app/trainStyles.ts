@@ -1,7 +1,7 @@
 import { StyleSheet } from "react-native";
 
 export const trainStyles = StyleSheet.create({
-  buttons: { gap: 10, marginLeft: 10, marginRight: 10 },
+  buttons: { gap: 20, marginLeft: 10, marginRight: 10 },
   header: {
     alignSelf: "stretch",
     alignItems: "center",
@@ -27,8 +27,9 @@ export const trainStyles = StyleSheet.create({
     justifyContent: "space-between",
   },
   stack: {
-    gap: 20,
-    marginBottom: 10,
+    alignItems: "center",
+    marginBottom: 5,
+    alignSelf: "stretch",
   },
   exerciseWrapper: {
     gap: 20,
