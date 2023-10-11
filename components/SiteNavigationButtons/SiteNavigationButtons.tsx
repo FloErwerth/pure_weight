@@ -1,7 +1,8 @@
-import {Pressable, Text, View} from "react-native";
+import { Pressable, Text, View } from "react-native";
 import { styles } from "./styles";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useMemo } from "react";
+import { HStack } from "../HStack/HStack";
 
 interface SiteNavigationButtonsProps {
   handleBack: () => void;
@@ -14,13 +15,13 @@ export const SiteNavigationButtons = ({ handleBack, title, titleFontSize = 40, h
   const titleStyles = useMemo(() => ({ ...styles.title, fontSize: titleFontSize }), [titleFontSize]);
 
   return (
-    <View style={styles.headerWrapper}>
-      <View style={styles.titleWrapper}>
+    <HStack style={styles.headerWrapper}>
+      <HStack style={styles.titleWrapper}>
         <Pressable disabled={disabled} onPress={handleBack}>
           <MaterialCommunityIcons color={disabled ? "lightgrey" : "black"} size={28} name="arrow-left" />
         </Pressable>
         <Text style={titleStyles}>{title}</Text>
-      </View>
+      </HStack>
       <View>
         {handleConfirm && (
           <Pressable disabled={disabled} onPress={handleConfirm}>
@@ -28,6 +29,6 @@ export const SiteNavigationButtons = ({ handleBack, title, titleFontSize = 40, h
           </Pressable>
         )}
       </View>
-    </View>
+    </HStack>
   );
 };

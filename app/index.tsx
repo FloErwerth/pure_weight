@@ -9,6 +9,7 @@ import { removeTrainingDay, setSelectedDay } from "../store/reducer";
 import { styles } from "./styles";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { AlertModal } from "../components/AlertModal/AlertModal";
+import { HStack } from "../components/HStack/HStack";
 
 export default function Main() {
   const navigate = useNavigate();
@@ -52,14 +53,14 @@ export default function Main() {
     <SafeAreaView style={styles.view}>
       <View style={styles.center}>
         <View style={styles.stack}>
-          <View style={styles.titleWrapper}>
+          <HStack style={styles.titleWrapper}>
             <Text style={styles.title}>Workouts</Text>
             <View>
               <Pressable onPress={handlePress} style={styles.button}>
                 <MaterialCommunityIcons size={40} name="plus" />
               </Pressable>
             </View>
-          </View>
+          </HStack>
           <ScrollView style={styles.view}>
             <View style={styles.savedTrainings}>
               {savedTrainings.map((trainingDay, index) => (

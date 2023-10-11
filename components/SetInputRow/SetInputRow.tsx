@@ -97,7 +97,7 @@ export const SetInputRow = ({ onSetDone, edited, setIndex, metaData, onEdit }: S
           ></TextInput>
         </View>
         <Pressable onPress={handleShowModal}>
-          <TextInput>{note ? "Show note" : "Add note"}</TextInput>
+          <Text>{note ? "Show note" : "Add note"}</Text>
         </Pressable>
         {edited ? (
           <Pressable style={styles.confirmButton} onPress={handleSetDone}>
