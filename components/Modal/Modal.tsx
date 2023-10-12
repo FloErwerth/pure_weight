@@ -3,6 +3,7 @@ import { PropsWithChildren, useEffect } from "react";
 import { LayoutAnimation, View } from "react-native";
 import { Button } from "../Button/Button";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { borderRadius } from "../../app/theme/border";
 
 interface ModalProps extends PropsWithChildren {
   isVisible: boolean;
@@ -25,7 +26,7 @@ export const Modal = ({ isVisible, children, onRequestClose }: ModalProps) => {
           <MaterialCommunityIcons name="close" size={24} />
         </Button>
       )}
-      <View style={{ backgroundColor: "white", borderRadius: 10, padding: 10 }}>{children}</View>
+      <View style={{ backgroundColor: "white", borderRadius, padding: 10 }}>{children}</View>
     </ReactNativeModal>
   );
 };

@@ -10,6 +10,8 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { HStack } from "../../../components/HStack/HStack";
 import { VStack } from "../../../components/VStack/VStack";
 import { Text } from "../../../components/Text/Text";
+import { mainColor, textFieldBackgroundColor } from "../../theme/colors";
+import { borderRadius } from "../../theme/border";
 
 interface ExerciseMetaDataDisplayProps {
   showEdit: boolean;
@@ -36,19 +38,32 @@ export const ExerciseMetaDataDisplay = ({ showEdit, setShowEdit }: ExerciseMetaD
   );
 
   return (
-    <HStack style={{ justifyContent: "space-between" }}>
+    <HStack style={{ justifyContent: "space-between", borderRadius, backgroundColor: textFieldBackgroundColor, padding: 10 }}>
       <VStack style={{ width: showEdit ? "100%" : "auto" }}>
         {showEdit ? (
           <EditableExercise theme={"Inline"} exercise={exerciseMetaData} onConfirmEdit={handleUpdateMetaData} onCancel={() => setShowEdit(false)} />
         ) : (
           <>
             <Text style={trainStyles.exerciseName}>{exerciseMetaData?.name}</Text>
+            <HStack>
+              <Text style={trainStyles.exerciseMetaText}>{exerciseMetaData?.weight} kg</Text>
+              <Text style={trainStyles.exerciseMetaText}>&#x30FB;</Text>
+              <Text style={trainStyles.exerciseMetaText}>{exerciseMetaData?.sets} sets</Text>
+              <Text style={trainStyles.exerciseMetaText}>&#x30FB;</Text>
+              <Text style={trainStyles.exerciseMetaText}>{exerciseMetaData?.reps} reps</Text>
+              {exerciseMetaData?.pause && (
+                <>
+                  <Text style={trainStyles.exerciseMetaText}>&#x30FB;</Text>
+                  <Text style={trainStyles.exerciseMetaText}>{exerciseMetaData.pause} min</Text>
+                </>
+              )}
+            </HStack>
           </>
         )}
       </VStack>
       {!showEdit && (
         <Pressable onPress={() => setShowEdit(true)} style={{ width: 50, alignItems: "center", justifyContent: "center" }}>
-          <MaterialCommunityIcons name="pencil" size={20} />
+          <MaterialCommunityIcons name="pencil" color={mainColor} size={20} />
         </Pressable>
       )}
     </HStack>

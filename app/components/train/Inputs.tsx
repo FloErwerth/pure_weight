@@ -5,8 +5,10 @@ import { getExerciseMetaDataRaw, getNumberOfSets, getSelectedTrainingName, getSe
 import { useCallback, useMemo } from "react";
 import { setSetIndex } from "../../../store/reducer";
 import { TrainingHeader } from "./TrainingHeader";
-import { Center } from "../../../components/Center/Center";
+import { ThemedView } from "../../../components/View/View";
 import { View } from "react-native";
+import { borderRadius } from "../../theme/border";
+import { textFieldBackgroundColor } from "../../theme/colors";
 
 interface InputsProps {
   doneSetsThisExercise: ExerciseSets;
@@ -28,32 +30,29 @@ export const Inputs = ({ doneSetsThisExercise, handleSetDone }: InputsProps) => 
   );
 
   return (
-    <Center style={{ flex: 1, justifyContent: "flex-start" }}>
-      <View style={{ alignSelf: "stretch", borderColor: "black", borderWidth: 1, borderRadius: 5, paddingTop: 10, paddingBottom: 5 }}>
+    <View style={{ flex: 1 }}>
+      <ThemedView style={{ paddingTop: 15, paddingBottom: 10, alignSelf: "stretch", borderRadius, backgroundColor: textFieldBackgroundColor }}>
         <TrainingHeader />
-        <View style={{ flex: 1, borderBottomWidth: 1, borderBottomColor: "black", paddingBottom: 5 }}></View>
-        <View style={{ paddingTop: 5, paddingBottom: 5 }}>
-          {doneSets.map((exerciseMetaData, index) => (
-            <SetInputRow
-              onSetDone={(plainExerciseData) => handleSetDone(plainExerciseData, index)}
-              setIndex={index + 1}
-              onEdit={() => handleEditDoneSet(index)}
-              edited={index === currentSetIndex}
-              key={`${index}-${selectedTrainingName}`}
-              metaData={exerciseMetaData}
-            />
-          ))}
-          {numberOfSets - 1 >= doneSets.length && (
-            <SetInputRow
-              onEdit={() => handleEditDoneSet(doneSets.length)}
-              setIndex={doneSets.length + 1}
-              metaData={exerciseMetaData}
-              edited={currentSetIndex === Object.values(doneSetsThisExercise).length}
-              onSetDone={handleSetDone}
-            />
-          )}
-        </View>
-      </View>
-    </Center>
+        {doneSets.map((exerciseMetaData, index) => (
+          <SetInputRow
+            onSetDone={(plainExerciseData) => handleSetDone(plainExerciseData, index)}
+            setIndex={index + 1}
+            onEdit={() => handleEditDoneSet(index)}
+            edited={index === currentSetIndex}
+            key={`${index}-${selectedTrainingName}`}
+            metaData={exerciseMetaData}
+          />
+        ))}
+        {numberOfSets - 1 >= doneSets.length && (
+          <SetInputRow
+            onEdit={() => handleEditDoneSet(doneSets.length)}
+            setIndex={doneSets.length + 1}
+            metaData={exerciseMetaData}
+            edited={currentSetIndex === Object.values(doneSetsThisExercise).length}
+            onSetDone={handleSetDone}
+          />
+        )}
+      </ThemedView>
+    </View>
   );
 };

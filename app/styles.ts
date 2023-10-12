@@ -1,5 +1,6 @@
 import { StyleSheet } from "react-native";
 import { backgroundColor, mainColor } from "./theme/colors";
+import { borderRadius } from "./theme/border";
 
 export const styles = StyleSheet.create({
   stack: {
@@ -20,7 +21,7 @@ export const styles = StyleSheet.create({
   },
   view: {
     flex: 1,
-    marginBottom: 20,
+    paddingBottom: 20,
     backgroundColor: backgroundColor,
     alignSelf: "stretch",
   },
@@ -37,7 +38,7 @@ export const styles = StyleSheet.create({
     paddingRight: 20,
   },
   listContainer: {
-    borderRadius: 8,
+    borderRadius,
   },
   list: {
     elevation: 2,

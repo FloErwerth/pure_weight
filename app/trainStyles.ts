@@ -1,7 +1,8 @@
 import { StyleSheet } from "react-native";
+import { mainColor } from "./theme/colors";
 
 export const trainStyles = StyleSheet.create({
-  buttons: { gap: 20, marginLeft: 10, marginRight: 10 },
+  buttons: { justifyContent: "space-around", gap: 20, marginLeft: 10, marginRight: 10, alignSelf: "stretch" },
   header: {
     alignSelf: "stretch",
     alignItems: "center",
@@ -18,10 +19,10 @@ export const trainStyles = StyleSheet.create({
     justifyContent: "center",
   },
   wrapper: {
-    marginTop: 10,
-    marginBottom: 20,
-    marginLeft: 10,
-    marginRight: 10,
+    paddingTop: 10,
+    paddingBottom: 20,
+    paddingLeft: 10,
+    paddingRight: 10,
     gap: 20,
     flex: 1,
     justifyContent: "space-between",
@@ -36,14 +37,15 @@ export const trainStyles = StyleSheet.create({
     alignSelf: "stretch",
   },
   exerciseName: {
-    fontSize: 20,
-    color: "black",
+    fontSize: 24,
+    color: mainColor,
   },
   exerciseMeta: {
     color: "lightgrey",
   },
   exerciseMetaText: {
     color: "grey",
+    fontSize: 16,
   },
   setInformation: {
     fontSize: 12,

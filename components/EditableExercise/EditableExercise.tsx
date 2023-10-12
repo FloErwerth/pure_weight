@@ -6,6 +6,7 @@ import { EditableExerciseTheme, styles } from "./styles";
 import { HStack } from "../HStack/HStack";
 import { Center } from "../Center/Center";
 import { ThemedTextInput } from "../TextInput/ThemedTextInput";
+import { mainColor } from "../../app/theme/colors";
 
 interface EditableExerciseProps {
   exercise: ExerciseMetaData;
@@ -30,33 +31,33 @@ export const EditableExercise = ({ exercise, onConfirmEdit, onCancel, theme }: E
   return (
     <View style={classes.wrapper}>
       <HStack style={classes.headerWrapper}>
-        <ThemedTextInput ref={inputRef} value={name} onChangeText={setName} style={classes.title} />
+        <ThemedTextInput placeholder="Exercise name" ref={inputRef} value={name} onChangeText={setName} style={classes.title} />
         <HStack style={classes.buttons}>
           <Pressable onPress={onCancel}>
-            <MaterialCommunityIcons color={"rgb(64,64,64)"} name="cancel" size={26}></MaterialCommunityIcons>
+            <MaterialCommunityIcons color={mainColor} name="cancel" size={26}></MaterialCommunityIcons>
           </Pressable>
           <Pressable onPress={handleConfirm}>
-            <MaterialCommunityIcons color={"rgb(64,64,64)"} name="check" size={26}></MaterialCommunityIcons>
+            <MaterialCommunityIcons color={mainColor} name="check" size={26}></MaterialCommunityIcons>
           </Pressable>
         </HStack>
       </HStack>
       <View style={classes.inputWrapper}>
         <HStack style={{ gap: 10, justifyContent: "space-between" }}>
           <Center style={{ width: "25%" }}>
-            <ThemedTextInput inputMode="decimal" style={{ backgroundColor: "lightgrey", alignSelf: "stretch", padding: 10, borderRadius: 8 }} onChangeText={setWeight} value={weight}></ThemedTextInput>
-            <Text>Weight</Text>
+            <ThemedTextInput inputMode="decimal" textAlign="center" style={classes.input} onChangeText={setWeight} value={weight}></ThemedTextInput>
+            <Text style={classes.text}>Weight</Text>
           </Center>
           <Center style={{ width: "25%" }}>
-            <ThemedTextInput inputMode="decimal" style={{ backgroundColor: "lightgrey", alignSelf: "stretch", padding: 10, borderRadius: 8 }} onChangeText={setSets} value={sets}></ThemedTextInput>
-            <Text>Sets</Text>
+            <ThemedTextInput inputMode="decimal" textAlign="center" style={classes.input} onChangeText={setSets} value={sets}></ThemedTextInput>
+            <Text style={classes.text}>Sets</Text>
           </Center>
           <Center style={{ width: "25%" }}>
-            <ThemedTextInput inputMode="decimal" style={{ backgroundColor: "lightgrey", alignSelf: "stretch", padding: 10, borderRadius: 8 }} onChangeText={setReps} value={reps}></ThemedTextInput>
-            <Text>Reps</Text>
+            <ThemedTextInput inputMode="decimal" textAlign="center" style={classes.input} onChangeText={setReps} value={reps}></ThemedTextInput>
+            <Text style={classes.text}>Reps</Text>
           </Center>
           <Center style={{ width: "25%" }}>
-            <ThemedTextInput inputMode="decimal" style={{ backgroundColor: "lightgrey", alignSelf: "stretch", padding: 10, borderRadius: 8 }} onChangeText={setPause} value={pause}></ThemedTextInput>
-            <Text>Pause</Text>
+            <ThemedTextInput inputMode="decimal" textAlign="center" style={classes.input} onChangeText={setPause} value={pause}></ThemedTextInput>
+            <Text style={classes.text}>Pause</Text>
           </Center>
         </HStack>
       </View>

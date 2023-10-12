@@ -1,5 +1,6 @@
 import { StyleSheet } from "react-native";
 import { componentBackgroundColor, mainColor } from "../../app/theme/colors";
+import { borderRadius } from "../../app/theme/border";
 
 export const styles = StyleSheet.create({
   text: {
@@ -16,7 +17,7 @@ export const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     backgroundColor: componentBackgroundColor,
-    borderRadius: 8,
+    borderRadius,
     alignSelf: "stretch",
   },
   iconWrapper: {

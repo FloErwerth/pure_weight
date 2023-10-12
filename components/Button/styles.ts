@@ -1,13 +1,14 @@
 import { StyleSheet, TextStyle, ViewStyle } from "react-native";
 import type { ButtonThemes } from "./Button";
 import { componentBackgroundColor } from "../../app/theme/colors";
+import { borderRadius } from "../../app/theme/border";
 
 const themes: Record<ButtonThemes, Record<"button" | "text", ViewStyle | TextStyle>> = {
   primary: {
     button: {
       backgroundColor: "black",
       borderWidth: 1,
-      borderRadius: 5,
+      borderRadius,
       borderColor: "black",
     },
     text: {
@@ -18,7 +19,7 @@ const themes: Record<ButtonThemes, Record<"button" | "text", ViewStyle | TextSty
     button: {
       backgroundColor: "white",
       borderWidth: 1,
-      borderRadius: 5,
+      borderRadius,
       borderColor: "black",
     },
     text: {

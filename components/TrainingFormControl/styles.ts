@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+import { borderRadius } from "../../app/theme/border";
 
 export const styles = StyleSheet.create({
   helperWrapper: {
@@ -13,7 +14,7 @@ export const styles = StyleSheet.create({
   wrapper: {
     alignSelf: "stretch",
     paddingLeft: 10,
-    borderRadius: 5,
+    borderRadius,
     backgroundColor: "lightgrey",
   },
 });

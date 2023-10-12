@@ -18,6 +18,7 @@ import { Center } from "../../components/Center/Center";
 import { VStack } from "../../components/VStack/VStack";
 import { SafeAreaView } from "../../components/SafeAreaView/SafeAreaView";
 import { View } from "react-native";
+import { borderRadius } from "../theme/border";
 
 const errorText = { ["workoutNameEmpty"]: "A workout name is required", ["createdExercisesEmpty"]: "The training requires at least 1 exercise" };
 
@@ -88,8 +89,8 @@ export default function Index() {
 
       if (!edited) {
         return (
-          <PressableRowWithIconSlots key={exercise.name.concat(index.toString())} Icon2={{ icon: "delete", onPress: onDelete, disabled: editedExerciseIndex !== undefined }}>
-            <AddExercise onPress={onEdit} exerciseName={exercise.name} />
+          <PressableRowWithIconSlots onClick={onEdit} key={exercise.name.concat(index.toString())} Icon2={{ icon: "delete", onPress: onDelete, disabled: editedExerciseIndex !== undefined }}>
+            <Text style={styles.text}>{exercise.name}</Text>
           </PressableRowWithIconSlots>
         );
       }
@@ -129,7 +130,7 @@ export default function Index() {
   }, [workoutName, createdExercises, editedDay, navigate, dispatch, editedDayIndex]);
 
   const exercisesWrapperStyles = useMemo(() => {
-    return { ...styles.savedTrainings, ...(createdExerciseErrorText ? { borderWidth: 1, borderColor: "red", borderRadius: 5 } : {}) };
+    return { ...styles.savedTrainings, ...(createdExerciseErrorText ? { borderWidth: 1, borderColor: "red", borderRadius } : {}) };
   }, [createdExerciseErrorText]);
 
   const handleNavigateHome = useCallback(() => navigate(Routes.HOME), [navigate]);
@@ -147,9 +148,7 @@ export default function Index() {
                 <View style={exercisesWrapperStyles}>
                   <>
                     {mappedExercises}
-                    <View style={styles.addWrapper}>
-                      <AddExercise disabled={editedExerciseIndex !== undefined} onPress={handleAddNewExercise} />
-                    </View>
+                    <AddExercise disabled={editedExerciseIndex !== undefined} onPress={handleAddNewExercise} />
                   </>
                 </View>
               </KeyboardAwareScrollView>

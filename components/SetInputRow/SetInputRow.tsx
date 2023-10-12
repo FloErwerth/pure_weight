@@ -1,4 +1,4 @@
-import { TextInput, View } from "react-native";
+import { View } from "react-native";
 import { styles } from "./styles";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigate } from "../../utils/navigate";
@@ -12,6 +12,9 @@ import { HStack } from "../HStack/HStack";
 import { Button } from "../Button/Button";
 import { Center } from "../Center/Center";
 import { Text } from "../Text/Text";
+import { borderRadius } from "../../app/theme/border";
+import { ThemedTextInput } from "../TextInput/ThemedTextInput";
+import { mainColor } from "../../app/theme/colors";
 
 interface SetInputRowProps {
   edited: boolean;
@@ -69,36 +72,29 @@ export const SetInputRow = ({ onSetDone, edited, setIndex, metaData, onEdit }: S
     <>
       <HStack style={styles.stack}>
         <Center style={{ flex: 0.55, height: 50 }}>
-          <Text style={{ padding: 10 }}>{setIndex}</Text>
+          <Text style={{ padding: 10, color: mainColor, fontSize: 16 }}>{setIndex}</Text>
         </Center>
         <Center style={{ flex: 0.55, height: 50 }}>
-          <TextInput
-            style={{ padding: 10, borderRadius: 3, backgroundColor: "#ddd" }}
-            onFocus={handleOnFocus}
-            value={weight}
-            onChangeText={setWeight}
-            textAlign="center"
-            inputMode="decimal"
-          ></TextInput>
+          <ThemedTextInput style={{ padding: 10, borderRadius, fontSize: 16 }} onFocus={handleOnFocus} value={weight} onChangeText={setWeight} textAlign="center" inputMode="decimal"></ThemedTextInput>
         </Center>
         <Center style={{ flex: 0.55, height: 50 }}>
-          <TextInput
-            style={{ padding: 10, borderRadius: 3, backgroundColor: "#ddd" }}
+          <ThemedTextInput
+            style={{ padding: 10, borderRadius, fontSize: 16 }}
             onFocus={handleOnFocus}
             value={reps}
             onChangeText={setReps}
             returnKeyType="next"
             textAlign="center"
             inputMode="decimal"
-          ></TextInput>
+          ></ThemedTextInput>
         </Center>
         <Center style={{ flex: 1, height: 50 }}>
-          <Button title={note ? "Show note" : "Add note"} style={{ button: { backgroundColor: "#ddd", borderRadius: 3, padding: 10 } }} theme="ghost" onPress={handleShowModal} />
+          <Button title={note ? "Show note" : "Add note"} style={{ button: { borderRadius, padding: 10 }, text: { color: mainColor, fontSize: 16 } }} theme="ghost" onPress={handleShowModal} />
         </Center>
         <Center style={{ flex: 0.6, height: 50 }}>
           {edited && onSetDone ? (
-            <Button theme="ghost" style={{ button: { width: 40, padding: 7, backgroundColor: "#ddd", borderRadius: 3 } }} onPress={handleSetDone}>
-              <MaterialCommunityIcons size={24} style={{ width: 24, color: "black", opacity: edited ? 1 : 0 }} name="check-bold" />
+            <Button theme="ghost" style={{ button: { width: 40, padding: 7, borderRadius } }} onPress={handleSetDone}>
+              <MaterialCommunityIcons size={24} style={{ width: 24, color: mainColor, opacity: edited ? 1 : 0 }} name="check-bold" />
             </Button>
           ) : (
             <View style={styles.box}></View>

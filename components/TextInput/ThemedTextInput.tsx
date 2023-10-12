@@ -3,6 +3,6 @@ import { componentBackgroundColor, mainColor, mainDisabledColor } from "../../ap
 import * as React from "react";
 import { RefObject } from "react";
 
-export const ThemedTextInput = (props: React.Component<TextInputProps>["props"] & { ref?: RefObject<TextInput> }) => {
-  return <TextInput {...props} style={{ backgroundColor: componentBackgroundColor, color: mainColor }} placeholderTextColor={mainDisabledColor} />;
+export const ThemedTextInput = (props: TextInputProps & { ref?: RefObject<TextInput> }) => {
+  return <TextInput {...props} style={[{ backgroundColor: componentBackgroundColor, color: mainColor }, props.style]} placeholderTextColor={mainDisabledColor} />;
 };

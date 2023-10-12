@@ -1,9 +1,10 @@
 import { StyleSheet } from "react-native";
+import { borderRadius } from "../../app/theme/border";
 
 export const styles = StyleSheet.create({
   wrapper: {
     backgroundColor: "white",
-    borderRadius: 5,
+    borderRadius,
     justifyContent: "center",
     alignItems: "center",
     padding: 10,

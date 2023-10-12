@@ -1,5 +1,6 @@
 import { StyleSheet } from "react-native";
-import { componentBackgroundColor } from "../theme/colors";
+import { componentBackgroundColor, mainColor } from "../theme/colors";
+import { borderRadius } from "../theme/border";
 
 export const styles = StyleSheet.create({
   stack: {
@@ -8,6 +9,10 @@ export const styles = StyleSheet.create({
     alignItems: "center",
     flex: 1,
     alignSelf: "stretch",
+  },
+  text: {
+    fontSize: 20,
+    color: mainColor,
   },
   title: {
     fontSize: 40,
@@ -30,7 +35,7 @@ export const styles = StyleSheet.create({
   addWrapper: {
     padding: 16,
     backgroundColor: componentBackgroundColor,
-    borderRadius: 10,
+    borderRadius,
   },
 
   errorBox: {
@@ -57,7 +62,7 @@ export const styles = StyleSheet.create({
     alignSelf: "stretch",
   },
   listContainer: {
-    borderRadius: 8,
+    borderRadius,
   },
   list: {
     elevation: 2,

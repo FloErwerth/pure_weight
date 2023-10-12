@@ -4,6 +4,7 @@ import { TextInput } from "react-native";
 import { Button } from "../../Button/Button";
 import { HStack } from "../../HStack/HStack";
 import { VStack } from "../../VStack/VStack";
+import { borderRadius } from "../../../app/theme/border";
 
 interface EditNoteModalProps {
   showModal: boolean;
@@ -31,9 +32,9 @@ export const EditNoteModal = ({ showModal, note, onDoneEdit, onCancel }: EditNot
 
   return (
     <Modal isVisible={showModal}>
-      <VStack style={{ backgroundColor: "white", borderRadius: 10, gap: 15, padding: 10 }}>
+      <VStack style={{ backgroundColor: "white", borderRadius, gap: 15, padding: 10 }}>
         <TextInput
-          style={{ borderWidth: 1, padding: 10, borderColor: "black", borderRadius: 5 }}
+          style={{ borderWidth: 1, padding: 10, borderColor: "black", borderRadius }}
           numberOfLines={5}
           ref={inputRef}
           onChangeText={handleSetNote}

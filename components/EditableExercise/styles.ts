@@ -1,5 +1,6 @@
 import { StyleSheet } from "react-native";
-import { componentBackgroundColor, mainColor } from "../../app/theme/colors";
+import { componentBackgroundColor, mainColor, mainDisabledColor, textFieldBackgroundColor } from "../../app/theme/colors";
+import { borderRadius } from "../../app/theme/border";
 
 export type EditableExerciseTheme = "Inline" | "Default";
 const Themes = {
@@ -24,6 +25,15 @@ export const styles = (theme: EditableExerciseTheme = "Default") =>
       alignSelf: "stretch",
       alignItems: "center",
     },
+    text: {
+      color: mainDisabledColor,
+    },
+    input: {
+      backgroundColor: textFieldBackgroundColor,
+      alignSelf: "stretch",
+      padding: 10,
+      borderRadius,
+    },
     inputWrapper: {
       paddingRight: 32,
       top: -10,
@@ -35,7 +45,7 @@ export const styles = (theme: EditableExerciseTheme = "Default") =>
     wrapper: {
       ...Themes[theme].wrapper,
       gap: 10,
-      borderRadius: 8,
+      borderRadius,
       alignSelf: "stretch",
     },
     saveText: {
@@ -47,5 +57,10 @@ export const styles = (theme: EditableExerciseTheme = "Default") =>
       flex: 1,
       fontSize: 20,
       lineHeight: 23,
+      backgroundColor: textFieldBackgroundColor,
+      alignSelf: "stretch",
+      marginRight: 15,
+      padding: 10,
+      borderRadius,
     },
   });

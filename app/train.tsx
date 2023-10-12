@@ -14,8 +14,8 @@ import { Inputs } from "./components/train/Inputs";
 import { Button } from "../components/Button/Button";
 import { HStack } from "../components/HStack/HStack";
 import { getNumberOfSets } from "../store/selectors";
-import { VStack } from "../components/VStack/VStack";
 import { SafeAreaView } from "../components/SafeAreaView/SafeAreaView";
+import { textFieldBackgroundColor } from "./theme/colors";
 
 export default function Train() {
   const { showPreviousExercise, hasNextExercise, previousExerciseName, nextExerciseName, currentExerciseIndex, currentSetIndex, selectedTrainingName } = useTrainingProps();
@@ -119,10 +119,16 @@ export default function Train() {
           <SiteNavigationButtons disabled={showEdit} handleBack={handleCloseButton} titleFontSize={30} title={selectedTrainingName} />
         </View>
         <ExerciseMetaDataDisplay showEdit={showEdit} setShowEdit={setShowEdit} />
-        <VStack style={{ flex: 1, gap: 40 }}>{!showEdit && <Inputs doneSetsThisExercise={doneSetsThisExercise} handleSetDone={handleSetDone} />}</VStack>
+        <View style={{ flex: 1 }}>{!showEdit && <Inputs doneSetsThisExercise={doneSetsThisExercise} handleSetDone={handleSetDone} />}</View>
         <HStack style={trainStyles.buttons}>
           <View style={{ flex: 1 }}>{showPreviousExercise && <Button title={previousExerciseName} theme="secondary" disabled={showEdit} onPress={handlePreviousExercise} />}</View>
-          <Button theme="primary" title={hasNextExercise ? nextExerciseName : "Done"} disabled={showEdit} onPress={handleNextOrDone} />
+          <Button
+            style={{ button: { flex: 1, borderWidth: 0, backgroundColor: textFieldBackgroundColor } }}
+            theme="primary"
+            title={hasNextExercise ? nextExerciseName : "Done"}
+            disabled={showEdit}
+            onPress={handleNextOrDone}
+          />
         </HStack>
       </SafeAreaView>
       <AlertModal
