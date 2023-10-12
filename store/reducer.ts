@@ -1,5 +1,5 @@
 import { createAction, createReducer } from "@reduxjs/toolkit/src";
-import { AppState, DoneExerciseData, ExerciseMetaData, TrainingDay } from "./types";
+import { AppState, ExerciseMetaData, ExerciseSets, TrainingDay } from "./types";
 
 export const setState = createAction<AppState>("set_state");
 export const addTrainingDay = createAction<TrainingDay>("add_training_day");
@@ -7,7 +7,7 @@ export const editTrainingDay = createAction<{ index: number; trainingDay: Traini
 export const setEditedExercise = createAction<number | undefined>("edit_exercise");
 export const removeTrainingDay = createAction<number>("remove_training_day");
 export const setSelectedDay = createAction<number | undefined>("edit_day");
-export const addExerciseDataEntry = createAction<DoneExerciseData>("set_training_data");
+export const addExerciseDataEntry = createAction<ExerciseSets>("set_training_data");
 export const setSetIndex = createAction<number>("set_set_index");
 export const setExerciseIndex = createAction<number>("set_exercise_index");
 export const editExerciseMetaData = createAction<Partial<ExerciseMetaData>>("edit_exercise_metadata");

@@ -1,8 +1,10 @@
-import { Pressable, Text, View } from "react-native";
+import { Text, View } from "react-native";
 import { styles } from "./styles";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useMemo } from "react";
 import { HStack } from "../HStack/HStack";
+import { Button } from "../Button/Button";
+import { mainColor, mainDisabledColor } from "../../app/theme/colors";
 
 interface SiteNavigationButtonsProps {
   handleBack: () => void;
@@ -17,16 +19,16 @@ export const SiteNavigationButtons = ({ handleBack, title, titleFontSize = 40, h
   return (
     <HStack style={styles.headerWrapper}>
       <HStack style={styles.titleWrapper}>
-        <Pressable disabled={disabled} onPress={handleBack}>
-          <MaterialCommunityIcons color={disabled ? "lightgrey" : "black"} size={28} name="arrow-left" />
-        </Pressable>
+        <Button theme="ghost" disabled={disabled} onPress={handleBack}>
+          <MaterialCommunityIcons color={disabled ? mainDisabledColor : mainColor} size={28} name="arrow-left" />
+        </Button>
         <Text style={titleStyles}>{title}</Text>
       </HStack>
       <View>
         {handleConfirm && (
-          <Pressable disabled={disabled} onPress={handleConfirm}>
-            <MaterialCommunityIcons color={disabled ? "lightgrey" : "black"} size={30} name="check" />
-          </Pressable>
+          <Button theme="ghost" disabled={disabled} onPress={handleConfirm}>
+            <MaterialCommunityIcons color={disabled ? mainDisabledColor : mainColor} size={30} name="check" />
+          </Button>
         )}
       </View>
     </HStack>

@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+import { componentBackgroundColor } from "../theme/colors";
 
 export const styles = StyleSheet.create({
   stack: {
@@ -26,7 +27,11 @@ export const styles = StyleSheet.create({
     alignItems: "center",
     paddingRight: 20,
   },
-  addWrapper: { padding: 16, backgroundColor: "white", borderRadius: 10 },
+  addWrapper: {
+    padding: 16,
+    backgroundColor: componentBackgroundColor,
+    borderRadius: 10,
+  },
 
   errorBox: {
     overflow: "visible",

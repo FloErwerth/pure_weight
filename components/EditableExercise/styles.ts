@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+import { componentBackgroundColor, mainColor } from "../../app/theme/colors";
 
 export type EditableExerciseTheme = "Inline" | "Default";
 const Themes = {
@@ -11,7 +12,7 @@ const Themes = {
   Default: {
     wrapper: {
       padding: 16,
-      backgroundColor: "white",
+      backgroundColor: componentBackgroundColor,
     },
   },
 };
@@ -39,8 +40,10 @@ export const styles = (theme: EditableExerciseTheme = "Default") =>
     },
     saveText: {
       fontSize: 16,
+      color: mainColor,
     },
     title: {
+      color: mainColor,
       flex: 1,
       fontSize: 20,
       lineHeight: 23,

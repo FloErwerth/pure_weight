@@ -1,8 +1,9 @@
 import { ComponentProps, PropsWithChildren, useCallback, useMemo } from "react";
 import { styles } from "./styles";
-import { Pressable, View } from "react-native";
+import { Pressable } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { HStack } from "../HStack/HStack";
+import { mainColor, mainDisabledColor } from "../../app/theme/colors";
 
 type IconType = {
   icon?: ComponentProps<typeof MaterialCommunityIcons>["name"];
@@ -45,12 +46,12 @@ export const PressableRowWithIconSlots = ({ children, onClick, Icon1, Icon2 }: P
       <HStack style={styles.iconWrapper}>
         {showIcon1 && (
           <Pressable style={styles.icon} disabled={Icon1?.disabled} onPress={handleClickIcon1}>
-            <MaterialCommunityIcons size={Icon1?.size ?? 20} name={Icon1?.icon} color={Icon1?.disabled ? "lightgrey" : "black"} />
+            <MaterialCommunityIcons size={Icon1?.size ?? 20} name={Icon1?.icon} color={Icon1?.disabled ? mainDisabledColor : mainColor} />
           </Pressable>
         )}
         {showIcon2 && (
           <Pressable style={styles.icon} disabled={Icon2?.disabled} onPress={handleClickIcon2}>
-            <MaterialCommunityIcons size={Icon2?.size ?? 20} name={Icon2?.icon} color={Icon2?.disabled ? "lightgrey" : "black"} />
+            <MaterialCommunityIcons size={Icon2?.size ?? 20} name={Icon2?.icon} color={Icon2?.disabled ? mainDisabledColor : mainColor} />
           </Pressable>
         )}
       </HStack>

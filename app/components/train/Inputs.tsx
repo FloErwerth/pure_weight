@@ -1,5 +1,5 @@
 import { SetInputRow } from "../../../components/SetInputRow/SetInputRow";
-import { DoneExerciseData, PlainExerciseData } from "../../../store/types";
+import { ExerciseSets, PlainExerciseData } from "../../../store/types";
 import { useAppDispatch, useAppSelector } from "../../../store";
 import { getExerciseMetaDataRaw, getNumberOfSets, getSelectedTrainingName, getSetIndex } from "../../../store/selectors";
 import { useCallback, useMemo } from "react";
@@ -9,7 +9,7 @@ import { Center } from "../../../components/Center/Center";
 import { View } from "react-native";
 
 interface InputsProps {
-  doneSetsThisExercise: DoneExerciseData;
+  doneSetsThisExercise: ExerciseSets;
   handleSetDone: (data: PlainExerciseData, setIndex?: number) => void;
 }
 
@@ -26,6 +26,7 @@ export const Inputs = ({ doneSetsThisExercise, handleSetDone }: InputsProps) => 
     },
     [dispatch],
   );
+
   return (
     <Center style={{ flex: 1, justifyContent: "flex-start" }}>
       <View style={{ alignSelf: "stretch", borderColor: "black", borderWidth: 1, borderRadius: 5, paddingTop: 10, paddingBottom: 5 }}>
@@ -42,16 +43,16 @@ export const Inputs = ({ doneSetsThisExercise, handleSetDone }: InputsProps) => 
               metaData={exerciseMetaData}
             />
           ))}
+          {numberOfSets - 1 >= doneSets.length && (
+            <SetInputRow
+              onEdit={() => handleEditDoneSet(doneSets.length)}
+              setIndex={doneSets.length + 1}
+              metaData={exerciseMetaData}
+              edited={currentSetIndex === Object.values(doneSetsThisExercise).length}
+              onSetDone={handleSetDone}
+            />
+          )}
         </View>
-        {numberOfSets - 1 >= doneSets.length && (
-          <SetInputRow
-            onEdit={() => handleEditDoneSet(doneSets.length)}
-            setIndex={doneSets.length + 1}
-            metaData={exerciseMetaData}
-            edited={currentSetIndex === Object.values(doneSetsThisExercise).length}
-            onSetDone={handleSetDone}
-          />
-        )}
       </View>
     </Center>
   );

@@ -1,4 +1,4 @@
-import { Pressable, SafeAreaView, ScrollView, Text, View } from "react-native";
+import { ScrollView, Text, View } from "react-native";
 import { ReactNode, useCallback, useState } from "react";
 import { PressableRowWithIconSlots } from "../components/PressableRowWithIconSlots/PressableRowWithIconSlots";
 import { useNavigate } from "../utils/navigate";
@@ -10,6 +10,9 @@ import { styles } from "./styles";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { AlertModal } from "../components/AlertModal/AlertModal";
 import { HStack } from "../components/HStack/HStack";
+import { Button } from "../components/Button/Button";
+import { mainColor } from "./theme/colors";
+import { SafeAreaView } from "../components/SafeAreaView/SafeAreaView";
 
 export default function Main() {
   const navigate = useNavigate();
@@ -55,9 +58,9 @@ export default function Main() {
           <HStack style={styles.titleWrapper}>
             <Text style={styles.title}>Workouts</Text>
             <View>
-              <Pressable onPress={handlePress} style={styles.button}>
-                <MaterialCommunityIcons size={40} name="plus" />
-              </Pressable>
+              <Button theme="ghost" onPress={handlePress} style={{ button: styles.button }}>
+                <MaterialCommunityIcons color={mainColor} size={40} name="plus" />
+              </Button>
             </View>
           </HStack>
           <ScrollView style={styles.view}>

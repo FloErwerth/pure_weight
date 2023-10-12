@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+import { backgroundColor, mainColor } from "./theme/colors";
 
 export const styles = StyleSheet.create({
   stack: {
@@ -12,6 +13,7 @@ export const styles = StyleSheet.create({
   },
   trainingDayName: {
     fontSize: 24,
+    color: mainColor,
   },
   button: {
     paddingTop: 10,
@@ -19,12 +21,13 @@ export const styles = StyleSheet.create({
   view: {
     flex: 1,
     marginBottom: 20,
-    backgroundColor: "transparent",
+    backgroundColor: backgroundColor,
     alignSelf: "stretch",
   },
   title: {
     fontSize: 40,
     fontWeight: "600",
+    color: mainColor,
   },
   titleWrapper: {
     justifyContent: "space-between",

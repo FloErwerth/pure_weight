@@ -1,4 +1,4 @@
-import { Text, TextInput, View } from "react-native";
+import { TextInput, View } from "react-native";
 import { styles } from "./styles";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigate } from "../../utils/navigate";
@@ -11,6 +11,7 @@ import { EditNoteModal } from "./components/EditNoteModal";
 import { HStack } from "../HStack/HStack";
 import { Button } from "../Button/Button";
 import { Center } from "../Center/Center";
+import { Text } from "../Text/Text";
 
 interface SetInputRowProps {
   edited: boolean;

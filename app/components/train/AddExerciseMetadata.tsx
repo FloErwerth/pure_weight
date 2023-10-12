@@ -1,11 +1,11 @@
-import { ExercideDataEntry, ExerciseMetaData } from "../../../store/types";
+import { DoneExerciseData, ExerciseMetaData } from "../../../store/types";
 import { useCallback } from "react";
 import { TrainingFormControl } from "../../../components/TrainingFormControl/TrainingFormControl";
-import {View} from "react-native";
+import { View } from "react-native";
 
 export type AddExerciseMetadataFields = Partial<Pick<ExerciseMetaData, "weight" | "reps" | "sets" | "pause">>;
 interface AddExerciseMetadataProps {
-  exerciseMetadata?: Partial<{ doneExerciseEntries: ExercideDataEntry } & ExerciseMetaData>;
+  exerciseMetadata?: Partial<{ doneExerciseEntries: DoneExerciseData } & ExerciseMetaData>;
   handleSetMetadata: (data: AddExerciseMetadataFields) => void;
 }
 export const AddExerciseMetadata = ({ exerciseMetadata, handleSetMetadata }: AddExerciseMetadataProps) => {
@@ -45,10 +45,10 @@ export const AddExerciseMetadata = ({ exerciseMetadata, handleSetMetadata }: Add
 
   return (
     <View>
-        <TrainingFormControl label="Weight" inputMode="decimal" value={exerciseMetadata?.weight} setValue={handleSetWeight} helper="in kg" />
-        <TrainingFormControl label="Number of sets" inputMode="numeric" value={exerciseMetadata?.sets} setValue={handleSetSets} />
-        <TrainingFormControl label="Number of repetitions" inputMode="numeric" value={exerciseMetadata?.reps} setValue={handleSetReps} />
-        <TrainingFormControl label="Pause duration" inputMode="decimal" value={exerciseMetadata?.pause} setValue={handleSetPause} helper="in minutes" />
+      <TrainingFormControl label="Weight" inputMode="decimal" value={exerciseMetadata?.weight} setValue={handleSetWeight} helper="in kg" />
+      <TrainingFormControl label="Number of sets" inputMode="numeric" value={exerciseMetadata?.sets} setValue={handleSetSets} />
+      <TrainingFormControl label="Number of repetitions" inputMode="numeric" value={exerciseMetadata?.reps} setValue={handleSetReps} />
+      <TrainingFormControl label="Pause duration" inputMode="decimal" value={exerciseMetadata?.pause} setValue={handleSetPause} helper="in minutes" />
     </View>
   );
 };

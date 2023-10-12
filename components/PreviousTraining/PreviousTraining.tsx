@@ -10,9 +10,10 @@ import { Button } from "../Button/Button";
 export const PreviousTraining = () => {
   const previousTraining = useAppSelector(getPreviousTraining);
   const [showPreviousTraining, setShowPreviousTraining] = useState(false);
+
   return (
     <>
-      {previousTraining.length > 0 && (
+      {previousTraining?.length > 0 && (
         <Button
           theme="ghost"
           title="Show previous training stats"

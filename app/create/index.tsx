@@ -1,8 +1,8 @@
-import { SafeAreaView, Text, View } from "react-native";
+import { Text } from "../../components/Text/Text";
 import { ReactNode, useCallback, useMemo, useState } from "react";
 import { useNavigate } from "../../utils/navigate";
 import { Routes } from "../../types/routes";
-import { ExercideDataEntry, ExerciseMetaData } from "../../store/types";
+import { DoneExerciseData, ExerciseMetaData } from "../../store/types";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { useAppDispatch, useAppSelector } from "../../store";
 import { addTrainingDay, editTrainingDay } from "../../store/reducer";
@@ -16,6 +16,8 @@ import { PressableRowWithIconSlots } from "../../components/PressableRowWithIcon
 import { AlertModal } from "../../components/AlertModal/AlertModal";
 import { Center } from "../../components/Center/Center";
 import { VStack } from "../../components/VStack/VStack";
+import { SafeAreaView } from "../../components/SafeAreaView/SafeAreaView";
+import { View } from "react-native";
 
 const errorText = { ["workoutNameEmpty"]: "A workout name is required", ["createdExercisesEmpty"]: "The training requires at least 1 exercise" };
 
@@ -40,7 +42,7 @@ export default function Index() {
   const [workoutName, setWorkoutName] = useState(editedDay?.name);
   const [workoutErrorText, setWorkoutErrorText] = useState<string | undefined>("");
   const [createdExerciseErrorText, setCreatedExerciseErrorText] = useState<string | undefined>("");
-  const [createdExercises, setCreatedExercises] = useState<({ doneExerciseEntries: ExercideDataEntry } & ExerciseMetaData)[]>(editedDay?.exercises.map((exercise) => exercise) ?? []);
+  const [createdExercises, setCreatedExercises] = useState<({ doneExerciseEntries: DoneExerciseData } & ExerciseMetaData)[]>(editedDay?.exercises.map((exercise) => exercise) ?? []);
   const dispatch = useAppDispatch();
 
   const handleSetWorkoutName = useCallback((value?: string) => {

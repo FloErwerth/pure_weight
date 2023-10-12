@@ -1,5 +1,6 @@
 import { StyleSheet, TextStyle, ViewStyle } from "react-native";
 import type { ButtonThemes } from "./Button";
+import { componentBackgroundColor } from "../../app/theme/colors";
 
 const themes: Record<ButtonThemes, Record<"button" | "text", ViewStyle | TextStyle>> = {
   primary: {
@@ -41,6 +42,7 @@ export const styles = (theme: ButtonThemes, disabled: boolean = false) =>
   StyleSheet.create({
     wrapper: {
       padding: 10,
+      backgroundColor: componentBackgroundColor,
     },
     commonText: {
       textAlign: "center",

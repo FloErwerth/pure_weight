@@ -1,17 +1,16 @@
 export type TrainingDay = {
   name: string;
-  exercises: ({ doneExerciseEntries: { [entry: string]: DoneExerciseData } } & ExerciseMetaData)[];
+  exercises: ({ doneExerciseEntries: DoneExerciseData } & ExerciseMetaData)[];
 };
-
 export type PlainExerciseData = {
   weight: string;
   reps: string;
   note?: string;
 };
-
 export type DoneExerciseData = {
-  [set: string]: PlainExerciseData;
+  [entry: string]: ExerciseSets;
 };
+export type ExerciseSets = { [set: string]: PlainExerciseData };
 
 export type ExerciseMetaData = {
   name: string;

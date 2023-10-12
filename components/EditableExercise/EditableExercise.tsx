@@ -5,6 +5,7 @@ import { ExerciseMetaData } from "../../store/types";
 import { EditableExerciseTheme, styles } from "./styles";
 import { HStack } from "../HStack/HStack";
 import { Center } from "../Center/Center";
+import { ThemedTextInput } from "../TextInput/ThemedTextInput";
 
 interface EditableExerciseProps {
   exercise: ExerciseMetaData;
@@ -29,7 +30,7 @@ export const EditableExercise = ({ exercise, onConfirmEdit, onCancel, theme }: E
   return (
     <View style={classes.wrapper}>
       <HStack style={classes.headerWrapper}>
-        <TextInput ref={inputRef} value={name} onChangeText={setName} style={classes.title} />
+        <ThemedTextInput ref={inputRef} value={name} onChangeText={setName} style={classes.title} />
         <HStack style={classes.buttons}>
           <Pressable onPress={onCancel}>
             <MaterialCommunityIcons color={"rgb(64,64,64)"} name="cancel" size={26}></MaterialCommunityIcons>
@@ -42,19 +43,19 @@ export const EditableExercise = ({ exercise, onConfirmEdit, onCancel, theme }: E
       <View style={classes.inputWrapper}>
         <HStack style={{ gap: 10, justifyContent: "space-between" }}>
           <Center style={{ width: "25%" }}>
-            <TextInput inputMode="decimal" style={{ backgroundColor: "lightgrey", alignSelf: "stretch", padding: 10, borderRadius: 8 }} onChangeText={setWeight} value={weight}></TextInput>
+            <ThemedTextInput inputMode="decimal" style={{ backgroundColor: "lightgrey", alignSelf: "stretch", padding: 10, borderRadius: 8 }} onChangeText={setWeight} value={weight}></ThemedTextInput>
             <Text>Weight</Text>
           </Center>
           <Center style={{ width: "25%" }}>
-            <TextInput inputMode="decimal" style={{ backgroundColor: "lightgrey", alignSelf: "stretch", padding: 10, borderRadius: 8 }} onChangeText={setSets} value={sets}></TextInput>
+            <ThemedTextInput inputMode="decimal" style={{ backgroundColor: "lightgrey", alignSelf: "stretch", padding: 10, borderRadius: 8 }} onChangeText={setSets} value={sets}></ThemedTextInput>
             <Text>Sets</Text>
           </Center>
           <Center style={{ width: "25%" }}>
-            <TextInput inputMode="decimal" style={{ backgroundColor: "lightgrey", alignSelf: "stretch", padding: 10, borderRadius: 8 }} onChangeText={setReps} value={reps}></TextInput>
+            <ThemedTextInput inputMode="decimal" style={{ backgroundColor: "lightgrey", alignSelf: "stretch", padding: 10, borderRadius: 8 }} onChangeText={setReps} value={reps}></ThemedTextInput>
             <Text>Reps</Text>
           </Center>
           <Center style={{ width: "25%" }}>
-            <TextInput inputMode="decimal" style={{ backgroundColor: "lightgrey", alignSelf: "stretch", padding: 10, borderRadius: 8 }} onChangeText={setPause} value={pause}></TextInput>
+            <ThemedTextInput inputMode="decimal" style={{ backgroundColor: "lightgrey", alignSelf: "stretch", padding: 10, borderRadius: 8 }} onChangeText={setPause} value={pause}></ThemedTextInput>
             <Text>Pause</Text>
           </Center>
         </HStack>

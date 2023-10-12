@@ -1,8 +1,7 @@
 import { useAppDispatch, useAppSelector } from "../store";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { trainStyles } from "./trainStyles";
-import { DoneExerciseData, PlainExerciseData } from "../store/types";
+import { ExerciseSets, PlainExerciseData } from "../store/types";
 import { addExerciseDataEntry, setExerciseIndex, setSelectedDay, setSetIndex } from "../store/reducer";
 import { AlertModal } from "../components/AlertModal/AlertModal";
 import { useTrainingProps } from "../hooks/training/useTrainingProps";
@@ -15,29 +14,22 @@ import { Inputs } from "./components/train/Inputs";
 import { Button } from "../components/Button/Button";
 import { HStack } from "../components/HStack/HStack";
 import { getNumberOfSets } from "../store/selectors";
-import { PreviousTraining } from "../components/PreviousTraining/PreviousTraining";
 import { VStack } from "../components/VStack/VStack";
+import { SafeAreaView } from "../components/SafeAreaView/SafeAreaView";
 
-function Train() {
-  const { showPreviousExercise, hasNextExercise, previousExerciseName, nextExerciseName, exerciseMetaData, currentExerciseIndex, currentSetIndex, selectedTrainingName, extractedNumberOfSets } =
-    useTrainingProps();
-  const [doneSetsThisExercise, setDoneSetsThisExercise] = useState<DoneExerciseData>({});
+export default function Train() {
+  const { showPreviousExercise, hasNextExercise, previousExerciseName, nextExerciseName, currentExerciseIndex, currentSetIndex, selectedTrainingName } = useTrainingProps();
+  const [doneSetsThisExercise, setDoneSetsThisExercise] = useState<ExerciseSets>({});
   const [showModal, setShowAlert] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const numberOfSets = useAppSelector(getNumberOfSets);
 
-  const previousDoneExercisesThisSession = useMemo(() => {
-    if (exerciseMetaData?.name) {
-      return Object.values(doneSetsThisExercise).map((exercise) => exercise);
-    }
-    return undefined;
-  }, [doneSetsThisExercise, exerciseMetaData?.name]);
-
   const isDone = useMemo(() => {
     return numberOfSets === Object.values(doneSetsThisExercise).length;
   }, [doneSetsThisExercise, numberOfSets]);
+
   const handleSetDone = useCallback(
     ({ weight, reps, note }: PlainExerciseData, setIndex?: number) => {
       if (setIndex) {
@@ -45,7 +37,7 @@ function Train() {
         newDoneExercises[setIndex] = { weight, reps, note };
         setDoneSetsThisExercise(newDoneExercises);
       } else {
-        const newDoneExercises: DoneExerciseData = {
+        const newDoneExercises: ExerciseSets = {
           ...doneSetsThisExercise,
           [currentSetIndex]: {
             weight,
@@ -119,6 +111,7 @@ function Train() {
   useEffect(() => {
     LayoutAnimation.configureNext({ duration: 250, create: { duration: 125, type: "easeInEaseOut", property: "opacity" }, delete: { duration: 125, type: "easeInEaseOut", property: "opacity" } });
   }, [showEdit]);
+
   return (
     <>
       <SafeAreaView style={trainStyles.wrapper}>
@@ -126,10 +119,7 @@ function Train() {
           <SiteNavigationButtons disabled={showEdit} handleBack={handleCloseButton} titleFontSize={30} title={selectedTrainingName} />
         </View>
         <ExerciseMetaDataDisplay showEdit={showEdit} setShowEdit={setShowEdit} />
-        <VStack style={{ flex: 1, gap: 40 }}>
-          {!showEdit && <Inputs doneSetsThisExercise={doneSetsThisExercise} handleSetDone={handleSetDone} />}
-          <PreviousTraining />
-        </VStack>
+        <VStack style={{ flex: 1, gap: 40 }}>{!showEdit && <Inputs doneSetsThisExercise={doneSetsThisExercise} handleSetDone={handleSetDone} />}</VStack>
         <HStack style={trainStyles.buttons}>
           <View style={{ flex: 1 }}>{showPreviousExercise && <Button title={previousExerciseName} theme="secondary" disabled={showEdit} onPress={handlePreviousExercise} />}</View>
           <Button theme="primary" title={hasNextExercise ? nextExerciseName : "Done"} disabled={showEdit} onPress={handleNextOrDone} />
@@ -145,5 +135,3 @@ function Train() {
     </>
   );
 }
-
-export default Train;

@@ -1,8 +1,10 @@
 import { StyleSheet } from "react-native";
+import { componentBackgroundColor, mainColor } from "../../app/theme/colors";
 
 export const styles = StyleSheet.create({
   text: {
     fontSize: 20,
+    color: mainColor,
   },
   button: {
     flex: 1,
@@ -13,10 +15,9 @@ export const styles = StyleSheet.create({
     paddingRight: 0,
     justifyContent: "space-between",
     alignItems: "center",
-    backgroundColor: "white",
+    backgroundColor: componentBackgroundColor,
     borderRadius: 8,
     alignSelf: "stretch",
-    boxShadow: "0 2px 4px 0.5px lightgrey",
   },
   iconWrapper: {
     justifyContent: "flex-end",

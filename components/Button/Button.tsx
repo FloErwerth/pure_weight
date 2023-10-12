@@ -13,7 +13,7 @@ interface ButtonProps extends PropsWithChildren {
 export const Button = ({ onPress, children, theme = "primary", title, disabled, style }: ButtonProps) => {
   const internalStyles = useMemo(() => styles(theme, disabled), [disabled, theme]);
   return (
-    <Pressable style={[internalStyles.button, style?.button, theme !== "ghost" && internalStyles.wrapper]} onPress={onPress}>
+    <Pressable style={[internalStyles.button, style?.button, theme !== "ghost" && internalStyles.wrapper]} onPress={() => onPress?.()}>
       {title && <Text style={[internalStyles.text, internalStyles.commonText, style?.text]}>{title}</Text>}
       {children}
     </Pressable>

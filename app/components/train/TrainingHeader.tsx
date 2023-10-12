@@ -1,6 +1,7 @@
 import { trainStyles } from "../../trainStyles";
-import { Text, View } from "react-native";
+import { View } from "react-native";
 import { HStack } from "../../../components/HStack/HStack";
+import { Text } from "../../../components/Text/Text";
 
 interface TrainingHeaderProps {
   showPlaceholderForDoneButton?: boolean;
