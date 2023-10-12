@@ -1,4 +1,4 @@
-import { View } from "react-native";
+import { Keyboard, View } from "react-native";
 import { styles } from "./styles";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigate } from "../../utils/navigate";
@@ -27,7 +27,7 @@ export const SetInputRow = ({ onSetDone, edited, setIndex, metaData, onEdit }: S
   const navigate = useNavigate();
   const trainingIndex = useAppSelector(getTrainingIndex);
   const [showModal, setShowModal] = useState(false);
-  const [note, setNote] = useState(!edited ? metaData.note : "");
+  const [note, setNote] = useState(edited ? metaData.note : "");
   const [weight, setWeight] = useState(metaData.weight);
   const [reps, setReps] = useState(metaData.reps);
 
@@ -37,6 +37,7 @@ export const SetInputRow = ({ onSetDone, edited, setIndex, metaData, onEdit }: S
   }, [metaData]);
 
   const handleSetDone = useCallback(() => {
+    Keyboard.dismiss();
     if (weight && reps) {
       onSetDone?.({ weight, reps, note });
     }

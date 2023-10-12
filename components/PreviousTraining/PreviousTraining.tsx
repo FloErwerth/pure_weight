@@ -1,4 +1,4 @@
-import { Text, View } from "react-native";
+import { View } from "react-native";
 import { useAppSelector } from "../../store";
 import { getPreviousTraining } from "../../store/selectors";
 import { TrainingHeader } from "../../app/components/train/TrainingHeader";
@@ -6,6 +6,7 @@ import { DoneSetDisplayRow } from "../DoneSetDisplayRow/DoneSetDisplayRow";
 import { Modal } from "../Modal/Modal";
 import { useState } from "react";
 import { Button } from "../Button/Button";
+import { mainColor } from "../../app/theme/colors";
 
 export const PreviousTraining = () => {
   const previousTraining = useAppSelector(getPreviousTraining);
@@ -21,12 +22,14 @@ export const PreviousTraining = () => {
             button: {
               alignSelf: "center",
             },
+            text: {
+              color: mainColor,
+            },
           }}
           onPress={() => setShowPreviousTraining(true)}
         />
       )}
-      <Modal isVisible={showPreviousTraining} onRequestClose={() => setShowPreviousTraining(false)}>
-        <Text style={{ fontSize: 16, marginBottom: 10 }}>Your previous training</Text>
+      <Modal title="Your previous training" isVisible={showPreviousTraining} onRequestClose={() => setShowPreviousTraining(false)}>
         <TrainingHeader showPlaceholderForDoneButton={false} />
         <View style={{ flex: 1, borderBottomWidth: 1, borderBottomColor: "black" }}></View>
         {previousTraining.map(({ weight, reps, note }, index) => (

@@ -1,13 +1,12 @@
 import { StyleSheet, TextStyle, ViewStyle } from "react-native";
 import type { ButtonThemes } from "./Button";
-import { componentBackgroundColor } from "../../app/theme/colors";
 import { borderRadius } from "../../app/theme/border";
+import { mainColor, textFieldBackgroundColor } from "../../app/theme/colors";
 
 const themes: Record<ButtonThemes, Record<"button" | "text", ViewStyle | TextStyle>> = {
   primary: {
     button: {
-      backgroundColor: "black",
-      borderWidth: 1,
+      backgroundColor: textFieldBackgroundColor,
       borderRadius,
       borderColor: "black",
     },
@@ -17,13 +16,12 @@ const themes: Record<ButtonThemes, Record<"button" | "text", ViewStyle | TextSty
   },
   secondary: {
     button: {
-      backgroundColor: "white",
       borderWidth: 1,
       borderRadius,
-      borderColor: "black",
+      borderColor: textFieldBackgroundColor,
     },
     text: {
-      color: "black",
+      color: mainColor,
     },
   },
   ghost: {
@@ -43,7 +41,6 @@ export const styles = (theme: ButtonThemes, disabled: boolean = false) =>
   StyleSheet.create({
     wrapper: {
       padding: 10,
-      backgroundColor: componentBackgroundColor,
     },
     commonText: {
       textAlign: "center",

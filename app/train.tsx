@@ -16,6 +16,7 @@ import { HStack } from "../components/HStack/HStack";
 import { getNumberOfSets } from "../store/selectors";
 import { SafeAreaView } from "../components/SafeAreaView/SafeAreaView";
 import { textFieldBackgroundColor } from "./theme/colors";
+import { PreviousTraining } from "../components/PreviousTraining/PreviousTraining";
 
 export default function Train() {
   const { showPreviousExercise, hasNextExercise, previousExerciseName, nextExerciseName, currentExerciseIndex, currentSetIndex, selectedTrainingName } = useTrainingProps();
@@ -32,10 +33,11 @@ export default function Train() {
 
   const handleSetDone = useCallback(
     ({ weight, reps, note }: PlainExerciseData, setIndex?: number) => {
-      if (setIndex) {
+      if (setIndex !== undefined) {
         const newDoneExercises = { ...doneSetsThisExercise };
         newDoneExercises[setIndex] = { weight, reps, note };
         setDoneSetsThisExercise(newDoneExercises);
+        dispatch(setSetIndex(Object.values(doneSetsThisExercise).length));
       } else {
         const newDoneExercises: ExerciseSets = {
           ...doneSetsThisExercise,
@@ -46,8 +48,8 @@ export default function Train() {
           },
         };
         setDoneSetsThisExercise({ ...newDoneExercises });
+        dispatch(setSetIndex(currentSetIndex + 1));
       }
-      dispatch(setSetIndex(currentSetIndex + 1));
     },
     [currentSetIndex, dispatch, doneSetsThisExercise],
   );
@@ -119,6 +121,7 @@ export default function Train() {
           <SiteNavigationButtons disabled={showEdit} handleBack={handleCloseButton} titleFontSize={30} title={selectedTrainingName} />
         </View>
         <ExerciseMetaDataDisplay showEdit={showEdit} setShowEdit={setShowEdit} />
+        <PreviousTraining />
         <View style={{ flex: 1 }}>{!showEdit && <Inputs doneSetsThisExercise={doneSetsThisExercise} handleSetDone={handleSetDone} />}</View>
         <HStack style={trainStyles.buttons}>
           <View style={{ flex: 1 }}>{showPreviousExercise && <Button title={previousExerciseName} theme="secondary" disabled={showEdit} onPress={handlePreviousExercise} />}</View>

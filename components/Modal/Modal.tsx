@@ -4,10 +4,15 @@ import { LayoutAnimation, View } from "react-native";
 import { Button } from "../Button/Button";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { borderRadius } from "../../app/theme/border";
+import { ThemedView } from "../View/View";
+import { mainColor } from "../../app/theme/colors";
+import { Text } from "../Text/Text";
+import { HStack } from "../HStack/HStack";
 
 interface ModalProps extends PropsWithChildren {
   isVisible: boolean;
   onRequestClose?: () => void;
+  title?: string;
 }
 
 const Backdrop = () => {
@@ -15,18 +20,29 @@ const Backdrop = () => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
   }, []);
 
-  return <View style={{ flex: 1, backgroundColor: "rgba(0,0,0,0.7)" }} />;
+  return <View style={{ flex: 1, backgroundColor: "black" }} />;
 };
 
-export const Modal = ({ isVisible, children, onRequestClose }: ModalProps) => {
+export const Modal = ({ isVisible, children, onRequestClose, title }: ModalProps) => {
   return (
-    <ReactNativeModal customBackdrop={<Backdrop />} animationIn="fadeIn" animationOut="fadeOut" backdropTransitionInTiming={0} backdropTransitionOutTiming={0} isVisible={isVisible}>
-      {onRequestClose && (
-        <Button onPress={() => onRequestClose()} style={{ button: { alignSelf: "flex-end", alignItems: "flex-end", padding: 10 } }} theme="ghost">
-          <MaterialCommunityIcons name="close" size={24} />
-        </Button>
-      )}
-      <View style={{ backgroundColor: "white", borderRadius, padding: 10 }}>{children}</View>
+    <ReactNativeModal
+      backdropOpacity={0.9}
+      customBackdrop={<Backdrop />}
+      animationIn="fadeIn"
+      animationOut="fadeOut"
+      backdropTransitionInTiming={0}
+      backdropTransitionOutTiming={0}
+      isVisible={isVisible}
+    >
+      <HStack style={{ justifyContent: "space-between", alignItems: "flex-end" }}>
+        {title && <Text style={{ color: mainColor, alignSelf: "center", fontSize: 20, padding: 0, margin: 0 }}>{title}</Text>}
+        {onRequestClose && (
+          <Button onPress={() => onRequestClose()} style={{ button: { padding: 10 } }} theme="ghost">
+            <MaterialCommunityIcons name="close" color={mainColor} size={24} />
+          </Button>
+        )}
+      </HStack>
+      <ThemedView style={{ borderRadius, padding: 10 }}>{children}</ThemedView>
     </ReactNativeModal>
   );
 };

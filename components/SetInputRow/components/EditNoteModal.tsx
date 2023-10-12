@@ -5,6 +5,8 @@ import { Button } from "../../Button/Button";
 import { HStack } from "../../HStack/HStack";
 import { VStack } from "../../VStack/VStack";
 import { borderRadius } from "../../../app/theme/border";
+import { backgroundColor } from "../../../app/theme/colors";
+import { ThemedTextInput } from "../../TextInput/ThemedTextInput";
 
 interface EditNoteModalProps {
   showModal: boolean;
@@ -32,8 +34,8 @@ export const EditNoteModal = ({ showModal, note, onDoneEdit, onCancel }: EditNot
 
   return (
     <Modal isVisible={showModal}>
-      <VStack style={{ backgroundColor: "white", borderRadius, gap: 15, padding: 10 }}>
-        <TextInput
+      <VStack style={{ backgroundColor, borderRadius, gap: 15, padding: 10 }}>
+        <ThemedTextInput
           style={{ borderWidth: 1, padding: 10, borderColor: "black", borderRadius }}
           numberOfLines={5}
           ref={inputRef}
@@ -43,8 +45,8 @@ export const EditNoteModal = ({ showModal, note, onDoneEdit, onCancel }: EditNot
           placeholder="Add your note here..."
         />
         <HStack style={{ gap: 20 }}>
-          <Button theme="secondary" title={"cancel"} onPress={onCancel} />
-          <Button title="done" onPress={handlePressDone} />
+          <Button style={{ button: { flex: 1 } }} theme="secondary" title={"cancel"} onPress={onCancel} />
+          <Button style={{ button: { flex: 1 } }} title="done" onPress={handlePressDone} />
         </HStack>
       </VStack>
     </Modal>
