@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import { backgroundColor, mainColor } from "./theme/colors";
+import { mainColor } from "./theme/colors";
 import { borderRadius } from "./theme/border";
 
 export const styles = StyleSheet.create({
@@ -22,7 +22,6 @@ export const styles = StyleSheet.create({
   view: {
     flex: 1,
     paddingBottom: 20,
-    backgroundColor: backgroundColor,
     alignSelf: "stretch",
   },
   title: {
