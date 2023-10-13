@@ -18,7 +18,7 @@ import { SafeAreaView } from "../components/SafeAreaView/SafeAreaView";
 import { textFieldBackgroundColor } from "./theme/colors";
 import { PreviousTraining } from "../components/PreviousTraining/PreviousTraining";
 
-const generateExerciseObjectFromArray = (data: PlainExerciseData[]) => data.reduce((obj, currentSet, index) => ({ [index]: currentSet }), {});
+const generateExerciseObjectFromArray = (data: PlainExerciseData[]) => data.reduce((obj, currentSet, index) => ({ ...obj, [index]: currentSet }), {});
 
 export default function Train() {
   const { showPreviousExercise, hasNextExercise, previousExerciseName, nextExerciseName, currentExerciseIndex, selectedTrainingName } = useTrainingProps();
@@ -38,6 +38,7 @@ export default function Train() {
   }, [dispatch, currentExerciseIndex]);
 
   const handleSaveTrainingData = useCallback(() => {
+    console.log(generateExerciseObjectFromArray(doneSetsThisExercise));
     dispatch(addExerciseDataEntry(generateExerciseObjectFromArray(doneSetsThisExercise)));
   }, [dispatch, doneSetsThisExercise]);
 
@@ -81,12 +82,13 @@ export default function Train() {
   }, [hasNextExercise, isDone, handleDone, handleNavigateToNextExercise]);
 
   const handleCloseButton = useCallback(() => {
-    if (!isDone && Object.values(doneSetsThisExercise).length > 0) {
+    if (!isDone) {
       setShowAlert(true);
     } else {
+      handleSaveTrainingData();
       handleReset();
     }
-  }, [doneSetsThisExercise, handleReset, isDone]);
+  }, [handleReset, handleSaveTrainingData, isDone]);
 
   const handleSetDone = useCallback(
     (data: PlainExerciseData, index: number) => {
