@@ -2,10 +2,11 @@ import { StyleSheet } from "react-native";
 import { mainColor } from "./theme/colors";
 
 export const trainStyles = StyleSheet.create({
-  buttons: { justifyContent: "space-around", gap: 20, marginLeft: 10, marginRight: 10, alignSelf: "stretch" },
+  buttons: { marginTop: 15, justifyContent: "space-around", gap: 20, marginLeft: 10, marginRight: 10, alignSelf: "stretch" },
   header: {
     alignSelf: "stretch",
     alignItems: "center",
+    marginBottom: 10,
   },
   title: {
     flex: 1,
@@ -24,8 +25,7 @@ export const trainStyles = StyleSheet.create({
     paddingLeft: 10,
     paddingRight: 10,
     gap: 20,
-    flex: 1,
-    justifyContent: "space-between",
+    justifyContent: "space-around",
   },
   stack: {
     alignItems: "center",

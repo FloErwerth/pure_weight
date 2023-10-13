@@ -9,7 +9,7 @@ import { useNavigate } from "../utils/navigate";
 import { Routes } from "../types/routes";
 import { SiteNavigationButtons } from "../components/SiteNavigationButtons/SiteNavigationButtons";
 import { ExerciseMetaDataDisplay } from "./components/train/ExerciseMetaDataDisplay";
-import { View } from "react-native";
+import { ScrollView, View } from "react-native";
 import { Inputs } from "./components/train/Inputs";
 import { Button } from "../components/Button/Button";
 import { HStack } from "../components/HStack/HStack";
@@ -104,32 +104,32 @@ export default function Train() {
   );
 
   return (
-    <>
-      <SafeAreaView style={trainStyles.wrapper}>
-        <View style={trainStyles.header}>
-          <SiteNavigationButtons disabled={showEdit} handleBack={handleCloseButton} titleFontSize={30} title={selectedTrainingName} />
-        </View>
+    <SafeAreaView>
+      <View style={trainStyles.header}>
+        <SiteNavigationButtons disabled={showEdit} handleBack={handleCloseButton} titleFontSize={30} title={selectedTrainingName} />
+      </View>
+      <ScrollView contentContainerStyle={trainStyles.wrapper}>
         <ExerciseMetaDataDisplay showEdit={showEdit} setShowEdit={setShowEdit} />
-        <PreviousTraining />
         <View style={{ flex: 1 }}>{!showEdit && <Inputs onDoneExercise={setDoneSetsThisExercise} onSetDone={handleSetDone} />}</View>
-        <HStack style={trainStyles.buttons}>
-          <View style={{ flex: 1 }}>{showPreviousExercise && <Button title={previousExerciseName} theme="secondary" disabled={showEdit} onPress={handlePreviousExercise} />}</View>
-          <Button
-            style={{ button: { flex: 1, borderWidth: 0, backgroundColor: textFieldBackgroundColor } }}
-            theme="primary"
-            title={hasNextExercise ? nextExerciseName : "Done"}
-            disabled={showEdit}
-            onPress={handleNextOrDone}
-          />
-        </HStack>
-      </SafeAreaView>
-      <AlertModal
-        title="Your training is not complete"
-        content="Are you sure to quit this training early? The progress so far will be saved."
-        isVisible={showModal}
-        onConfirm={handleNotDoneConfirm}
-        onCancel={handleCloseAlert}
-      ></AlertModal>
-    </>
+        <PreviousTraining />
+        <AlertModal
+          title="Your training is not complete"
+          content="Are you sure to quit this training early? The progress so far will be saved."
+          isVisible={showModal}
+          onConfirm={handleNotDoneConfirm}
+          onCancel={handleCloseAlert}
+        ></AlertModal>
+      </ScrollView>
+      <HStack style={trainStyles.buttons}>
+        <View style={{ flex: 1 }}>{showPreviousExercise && <Button title={previousExerciseName} theme="secondary" disabled={showEdit} onPress={handlePreviousExercise} />}</View>
+        <Button
+          style={{ button: { flex: 1, borderWidth: 0, backgroundColor: textFieldBackgroundColor } }}
+          theme="primary"
+          title={hasNextExercise ? nextExerciseName : "Done"}
+          disabled={showEdit}
+          onPress={handleNextOrDone}
+        />
+      </HStack>
+    </SafeAreaView>
   );
 }
