@@ -38,18 +38,6 @@ export const SetInputRow = ({ onSetDone, setIndex, metaData, isActiveSet }: SetI
     setReps(metaData?.reps);
   }, [metaData]);
 
-  const handleSetDone = useCallback(() => {
-    if (isActiveSet) {
-      Keyboard.dismiss();
-      setIsPrestine(false);
-      if (weight && reps) {
-        onSetDone?.({ weight, reps, note });
-      }
-    } else {
-      handleOnFocus();
-    }
-  }, [isActiveSet, weight, reps, onSetDone, note, handleOnFocus]);
-
   const handleConfirmNoteModal = useCallback(
     (newNote?: string) => {
       setNote(newNote ?? note);
@@ -61,6 +49,18 @@ export const SetInputRow = ({ onSetDone, setIndex, metaData, isActiveSet }: SetI
   const handleOnFocus = useCallback(() => {
     dispatch(setSetIndex(setIndex - 1));
   }, [dispatch, setIndex]);
+
+  const handleSetDone = useCallback(() => {
+    if (isActiveSet) {
+      Keyboard.dismiss();
+      setIsPrestine(false);
+      if (weight && reps) {
+        onSetDone?.({ weight, reps, note });
+      }
+    } else {
+      handleOnFocus();
+    }
+  }, [isActiveSet, weight, reps, onSetDone, note, handleOnFocus]);
 
   const handleShowModal = useCallback(() => {
     handleOnFocus();
