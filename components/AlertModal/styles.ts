@@ -1,9 +1,9 @@
 import { StyleSheet } from "react-native";
 import { borderRadius } from "../../app/theme/border";
+import { mainColor } from "../../app/theme/colors";
 
 export const styles = StyleSheet.create({
   wrapper: {
-    backgroundColor: "white",
     borderRadius,
     justifyContent: "space-between",
     padding: 10,
@@ -24,7 +24,12 @@ export const styles = StyleSheet.create({
     flex: 1,
     alignSelf: "stretch",
   },
+  title: {
+    color: mainColor,
+    fontSize: 20,
+  },
   text: {
+    color: mainColor,
     textAlign: "center",
   },
 });

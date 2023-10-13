@@ -1,11 +1,6 @@
-import { StyleProp, View, ViewStyle } from "react-native";
+import { View, ViewProps } from "react-native";
 import { styles } from "./styles";
-import { PropsWithChildren } from "react";
 
-interface HStackProps extends PropsWithChildren {
-  style?: StyleProp<ViewStyle>;
-}
-
-export function HStack({ children, style }: HStackProps) {
-  return <View style={[styles.wrapper, style]}>{children}</View>;
+export function HStack(props: ViewProps) {
+  return <View style={[styles.wrapper, props.style]}>{props.children}</View>;
 }

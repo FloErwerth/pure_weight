@@ -6,20 +6,24 @@ import { Provider } from "react-redux";
 import { backgroundColor } from "./theme/colors";
 
 export default function index() {
-  return (
-    <Provider store={store}>
-      <PersistGate persistor={persistor}>
-        <Stack screenOptions={{ contentStyle: { backgroundColor } }}>
-          <Stack.Screen
-            options={{
-              headerShown: false,
-            }}
-            name="create/index"
-          />
-          <Stack.Screen options={{ headerShown: false }} name="index" />
-          <Stack.Screen options={{ headerShown: false }} name="train" />
-        </Stack>
-      </PersistGate>
-    </Provider>
-  );
+  const App = () => {
+    return (
+      <Provider store={store}>
+        <PersistGate persistor={persistor}>
+          <Stack screenOptions={{ contentStyle: { backgroundColor } }}>
+            <Stack.Screen
+              options={{
+                headerShown: false,
+              }}
+              name="create/index"
+            />
+            <Stack.Screen options={{ headerShown: false }} name="index" />
+            <Stack.Screen options={{ headerShown: false }} name="train" />
+          </Stack>
+        </PersistGate>
+      </Provider>
+    );
+  };
+
+  return App();
 }

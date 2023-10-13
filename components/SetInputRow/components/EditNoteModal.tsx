@@ -5,7 +5,7 @@ import { Button } from "../../Button/Button";
 import { HStack } from "../../HStack/HStack";
 import { VStack } from "../../VStack/VStack";
 import { borderRadius } from "../../../app/theme/border";
-import { backgroundColor } from "../../../app/theme/colors";
+import { backgroundColor, secondaryColor } from "../../../app/theme/colors";
 import { ThemedTextInput } from "../../TextInput/ThemedTextInput";
 
 interface EditNoteModalProps {
@@ -41,7 +41,7 @@ export const EditNoteModal = ({ showModal, note, onDoneEdit, onCancel }: EditNot
           ref={inputRef}
           onChangeText={handleSetNote}
           value={internalNote}
-          placeholderTextColor="grey"
+          placeholderTextColor={secondaryColor}
           placeholder="Add your note here..."
         />
         <HStack style={{ gap: 20 }}>

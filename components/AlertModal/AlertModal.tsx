@@ -16,7 +16,7 @@ export const AlertModal = ({ onConfirm, onCancel, isVisible, content, title, chi
   return (
     <Modal isVisible={isVisible}>
       <View style={styles.wrapper}>
-        <Text>{title}</Text>
+        <Text style={styles.title}>{title}</Text>
         <Text style={styles.text}>{content}</Text>
         {children}
         <HStack style={styles.buttons}>

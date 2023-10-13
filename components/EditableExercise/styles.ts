@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import { componentBackgroundColor, mainColor, mainDisabledColor, textFieldBackgroundColor } from "../../app/theme/colors";
+import { componentBackgroundColor, mainColor, secondaryColor, textFieldBackgroundColor } from "../../app/theme/colors";
 import { borderRadius } from "../../app/theme/border";
 
 export type EditableExerciseTheme = "Inline" | "Default";
@@ -26,7 +26,7 @@ export const styles = (theme: EditableExerciseTheme = "Default") =>
       alignItems: "center",
     },
     text: {
-      color: mainDisabledColor,
+      color: secondaryColor,
     },
     input: {
       backgroundColor: textFieldBackgroundColor,
