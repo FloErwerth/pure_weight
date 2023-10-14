@@ -6,5 +6,5 @@ export const Text = (props: TextProps) => {
   const {
     colors: { text },
   } = useTheme();
-  return <_Text style={[{ color: props.disabled ? mainDisabledColor : text }, props.style]} {...props} />;
+  return <_Text style={[props.style, { color: props.disabled ? mainDisabledColor : text }]} {...props} />;
 };

@@ -1,4 +1,4 @@
-import { Keyboard } from "react-native";
+import { Keyboard, View } from "react-native";
 import { styles } from "./styles";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigate } from "../../utils/navigate";
@@ -14,7 +14,7 @@ import { Center } from "../Center/Center";
 import { Text } from "../Text/Text";
 import { borderRadius } from "../../app/theme/border";
 import { ThemedTextInput } from "../TextInput/ThemedTextInput";
-import { mainColor, mainDisabledColor, secondaryColor, textFieldBackgroundColor } from "../../app/theme/colors";
+import { backgroundColor, mainColor, mainDisabledColor, secondaryColor, textFieldBackgroundColor } from "../../app/theme/colors";
 import { setSetIndex } from "../../store/reducer";
 
 interface SetInputRowProps {
@@ -77,13 +77,21 @@ export const SetInputRow = ({ onSetDone, setIndex, isActiveSet, hasData, data }:
     <>
       <HStack style={styles.stack}>
         <Center style={{ flex: 0.55, height: 50 }}>
-          <Text style={{ padding: 10, color: mainColor, fontSize: 16 }}>{setIndex}</Text>
+          <View style={{ backgroundColor: !isActiveSet ? "transparent" : backgroundColor, borderRadius }}>
+            <Text style={{ padding: 10, color: hasData || isActiveSet ? mainColor : secondaryColor, fontSize: 16 }}>{setIndex}</Text>
+          </View>
         </Center>
         <Center style={{ flex: 0.55, height: 50 }}>
           <ThemedTextInput
             returnKeyType="done"
             onFocus={handleOnFocus}
-            style={{ padding: 10, borderRadius, fontSize: 16, color: !hasData && !isActiveSet ? secondaryColor : mainColor }}
+            style={{
+              padding: 10,
+              backgroundColor: !isActiveSet ? "transparent" : backgroundColor,
+              borderRadius,
+              fontSize: 16,
+              color: !hasData && !isActiveSet ? secondaryColor : mainColor,
+            }}
             value={weight}
             onChangeText={setWeight}
             textAlign="center"
@@ -94,7 +102,7 @@ export const SetInputRow = ({ onSetDone, setIndex, isActiveSet, hasData, data }:
           <ThemedTextInput
             returnKeyType="done"
             onFocus={handleOnFocus}
-            style={{ padding: 10, borderRadius, fontSize: 16, color: !hasData && !isActiveSet ? secondaryColor : mainColor }}
+            style={{ padding: 10, borderRadius, backgroundColor: !isActiveSet ? "transparent" : backgroundColor, fontSize: 16, color: !hasData && !isActiveSet ? secondaryColor : mainColor }}
             value={reps}
             onChangeText={setReps}
             textAlign="center"
@@ -104,7 +112,10 @@ export const SetInputRow = ({ onSetDone, setIndex, isActiveSet, hasData, data }:
         <Center style={{ flex: 1, height: 50 }}>
           <Button
             title={note ? "Show note" : "Add note"}
-            style={{ button: { borderRadius, padding: 10 }, text: { color: !hasData && !isActiveSet ? secondaryColor : mainColor, fontSize: 16 } }}
+            style={{
+              button: { borderRadius, padding: 10, backgroundColor: !isActiveSet ? "transparent" : backgroundColor },
+              text: { color: !hasData && !isActiveSet ? secondaryColor : mainColor, fontSize: 16 },
+            }}
             theme="ghost"
             onPress={handleShowModal}
           />
