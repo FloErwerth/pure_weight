@@ -12,6 +12,7 @@ export const styles = StyleSheet.create({
     backgroundColor: componentBackgroundColor,
   },
   text: {
+    paddingLeft: 10,
     fontSize: 20,
   },
 });

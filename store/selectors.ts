@@ -33,7 +33,7 @@ export const getExerciseIndex = createSelector([getState], (state) => state.exer
 export const getTrainingIndex = createSelector([getState], (state) => state.trainingDayIndex);
 export const getPreviousTraining = createSelector([getSelectedTrainingDay, getExerciseIndex], (traininigDay, exerciseIndex) => {
   const entries = Object.values(traininigDay?.exercises[exerciseIndex]?.doneExerciseEntries ?? {});
-  return Object.values(Object.values(traininigDay?.exercises[exerciseIndex]?.doneExerciseEntries ?? {})[entries.length - 1] ?? {});
+  return Object.values(entries[entries.length - 1] ?? []);
 });
 
 export const getExerciseMetaData = createSelector([getSelectedTrainingDay, getExerciseIndex], (traininigDay, exerciseIndex) => {

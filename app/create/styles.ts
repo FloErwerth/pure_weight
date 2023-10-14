@@ -11,6 +11,7 @@ export const styles = StyleSheet.create({
     alignSelf: "stretch",
   },
   text: {
+    paddingLeft: 10,
     fontSize: 20,
     color: mainColor,
   },

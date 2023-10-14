@@ -2,7 +2,7 @@ import { useAppDispatch, useAppSelector } from "../store";
 import { useCallback, useMemo, useState } from "react";
 import { trainStyles } from "./trainStyles";
 import { PlainExerciseData } from "../store/types";
-import { addExerciseDataEntry, setExerciseIndex, setSelectedDay, setSetIndex } from "../store/reducer";
+import { addSetDataToTrainingDay, setExerciseIndex, setSelectedDay, setSetIndex } from "../store/reducer";
 import { AlertModal } from "../components/AlertModal/AlertModal";
 import { useTrainingProps } from "../hooks/training/useTrainingProps";
 import { useNavigate } from "../utils/navigate";
@@ -13,23 +13,30 @@ import { ScrollView, View } from "react-native";
 import { Inputs } from "./components/train/Inputs";
 import { Button } from "../components/Button/Button";
 import { HStack } from "../components/HStack/HStack";
-import { getNumberOfSets } from "../store/selectors";
+import { getNumberOfSets, getSelectedTrainingDay } from "../store/selectors";
 import { SafeAreaView } from "../components/SafeAreaView/SafeAreaView";
 import { textFieldBackgroundColor } from "./theme/colors";
 import { PreviousTraining } from "../components/PreviousTraining/PreviousTraining";
 
-const generateExerciseObjectFromArray = (data: PlainExerciseData[]) => data.reduce((obj, currentSet, index) => ({ ...obj, [index]: currentSet }), {});
+const useInitialExerciseDataState = () => {
+  const trainingDay = useAppSelector(getSelectedTrainingDay);
+  const [doneSetsThisExercise, setDoneSetsThisExercise] = useState<Array<(PlainExerciseData | undefined)[]>>(
+    trainingDay?.exercises.map((exercise) => Array(parseInt(exercise.sets)).fill(undefined)) ?? [],
+  );
+  return [doneSetsThisExercise, setDoneSetsThisExercise] as const;
+};
 
 export default function Train() {
   const { showPreviousExercise, hasNextExercise, previousExerciseName, nextExerciseName, currentExerciseIndex, selectedTrainingName } = useTrainingProps();
-  const [doneSetsThisExercise, setDoneSetsThisExercise] = useState<PlainExerciseData[]>([]);
   const [showModal, setShowAlert] = useState(false);
+  const [doneSetsThisExercise, setDoneSetsThisExercise] = useInitialExerciseDataState();
   const [showEdit, setShowEdit] = useState(false);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const numberOfSets = useAppSelector(getNumberOfSets);
 
   const isDone = useMemo(() => {
+    //TODO: check if all exercises are done and make a warning if any is not done (with name of the exercise)
     return numberOfSets === Object.values(doneSetsThisExercise).length;
   }, [doneSetsThisExercise, numberOfSets]);
 
@@ -38,8 +45,7 @@ export default function Train() {
   }, [dispatch, currentExerciseIndex]);
 
   const handleSaveTrainingData = useCallback(() => {
-    console.log(generateExerciseObjectFromArray(doneSetsThisExercise));
-    dispatch(addExerciseDataEntry(generateExerciseObjectFromArray(doneSetsThisExercise)));
+    dispatch(addSetDataToTrainingDay(doneSetsThisExercise));
   }, [dispatch, doneSetsThisExercise]);
 
   const handleReset = useCallback(() => {
@@ -48,7 +54,7 @@ export default function Train() {
     dispatch(setSetIndex(0));
     setDoneSetsThisExercise([]);
     navigate(Routes.HOME);
-  }, [dispatch, navigate]);
+  }, [dispatch, navigate, setDoneSetsThisExercise]);
 
   const handleDone = useCallback(() => {
     handleSaveTrainingData();
@@ -61,13 +67,12 @@ export default function Train() {
     setShowAlert(false);
     handleDone();
   }, [handleDone]);
+
   const handleNavigateToNextExercise = useCallback(() => {
-    handleSaveTrainingData();
-    setDoneSetsThisExercise([]);
     dispatch(setExerciseIndex(currentExerciseIndex + 1));
     dispatch(setSetIndex(0));
     setShowAlert(false);
-  }, [currentExerciseIndex, dispatch, handleSaveTrainingData]);
+  }, [currentExerciseIndex, dispatch]);
 
   const handleNextOrDone = useCallback(() => {
     if (!hasNextExercise) {
@@ -80,7 +85,6 @@ export default function Train() {
       handleNavigateToNextExercise();
     }
   }, [hasNextExercise, isDone, handleDone, handleNavigateToNextExercise]);
-
   const handleCloseButton = useCallback(() => {
     if (!isDone) {
       setShowAlert(true);
@@ -91,16 +95,11 @@ export default function Train() {
   }, [handleReset, handleSaveTrainingData, isDone]);
 
   const handleSetDone = useCallback(
-    (data: PlainExerciseData, index: number) => {
-      const newExercises = [...doneSetsThisExercise];
-      if (index >= doneSetsThisExercise.length) {
-        newExercises.push(data);
-      } else {
-        newExercises.splice(index, 1, data);
-      }
-      setDoneSetsThisExercise(newExercises);
+    (data: PlainExerciseData, setIndex: number) => {
+      doneSetsThisExercise[currentExerciseIndex][setIndex] = data;
+      setDoneSetsThisExercise(doneSetsThisExercise);
     },
-    [doneSetsThisExercise],
+    [currentExerciseIndex, doneSetsThisExercise, setDoneSetsThisExercise],
   );
 
   return (
@@ -110,8 +109,8 @@ export default function Train() {
       </View>
       <ScrollView contentContainerStyle={trainStyles.wrapper}>
         <ExerciseMetaDataDisplay showEdit={showEdit} setShowEdit={setShowEdit} />
-        <View style={{ flex: 1 }}>{!showEdit && <Inputs onDoneExercise={setDoneSetsThisExercise} onSetDone={handleSetDone} />}</View>
-        <PreviousTraining />
+        <View style={{ flex: 1 }}>{!showEdit && <Inputs setData={doneSetsThisExercise[currentExerciseIndex]} onSetDone={handleSetDone} />}</View>
+        {!showEdit && <PreviousTraining />}
         <AlertModal
           title="Your training is not complete"
           content="Are you sure to quit this training early? The progress so far will be saved."

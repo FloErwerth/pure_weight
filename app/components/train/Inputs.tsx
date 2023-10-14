@@ -11,16 +11,33 @@ import { borderRadius } from "../../theme/border";
 import { textFieldBackgroundColor } from "../../theme/colors";
 
 interface InputsProps {
-  onDoneExercise: (data: PlainExerciseData[]) => void;
   onSetDone: (data: PlainExerciseData, index: number) => void;
+  setData: (PlainExerciseData | undefined)[];
 }
 
-export const Inputs = ({ onDoneExercise, onSetDone }: InputsProps) => {
-  const currentSetIndex = useAppSelector(getSetIndex);
-  const selectedTrainingName = useAppSelector(getSelectedTrainingName);
+const useGeneratedSetData = (setData: (PlainExerciseData | undefined)[]) => {
   const exerciseMetaData = useAppSelector(getExerciseMetaDataRaw);
   const numberOfSets = useAppSelector(getNumberOfSets);
-  const [sets, setSets] = useState(Array(numberOfSets).fill({ weight: exerciseMetaData.weight, reps: exerciseMetaData.reps, note: "" }));
+
+  const [sets, setSets] = useState<(PlainExerciseData | undefined)[]>([]);
+
+  useEffect(() => {
+    const prefilledArray = Array(numberOfSets).fill({ weight: exerciseMetaData?.weight, reps: exerciseMetaData?.reps, note: "" });
+    setData.forEach((data, index) => {
+      if (setData[index] !== undefined) {
+        prefilledArray[index] = data;
+      }
+    });
+    setSets(prefilledArray);
+  }, [exerciseMetaData, numberOfSets, setData]);
+
+  return [sets, setSets] as const;
+};
+
+export const Inputs = ({ onSetDone, setData }: InputsProps) => {
+  const currentSetIndex = useAppSelector(getSetIndex);
+  const selectedTrainingName = useAppSelector(getSelectedTrainingName);
+  const [sets, setSets] = useGeneratedSetData(setData);
   const dispatch = useAppDispatch();
 
   const handleSetDone = useCallback(
@@ -32,11 +49,8 @@ export const Inputs = ({ onDoneExercise, onSetDone }: InputsProps) => {
         setSets(newSets);
         dispatch(setSetIndex(currentSetIndex + 1));
       }
-      if (currentSetIndex === numberOfSets - 1) {
-        onDoneExercise(sets);
-      }
     },
-    [currentSetIndex, dispatch, numberOfSets, onDoneExercise, onSetDone, sets],
+    [currentSetIndex, dispatch, onSetDone, setSets, sets],
   );
 
   useEffect(() => {
@@ -47,15 +61,18 @@ export const Inputs = ({ onDoneExercise, onSetDone }: InputsProps) => {
     <View style={{ flex: 1 }}>
       <ThemedView style={{ paddingTop: 15, paddingBottom: 10, alignSelf: "stretch", borderRadius, backgroundColor: textFieldBackgroundColor }}>
         <TrainingHeader />
-        {sets.map((exerciseMetaData, index) => (
-          <SetInputRow
-            onSetDone={(plainExerciseData) => handleSetDone(plainExerciseData, index)}
-            setIndex={index + 1}
-            isActiveSet={index === currentSetIndex}
-            key={`${index}-${selectedTrainingName}`}
-            metaData={exerciseMetaData}
-          />
-        ))}
+        {sets.map((exerciseMetaData, index) => {
+          return (
+            <SetInputRow
+              data={exerciseMetaData}
+              hasData={Boolean(setData?.[index])}
+              onSetDone={(plainExerciseData) => handleSetDone(plainExerciseData, index)}
+              setIndex={index + 1}
+              isActiveSet={index === currentSetIndex}
+              key={`${index}-${selectedTrainingName}`}
+            />
+          );
+        })}
       </ThemedView>
     </View>
   );

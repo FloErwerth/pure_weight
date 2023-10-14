@@ -10,7 +10,7 @@ export type PlainExerciseData = {
 export type DoneExerciseData = {
   [entry: string]: ExerciseSets;
 };
-export type ExerciseSets = { [set: string]: PlainExerciseData };
+export type ExerciseSets = Partial<{ [set: string]: PlainExerciseData }>;
 
 export type ExerciseMetaData = {
   name: string;

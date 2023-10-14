@@ -5,7 +5,7 @@ import { useNavigate } from "../../utils/navigate";
 import { Routes } from "../../types/routes";
 import { useCallback, useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../store";
-import { getTrainingIndex } from "../../store/selectors";
+import { getExerciseIndex, getTrainingIndex } from "../../store/selectors";
 import { PlainExerciseData } from "../../store/types";
 import { EditNoteModal } from "./components/EditNoteModal";
 import { HStack } from "../HStack/HStack";
@@ -19,24 +19,26 @@ import { setSetIndex } from "../../store/reducer";
 
 interface SetInputRowProps {
   setIndex: number;
-  metaData: PlainExerciseData;
   isActiveSet: boolean;
   onSetDone?: (plainExerciseData: PlainExerciseData) => void;
+  hasData: boolean;
+  data: PlainExerciseData | undefined;
 }
-export const SetInputRow = ({ onSetDone, setIndex, metaData, isActiveSet }: SetInputRowProps) => {
+export const SetInputRow = ({ onSetDone, setIndex, isActiveSet, hasData, data }: SetInputRowProps) => {
   const navigate = useNavigate();
   const trainingIndex = useAppSelector(getTrainingIndex);
+  const exerciseIndex = useAppSelector(getExerciseIndex);
   const [showModal, setShowModal] = useState(false);
-  const [note, setNote] = useState(metaData.note);
-  const [weight, setWeight] = useState(metaData.weight);
-  const [reps, setReps] = useState(metaData.reps);
+  const [note, setNote] = useState(data?.note ?? "");
+  const [weight, setWeight] = useState(data?.weight);
+  const [reps, setReps] = useState(data?.reps);
   const dispatch = useAppDispatch();
-  const [isPrestine, setIsPrestine] = useState(true);
 
   useEffect(() => {
-    setWeight(metaData?.weight);
-    setReps(metaData?.reps);
-  }, [metaData]);
+    setNote(data?.note ?? "");
+    setWeight(data?.weight);
+    setReps(data?.reps);
+  }, [data, exerciseIndex]);
 
   const handleConfirmNoteModal = useCallback(
     (newNote?: string) => {
@@ -53,7 +55,6 @@ export const SetInputRow = ({ onSetDone, setIndex, metaData, isActiveSet }: SetI
   const handleSetDone = useCallback(() => {
     if (isActiveSet) {
       Keyboard.dismiss();
-      setIsPrestine(false);
       if (weight && reps) {
         onSetDone?.({ weight, reps, note });
       }
@@ -82,7 +83,7 @@ export const SetInputRow = ({ onSetDone, setIndex, metaData, isActiveSet }: SetI
           <ThemedTextInput
             returnKeyType="done"
             onFocus={handleOnFocus}
-            style={{ padding: 10, borderRadius, fontSize: 16, color: isPrestine && !isActiveSet ? secondaryColor : mainColor }}
+            style={{ padding: 10, borderRadius, fontSize: 16, color: !hasData && !isActiveSet ? secondaryColor : mainColor }}
             value={weight}
             onChangeText={setWeight}
             textAlign="center"
@@ -93,7 +94,7 @@ export const SetInputRow = ({ onSetDone, setIndex, metaData, isActiveSet }: SetI
           <ThemedTextInput
             returnKeyType="done"
             onFocus={handleOnFocus}
-            style={{ padding: 10, borderRadius, fontSize: 16, color: isPrestine && !isActiveSet ? secondaryColor : mainColor }}
+            style={{ padding: 10, borderRadius, fontSize: 16, color: !hasData && !isActiveSet ? secondaryColor : mainColor }}
             value={reps}
             onChangeText={setReps}
             textAlign="center"
@@ -103,14 +104,14 @@ export const SetInputRow = ({ onSetDone, setIndex, metaData, isActiveSet }: SetI
         <Center style={{ flex: 1, height: 50 }}>
           <Button
             title={note ? "Show note" : "Add note"}
-            style={{ button: { borderRadius, padding: 10 }, text: { color: isPrestine && !isActiveSet ? secondaryColor : mainColor, fontSize: 16 } }}
+            style={{ button: { borderRadius, padding: 10 }, text: { color: !hasData && !isActiveSet ? secondaryColor : mainColor, fontSize: 16 } }}
             theme="ghost"
             onPress={handleShowModal}
           />
         </Center>
         <Center style={{ flex: 0.6, height: 50 }}>
           <Button style={{ button: { width: 40, padding: 7, borderRadius, backgroundColor: isActiveSet ? "#222" : textFieldBackgroundColor } }} onPress={handleSetDone}>
-            <MaterialCommunityIcons size={24} style={{ width: 24, color: isActiveSet ? mainColor : isPrestine ? mainDisabledColor : "green" }} name="check-bold" />
+            <MaterialCommunityIcons size={24} style={{ width: 24, color: isActiveSet ? mainColor : !hasData ? mainDisabledColor : "green" }} name="check-bold" />
           </Button>
           <EditNoteModal note={note} showModal={showModal} onDoneEdit={handleConfirmNoteModal} onCancel={() => setShowModal(false)} />
         </Center>

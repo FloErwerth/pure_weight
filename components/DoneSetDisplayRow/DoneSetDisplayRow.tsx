@@ -24,13 +24,19 @@ export const DoneSetDisplayRow = ({ setData: { weight, reps, note }, setNumber }
     }
     return false;
   }, [currentSetIndex, setNumber]);
+
   return (
     <HStack style={styles.wrapper}>
-      <Text style={{ flex: 0.55, textAlign: "center", color: highlight ? mainColor : secondaryColor, fontSize: 16 }}>{setNumber}</Text>
-      <Text style={{ flex: 0.55, textAlign: "center", color: highlight ? mainColor : secondaryColor, fontSize: 16 }}>{weight}</Text>
-      <Text style={{ flex: 0.55, textAlign: "center", color: highlight ? mainColor : secondaryColor, fontSize: 16 }}>{reps}</Text>
+      <Text style={{ flex: 0.45, textAlign: "center", color: highlight ? mainColor : secondaryColor, fontSize: 16 }}>{setNumber ?? ""}</Text>
+      <Text style={{ flex: 0.55, textAlign: "center", color: highlight ? mainColor : secondaryColor, fontSize: 16 }}>{weight ?? ""}</Text>
+      <Text style={{ flex: 0.55, textAlign: "center", color: highlight ? mainColor : secondaryColor, fontSize: 16 }}>{reps ?? ""}</Text>
       {note ? (
-        <Button theme="ghost" title="show note" onPress={() => setShowNote(true)} style={{ button: { flex: 1 }, text: { color: highlight ? mainColor : secondaryColor, fontSize: 16 } }} />
+        <Button
+          theme="ghost"
+          title={note === "notes" ? "notes" : "show note"}
+          onPress={() => setShowNote(true)}
+          style={{ button: { flex: 1 }, text: { color: highlight ? mainColor : secondaryColor, fontSize: 16 } }}
+        />
       ) : (
         <View style={{ flex: 1 }} />
       )}
