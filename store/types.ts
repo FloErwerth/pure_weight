@@ -26,4 +26,5 @@ export type AppState = {
   editedExerciseIndex?: number;
   setIndex: number;
   exerciseIndex: number;
+  isFirstTimeRendered: boolean;
 };

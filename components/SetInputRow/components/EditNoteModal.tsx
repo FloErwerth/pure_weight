@@ -33,20 +33,19 @@ export const EditNoteModal = ({ showModal, note, onDoneEdit, onCancel }: EditNot
   }, [showModal]);
 
   return (
-    <Modal isVisible={showModal}>
-      <VStack style={{ backgroundColor, borderRadius, gap: 15, padding: 10 }}>
+    <Modal isVisible={showModal} onRequestClose={onCancel}>
+      <VStack style={{ backgroundColor, borderRadius, gap: 15 }}>
         <ThemedTextInput
-          style={{ borderWidth: 1, padding: 10, borderColor: "black", borderRadius }}
-          numberOfLines={5}
+          style={{ height: 140, padding: 10, borderRadius }}
+          multiline={true}
           ref={inputRef}
           onChangeText={handleSetNote}
           value={internalNote}
           placeholderTextColor={secondaryColor}
           placeholder="Add your note here..."
         />
-        <HStack style={{ gap: 20 }}>
-          <Button style={{ button: { flex: 1 } }} theme="secondary" title={"cancel"} onPress={onCancel} />
-          <Button style={{ button: { flex: 1 } }} title="done" onPress={handlePressDone} />
+        <HStack style={{ justifyContent: "flex-end" }}>
+          <Button style={{ button: { width: 100 } }} title="done" onPress={handlePressDone} />
         </HStack>
       </VStack>
     </Modal>

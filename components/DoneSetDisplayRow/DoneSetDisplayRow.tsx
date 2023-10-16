@@ -6,7 +6,7 @@ import { useMemo, useState } from "react";
 import { Modal } from "../Modal/Modal";
 import { styles } from "./styles";
 import { borderRadius } from "../../app/theme/border";
-import { mainColor, secondaryColor } from "../../app/theme/colors";
+import { componentBackgroundColor, mainColor, secondaryColor } from "../../app/theme/colors";
 import { Text } from "../Text/Text";
 import { useAppSelector } from "../../store";
 import { getSetIndex } from "../../store/selectors";
@@ -41,8 +41,8 @@ export const DoneSetDisplayRow = ({ setData: { weight, reps, note }, setNumber }
         <View style={{ flex: 1 }} />
       )}
       <Modal isVisible={showNote} onRequestClose={() => setShowNote(false)}>
-        <View style={{ backgroundColor: "white", padding: 10, borderRadius }}>
-          <Text>{note}</Text>
+        <View style={{ backgroundColor: componentBackgroundColor, padding: 10, borderRadius }}>
+          <Text style={{ minHeight: 140, color: mainColor }}>{note}</Text>
         </View>
       </Modal>
     </HStack>

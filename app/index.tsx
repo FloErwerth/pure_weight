@@ -4,7 +4,7 @@ import { PressableRowWithIconSlots } from "../components/PressableRowWithIconSlo
 import { useNavigate } from "../utils/navigate";
 import { Routes } from "../types/routes";
 import { useAppDispatch, useAppSelector } from "../store";
-import { getSavedTrainings } from "../store/selectors";
+import { getIsFirstTimeRendered, getSavedTrainings } from "../store/selectors";
 import { removeTrainingDay, setSelectedDay } from "../store/reducer";
 import { styles } from "./styles";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -18,6 +18,7 @@ export default function Main() {
   const navigate = useNavigate();
 
   const [Alert, setAlert] = useState<ReactNode | null>(null);
+  const isFirstTimeRendered = useAppSelector(getIsFirstTimeRendered);
 
   const dispatch = useAppDispatch();
   const savedTrainings = useAppSelector(getSavedTrainings);
@@ -39,7 +40,13 @@ export default function Main() {
     handleNavigateToCreateTraining();
   }, [dispatch, handleNavigateToCreateTraining]);
 
-  const handleDelete = useCallback((index: number) => dispatch(removeTrainingDay(index)), [dispatch]);
+  const handleDelete = useCallback(
+    (index: number) => {
+      dispatch(removeTrainingDay(index));
+      setAlert(undefined);
+    },
+    [dispatch],
+  );
   const handleShowAlert = useCallback(
     (index: number) => setAlert(<AlertModal onCancel={() => setAlert(null)} onConfirm={() => handleDelete(index)} title="Delete training?" content="This action can't be undone" isVisible={true} />),
     [handleDelete],
@@ -51,17 +58,16 @@ export default function Main() {
     },
     [dispatch, handleNavigateToCreateTraining],
   );
+
   return (
     <SafeAreaView style={styles.view}>
       <View style={styles.center}>
         <View style={styles.stack}>
           <HStack style={styles.titleWrapper}>
             <Text style={styles.title}>Workouts</Text>
-            <View>
-              <Button theme="ghost" onPress={handlePress} style={{ button: styles.button }}>
-                <MaterialCommunityIcons color={mainColor} size={40} name="plus" />
-              </Button>
-            </View>
+            <Button theme="ghost" onPress={handlePress} style={{ button: styles.button }}>
+              <MaterialCommunityIcons color={mainColor} size={40} name="plus" />
+            </Button>
           </HStack>
           <ScrollView style={styles.view}>
             <View style={styles.savedTrainings}>

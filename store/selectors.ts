@@ -27,6 +27,7 @@ export const getEditedExericseIndex = createSelector([getSelectedTrainingDay, ge
 export const getExerciseNames = createSelector([getSelectedTrainingDay], (day) => {
   return day?.exercises.map((exercise) => exercise.name);
 });
+export const getIsFirstTimeRendered = createSelector([getState], (state) => state.isFirstTimeRendered);
 export const getSelectedTrainingName = createSelector([getSelectedTrainingDay], (day) => day?.name);
 export const getSetIndex = createSelector([getState], (state) => state.setIndex ?? 0);
 export const getExerciseIndex = createSelector([getState], (state) => state.exerciseIndex);

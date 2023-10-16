@@ -15,8 +15,9 @@ export const store = configureStore({
     setIndex: 0,
     exerciseIndex: 0,
     trainingDayIndex: 0,
+    isFirstTimeRendered: true,
     editedExerciseIndex: undefined,
-    trainingDays: [{ name: "Brust 1", exercises: [{ name: "Bankdrücken", weight: "50", reps: "5", pause: "2.5", sets: "5", doneExerciseEntries: {} }] }],
+    trainingDays: [],
   },
 });
 export const persistor = persistStore(store);

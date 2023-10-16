@@ -1,5 +1,5 @@
 import { ReactNativeModal } from "react-native-modal";
-import { PropsWithChildren, useEffect } from "react";
+import React, { PropsWithChildren, ReactNode, useEffect } from "react";
 import { LayoutAnimation, View } from "react-native";
 import { Button } from "../Button/Button";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -12,7 +12,9 @@ import { HStack } from "../HStack/HStack";
 interface ModalProps extends PropsWithChildren {
   isVisible: boolean;
   onRequestClose?: () => void;
+  customBackdrop?: ReactNode;
   title?: string;
+  backgroundOpacity?: number;
 }
 
 const Backdrop = () => {
@@ -23,11 +25,11 @@ const Backdrop = () => {
   return <View style={{ flex: 1, backgroundColor: "black" }} />;
 };
 
-export const Modal = ({ isVisible, children, onRequestClose, title }: ModalProps) => {
+export const Modal = ({ backgroundOpacity, isVisible, children, onRequestClose, title, customBackdrop }: ModalProps) => {
   return (
     <ReactNativeModal
-      backdropOpacity={0.9}
-      customBackdrop={<Backdrop />}
+      backdropOpacity={backgroundOpacity ?? 0.9}
+      customBackdrop={customBackdrop ?? <Backdrop />}
       animationIn="fadeIn"
       animationOut="fadeOut"
       backdropTransitionInTiming={0}
@@ -35,7 +37,7 @@ export const Modal = ({ isVisible, children, onRequestClose, title }: ModalProps
       isVisible={isVisible}
     >
       <HStack style={{ justifyContent: "space-between", alignItems: "flex-end" }}>
-        {title && <Text style={{ color: mainColor, alignSelf: "center", fontSize: 20, padding: 0, margin: 0 }}>{title}</Text>}
+        <View>{title && <Text style={{ color: mainColor, alignSelf: "center", fontSize: 20, padding: 0, margin: 0 }}>{title}</Text>}</View>
         {onRequestClose && (
           <Button onPress={() => onRequestClose()} style={{ button: { padding: 10 } }} theme="ghost">
             <MaterialCommunityIcons name="close" color={mainColor} size={24} />
