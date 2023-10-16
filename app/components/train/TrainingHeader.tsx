@@ -1,4 +1,4 @@
-import { trainStyles } from "../../trainStyles";
+import { trainStyles } from "../../train/trainStyles";
 import { View } from "react-native";
 import { HStack } from "../../../components/HStack/HStack";
 import { Text } from "../../../components/Text/Text";

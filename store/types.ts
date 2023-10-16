@@ -1,3 +1,6 @@
+import { IsoDate } from "../types/date";
+import { ChartType } from "../app/progress/chart/components/ExerciseChart";
+
 export type TrainingDay = {
   name: string;
   exercises: ({ doneExerciseEntries: DoneExerciseData } & ExerciseMetaData)[];
@@ -8,7 +11,7 @@ export type PlainExerciseData = {
   note?: string;
 };
 export type DoneExerciseData = {
-  [entry: string]: ExerciseSets;
+  [date: IsoDate]: ExerciseSets;
 };
 export type ExerciseSets = Partial<{ [set: string]: PlainExerciseData }>;
 
@@ -27,4 +30,5 @@ export type AppState = {
   setIndex: number;
   exerciseIndex: number;
   isFirstTimeRendered: boolean;
+  chartType: ChartType;
 };

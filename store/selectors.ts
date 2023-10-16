@@ -1,5 +1,5 @@
 import { createSelector } from "@reduxjs/toolkit";
-import { AppState, ExerciseMetaData } from "./types";
+import { AppState, ExerciseMetaData, TrainingDay } from "./types";
 
 export const getState = (state: AppState) => state;
 export const getSavedTrainings = createSelector([getState], (state) => Array.from(state.trainingDays.values()).map((day) => day));
@@ -43,3 +43,22 @@ export const getExerciseMetaData = createSelector([getSelectedTrainingDay, getEx
 
 export const getExerciseMetaDataRaw = createSelector([getExerciseMetaData], (metaData) => metaData as ExerciseMetaData);
 export const getNumberOfSets = createSelector([getExerciseMetaDataRaw], (exerciseMetaDataRaw) => parseFloat(exerciseMetaDataRaw.sets));
+export const getTrainingDayData = createSelector([getState], (state) => {
+  return state.trainingDays.reduce((days, day) => {
+    const exerciseEntries = day.exercises.filter((exercise) => Object.values(exercise.doneExerciseEntries).length > 1);
+    if (exerciseEntries.length > 0) {
+      return [...days, { name: day.name, exercises: exerciseEntries }];
+    }
+    return days;
+  }, [] as TrainingDay[]);
+});
+
+export const getChartType = createSelector([getState], (state) => state.chartType);
+
+export const getSelectedTrainingDayData = createSelector([getTrainingDayData, getTrainingIndex], (data, index) => {
+  if (index === undefined) {
+    return undefined;
+  }
+
+  return data[index];
+});

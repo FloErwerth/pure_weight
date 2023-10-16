@@ -36,8 +36,8 @@ export const Modal = ({ backgroundOpacity, isVisible, children, onRequestClose, 
       backdropTransitionOutTiming={0}
       isVisible={isVisible}
     >
-      <HStack style={{ justifyContent: "space-between", alignItems: "flex-end" }}>
-        <View>{title && <Text style={{ color: mainColor, alignSelf: "center", fontSize: 20, padding: 0, margin: 0 }}>{title}</Text>}</View>
+      <HStack style={{ justifyContent: "space-between", alignItems: "center" }}>
+        <View>{title && <Text style={{ color: mainColor, fontSize: 20, paddingLeft: 10, padding: 0, margin: 0 }}>{title}</Text>}</View>
         {onRequestClose && (
           <Button onPress={() => onRequestClose()} style={{ button: { padding: 10 } }} theme="ghost">
             <MaterialCommunityIcons name="close" color={mainColor} size={24} />

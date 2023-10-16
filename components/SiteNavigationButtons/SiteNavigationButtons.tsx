@@ -7,7 +7,7 @@ import { Button } from "../Button/Button";
 import { mainColor, mainDisabledColor } from "../../app/theme/colors";
 
 interface SiteNavigationButtonsProps {
-  handleBack: () => void;
+  handleBack?: () => void;
   handleConfirm?: () => void;
   title?: string;
   titleFontSize?: number;
@@ -19,10 +19,16 @@ export const SiteNavigationButtons = ({ handleBack, title, titleFontSize = 40, h
   return (
     <HStack style={styles.headerWrapper}>
       <HStack style={styles.titleWrapper}>
-        <Button theme="ghost" disabled={disabled} onPress={handleBack}>
-          <MaterialCommunityIcons color={disabled ? mainDisabledColor : mainColor} size={28} name="arrow-left" />
-        </Button>
-        <Text style={titleStyles}>{title}</Text>
+        <View>
+          {handleBack && (
+            <Button theme="ghost" disabled={disabled} onPress={handleBack}>
+              <MaterialCommunityIcons color={disabled ? mainDisabledColor : mainColor} size={28} name="arrow-left" />
+            </Button>
+          )}
+        </View>
+        <Text numberOfLines={1} style={titleStyles}>
+          {title}
+        </Text>
       </HStack>
       <View>
         {handleConfirm && (

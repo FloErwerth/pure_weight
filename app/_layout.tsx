@@ -5,6 +5,7 @@ import { PersistGate } from "redux-persist/integration/react";
 import { Provider } from "react-redux";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { mainColor, secondaryColor, textFieldBackgroundColor } from "./theme/colors";
+import ProgressIcon from "../media/icons/ProgressIcon.svg";
 
 export default function index() {
   const App = () => {
@@ -21,7 +22,7 @@ export default function index() {
                 tabBarActiveTintColor: mainColor,
                 tabBarInactiveTintColor: secondaryColor,
               }}
-              name="index"
+              name="index/index"
             />
             <Tabs.Screen
               options={{
@@ -34,7 +35,7 @@ export default function index() {
               options={{
                 headerShown: false,
                 title: "Progress",
-                tabBarIcon: ({ focused }) => <MaterialCommunityIcons name="chart-bell-curve-cumulative" size={16} color={focused ? mainColor : secondaryColor} />,
+                tabBarIcon: ({ focused }) => <ProgressIcon width={16} height={16} fill={focused ? mainColor : secondaryColor} />,
                 tabBarLabelStyle: { fontSize: 13 },
                 tabBarActiveTintColor: mainColor,
                 tabBarInactiveTintColor: secondaryColor,
@@ -50,9 +51,9 @@ export default function index() {
                 tabBarActiveTintColor: mainColor,
                 tabBarInactiveTintColor: secondaryColor,
               }}
-              name="settings"
+              name="settings/index"
             />
-            <Tabs.Screen options={{ headerShown: false, href: null }} name="train" />
+            <Tabs.Screen options={{ headerShown: false, href: null }} name="train/index" />
           </Tabs>
         </PersistGate>
       </Provider>

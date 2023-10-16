@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
-import { mainColor } from "./theme/colors";
-import { borderRadius } from "./theme/border";
+import { mainColor } from "../theme/colors";
+import { borderRadius } from "../theme/border";
 
 export const styles = StyleSheet.create({
   stack: {

@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import { mainColor } from "./theme/colors";
+import { mainColor } from "../theme/colors";
 
 export const trainStyles = StyleSheet.create({
   buttons: { marginTop: 15, justifyContent: "space-around", gap: 20, marginLeft: 10, marginRight: 10, alignSelf: "stretch" },

@@ -1,22 +1,22 @@
-import { useAppDispatch, useAppSelector } from "../store";
+import { useAppDispatch, useAppSelector } from "../../store";
 import { useCallback, useMemo, useState } from "react";
 import { trainStyles } from "./trainStyles";
-import { PlainExerciseData } from "../store/types";
-import { addSetDataToTrainingDay, setExerciseIndex, setSelectedDay, setSetIndex } from "../store/reducer";
-import { AlertModal } from "../components/AlertModal/AlertModal";
-import { useTrainingProps } from "../hooks/training/useTrainingProps";
-import { useNavigate } from "../utils/navigate";
-import { Routes } from "../types/routes";
-import { SiteNavigationButtons } from "../components/SiteNavigationButtons/SiteNavigationButtons";
-import { ExerciseMetaDataDisplay } from "./components/train/ExerciseMetaDataDisplay";
+import { PlainExerciseData } from "../../store/types";
+import { addSetDataToTrainingDay, setExerciseIndex, setSelectedDay, setSetIndex } from "../../store/reducer";
+import { AlertModal } from "../../components/AlertModal/AlertModal";
+import { useTrainingProps } from "../../hooks/training/useTrainingProps";
+import { useNavigate } from "../../utils/navigate";
+import { Routes } from "../../types/routes";
+import { SiteNavigationButtons } from "../../components/SiteNavigationButtons/SiteNavigationButtons";
+import { ExerciseMetaDataDisplay } from "../components/train/ExerciseMetaDataDisplay";
 import { ScrollView, View } from "react-native";
-import { Inputs } from "./components/train/Inputs";
-import { Button } from "../components/Button/Button";
-import { HStack } from "../components/HStack/HStack";
-import { getNumberOfSets, getSelectedTrainingDay } from "../store/selectors";
-import { SafeAreaView } from "../components/SafeAreaView/SafeAreaView";
-import { textFieldBackgroundColor } from "./theme/colors";
-import { PreviousTraining } from "../components/PreviousTraining/PreviousTraining";
+import { Inputs } from "../components/train/Inputs";
+import { Button } from "../../components/Button/Button";
+import { HStack } from "../../components/HStack/HStack";
+import { getNumberOfSets, getSelectedTrainingDay } from "../../store/selectors";
+import { SafeAreaView } from "../../components/SafeAreaView/SafeAreaView";
+import { textFieldBackgroundColor } from "../theme/colors";
+import { PreviousTraining } from "../../components/PreviousTraining/PreviousTraining";
 
 const useInitialExerciseDataState = () => {
   const trainingDay = useAppSelector(getSelectedTrainingDay);
@@ -26,7 +26,7 @@ const useInitialExerciseDataState = () => {
   return [doneSetsThisExercise, setDoneSetsThisExercise] as const;
 };
 
-export default function Train() {
+export default function Index() {
   const { showPreviousExercise, hasNextExercise, previousExerciseName, nextExerciseName, currentExerciseIndex, selectedTrainingName } = useTrainingProps();
   const [showModal, setShowAlert] = useState(false);
   const [doneSetsThisExercise, setDoneSetsThisExercise] = useInitialExerciseDataState();
