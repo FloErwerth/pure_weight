@@ -7,12 +7,9 @@ import { useAppDispatch, useAppSelector } from "../store";
 import { getIsFirstTimeRendered, getSavedTrainings } from "../store/selectors";
 import { removeTrainingDay, setSelectedDay } from "../store/reducer";
 import { styles } from "./styles";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { AlertModal } from "../components/AlertModal/AlertModal";
-import { HStack } from "../components/HStack/HStack";
-import { Button } from "../components/Button/Button";
-import { mainColor } from "./theme/colors";
 import { SafeAreaView } from "../components/SafeAreaView/SafeAreaView";
+import { PageHeader } from "../components/PageHeader/PageHeader";
 
 export default function Main() {
   const navigate = useNavigate();
@@ -63,12 +60,7 @@ export default function Main() {
     <SafeAreaView style={styles.view}>
       <View style={styles.center}>
         <View style={styles.stack}>
-          <HStack style={styles.titleWrapper}>
-            <Text style={styles.title}>Workouts</Text>
-            <Button theme="ghost" onPress={handlePress} style={{ button: styles.button }}>
-              <MaterialCommunityIcons color={mainColor} size={40} name="plus" />
-            </Button>
-          </HStack>
+          <PageHeader title="Workouts" onPressIcon={handlePress} />
           <ScrollView style={styles.view}>
             <View style={styles.savedTrainings}>
               {savedTrainings.map((trainingDay, index) => (

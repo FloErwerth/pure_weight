@@ -16,25 +16,11 @@ export const styles = StyleSheet.create({
     fontSize: 24,
     color: mainColor,
   },
-  button: {
-    paddingTop: 10,
-  },
+
   view: {
     flex: 1,
     paddingBottom: 20,
     alignSelf: "stretch",
-  },
-  title: {
-    fontSize: 40,
-    fontWeight: "600",
-    color: mainColor,
-  },
-  titleWrapper: {
-    justifyContent: "space-between",
-    alignSelf: "stretch",
-    alignItems: "center",
-    paddingLeft: 20,
-    paddingRight: 20,
   },
   listContainer: {
     borderRadius,
