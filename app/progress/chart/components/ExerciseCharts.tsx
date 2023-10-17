@@ -115,6 +115,29 @@ export const ExerciseChart = ({ exercise }: ExerciseChartProps) => {
     [],
   );
 
+  const config = useMemo(
+    () => ({
+      backgroundGradientFrom: textFieldBackgroundColor,
+      backgroundGradientTo: textFieldBackgroundColor,
+      decimalPlaces: 0,
+      color: () => "#111",
+      labelColor: () => mainColor,
+      propsForDots: {
+        r: "3",
+      },
+      propsForLabels: {
+        fontSize: 12,
+      },
+    }),
+    [],
+  );
+
+  const getXLabel = useCallback((xValue: string) => {
+    return getUsDate(xValue as IsoDate);
+  }, []);
+
+  const width = useMemo(() => (numberEntries > 5 ? numberEntries * 80 : Dimensions.get("screen").width + 250 / (numberEntries * numberEntries * numberEntries)), [numberEntries]);
+
   return (
     <View ref={viewRef} style={{ backgroundColor: textFieldBackgroundColor, overflow: "hidden", padding: 10, paddingBottom: 0, borderRadius, margin: 10, gap: 10 }}>
       <VStack>
@@ -124,23 +147,11 @@ export const ExerciseChart = ({ exercise }: ExerciseChartProps) => {
       <ScrollView horizontal scrollEnabled={numberEntries > 5}>
         <LineChart
           data={data}
-          width={numberEntries > 5 ? numberEntries * 80 : Dimensions.get("screen").width + 250 / (numberEntries * numberEntries * numberEntries)}
+          width={width}
           height={Dimensions.get("screen").height * 0.33}
           renderDotContent={dotContent}
-          formatXLabel={(xValue) => getUsDate(xValue as IsoDate)}
-          chartConfig={{
-            backgroundGradientFrom: textFieldBackgroundColor,
-            backgroundGradientTo: textFieldBackgroundColor,
-            decimalPlaces: 0,
-            color: () => "#111",
-            labelColor: () => mainColor,
-            propsForDots: {
-              r: "3",
-            },
-            propsForLabels: {
-              fontSize: 12,
-            },
-          }}
+          formatXLabel={getXLabel}
+          chartConfig={config}
           style={{
             marginTop: 15,
             borderRadius: 16,

@@ -29,8 +29,8 @@ export default function Index() {
     const exerciseNames = trainingDayData?.exercises.map((exercise) => exercise.name);
     return (
       <ScrollView style={{ flex: 1 }} contentContainerStyle={{ alignItems: "center", gap: 20, padding: 10 }}>
-        {exerciseNames?.map(() => (
-          <VStack style={{ borderRadius, backgroundColor: textFieldBackgroundColor, padding: 10, gap: 10 }}>
+        {exerciseNames?.map((name) => (
+          <VStack key={`${name}-skeleton`} style={{ borderRadius, backgroundColor: textFieldBackgroundColor, padding: 10, gap: 10 }}>
             <Skeleton borderRadius={borderRadius} width={Dimensions.get("screen").width / 2 - 20} height={40} />
             <Skeleton borderRadius={borderRadius} width={Dimensions.get("screen").width - 40} height={Dimensions.get("screen").height * 0.33} />
             <Skeleton borderRadius={borderRadius} style={{ alignSelf: "center" }} width={Dimensions.get("screen").width - 100} height={40} />
