@@ -23,7 +23,7 @@ export default function Index() {
   return (
     <SafeAreaView>
       <SiteNavigationButtons handleBack={handleNavigateToProgress} title={trainingDayData?.name} />
-      <ScrollView>{trainingDayData?.exercises?.map((exercise) => <ExerciseChart exercise={exercise} />)}</ScrollView>
+      <ScrollView>{trainingDayData?.exercises?.map((exercise) => <ExerciseChart key={`${exercise.sets}${exercise.name}${exercise.weight}`} exercise={exercise} />)}</ScrollView>
     </SafeAreaView>
   );
 }

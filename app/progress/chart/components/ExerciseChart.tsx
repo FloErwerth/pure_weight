@@ -150,7 +150,7 @@ export const ExerciseChart = ({ exercise }: ExerciseChartProps) => {
         <Modal title="Select chart type" onRequestClose={() => setShowSelectionModal(false)} isVisible={showSelectionModal}>
           <VStack style={{ gap: 10 }}>
             {mappedChartProps.map(({ onPress, title, chartType }) => (
-              <Button onPress={onPress}>
+              <Button key={`${chartType}${title}`} onPress={onPress}>
                 <Text style={{ color: mainColor, fontSize: 20 }}>{title}</Text>
                 <ChartTypeDisplay chartType={chartType as ChartType} />
               </Button>

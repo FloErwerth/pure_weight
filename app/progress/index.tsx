@@ -37,7 +37,7 @@ export default function Index() {
       {data.length > 0 && (
         <View style={{ flex: 1, padding: 20, gap: 10 }}>
           {data.map(({ name }, index) => (
-            <PressableRowWithIconSlots onClick={() => selectTrainingDayToShow(index)}>
+            <PressableRowWithIconSlots key={`${name}${index}`} onClick={() => selectTrainingDayToShow(index)}>
               <Text style={styles.trainingDayName}>{name}</Text>
             </PressableRowWithIconSlots>
           ))}
