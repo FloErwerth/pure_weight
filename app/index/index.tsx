@@ -4,7 +4,7 @@ import { PressableRowWithIconSlots } from "../../components/PressableRowWithIcon
 import { useNavigate } from "../../utils/navigate";
 import { Routes } from "../../types/routes";
 import { useAppDispatch, useAppSelector } from "../../store";
-import { getIsFirstTimeRendered, getSavedTrainings } from "../../store/selectors";
+import { getSavedTrainings } from "../../store/selectors";
 import { removeTrainingDay, setSelectedDay } from "../../store/reducer";
 import { styles } from "./styles";
 import { AlertModal } from "../../components/AlertModal/AlertModal";
@@ -15,7 +15,6 @@ export default function Main() {
   const navigate = useNavigate();
 
   const [Alert, setAlert] = useState<ReactNode | null>(null);
-  const isFirstTimeRendered = useAppSelector(getIsFirstTimeRendered);
 
   const dispatch = useAppDispatch();
   const savedTrainings = useAppSelector(getSavedTrainings);
