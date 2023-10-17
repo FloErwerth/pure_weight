@@ -7,8 +7,9 @@
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "splash": {
+      "image": "./media/icons/Logo.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#333333"
     },
     "assetBundlePatterns": [
       "**/*"

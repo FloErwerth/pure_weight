@@ -16,7 +16,7 @@ export default function index() {
     return (
       <Provider store={store}>
         <PersistGate persistor={persistor}>
-          <Tabs screenOptions={{ tabBarStyle: { backgroundColor: textFieldBackgroundColor } }}>
+          <Tabs screenOptions={{ tabBarStyle: { backgroundColor: textFieldBackgroundColor, borderTopWidth: 0 } }}>
             <Tabs.Screen
               options={{
                 headerShown: false,

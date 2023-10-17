@@ -1,16 +1,23 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { storeReducer } from "./reducer";
 import { useSelector } from "react-redux";
-import storage from "redux-persist/lib/storage";
 import { persistReducer, persistStore } from "redux-persist";
+import { FLUSH, PAUSE, PERSIST, PURGE, REGISTER, REHYDRATE } from "redux-persist/es/constants";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const persistConfig = {
   key: "root",
-  storage,
+  storage: AsyncStorage,
 };
 const persistedReducer = persistReducer(persistConfig, storeReducer);
 export const store = configureStore({
   reducer: persistedReducer,
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+      },
+    }),
   preloadedState: {
     setIndex: 0,
     exerciseIndex: 0,
