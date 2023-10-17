@@ -12,6 +12,8 @@ import { VStack } from "../../../../components/VStack/VStack";
 import { Button } from "../../../../components/Button/Button";
 import { Modal } from "../../../../components/Modal/Modal";
 import { ChartTypeDisplay } from "./ChartTypeDisplay";
+import { useAppSelector } from "../../../../store";
+import { getSelectedTrainingDayData } from "../../../../store/selectors";
 
 interface ExerciseChartProps {
   exercise: { doneExerciseEntries: DoneExerciseData } & ExerciseMetaData;
@@ -51,6 +53,7 @@ const useExerciseData = (exerciseData: DoneExerciseData, chartType: ChartType) =
 
   const data = useMemo(() => {
     const data = Array.from(rawEntries.values()).map(([_, entry]) => entry);
+
     if (chartType === "AVG_REPS") {
       return getAveragePerDay(data, "reps");
     }
@@ -161,3 +164,15 @@ export const ExerciseChart = ({ exercise }: ExerciseChartProps) => {
     </View>
   );
 };
+
+export default function Charts() {
+  const trainingDayData = useAppSelector(getSelectedTrainingDayData);
+
+  return (
+    <ScrollView>
+      {trainingDayData?.exercises?.map((exercise) => {
+        return <ExerciseChart key={`${exercise.sets}${exercise.name}${exercise.weight}`} exercise={exercise} />;
+      })}
+    </ScrollView>
+  );
+}

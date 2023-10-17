@@ -1,5 +1,5 @@
 import { View } from "react-native";
-import { ChartType } from "./ExerciseChart";
+import { ChartType } from "./ExerciseCharts";
 import { useMemo } from "react";
 import { Text } from "../../../../components/Text/Text";
 import { secondaryColor } from "../../../theme/colors";

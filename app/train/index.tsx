@@ -65,8 +65,8 @@ export default function Index() {
 
   const handleNotDoneConfirm = useCallback(() => {
     setShowAlert(false);
-    handleDone();
-  }, [handleDone]);
+    handleReset();
+  }, [handleReset]);
 
   const handleNavigateToNextExercise = useCallback(() => {
     dispatch(setExerciseIndex(currentExerciseIndex + 1));
