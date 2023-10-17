@@ -22,13 +22,15 @@ const useGeneratedSetData = (setData: (PlainExerciseData | undefined)[]) => {
   const [sets, setSets] = useState<(PlainExerciseData | undefined)[]>([]);
 
   useEffect(() => {
-    const prefilledArray = Array(numberOfSets).fill({ weight: exerciseMetaData?.weight, reps: exerciseMetaData?.reps, note: "" });
-    setData.forEach((data, index) => {
-      if (setData[index] !== undefined) {
-        prefilledArray[index] = data;
-      }
-    });
-    setSets(prefilledArray);
+    if (numberOfSets) {
+      const prefilledArray = Array(numberOfSets).fill({ weight: exerciseMetaData?.weight, reps: exerciseMetaData?.reps, note: "" });
+      setData?.forEach((data, index) => {
+        if (setData[index] !== undefined) {
+          prefilledArray[index] = data;
+        }
+      });
+      setSets(prefilledArray);
+    }
   }, [exerciseMetaData, numberOfSets, setData]);
 
   return [sets, setSets] as const;

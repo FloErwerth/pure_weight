@@ -56,7 +56,7 @@ export default function index() {
               }}
               name="settings/index"
             />
-            <Tabs.Screen options={{ headerShown: false, href: null }} name="train/index" />
+            <Tabs.Screen options={{ tabBarStyle: { display: "none" }, headerShown: false, href: null }} name="train/index" />
           </Tabs>
         </PersistGate>
       </Provider>

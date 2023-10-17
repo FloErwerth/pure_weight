@@ -109,7 +109,7 @@ export const ExerciseChart = ({ exercise }: ExerciseChartProps) => {
 
         return { onPress, title: text, chartType: type };
       }),
-    [chartType],
+    [],
   );
 
   return (

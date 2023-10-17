@@ -42,7 +42,12 @@ export const getExerciseMetaData = createSelector([getSelectedTrainingDay, getEx
 });
 
 export const getExerciseMetaDataRaw = createSelector([getExerciseMetaData], (metaData) => metaData as ExerciseMetaData);
-export const getNumberOfSets = createSelector([getExerciseMetaDataRaw], (exerciseMetaDataRaw) => parseFloat(exerciseMetaDataRaw.sets));
+export const getNumberOfSets = createSelector([getExerciseMetaDataRaw], (exerciseMetaDataRaw) => {
+  if (exerciseMetaDataRaw?.sets) {
+    return parseFloat(exerciseMetaDataRaw.sets);
+  }
+  return undefined;
+});
 export const getTrainingDayData = createSelector([getState], (state) => {
   return state.trainingDays.reduce((days, day) => {
     const exerciseEntries = day.exercises.filter((exercise) => Object.values(exercise.doneExerciseEntries).length > 1);
@@ -52,8 +57,6 @@ export const getTrainingDayData = createSelector([getState], (state) => {
     return days;
   }, [] as TrainingDay[]);
 });
-
-export const getChartType = createSelector([getState], (state) => state.chartType);
 
 export const getSelectedTrainingDayData = createSelector([getTrainingDayData, getTrainingIndex], (data, index) => {
   if (index === undefined) {
