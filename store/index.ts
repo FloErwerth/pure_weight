@@ -14,7 +14,7 @@ export const store = configureStore({
   preloadedState: {
     setIndex: 0,
     exerciseIndex: 0,
-    trainingDayIndex: 0,
+    trainingDayIndex: undefined,
     isFirstTimeRendered: true,
     editedExerciseIndex: undefined,
     chartType: "CUMULATIVE",
