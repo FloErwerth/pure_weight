@@ -36,7 +36,7 @@ export default function Index() {
   const { t } = useTranslation();
   const [Alert, setAlert] = useState<ReactNode | null>(null);
   const editedDay = useAppSelector(getSelectedTrainingDay);
-  const title = useMemo(() => (editedDay ? t("edit_workout") : t("create_workout")), [editedDay]);
+  const title = useMemo(() => (editedDay ? t("edit_workout") : t("create_workout")), [editedDay, t]);
   const editedDayIndex = useAppSelector(getSelectedTrainingDayIndex);
   const [editedExerciseIndex, setEditedExerciseIndex] = useState<number | undefined>(undefined);
   const [workoutName, setWorkoutName] = useState(editedDay?.name);
