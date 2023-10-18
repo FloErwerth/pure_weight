@@ -7,5 +7,5 @@ interface CenterProps extends PropsWithChildren {
 }
 
 export function Center({ children, style }: CenterProps) {
-  return <View style={[styles.wrapper, style]}>{children}</View>;
+  return <View style={[styles.innerWrapper, style]}>{children}</View>;
 }

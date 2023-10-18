@@ -1,23 +1,32 @@
 import { ScrollView, Text, View } from "react-native";
-import { ReactNode, useCallback, useState } from "react";
+import { ReactNode, useCallback, useEffect, useState } from "react";
 import { PressableRowWithIconSlots } from "../../components/PressableRowWithIconSlots/PressableRowWithIconSlots";
 import { useNavigate } from "../../utils/navigate";
 import { Routes } from "../../types/routes";
 import { useAppDispatch, useAppSelector } from "../../store";
-import { getSavedTrainings } from "../../store/selectors";
+import { getLanguage, getSavedTrainings } from "../../store/selectors";
 import { removeTrainingDay, setMockState, setSelectedDay } from "../../store/reducer";
 import { styles } from "./styles";
 import { AlertModal } from "../../components/AlertModal/AlertModal";
 import { SafeAreaView } from "../../components/SafeAreaView/SafeAreaView";
 import { SiteNavigationButtons } from "../../components/SiteNavigationButtons/SiteNavigationButtons";
 import { Button } from "../../components/Button/Button";
+import { useTranslation } from "react-i18next";
+import * as Locale from "expo-localization";
 
 export default function Main() {
+  const language = useAppSelector(getLanguage);
+  const dispatch = useAppDispatch();
+  const { t, i18n } = useTranslation();
+
+  useEffect(() => {
+    i18n.changeLanguage(language ?? Locale.getLocales()[0].languageCode ?? "en");
+  }, []);
+
   const navigate = useNavigate();
 
   const [Alert, setAlert] = useState<ReactNode | null>(null);
 
-  const dispatch = useAppDispatch();
   const savedTrainings = useAppSelector(getSavedTrainings);
 
   const handleNavigateToCreateTraining = useCallback(() => {
@@ -60,7 +69,7 @@ export default function Main() {
     <SafeAreaView style={styles.view}>
       <View style={styles.center}>
         <View style={styles.stack}>
-          <SiteNavigationButtons title="Workouts" handleConfirmIcon={{ name: "plus", size: 40 }} handleConfirm={handlePress} />
+          <SiteNavigationButtons title={t("workouts")} handleConfirmIcon={{ name: "plus", size: 40 }} handleConfirm={handlePress} />
           <ScrollView style={styles.view}>
             <View style={styles.savedTrainings}>
               {savedTrainings.map((trainingDay, index) => (

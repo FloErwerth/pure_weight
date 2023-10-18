@@ -2,6 +2,7 @@ import { styles } from "./styles";
 import { Pressable, Text } from "react-native";
 import { useCallback, useMemo } from "react";
 import { mainColor, mainDisabledColor } from "../../app/theme/colors";
+import { useTranslation } from "react-i18next";
 
 interface AddExerciseProps {
   onPress?: () => void;
@@ -9,7 +10,8 @@ interface AddExerciseProps {
   disabled?: boolean;
 }
 export const AddExercise = ({ onPress, exerciseName, disabled = false }: AddExerciseProps) => {
-  const text = useMemo(() => exerciseName ?? "Add new exercise", [exerciseName]);
+  const { t } = useTranslation();
+  const text = useMemo(() => exerciseName ?? t("add_exercise"), [exerciseName, t]);
   const handlePress = useCallback(() => onPress?.(), [onPress]);
   const textStyles = useMemo(() => ({ ...styles.text, color: disabled ? mainDisabledColor : mainColor }), [disabled]);
 

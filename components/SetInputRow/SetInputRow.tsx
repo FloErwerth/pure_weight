@@ -16,6 +16,7 @@ import { borderRadius } from "../../app/theme/border";
 import { ThemedTextInput } from "../TextInput/ThemedTextInput";
 import { mainColor, mainDisabledColor, secondaryColor, textFieldBackgroundColor } from "../../app/theme/colors";
 import { setSetIndex } from "../../store/reducer";
+import { useTranslation } from "react-i18next";
 
 interface SetInputRowProps {
   setIndex: number;
@@ -33,7 +34,7 @@ export const SetInputRow = ({ onSetDone, setIndex, isActiveSet, hasData, data }:
   const [weight, setWeight] = useState(data?.weight);
   const [reps, setReps] = useState(data?.reps);
   const dispatch = useAppDispatch();
-
+  const { t } = useTranslation();
   useEffect(() => {
     setNote(data?.note ?? "");
     setWeight(data?.weight);
@@ -111,7 +112,7 @@ export const SetInputRow = ({ onSetDone, setIndex, isActiveSet, hasData, data }:
         </Center>
         <Center style={{ flex: 1, height: 50 }}>
           <Button
-            title={note ? "Show note" : "Add note"}
+            title={note ? t("training_input_show_note") : t("training_input_add_note")}
             style={{
               button: { borderRadius, padding: 10, backgroundColor: !isActiveSet ? "transparent" : textFieldBackgroundColor },
               text: { color: !hasData && !isActiveSet ? secondaryColor : mainColor, fontSize: 16 },

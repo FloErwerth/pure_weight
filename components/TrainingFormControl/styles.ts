@@ -11,7 +11,7 @@ export const styles = StyleSheet.create({
   helperStack: {
     flex: 1,
   },
-  wrapper: {
+  innerWrapper: {
     alignSelf: "stretch",
     paddingLeft: 10,
     borderRadius,

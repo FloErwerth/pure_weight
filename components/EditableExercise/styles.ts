@@ -5,14 +5,15 @@ import { borderRadius } from "../../app/theme/border";
 export type EditableExerciseTheme = "Inline" | "Default";
 const Themes = {
   Inline: {
-    wrapper: {
+    innerWrapper: {
       padding: 0,
       backgroundColor: componentBackgroundColor,
     },
   },
   Default: {
-    wrapper: {
+    innerWrapper: {
       padding: 16,
+      paddingBottom: 0,
       backgroundColor: componentBackgroundColor,
     },
   },
@@ -42,8 +43,8 @@ export const styles = (theme: EditableExerciseTheme = "Default") =>
     buttons: {
       gap: 18,
     },
-    wrapper: {
-      ...Themes[theme].wrapper,
+    innerWrapper: {
+      ...Themes[theme].innerWrapper,
       gap: 10,
       borderRadius,
       alignSelf: "stretch",

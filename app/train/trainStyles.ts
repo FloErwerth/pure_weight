@@ -19,7 +19,7 @@ export const trainStyles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  wrapper: {
+  innerWrapper: {
     paddingTop: 10,
     paddingBottom: 20,
     paddingLeft: 10,

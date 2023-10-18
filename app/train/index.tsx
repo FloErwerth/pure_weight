@@ -16,8 +16,10 @@ import { HStack } from "../../components/HStack/HStack";
 import { getNumberOfExercises, getSpecificNumberOfSets } from "../../store/selectors";
 import { SafeAreaView } from "../../components/SafeAreaView/SafeAreaView";
 import { PreviousTraining } from "../../components/PreviousTraining/PreviousTraining";
+import { useTranslation } from "react-i18next";
 
 export default function Index() {
+  const { t } = useTranslation();
   const numberOfExercises = useAppSelector(getNumberOfExercises);
   const { showPreviousExercise, hasNextExercise, previousExerciseName, nextExerciseName, currentExerciseIndex, selectedTrainingName } = useTrainingProps();
   const [showModal, setShowAlert] = useState(false);
@@ -109,17 +111,15 @@ export default function Index() {
       <View style={trainStyles.header}>
         <SiteNavigationButtons disabled={showEdit} handleBack={handleCloseButton} titleFontSize={30} title={selectedTrainingName} />
       </View>
-      <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={trainStyles.wrapper}>
+      <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={trainStyles.innerWrapper}>
         <ExerciseMetaDataDisplay showEdit={showEdit} setShowEdit={setShowEdit} />
         <View style={{ flex: 1 }}>{!showEdit && <Inputs setData={doneSetsThisExercise[currentExerciseIndex] ?? []} onSetDone={handleSetDone} />}</View>
         {!showEdit && <PreviousTraining />}
-        {showModal && (
-          <AlertModal title="Quit training early?" content="The progress so far will be saved." isVisible={showModal} onConfirm={handleNotDoneConfirm} onCancel={handleCloseAlert}></AlertModal>
-        )}
+        {showModal && <AlertModal title={t("alert_quit_title")} content={t("alert_quit_message")} isVisible={showModal} onConfirm={handleNotDoneConfirm} onCancel={handleCloseAlert}></AlertModal>}
       </ScrollView>
       <HStack style={trainStyles.buttons}>
         <View style={{ flex: 1 }}>{showPreviousExercise && <Button title={previousExerciseName} theme="secondary" disabled={showEdit} onPress={handlePreviousExercise} />}</View>
-        <Button style={{ button: { flex: 1, borderWidth: 0 } }} theme="primary" title={hasNextExercise ? nextExerciseName : "Done"} disabled={showEdit} onPress={handleNextOrDone} />
+        <Button style={{ button: { flex: 1, borderWidth: 0 } }} theme="primary" title={hasNextExercise ? nextExerciseName : t("training_done")} disabled={showEdit} onPress={handleNextOrDone} />
       </HStack>
     </SafeAreaView>
   );

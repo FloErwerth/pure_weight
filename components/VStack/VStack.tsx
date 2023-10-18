@@ -7,5 +7,5 @@ interface VStackProps extends PropsWithChildren {
 }
 
 export function VStack({ children, style }: VStackProps) {
-  return <View style={[styles.wrapper, style]}>{children}</View>;
+  return <View style={[styles.innerWrapper, style]}>{children}</View>;
 }

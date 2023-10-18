@@ -13,6 +13,7 @@ import { Text } from "../../../components/Text/Text";
 import { componentBackgroundColor, mainColor } from "../../theme/colors";
 import { borderRadius } from "../../theme/border";
 import * as Haptics from "expo-haptics";
+import { useTranslation } from "react-i18next";
 
 interface ExerciseMetaDataDisplayProps {
   showEdit: boolean;
@@ -24,14 +25,24 @@ interface SmallMetadataDisplayProps {
 }
 export const SmallMetadataDisplay = ({ style }: SmallMetadataDisplayProps) => {
   const exerciseMetaData = useAppSelector(getExerciseMetaData);
+  const { t } = useTranslation();
   const textStyle = useMemo(() => [trainStyles.exerciseMetaText, style], [style]);
+
+  const isSingle = useMemo(() => parseFloat(exerciseMetaData.sets) === 1, [exerciseMetaData.sets]);
+
   return (
     <HStack>
-      <Text style={textStyle}>{exerciseMetaData?.weight} kg</Text>
+      <Text style={textStyle}>
+        {exerciseMetaData?.weight} {t("training_header_weight")}
+      </Text>
       <Text style={textStyle}>&#x30FB;</Text>
-      <Text style={textStyle}>{exerciseMetaData?.sets} sets</Text>
+      <Text style={textStyle}>
+        {exerciseMetaData?.sets} {t(`training_header_sets_${isSingle ? "single" : "multi"}`)}
+      </Text>
       <Text style={textStyle}>&#x30FB;</Text>
-      <Text style={textStyle}>{exerciseMetaData?.reps} reps</Text>
+      <Text style={textStyle}>
+        {exerciseMetaData?.reps} {t("training_header_reps")}
+      </Text>
       {exerciseMetaData?.pause && (
         <>
           <Text style={textStyle}>&#x30FB;</Text>

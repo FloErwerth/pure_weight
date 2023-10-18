@@ -3,9 +3,8 @@ import { ReactNode, useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "../../utils/navigate";
 import { Routes } from "../../types/routes";
 import { DoneExerciseData, ExerciseMetaData } from "../../store/types";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { useAppDispatch, useAppSelector } from "../../store";
-import { addTrainingDay, editTrainingDay } from "../../store/reducer";
+import { addTrainingDay, adjustTrainingDayExercises, editTrainingDay } from "../../store/reducer";
 import { AddExercise } from "../../components/AddExercise/AddExercise";
 import { styles } from "./styles";
 import { PlainInput } from "../../components/PlainInput/PlainInput";
@@ -13,13 +12,14 @@ import { SiteNavigationButtons } from "../../components/SiteNavigationButtons/Si
 import { EditableExercise } from "../../components/EditableExercise/EditableExercise";
 import { PressableRowWithIconSlots } from "../../components/PressableRowWithIconSlots/PressableRowWithIconSlots";
 import { AlertModal } from "../../components/AlertModal/AlertModal";
-import { Center } from "../../components/Center/Center";
-import { VStack } from "../../components/VStack/VStack";
 import { SafeAreaView } from "../../components/SafeAreaView/SafeAreaView";
 import { View } from "react-native";
 import * as Haptics from "expo-haptics";
 import { NotificationFeedbackType } from "expo-haptics";
 import { getSelectedTrainingDay, getSelectedTrainingDayIndex } from "../../store/selectors";
+import DraggableFlatList from "react-native-draggable-flatlist/src/components/DraggableFlatList";
+import { ScaleDecorator } from "react-native-draggable-flatlist";
+import { useTranslation } from "react-i18next";
 
 function getAreValuesEmpty(exercise: ExerciseMetaData) {
   const values = Object.values(exercise);
@@ -33,10 +33,10 @@ function getAreValuesEmpty(exercise: ExerciseMetaData) {
 
 export default function Index() {
   const navigate = useNavigate();
-
+  const { t } = useTranslation();
   const [Alert, setAlert] = useState<ReactNode | null>(null);
   const editedDay = useAppSelector(getSelectedTrainingDay);
-  const title = useMemo(() => (editedDay ? "Edit workout" : "Create workout"), [editedDay]);
+  const title = useMemo(() => (editedDay ? t("edit_workout") : t("create_workout")), [editedDay]);
   const editedDayIndex = useAppSelector(getSelectedTrainingDayIndex);
   const [editedExerciseIndex, setEditedExerciseIndex] = useState<number | undefined>(undefined);
   const [workoutName, setWorkoutName] = useState(editedDay?.name);
@@ -85,31 +85,13 @@ export default function Index() {
         }
         setEditedExerciseIndex(undefined);
       };
-      const onDelete = () => setAlert(<AlertModal onCancel={() => setAlert(null)} onConfirm={handleConfirmDelete} title="Delete exercise?" content="This action can't be undone" isVisible={true} />);
+      const onDelete = () =>
+        setAlert(<AlertModal onCancel={() => setAlert(null)} onConfirm={handleConfirmDelete} title={t("alert_delete_title")} content={t("alert_delete_message")} isVisible={true} />);
       const edited = index === editedExerciseIndex;
 
-      if (!edited) {
-        return (
-          <PressableRowWithIconSlots onClick={onEdit} key={exercise.name.concat(index.toString())} Icon2={{ icon: "delete", onPress: onDelete, disabled: editedExerciseIndex !== undefined }}>
-            <Text style={styles.text}>{exercise.name}</Text>
-          </PressableRowWithIconSlots>
-        );
-      }
-      return (
-        <EditableExercise
-          key={exercise.name.concat(index.toString())}
-          exercise={exercise}
-          onCancel={handleCancel}
-          onConfirmEdit={(exercise) => {
-            const newExercises = [...createdExercises];
-            newExercises.splice(index, 1, { doneExerciseEntries: createdExercises[index].doneExerciseEntries, ...exercise });
-            setCreatedExercises(newExercises);
-            setEditedExerciseIndex(undefined);
-          }}
-        />
-      );
+      return { onDelete, edited, handleCancel, onEdit, exercise, index };
     });
-  }, [createdExercises, editedExerciseIndex, handleDeleteExercise]);
+  }, [createdExercises, editedExerciseIndex, handleDeleteExercise, t]);
 
   const handleConfirm = useCallback(() => {
     if (!workoutName || createdExercises.length === 0) {
@@ -128,23 +110,52 @@ export default function Index() {
 
   return (
     <>
-      <SafeAreaView style={styles.wrapper}>
+      <SafeAreaView style={styles.innerWrapper}>
         <SiteNavigationButtons disabled={editedExerciseIndex !== undefined} handleBack={handleNavigateHome} handleConfirm={handleConfirm} titleFontSize={30} title={title} />
-        <Center style={styles.center}>
-          <VStack style={styles.stack}>
-            <PlainInput value={workoutName} setValue={handleSetWorkoutName} fontSize={30} placeholder="Workout name" />
-            <View style={styles.contentWrapper}>
-              <KeyboardAwareScrollView keyboardShouldPersistTaps="handled" keyboardOpeningTime={0}>
-                <View style={styles.savedTrainings}>
-                  <>
-                    {mappedExercises}
-                    <AddExercise disabled={editedExerciseIndex !== undefined} onPress={handleAddNewExercise} />
-                  </>
+        <View style={styles.contentWrapper}>
+          <PlainInput value={workoutName} setValue={handleSetWorkoutName} fontSize={30} placeholder={t("workout_name")} />
+          <DraggableFlatList
+            keyboardShouldPersistTaps="handled"
+            keyExtractor={(item) => `${item.index}${item.exercise.name}${item.exercise.pause}`}
+            data={mappedExercises}
+            onDragEnd={({ from, to }) => {
+              const newExercises = [...createdExercises];
+              const toExercise = createdExercises[to];
+              newExercises.splice(to, 1, newExercises[from]);
+              newExercises.splice(from, 1, toExercise);
+              setCreatedExercises(newExercises);
+              dispatch(adjustTrainingDayExercises({ from, to }));
+            }}
+            renderItem={({ drag, item: { index, exercise, onEdit, edited, handleCancel, onDelete } }) => (
+              <ScaleDecorator activeScale={0.95}>
+                <View style={{ marginBottom: 10 }}>
+                  {edited ? (
+                    <EditableExercise
+                      exercise={exercise}
+                      onCancel={handleCancel}
+                      onConfirmEdit={(exercise) => {
+                        const newExercises = [...createdExercises];
+                        newExercises.splice(index, 1, { doneExerciseEntries: createdExercises[index].doneExerciseEntries, ...exercise });
+                        setCreatedExercises(newExercises);
+                        setEditedExerciseIndex(undefined);
+                      }}
+                    />
+                  ) : (
+                    <PressableRowWithIconSlots
+                      onClick={onEdit}
+                      key={exercise.name.concat(index.toString())}
+                      Icon1={{ icon: "delete", onPress: onDelete, disabled: editedExerciseIndex !== undefined }}
+                      Icon2={{ icon: "drag", onLongPress: drag, disabled: editedExerciseIndex !== undefined }}
+                    >
+                      <Text style={styles.text}>{exercise.name}</Text>
+                    </PressableRowWithIconSlots>
+                  )}
                 </View>
-              </KeyboardAwareScrollView>
-            </View>
-          </VStack>
-        </Center>
+              </ScaleDecorator>
+            )}
+          />
+          <AddExercise disabled={editedExerciseIndex !== undefined} onPress={handleAddNewExercise} />
+        </View>
       </SafeAreaView>
       {Alert}
     </>

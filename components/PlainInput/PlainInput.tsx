@@ -18,7 +18,7 @@ export const PlainInput = ({ keyboardType, placeholder, fontSize = 14, value, se
   const inputRef = useRef<TextInput>(null);
 
   return (
-    <Pressable style={[style, styles.wrapper]} onPress={() => inputRef.current?.focus()}>
+    <Pressable style={[style, styles.innerWrapper]} onPress={() => inputRef.current?.focus()}>
       <HStack>
         <TextInput
           ref={inputRef}

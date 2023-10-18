@@ -11,11 +11,13 @@ import { PressableRowWithIconSlots } from "../../components/PressableRowWithIcon
 import { styles } from "./styles";
 import { useCallback } from "react";
 import { setSelectedDay } from "../../store/reducer";
+import { useTranslation } from "react-i18next";
 
 export default function Index() {
   const data = useAppSelector(getTrainingDayData);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+  const { t } = useTranslation();
 
   const selectTrainingDayToShow = useCallback(
     (dayIndex: number) => {
@@ -27,7 +29,7 @@ export default function Index() {
 
   return (
     <SafeAreaView>
-      <SiteNavigationButtons handleBack={() => navigate(Routes.HOME)} title="Progress" />
+      <SiteNavigationButtons handleBack={() => navigate(Routes.HOME)} title={t("progress")} />
       {data.length === 0 && (
         <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
           <MissingData fill={secondaryColor} />

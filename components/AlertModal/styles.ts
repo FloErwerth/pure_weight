@@ -3,7 +3,7 @@ import { borderRadius } from "../../app/theme/border";
 import { mainColor } from "../../app/theme/colors";
 
 export const styles = StyleSheet.create({
-  wrapper: {
+  innerWrapper: {
     borderRadius,
     justifyContent: "space-between",
     padding: 10,

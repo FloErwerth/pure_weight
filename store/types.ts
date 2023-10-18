@@ -32,4 +32,7 @@ export type AppState = {
   exerciseIndex: number;
   isFirstTimeRendered: boolean;
   chartType: ChartType;
+  settings: {
+    language?: "en" | "de";
+  };
 };

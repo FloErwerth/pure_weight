@@ -1,5 +1,7 @@
 import { createSelector } from "@reduxjs/toolkit";
 import { AppState, ExerciseMetaData, TrainingDay } from "./types";
+import { getDate } from "../utils/date";
+import { IsoDate } from "../types/date";
 
 export const getState = (state: AppState) => state;
 export const getSavedTrainings = createSelector([getState], (state) => Array.from(state.trainingDays.values()).map((day) => day));
@@ -23,8 +25,11 @@ export const getExerciseIndex = createSelector([getState], (state) => state.exer
 export const getTrainingIndex = createSelector([getState], (state) => state.trainingDayIndex);
 export const getPreviousTraining = createSelector([getSelectedTrainingDay, getExerciseIndex], (traininigDay, exerciseIndex) => {
   const entries = Object.values(traininigDay?.exercises[exerciseIndex]?.doneExerciseEntries ?? {});
-  return Object.values(entries[entries.length - 1] ?? []);
+  const date = Object.keys(traininigDay?.exercises[exerciseIndex]?.doneExerciseEntries ?? [])[entries.length - 1];
+  return { date: getDate(date as IsoDate), vals: Object.values(entries[entries.length - 1] ?? []) };
 });
+export const getSettings = createSelector([getState], (state) => state.settings);
+export const getLanguage = createSelector([getSettings], (settings) => settings.language);
 
 export const getExerciseMetaData = createSelector([getSelectedTrainingDay, getExerciseIndex], (traininigDay, exerciseIndex) => {
   const exercise = traininigDay?.exercises[exerciseIndex];

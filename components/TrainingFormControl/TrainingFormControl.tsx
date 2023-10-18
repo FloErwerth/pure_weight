@@ -14,7 +14,7 @@ export interface CreateTrainingFormControlProps {
 export const TrainingFormControl = ({ required = false, label, setValue, value, inputMode, helper, errorText }: CreateTrainingFormControlProps) => {
   const showHelper = useMemo(() => !errorText && Boolean(helper), [errorText, helper]);
   return (
-    <View style={styles.wrapper}>
+    <View style={styles.innerWrapper}>
       <View style={{ alignItems: "center" }}>
         <Text style={{ width: 50, fontWeight: "200" }}>{label}</Text>
         <TextInput style={{ padding: 20, width: "100%" }} onChangeText={setValue} value={value}></TextInput>

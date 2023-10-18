@@ -10,7 +10,7 @@ export const styles = StyleSheet.create({
   button: {
     flex: 1,
   },
-  wrapper: {
+  innerWrapper: {
     padding: 10,
     paddingLeft: 16,
     paddingRight: 0,

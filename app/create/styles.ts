@@ -52,7 +52,7 @@ export const styles = StyleSheet.create({
     marginLeft: 10,
     marginRight: 10,
   },
-  wrapper: {
+  innerWrapper: {
     flex: 1,
     padding: 10,
     gap: 20,
@@ -62,6 +62,7 @@ export const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "transparent",
     alignSelf: "stretch",
+    padding: 10,
   },
   listContainer: {
     borderRadius,
@@ -73,11 +74,6 @@ export const styles = StyleSheet.create({
   },
   center: {
     flex: 1,
-  },
-  savedTrainings: {
-    gap: 10,
-    borderWidth: 1,
-    borderColor: "transparent",
   },
   buttons: {
     alignSelf: "stretch",

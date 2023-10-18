@@ -7,6 +7,7 @@ import { VStack } from "../../VStack/VStack";
 import { borderRadius } from "../../../app/theme/border";
 import { backgroundColor, secondaryColor } from "../../../app/theme/colors";
 import { ThemedTextInput } from "../../TextInput/ThemedTextInput";
+import { useTranslation } from "react-i18next";
 
 interface EditNoteModalProps {
   showModal: boolean;
@@ -17,6 +18,7 @@ interface EditNoteModalProps {
 export const EditNoteModal = ({ showModal, note, onDoneEdit, onCancel }: EditNoteModalProps) => {
   const [internalNote, setInternalNote] = useState(note);
   const inputRef = useRef<TextInput>(null);
+  const { t } = useTranslation();
 
   const handleSetNote = useCallback((note: string) => {
     setInternalNote(note);
@@ -33,7 +35,7 @@ export const EditNoteModal = ({ showModal, note, onDoneEdit, onCancel }: EditNot
   }, [showModal]);
 
   return (
-    <Modal isVisible={showModal} onRequestClose={onCancel}>
+    <Modal title={t("edit_note_title")} isVisible={showModal} onRequestClose={onCancel}>
       <VStack style={{ backgroundColor, borderRadius, gap: 15 }}>
         <ThemedTextInput
           style={{ height: 140, padding: 10, borderRadius }}
@@ -42,10 +44,10 @@ export const EditNoteModal = ({ showModal, note, onDoneEdit, onCancel }: EditNot
           onChangeText={handleSetNote}
           value={internalNote}
           placeholderTextColor={secondaryColor}
-          placeholder="Add your note here..."
+          placeholder={t("edit_note_placeholder")}
         />
         <HStack style={{ justifyContent: "flex-end" }}>
-          <Button style={{ button: { width: 100 } }} title="done" onPress={handlePressDone} />
+          <Button style={{ button: { width: 100 } }} title={t("edit_note_done")} onPress={handlePressDone} />
         </HStack>
       </VStack>
     </Modal>

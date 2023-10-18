@@ -2,28 +2,37 @@ import { Dimensions, ScrollView, Text, View } from "react-native";
 import { LineChart } from "react-native-chart-kit";
 import { DoneExerciseData, ExerciseMetaData, ExerciseSets, PlainExerciseData } from "../../../../store/types";
 import { useCallback, useMemo, useRef, useState } from "react";
-import { backgroundColor, componentBackgroundColor, mainColor } from "../../../theme/colors";
+import { backgroundColor, componentBackgroundColor, mainColor, secondaryColor } from "../../../theme/colors";
 import { borderRadius } from "../../../theme/border";
-import { getUsDate } from "../../../../utils/date";
+import { getDate } from "../../../../utils/date";
 import { IsoDate } from "../../../../types/date";
 import { LineChartData } from "react-native-chart-kit/dist/line-chart/LineChart";
 import { VStack } from "../../../../components/VStack/VStack";
 import { Button } from "../../../../components/Button/Button";
 import { Modal } from "../../../../components/Modal/Modal";
-import { ChartTypeDisplay } from "./ChartTypeDisplay";
 import { useAppSelector } from "../../../../store";
 import { getSelectedTrainingDayData } from "../../../../store/selectors";
 import { HStack } from "../../../../components/HStack/HStack";
 import { styles } from "./styles";
+import { useTranslation } from "react-i18next";
 
 interface ExerciseChartProps {
   exercise: { doneExerciseEntries: DoneExerciseData } & ExerciseMetaData;
 }
 
-const chartTypeMap = {
-  CUMULATIVE: "Cumulative",
-  AVG_REPS: "Average reps",
-  AVG_WEIGHT: "Average weight",
+const chartTypeMap: Record<string, { title: string; hint: string }> = {
+  CUMULATIVE: {
+    title: "progress_cumulative",
+    hint: "progress_cumulative_hint",
+  },
+  AVG_REPS: {
+    title: "progress_avg_reps",
+    hint: "progress_avg_reps_hint",
+  },
+  AVG_WEIGHT: {
+    title: "progress_avg_weight",
+    hint: "progress_avg_weight_hint",
+  },
 };
 export type ChartType = keyof typeof chartTypeMap;
 
@@ -89,7 +98,7 @@ export const ExerciseChart = ({ exercise }: ExerciseChartProps) => {
   const [data, numberEntries] = useExerciseData(exercise.doneExerciseEntries, chartType);
   const viewRef = useRef<View>(null);
   const [showSelectionModal, setShowSelectionModal] = useState(false);
-
+  const { t } = useTranslation();
   const dotContent = useCallback(
     ({ x, y, indexData }: { x: number; y: number; index: number; indexData: number }) => {
       return (
@@ -134,19 +143,17 @@ export const ExerciseChart = ({ exercise }: ExerciseChartProps) => {
   );
 
   const getXLabel = useCallback((xValue: string) => {
-    return getUsDate(xValue as IsoDate);
+    return getDate(xValue as IsoDate);
   }, []);
 
   const width = useMemo(() => (numberEntries > 5 ? numberEntries * 80 : Dimensions.get("screen").width + 250 / (numberEntries * numberEntries * numberEntries)), [numberEntries]);
-
-  const mappedChartTypes = useMemo(() => Object.entries(chartTypeMap).map(([type, label]) => ({ type, label })), []);
 
   return (
     <View ref={viewRef} style={{ backgroundColor: componentBackgroundColor, overflow: "hidden", padding: 10, paddingBottom: 0, borderRadius, margin: 10, gap: 10 }}>
       <HStack style={styles.chartHeader}>
         <Text style={styles.headerTitle}>{exercise.name}</Text>
         <View style={styles.chartTypeSelection}>
-          <Button onPress={() => setShowSelectionModal(true)} title={chartTypeMap[chartType]} style={{ text: styles.selectionText }} />
+          <Button onPress={() => setShowSelectionModal(true)} title={t(chartTypeMap[chartType].title)} style={{ text: styles.selectionText }} />
         </View>
       </HStack>
       <ScrollView horizontal scrollEnabled={numberEntries > 5}>
@@ -165,12 +172,14 @@ export const ExerciseChart = ({ exercise }: ExerciseChartProps) => {
         />
       </ScrollView>
       {showSelectionModal && (
-        <Modal title="Select chart type" onRequestClose={() => setShowSelectionModal(false)} isVisible={showSelectionModal}>
+        <Modal title={t("progress_modal_title")} onRequestClose={() => setShowSelectionModal(false)} isVisible={showSelectionModal}>
           <VStack style={{ gap: 10 }}>
             {mappedChartProps.map(({ onPress, title, chartType }) => (
               <Button key={`${chartType}${title}`} onPress={onPress}>
-                <Text style={{ color: mainColor, fontSize: 20 }}>{title}</Text>
-                <ChartTypeDisplay chartType={chartType as ChartType} />
+                <Text style={{ color: mainColor, fontSize: 20 }}>{t(chartTypeMap[chartType].title)}</Text>
+                <View>
+                  <Text style={{ color: secondaryColor, fontSize: 12 }}>{t(chartTypeMap[chartType].hint)}</Text>
+                </View>
               </Button>
             ))}
           </VStack>

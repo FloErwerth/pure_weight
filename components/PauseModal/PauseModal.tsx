@@ -1,6 +1,6 @@
 import { Modal } from "../Modal/Modal";
 import { useCallback, useEffect, useState } from "react";
-import {Pressable, Text, View} from "react-native";
+import { Pressable, Text, View } from "react-native";
 import { styles } from "./styles";
 
 interface PauseModalProps {
@@ -63,7 +63,7 @@ export const PauseModal = ({ isVisible, duration, onTimerDone, onCancelTimer }: 
 
   return (
     <Modal isVisible={isVisible}>
-      <View style={styles.wrapper}>
+      <View style={styles.innerWrapper}>
         <View style={styles.clockWrapper}>
           <Text style={styles.clock}>{formatTime(timeLeftSeconds)}</Text>
         </View>
