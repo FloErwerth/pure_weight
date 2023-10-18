@@ -134,10 +134,12 @@ export default function Index() {
                       exercise={exercise}
                       onCancel={handleCancel}
                       onConfirmEdit={(exercise) => {
-                        const newExercises = [...createdExercises];
-                        newExercises.splice(index, 1, { doneExerciseEntries: createdExercises[index].doneExerciseEntries, ...exercise });
-                        setCreatedExercises(newExercises);
-                        setEditedExerciseIndex(undefined);
+                        if (exercise.sets && exercise.name && exercise.weight && exercise.reps) {
+                          const newExercises = [...createdExercises];
+                          newExercises.splice(index, 1, { doneExerciseEntries: createdExercises[index].doneExerciseEntries, ...exercise });
+                          setCreatedExercises(newExercises);
+                          setEditedExerciseIndex(undefined);
+                        }
                       }}
                     />
                   ) : (

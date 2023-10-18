@@ -24,6 +24,8 @@ export type ExerciseMetaData = {
   pause?: string;
 };
 
+export type ErrorFields = "create_name" | "create_weight" | "create_sets" | "create_reps" | "workout_nam";
+
 export type AppState = {
   trainingDays: TrainingDay[];
   trainingDayIndex: number | undefined;
@@ -35,4 +37,5 @@ export type AppState = {
   settings: {
     language?: "en" | "de";
   };
+  errors: ErrorFields[];
 };

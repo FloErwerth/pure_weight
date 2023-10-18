@@ -1,5 +1,5 @@
 import { createAction, createReducer } from "@reduxjs/toolkit/src";
-import { AppState, DoneExerciseData, ExerciseMetaData, PlainExerciseData, TrainingDay } from "./types";
+import { AppState, DoneExerciseData, ErrorFields, ExerciseMetaData, PlainExerciseData, TrainingDay } from "./types";
 import { getDateTodayIso } from "../utils/date";
 import { ChartType } from "../app/progress/chart/components/ExerciseCharts";
 import { mockState } from "./index";
@@ -19,8 +19,11 @@ export const setSetIndex = createAction<number>("set_set_index");
 export const setExerciseIndex = createAction<number>("set_exercise_index");
 export const editExerciseMetaData = createAction<Partial<ExerciseMetaData>>("edit_exercise_metadata");
 export const setLanguage = createAction<"de" | "en" | undefined>("settings_langauge");
+export const setError = createAction<ErrorFields | ErrorFields[]>("error_set");
+export const cleanError = createAction<ErrorFields | ErrorFields[]>("error_clean");
+export const cleanErrors = createAction("error_clean_all");
 export const storeReducer = createReducer<AppState>(
-  { settings: { language: undefined }, chartType: "CUMULATIVE", trainingDayIndex: 0, trainingDays: [], isFirstTimeRendered: true, exerciseIndex: 0, setIndex: 0 },
+  { errors: [], settings: { language: undefined }, chartType: "CUMULATIVE", trainingDayIndex: 0, trainingDays: [], isFirstTimeRendered: true, exerciseIndex: 0, setIndex: 0 },
   (builder) =>
     builder
       .addCase(setState, (state, action) => {
@@ -29,6 +32,29 @@ export const storeReducer = createReducer<AppState>(
       .addCase(setMockState, () => mockState)
       .addCase(setChartType, (state, action) => {
         state.chartType = action.payload;
+      })
+      .addCase(setError, (state, action) => {
+        if (typeof action.payload === "string" && !state.errors.includes(action.payload)) {
+          state.errors.push(action.payload);
+        }
+        if (Array.isArray(action.payload)) {
+          const notIncludedErrors = action.payload.filter((errorKey) => !state.errors.includes(errorKey));
+          state.errors.push(...notIncludedErrors);
+        }
+      })
+      .addCase(cleanError, (state, action) => {
+        if (typeof action.payload === "string" && state.errors.includes(action.payload)) {
+          state.errors.splice(
+            state.errors.findIndex((key) => key === action.payload),
+            1,
+          );
+        }
+        if (Array.isArray(action.payload)) {
+          state.errors.filter((key) => !action.payload.includes(key));
+        }
+      })
+      .addCase(cleanErrors, (state) => {
+        state.errors = [];
       })
       .addCase(adjustTrainingDayExercises, (state, action) => {
         if (state.trainingDayIndex) {

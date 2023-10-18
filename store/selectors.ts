@@ -1,5 +1,5 @@
 import { createSelector } from "@reduxjs/toolkit";
-import { AppState, ExerciseMetaData, TrainingDay } from "./types";
+import { AppState, ErrorFields, ExerciseMetaData, TrainingDay } from "./types";
 import { getDate } from "../utils/date";
 import { IsoDate } from "../types/date";
 
@@ -28,6 +28,8 @@ export const getPreviousTraining = createSelector([getSelectedTrainingDay, getEx
   const date = Object.keys(traininigDay?.exercises[exerciseIndex]?.doneExerciseEntries ?? [])[entries.length - 1];
   return { date: getDate(date as IsoDate), vals: Object.values(entries[entries.length - 1] ?? []) };
 });
+export const getErrors = createSelector([getState], (state) => state.errors);
+export const getErrorByKey = createSelector([getErrors], (state) => (errorField?: ErrorFields | undefined) => Boolean(errorField && state.includes(errorField)));
 export const getSettings = createSelector([getState], (state) => state.settings);
 export const getLanguage = createSelector([getSettings], (settings) => settings.language);
 

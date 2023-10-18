@@ -1,14 +1,16 @@
-import { Pressable, Text, TextInput, View } from "react-native";
+import { Pressable, TextInput, View } from "react-native";
 import { useCallback, useMemo, useRef, useState } from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { ExerciseMetaData } from "../../store/types";
+import { ErrorFields, ExerciseMetaData } from "../../store/types";
 import { EditableExerciseTheme, styles } from "./styles";
 import { HStack } from "../HStack/HStack";
-import { Center } from "../Center/Center";
 import { ThemedTextInput } from "../TextInput/ThemedTextInput";
 import { mainColor } from "../../app/theme/colors";
 import * as Haptics from "expo-haptics";
 import { useTranslation } from "react-i18next";
+import { useAppDispatch } from "../../store";
+import { setError } from "../../store/reducer";
+import { EditableExerciseInputRow } from "./EditableExerciseInputRow";
 
 interface EditableExerciseProps {
   exercise: ExerciseMetaData;
@@ -17,20 +19,44 @@ interface EditableExerciseProps {
   theme?: EditableExerciseTheme;
 }
 
+const validateData = (data: Partial<ExerciseMetaData>) => {
+  const errors: ErrorFields[] = [];
+  if (!data.sets) {
+    errors.push("create_sets");
+  }
+  if (!data.name) {
+    errors.push("create_name");
+  }
+  if (!data.reps) {
+    errors.push("create_reps");
+  }
+  if (!data.weight) {
+    errors.push("create_weight");
+  }
+  return errors;
+};
+
 export const EditableExercise = ({ exercise, onConfirmEdit, onCancel, theme }: EditableExerciseProps) => {
   const { t } = useTranslation();
-  const [name, setName] = useState(exercise?.name);
-  const [weight, setWeight] = useState(exercise?.weight);
-  const [sets, setSets] = useState(exercise?.sets);
-  const [reps, setReps] = useState(exercise?.reps);
-  const [pause, setPause] = useState(exercise?.pause);
+  const [name, setName] = useState<string | undefined>(exercise?.name);
+  const [weight, setWeight] = useState<string | undefined>(exercise?.weight);
+  const [sets, setSets] = useState<string | undefined>(exercise?.sets);
+  const [reps, setReps] = useState<string | undefined>(exercise?.reps);
+  const [pause, setPause] = useState<string | undefined>(exercise?.pause);
   const inputRef = useRef<TextInput>(null);
   const classes = useMemo(() => styles(theme), [theme]);
+  const dispatch = useAppDispatch();
 
   const handleConfirm = useCallback(() => {
     void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-    onConfirmEdit({ name, reps, sets, weight, pause });
-  }, [onConfirmEdit, name, reps, sets, weight, pause]);
+
+    const possibleErrors = validateData({ reps, sets, weight, name });
+    if (possibleErrors.length > 0) {
+      dispatch(setError(possibleErrors));
+    } else {
+      onConfirmEdit({ name: name ?? "", reps: reps ?? "", sets: sets ?? "", weight: weight ?? "", pause });
+    }
+  }, [reps, sets, weight, name, dispatch, onConfirmEdit, pause]);
 
   const handleCancel = useCallback(() => {
     void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
@@ -40,7 +66,7 @@ export const EditableExercise = ({ exercise, onConfirmEdit, onCancel, theme }: E
   return (
     <View style={classes.innerWrapper}>
       <HStack style={classes.headerWrapper}>
-        <ThemedTextInput placeholder={t("exercise_name")} ref={inputRef} value={name} onChangeText={setName} style={classes.title} />
+        <ThemedTextInput errorKey="create_name" placeholder={t("exercise_name")} ref={inputRef} value={name} onChangeText={setName} style={classes.title} />
         <HStack style={classes.buttons}>
           <Pressable onPress={handleCancel}>
             <MaterialCommunityIcons color={mainColor} name="cancel" size={26}></MaterialCommunityIcons>
@@ -52,22 +78,10 @@ export const EditableExercise = ({ exercise, onConfirmEdit, onCancel, theme }: E
       </HStack>
       <View style={classes.inputWrapper}>
         <HStack style={{ gap: 10, justifyContent: "space-between" }}>
-          <Center style={{ width: "25%" }}>
-            <ThemedTextInput inputMode="decimal" textAlign="center" style={classes.input} onChangeText={setWeight} value={weight}></ThemedTextInput>
-            <Text style={classes.text}>{t("weight")}</Text>
-          </Center>
-          <Center style={{ width: "25%" }}>
-            <ThemedTextInput inputMode="decimal" textAlign="center" style={classes.input} onChangeText={setSets} value={sets}></ThemedTextInput>
-            <Text style={classes.text}>{t("sets")}</Text>
-          </Center>
-          <Center style={{ width: "25%" }}>
-            <ThemedTextInput inputMode="decimal" textAlign="center" style={classes.input} onChangeText={setReps} value={reps}></ThemedTextInput>
-            <Text style={classes.text}>{t("reps")}</Text>
-          </Center>
-          <Center style={{ width: "25%" }}>
-            <ThemedTextInput inputMode="decimal" textAlign="center" style={classes.input} onChangeText={setPause} value={pause}></ThemedTextInput>
-            <Text style={classes.text}>{t("pause")}</Text>
-          </Center>
+          <EditableExerciseInputRow i18key="weight" setValue={setWeight} errorKey={"create_weight"} value={weight} />
+          <EditableExerciseInputRow i18key="sets" setValue={setSets} errorKey={"create_sets"} value={sets} />
+          <EditableExerciseInputRow i18key="reps" setValue={setReps} errorKey={"create_reps"} value={reps} />
+          <EditableExerciseInputRow i18key="pause" setValue={setPause} value={pause} />
         </HStack>
       </View>
     </View>

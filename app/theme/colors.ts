@@ -7,3 +7,5 @@ export const mainColorLight = "#b1b1b1";
 export const mainDisabledColor = "#555";
 export const secondaryColor = "#888";
 export const primaryColor = "#212121";
+export const errorColor = "#f00";
+export const placeholderErrorColor = "#a00";
