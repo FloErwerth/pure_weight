@@ -15,11 +15,11 @@ const persistedReducer = persistReducer(persistConfig, storeReducer);
 export const mockState: AppState = {
   setIndex: 0,
   settings: { language: "en" },
-  exerciseIndex: 0,
   trainingDayIndex: undefined,
   isFirstTimeRendered: true,
   editedExerciseIndex: undefined,
   chartType: "CUMULATIVE",
+  errors: [],
   trainingDays: [
     {
       name: "Brust 1",

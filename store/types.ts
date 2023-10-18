@@ -24,12 +24,11 @@ export type ExerciseMetaData = {
   pause?: string;
 };
 
-export type ErrorFields = "create_name" | "create_weight" | "create_sets" | "create_reps" | "workout_nam";
+export type ErrorFields = "create_name" | "create_weight" | "create_sets" | "create_reps" | "workout_name" | "create_exercises_empty";
 
 export type AppState = {
   trainingDays: TrainingDay[];
   trainingDayIndex: number | undefined;
-  editedExerciseIndex?: number;
   setIndex: number;
   exerciseIndex: number;
   isFirstTimeRendered: boolean;

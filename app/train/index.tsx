@@ -2,7 +2,7 @@ import { useAppDispatch, useAppSelector } from "../../store";
 import { useCallback, useMemo, useState } from "react";
 import { trainStyles } from "./trainStyles";
 import { PlainExerciseData } from "../../store/types";
-import { addSetDataToTrainingDay, setExerciseIndex, setSelectedDay, setSetIndex } from "../../store/reducer";
+import { addSetDataToTrainingDay, setExerciseIndex, setSetIndex, setTrainingDayIndex } from "../../store/reducer";
 import { AlertModal } from "../../components/AlertModal/AlertModal";
 import { useTrainingProps } from "../../hooks/training/useTrainingProps";
 import { useNavigate } from "../../utils/navigate";
@@ -51,7 +51,7 @@ export default function Index() {
 
   const handleReset = useCallback(() => {
     dispatch(setExerciseIndex(0));
-    dispatch(setSelectedDay(undefined));
+    dispatch(setTrainingDayIndex(undefined));
     dispatch(setSetIndex(0));
     setDoneSetsThisExercise([]);
     navigate(Routes.HOME);

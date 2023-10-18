@@ -4,6 +4,7 @@ import { Text } from "../Text/Text";
 import { HStack } from "../HStack/HStack";
 import { mainColor, secondaryColor } from "../../app/theme/colors";
 import { useRef } from "react";
+import { ThemedTextInput } from "../TextInput/ThemedTextInput";
 
 interface PlainInputProps {
   placeholder?: string;
@@ -20,7 +21,9 @@ export const PlainInput = ({ keyboardType, placeholder, fontSize = 14, value, se
   return (
     <Pressable style={[style, styles.innerWrapper]} onPress={() => inputRef.current?.focus()}>
       <HStack>
-        <TextInput
+        <ThemedTextInput
+          hideErrorBorder={true}
+          errorKey="workout_name"
           ref={inputRef}
           returnKeyType="done"
           keyboardType={keyboardType}
@@ -28,8 +31,8 @@ export const PlainInput = ({ keyboardType, placeholder, fontSize = 14, value, se
           value={value}
           placeholderTextColor={secondaryColor}
           placeholder={placeholder}
-          style={{ fontSize, color: mainColor }}
-        ></TextInput>
+          style={{ fontSize, color: mainColor, backgroundColor: "transparent" }}
+        ></ThemedTextInput>
         {suffix && value && <Text style={{ fontSize, marginLeft: 5, color: mainColor }}>{suffix}</Text>}
       </HStack>
     </Pressable>

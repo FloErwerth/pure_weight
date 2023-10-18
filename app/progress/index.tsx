@@ -10,7 +10,7 @@ import { SiteNavigationButtons } from "../../components/SiteNavigationButtons/Si
 import { PressableRowWithIconSlots } from "../../components/PressableRowWithIconSlots/PressableRowWithIconSlots";
 import { styles } from "./styles";
 import { useCallback } from "react";
-import { setSelectedDay } from "../../store/reducer";
+import { setTrainingDayIndex } from "../../store/reducer";
 import { useTranslation } from "react-i18next";
 
 export default function Index() {
@@ -21,7 +21,7 @@ export default function Index() {
 
   const selectTrainingDayToShow = useCallback(
     (dayIndex: number) => {
-      dispatch(setSelectedDay(dayIndex));
+      dispatch(setTrainingDayIndex(dayIndex));
       navigate(Routes.PROGRESS_CHART);
     },
     [dispatch, navigate],

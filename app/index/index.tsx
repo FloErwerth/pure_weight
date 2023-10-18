@@ -5,7 +5,7 @@ import { useNavigate } from "../../utils/navigate";
 import { Routes } from "../../types/routes";
 import { useAppDispatch, useAppSelector } from "../../store";
 import { getLanguage, getSavedTrainings } from "../../store/selectors";
-import { removeTrainingDay, setMockState, setSelectedDay } from "../../store/reducer";
+import { cleanErrors, removeTrainingDay, setExerciseIndex, setMockState, setSetIndex, setTrainingDayIndex } from "../../store/reducer";
 import { styles } from "./styles";
 import { AlertModal } from "../../components/AlertModal/AlertModal";
 import { SafeAreaView } from "../../components/SafeAreaView/SafeAreaView";
@@ -21,6 +21,11 @@ export default function Main() {
 
   useEffect(() => {
     i18n.changeLanguage(language ?? Locale.getLocales()[0].languageCode ?? "en");
+    dispatch(setExerciseIndex(0));
+    dispatch(setTrainingDayIndex(undefined));
+    dispatch(setExerciseIndex(0));
+    dispatch(setSetIndex(0));
+    dispatch(cleanErrors());
   }, []);
 
   const navigate = useNavigate();
@@ -35,14 +40,14 @@ export default function Main() {
 
   const handleNavigateToTrain = useCallback(
     (index: number) => {
-      dispatch(setSelectedDay(index));
+      dispatch(setTrainingDayIndex(index));
       navigate(Routes.TRAIN);
     },
     [dispatch, navigate],
   );
 
   const handlePress = useCallback(() => {
-    dispatch(setSelectedDay(undefined));
+    dispatch(setTrainingDayIndex(undefined));
     handleNavigateToCreateTraining();
   }, [dispatch, handleNavigateToCreateTraining]);
 
@@ -59,7 +64,7 @@ export default function Main() {
   );
   const handleEdit = useCallback(
     (index: number) => {
-      dispatch(setSelectedDay(index));
+      dispatch(setTrainingDayIndex(index));
       handleNavigateToCreateTraining();
     },
     [dispatch, handleNavigateToCreateTraining],

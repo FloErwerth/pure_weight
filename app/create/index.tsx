@@ -4,7 +4,7 @@ import { useNavigate } from "../../utils/navigate";
 import { Routes } from "../../types/routes";
 import { DoneExerciseData, ExerciseMetaData } from "../../store/types";
 import { useAppDispatch, useAppSelector } from "../../store";
-import { addTrainingDay, adjustTrainingDayExercises, editTrainingDay } from "../../store/reducer";
+import { adjustTrainingDayExercises, cleanErrors, setError, setTrainingDayIndex } from "../../store/reducer";
 import { AddExercise } from "../../components/AddExercise/AddExercise";
 import { styles } from "./styles";
 import { PlainInput } from "../../components/PlainInput/PlainInput";
@@ -66,6 +66,16 @@ export default function Index() {
     setEditedExerciseIndex(createdExercises.length);
   }, [createdExercises]);
 
+  const handleCleanErrors = useCallback(() => {
+    dispatch(cleanErrors());
+  }, [dispatch]);
+
+  const handleConfirmDiscardChanges = useCallback(() => {
+    setAlert(undefined);
+    handleCleanErrors();
+    navigate(Routes.HOME);
+  }, [handleCleanErrors, navigate]);
+
   const mappedExercises = useMemo(() => {
     return createdExercises.map((exercise, index) => {
       const onEdit = () => {
@@ -92,26 +102,38 @@ export default function Index() {
       return { onDelete, edited, handleCancel, onEdit, exercise, index };
     });
   }, [createdExercises, editedExerciseIndex, handleDeleteExercise, t]);
-
+  const handleNavigateHome = useCallback(() => {
+    handleCleanErrors();
+    dispatch(setTrainingDayIndex(undefined));
+    navigate(Routes.HOME);
+  }, [dispatch, handleCleanErrors, navigate]);
   const handleConfirm = useCallback(() => {
-    if (!workoutName || createdExercises.length === 0) {
+    if (workoutName?.length === 0 || createdExercises.length === 0) {
+      if (workoutName?.length === 0) {
+        dispatch(setError(["workout_name"]));
+      }
+      if (createdExercises.length === 0) {
+        dispatch(setError(["create_exercises_empty"]));
+      }
       return;
     }
+    handleNavigateHome();
+  }, [workoutName?.length, createdExercises.length, handleNavigateHome, dispatch]);
 
-    if (editedDay) {
-      dispatch(editTrainingDay({ index: editedDayIndex ?? 0, trainingDay: { name: workoutName ?? editedDay.name, exercises: createdExercises } }));
+  const handleBackButton = useCallback(() => {
+    if (createdExercises.length !== 0 || workoutName?.length !== 0) {
+      const titleKey = editedDay ? "alert_edit_workout_discard_title" : "alert_create_workout_discard_title";
+      const contentKey = editedDay ? "alert_edit_workout_discard_content" : "alert_create_workout_discard_content";
+      setAlert(<AlertModal onCancel={() => setAlert(null)} onConfirm={handleConfirmDiscardChanges} title={t(titleKey)} content={t(contentKey)} isVisible={true} />);
     } else {
-      dispatch(addTrainingDay({ name: workoutName, exercises: createdExercises }));
+      handleNavigateHome();
     }
-    navigate(Routes.HOME);
-  }, [workoutName, createdExercises, editedDay, navigate, dispatch, editedDayIndex]);
-
-  const handleNavigateHome = useCallback(() => navigate(Routes.HOME), [navigate]);
+  }, [createdExercises.length, editedDay, handleConfirmDiscardChanges, handleNavigateHome, t, workoutName?.length]);
 
   return (
     <>
       <SafeAreaView style={styles.innerWrapper}>
-        <SiteNavigationButtons disabled={editedExerciseIndex !== undefined} handleBack={handleNavigateHome} handleConfirm={handleConfirm} titleFontSize={30} title={title} />
+        <SiteNavigationButtons disabled={editedExerciseIndex !== undefined} handleBack={handleBackButton} handleConfirm={handleConfirm} titleFontSize={30} title={title} />
         <View style={styles.contentWrapper}>
           <PlainInput value={workoutName} setValue={handleSetWorkoutName} fontSize={30} placeholder={t("workout_name")} />
           <DraggableFlatList

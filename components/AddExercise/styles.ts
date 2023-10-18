@@ -4,6 +4,7 @@ import { borderRadius } from "../../app/theme/border";
 
 export const styles = StyleSheet.create({
   add: {
+    borderWidth: 1,
     justifyContent: "center",
     alignSelf: "stretch",
     borderRadius,

@@ -8,13 +8,19 @@ import { getErrorByKey } from "../../store/selectors";
 import { styles } from "./styles";
 import { cleanError } from "../../store/reducer";
 
-export const ThemedTextInput = (props: TextInputProps & { ref?: RefObject<TextInput>; errorKey?: ErrorFields }) => {
+interface ThemedTextInputProps extends TextInputProps {
+  ref?: RefObject<TextInput>;
+  errorKey?: ErrorFields;
+  hideErrorBorder?: boolean;
+}
+export const ThemedTextInput = (props: ThemedTextInputProps) => {
   const getHasError = useAppSelector((state: AppState) => getErrorByKey(state)(props.errorKey));
+
   const dispatch = useAppDispatch();
   const handleTextInput = useCallback(
     (value: string) => {
       if (getHasError && props.errorKey) {
-        dispatch(cleanError(props.errorKey));
+        dispatch(cleanError([props.errorKey]));
       }
       props.onChangeText?.(value);
     },
@@ -25,7 +31,7 @@ export const ThemedTextInput = (props: TextInputProps & { ref?: RefObject<TextIn
     <TextInput
       {...props}
       onChangeText={handleTextInput}
-      style={[{ backgroundColor: componentBackgroundColor, color: mainColor }, props.style, getHasError && styles.error]}
+      style={[{ backgroundColor: componentBackgroundColor, color: mainColor }, props.style, !props.hideErrorBorder && getHasError && styles.errorBorder, getHasError && styles.error]}
       placeholderTextColor={getHasError ? placeholderErrorColor : secondaryColor}
     />
   );
