@@ -25,7 +25,17 @@ const useInitialExerciseDataState = () => {
   );
 
   const fill = useCallback(() => {
-    setDoneSetsThisExercise(trainingDay?.exercises.map((exercise) => Array(parseInt(exercise.sets)).fill(undefined)) ?? []);
+    setDoneSetsThisExercise(
+      trainingDay?.exercises.map((exercise, exerciseIndex) =>
+        Array(parseInt(exercise.sets))
+          .fill(undefined)
+          .map((_, setIndex) => {
+            if (doneSetsThisExercise[exerciseIndex][setIndex]) {
+              return doneSetsThisExercise[exerciseIndex][setIndex];
+            } else return undefined;
+          }),
+      ) ?? [],
+    );
   }, [trainingDay?.exercises]);
 
   useEffect(() => {
@@ -114,7 +124,6 @@ export default function Index() {
 
   const handleSetDone = useCallback(
     (data: PlainExerciseData, setIndex: number) => {
-      console.log(currentExerciseIndex, setIndex);
       doneSetsThisExercise[currentExerciseIndex][setIndex] = data;
       setDoneSetsThisExercise(doneSetsThisExercise);
     },
@@ -126,7 +135,7 @@ export default function Index() {
       <View style={trainStyles.header}>
         <SiteNavigationButtons disabled={showEdit} handleBack={handleCloseButton} titleFontSize={30} title={selectedTrainingName} />
       </View>
-      <ScrollView contentContainerStyle={trainStyles.wrapper}>
+      <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={trainStyles.wrapper}>
         <ExerciseMetaDataDisplay showEdit={showEdit} setShowEdit={setShowEdit} />
         <View style={{ flex: 1 }}>{!showEdit && <Inputs setData={doneSetsThisExercise[currentExerciseIndex]} onSetDone={handleSetDone} />}</View>
         {!showEdit && <PreviousTraining />}

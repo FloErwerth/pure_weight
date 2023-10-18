@@ -21,7 +21,7 @@ const useGeneratedSetData = (setData: (PlainExerciseData | undefined)[]) => {
   const numberOfSets = useAppSelector(getNumberOfSets);
 
   const [sets, setSets] = useState<(PlainExerciseData | undefined)[]>([]);
-
+  console.log(sets);
   useEffect(() => {
     if (numberOfSets) {
       const prefilledArray = Array(numberOfSets).fill({ weight: exerciseMetaData?.weight, reps: exerciseMetaData?.reps, note: "" });
