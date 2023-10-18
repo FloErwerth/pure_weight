@@ -1,7 +1,7 @@
 import { SetInputRow } from "../../../components/SetInputRow/SetInputRow";
 import { PlainExerciseData } from "../../../store/types";
 import { useAppDispatch, useAppSelector } from "../../../store";
-import { getExerciseMetaDataRaw, getNumberOfSets, getSelectedTrainingName, getSetIndex } from "../../../store/selectors";
+import { getExerciseMetaData, getNumberOfSets, getSelectedTrainingName, getSetIndex } from "../../../store/selectors";
 import { useCallback, useEffect, useState } from "react";
 import { setSetIndex } from "../../../store/reducer";
 import { TrainingHeader } from "./TrainingHeader";
@@ -17,44 +17,43 @@ interface InputsProps {
 }
 
 const useGeneratedSetData = (setData: (PlainExerciseData | undefined)[]) => {
-  const exerciseMetaData = useAppSelector(getExerciseMetaDataRaw);
+  const exerciseMetaData = useAppSelector(getExerciseMetaData);
   const numberOfSets = useAppSelector(getNumberOfSets);
-
-  const [sets, setSets] = useState<(PlainExerciseData | undefined)[]>([]);
+  const [sets, setSets] = useState<Map<number, PlainExerciseData | undefined>>(new Map(setData.entries()));
 
   useEffect(() => {
     if (numberOfSets) {
-      const prefilledArray = Array(numberOfSets).fill({ weight: exerciseMetaData?.weight, reps: exerciseMetaData?.reps, note: "" });
-      setData?.forEach((data, index) => {
-        if (setData[index] !== undefined) {
-          prefilledArray[index] = data;
+      const map = new Map<number, PlainExerciseData | undefined>();
+      const prefilledMap = Array(numberOfSets).fill({ weight: exerciseMetaData?.weight, reps: exerciseMetaData?.reps, note: "" });
+      prefilledMap.forEach((metaData, index) => {
+        if (setData?.[index]) {
+          map.set(index, setData[index]);
+        } else {
+          map.set(index, metaData);
         }
       });
-      setSets(prefilledArray);
+      setSets(map);
     }
   }, [exerciseMetaData, numberOfSets, setData]);
 
-  return [sets, setSets] as const;
+  return [Array.from(sets.values())] as const;
 };
 
 export const Inputs = ({ onSetDone, setData }: InputsProps) => {
   const currentSetIndex = useAppSelector(getSetIndex);
   const selectedTrainingName = useAppSelector(getSelectedTrainingName);
-  const [sets, setSets] = useGeneratedSetData(setData);
+  const [sets] = useGeneratedSetData(setData);
   const dispatch = useAppDispatch();
 
   const handleSetDone = useCallback(
     ({ weight, reps, note }: PlainExerciseData, setIndex: number) => {
       if (setIndex !== undefined) {
-        const newSets = [...sets];
-        newSets.splice(setIndex, 1, { weight, reps, note });
         onSetDone({ weight, reps, note }, setIndex);
-        setSets(newSets);
         dispatch(setSetIndex(currentSetIndex + 1));
         void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
       }
     },
-    [currentSetIndex, dispatch, onSetDone, setSets, sets],
+    [currentSetIndex, dispatch, onSetDone],
   );
 
   useEffect(() => {
@@ -65,7 +64,7 @@ export const Inputs = ({ onSetDone, setData }: InputsProps) => {
     <View style={{ flex: 1 }}>
       <ThemedView style={{ paddingTop: 15, paddingBottom: 10, alignSelf: "stretch", borderRadius, backgroundColor: componentBackgroundColor }}>
         <TrainingHeader />
-        {sets.map((exerciseMetaData, index) => {
+        {sets?.map((exerciseMetaData, index) => {
           return (
             <SetInputRow
               data={exerciseMetaData}

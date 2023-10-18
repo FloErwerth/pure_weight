@@ -1,6 +1,6 @@
 import { trainStyles } from "../../train/trainStyles";
 import { useAppDispatch, useAppSelector } from "../../../store";
-import { getExerciseIndex, getExerciseMetaDataRaw, getSelectedTrainingDay, getTrainingIndex } from "../../../store/selectors";
+import { getExerciseIndex, getExerciseMetaData, getSelectedTrainingDay, getTrainingIndex } from "../../../store/selectors";
 import { Pressable, TextStyle } from "react-native";
 import { Dispatch, SetStateAction, useCallback, useEffect, useMemo } from "react";
 import { EditableExercise } from "../../../components/EditableExercise/EditableExercise";
@@ -23,7 +23,7 @@ interface SmallMetadataDisplayProps {
   style?: TextStyle;
 }
 export const SmallMetadataDisplay = ({ style }: SmallMetadataDisplayProps) => {
-  const exerciseMetaData = useAppSelector(getExerciseMetaDataRaw);
+  const exerciseMetaData = useAppSelector(getExerciseMetaData);
   const textStyle = useMemo(() => [trainStyles.exerciseMetaText, style], [style]);
   return (
     <HStack>
@@ -43,7 +43,7 @@ export const SmallMetadataDisplay = ({ style }: SmallMetadataDisplayProps) => {
 };
 
 export const ExerciseMetaDataDisplay = ({ showEdit, setShowEdit }: ExerciseMetaDataDisplayProps) => {
-  const exerciseMetaData = useAppSelector(getExerciseMetaDataRaw);
+  const exerciseMetaData = useAppSelector(getExerciseMetaData);
   const currentExerciseIndex = useAppSelector(getExerciseIndex);
   const trainingDayIndex = useAppSelector(getTrainingIndex);
   const selectedTraining = useAppSelector(getSelectedTrainingDay);

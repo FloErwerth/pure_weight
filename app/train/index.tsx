@@ -1,5 +1,5 @@
 import { useAppDispatch, useAppSelector } from "../../store";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { trainStyles } from "./trainStyles";
 import { PlainExerciseData } from "../../store/types";
 import { addSetDataToTrainingDay, setExerciseIndex, setSelectedDay, setSetIndex } from "../../store/reducer";
@@ -13,44 +13,15 @@ import { ScrollView, View } from "react-native";
 import { Inputs } from "../components/train/Inputs";
 import { Button } from "../../components/Button/Button";
 import { HStack } from "../../components/HStack/HStack";
-import { getNumberOfSets, getSelectedTrainingDay } from "../../store/selectors";
+import { getNumberOfExercises, getNumberOfSets } from "../../store/selectors";
 import { SafeAreaView } from "../../components/SafeAreaView/SafeAreaView";
 import { PreviousTraining } from "../../components/PreviousTraining/PreviousTraining";
 
-const useInitialExerciseDataState = () => {
-  const trainingDay = useAppSelector(getSelectedTrainingDay);
-
-  const [doneSetsThisExercise, setDoneSetsThisExercise] = useState<Array<(PlainExerciseData | undefined)[]>>(
-    trainingDay?.exercises.map((exercise) => Array(parseInt(exercise.sets)).fill(undefined)) ?? [],
-  );
-
-  const getFilledArray = useCallback(() => {
-    return (
-      trainingDay?.exercises.map((exercise, exerciseIndex) =>
-        Array(parseInt(exercise.sets))
-          .fill(undefined)
-          .map((_, setIndex) => {
-            if (doneSetsThisExercise[exerciseIndex][setIndex]) {
-              return doneSetsThisExercise[exerciseIndex][setIndex];
-            } else return undefined;
-          }),
-      ) ?? []
-    );
-  }, [doneSetsThisExercise, trainingDay?.exercises]);
-
-  useEffect(() => {
-    if (trainingDay) {
-      setDoneSetsThisExercise(getFilledArray());
-    }
-  }, [trainingDay]);
-
-  return [doneSetsThisExercise, setDoneSetsThisExercise] as const;
-};
-
 export default function Index() {
+  const numberOfExercises = useAppSelector(getNumberOfExercises);
   const { showPreviousExercise, hasNextExercise, previousExerciseName, nextExerciseName, currentExerciseIndex, selectedTrainingName } = useTrainingProps();
   const [showModal, setShowAlert] = useState(false);
-  const [doneSetsThisExercise, setDoneSetsThisExercise] = useInitialExerciseDataState();
+  const [doneSetsThisExercise, setDoneSetsThisExercise] = useState<PlainExerciseData[][]>(Array(numberOfExercises ?? 0).fill([]));
   const [showEdit, setShowEdit] = useState(false);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -137,7 +108,7 @@ export default function Index() {
       </View>
       <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={trainStyles.wrapper}>
         <ExerciseMetaDataDisplay showEdit={showEdit} setShowEdit={setShowEdit} />
-        <View style={{ flex: 1 }}>{!showEdit && <Inputs setData={doneSetsThisExercise[currentExerciseIndex]} onSetDone={handleSetDone} />}</View>
+        <View style={{ flex: 1 }}>{!showEdit && <Inputs setData={doneSetsThisExercise[currentExerciseIndex] ?? []} onSetDone={handleSetDone} />}</View>
         {!showEdit && <PreviousTraining />}
         <AlertModal title="Quit training early?" content="The progress so far will be saved." isVisible={showModal} onConfirm={handleNotDoneConfirm} onCancel={handleCloseAlert}></AlertModal>
       </ScrollView>

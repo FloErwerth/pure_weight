@@ -10,6 +10,9 @@ export const getSelectedTrainingDay = createSelector([getSavedTrainings, getSele
   }
   return undefined;
 });
+export const getNumberOfExercises = createSelector([getSelectedTrainingDay], (day) => {
+  return day?.exercises.length;
+});
 export const getExerciseNames = createSelector([getSelectedTrainingDay], (day) => {
   return day?.exercises.map((exercise) => exercise.name);
 });
@@ -24,11 +27,18 @@ export const getPreviousTraining = createSelector([getSelectedTrainingDay, getEx
 });
 
 export const getExerciseMetaData = createSelector([getSelectedTrainingDay, getExerciseIndex], (traininigDay, exerciseIndex) => {
-  return traininigDay?.exercises[exerciseIndex];
+  const exercise = traininigDay?.exercises[exerciseIndex];
+  return { weight: exercise?.weight, reps: exercise?.reps, name: exercise?.name, sets: exercise?.sets, pause: exercise?.pause } as ExerciseMetaData;
 });
 
-export const getExerciseMetaDataRaw = createSelector([getExerciseMetaData], (metaData) => metaData as ExerciseMetaData);
-export const getNumberOfSets = createSelector([getExerciseMetaDataRaw], (exerciseMetaDataRaw) => {
+export const getSpecificMetaData = createSelector([getSelectedTrainingDay], (traininigDay) => {
+  return (exerciseIndex: number) => {
+    const exercise = traininigDay?.exercises[exerciseIndex];
+    return { weight: exercise?.weight, reps: exercise?.reps, name: exercise?.name, sets: exercise?.sets, pause: exercise?.pause } as ExerciseMetaData;
+  };
+});
+
+export const getNumberOfSets = createSelector([getExerciseMetaData], (exerciseMetaDataRaw) => {
   if (exerciseMetaDataRaw?.sets) {
     return parseFloat(exerciseMetaDataRaw.sets);
   }

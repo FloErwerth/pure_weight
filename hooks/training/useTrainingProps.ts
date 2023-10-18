@@ -1,11 +1,11 @@
 import { useAppSelector } from "../../store";
-import { getExerciseIndex, getExerciseMetaDataRaw, getExerciseNames, getSelectedTrainingName, getSetIndex } from "../../store/selectors";
+import { getExerciseIndex, getExerciseMetaData, getExerciseNames, getSelectedTrainingName, getSetIndex } from "../../store/selectors";
 import { useMemo } from "react";
 
 export const useTrainingProps = () => {
   const currentExerciseIndex = useAppSelector(getExerciseIndex);
   const currentSetIndex = useAppSelector(getSetIndex);
-  const exerciseMetaData = useAppSelector(getExerciseMetaDataRaw);
+  const exerciseMetaData = useAppSelector(getExerciseMetaData);
   const selectedTrainingName = useAppSelector(getSelectedTrainingName);
   const mappedExerciseNames = useAppSelector(getExerciseNames);
   const extractedNumberOfSets = exerciseMetaData?.sets;
