@@ -44,6 +44,13 @@ export const getNumberOfSets = createSelector([getExerciseMetaData], (exerciseMe
   }
   return undefined;
 });
+export const getSpecificNumberOfSets = createSelector([getSelectedTrainingDay], (day) => {
+  return (exerciseIndex: number) => {
+    if (day && day.exercises) {
+      return parseFloat(day.exercises[exerciseIndex].sets);
+    }
+  };
+});
 export const getTrainingDayData = createSelector([getState], (state) => {
   return state.trainingDays.reduce((days, day) => {
     const exerciseEntries = day.exercises.filter((exercise) => Object.values(exercise.doneExerciseEntries).length > 1);

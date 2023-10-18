@@ -13,7 +13,7 @@ import { ScrollView, View } from "react-native";
 import { Inputs } from "../components/train/Inputs";
 import { Button } from "../../components/Button/Button";
 import { HStack } from "../../components/HStack/HStack";
-import { getNumberOfExercises, getNumberOfSets } from "../../store/selectors";
+import { getNumberOfExercises, getSpecificNumberOfSets } from "../../store/selectors";
 import { SafeAreaView } from "../../components/SafeAreaView/SafeAreaView";
 import { PreviousTraining } from "../../components/PreviousTraining/PreviousTraining";
 
@@ -25,12 +25,14 @@ export default function Index() {
   const [showEdit, setShowEdit] = useState(false);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const numberOfSets = useAppSelector(getNumberOfSets);
+  const getNumberOfSetsWithIndex = useAppSelector(getSpecificNumberOfSets);
 
   const isDone = useMemo(() => {
-    //TODO: check if all exercises are done and make a warning if any is not done (with name of the exercise)
-    return numberOfSets === Object.values(doneSetsThisExercise).length;
-  }, [doneSetsThisExercise, numberOfSets]);
+    return doneSetsThisExercise.every((exercise, index) => {
+      const numberOfSets = getNumberOfSetsWithIndex(index);
+      return numberOfSets === exercise.length;
+    });
+  }, [doneSetsThisExercise, getNumberOfSetsWithIndex]);
 
   const handlePreviousExercise = useCallback(() => {
     dispatch(setExerciseIndex(currentExerciseIndex - 1));
@@ -95,8 +97,9 @@ export default function Index() {
 
   const handleSetDone = useCallback(
     (data: PlainExerciseData, setIndex: number) => {
-      doneSetsThisExercise[currentExerciseIndex][setIndex] = data;
-      setDoneSetsThisExercise(doneSetsThisExercise);
+      const newData = Array.from(doneSetsThisExercise.map((exercise) => Array.from(exercise)));
+      newData[currentExerciseIndex][setIndex] = data;
+      setDoneSetsThisExercise(newData);
     },
     [currentExerciseIndex, doneSetsThisExercise, setDoneSetsThisExercise],
   );
@@ -110,7 +113,9 @@ export default function Index() {
         <ExerciseMetaDataDisplay showEdit={showEdit} setShowEdit={setShowEdit} />
         <View style={{ flex: 1 }}>{!showEdit && <Inputs setData={doneSetsThisExercise[currentExerciseIndex] ?? []} onSetDone={handleSetDone} />}</View>
         {!showEdit && <PreviousTraining />}
-        <AlertModal title="Quit training early?" content="The progress so far will be saved." isVisible={showModal} onConfirm={handleNotDoneConfirm} onCancel={handleCloseAlert}></AlertModal>
+        {showModal && (
+          <AlertModal title="Quit training early?" content="The progress so far will be saved." isVisible={showModal} onConfirm={handleNotDoneConfirm} onCancel={handleCloseAlert}></AlertModal>
+        )}
       </ScrollView>
       <HStack style={trainStyles.buttons}>
         <View style={{ flex: 1 }}>{showPreviousExercise && <Button title={previousExerciseName} theme="secondary" disabled={showEdit} onPress={handlePreviousExercise} />}</View>
