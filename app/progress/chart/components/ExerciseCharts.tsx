@@ -7,13 +7,14 @@ import { borderRadius } from "../../../theme/border";
 import { getUsDate } from "../../../../utils/date";
 import { IsoDate } from "../../../../types/date";
 import { LineChartData } from "react-native-chart-kit/dist/line-chart/LineChart";
-import { SmallMetadataDisplay } from "../../../components/train/ExerciseMetaDataDisplay";
 import { VStack } from "../../../../components/VStack/VStack";
 import { Button } from "../../../../components/Button/Button";
 import { Modal } from "../../../../components/Modal/Modal";
 import { ChartTypeDisplay } from "./ChartTypeDisplay";
 import { useAppSelector } from "../../../../store";
 import { getSelectedTrainingDayData } from "../../../../store/selectors";
+import { HStack } from "../../../../components/HStack/HStack";
+import { styles } from "./styles";
 
 interface ExerciseChartProps {
   exercise: { doneExerciseEntries: DoneExerciseData } & ExerciseMetaData;
@@ -138,12 +139,16 @@ export const ExerciseChart = ({ exercise }: ExerciseChartProps) => {
 
   const width = useMemo(() => (numberEntries > 5 ? numberEntries * 80 : Dimensions.get("screen").width + 250 / (numberEntries * numberEntries * numberEntries)), [numberEntries]);
 
+  const mappedChartTypes = useMemo(() => Object.entries(chartTypeMap).map(([type, label]) => ({ type, label })), []);
+
   return (
     <View ref={viewRef} style={{ backgroundColor: componentBackgroundColor, overflow: "hidden", padding: 10, paddingBottom: 0, borderRadius, margin: 10, gap: 10 }}>
-      <VStack>
-        <Text style={{ color: mainColor, fontSize: 16 }}>{exercise.name}</Text>
-        <SmallMetadataDisplay style={{ fontSize: 12, alignSelf: "center" }} />
-      </VStack>
+      <HStack style={styles.chartHeader}>
+        <Text style={styles.headerTitle}>{exercise.name}</Text>
+        <View style={styles.chartTypeSelection}>
+          <Button onPress={() => setShowSelectionModal(true)} title={chartTypeMap[chartType]} style={{ text: styles.selectionText }} />
+        </View>
+      </HStack>
       <ScrollView horizontal scrollEnabled={numberEntries > 5}>
         <LineChart
           data={data}
@@ -159,7 +164,6 @@ export const ExerciseChart = ({ exercise }: ExerciseChartProps) => {
           yLabelsOffset={25}
         />
       </ScrollView>
-      <Button style={{ button: { padding: 10, marginBottom: 10, backgroundColor } }} title={`Chart type: ${chartTypeMap[chartType ?? "CUMULATIVE"]}`} onPress={() => setShowSelectionModal(true)} />
       {showSelectionModal && (
         <Modal title="Select chart type" onRequestClose={() => setShowSelectionModal(false)} isVisible={showSelectionModal}>
           <VStack style={{ gap: 10 }}>
