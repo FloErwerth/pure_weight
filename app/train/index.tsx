@@ -24,8 +24,8 @@ const useInitialExerciseDataState = () => {
     trainingDay?.exercises.map((exercise) => Array(parseInt(exercise.sets)).fill(undefined)) ?? [],
   );
 
-  const fill = useCallback(() => {
-    setDoneSetsThisExercise(
+  const getFilledArray = useCallback(() => {
+    return (
       trainingDay?.exercises.map((exercise, exerciseIndex) =>
         Array(parseInt(exercise.sets))
           .fill(undefined)
@@ -34,15 +34,15 @@ const useInitialExerciseDataState = () => {
               return doneSetsThisExercise[exerciseIndex][setIndex];
             } else return undefined;
           }),
-      ) ?? [],
+      ) ?? []
     );
-  }, [trainingDay?.exercises]);
+  }, [doneSetsThisExercise, trainingDay?.exercises]);
 
   useEffect(() => {
     if (trainingDay) {
-      fill();
+      setDoneSetsThisExercise(getFilledArray());
     }
-  }, [fill, trainingDay]);
+  }, [trainingDay]);
 
   return [doneSetsThisExercise, setDoneSetsThisExercise] as const;
 };
