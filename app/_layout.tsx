@@ -3,7 +3,7 @@ import { persistor, store } from "../store";
 import React from "react";
 import { PersistGate } from "redux-persist/integration/react";
 import { Provider } from "react-redux";
-import { mainColor, secondaryColor, textFieldBackgroundColor } from "./theme/colors";
+import { componentBackgroundColor, mainColor, secondaryColor } from "./theme/colors";
 import ProgressIcon from "../media/icons/ProgressIcon.svg";
 import CogIcon from "../media/icons/CogIcon.svg";
 import Weightlifter from "../media/icons/Weightlifter.svg";
@@ -16,7 +16,7 @@ export default function index() {
     return (
       <Provider store={store}>
         <PersistGate persistor={persistor}>
-          <Tabs screenOptions={{ tabBarStyle: { backgroundColor: textFieldBackgroundColor, borderTopWidth: 0 } }}>
+          <Tabs screenOptions={{ tabBarStyle: { backgroundColor: componentBackgroundColor, borderTopWidth: 0 } }}>
             <Tabs.Screen
               options={{
                 headerShown: false,

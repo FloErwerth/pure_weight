@@ -1,12 +1,11 @@
 import { Text } from "../../components/Text/Text";
-import { ReactNode, useCallback, useMemo, useState } from "react";
+import { ReactNode, useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "../../utils/navigate";
 import { Routes } from "../../types/routes";
 import { DoneExerciseData, ExerciseMetaData } from "../../store/types";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { useAppDispatch, useAppSelector } from "../../store";
 import { addTrainingDay, editTrainingDay } from "../../store/reducer";
-import { getEditedTrainingDay, getEditedTrainingDayIndex } from "../../store/selectors";
 import { AddExercise } from "../../components/AddExercise/AddExercise";
 import { styles } from "./styles";
 import { PlainInput } from "../../components/PlainInput/PlainInput";
@@ -18,9 +17,9 @@ import { Center } from "../../components/Center/Center";
 import { VStack } from "../../components/VStack/VStack";
 import { SafeAreaView } from "../../components/SafeAreaView/SafeAreaView";
 import { View } from "react-native";
-import { borderRadius } from "../theme/border";
-
-const errorText = { ["workoutNameEmpty"]: "A workout name is required", ["createdExercisesEmpty"]: "The training requires at least 1 exercise" };
+import * as Haptics from "expo-haptics";
+import { NotificationFeedbackType } from "expo-haptics";
+import { getSelectedTrainingDay, getSelectedTrainingDayIndex } from "../../store/selectors";
 
 function getAreValuesEmpty(exercise: ExerciseMetaData) {
   const values = Object.values(exercise);
@@ -36,30 +35,30 @@ export default function Index() {
   const navigate = useNavigate();
 
   const [Alert, setAlert] = useState<ReactNode | null>(null);
-  const editedDay = useAppSelector(getEditedTrainingDay);
+  const editedDay = useAppSelector(getSelectedTrainingDay);
   const title = useMemo(() => (editedDay ? "Edit workout" : "Create workout"), [editedDay]);
-  const editedDayIndex = useAppSelector(getEditedTrainingDayIndex);
+  const editedDayIndex = useAppSelector(getSelectedTrainingDayIndex);
   const [editedExerciseIndex, setEditedExerciseIndex] = useState<number | undefined>(undefined);
   const [workoutName, setWorkoutName] = useState(editedDay?.name);
-  const [workoutErrorText, setWorkoutErrorText] = useState<string | undefined>("");
-  const [createdExerciseErrorText, setCreatedExerciseErrorText] = useState<string | undefined>("");
   const [createdExercises, setCreatedExercises] = useState<({ doneExerciseEntries: DoneExerciseData } & ExerciseMetaData)[]>(editedDay?.exercises.map((exercise) => exercise) ?? []);
   const dispatch = useAppDispatch();
 
+  useEffect(() => {
+    setWorkoutName(editedDay?.name);
+    setCreatedExercises(editedDay?.exercises ?? []);
+  }, [editedDay]);
+
   const handleSetWorkoutName = useCallback((value?: string) => {
-    setWorkoutErrorText("");
     setWorkoutName(value);
   }, []);
 
   const handleDeleteExercise = useCallback(
     (index: number) => {
-      if (editedDay) {
-        const newExercises = [...editedDay.exercises];
-        newExercises.splice(index, 1);
-        setCreatedExercises(newExercises);
-      }
+      const newExercises = [...createdExercises];
+      newExercises.splice(index, 1);
+      setCreatedExercises(newExercises);
     },
-    [editedDay],
+    [createdExercises],
   );
 
   const handleAddNewExercise = useCallback(() => {
@@ -70,9 +69,11 @@ export default function Index() {
   const mappedExercises = useMemo(() => {
     return createdExercises.map((exercise, index) => {
       const onEdit = () => {
+        void Haptics.selectionAsync();
         setEditedExerciseIndex(index);
       };
       const handleConfirmDelete = () => {
+        void Haptics.notificationAsync(NotificationFeedbackType.Success);
         handleDeleteExercise(index);
         setAlert(null);
       };
@@ -112,12 +113,6 @@ export default function Index() {
 
   const handleConfirm = useCallback(() => {
     if (!workoutName || createdExercises.length === 0) {
-      if (!workoutName) {
-        setWorkoutErrorText(errorText["workoutNameEmpty"]);
-      }
-      if (createdExercises.length === 0) {
-        setCreatedExerciseErrorText(errorText["createdExercisesEmpty"]);
-      }
       return;
     }
 
@@ -129,10 +124,6 @@ export default function Index() {
     navigate(Routes.HOME);
   }, [workoutName, createdExercises, editedDay, navigate, dispatch, editedDayIndex]);
 
-  const exercisesWrapperStyles = useMemo(() => {
-    return { ...styles.savedTrainings, ...(createdExerciseErrorText ? { borderWidth: 1, borderColor: "red", borderRadius } : {}) };
-  }, [createdExerciseErrorText]);
-
   const handleNavigateHome = useCallback(() => navigate(Routes.HOME), [navigate]);
 
   return (
@@ -143,9 +134,8 @@ export default function Index() {
           <VStack style={styles.stack}>
             <PlainInput value={workoutName} setValue={handleSetWorkoutName} fontSize={30} placeholder="Workout name" />
             <View style={styles.contentWrapper}>
-              <Text style={styles.errorBox}>{createdExerciseErrorText}</Text>
               <KeyboardAwareScrollView keyboardShouldPersistTaps="handled" keyboardOpeningTime={0}>
-                <View style={exercisesWrapperStyles}>
+                <View style={styles.savedTrainings}>
                   <>
                     {mappedExercises}
                     <AddExercise disabled={editedExerciseIndex !== undefined} onPress={handleAddNewExercise} />

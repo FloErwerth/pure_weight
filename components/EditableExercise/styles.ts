@@ -7,7 +7,7 @@ const Themes = {
   Inline: {
     wrapper: {
       padding: 0,
-      backgroundColor: "transparent",
+      backgroundColor: componentBackgroundColor,
     },
   },
   Default: {

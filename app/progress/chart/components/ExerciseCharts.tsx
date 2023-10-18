@@ -2,7 +2,7 @@ import { Dimensions, ScrollView, Text, View } from "react-native";
 import { LineChart } from "react-native-chart-kit";
 import { DoneExerciseData, ExerciseMetaData, ExerciseSets, PlainExerciseData } from "../../../../store/types";
 import { useCallback, useMemo, useRef, useState } from "react";
-import { backgroundColor, mainColor, textFieldBackgroundColor } from "../../../theme/colors";
+import { backgroundColor, componentBackgroundColor, mainColor } from "../../../theme/colors";
 import { borderRadius } from "../../../theme/border";
 import { getUsDate } from "../../../../utils/date";
 import { IsoDate } from "../../../../types/date";
@@ -117,8 +117,8 @@ export const ExerciseChart = ({ exercise }: ExerciseChartProps) => {
 
   const config = useMemo(
     () => ({
-      backgroundGradientFrom: textFieldBackgroundColor,
-      backgroundGradientTo: textFieldBackgroundColor,
+      backgroundGradientFrom: componentBackgroundColor,
+      backgroundGradientTo: componentBackgroundColor,
       decimalPlaces: 0,
       color: () => "#111",
       labelColor: () => mainColor,
@@ -139,7 +139,7 @@ export const ExerciseChart = ({ exercise }: ExerciseChartProps) => {
   const width = useMemo(() => (numberEntries > 5 ? numberEntries * 80 : Dimensions.get("screen").width + 250 / (numberEntries * numberEntries * numberEntries)), [numberEntries]);
 
   return (
-    <View ref={viewRef} style={{ backgroundColor: textFieldBackgroundColor, overflow: "hidden", padding: 10, paddingBottom: 0, borderRadius, margin: 10, gap: 10 }}>
+    <View ref={viewRef} style={{ backgroundColor: componentBackgroundColor, overflow: "hidden", padding: 10, paddingBottom: 0, borderRadius, margin: 10, gap: 10 }}>
       <VStack>
         <Text style={{ color: mainColor, fontSize: 16 }}>{exercise.name}</Text>
         <SmallMetadataDisplay style={{ fontSize: 12, alignSelf: "center" }} />

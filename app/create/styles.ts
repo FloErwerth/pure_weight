@@ -5,6 +5,7 @@ import { borderRadius } from "../theme/border";
 export const styles = StyleSheet.create({
   stack: {
     padding: 15,
+    gap: 10,
     justifyContent: "space-between",
     alignItems: "center",
     flex: 1,

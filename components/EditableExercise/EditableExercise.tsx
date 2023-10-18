@@ -7,6 +7,7 @@ import { HStack } from "../HStack/HStack";
 import { Center } from "../Center/Center";
 import { ThemedTextInput } from "../TextInput/ThemedTextInput";
 import { mainColor } from "../../app/theme/colors";
+import * as Haptics from "expo-haptics";
 
 interface EditableExerciseProps {
   exercise: ExerciseMetaData;
@@ -25,15 +26,21 @@ export const EditableExercise = ({ exercise, onConfirmEdit, onCancel, theme }: E
   const classes = useMemo(() => styles(theme), [theme]);
 
   const handleConfirm = useCallback(() => {
+    void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     onConfirmEdit({ name, reps, sets, weight, pause });
   }, [onConfirmEdit, name, reps, sets, weight, pause]);
+
+  const handleCancel = useCallback(() => {
+    void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
+    onCancel();
+  }, [onCancel]);
 
   return (
     <View style={classes.wrapper}>
       <HStack style={classes.headerWrapper}>
         <ThemedTextInput placeholder="Exercise name" ref={inputRef} value={name} onChangeText={setName} style={classes.title} />
         <HStack style={classes.buttons}>
-          <Pressable onPress={onCancel}>
+          <Pressable onPress={handleCancel}>
             <MaterialCommunityIcons color={mainColor} name="cancel" size={26}></MaterialCommunityIcons>
           </Pressable>
           <Pressable onPress={handleConfirm}>

@@ -14,7 +14,7 @@ import { Center } from "../Center/Center";
 import { Text } from "../Text/Text";
 import { borderRadius } from "../../app/theme/border";
 import { ThemedTextInput } from "../TextInput/ThemedTextInput";
-import { backgroundColor, mainColor, mainDisabledColor, secondaryColor, textFieldBackgroundColor } from "../../app/theme/colors";
+import { mainColor, mainDisabledColor, secondaryColor, textFieldBackgroundColor } from "../../app/theme/colors";
 import { setSetIndex } from "../../store/reducer";
 
 interface SetInputRowProps {
@@ -77,7 +77,7 @@ export const SetInputRow = ({ onSetDone, setIndex, isActiveSet, hasData, data }:
     <>
       <HStack style={styles.stack}>
         <Center style={{ flex: 0.55, height: 50 }}>
-          <View style={{ backgroundColor: !isActiveSet ? "transparent" : backgroundColor, borderRadius }}>
+          <View style={{ backgroundColor: !isActiveSet ? "transparent" : textFieldBackgroundColor, borderRadius }}>
             <Text style={{ padding: 10, color: hasData || isActiveSet ? mainColor : secondaryColor, fontSize: 16 }}>{setIndex}</Text>
           </View>
         </Center>
@@ -87,7 +87,7 @@ export const SetInputRow = ({ onSetDone, setIndex, isActiveSet, hasData, data }:
             onFocus={handleOnFocus}
             style={{
               padding: 10,
-              backgroundColor: !isActiveSet ? "transparent" : backgroundColor,
+              backgroundColor: !isActiveSet ? "transparent" : textFieldBackgroundColor,
               borderRadius,
               fontSize: 16,
               color: !hasData && !isActiveSet ? secondaryColor : mainColor,
@@ -102,7 +102,7 @@ export const SetInputRow = ({ onSetDone, setIndex, isActiveSet, hasData, data }:
           <ThemedTextInput
             returnKeyType="done"
             onFocus={handleOnFocus}
-            style={{ padding: 10, borderRadius, backgroundColor: !isActiveSet ? "transparent" : backgroundColor, fontSize: 16, color: !hasData && !isActiveSet ? secondaryColor : mainColor }}
+            style={{ padding: 10, borderRadius, backgroundColor: !isActiveSet ? "transparent" : textFieldBackgroundColor, fontSize: 16, color: !hasData && !isActiveSet ? secondaryColor : mainColor }}
             value={reps}
             onChangeText={setReps}
             textAlign="center"
@@ -113,7 +113,7 @@ export const SetInputRow = ({ onSetDone, setIndex, isActiveSet, hasData, data }:
           <Button
             title={note ? "Show note" : "Add note"}
             style={{
-              button: { borderRadius, padding: 10, backgroundColor: !isActiveSet ? "transparent" : backgroundColor },
+              button: { borderRadius, padding: 10, backgroundColor: !isActiveSet ? "transparent" : textFieldBackgroundColor },
               text: { color: !hasData && !isActiveSet ? secondaryColor : mainColor, fontSize: 16 },
             }}
             theme="ghost"
@@ -121,7 +121,7 @@ export const SetInputRow = ({ onSetDone, setIndex, isActiveSet, hasData, data }:
           />
         </Center>
         <Center style={{ flex: 0.6, height: 50 }}>
-          <Button style={{ button: { width: 40, padding: 7, borderRadius, backgroundColor: isActiveSet ? "#222" : textFieldBackgroundColor } }} onPress={handleSetDone}>
+          <Button style={{ button: { width: 40, padding: 7, borderRadius, backgroundColor: isActiveSet ? textFieldBackgroundColor : "transparent" } }} onPress={handleSetDone}>
             <MaterialCommunityIcons size={24} style={{ width: 24, color: isActiveSet ? mainColor : !hasData ? mainDisabledColor : "green" }} name="check-bold" />
           </Button>
           <EditNoteModal note={note} showModal={showModal} onDoneEdit={handleConfirmNoteModal} onCancel={() => setShowModal(false)} />

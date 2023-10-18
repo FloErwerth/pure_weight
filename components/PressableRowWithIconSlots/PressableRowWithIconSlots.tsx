@@ -4,6 +4,7 @@ import { Pressable } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { HStack } from "../HStack/HStack";
 import { mainColor, mainDisabledColor } from "../../app/theme/colors";
+import * as Haptics from "expo-haptics";
 
 type IconType = {
   icon?: ComponentProps<typeof MaterialCommunityIcons>["name"];
@@ -23,17 +24,20 @@ export const PressableRowWithIconSlots = ({ children, onClick, Icon1, Icon2 }: P
   const showIcon2 = useMemo(() => (Icon2 && !Icon2.hide) ?? false, [Icon2]);
 
   const handleClick = useCallback(() => {
+    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     onClick?.();
   }, [onClick]);
 
   const handleClickIcon1 = useCallback(() => {
     if (Icon1?.onPress) {
+      void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
       Icon1.onPress();
     }
   }, [Icon1]);
 
   const handleClickIcon2 = useCallback(() => {
     if (Icon2?.onPress) {
+      void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
       Icon2.onPress();
     }
   }, [Icon2]);

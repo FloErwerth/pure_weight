@@ -8,7 +8,8 @@ import { TrainingHeader } from "./TrainingHeader";
 import { ThemedView } from "../../../components/View/View";
 import { View } from "react-native";
 import { borderRadius } from "../../theme/border";
-import { textFieldBackgroundColor } from "../../theme/colors";
+import * as Haptics from "expo-haptics";
+import { componentBackgroundColor } from "../../theme/colors";
 
 interface InputsProps {
   onSetDone: (data: PlainExerciseData, index: number) => void;
@@ -50,6 +51,7 @@ export const Inputs = ({ onSetDone, setData }: InputsProps) => {
         onSetDone({ weight, reps, note }, setIndex);
         setSets(newSets);
         dispatch(setSetIndex(currentSetIndex + 1));
+        void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
       }
     },
     [currentSetIndex, dispatch, onSetDone, setSets, sets],
@@ -61,7 +63,7 @@ export const Inputs = ({ onSetDone, setData }: InputsProps) => {
 
   return (
     <View style={{ flex: 1 }}>
-      <ThemedView style={{ paddingTop: 15, paddingBottom: 10, alignSelf: "stretch", borderRadius, backgroundColor: textFieldBackgroundColor }}>
+      <ThemedView style={{ paddingTop: 15, paddingBottom: 10, alignSelf: "stretch", borderRadius, backgroundColor: componentBackgroundColor }}>
         <TrainingHeader />
         {sets.map((exerciseMetaData, index) => {
           return (

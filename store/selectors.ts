@@ -3,24 +3,10 @@ import { AppState, ExerciseMetaData, TrainingDay } from "./types";
 
 export const getState = (state: AppState) => state;
 export const getSavedTrainings = createSelector([getState], (state) => Array.from(state.trainingDays.values()).map((day) => day));
-export const getEditedTrainingDayIndex = createSelector([getState], (state) => {
-  return state.trainingDayIndex;
-});
-export const getEditedTrainingDay = createSelector([getSavedTrainings, getEditedTrainingDayIndex], (trainings, index) => {
+export const getSelectedTrainingDayIndex = createSelector([getState], (state) => state.trainingDayIndex);
+export const getSelectedTrainingDay = createSelector([getSavedTrainings, getSelectedTrainingDayIndex], (trainings, index) => {
   if (index !== undefined) {
     return trainings[index];
-  }
-  return undefined;
-});
-export const getSelectedTrainingDay = createSelector([getState], (state) => {
-  if (state.trainingDayIndex !== undefined) {
-    return state.trainingDays[state.trainingDayIndex];
-  }
-  return undefined;
-});
-export const getEditedExericseIndex = createSelector([getSelectedTrainingDay, getState], (day, state) => {
-  if (state.editedExerciseIndex !== undefined) {
-    return state.editedExerciseIndex;
   }
   return undefined;
 });
@@ -57,7 +43,6 @@ export const getTrainingDayData = createSelector([getState], (state) => {
     return days;
   }, [] as TrainingDay[]);
 });
-
 export const getSelectedTrainingDayData = createSelector([getTrainingDayData, getTrainingIndex], (data, index) => {
   if (index === undefined) {
     return undefined;

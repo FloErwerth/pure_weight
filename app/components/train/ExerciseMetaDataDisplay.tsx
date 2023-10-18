@@ -2,7 +2,7 @@ import { trainStyles } from "../../train/trainStyles";
 import { useAppDispatch, useAppSelector } from "../../../store";
 import { getExerciseIndex, getExerciseMetaDataRaw, getSelectedTrainingDay, getTrainingIndex } from "../../../store/selectors";
 import { Pressable, TextStyle } from "react-native";
-import { Dispatch, SetStateAction, useCallback, useMemo } from "react";
+import { Dispatch, SetStateAction, useCallback, useEffect, useMemo } from "react";
 import { EditableExercise } from "../../../components/EditableExercise/EditableExercise";
 import { editTrainingDay } from "../../../store/reducer";
 import { ExerciseMetaData } from "../../../store/types";
@@ -10,8 +10,9 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { HStack } from "../../../components/HStack/HStack";
 import { VStack } from "../../../components/VStack/VStack";
 import { Text } from "../../../components/Text/Text";
-import { mainColor, textFieldBackgroundColor } from "../../theme/colors";
+import { componentBackgroundColor, mainColor } from "../../theme/colors";
 import { borderRadius } from "../../theme/border";
+import * as Haptics from "expo-haptics";
 
 interface ExerciseMetaDataDisplayProps {
   showEdit: boolean;
@@ -61,8 +62,14 @@ export const ExerciseMetaDataDisplay = ({ showEdit, setShowEdit }: ExerciseMetaD
     [currentExerciseIndex, dispatch, selectedTraining?.exercises, selectedTraining?.name, setShowEdit, trainingDayIndex],
   );
 
+  useEffect(() => {
+    if (showEdit) {
+      void Haptics.selectionAsync();
+    }
+  }, [showEdit]);
+
   return (
-    <HStack style={{ justifyContent: "space-between", borderRadius, backgroundColor: textFieldBackgroundColor, padding: 10 }}>
+    <HStack style={{ justifyContent: "space-between", borderRadius, backgroundColor: componentBackgroundColor, padding: 10 }}>
       <VStack style={{ width: showEdit ? "100%" : "auto" }}>
         {showEdit ? (
           <EditableExercise theme={"Inline"} exercise={exerciseMetaData} onConfirmEdit={handleUpdateMetaData} onCancel={() => setShowEdit(false)} />

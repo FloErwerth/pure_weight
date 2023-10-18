@@ -1,7 +1,7 @@
 import { Modal } from "../../Modal/Modal";
 import { VStack } from "../../VStack/VStack";
 import { Text, View } from "react-native";
-import { mainColor, textFieldBackgroundColor } from "../../../app/theme/colors";
+import { componentBackgroundColor, mainColor } from "../../../app/theme/colors";
 import { HStack } from "../../HStack/HStack";
 import { borderRadius } from "../../../app/theme/border";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -31,15 +31,15 @@ export const Welcome = () => {
         <Modal isVisible={renderModal}>
           <VStack style={{ gap: 15 }}>
             <Text style={{ fontSize: 26, textAlign: "center", color: mainColor }}>Welcome to Pure Weight</Text>
-            <HStack style={{ backgroundColor: textFieldBackgroundColor, borderRadius, padding: 10, alignItems: "center", gap: 5 }}>
+            <HStack style={{ backgroundColor: componentBackgroundColor, borderRadius, padding: 10, alignItems: "center", gap: 5 }}>
               <MaterialCommunityIcons name="weight" color={mainColor} size={20} />
               <Text style={{ paddingRight: 15, fontSize: 16, paddingLeft: 10, color: mainColor }}>This app is designed to track weights as simple as possible</Text>
             </HStack>
-            <HStack style={{ backgroundColor: textFieldBackgroundColor, borderRadius, padding: 10, alignItems: "center", gap: 5 }}>
+            <HStack style={{ backgroundColor: componentBackgroundColor, borderRadius, padding: 10, alignItems: "center", gap: 5 }}>
               <MaterialCommunityIcons name="content-save-off" color={mainColor} size={20} />
               <Text style={{ paddingRight: 15, fontSize: 16, paddingLeft: 10, color: mainColor }}>Your data is stored only on your phone and will not be send to any server</Text>
             </HStack>
-            <HStack style={{ backgroundColor: textFieldBackgroundColor, borderRadius, padding: 10, alignItems: "center", gap: 5 }}>
+            <HStack style={{ backgroundColor: componentBackgroundColor, borderRadius, padding: 10, alignItems: "center", gap: 5 }}>
               <MaterialCommunityIcons name="help-box" color={mainColor} size={20} />
               <Text style={{ paddingRight: 15, fontSize: 16, paddingLeft: 10, color: mainColor }}>Feel free to contact me to give feedback to features or witnessing a bug</Text>
             </HStack>

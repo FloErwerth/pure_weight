@@ -2,8 +2,10 @@ import { createAction, createReducer } from "@reduxjs/toolkit/src";
 import { AppState, DoneExerciseData, ExerciseMetaData, PlainExerciseData, TrainingDay } from "./types";
 import { getDateTodayIso } from "../utils/date";
 import { ChartType } from "../app/progress/chart/components/ExerciseCharts";
+import { mockState } from "./index";
 
 export const setChartType = createAction<ChartType>("set_chart_type");
+export const setMockState = createAction("set_mock_state");
 export const setFirstTimeRendered = createAction<boolean>("set_greeting");
 export const setState = createAction<AppState>("set_state");
 export const addTrainingDay = createAction<TrainingDay>("add_training_day");
@@ -20,6 +22,7 @@ export const storeReducer = createReducer<AppState>({ chartType: "CUMULATIVE", t
     .addCase(setState, (state, action) => {
       return action.payload;
     })
+    .addCase(setMockState, () => mockState)
     .addCase(setChartType, (state, action) => {
       state.chartType = action.payload;
     })
@@ -46,7 +49,9 @@ export const storeReducer = createReducer<AppState>({ chartType: "CUMULATIVE", t
         const dateToday = getDateTodayIso();
         for (let exerciseIndex = 0; exerciseIndex < state.trainingDays[state.trainingDayIndex].exercises.length; exerciseIndex++) {
           const currentSetData: DoneExerciseData = state.trainingDays[state.trainingDayIndex]?.exercises[exerciseIndex]?.doneExerciseEntries ?? {};
-          currentSetData[dateToday] = action.payload[exerciseIndex]?.reduce((obj = {}, entry, index) => ({ ...obj, [index]: entry }), {});
+          if (action.payload[exerciseIndex]) {
+            currentSetData[dateToday] = action.payload[exerciseIndex]?.reduce((obj = {}, entry, index) => ({ ...obj, [index]: entry }), {});
+          }
         }
       }
     })

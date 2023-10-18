@@ -6,6 +6,7 @@
     "orientation": "portrait",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
+    "icon": "./media/icons/Logo.png",
     "splash": {
       "image": "./media/icons/Logo.png",
       "resizeMode": "contain",
@@ -18,6 +19,7 @@
       "supportsTablet": true
     },
     "android": {
+      "permissions": ["VIBRATE"],
       "package": "com.pure_weight"
     },
     "web": {

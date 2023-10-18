@@ -1,13 +1,13 @@
 import { StyleSheet, TextStyle, ViewStyle } from "react-native";
 import type { ButtonThemes } from "./Button";
 import { borderRadius } from "../../app/theme/border";
-import { mainColor, textFieldBackgroundColor } from "../../app/theme/colors";
+import { mainColor, primaryColor } from "../../app/theme/colors";
 
 const themes = (disabled: boolean): Record<ButtonThemes, Record<"button" | "text", ViewStyle | TextStyle>> => ({
   primary: {
     button: {
       padding: 10,
-      backgroundColor: textFieldBackgroundColor,
+      backgroundColor: primaryColor,
       borderRadius,
       borderColor: "black",
     },
@@ -20,7 +20,7 @@ const themes = (disabled: boolean): Record<ButtonThemes, Record<"button" | "text
       padding: 10,
       borderWidth: 1,
       borderRadius,
-      borderColor: textFieldBackgroundColor,
+      borderColor: primaryColor,
     },
     text: {
       color: mainColor,

@@ -5,11 +5,12 @@ import { useNavigate } from "../../utils/navigate";
 import { Routes } from "../../types/routes";
 import { useAppDispatch, useAppSelector } from "../../store";
 import { getSavedTrainings } from "../../store/selectors";
-import { removeTrainingDay, setSelectedDay } from "../../store/reducer";
+import { removeTrainingDay, setMockState, setSelectedDay } from "../../store/reducer";
 import { styles } from "./styles";
 import { AlertModal } from "../../components/AlertModal/AlertModal";
 import { SafeAreaView } from "../../components/SafeAreaView/SafeAreaView";
 import { SiteNavigationButtons } from "../../components/SiteNavigationButtons/SiteNavigationButtons";
+import { Button } from "../../components/Button/Button";
 
 export default function Main() {
   const navigate = useNavigate();
@@ -59,7 +60,7 @@ export default function Main() {
     <SafeAreaView style={styles.view}>
       <View style={styles.center}>
         <View style={styles.stack}>
-          <SiteNavigationButtons title="Workouts" handleConfirm={handlePress} />
+          <SiteNavigationButtons title="Workouts" handleConfirmIcon={{ name: "plus", size: 40 }} handleConfirm={handlePress} />
           <ScrollView style={styles.view}>
             <View style={styles.savedTrainings}>
               {savedTrainings.map((trainingDay, index) => (
@@ -77,6 +78,7 @@ export default function Main() {
         </View>
       </View>
       {Alert}
+      <Button title={"Use Mock State"} onPress={() => dispatch(setMockState())} />
     </SafeAreaView>
   );
 }

@@ -10,6 +10,7 @@ export type PlainExerciseData = {
   reps: string;
   note?: string;
 };
+
 export type DoneExerciseData = {
   [date: IsoDate]: ExerciseSets;
 };
