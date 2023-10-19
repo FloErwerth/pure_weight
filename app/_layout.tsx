@@ -13,20 +13,21 @@ import { TabBarLabel } from "../components/App/TabBar/TabBarLabel";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { useTranslation } from "react-i18next";
 import "../locales/i18next";
-import { SafeAreaView } from "../components/SafeAreaView/SafeAreaView";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { View } from "react-native";
 
 export default function index() {
   const App = () => {
     const { t } = useTranslation();
-
+    const insets = useSafeAreaInsets();
     return (
       <GestureHandlerRootView style={{ flex: 1 }}>
-        <SafeAreaView style={{ flex: 1 }}>
+        <View style={{ flex: 1, paddingLeft: insets.left, paddingTop: insets.top, paddingRight: insets.right }}>
           <Provider store={store}>
             <PersistGate persistor={persistor}>
               <Tabs
                 screenOptions={{
-                  tabBarStyle: { backgroundColor: componentBackgroundColor, borderTopWidth: 0, margin: 0 },
+                  tabBarStyle: { backgroundColor: componentBackgroundColor, borderTopWidth: 0, paddingTop: 5 },
                 }}
               >
                 <Tabs.Screen
@@ -74,7 +75,7 @@ export default function index() {
               </Tabs>
             </PersistGate>
           </Provider>
-        </SafeAreaView>
+        </View>
       </GestureHandlerRootView>
     );
   };
