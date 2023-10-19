@@ -1,5 +1,5 @@
 import { createAction, createReducer } from "@reduxjs/toolkit/src";
-import { AppState, DoneExerciseData, ErrorFields, ExerciseMetaData, PlainExerciseData, TrainingDay } from "./types";
+import type { AppState, DoneExerciseData, ErrorFields, ExerciseMetaData, ExerciseMetaDataWithDoneEntries, PlainExerciseData, TrainingDay } from "./types";
 import { getDateTodayIso } from "../utils/date";
 import { ChartType } from "../components/App/progress/chart/components/ExerciseCharts";
 import { mockState } from "./index";
@@ -10,7 +10,7 @@ export const setFirstTimeRendered = createAction<boolean>("set_greeting");
 export const setState = createAction<AppState>("set_state");
 export const addTrainingDay = createAction<TrainingDay>("add_training_day");
 export const editTrainingDay = createAction<{ index: number; trainingDay: TrainingDay }>("edit_training_day");
-export const adjustTrainingDayExercises = createAction<{ from: number; to: number }>("adjust_exercises");
+export const overwriteTrainingDayExercises = createAction<ExerciseMetaDataWithDoneEntries>("adjust_exercises");
 export const removeTrainingDay = createAction<number>("remove_training_day");
 export const setTrainingDayIndex = createAction<number | undefined>("edit_day");
 export const addSetDataToTrainingDay = createAction<(PlainExerciseData | undefined)[][]>("set_training_data");
@@ -42,12 +42,9 @@ export const storeReducer = createReducer<AppState>(
       .addCase(cleanErrors, (state) => {
         state.errors = [];
       })
-      .addCase(adjustTrainingDayExercises, (state, action) => {
+      .addCase(overwriteTrainingDayExercises, (state, action) => {
         if (state.trainingDayIndex) {
-          const newExercises = [...state.trainingDays[state.trainingDayIndex].exercises];
-          const toExercise = newExercises[action.payload.to];
-          newExercises.splice(action.payload.to, 1, newExercises[action.payload.from]);
-          newExercises.splice(action.payload.from, 1, toExercise);
+          state.trainingDays[state.trainingDayIndex].exercises = action.payload;
         }
       })
       .addCase(addTrainingDay, (state, action) => {

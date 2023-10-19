@@ -11,9 +11,12 @@ export type PlainExerciseData = {
   note?: string;
 };
 
+export type ExerciseMetaDataWithDoneEntries = ({ doneExerciseEntries: DoneExerciseData } & ExerciseMetaData)[];
+
 export type DoneExerciseData = {
   [date: IsoDate]: ExerciseSets;
 };
+
 export type ExerciseSets = Partial<{ [set: string]: PlainExerciseData }>;
 
 export type ExerciseMetaData = {

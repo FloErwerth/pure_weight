@@ -2,9 +2,9 @@ import { Text } from "../../components/Text/Text";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "../../utils/navigate";
 import { Routes } from "../../types/routes";
-import { DoneExerciseData, ExerciseMetaData } from "../../store/types";
+import { ExerciseMetaData, ExerciseMetaDataWithDoneEntries } from "../../store/types";
 import { useAppDispatch, useAppSelector } from "../../store";
-import { addTrainingDay, cleanErrors, editTrainingDay, setError, setTrainingDayIndex } from "../../store/reducer";
+import { addTrainingDay, cleanErrors, editTrainingDay, overwriteTrainingDayExercises, setError, setTrainingDayIndex } from "../../store/reducer";
 import { AddExercise } from "../../components/AddExercise/AddExercise";
 import { styles } from "../../components/App/create/styles";
 import { PlainInput } from "../../components/PlainInput/PlainInput";
@@ -50,7 +50,7 @@ export default function Index() {
   const editedDayIndex = useAppSelector(getSelectedTrainingDayIndex);
   const [editedExerciseIndex, setEditedExerciseIndex] = useState<number | undefined>(undefined);
   const [workoutName, setWorkoutName] = useState(editedDay?.name);
-  const [createdExercises, setCreatedExercises] = useState<({ doneExerciseEntries: DoneExerciseData } & ExerciseMetaData)[]>(editedDay?.exercises.map((exercise) => exercise) ?? []);
+  const [createdExercises, setCreatedExercises] = useState<ExerciseMetaDataWithDoneEntries>(editedDay?.exercises.map((exercise) => exercise) ?? []);
   const dispatch = useAppDispatch();
   useEffect(() => {
     setWorkoutName(editedDay?.name);
@@ -180,9 +180,11 @@ export default function Index() {
 
   const handleOnDragEnd = useCallback(
     ({ data }: { data: MappedExercises[] }) => {
-      setCreatedExercises(data.map((dataPoint, index) => ({ ...dataPoint.exercise, doneExerciseEntries: createdExercises[index].doneExerciseEntries })));
+      const newExercises = data.map((dataPoint, index) => ({ ...dataPoint.exercise, doneExerciseEntries: createdExercises[index].doneExerciseEntries }));
+      setCreatedExercises(newExercises);
+      dispatch(overwriteTrainingDayExercises(newExercises));
     },
-    [createdExercises],
+    [createdExercises, dispatch],
   );
 
   return (
