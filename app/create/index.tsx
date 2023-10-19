@@ -9,7 +9,6 @@ import { AddExercise } from "../../components/AddExercise/AddExercise";
 import { styles } from "../../components/App/create/styles";
 import { PlainInput } from "../../components/PlainInput/PlainInput";
 import { SiteNavigationButtons } from "../../components/SiteNavigationButtons/SiteNavigationButtons";
-import { EditableExercise } from "../../components/EditableExercise/EditableExercise";
 import { PressableRowWithIconSlots } from "../../components/PressableRowWithIconSlots/PressableRowWithIconSlots";
 import { AlertModal } from "../../components/AlertModal/AlertModal";
 import { SafeAreaView } from "../../components/SafeAreaView/SafeAreaView";
@@ -17,9 +16,10 @@ import { View } from "react-native";
 import * as Haptics from "expo-haptics";
 import { NotificationFeedbackType } from "expo-haptics";
 import { getSelectedTrainingDay, getSelectedTrainingDayIndex } from "../../store/selectors";
+import DraggableFlatList from "react-native-draggable-flatlist/src/components/DraggableFlatList";
 import { ScaleDecorator } from "react-native-draggable-flatlist";
 import { useTranslation } from "react-i18next";
-import KeyboardAwareDraggableFlatlist from "../../components/KeyboardAwareDraggableFlatlist/KeyboardAwareDraggableFlatlist";
+import { AddExerciseModal } from "../../components/AddExerciseModal/AddExerciseModal";
 
 function getAreValuesEmpty(exercise: ExerciseMetaData) {
   const values = Object.values(exercise);
@@ -30,7 +30,7 @@ function getAreValuesEmpty(exercise: ExerciseMetaData) {
     return !value;
   });
 }
-
+const emptyExercise: ExerciseMetaData = { reps: "", pause: "", sets: "", weight: "", name: "" };
 export default function Index() {
   const navigate = useNavigate();
   const { t } = useTranslation();
@@ -42,8 +42,6 @@ export default function Index() {
   const [workoutName, setWorkoutName] = useState(editedDay?.name);
   const [createdExercises, setCreatedExercises] = useState<({ doneExerciseEntries: DoneExerciseData } & ExerciseMetaData)[]>(editedDay?.exercises.map((exercise) => exercise) ?? []);
   const dispatch = useAppDispatch();
-  const [addingNewExercise, setAddingNewExercise] = useState(false);
-
   useEffect(() => {
     setWorkoutName(editedDay?.name);
     setCreatedExercises(editedDay?.exercises ?? []);
@@ -62,11 +60,21 @@ export default function Index() {
     [createdExercises],
   );
 
-  const handleAddNewExercise = useCallback(() => {
-    setCreatedExercises([...createdExercises, { doneExerciseEntries: {}, pause: "", reps: "", weight: "", name: "", sets: "" }]);
-    setEditedExerciseIndex(createdExercises.length);
-    setAddingNewExercise(true);
-  }, [createdExercises]);
+  const handleConfirmExerciseModal = useCallback(
+    (exercise: ExerciseMetaData) => {
+      if (editedExerciseIndex !== undefined && editedExerciseIndex !== -1) {
+        const extractedExercise = createdExercises[editedExerciseIndex];
+        const newExercises = [...createdExercises];
+        newExercises.splice(editedExerciseIndex, 1, { ...exercise, doneExerciseEntries: extractedExercise.doneExerciseEntries });
+        setCreatedExercises(newExercises);
+      } else {
+        setCreatedExercises([...createdExercises, { doneExerciseEntries: {}, ...exercise }]);
+        setEditedExerciseIndex(createdExercises.length);
+      }
+      setEditedExerciseIndex(undefined);
+    },
+    [createdExercises, editedExerciseIndex],
+  );
 
   const handleCleanErrors = useCallback(() => {
     dispatch(cleanErrors());
@@ -84,18 +92,19 @@ export default function Index() {
         void Haptics.selectionAsync();
         setEditedExerciseIndex(index);
       };
+
       const handleConfirmDelete = () => {
         void Haptics.notificationAsync(NotificationFeedbackType.Success);
         handleDeleteExercise(index);
         setAlert(null);
       };
+
       const handleOnConfirmEdit = (exercise: ExerciseMetaData) => {
         if (exercise.sets && exercise.name && exercise.weight && exercise.reps) {
           const newExercises = [...createdExercises];
           newExercises.splice(index, 1, { doneExerciseEntries: createdExercises[index].doneExerciseEntries, ...exercise });
           setCreatedExercises(newExercises);
-          setEditedExerciseIndex(undefined);
-          setAddingNewExercise(false);
+          setEditedExerciseIndex(-1);
         }
       };
       const handleCancel = () => {
@@ -104,7 +113,7 @@ export default function Index() {
           newExercises.splice(index, 1);
           setCreatedExercises(newExercises);
         }
-        setEditedExerciseIndex(undefined);
+        setEditedExerciseIndex(-1);
       };
       const onDelete = () =>
         setAlert(<AlertModal onCancel={() => setAlert(null)} onConfirm={handleConfirmDelete} title={t("alert_delete_title")} content={t("alert_delete_message")} isVisible={true} />);
@@ -169,39 +178,36 @@ export default function Index() {
   return (
     <>
       <SafeAreaView style={styles.innerWrapper}>
-        <SiteNavigationButtons disabled={editedExerciseIndex !== undefined} handleBack={handleBackButton} handleConfirm={handleConfirm} titleFontSize={30} title={title} />
+        <SiteNavigationButtons handleBack={handleBackButton} handleConfirm={handleConfirm} titleFontSize={30} title={title} />
         <View style={styles.contentWrapper}>
           <PlainInput value={workoutName} setValue={handleSetWorkoutName} fontSize={30} placeholder={t("workout_name")} />
-          <KeyboardAwareDraggableFlatlist
-            data={mappedExercises}
+          <DraggableFlatList
+            scrollsToTop
             keyboardShouldPersistTaps="handled"
             keyExtractor={(item) => `${item.index}${item.exercise.name}${item.exercise.pause}`}
+            data={mappedExercises}
             onDragEnd={handleOnDragEnd}
-            renderItem={({ drag, item: { index, exercise, handleOnConfirmEdit, onEdit, edited, handleCancel, onDelete } }) => (
+            renderItem={({ drag, item: { index, exercise, onEdit, onDelete } }) => (
               <ScaleDecorator activeScale={0.95}>
                 <View style={{ marginBottom: 10 }}>
-                  {edited ? (
-                    <>
-                      <EditableExercise exercise={exercise} onCancel={handleCancel} onConfirmEdit={handleOnConfirmEdit} />
-                    </>
-                  ) : (
-                    <PressableRowWithIconSlots
-                      onClick={onEdit}
-                      key={exercise.name.concat(index.toString())}
-                      Icon1={{ icon: "delete", onPress: onDelete, disabled: editedExerciseIndex !== undefined }}
-                      Icon2={{ icon: "drag", onLongPress: drag, disabled: editedExerciseIndex !== undefined }}
-                    >
-                      <Text style={styles.text}>{exercise.name}</Text>
-                    </PressableRowWithIconSlots>
-                  )}
+                  <PressableRowWithIconSlots onClick={onEdit} key={exercise.name.concat(index.toString())} Icon1={{ icon: "delete", onPress: onDelete }} Icon2={{ icon: "drag", onLongPress: drag }}>
+                    <Text style={styles.text}>{exercise.name}</Text>
+                  </PressableRowWithIconSlots>
                 </View>
               </ScaleDecorator>
             )}
           />
         </View>
-        <AddExercise disabled={editedExerciseIndex !== undefined} onPress={handleAddNewExercise} />
+        <AddExercise onPress={() => setEditedExerciseIndex(-1)} />
       </SafeAreaView>
       {Alert}
+      {editedExerciseIndex !== undefined && (
+        <AddExerciseModal
+          onRequestClose={() => setEditedExerciseIndex(undefined)}
+          exercise={editedExerciseIndex !== -1 ? createdExercises[editedExerciseIndex] : emptyExercise}
+          onConfirmEdit={handleConfirmExerciseModal}
+        />
+      )}
     </>
   );
 }

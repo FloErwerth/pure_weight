@@ -11,9 +11,10 @@ import { useTranslation } from "react-i18next";
 import { useAppDispatch } from "../../store";
 import { setError } from "../../store/reducer";
 import { EditableExerciseInputRow } from "./EditableExerciseInputRow";
+import { Text } from "../Text/Text";
 
-interface EditableExerciseProps {
-  exercise: ExerciseMetaData;
+export interface EditableExerciseProps {
+  exercise?: ExerciseMetaData;
   onConfirmEdit: (exercise: ExerciseMetaData) => void;
   onCancel: () => void;
   theme?: EditableExerciseTheme;
@@ -46,6 +47,7 @@ export const EditableExercise = ({ exercise, onConfirmEdit, onCancel, theme }: E
   const inputRef = useRef<TextInput>(null);
   const classes = useMemo(() => styles(theme), [theme]);
   const dispatch = useAppDispatch();
+  const isEditing = useMemo(() => Boolean(exercise), [exercise]);
 
   const handleConfirm = useCallback(() => {
     void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
@@ -58,23 +60,10 @@ export const EditableExercise = ({ exercise, onConfirmEdit, onCancel, theme }: E
     }
   }, [reps, sets, weight, name, dispatch, onConfirmEdit, pause]);
 
-  const handleCancel = useCallback(() => {
-    void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
-    onCancel();
-  }, [onCancel]);
-
   return (
     <View style={classes.innerWrapper}>
       <HStack style={classes.headerWrapper}>
         <ThemedTextInput autoFocus={true} errorKey="create_name" placeholder={t("exercise_name")} ref={inputRef} value={name} onChangeText={setName} style={classes.title} />
-        <HStack style={classes.buttons}>
-          <Pressable onPress={handleCancel}>
-            <MaterialCommunityIcons color={mainColor} name="cancel" size={26}></MaterialCommunityIcons>
-          </Pressable>
-          <Pressable onPress={handleConfirm}>
-            <MaterialCommunityIcons color={mainColor} name="check" size={26}></MaterialCommunityIcons>
-          </Pressable>
-        </HStack>
       </HStack>
       <View style={classes.inputWrapper}>
         <HStack style={{ gap: 10, justifyContent: "space-between" }}>
@@ -84,6 +73,12 @@ export const EditableExercise = ({ exercise, onConfirmEdit, onCancel, theme }: E
           <EditableExerciseInputRow i18key="pause" setValue={setPause} value={pause} />
         </HStack>
       </View>
+      <Pressable onPress={handleConfirm}>
+        <HStack style={classes.button}>
+          <Text style={classes.buttonText}>{t(isEditing ? "edit_exercise" : "create_exercise")}</Text>
+          <MaterialCommunityIcons color={mainColor} name="pencil-plus-outline" size={26}></MaterialCommunityIcons>
+        </HStack>
+      </Pressable>
     </View>
   );
 };

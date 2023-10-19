@@ -117,7 +117,7 @@ export default function Index() {
         {!showEdit && <PreviousTraining />}
         {showModal && <AlertModal title={t("alert_quit_title")} content={t("alert_quit_message")} isVisible={showModal} onConfirm={handleNotDoneConfirm} onCancel={handleCloseAlert}></AlertModal>}
       </ScrollView>
-      <HStack style={trainStyles.buttons}>
+      <HStack style={trainStyles.button}>
         <View style={{ flex: 1 }}>{showPreviousExercise && <Button title={previousExerciseName} theme="secondary" disabled={showEdit} onPress={handlePreviousExercise} />}</View>
         <Button style={{ button: { flex: 1, borderWidth: 0 } }} theme="primary" title={hasNextExercise ? nextExerciseName : t("training_done")} disabled={showEdit} onPress={handleNextOrDone} />
       </HStack>

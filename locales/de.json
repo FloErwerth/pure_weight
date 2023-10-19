@@ -45,4 +45,7 @@
   "alert_create_workout_discard_content": "Alle Änderungen gehen dabei verloren",
   "alert_edit_workout_discard_title": "Einheitenbearbeitung abbrechen",
   "alert_edit_workout_discard_content": "Alle Änderungen gehen dabei verloren",
+
+  "create_exercise": "Übung erstellen",
+  "edit_exercise": "Änderungen bestätigen"
 }

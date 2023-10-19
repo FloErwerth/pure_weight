@@ -2,7 +2,7 @@ import { StyleSheet } from "react-native";
 import { mainColor } from "../theme/colors";
 
 export const trainStyles = StyleSheet.create({
-  buttons: { marginTop: 15, justifyContent: "space-around", gap: 20, marginLeft: 10, marginRight: 10, alignSelf: "stretch" },
+  button: { marginTop: 15, justifyContent: "space-around", gap: 20, marginLeft: 10, marginRight: 10, alignSelf: "stretch" },
   header: {
     alignSelf: "stretch",
     alignItems: "center",

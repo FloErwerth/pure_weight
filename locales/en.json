@@ -6,6 +6,8 @@
   "create_workout": "Create workout",
   "workout_name": "Workout name",
   "exercise_name": "Exercise name",
+  "create_exercise": "Create exercise",
+  "edit_exercise": "Confirm changes",
   "weight": "Weight",
   "sets": "Sets",
   "reps": "Reps",

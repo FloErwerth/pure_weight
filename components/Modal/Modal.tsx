@@ -1,6 +1,6 @@
 import { ReactNativeModal } from "react-native-modal";
 import React, { PropsWithChildren, ReactNode, useEffect } from "react";
-import { LayoutAnimation, View } from "react-native";
+import { LayoutAnimation, View, ViewStyle } from "react-native";
 import { Button } from "../Button/Button";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { borderRadius } from "../App/theme/border";
@@ -9,12 +9,13 @@ import { mainColor } from "../App/theme/colors";
 import { Text } from "../Text/Text";
 import { HStack } from "../HStack/HStack";
 
-interface ModalProps extends PropsWithChildren {
-  isVisible: boolean;
+export interface ModalProps extends PropsWithChildren {
+  isVisible?: boolean;
   onRequestClose?: () => void;
   customBackdrop?: ReactNode;
   title?: string;
   backgroundOpacity?: number;
+  customContentStyle?: ViewStyle;
 }
 
 const Backdrop = () => {
@@ -25,7 +26,7 @@ const Backdrop = () => {
   return <View style={{ flex: 1, backgroundColor: "black" }} />;
 };
 
-export const Modal = ({ backgroundOpacity, isVisible, children, onRequestClose, title, customBackdrop }: ModalProps) => {
+export const Modal = ({ customContentStyle, backgroundOpacity, isVisible = true, children, onRequestClose, title, customBackdrop }: ModalProps) => {
   return (
     <ReactNativeModal
       backdropOpacity={backgroundOpacity ?? 0.9}
@@ -44,7 +45,7 @@ export const Modal = ({ backgroundOpacity, isVisible, children, onRequestClose, 
           </Button>
         )}
       </HStack>
-      <ThemedView style={{ borderRadius, padding: 10 }}>{children}</ThemedView>
+      <ThemedView style={customContentStyle ?? { borderRadius, padding: 10 }}>{children}</ThemedView>
     </ReactNativeModal>
   );
 };
