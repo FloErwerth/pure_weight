@@ -66,7 +66,7 @@ export const EditableExercise = ({ exercise, onConfirmEdit, onCancel, theme }: E
   return (
     <View style={classes.innerWrapper}>
       <HStack style={classes.headerWrapper}>
-        <ThemedTextInput errorKey="create_name" placeholder={t("exercise_name")} ref={inputRef} value={name} onChangeText={setName} style={classes.title} />
+        <ThemedTextInput autoFocus={true} errorKey="create_name" placeholder={t("exercise_name")} ref={inputRef} value={name} onChangeText={setName} style={classes.title} />
         <HStack style={classes.buttons}>
           <Pressable onPress={handleCancel}>
             <MaterialCommunityIcons color={mainColor} name="cancel" size={26}></MaterialCommunityIcons>
