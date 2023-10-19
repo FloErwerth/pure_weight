@@ -4,7 +4,7 @@ import { useNavigate } from "../../utils/navigate";
 import { Routes } from "../../types/routes";
 import { DoneExerciseData, ExerciseMetaData } from "../../store/types";
 import { useAppDispatch, useAppSelector } from "../../store";
-import { addTrainingDay, adjustTrainingDayExercises, cleanErrors, editTrainingDay, setError, setTrainingDayIndex } from "../../store/reducer";
+import { addTrainingDay, cleanErrors, editTrainingDay, setError, setTrainingDayIndex } from "../../store/reducer";
 import { AddExercise } from "../../components/AddExercise/AddExercise";
 import { styles } from "../../components/App/create/styles";
 import { PlainInput } from "../../components/PlainInput/PlainInput";
@@ -30,6 +30,16 @@ function getAreValuesEmpty(exercise: ExerciseMetaData) {
     return !value;
   });
 }
+
+type MappedExercises = {
+  onDelete: () => void;
+  edited: boolean;
+  handleCancel: () => void;
+  onEdit: () => void;
+  exercise: ExerciseMetaData;
+  index: number;
+  handleOnConfirmEdit: (exercise: ExerciseMetaData) => void;
+};
 const emptyExercise: ExerciseMetaData = { reps: "", pause: "", sets: "", weight: "", name: "" };
 export default function Index() {
   const navigate = useNavigate();
@@ -169,15 +179,10 @@ export default function Index() {
   }, [createdExercises.length, editedDay, handleNavigateHome, t, workoutName]);
 
   const handleOnDragEnd = useCallback(
-    ({ from, to }: { from: number; to: number }) => {
-      const newExercises = [...createdExercises];
-      const toExercise = createdExercises[to];
-      newExercises.splice(to, 1, newExercises[from]);
-      newExercises.splice(from, 1, toExercise);
-      setCreatedExercises(newExercises);
-      dispatch(adjustTrainingDayExercises({ from, to }));
+    ({ data }: { data: MappedExercises[] }) => {
+      setCreatedExercises(data.map((dataPoint, index) => ({ ...dataPoint.exercise, doneExerciseEntries: createdExercises[index].doneExerciseEntries })));
     },
-    [createdExercises, dispatch],
+    [createdExercises],
   );
 
   return (
