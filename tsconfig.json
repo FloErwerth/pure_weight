@@ -6,6 +6,7 @@
   },
   "include": [
     "**/*.ts",
-    "**/*.tsx"
+    "**/*.tsx",
+    "./declarations/keyboardAwareDraggableList.d.ts"
   ]
 }

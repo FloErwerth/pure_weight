@@ -2,13 +2,13 @@
   "expo": {
     "name": "pure-weight",
     "slug": "pureweight",
-    "version": "0.1.2",
+    "version": "0.1.3",
     "scheme": "pureweight",
     "orientation": "portrait",
     "userInterfaceStyle": "automatic",
     "icon": "./media/icons/Logo.png",
     "splash": {
-      "image": "./media/icons/Logo.png",
+      "image": "./media/icons/SplashLogo.png",
       "resizeMode": "contain",
       "backgroundColor": "#333333"
     },

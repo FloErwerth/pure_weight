@@ -40,6 +40,96 @@ export const mockState: AppState = {
           },
         },
         {
+          name: "Bankdrücken",
+          weight: "50",
+          sets: "5",
+          reps: "5",
+          pause: " 2",
+          doneExerciseEntries: {
+            "2023-01-01": {
+              0: { reps: "5", weight: "50" },
+              1: { reps: "5", weight: "50" },
+              3: { reps: "5", weight: "50" },
+              4: { reps: "5", weight: "50" },
+            },
+          },
+        },
+        {
+          name: "Bankdrücken",
+          weight: "50",
+          sets: "5",
+          reps: "5",
+          pause: " 2",
+          doneExerciseEntries: {
+            "2023-01-01": {
+              0: { reps: "5", weight: "50" },
+              1: { reps: "5", weight: "50" },
+              3: { reps: "5", weight: "50" },
+              4: { reps: "5", weight: "50" },
+            },
+          },
+        },
+        {
+          name: "Bankdrücken",
+          weight: "50",
+          sets: "5",
+          reps: "5",
+          pause: " 2",
+          doneExerciseEntries: {
+            "2023-01-01": {
+              0: { reps: "5", weight: "50" },
+              1: { reps: "5", weight: "50" },
+              3: { reps: "5", weight: "50" },
+              4: { reps: "5", weight: "50" },
+            },
+          },
+        },
+        {
+          name: "Bankdrücken",
+          weight: "50",
+          sets: "5",
+          reps: "5",
+          pause: " 2",
+          doneExerciseEntries: {
+            "2023-01-01": {
+              0: { reps: "5", weight: "50" },
+              1: { reps: "5", weight: "50" },
+              3: { reps: "5", weight: "50" },
+              4: { reps: "5", weight: "50" },
+            },
+          },
+        },
+        {
+          name: "Bankdrücken",
+          weight: "50",
+          sets: "5",
+          reps: "5",
+          pause: " 2",
+          doneExerciseEntries: {
+            "2023-01-01": {
+              0: { reps: "5", weight: "50" },
+              1: { reps: "5", weight: "50" },
+              3: { reps: "5", weight: "50" },
+              4: { reps: "5", weight: "50" },
+            },
+          },
+        },
+        {
+          name: "Bankdrücken",
+          weight: "50",
+          sets: "5",
+          reps: "5",
+          pause: " 2",
+          doneExerciseEntries: {
+            "2023-01-01": {
+              0: { reps: "5", weight: "50" },
+              1: { reps: "5", weight: "50" },
+              3: { reps: "5", weight: "50" },
+              4: { reps: "5", weight: "50" },
+            },
+          },
+        },
+        {
           name: "Butterfly",
           weight: "50",
           sets: "5",
