@@ -114,7 +114,7 @@ export const SetInputRow = ({ onSetDone, setIndex, isActiveSet, hasData, data }:
           <Button
             title={note ? t("training_input_show_note") : t("training_input_add_note")}
             style={{
-              button: { borderRadius, padding: 10, backgroundColor: !isActiveSet ? "transparent" : textFieldBackgroundColor },
+              singleButton: { borderRadius, padding: 10, backgroundColor: !isActiveSet ? "transparent" : textFieldBackgroundColor },
               text: { color: !hasData && !isActiveSet ? secondaryColor : mainColor, fontSize: 16 },
             }}
             theme="ghost"
@@ -122,7 +122,7 @@ export const SetInputRow = ({ onSetDone, setIndex, isActiveSet, hasData, data }:
           />
         </Center>
         <Center style={{ flex: 0.6, height: 50 }}>
-          <Button style={{ button: { width: 40, padding: 7, borderRadius, backgroundColor: isActiveSet ? textFieldBackgroundColor : "transparent" } }} onPress={handleSetDone}>
+          <Button style={{ singleButton: { width: 40, padding: 7, borderRadius, backgroundColor: isActiveSet ? textFieldBackgroundColor : "transparent" } }} onPress={handleSetDone}>
             <MaterialCommunityIcons size={24} style={{ width: 24, color: isActiveSet ? mainColor : !hasData ? mainDisabledColor : "green" }} name="check-bold" />
           </Button>
           <EditNoteModal note={note} showModal={showModal} onDoneEdit={handleConfirmNoteModal} onCancel={() => setShowModal(false)} />

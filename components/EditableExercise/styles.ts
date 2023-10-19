@@ -53,7 +53,10 @@ export const styles = (theme: EditableExerciseTheme = "Default") =>
       paddingRight: 8,
       backgroundColor: secondaryComponentBackgroundColor,
       borderRadius,
-      alignItems: "center",
+    },
+    buttons: {
+      alignSelf: "stretch",
+      justifyContent: "space-around",
     },
     innerWrapper: {
       ...Themes[theme].innerWrapper,

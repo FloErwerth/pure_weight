@@ -75,7 +75,7 @@ export const styles = StyleSheet.create({
   center: {
     flex: 1,
   },
-  button: {
+  singleButton: {
     alignSelf: "stretch",
     marginBottom: 30,
     gap: 15,

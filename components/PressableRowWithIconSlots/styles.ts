@@ -7,7 +7,7 @@ export const styles = StyleSheet.create({
     fontSize: 20,
     color: mainColor,
   },
-  button: {
+  singleButton: {
     flex: 1,
   },
   innerWrapper: {

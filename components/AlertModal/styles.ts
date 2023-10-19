@@ -13,7 +13,7 @@ export const styles = StyleSheet.create({
   primary: {
     backgroundColor: "lightblue",
   },
-  button: {
+  singleButton: {
     alignSelf: "stretch",
     justifyContent: "space-around",
     marginLeft: 10,

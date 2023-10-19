@@ -7,7 +7,7 @@ type AddExerciseModalProps = ModalProps & Omit<EditableExerciseProps, "onCancel"
 export const AddExerciseModal = (props: AddExerciseModalProps) => {
   return (
     <Modal customContentStyle={{ backgroundColor: componentBackgroundColor, padding: 10, borderRadius }} {...props}>
-      <EditableExercise exercise={props.exercise} onConfirmEdit={props.onConfirmEdit} onCancel={() => props.onRequestClose?.()} />
+      <EditableExercise exercise={props.exercise} onConfirmEdit={props.onConfirmEdit} />
     </Modal>
   );
 };

@@ -3,7 +3,6 @@ import { useAppDispatch, useAppSelector } from "../../../store";
 import { getExerciseIndex, getExerciseMetaData, getSelectedTrainingDay, getTrainingIndex } from "../../../store/selectors";
 import { Pressable, TextStyle } from "react-native";
 import { Dispatch, SetStateAction, useCallback, useEffect, useMemo } from "react";
-import { EditableExercise } from "../../EditableExercise/EditableExercise";
 import { editTrainingDay } from "../../../store/reducer";
 import { ExerciseMetaData } from "../../../store/types";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -14,6 +13,7 @@ import { componentBackgroundColor, mainColor } from "../theme/colors";
 import { borderRadius } from "../theme/border";
 import * as Haptics from "expo-haptics";
 import { useTranslation } from "react-i18next";
+import { AddExerciseModal } from "../../AddExerciseModal/AddExerciseModal";
 
 interface ExerciseMetaDataDisplayProps {
   showEdit: boolean;
@@ -80,22 +80,17 @@ export const ExerciseMetaDataDisplay = ({ showEdit, setShowEdit }: ExerciseMetaD
   }, [showEdit]);
 
   return (
-    <HStack style={{ justifyContent: "space-between", borderRadius, backgroundColor: componentBackgroundColor, padding: 10 }}>
-      <VStack style={{ width: showEdit ? "100%" : "auto" }}>
-        {showEdit ? (
-          <EditableExercise theme={"Inline"} exercise={exerciseMetaData} onConfirmEdit={handleUpdateMetaData} onCancel={() => setShowEdit(false)} />
-        ) : (
-          <>
-            <Text style={trainStyles.exerciseName}>{exerciseMetaData?.name}</Text>
-            <SmallMetadataDisplay />
-          </>
-        )}
-      </VStack>
-      {!showEdit && (
+    <>
+      <HStack style={{ justifyContent: "space-between", borderRadius, backgroundColor: componentBackgroundColor, padding: 10 }}>
+        <VStack style={{ width: showEdit ? "100%" : "auto" }}>
+          <Text style={trainStyles.exerciseName}>{exerciseMetaData?.name}</Text>
+          <SmallMetadataDisplay />
+        </VStack>
         <Pressable onPress={() => setShowEdit(true)} style={{ width: 50, alignItems: "center", justifyContent: "center" }}>
           <MaterialCommunityIcons name="pencil" color={mainColor} size={20} />
         </Pressable>
-      )}
-    </HStack>
+      </HStack>
+      {showEdit && <AddExerciseModal onConfirmEdit={handleUpdateMetaData} exercise={exerciseMetaData} onRequestClose={() => setShowEdit(false)} />}
+    </>
   );
 };

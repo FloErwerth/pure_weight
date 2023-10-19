@@ -75,7 +75,7 @@ export const EditableExercise = ({ exercise, onConfirmEdit, theme }: EditableExe
       <Pressable onPress={handleConfirm}>
         <HStack style={classes.button}>
           <Text style={classes.buttonText}>{t(isEditing ? "edit_exercise" : "create_exercise")}</Text>
-          <MaterialCommunityIcons color={mainColor} name="pencil-plus-outline" size={26}></MaterialCommunityIcons>
+          <MaterialCommunityIcons color={mainColor} name="pencil-plus-outline" size={20}></MaterialCommunityIcons>
         </HStack>
       </Pressable>
     </View>

@@ -22,7 +22,7 @@ export const Button = ({ onPress, children, theme = "primary", title, disabled, 
   }, [onPress]);
 
   return (
-    <Pressable disabled={disabled} style={[internalStyles.button, style?.button]} onPress={handlePress}>
+    <Pressable disabled={disabled} style={[internalStyles.singleButton, style?.button]} onPress={handlePress}>
       {title && <Text style={[internalStyles.text, internalStyles.commonText, style?.text]}>{title}</Text>}
       {children}
     </Pressable>

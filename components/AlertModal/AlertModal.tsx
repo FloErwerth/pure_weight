@@ -46,7 +46,7 @@ export const AlertModal = ({ onConfirm, onCancel, isVisible = true, content, tit
         <Text style={styles.title}>{title}</Text>
         <Text style={styles.text}>{content}</Text>
         {children}
-        <HStack style={styles.button}>
+        <HStack style={styles.singleButton}>
           <Button style={{ button: { flex: 1 } }} title={t("alert_delete_cancel")} theme="secondary" onPress={handleCancelButton} />
           <Button style={{ button: { flex: 1 } }} title={t("alert_delete_confirm")} theme="primary" onPress={handleConfirmButton} />
         </HStack>

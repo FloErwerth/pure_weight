@@ -47,7 +47,7 @@ export const EditNoteModal = ({ showModal, note, onDoneEdit, onCancel }: EditNot
           placeholder={t("edit_note_placeholder")}
         />
         <HStack style={{ justifyContent: "flex-end" }}>
-          <Button style={{ button: { width: 100 } }} title={t("edit_note_done")} onPress={handlePressDone} />
+          <Button style={{ singleButton: { width: 100 } }} title={t("edit_note_done")} onPress={handlePressDone} />
         </HStack>
       </VStack>
     </Modal>
