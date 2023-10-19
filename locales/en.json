@@ -41,10 +41,9 @@
   "progress_avg_reps_hint": "Shows the average reps per day",
   "progress_avg_weight": "Average weight",
   "progress_avg_weight_hint": "Shows the average reps per day",
-  "german": "German",
-  "english": "English",
   "alert_create_workout_discard_title": "Cancel workout creation",
   "alert_create_workout_discard_content": "All changes made so far will be lost",
   "alert_edit_workout_discard_title": "Cancel workout edit",
-  "alert_edit_workout_discard_content": "All changes made so far will be lost"
+  "alert_edit_workout_discard_content": "All changes made so far will be lost",
+  "progress_placeholder": "Looks like there is no data to display yet"
 }

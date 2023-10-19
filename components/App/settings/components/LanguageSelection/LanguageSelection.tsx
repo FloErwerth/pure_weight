@@ -19,8 +19,6 @@ import { ImpactFeedbackStyle } from "expo-haptics";
 export const LanguageSelection = () => {
   const { t, i18n } = useTranslation();
   const dispatch = useAppDispatch();
-  const german = useMemo(() => t("german"), [t]);
-  const english = useMemo(() => t("english"), [t]);
   const lang = useAppSelector(getLanguage);
   const isGerman = useMemo(() => lang === "de", [lang]);
 
@@ -40,7 +38,7 @@ export const LanguageSelection = () => {
           <HStack style={styles.outerStack}>
             <HStack style={styles.innerStack}>
               <GermanFlag width={30} height={30} />
-              <Text style={styles.text}>{german}</Text>
+              <Text style={styles.text}>Deutsch</Text>
             </HStack>
             {isGerman && <MaterialCommunityIcons name="check" size={30} color={secondaryColor} />}
           </HStack>
@@ -49,7 +47,7 @@ export const LanguageSelection = () => {
           <HStack style={styles.outerStack}>
             <HStack style={styles.innerStack}>
               <UsaFlag width={30} height={30} />
-              <Text style={styles.text}>{english}</Text>
+              <Text style={styles.text}>English</Text>
             </HStack>
             {!isGerman && <MaterialCommunityIcons name="check" size={30} color={secondaryColor} />}
           </HStack>

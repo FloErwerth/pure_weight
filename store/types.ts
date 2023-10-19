@@ -1,5 +1,4 @@
 import { IsoDate } from "../types/date";
-import { ChartType } from "../components/App/progress/chart/components/ExerciseCharts";
 
 export type TrainingDay = {
   name: string;
@@ -35,7 +34,6 @@ export type AppState = {
   setIndex: number;
   exerciseIndex: number;
   isFirstTimeRendered: boolean;
-  chartType: ChartType;
   settings: {
     language?: "en" | "de";
   };

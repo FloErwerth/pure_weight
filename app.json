@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "pure-weight",
+    "name": "Pure Weight",
     "slug": "pureweight",
-    "version": "0.1.3",
+    "version": "0.1.4",
     "scheme": "pureweight",
     "orientation": "portrait",
     "userInterfaceStyle": "automatic",
@@ -25,7 +25,7 @@
       "usesIcloudStorage": false,
       "supportsTablet": false,
       "bundleIdentifier": "com.FlorianErwerth.PureWeight",
-      "buildNumber": "7"
+      "buildNumber": "8"
     },
     "android": {
       "permissions": [

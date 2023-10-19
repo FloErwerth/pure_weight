@@ -1,10 +1,8 @@
 import { createAction, createReducer } from "@reduxjs/toolkit/src";
 import type { AppState, DoneExerciseData, ErrorFields, ExerciseMetaData, ExerciseMetaDataWithDoneEntries, PlainExerciseData, TrainingDay } from "./types";
 import { getDateTodayIso } from "../utils/date";
-import { ChartType } from "../components/App/progress/chart/components/ExerciseCharts";
 import { mockState } from "./index";
 
-export const setChartType = createAction<ChartType>("set_chart_type");
 export const setMockState = createAction("set_mock_state");
 export const setFirstTimeRendered = createAction<boolean>("set_greeting");
 export const setState = createAction<AppState>("set_state");
@@ -22,16 +20,13 @@ export const setError = createAction<ErrorFields[]>("error_set");
 export const cleanError = createAction<ErrorFields[]>("error_clean");
 export const cleanErrors = createAction("error_clean_all");
 export const storeReducer = createReducer<AppState>(
-  { errors: [], settings: { language: undefined }, chartType: "CUMULATIVE", trainingDayIndex: 0, trainingDays: [], isFirstTimeRendered: true, exerciseIndex: 0, setIndex: 0 },
+  { errors: [], settings: { language: undefined }, trainingDayIndex: 0, trainingDays: [], isFirstTimeRendered: true, exerciseIndex: 0, setIndex: 0 },
   (builder) =>
     builder
       .addCase(setState, (state, action) => {
         return action.payload;
       })
       .addCase(setMockState, () => mockState)
-      .addCase(setChartType, (state, action) => {
-        state.chartType = action.payload;
-      })
       .addCase(setError, (state, action) => {
         const notIncludedErrors = action.payload.filter((errorKey) => !state.errors.includes(errorKey));
         state.errors.push(...notIncludedErrors);

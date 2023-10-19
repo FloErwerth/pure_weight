@@ -14,9 +14,9 @@ import { Inputs } from "../../components/App/train/Inputs";
 import { Button } from "../../components/Button/Button";
 import { HStack } from "../../components/HStack/HStack";
 import { getNumberOfExercises, getSpecificNumberOfSets } from "../../store/selectors";
-import { SafeAreaView } from "../../components/SafeAreaView/SafeAreaView";
 import { PreviousTraining } from "../../components/PreviousTraining/PreviousTraining";
 import { useTranslation } from "react-i18next";
+import { ThemedView } from "../../components/View/View";
 
 export default function Index() {
   const { t } = useTranslation();
@@ -107,7 +107,7 @@ export default function Index() {
   );
 
   return (
-    <SafeAreaView>
+    <ThemedView>
       <View style={trainStyles.header}>
         <SiteNavigationButtons disabled={showEdit} handleBack={handleCloseButton} titleFontSize={30} title={selectedTrainingName} />
       </View>
@@ -121,6 +121,6 @@ export default function Index() {
         <View style={{ flex: 1 }}>{showPreviousExercise && <Button title={previousExerciseName} theme="secondary" disabled={showEdit} onPress={handlePreviousExercise} />}</View>
         <Button style={{ button: { flex: 1, borderWidth: 0 } }} theme="primary" title={hasNextExercise ? nextExerciseName : t("training_done")} disabled={showEdit} onPress={handleNextOrDone} />
       </HStack>
-    </SafeAreaView>
+    </ThemedView>
   );
 }

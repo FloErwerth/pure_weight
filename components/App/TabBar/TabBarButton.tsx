@@ -12,5 +12,5 @@ export const TabBarButton = (props: BottomTabBarButtonProps) => {
     [props],
   );
 
-  return <Pressable {...props} onPress={handlePress} style={{ flex: 1, alignSelf: "center" }} />;
+  return <Pressable {...props} onPress={handlePress} />;
 };

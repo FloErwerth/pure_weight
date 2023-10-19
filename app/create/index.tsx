@@ -11,7 +11,6 @@ import { PlainInput } from "../../components/PlainInput/PlainInput";
 import { SiteNavigationButtons } from "../../components/SiteNavigationButtons/SiteNavigationButtons";
 import { PressableRowWithIconSlots } from "../../components/PressableRowWithIconSlots/PressableRowWithIconSlots";
 import { AlertConfig, AlertModal } from "../../components/AlertModal/AlertModal";
-import { SafeAreaView } from "../../components/SafeAreaView/SafeAreaView";
 import { View } from "react-native";
 import * as Haptics from "expo-haptics";
 import { NotificationFeedbackType } from "expo-haptics";
@@ -20,6 +19,7 @@ import DraggableFlatList from "react-native-draggable-flatlist/src/components/Dr
 import { ScaleDecorator } from "react-native-draggable-flatlist";
 import { useTranslation } from "react-i18next";
 import { AddExerciseModal } from "../../components/AddExerciseModal/AddExerciseModal";
+import { ThemedView } from "../../components/View/View";
 
 function getAreValuesEmpty(exercise: ExerciseMetaData) {
   const values = Object.values(exercise);
@@ -189,7 +189,7 @@ export default function Index() {
 
   return (
     <>
-      <SafeAreaView style={styles.innerWrapper}>
+      <ThemedView style={styles.innerWrapper}>
         <SiteNavigationButtons handleBack={handleBackButton} handleConfirm={handleConfirm} titleFontSize={30} title={title} />
         <View style={styles.contentWrapper}>
           <PlainInput value={workoutName} setValue={handleSetWorkoutName} fontSize={30} placeholder={t("workout_name")} />
@@ -216,7 +216,7 @@ export default function Index() {
           />
         </View>
         <AddExercise onPress={() => setEditedExerciseIndex(-1)} />
-      </SafeAreaView>
+      </ThemedView>
       {alertConfig && <AlertModal title={alertConfig.title} content={alertConfig.content} onConfirm={alertConfig.onConfirm} onCancel={() => setAlertConfig(undefined)} />}
       {editedExerciseIndex !== undefined && (
         <AddExerciseModal

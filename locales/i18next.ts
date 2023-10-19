@@ -4,8 +4,8 @@ import en from "./en.json";
 import de from "./de.json";
 
 export default i18n.use(initReactI18next).init({
-  lng: "de",
-  fallbackLng: "de",
+  lng: "en",
+  fallbackLng: "en",
   compatibilityJSON: "v3",
   resources: { en: { translation: en }, de: { translation: de } },
 });

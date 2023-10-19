@@ -1,4 +1,3 @@
-import { SafeAreaView } from "../../../components/SafeAreaView/SafeAreaView";
 import { lazy, Suspense, useCallback } from "react";
 import { useNavigate } from "../../../utils/navigate";
 import { Routes } from "../../../types/routes";
@@ -10,6 +9,7 @@ import { Skeleton } from "../../../components/Skeleton/Skeleton";
 import { borderRadius } from "../../../components/App/theme/border";
 import { VStack } from "../../../components/VStack/VStack";
 import { componentBackgroundColor } from "../../../components/App/theme/colors";
+import { ThemedView } from "../../../components/View/View";
 
 const ExerciseCharts = lazy(() => import("../../../components/App/progress/chart/components/ExerciseCharts"));
 
@@ -41,11 +41,11 @@ export default function Index() {
   };
 
   return (
-    <SafeAreaView>
+    <ThemedView>
       <SiteNavigationButtons handleBack={handleNavigateToProgress} title={trainingDayData?.name} />
       <Suspense fallback={<Fallback />}>
         <ExerciseCharts />
       </Suspense>
-    </SafeAreaView>
+    </ThemedView>
   );
 }

@@ -5,14 +5,14 @@ import { useNavigate } from "../../utils/navigate";
 import { Routes } from "../../types/routes";
 import { useAppDispatch, useAppSelector } from "../../store";
 import { getLanguage, getSavedTrainings } from "../../store/selectors";
-import { cleanErrors, removeTrainingDay, setExerciseIndex, setMockState, setSetIndex, setTrainingDayIndex } from "../../store/reducer";
+import { cleanErrors, removeTrainingDay, setExerciseIndex, setMockState, setSetIndex, setState, setTrainingDayIndex } from "../../store/reducer";
 import { styles } from "../../components/App/index/styles";
 import { AlertModal } from "../../components/AlertModal/AlertModal";
-import { SafeAreaView } from "../../components/SafeAreaView/SafeAreaView";
 import { SiteNavigationButtons } from "../../components/SiteNavigationButtons/SiteNavigationButtons";
 import { Button } from "../../components/Button/Button";
 import { useTranslation } from "react-i18next";
 import * as Locale from "expo-localization";
+import { ThemedView } from "../../components/View/View";
 
 export default function Main() {
   const language = useAppSelector(getLanguage);
@@ -71,7 +71,7 @@ export default function Main() {
   );
 
   return (
-    <SafeAreaView style={styles.view}>
+    <ThemedView style={styles.view}>
       <View style={styles.center}>
         <View style={styles.stack}>
           <SiteNavigationButtons title={t("workouts")} handleConfirmIcon={{ name: "plus", size: 40 }} handleConfirm={handlePress} />
@@ -93,6 +93,10 @@ export default function Main() {
       </View>
       {Alert}
       <Button title={"Use Mock State"} onPress={() => dispatch(setMockState())} />
-    </SafeAreaView>
+      <Button
+        title={"Use empty state"}
+        onPress={() => dispatch(setState({ exerciseIndex: 0, errors: [], settings: { language: "en" }, trainingDayIndex: undefined, trainingDays: [], setIndex: 0, isFirstTimeRendered: false }))}
+      />
+    </ThemedView>
   );
 }

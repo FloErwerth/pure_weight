@@ -6,5 +6,5 @@ export const TabBarIcon = ({ focused, Icon }: { focused: boolean; Icon: React.FC
   const fillColor = useMemo(() => {
     return focused ? mainColor : secondaryColor;
   }, [focused]);
-  return <Icon width={16} height={16} fill={fillColor} />;
+  return <Icon width={20} height={20} fill={fillColor} />;
 };

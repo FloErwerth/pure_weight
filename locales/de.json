@@ -39,13 +39,11 @@
   "progress_avg_reps_hint": "Zeigt die durchschnittliche Anzahl an Wiederholungen pro Tag an",
   "progress_avg_weight": "Durschnittliches Gewicht",
   "progress_avg_weight_hint": "Zeigt das durchschnittlich bewegte Gewicht pro Tag an",
-  "german": "Deutsch",
-  "english": "Englisch",
   "alert_create_workout_discard_title": "Einheiterstellung abbrechen",
   "alert_create_workout_discard_content": "Alle Änderungen gehen dabei verloren",
   "alert_edit_workout_discard_title": "Einheitenbearbeitung abbrechen",
   "alert_edit_workout_discard_content": "Alle Änderungen gehen dabei verloren",
-
+  "progress_placeholder": "Noch keine Daten zum Anzeigen vorhanden",
   "create_exercise": "Übung erstellen",
   "edit_exercise": "Änderungen bestätigen"
 }

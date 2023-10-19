@@ -1,4 +1,3 @@
-import { SafeAreaView } from "../../components/SafeAreaView/SafeAreaView";
 import { useAppDispatch, useAppSelector } from "../../store";
 import { getTrainingDayData } from "../../store/selectors";
 import { Text, View } from "react-native";
@@ -12,6 +11,7 @@ import { styles } from "../../components/App/progress/styles";
 import { useCallback } from "react";
 import { setTrainingDayIndex } from "../../store/reducer";
 import { useTranslation } from "react-i18next";
+import { ThemedView } from "../../components/View/View";
 
 export default function Index() {
   const data = useAppSelector(getTrainingDayData);
@@ -28,12 +28,12 @@ export default function Index() {
   );
 
   return (
-    <SafeAreaView>
+    <ThemedView style={{ flex: 1 }}>
       <SiteNavigationButtons handleBack={() => navigate(Routes.HOME)} title={t("progress")} />
       {data.length === 0 && (
         <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
           <MissingData fill={secondaryColor} />
-          <Text style={{ color: secondaryColor, fontSize: 16 }}>Looks like there is no data to display yet</Text>
+          <Text style={{ color: secondaryColor, fontSize: 16 }}>{t("progress_placeholder")}</Text>
         </View>
       )}
       {data.length > 0 && (
@@ -45,6 +45,6 @@ export default function Index() {
           ))}
         </View>
       )}
-    </SafeAreaView>
+    </ThemedView>
   );
 }
