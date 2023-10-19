@@ -7,7 +7,7 @@ import { useTranslation } from "react-i18next";
 import { AppState, ErrorFields } from "../../store/types";
 import { useAppSelector } from "../../store";
 import { getErrorByKey } from "../../store/selectors";
-import { errorColor } from "../../app/theme/colors";
+import { errorColor } from "../App/theme/colors";
 
 interface EditableExerciseInputRowProps {
   value?: string;

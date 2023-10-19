@@ -6,7 +6,7 @@ import { Routes } from "../../types/routes";
 import { useAppDispatch, useAppSelector } from "../../store";
 import { getLanguage, getSavedTrainings } from "../../store/selectors";
 import { cleanErrors, removeTrainingDay, setExerciseIndex, setMockState, setSetIndex, setTrainingDayIndex } from "../../store/reducer";
-import { styles } from "./styles";
+import { styles } from "../../components/App/index/styles";
 import { AlertModal } from "../../components/AlertModal/AlertModal";
 import { SafeAreaView } from "../../components/SafeAreaView/SafeAreaView";
 import { SiteNavigationButtons } from "../../components/SiteNavigationButtons/SiteNavigationButtons";

@@ -1,5 +1,5 @@
 import { IsoDate } from "../types/date";
-import { ChartType } from "../app/progress/chart/components/ExerciseCharts";
+import { ChartType } from "../components/App/progress/chart/components/ExerciseCharts";
 
 export type TrainingDay = {
   name: string;

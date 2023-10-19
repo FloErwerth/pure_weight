@@ -3,9 +3,9 @@ import React, { PropsWithChildren, ReactNode, useEffect } from "react";
 import { LayoutAnimation, View } from "react-native";
 import { Button } from "../Button/Button";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { borderRadius } from "../../app/theme/border";
+import { borderRadius } from "../App/theme/border";
 import { ThemedView } from "../View/View";
-import { mainColor } from "../../app/theme/colors";
+import { mainColor } from "../App/theme/colors";
 import { Text } from "../Text/Text";
 import { HStack } from "../HStack/HStack";
 

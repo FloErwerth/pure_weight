@@ -12,9 +12,9 @@ import { HStack } from "../HStack/HStack";
 import { Button } from "../Button/Button";
 import { Center } from "../Center/Center";
 import { Text } from "../Text/Text";
-import { borderRadius } from "../../app/theme/border";
+import { borderRadius } from "../App/theme/border";
 import { ThemedTextInput } from "../TextInput/ThemedTextInput";
-import { mainColor, mainDisabledColor, secondaryColor, textFieldBackgroundColor } from "../../app/theme/colors";
+import { mainColor, mainDisabledColor, secondaryColor, textFieldBackgroundColor } from "../App/theme/colors";
 import { setSetIndex } from "../../store/reducer";
 import { useTranslation } from "react-i18next";
 

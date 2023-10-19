@@ -1,10 +1,10 @@
 import { useAppSelector } from "../../store";
 import { getPreviousTraining } from "../../store/selectors";
 import { DoneSetDisplayRow } from "../DoneSetDisplayRow/DoneSetDisplayRow";
-import { componentBackgroundColor, mainDisabledColor } from "../../app/theme/colors";
+import { componentBackgroundColor, mainDisabledColor } from "../App/theme/colors";
 import { Text } from "../Text/Text";
 import { View } from "react-native";
-import { borderRadius } from "../../app/theme/border";
+import { borderRadius } from "../App/theme/border";
 import { VStack } from "../VStack/VStack";
 import { useTranslation } from "react-i18next";
 

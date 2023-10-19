@@ -2,9 +2,9 @@
   "expo": {
     "name": "pure-weight",
     "slug": "pureweight",
-    "version": "1.0.0",
+    "version": "0.1.2",
+    "scheme": "pureweight",
     "orientation": "portrait",
-    "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "icon": "./media/icons/Logo.png",
     "splash": {
@@ -15,23 +15,28 @@
     "assetBundlePatterns": [
       "**/*"
     ],
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
     "ios": {
-      "supportsTablet": true
+      "usesAppleSignIn": false,
+      "accessesContactNotes": false,
+      "backgroundColor": "#2e2e2e",
+      "usesIcloudStorage": false,
+      "supportsTablet": false,
+      "bundleIdentifier": "com.FlorianErwerth.PureWeight",
+      "buildNumber": "7"
     },
     "android": {
-      "permissions": ["VIBRATE"],
-      "package": "com.pure_weight"
-    },
-    "web": {
-      "bundler": "metro",
-      "output": "static"
+      "permissions": [
+        "VIBRATE"
+      ],
+      "package": "com.FlorianErwerth.PureWeight"
     },
     "plugins": [
-      "expo-router"
+      "expo-router",
+      "expo-localization"
     ],
-    "experiments": {
-      "typedRoutes": true
-    },
     "extra": {
       "router": {
         "origin": false

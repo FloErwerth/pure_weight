@@ -4,7 +4,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useCallback, useMemo } from "react";
 import { HStack } from "../HStack/HStack";
 import { Button } from "../Button/Button";
-import { mainColor, mainDisabledColor } from "../../app/theme/colors";
+import { mainColor, mainDisabledColor } from "../App/theme/colors";
 import * as Haptics from "expo-haptics";
 
 interface SiteNavigationButtonsProps {

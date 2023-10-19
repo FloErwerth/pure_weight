@@ -1,5 +1,5 @@
 import { Text as _Text, TextProps } from "react-native";
-import { mainDisabledColor } from "../../app/theme/colors";
+import { mainDisabledColor } from "../App/theme/colors";
 import { useTheme } from "@react-navigation/native";
 
 export const Text = (props: TextProps) => {

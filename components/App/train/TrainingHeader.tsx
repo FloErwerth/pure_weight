@@ -1,7 +1,7 @@
-import { trainStyles } from "../../train/trainStyles";
+import { trainStyles } from "./trainStyles";
 import { View } from "react-native";
-import { HStack } from "../../../components/HStack/HStack";
-import { Text } from "../../../components/Text/Text";
+import { HStack } from "../../HStack/HStack";
+import { Text } from "../../Text/Text";
 import { useTranslation } from "react-i18next";
 
 interface TrainingHeaderProps {

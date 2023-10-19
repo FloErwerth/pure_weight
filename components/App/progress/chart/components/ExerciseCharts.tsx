@@ -1,18 +1,18 @@
 import { Dimensions, ScrollView, Text, View } from "react-native";
 import { LineChart } from "react-native-chart-kit";
-import { DoneExerciseData, ExerciseMetaData, ExerciseSets, PlainExerciseData } from "../../../../store/types";
+import { DoneExerciseData, ExerciseMetaData, ExerciseSets, PlainExerciseData } from "../../../../../store/types";
 import { useCallback, useMemo, useRef, useState } from "react";
 import { backgroundColor, componentBackgroundColor, mainColor, secondaryColor } from "../../../theme/colors";
 import { borderRadius } from "../../../theme/border";
-import { getDate } from "../../../../utils/date";
-import { IsoDate } from "../../../../types/date";
+import { getDate } from "../../../../../utils/date";
+import { IsoDate } from "../../../../../types/date";
 import { LineChartData } from "react-native-chart-kit/dist/line-chart/LineChart";
-import { VStack } from "../../../../components/VStack/VStack";
-import { Button } from "../../../../components/Button/Button";
-import { Modal } from "../../../../components/Modal/Modal";
-import { useAppSelector } from "../../../../store";
-import { getSelectedTrainingDayData } from "../../../../store/selectors";
-import { HStack } from "../../../../components/HStack/HStack";
+import { VStack } from "../../../../VStack/VStack";
+import { Button } from "../../../../Button/Button";
+import { Modal } from "../../../../Modal/Modal";
+import { useAppSelector } from "../../../../../store";
+import { getSelectedTrainingDayData } from "../../../../../store/selectors";
+import { HStack } from "../../../../HStack/HStack";
 import { styles } from "./styles";
 import { useTranslation } from "react-i18next";
 

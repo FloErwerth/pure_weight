@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
-import { componentBackgroundColor, errorColor, mainColor, secondaryColor, textFieldBackgroundColor } from "../../app/theme/colors";
-import { borderRadius } from "../../app/theme/border";
+import { componentBackgroundColor, errorColor, mainColor, secondaryColor, textFieldBackgroundColor } from "../App/theme/colors";
+import { borderRadius } from "../App/theme/border";
 
 export type EditableExerciseTheme = "Inline" | "Default";
 const Themes = {

@@ -7,11 +7,11 @@ import { useAppSelector } from "../../../store";
 import { getSelectedTrainingDayData } from "../../../store/selectors";
 import { Dimensions, ScrollView } from "react-native";
 import { Skeleton } from "../../../components/Skeleton/Skeleton";
-import { borderRadius } from "../../theme/border";
+import { borderRadius } from "../../../components/App/theme/border";
 import { VStack } from "../../../components/VStack/VStack";
-import { componentBackgroundColor } from "../../theme/colors";
+import { componentBackgroundColor } from "../../../components/App/theme/colors";
 
-const ExerciseCharts = lazy(() => import("./components/ExerciseCharts"));
+const ExerciseCharts = lazy(() => import("../../../components/App/progress/chart/components/ExerciseCharts"));
 
 export default function Index() {
   const navigate = useNavigate();

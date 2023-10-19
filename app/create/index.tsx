@@ -4,9 +4,9 @@ import { useNavigate } from "../../utils/navigate";
 import { Routes } from "../../types/routes";
 import { DoneExerciseData, ExerciseMetaData } from "../../store/types";
 import { useAppDispatch, useAppSelector } from "../../store";
-import { adjustTrainingDayExercises, cleanErrors, setError, setTrainingDayIndex } from "../../store/reducer";
+import { addTrainingDay, adjustTrainingDayExercises, cleanErrors, editTrainingDay, setError, setTrainingDayIndex } from "../../store/reducer";
 import { AddExercise } from "../../components/AddExercise/AddExercise";
-import { styles } from "./styles";
+import { styles } from "../../components/App/create/styles";
 import { PlainInput } from "../../components/PlainInput/PlainInput";
 import { SiteNavigationButtons } from "../../components/SiteNavigationButtons/SiteNavigationButtons";
 import { EditableExercise } from "../../components/EditableExercise/EditableExercise";
@@ -102,11 +102,13 @@ export default function Index() {
       return { onDelete, edited, handleCancel, onEdit, exercise, index };
     });
   }, [createdExercises, editedExerciseIndex, handleDeleteExercise, t]);
+
   const handleNavigateHome = useCallback(() => {
     handleCleanErrors();
     dispatch(setTrainingDayIndex(undefined));
     navigate(Routes.HOME);
   }, [dispatch, handleCleanErrors, navigate]);
+
   const handleConfirm = useCallback(() => {
     if (workoutName?.length === 0 || createdExercises.length === 0) {
       if (workoutName?.length === 0) {
@@ -116,6 +118,12 @@ export default function Index() {
         dispatch(setError(["create_exercises_empty"]));
       }
       return;
+    }
+
+    if (editedDay) {
+      dispatch(editTrainingDay({ index: editedDayIndex ?? 0, trainingDay: { name: workoutName ?? editedDay.name, exercises: createdExercises } }));
+    } else {
+      dispatch(addTrainingDay({ name: workoutName ?? "", exercises: createdExercises }));
     }
     handleNavigateHome();
   }, [workoutName?.length, createdExercises.length, handleNavigateHome, dispatch]);

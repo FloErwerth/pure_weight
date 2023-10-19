@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import { borderRadius } from "../../app/theme/border";
+import { borderRadius } from "../App/theme/border";
 
 export const styles = StyleSheet.create({
   helperWrapper: {

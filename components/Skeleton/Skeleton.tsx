@@ -1,6 +1,6 @@
 import { Animated, LayoutAnimation, View, ViewProps } from "react-native";
 import { useEffect, useLayoutEffect, useRef } from "react";
-import { componentBackgroundColor } from "../../app/theme/colors";
+import { componentBackgroundColor } from "../App/theme/colors";
 import { LinearGradient } from "expo-linear-gradient";
 
 interface SkeletonProps {

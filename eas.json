@@ -15,9 +15,22 @@
         "buildType": "apk"
       }
     },
-    "production": {}
+    "production": {
+      "env": {
+        "EAS_BUILD_DISABLE_NPM_CACHE": "0"
+      }
+    }
   },
   "submit": {
-    "production": {}
+    "production": {
+      "android": {
+
+      },
+      "ios": {
+        "appleId": "erwerthflorian@outlook.de",
+        "ascAppId": "6469710434",
+        "appleTeamId": "4A8D75P83C"
+      }
+    }
   }
 }

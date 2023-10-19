@@ -3,7 +3,7 @@ import { styles } from "./styles";
 import { Pressable } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { HStack } from "../HStack/HStack";
-import { mainColor, mainDisabledColor } from "../../app/theme/colors";
+import { mainColor, mainDisabledColor } from "../App/theme/colors";
 import * as Haptics from "expo-haptics";
 
 type IconType = {

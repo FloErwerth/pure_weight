@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import { errorColor } from "../../app/theme/colors";
+import { errorColor } from "../App/theme/colors";
 
 export const styles = StyleSheet.create({
   error: {

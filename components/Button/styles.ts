@@ -1,7 +1,7 @@
 import { StyleSheet, TextStyle, ViewStyle } from "react-native";
 import type { ButtonThemes } from "./Button";
-import { borderRadius } from "../../app/theme/border";
-import { mainColor, primaryColor } from "../../app/theme/colors";
+import { borderRadius } from "../App/theme/border";
+import { mainColor, primaryColor } from "../App/theme/colors";
 
 const themes = (disabled: boolean): Record<ButtonThemes, Record<"button" | "text", ViewStyle | TextStyle>> => ({
   primary: {

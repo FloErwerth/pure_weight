@@ -1,7 +1,7 @@
 import { styles } from "./styles";
 import { Pressable, Text } from "react-native";
 import { useCallback, useMemo } from "react";
-import { errorColor, mainColor, mainDisabledColor } from "../../app/theme/colors";
+import { errorColor, mainColor, mainDisabledColor } from "../App/theme/colors";
 import { useTranslation } from "react-i18next";
 import { useAppDispatch, useAppSelector } from "../../store";
 import { AppState } from "../../store/types";

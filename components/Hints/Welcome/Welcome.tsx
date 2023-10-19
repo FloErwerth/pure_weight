@@ -1,9 +1,9 @@
 import { Modal } from "../../Modal/Modal";
 import { VStack } from "../../VStack/VStack";
 import { Text, View } from "react-native";
-import { componentBackgroundColor, mainColor } from "../../../app/theme/colors";
+import { componentBackgroundColor, mainColor } from "../../App/theme/colors";
 import { HStack } from "../../HStack/HStack";
-import { borderRadius } from "../../../app/theme/border";
+import { borderRadius } from "../../App/theme/border";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Button } from "../../Button/Button";
 import { useAppDispatch, useAppSelector } from "../../../store";

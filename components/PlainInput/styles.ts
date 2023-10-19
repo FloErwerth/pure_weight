@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import { mainColor } from "../../app/theme/colors";
+import { mainColor } from "../App/theme/colors";
 
 export const styles = StyleSheet.create({
   innerWrapper: {

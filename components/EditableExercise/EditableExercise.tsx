@@ -5,7 +5,7 @@ import { ErrorFields, ExerciseMetaData } from "../../store/types";
 import { EditableExerciseTheme, styles } from "./styles";
 import { HStack } from "../HStack/HStack";
 import { ThemedTextInput } from "../TextInput/ThemedTextInput";
-import { mainColor } from "../../app/theme/colors";
+import { mainColor } from "../App/theme/colors";
 import * as Haptics from "expo-haptics";
 import { useTranslation } from "react-i18next";
 import { useAppDispatch } from "../../store";

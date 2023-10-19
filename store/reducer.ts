@@ -1,7 +1,7 @@
 import { createAction, createReducer } from "@reduxjs/toolkit/src";
 import { AppState, DoneExerciseData, ErrorFields, ExerciseMetaData, PlainExerciseData, TrainingDay } from "./types";
 import { getDateTodayIso } from "../utils/date";
-import { ChartType } from "../app/progress/chart/components/ExerciseCharts";
+import { ChartType } from "../components/App/progress/chart/components/ExerciseCharts";
 import { mockState } from "./index";
 
 export const setChartType = createAction<ChartType>("set_chart_type");

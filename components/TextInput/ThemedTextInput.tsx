@@ -1,5 +1,5 @@
 import { TextInput, TextInputProps } from "react-native";
-import { componentBackgroundColor, mainColor, placeholderErrorColor, secondaryColor } from "../../app/theme/colors";
+import { componentBackgroundColor, mainColor, placeholderErrorColor, secondaryColor } from "../App/theme/colors";
 import * as React from "react";
 import { RefObject, useCallback } from "react";
 import { AppState, ErrorFields } from "../../store/types";

@@ -4,8 +4,8 @@ import { TextInput } from "react-native";
 import { Button } from "../../Button/Button";
 import { HStack } from "../../HStack/HStack";
 import { VStack } from "../../VStack/VStack";
-import { borderRadius } from "../../../app/theme/border";
-import { backgroundColor, secondaryColor } from "../../../app/theme/colors";
+import { borderRadius } from "../../App/theme/border";
+import { backgroundColor, secondaryColor } from "../../App/theme/colors";
 import { ThemedTextInput } from "../../TextInput/ThemedTextInput";
 import { useTranslation } from "react-i18next";
 

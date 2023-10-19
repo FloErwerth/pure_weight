@@ -2,7 +2,7 @@ import { KeyboardType, Pressable, StyleProp, TextInput, TextStyle, ViewStyle } f
 import { styles } from "./styles";
 import { Text } from "../Text/Text";
 import { HStack } from "../HStack/HStack";
-import { mainColor, secondaryColor } from "../../app/theme/colors";
+import { mainColor, secondaryColor } from "../App/theme/colors";
 import { useRef } from "react";
 import { ThemedTextInput } from "../TextInput/ThemedTextInput";
 

@@ -1,6 +1,6 @@
 import { useMemo } from "react";
-import { mainColor, secondaryColor } from "../../theme/colors";
-import { Text } from "../../../components/Text/Text";
+import { mainColor, secondaryColor } from "../theme/colors";
+import { Text } from "../../Text/Text";
 
 export const TabBarLabel = ({ focused, title }: { focused: boolean; title: string }) => {
   const color = useMemo(() => {

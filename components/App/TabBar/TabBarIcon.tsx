@@ -1,5 +1,5 @@
 import { SvgProps } from "react-native-svg";
-import { mainColor, secondaryColor } from "../../theme/colors";
+import { mainColor, secondaryColor } from "../theme/colors";
 import { useMemo } from "react";
 
 export const TabBarIcon = ({ focused, Icon }: { focused: boolean; Icon: React.FC<SvgProps> }) => {

@@ -1,8 +1,8 @@
-import { ThemedView } from "../../../../components/View/View";
+import { ThemedView } from "../../../../View/View";
 import { PropsWithChildren } from "react";
 import { styles } from "./styles";
 import { View } from "react-native";
-import { Text } from "../../../../components/Text/Text";
+import { Text } from "../../../../Text/Text";
 
 interface SettingsSectionProps extends PropsWithChildren {
   title: string;
