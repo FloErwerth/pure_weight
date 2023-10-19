@@ -14,7 +14,7 @@ import { useTranslation } from "react-i18next";
 import * as Locale from "expo-localization";
 import { ThemedView } from "../../components/View/View";
 
-export default function Main() {
+export default function Index() {
   const language = useAppSelector(getLanguage);
   const dispatch = useAppDispatch();
   const { t, i18n } = useTranslation();

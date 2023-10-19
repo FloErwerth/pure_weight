@@ -1,22 +1,22 @@
-import { useAppDispatch, useAppSelector } from "../../store";
+import { useAppDispatch, useAppSelector } from "../../../store";
 import { useCallback, useMemo, useState } from "react";
-import { trainStyles } from "../../components/App/train/trainStyles";
-import { PlainExerciseData } from "../../store/types";
-import { addSetDataToTrainingDay, setExerciseIndex, setSetIndex, setTrainingDayIndex } from "../../store/reducer";
-import { AlertModal } from "../../components/AlertModal/AlertModal";
-import { useTrainingProps } from "../../hooks/training/useTrainingProps";
-import { useNavigate } from "../../utils/navigate";
-import { Routes } from "../../types/routes";
-import { SiteNavigationButtons } from "../../components/SiteNavigationButtons/SiteNavigationButtons";
-import { ExerciseMetaDataDisplay } from "../../components/App/train/ExerciseMetaDataDisplay";
+import { trainStyles } from "../../../components/App/train/trainStyles";
+import { PlainExerciseData } from "../../../store/types";
+import { addSetDataToTrainingDay, setExerciseIndex, setSetIndex, setTrainingDayIndex } from "../../../store/reducer";
+import { AlertModal } from "../../../components/AlertModal/AlertModal";
+import { useTrainingProps } from "../../../hooks/training/useTrainingProps";
+import { useNavigate } from "../../../utils/navigate";
+import { Routes } from "../../../types/routes";
+import { SiteNavigationButtons } from "../../../components/SiteNavigationButtons/SiteNavigationButtons";
+import { ExerciseMetaDataDisplay } from "../../../components/App/train/ExerciseMetaDataDisplay";
 import { ScrollView, View } from "react-native";
-import { Inputs } from "../../components/App/train/Inputs";
-import { Button } from "../../components/Button/Button";
-import { HStack } from "../../components/HStack/HStack";
-import { getNumberOfExercises, getSpecificNumberOfSets } from "../../store/selectors";
-import { PreviousTraining } from "../../components/PreviousTraining/PreviousTraining";
+import { Inputs } from "../../../components/App/train/Inputs";
+import { Button } from "../../../components/Button/Button";
+import { HStack } from "../../../components/HStack/HStack";
+import { getNumberOfExercises, getSpecificNumberOfSets } from "../../../store/selectors";
+import { PreviousTraining } from "../../../components/PreviousTraining/PreviousTraining";
 import { useTranslation } from "react-i18next";
-import { ThemedView } from "../../components/View/View";
+import { ThemedView } from "../../../components/View/View";
 
 export default function Index() {
   const { t } = useTranslation();

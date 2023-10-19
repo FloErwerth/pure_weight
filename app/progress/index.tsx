@@ -29,7 +29,7 @@ export default function Index() {
 
   return (
     <ThemedView style={{ flex: 1 }}>
-      <SiteNavigationButtons handleBack={() => navigate(Routes.HOME)} title={t("progress")} />
+      <SiteNavigationButtons title={t("progress")} />
       {data.length === 0 && (
         <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
           <MissingData fill={secondaryColor} />

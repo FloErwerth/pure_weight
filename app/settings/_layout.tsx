@@ -5,7 +5,6 @@ export default function index() {
   return (
     <Stack screenOptions={{ headerShown: false }}>
       <Stack.Screen name="index" />
-      <Stack.Screen name="chart/index" />
     </Stack>
   );
 }

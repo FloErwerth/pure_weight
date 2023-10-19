@@ -40,7 +40,7 @@ export default function index() {
                     tabBarActiveTintColor: mainColor,
                     tabBarInactiveTintColor: secondaryColor,
                   }}
-                  name="index/index"
+                  name="index"
                 />
 
                 <Tabs.Screen
@@ -61,16 +61,7 @@ export default function index() {
                     tabBarButton: TabBarButton,
                     tabBarLabel: ({ focused }) => <TabBarLabel focused={focused} title={t("settings")} />,
                   }}
-                  name="settings/index"
-                />
-                <Tabs.Screen options={{ tabBarStyle: { display: "none" }, headerShown: false, href: null }} name="train/index" />
-                <Tabs.Screen
-                  options={{
-                    tabBarStyle: { display: "none" },
-                    headerShown: false,
-                    href: null,
-                  }}
-                  name="create/index"
+                  name="settings"
                 />
               </Tabs>
             </PersistGate>
