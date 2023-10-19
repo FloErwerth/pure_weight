@@ -3,7 +3,7 @@ import type { ButtonThemes } from "./Button";
 import { borderRadius } from "../App/theme/border";
 import { mainColor, primaryColor } from "../App/theme/colors";
 
-const themes = (disabled: boolean): Record<ButtonThemes, Record<"button" | "text", ViewStyle | TextStyle>> => ({
+const themes: Record<ButtonThemes, Record<"button" | "text", ViewStyle | TextStyle>> = {
   primary: {
     button: {
       padding: 10,
@@ -37,13 +37,13 @@ const themes = (disabled: boolean): Record<ButtonThemes, Record<"button" | "text
       padding: 0,
     },
   },
-});
+};
 
-export const styles = (theme: ButtonThemes, disabled: boolean = false) =>
+export const styles = (theme: ButtonThemes) =>
   StyleSheet.create({
     commonText: {
       textAlign: "center",
     },
-    button: themes(disabled)[theme].button,
-    text: themes(disabled)[theme].text,
+    button: themes[theme].button,
+    text: themes[theme].text,
   });

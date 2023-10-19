@@ -12,7 +12,7 @@ interface ButtonProps extends PropsWithChildren {
   style?: { button?: ViewStyle; text?: TextStyle };
 }
 export const Button = ({ onPress, children, theme = "primary", title, disabled, style }: ButtonProps) => {
-  const internalStyles = useMemo(() => styles(theme, disabled), [disabled, theme]);
+  const internalStyles = useMemo(() => styles(theme), [theme]);
 
   const handlePress = useCallback(() => {
     if (onPress) {
