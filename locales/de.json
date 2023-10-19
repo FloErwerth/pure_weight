@@ -43,7 +43,8 @@
   "alert_create_workout_discard_content": "Alle Änderungen gehen dabei verloren",
   "alert_edit_workout_discard_title": "Einheitenbearbeitung abbrechen",
   "alert_edit_workout_discard_content": "Alle Änderungen gehen dabei verloren",
-  "progress_placeholder": "Noch keine Daten zum Anzeigen vorhanden",
+  "progress_placeholder": "Messdaten oder Daten von Einheiten hinzufügen, um Graphen anzeigen zu können",
+  "create_missing_data_text": "Es sind keine Übungen zum Anzeigen vorhanden",
   "create_exercise": "Übung erstellen",
   "edit_exercise": "Änderungen bestätigen"
 }

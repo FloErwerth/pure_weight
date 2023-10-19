@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import { componentBackgroundColor, mainColor } from "../theme/colors";
+import { componentBackgroundColor, mainColor, secondaryComponentBackgroundColor } from "../theme/colors";
 import { borderRadius } from "../theme/border";
 
 export const styles = StyleSheet.create({
@@ -39,7 +39,6 @@ export const styles = StyleSheet.create({
     backgroundColor: componentBackgroundColor,
     borderRadius,
   },
-
   errorBox: {
     overflow: "visible",
     color: "rgb(185,28,28)",
@@ -60,12 +59,15 @@ export const styles = StyleSheet.create({
   },
   contentWrapper: {
     flex: 1,
-    backgroundColor: "transparent",
+    justifyContent: "center",
     alignSelf: "stretch",
     padding: 10,
   },
   listContainer: {
     borderRadius,
+    flex: 1,
+    padding: 10,
+    backgroundColor: secondaryComponentBackgroundColor,
   },
   list: {
     elevation: 2,

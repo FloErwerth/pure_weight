@@ -72,12 +72,12 @@ export const PressableRowWithIconSlots = ({ children, onClick, Icon1, Icon2, onL
       <HStack style={styles.iconWrapper}>
         {showIcon1 && (
           <Pressable delayLongPress={200} onLongPress={handleLongPressIcon1} style={styles.icon} disabled={Icon1?.disabled} onPress={handleClickIcon1}>
-            <MaterialCommunityIcons size={Icon1?.size ?? 20} name={Icon1?.icon} color={Icon1?.disabled ? mainDisabledColor : mainColor} />
+            <MaterialCommunityIcons size={Icon1?.size ?? 24} name={Icon1?.icon} color={Icon1?.disabled ? mainDisabledColor : mainColor} />
           </Pressable>
         )}
         {showIcon2 && (
           <Pressable delayLongPress={200} onLongPress={handleLongPressIcon2} style={styles.icon} disabled={Icon2?.disabled} onPress={handleClickIcon2}>
-            <MaterialCommunityIcons size={Icon2?.size ?? 20} name={Icon2?.icon} color={Icon2?.disabled ? mainDisabledColor : mainColor} />
+            <MaterialCommunityIcons size={Icon2?.size ?? 24} name={Icon2?.icon} color={Icon2?.disabled ? mainDisabledColor : mainColor} />
           </Pressable>
         )}
       </HStack>

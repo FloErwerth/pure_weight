@@ -22,7 +22,7 @@ export const styles = StyleSheet.create({
   },
   iconWrapper: {
     justifyContent: "flex-end",
-    gap: 20,
+    gap: 10,
     paddingRight: 16,
   },
   icon: {

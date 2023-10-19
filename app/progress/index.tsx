@@ -2,7 +2,7 @@ import { useAppDispatch, useAppSelector } from "../../store";
 import { getTrainingDayData } from "../../store/selectors";
 import { Text, View } from "react-native";
 import MissingData from "../../media/icons/MissingData.svg";
-import { secondaryColor } from "../../components/App/theme/colors";
+import { backgroundColor, componentBackgroundColor, secondaryColor } from "../../components/App/theme/colors";
 import { useNavigate } from "../../utils/navigate";
 import { Routes } from "../../types/routes";
 import { SiteNavigationButtons } from "../../components/SiteNavigationButtons/SiteNavigationButtons";
@@ -12,6 +12,7 @@ import { useCallback } from "react";
 import { setTrainingDayIndex } from "../../store/reducer";
 import { useTranslation } from "react-i18next";
 import { ThemedView } from "../../components/View/View";
+import { borderRadius } from "../../components/App/theme/border";
 
 export default function Index() {
   const data = useAppSelector(getTrainingDayData);
@@ -31,9 +32,9 @@ export default function Index() {
     <ThemedView style={{ flex: 1 }}>
       <SiteNavigationButtons title={t("progress")} />
       {data.length === 0 && (
-        <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-          <MissingData fill={secondaryColor} />
-          <Text style={{ color: secondaryColor, fontSize: 16 }}>{t("progress_placeholder")}</Text>
+        <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: componentBackgroundColor, margin: 20, borderRadius }}>
+          <MissingData fill={backgroundColor} />
+          <Text style={{ color: secondaryColor, textAlign: "center", fontSize: 16 }}>{t("progress_placeholder")}</Text>
         </View>
       )}
       {data.length > 0 && (

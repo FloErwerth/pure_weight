@@ -20,6 +20,8 @@ import { ScaleDecorator } from "react-native-draggable-flatlist";
 import { useTranslation } from "react-i18next";
 import { AddExerciseModal } from "../../../components/AddExerciseModal/AddExerciseModal";
 import { ThemedView } from "../../../components/View/View";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { backgroundColor } from "../../../components/App/theme/colors";
 
 function getAreValuesEmpty(exercise: ExerciseMetaData) {
   const values = Object.values(exercise);
@@ -193,27 +195,33 @@ export default function Index() {
         <SiteNavigationButtons handleBack={handleBackButton} handleConfirm={handleConfirm} titleFontSize={30} title={title} />
         <View style={styles.contentWrapper}>
           <PlainInput value={workoutName} setValue={handleSetWorkoutName} fontSize={30} placeholder={t("workout_name")} />
-          <DraggableFlatList
-            scrollsToTop
-            keyboardShouldPersistTaps="handled"
-            keyExtractor={(item) => `${item.index}${item.exercise.name}${item.exercise.pause}`}
-            data={mappedExercises}
-            onDragEnd={handleOnDragEnd}
-            renderItem={({ drag, item: { index, exercise, onEdit, onDelete } }) => (
-              <ScaleDecorator activeScale={0.95}>
-                <View style={{ marginBottom: 10 }}>
-                  <PressableRowWithIconSlots
-                    onClick={onEdit}
-                    key={exercise.name.concat(index.toString())}
-                    Icon1={{ icon: "delete", onPress: onDelete }}
-                    Icon2={mappedExercises.length > 1 ? { icon: "drag", onLongPress: drag } : undefined}
-                  >
-                    <Text style={styles.text}>{exercise.name}</Text>
-                  </PressableRowWithIconSlots>
-                </View>
-              </ScaleDecorator>
+          <View style={styles.listContainer}>
+            {mappedExercises.length > 0 ? (
+              <DraggableFlatList
+                scrollsToTop
+                keyboardShouldPersistTaps="handled"
+                keyExtractor={(item) => `${item.index}${item.exercise.name}${item.exercise.pause}`}
+                data={mappedExercises}
+                onDragEnd={handleOnDragEnd}
+                renderItem={({ drag, item: { index, exercise, onEdit, onDelete } }) => (
+                  <ScaleDecorator activeScale={0.95}>
+                    <View style={{ marginBottom: 10 }}>
+                      <PressableRowWithIconSlots
+                        onClick={onEdit}
+                        key={exercise.name.concat(index.toString())}
+                        Icon1={{ icon: "delete", onPress: onDelete }}
+                        Icon2={mappedExercises.length > 1 ? { icon: "drag", onLongPress: drag } : undefined}
+                      >
+                        <Text style={styles.text}>{exercise.name}</Text>
+                      </PressableRowWithIconSlots>
+                    </View>
+                  </ScaleDecorator>
+                )}
+              />
+            ) : (
+              <MaterialCommunityIcons style={{ alignSelf: "center", flex: 1, marginTop: "25%" }} name="clipboard-search-outline" size={256} color={backgroundColor} />
             )}
-          />
+          </View>
         </View>
         <AddExercise onPress={() => setEditedExerciseIndex(-1)} />
       </ThemedView>

@@ -12,7 +12,9 @@ import { componentBackgroundColor } from "../../../components/App/theme/colors";
 import { ThemedView } from "../../../components/View/View";
 
 const ExerciseCharts = lazy(() => import("../../../components/App/progress/chart/components/ExerciseCharts"));
-
+const SuspenseTrigger = () => {
+  throw new Promise(() => {});
+};
 export default function Index() {
   const navigate = useNavigate();
   const trainingDayData = useAppSelector(getSelectedTrainingDayData);
@@ -41,7 +43,7 @@ export default function Index() {
   };
 
   return (
-    <ThemedView>
+    <ThemedView style={{ flex: 1 }}>
       <SiteNavigationButtons handleBack={handleNavigateToProgress} title={trainingDayData?.name} />
       <Suspense fallback={<Fallback />}>
         <ExerciseCharts />
