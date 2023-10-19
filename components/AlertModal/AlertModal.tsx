@@ -7,14 +7,21 @@ import { Button } from "../Button/Button";
 import * as Haptics from "expo-haptics";
 import { useTranslation } from "react-i18next";
 
+export type AlertConfig = {
+  title: string;
+  content: string;
+  onConfirm?: () => void;
+  onCancel?: () => void;
+};
+
 interface TrainingNotDoneModalProps extends PropsWithChildren {
   onConfirm?: () => void;
   onCancel: () => void;
   content?: string;
   title?: string;
-  isVisible: boolean;
+  isVisible?: boolean;
 }
-export const AlertModal = ({ onConfirm, onCancel, isVisible, content, title, children }: TrainingNotDoneModalProps) => {
+export const AlertModal = ({ onConfirm, onCancel, isVisible = true, content, title, children }: TrainingNotDoneModalProps) => {
   const { t } = useTranslation();
 
   useEffect(() => {

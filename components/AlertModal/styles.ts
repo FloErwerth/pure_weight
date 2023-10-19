@@ -20,10 +20,6 @@ export const styles = StyleSheet.create({
     gap: 20,
     marginRight: 10,
   },
-  button: {
-    flex: 1,
-    alignSelf: "stretch",
-  },
   title: {
     color: mainColor,
     fontSize: 20,

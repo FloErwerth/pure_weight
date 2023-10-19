@@ -1,5 +1,5 @@
 import { Text } from "../../components/Text/Text";
-import { ReactNode, useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "../../utils/navigate";
 import { Routes } from "../../types/routes";
 import { DoneExerciseData, ExerciseMetaData } from "../../store/types";
@@ -10,7 +10,7 @@ import { styles } from "../../components/App/create/styles";
 import { PlainInput } from "../../components/PlainInput/PlainInput";
 import { SiteNavigationButtons } from "../../components/SiteNavigationButtons/SiteNavigationButtons";
 import { PressableRowWithIconSlots } from "../../components/PressableRowWithIconSlots/PressableRowWithIconSlots";
-import { AlertModal } from "../../components/AlertModal/AlertModal";
+import { AlertConfig, AlertModal } from "../../components/AlertModal/AlertModal";
 import { SafeAreaView } from "../../components/SafeAreaView/SafeAreaView";
 import { View } from "react-native";
 import * as Haptics from "expo-haptics";
@@ -34,7 +34,7 @@ const emptyExercise: ExerciseMetaData = { reps: "", pause: "", sets: "", weight:
 export default function Index() {
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const [Alert, setAlert] = useState<ReactNode | null>(null);
+  const [alertConfig, setAlertConfig] = useState<AlertConfig | undefined>(undefined);
   const editedDay = useAppSelector(getSelectedTrainingDay);
   const title = useMemo(() => (editedDay ? t("edit_workout") : t("create_workout")), [editedDay, t]);
   const editedDayIndex = useAppSelector(getSelectedTrainingDayIndex);
@@ -81,7 +81,7 @@ export default function Index() {
   }, [dispatch]);
 
   const handleConfirmDiscardChanges = useCallback(() => {
-    setAlert(undefined);
+    setAlertConfig(undefined);
     handleCleanErrors();
     navigate(Routes.HOME);
   }, [handleCleanErrors, navigate]);
@@ -96,7 +96,7 @@ export default function Index() {
       const handleConfirmDelete = () => {
         void Haptics.notificationAsync(NotificationFeedbackType.Success);
         handleDeleteExercise(index);
-        setAlert(null);
+        setAlertConfig(undefined);
       };
 
       const handleOnConfirmEdit = (exercise: ExerciseMetaData) => {
@@ -115,17 +115,18 @@ export default function Index() {
         }
         setEditedExerciseIndex(-1);
       };
-      const onDelete = () =>
-        setAlert(<AlertModal onCancel={() => setAlert(null)} onConfirm={handleConfirmDelete} title={t("alert_delete_title")} content={t("alert_delete_message")} isVisible={true} />);
+      const onDelete = () => setAlertConfig({ title: t("alert_delete_title"), content: t("alert_delete_message"), onConfirm: handleConfirmDelete, onCancel: handleConfirmDiscardChanges });
       const edited = index === editedExerciseIndex;
 
       return { onDelete, edited, handleCancel, onEdit, exercise, index, handleOnConfirmEdit };
     });
-  }, [createdExercises, editedExerciseIndex, handleDeleteExercise, t]);
+  }, [createdExercises, editedExerciseIndex, handleConfirmDiscardChanges, handleDeleteExercise, t]);
 
   const handleNavigateHome = useCallback(() => {
     handleCleanErrors();
     dispatch(setTrainingDayIndex(undefined));
+    setAlertConfig(undefined);
+    setEditedExerciseIndex(undefined);
     navigate(Routes.HOME);
   }, [dispatch, handleCleanErrors, navigate]);
 
@@ -155,13 +156,17 @@ export default function Index() {
     if (createdExercises.length === 0 && !workoutName) {
       handleNavigateHome();
     } else if (createdExercises.length !== 0 || workoutName?.length !== 0) {
-      const titleKey = editedDay ? "alert_edit_workout_discard_title" : "alert_create_workout_discard_title";
-      const contentKey = editedDay ? "alert_edit_workout_discard_content" : "alert_create_workout_discard_content";
-      setAlert(<AlertModal onCancel={() => setAlert(null)} onConfirm={handleConfirmDiscardChanges} title={t(titleKey)} content={t(contentKey)} isVisible={true} />);
+      const title = t(editedDay ? "alert_edit_workout_discard_title" : "alert_create_workout_discard_title");
+      const content = t(editedDay ? "alert_edit_workout_discard_content" : "alert_create_workout_discard_content");
+      setAlertConfig({
+        title,
+        content,
+        onConfirm: handleNavigateHome,
+      });
     } else {
       handleNavigateHome();
     }
-  }, [createdExercises.length, editedDay, handleConfirmDiscardChanges, handleNavigateHome, t, workoutName]);
+  }, [createdExercises.length, editedDay, handleNavigateHome, t, workoutName]);
 
   const handleOnDragEnd = useCallback(
     ({ from, to }: { from: number; to: number }) => {
@@ -190,7 +195,12 @@ export default function Index() {
             renderItem={({ drag, item: { index, exercise, onEdit, onDelete } }) => (
               <ScaleDecorator activeScale={0.95}>
                 <View style={{ marginBottom: 10 }}>
-                  <PressableRowWithIconSlots onClick={onEdit} key={exercise.name.concat(index.toString())} Icon1={{ icon: "delete", onPress: onDelete }} Icon2={{ icon: "drag", onLongPress: drag }}>
+                  <PressableRowWithIconSlots
+                    onClick={onEdit}
+                    key={exercise.name.concat(index.toString())}
+                    Icon1={{ icon: "delete", onPress: onDelete }}
+                    Icon2={mappedExercises.length > 1 ? { icon: "drag", onLongPress: drag } : undefined}
+                  >
                     <Text style={styles.text}>{exercise.name}</Text>
                   </PressableRowWithIconSlots>
                 </View>
@@ -200,7 +210,7 @@ export default function Index() {
         </View>
         <AddExercise onPress={() => setEditedExerciseIndex(-1)} />
       </SafeAreaView>
-      {Alert}
+      {alertConfig && <AlertModal title={alertConfig.title} content={alertConfig.content} onConfirm={alertConfig.onConfirm} onCancel={() => setAlertConfig(undefined)} />}
       {editedExerciseIndex !== undefined && (
         <AddExerciseModal
           onRequestClose={() => setEditedExerciseIndex(undefined)}
