@@ -16,7 +16,7 @@ interface SiteNavigationButtonsProps {
   disabled?: boolean;
 }
 export const SiteNavigationButtons = ({ handleBack, title, titleFontSize = 40, handleConfirm, disabled = false, handleConfirmIcon = { name: "check", size: 30 } }: SiteNavigationButtonsProps) => {
-  const titleStyles = useMemo(() => ({ ...styles.title, fontSize: titleFontSize, marginLeft: handleBack ? 0 : 15 }), [titleFontSize]);
+  const titleStyles = useMemo(() => ({ ...styles.title, fontSize: titleFontSize, marginLeft: handleBack ? 0 : 15 }), [handleBack, titleFontSize]);
 
   const handleBackButton = useCallback(() => {
     void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);

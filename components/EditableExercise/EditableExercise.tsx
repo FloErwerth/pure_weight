@@ -16,7 +16,6 @@ import { Text } from "../Text/Text";
 export interface EditableExerciseProps {
   exercise?: ExerciseMetaData;
   onConfirmEdit: (exercise: ExerciseMetaData) => void;
-  onCancel: () => void;
   theme?: EditableExerciseTheme;
 }
 
@@ -37,7 +36,7 @@ const validateData = (data: Partial<ExerciseMetaData>) => {
   return errors;
 };
 
-export const EditableExercise = ({ exercise, onConfirmEdit, onCancel, theme }: EditableExerciseProps) => {
+export const EditableExercise = ({ exercise, onConfirmEdit, theme }: EditableExerciseProps) => {
   const { t } = useTranslation();
   const [name, setName] = useState<string | undefined>(exercise?.name);
   const [weight, setWeight] = useState<string | undefined>(exercise?.weight);
