@@ -1,6 +1,5 @@
 import { lazy, Suspense, useCallback } from "react";
-import { useNavigate } from "../../../utils/navigate";
-import { Routes } from "../../../types/routes";
+import { useNavigate } from "../../../hooks/navigate";
 import { SiteNavigationButtons } from "../../../components/SiteNavigationButtons/SiteNavigationButtons";
 import { useAppSelector } from "../../../store";
 import { getSelectedTrainingDayData } from "../../../store/selectors";
@@ -12,19 +11,16 @@ import { componentBackgroundColor } from "../../../components/App/theme/colors";
 import { ThemedView } from "../../../components/View/View";
 
 const ExerciseCharts = lazy(() => import("../../../components/App/progress/chart/components/ExerciseCharts"));
-const SuspenseTrigger = () => {
-  throw new Promise(() => {});
-};
-export default function Index() {
+export function Charts() {
   const navigate = useNavigate();
   const trainingDayData = useAppSelector(getSelectedTrainingDayData);
 
   const handleNavigateToProgress = useCallback(() => {
-    navigate(Routes.PROGRESS);
+    navigate("progress");
   }, [navigate]);
 
   if (trainingDayData === undefined) {
-    navigate(Routes.PROGRESS);
+    navigate("progress");
   }
 
   const Fallback = () => {

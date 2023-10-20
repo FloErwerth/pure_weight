@@ -5,8 +5,7 @@ import { PlainExerciseData } from "../../../store/types";
 import { addSetDataToTrainingDay, setExerciseIndex, setSetIndex, setTrainingDayIndex } from "../../../store/reducer";
 import { AlertModal } from "../../../components/AlertModal/AlertModal";
 import { useTrainingProps } from "../../../hooks/training/useTrainingProps";
-import { useNavigate } from "../../../utils/navigate";
-import { Routes } from "../../../types/routes";
+import { useNavigate } from "../../../hooks/navigate";
 import { SiteNavigationButtons } from "../../../components/SiteNavigationButtons/SiteNavigationButtons";
 import { ExerciseMetaDataDisplay } from "../../../components/App/train/ExerciseMetaDataDisplay";
 import { ScrollView, View } from "react-native";
@@ -18,7 +17,7 @@ import { PreviousTraining } from "../../../components/PreviousTraining/PreviousT
 import { useTranslation } from "react-i18next";
 import { ThemedView } from "../../../components/View/View";
 
-export default function Index() {
+export function Train() {
   const { t } = useTranslation();
   const numberOfExercises = useAppSelector(getNumberOfExercises);
   const { showPreviousExercise, hasNextExercise, previousExerciseName, nextExerciseName, currentExerciseIndex, selectedTrainingName } = useTrainingProps();
@@ -54,7 +53,7 @@ export default function Index() {
     dispatch(setTrainingDayIndex(undefined));
     dispatch(setSetIndex(0));
     setDoneSetsThisExercise([]);
-    navigate(Routes.HOME);
+    navigate("workouts");
   }, [dispatch, navigate, setDoneSetsThisExercise]);
 
   const handleDone = useCallback(() => {

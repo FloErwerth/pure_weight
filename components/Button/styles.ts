@@ -5,7 +5,7 @@ import { mainColor, primaryColor } from "../App/theme/colors";
 
 const themes: Record<ButtonThemes, Record<"button" | "text", ViewStyle | TextStyle>> = {
   primary: {
-    singleButton: {
+    button: {
       padding: 10,
       backgroundColor: primaryColor,
       borderRadius,
@@ -16,7 +16,7 @@ const themes: Record<ButtonThemes, Record<"button" | "text", ViewStyle | TextSty
     },
   },
   secondary: {
-    singleButton: {
+    button: {
       padding: 10,
       borderWidth: 1,
       borderRadius,
@@ -27,7 +27,7 @@ const themes: Record<ButtonThemes, Record<"button" | "text", ViewStyle | TextSty
     },
   },
   ghost: {
-    singleButton: {
+    button: {
       backgroundColor: "transparent",
       borderColor: "transparent",
       padding: 0,
@@ -44,6 +44,6 @@ export const styles = (theme: ButtonThemes) =>
     commonText: {
       textAlign: "center",
     },
-    singleButton: themes[theme].singleButton,
+    singleButton: themes[theme].button,
     text: themes[theme].text,
   });

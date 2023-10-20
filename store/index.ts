@@ -18,7 +18,6 @@ export const mockState: AppState = {
   trainingDayIndex: undefined,
   isFirstTimeRendered: true,
   exerciseIndex: 0,
-  chartType: "CUMULATIVE",
   errors: [],
   trainingDays: [
     {

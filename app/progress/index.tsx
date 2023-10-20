@@ -3,8 +3,7 @@ import { getTrainingDayData } from "../../store/selectors";
 import { Text, View } from "react-native";
 import MissingData from "../../media/icons/MissingData.svg";
 import { backgroundColor, componentBackgroundColor, secondaryColor } from "../../components/App/theme/colors";
-import { useNavigate } from "../../utils/navigate";
-import { Routes } from "../../types/routes";
+import { useNavigate } from "../../hooks/navigate";
 import { SiteNavigationButtons } from "../../components/SiteNavigationButtons/SiteNavigationButtons";
 import { PressableRowWithIconSlots } from "../../components/PressableRowWithIconSlots/PressableRowWithIconSlots";
 import { styles } from "../../components/App/progress/styles";
@@ -14,7 +13,7 @@ import { useTranslation } from "react-i18next";
 import { ThemedView } from "../../components/View/View";
 import { borderRadius } from "../../components/App/theme/border";
 
-export default function Index() {
+export function Progress() {
   const data = useAppSelector(getTrainingDayData);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
@@ -23,7 +22,7 @@ export default function Index() {
   const selectTrainingDayToShow = useCallback(
     (dayIndex: number) => {
       dispatch(setTrainingDayIndex(dayIndex));
-      navigate(Routes.PROGRESS_CHART);
+      navigate("chart");
     },
     [dispatch, navigate],
   );

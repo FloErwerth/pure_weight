@@ -1,7 +1,6 @@
 import { Text } from "../../../components/Text/Text";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { useNavigate } from "../../../utils/navigate";
-import { Routes } from "../../../types/routes";
+import { useNavigate } from "../../../hooks/navigate";
 import { ExerciseMetaData, ExerciseMetaDataWithDoneEntries } from "../../../store/types";
 import { useAppDispatch, useAppSelector } from "../../../store";
 import { addTrainingDay, cleanErrors, editTrainingDay, overwriteTrainingDayExercises, setError, setTrainingDayIndex } from "../../../store/reducer";
@@ -43,7 +42,7 @@ type MappedExercises = {
   handleOnConfirmEdit: (exercise: ExerciseMetaData) => void;
 };
 const emptyExercise: ExerciseMetaData = { reps: "", pause: "", sets: "", weight: "", name: "" };
-export default function Index() {
+export function Create() {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const [alertConfig, setAlertConfig] = useState<AlertConfig | undefined>(undefined);
@@ -95,7 +94,7 @@ export default function Index() {
   const handleConfirmDiscardChanges = useCallback(() => {
     setAlertConfig(undefined);
     handleCleanErrors();
-    navigate(Routes.HOME);
+    navigate("workouts");
   }, [handleCleanErrors, navigate]);
 
   const mappedExercises = useMemo(() => {
@@ -139,7 +138,7 @@ export default function Index() {
     dispatch(setTrainingDayIndex(undefined));
     setAlertConfig(undefined);
     setEditedExerciseIndex(undefined);
-    navigate(Routes.HOME);
+    navigate("workouts");
   }, [dispatch, handleCleanErrors, navigate]);
 
   const handleConfirm = useCallback(() => {

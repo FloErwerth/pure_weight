@@ -1,8 +1,7 @@
 import { ScrollView, Text, View } from "react-native";
 import { ReactNode, useCallback, useEffect, useState } from "react";
 import { PressableRowWithIconSlots } from "../../components/PressableRowWithIconSlots/PressableRowWithIconSlots";
-import { useNavigate } from "../../utils/navigate";
-import { Routes } from "../../types/routes";
+import { useNavigate } from "../../hooks/navigate";
 import { useAppDispatch, useAppSelector } from "../../store";
 import { getLanguage, getSavedTrainings } from "../../store/selectors";
 import { cleanErrors, removeTrainingDay, setExerciseIndex, setMockState, setSetIndex, setState, setTrainingDayIndex } from "../../store/reducer";
@@ -14,7 +13,7 @@ import { useTranslation } from "react-i18next";
 import * as Locale from "expo-localization";
 import { ThemedView } from "../../components/View/View";
 
-export default function Index() {
+export function Workouts() {
   const language = useAppSelector(getLanguage);
   const dispatch = useAppDispatch();
   const { t, i18n } = useTranslation();
@@ -35,13 +34,13 @@ export default function Index() {
   const savedTrainings = useAppSelector(getSavedTrainings);
 
   const handleNavigateToCreateTraining = useCallback(() => {
-    navigate(Routes.CREATE_TRAINING);
+    navigate("create");
   }, [navigate]);
 
   const handleNavigateToTrain = useCallback(
     (index: number) => {
       dispatch(setTrainingDayIndex(index));
-      navigate(Routes.TRAIN);
+      navigate("train");
     },
     [dispatch, navigate],
   );

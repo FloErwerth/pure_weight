@@ -1,8 +1,7 @@
 import { Keyboard, View } from "react-native";
 import { styles } from "./styles";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { useNavigate } from "../../utils/navigate";
-import { Routes } from "../../types/routes";
+import { useNavigate } from "../../hooks/navigate";
 import { useCallback, useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../store";
 import { getExerciseIndex, getTrainingIndex } from "../../store/selectors";
@@ -70,7 +69,7 @@ export const SetInputRow = ({ onSetDone, setIndex, isActiveSet, hasData, data }:
   }, [handleOnFocus]);
 
   if (trainingIndex === undefined) {
-    navigate(Routes.HOME);
+    navigate("workouts");
     return null;
   }
 
@@ -114,7 +113,7 @@ export const SetInputRow = ({ onSetDone, setIndex, isActiveSet, hasData, data }:
           <Button
             title={note ? t("training_input_show_note") : t("training_input_add_note")}
             style={{
-              singleButton: { borderRadius, padding: 10, backgroundColor: !isActiveSet ? "transparent" : textFieldBackgroundColor },
+              button: { borderRadius, padding: 10, backgroundColor: !isActiveSet ? "transparent" : textFieldBackgroundColor },
               text: { color: !hasData && !isActiveSet ? secondaryColor : mainColor, fontSize: 16 },
             }}
             theme="ghost"
@@ -122,7 +121,7 @@ export const SetInputRow = ({ onSetDone, setIndex, isActiveSet, hasData, data }:
           />
         </Center>
         <Center style={{ flex: 0.6, height: 50 }}>
-          <Button style={{ singleButton: { width: 40, padding: 7, borderRadius, backgroundColor: isActiveSet ? textFieldBackgroundColor : "transparent" } }} onPress={handleSetDone}>
+          <Button style={{ button: { width: 40, padding: 7, borderRadius, backgroundColor: isActiveSet ? textFieldBackgroundColor : "transparent" } }} onPress={handleSetDone}>
             <MaterialCommunityIcons size={24} style={{ width: 24, color: isActiveSet ? mainColor : !hasData ? mainDisabledColor : "green" }} name="check-bold" />
           </Button>
           <EditNoteModal note={note} showModal={showModal} onDoneEdit={handleConfirmNoteModal} onCancel={() => setShowModal(false)} />
