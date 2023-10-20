@@ -35,11 +35,11 @@ export const MeasurementModal = ({ isNewMeasurement = true, onRequestClose, isVi
     }, [measurement, setMeasurement]);
 
     useEffect(() => {
-        LayoutAnimation.configureNext({...LayoutAnimation.Presets.easeInEaseOut, duration: showDatePicker ? LayoutAnimation.Presets.easeInEaseOut.duration : 200, delete: { ...LayoutAnimation.Presets.easeInEaseOut.update, duration: 200, property:"scaleY"}  });
+        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
         Animated.timing(opacity, {
           toValue: showDatePicker ? 1 : 0,
-            duration: showDatePicker ? 300: 50,
-            delay: showDatePicker ? 200 : 0,
+            duration: showDatePicker ? 300: 150,
+            delay: showDatePicker ? 200 : 150,
             useNativeDriver: false
         }).start();
     }, [opacity, showDatePicker])
