@@ -20,7 +20,6 @@ export const Routes = {
     screen: "tabs",
   },
 };
-type Routes = typeof Routes;
 
 export const navigationRef = createNavigationContainerRef<typeof Routes>();
 
