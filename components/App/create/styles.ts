@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import { componentBackgroundColor, mainColor, secondaryComponentBackgroundColor } from "../theme/colors";
+import { componentBackgroundColor, mainColor } from "../theme/colors";
 import { borderRadius } from "../theme/border";
 
 export const styles = StyleSheet.create({
@@ -68,7 +68,6 @@ export const styles = StyleSheet.create({
     borderRadius,
     flex: 1,
     padding: 10,
-    backgroundColor: secondaryComponentBackgroundColor,
   },
   list: {
     elevation: 2,

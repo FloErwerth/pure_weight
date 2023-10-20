@@ -20,7 +20,6 @@ import { useTranslation } from "react-i18next";
 import { AddExerciseModal } from "../../../components/AddExerciseModal/AddExerciseModal";
 import { ThemedView } from "../../../components/View/View";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { backgroundColor } from "../../../components/App/theme/colors";
 
 function getAreValuesEmpty(exercise: ExerciseMetaData) {
   const values = Object.values(exercise);
@@ -218,7 +217,9 @@ export function Create() {
                 )}
               />
             ) : (
-              <MaterialCommunityIcons style={{ alignSelf: "center", flex: 1, marginTop: "25%" }} name="clipboard-search-outline" size={256} color={backgroundColor} />
+              <View style={{ flex: 1, justifyContent: "center" }}>
+                <MaterialCommunityIcons style={{ alignSelf: "center" }} name="clipboard-search-outline" size={256} color={"#444"} />
+              </View>
             )}
           </View>
         </View>
