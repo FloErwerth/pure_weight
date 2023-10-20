@@ -4,7 +4,7 @@ import { useNavigate } from "../../../hooks/navigate";
 import { ExerciseMetaData, ExerciseMetaDataWithDoneEntries } from "../../../store/types";
 import { useAppDispatch, useAppSelector } from "../../../store";
 import { addTrainingDay, cleanErrors, editTrainingDay, overwriteTrainingDayExercises, setError, setTrainingDayIndex } from "../../../store/reducer";
-import { AddExercise } from "../../../components/AddExercise/AddExercise";
+import { AddButton } from "../../../components/AddButton/AddButton";
 import { styles } from "../../../components/App/create/styles";
 import { PlainInput } from "../../../components/PlainInput/PlainInput";
 import { SiteNavigationButtons } from "../../../components/SiteNavigationButtons/SiteNavigationButtons";
@@ -223,7 +223,7 @@ export function Create() {
             )}
           </View>
         </View>
-        <AddExercise onPress={() => setEditedExerciseIndex(-1)} />
+        <AddButton onPress={() => setEditedExerciseIndex(-1)} />
       </ThemedView>
       {alertConfig && <AlertModal title={alertConfig.title} content={alertConfig.content} onConfirm={alertConfig.onConfirm} onCancel={() => setAlertConfig(undefined)} />}
       {editedExerciseIndex !== undefined && (

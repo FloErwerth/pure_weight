@@ -8,6 +8,7 @@ export const getDateTodayIso = (): IsoDate => {
   return isoDateDecoder.parse(now);
 };
 
+
 export const getDate = (date: IsoDate) => {
   if (!date) {
     return "";

@@ -26,6 +26,13 @@ export type ExerciseMetaData = {
   pause?: string;
 };
 
+export type Measurement = {
+  name: string
+  unit: string;
+  data: {
+    [date: IsoDate]: string
+  }
+}
 export type ErrorFields = "create_name" | "create_weight" | "create_sets" | "create_reps" | "workout_name" | "create_exercises_empty";
 
 export type AppState = {
@@ -37,5 +44,6 @@ export type AppState = {
   settings: {
     language?: "en" | "de";
   };
+  measurements: Measurement[],
   errors: ErrorFields[];
 };

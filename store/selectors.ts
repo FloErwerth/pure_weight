@@ -12,6 +12,8 @@ export const getSelectedTrainingDay = createSelector([getSavedTrainings, getSele
   }
   return undefined;
 });
+export const getMeasurements = createSelector([getState], (state) => state.measurements);
+export const getMeasurementNames = createSelector([getMeasurements], (measurements) => measurements?.map((measurement) => measurement.name));
 export const getNumberOfExercises = createSelector([getSelectedTrainingDay], (day) => {
   return day?.exercises.length;
 });

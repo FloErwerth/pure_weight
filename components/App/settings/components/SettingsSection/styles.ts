@@ -15,7 +15,6 @@ export const styles = StyleSheet.create({
     color: mainColor,
   },
   outerWrapper: {
-    margin: 20,
     backgroundColor: componentBackgroundColor,
     padding: 10,
     borderRadius,

@@ -10,12 +10,12 @@ import { cleanError } from "../../store/reducer";
 
 interface AddExerciseProps {
   onPress?: () => void;
-  exerciseName?: string;
+  title?: string;
   disabled?: boolean;
 }
-export const AddExercise = ({ onPress, exerciseName, disabled = false }: AddExerciseProps) => {
+export const AddButton = ({ onPress, title, disabled = false }: AddExerciseProps) => {
   const { t } = useTranslation();
-  const text = useMemo(() => exerciseName ?? t("add_exercise"), [exerciseName, t]);
+  const text = useMemo(() => title ?? t("add_exercise"), [title, t]);
   const textStyles = useMemo(() => ({ ...styles.text, color: disabled ? mainDisabledColor : mainColor }), [disabled]);
   const hasError = useAppSelector((state: AppState) => getErrorByKey(state)("create_exercises_empty"));
   const dispatch = useAppDispatch();

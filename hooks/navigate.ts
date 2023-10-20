@@ -22,6 +22,9 @@ export const Routes = {
   profile: {
     screen: "tabs",
   },
+  measurements: {
+    screen: "profile/measurements/index"
+  }
 };
 
 export const navigationRef = createNavigationContainerRef<typeof Routes>();

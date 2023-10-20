@@ -13,6 +13,7 @@ const persistConfig = {
 const persistedReducer = persistReducer(persistConfig, storeReducer);
 
 export const mockState: AppState = {
+  measurements: [{name: "Körpergewicht", unit: "kg", data: { ["2023-10-11"]: "85" }}, {name: "Körperfettanteil", unit: "%", data: { ["2023-10-11"]: "15" }}],
   setIndex: 0,
   settings: { language: "en" },
   trainingDayIndex: undefined,

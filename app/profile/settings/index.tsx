@@ -4,6 +4,7 @@ import { SiteNavigationButtons } from "../../../components/SiteNavigationButtons
 import { useTranslation } from "react-i18next";
 import { useCallback } from "react";
 import { useNavigate } from "../../../hooks/navigate";
+import {View} from "react-native";
 
 export function Settings() {
   const { t } = useTranslation();
@@ -15,7 +16,7 @@ export function Settings() {
   return (
     <ThemedView style={{ flex: 1 }}>
       <SiteNavigationButtons handleBack={handleNavigateBack} title={t("settings")} />
-      <LanguageSelection />
+        <View style={{padding: 10}}><LanguageSelection /></View>
     </ThemedView>
   );
 }
