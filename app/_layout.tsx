@@ -15,6 +15,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { navigationRef } from "../hooks/navigate";
 import { Settings } from "./profile/settings";
 import {Measurements} from "./profile/measurements";
+import {backgroundColor} from "../components/App/theme/colors";
 
 const Stack = createNativeStackNavigator();
 
@@ -23,7 +24,7 @@ export default function index() {
     const insets = useSafeAreaInsets();
 
     return (
-      <GestureHandlerRootView style={{ flex: 1 }}>
+      <GestureHandlerRootView style={{ flex: 1, backgroundColor }}>
         <View style={{ flex: 1, paddingLeft: insets.left, paddingTop: insets.top, paddingRight: insets.right }}>
           <Provider store={store}>
             <PersistGate persistor={persistor}>
