@@ -193,7 +193,7 @@ export function Create() {
       <ThemedView style={styles.innerWrapper}>
         <SiteNavigationButtons handleBack={handleBackButton} handleConfirm={handleConfirm} titleFontSize={30} title={title} />
         <View style={styles.contentWrapper}>
-          <PlainInput showDeleteX value={workoutName} setValue={handleSetWorkoutName} fontSize={30} placeholder={t("workout_name")} />
+          <PlainInput value={workoutName} setValue={handleSetWorkoutName} fontSize={30} placeholder={t("workout_name")} />
           <View style={styles.listContainer}>
             {mappedExercises.length > 0 ? (
               <DraggableFlatList
