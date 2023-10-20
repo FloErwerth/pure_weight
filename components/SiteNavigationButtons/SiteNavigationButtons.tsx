@@ -1,7 +1,7 @@
 import { Text, View } from "react-native";
 import { styles } from "./styles";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { useCallback, useMemo } from "react";
+import { RefObject, useCallback, useMemo } from "react";
 import { HStack } from "../HStack/HStack";
 import { Button } from "../Button/Button";
 import { mainColor, mainDisabledColor } from "../App/theme/colors";
@@ -14,8 +14,17 @@ interface SiteNavigationButtonsProps {
   title?: string;
   titleFontSize?: number;
   disabled?: boolean;
+  confirmButtonRef?: RefObject<View>;
 }
-export const SiteNavigationButtons = ({ handleBack, title, titleFontSize = 40, handleConfirm, disabled = false, handleConfirmIcon = { name: "check", size: 30 } }: SiteNavigationButtonsProps) => {
+export const SiteNavigationButtons = ({
+  handleBack,
+  title,
+  titleFontSize = 40,
+  handleConfirm,
+  disabled = false,
+  handleConfirmIcon = { name: "check", size: 30 },
+  confirmButtonRef,
+}: SiteNavigationButtonsProps) => {
   const titleStyles = useMemo(() => ({ ...styles.title, fontSize: titleFontSize, marginLeft: handleBack ? 0 : 15 }), [handleBack, titleFontSize]);
 
   const handleBackButton = useCallback(() => {
@@ -49,7 +58,7 @@ export const SiteNavigationButtons = ({ handleBack, title, titleFontSize = 40, h
       </HStack>
       <View>
         {handleConfirm && (
-          <Button theme="ghost" disabled={disabled} onPress={handleConfirmButton}>
+          <Button reference={confirmButtonRef} theme="ghost" disabled={disabled} onPress={handleConfirmButton}>
             <MaterialCommunityIcons color={disabled ? mainDisabledColor : mainColor} size={handleConfirmIcon?.size} name={handleConfirmIcon?.name} />
           </Button>
         )}

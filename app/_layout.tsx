@@ -13,6 +13,7 @@ import { Charts } from "./progress/chart";
 import { Create } from "./workouts/create";
 import { NavigationContainer } from "@react-navigation/native";
 import { navigationRef } from "../hooks/navigate";
+import { Settings } from "./profile/settings";
 
 const Stack = createNativeStackNavigator();
 
@@ -31,6 +32,7 @@ export default function index() {
                   <Stack.Screen component={Train} options={{ headerShown: false }} name="workouts/train/index" />
                   <Stack.Screen component={Create} options={{ headerShown: false }} name="workouts/create/index" />
                   <Stack.Screen component={Charts} options={{ headerShown: false }} name="progress/chart/index" />
+                  <Stack.Screen component={Settings} options={{ headerShown: false }} name="profile/settings/index" />
                 </Stack.Navigator>
               </NavigationContainer>
             </PersistGate>

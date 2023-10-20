@@ -1,5 +1,5 @@
-import { PropsWithChildren, useCallback, useMemo } from "react";
-import { Pressable, Text, TextStyle, ViewStyle } from "react-native";
+import { PropsWithChildren, RefObject, useCallback, useMemo } from "react";
+import { Pressable, Text, TextStyle, View, ViewStyle } from "react-native";
 import { styles } from "./styles";
 import * as Haptics from "expo-haptics";
 
@@ -10,8 +10,9 @@ interface ButtonProps extends PropsWithChildren {
   disabled?: boolean;
   theme?: ButtonThemes;
   style?: { button?: ViewStyle; text?: TextStyle };
+  reference?: RefObject<View>;
 }
-export const Button = ({ onPress, children, theme = "primary", title, disabled, style }: ButtonProps) => {
+export const Button = ({ onPress, children, theme = "primary", title, disabled, style, reference }: ButtonProps) => {
   const internalStyles = useMemo(() => styles(theme), [theme]);
 
   const handlePress = useCallback(() => {
@@ -22,7 +23,7 @@ export const Button = ({ onPress, children, theme = "primary", title, disabled, 
   }, [onPress]);
 
   return (
-    <Pressable disabled={disabled} style={[internalStyles.singleButton, style?.button]} onPress={handlePress}>
+    <Pressable ref={reference} disabled={disabled} style={[internalStyles.singleButton, style?.button]} onPress={handlePress}>
       {title && <Text style={[internalStyles.text, internalStyles.commonText, style?.text]}>{title}</Text>}
       {children}
     </Pressable>

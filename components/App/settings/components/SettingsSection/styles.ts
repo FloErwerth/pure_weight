@@ -4,10 +4,11 @@ import { borderRadius } from "../../../theme/border";
 
 export const styles = StyleSheet.create({
   innerWrapper: {
-    padding: 10,
-    backgroundColor: componentBackgroundColor,
-    borderRadius,
-    marginTop: 10,
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  innerWrapperChildren: {
+    gap: 20,
   },
   title: {
     fontSize: 26,
@@ -15,5 +16,9 @@ export const styles = StyleSheet.create({
   },
   outerWrapper: {
     margin: 20,
+    backgroundColor: componentBackgroundColor,
+    padding: 10,
+    borderRadius,
+    alignSelf: "stretch",
   },
 });

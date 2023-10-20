@@ -8,6 +8,7 @@ export const styles = StyleSheet.create({
     alignSelf: "stretch",
     justifyContent: "space-around",
     backgroundColor: "#343434",
+    borderColor: "transparent",
     borderRadius,
     borderWidth: 1,
   },

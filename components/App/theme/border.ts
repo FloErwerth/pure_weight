@@ -1,1 +1,1 @@
-export const borderRadius = 5;
+export const borderRadius = 10;

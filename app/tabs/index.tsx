@@ -1,16 +1,13 @@
 import { componentBackgroundColor, mainColor, secondaryColor } from "../../components/App/theme/colors";
 import { TabBarIcon } from "../../components/App/TabBar/TabBarIcon";
-import Weightlifter from "../../media/icons/Weightlifter.svg";
 import { TabBarButton } from "../../components/App/TabBar/TabBarButton";
 import { TabBarLabel } from "../../components/App/TabBar/TabBarLabel";
-import ProgressIcon from "../../media/icons/ProgressIcon.svg";
-import CogIcon from "../../media/icons/CogIcon.svg";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Progress } from "../progress";
 import { Workouts } from "../workouts";
-import { Settings } from "../settings";
+import { Profile } from "../profile";
 
 const Tabs = createBottomTabNavigator();
 
@@ -28,7 +25,7 @@ export function TabsWrapper() {
           component={Workouts}
           options={{
             headerShown: false,
-            tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} Icon={Weightlifter} />,
+            tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} Icon={"weight-lifter"} />,
             tabBarLabelStyle: { fontSize: 13 },
             tabBarButton: TabBarButton,
             tabBarLabel: ({ focused }) => <TabBarLabel focused={focused} title={t("workouts")} />,
@@ -41,7 +38,7 @@ export function TabsWrapper() {
           component={Progress}
           options={{
             headerShown: false,
-            tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} Icon={ProgressIcon} />,
+            tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} Icon={"chart-box"} />,
             tabBarLabelStyle: { fontSize: 13 },
             tabBarButton: TabBarButton,
             tabBarLabel: ({ focused }) => <TabBarLabel focused={focused} title={t("progress")} />,
@@ -49,13 +46,13 @@ export function TabsWrapper() {
           name="progress"
         />
         <Tabs.Screen
-          component={Settings}
+          component={Profile}
           options={{
             headerShown: false,
-            tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} Icon={CogIcon} />,
+            tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} Icon={"account-circle"} />,
             tabBarLabelStyle: { fontSize: 13 },
             tabBarButton: TabBarButton,
-            tabBarLabel: ({ focused }) => <TabBarLabel focused={focused} title={t("settings")} />,
+            tabBarLabel: ({ focused }) => <TabBarLabel focused={focused} title={t("profile")} />,
           }}
           name="settings"
         />

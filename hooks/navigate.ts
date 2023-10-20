@@ -17,6 +17,9 @@ export const Routes = {
     screen: "progress/chart/index",
   },
   settings: {
+    screen: "profile/settings/index",
+  },
+  profile: {
     screen: "tabs",
   },
 };
