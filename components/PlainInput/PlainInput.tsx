@@ -1,6 +1,4 @@
-import { KeyboardType, Pressable, StyleProp, TextInput, TextStyle, ViewStyle } from "react-native";
-import { styles } from "./styles";
-import { Text } from "../Text/Text";
+import { KeyboardType, StyleProp, TextInput, TextStyle, ViewStyle } from "react-native";
 import { HStack } from "../HStack/HStack";
 import { mainColor, secondaryColor } from "../App/theme/colors";
 import { useRef } from "react";
@@ -14,27 +12,28 @@ interface PlainInputProps {
   suffix?: string;
   keyboardType?: KeyboardType;
   style?: StyleProp<ViewStyle | TextStyle>;
+  showClear?: boolean;
+  autoFocus?: boolean;
 }
-export const PlainInput = ({ keyboardType, placeholder, fontSize = 14, value, setValue, suffix, style }: PlainInputProps) => {
+export const PlainInput = ({ keyboardType, placeholder, fontSize = 14, value, setValue, style, autoFocus, showClear }: PlainInputProps) => {
   const inputRef = useRef<TextInput>(null);
 
   return (
-    <Pressable style={[style, styles.innerWrapper]} onPress={() => inputRef.current?.focus()}>
-      <HStack>
-        <ThemedTextInput
-          hideErrorBorder={true}
-          errorKey="workout_name"
-          ref={inputRef}
-          returnKeyType="done"
-          keyboardType={keyboardType}
-          onChangeText={setValue}
-          value={value}
-          placeholderTextColor={secondaryColor}
-          placeholder={placeholder}
-          style={{ fontSize, color: mainColor, backgroundColor: "transparent" }}
-        ></ThemedTextInput>
-        {suffix && value && <Text style={{ fontSize, marginLeft: 5, color: mainColor }}>{suffix}</Text>}
-      </HStack>
-    </Pressable>
+    <HStack>
+      <ThemedTextInput
+        autoFocus={autoFocus}
+        clearButtonMode={showClear ? "while-editing" : "never"}
+        hideErrorBorder={true}
+        errorKey="workout_name"
+        ref={inputRef}
+        returnKeyType="done"
+        keyboardType={keyboardType}
+        onChangeText={setValue}
+        value={value}
+        placeholderTextColor={secondaryColor}
+        placeholder={placeholder}
+        style={[{ fontSize, color: mainColor, backgroundColor: "transparent", flex: 1 }, style]}
+      ></ThemedTextInput>
+    </HStack>
   );
 };

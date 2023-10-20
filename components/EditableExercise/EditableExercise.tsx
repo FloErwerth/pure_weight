@@ -62,7 +62,16 @@ export const EditableExercise = ({ exercise, onConfirmEdit, theme }: EditableExe
   return (
     <View style={classes.innerWrapper}>
       <HStack style={classes.headerWrapper}>
-        <ThemedTextInput autoFocus={true} errorKey="create_name" placeholder={t("exercise_name")} ref={inputRef} value={name} onChangeText={setName} style={classes.title} />
+        <ThemedTextInput
+          clearButtonMode="while-editing"
+          autoFocus={true}
+          errorKey="create_name"
+          placeholder={t("exercise_name")}
+          ref={inputRef}
+          value={name}
+          onChangeText={setName}
+          style={classes.title}
+        />
       </HStack>
       <View style={classes.inputWrapper}>
         <HStack style={{ gap: 10, justifyContent: "space-between" }}>

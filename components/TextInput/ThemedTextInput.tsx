@@ -31,7 +31,12 @@ export const ThemedTextInput = (props: ThemedTextInputProps) => {
     <TextInput
       {...props}
       onChangeText={handleTextInput}
-      style={[{ backgroundColor: componentBackgroundColor, color: mainColor }, props.style, !props.hideErrorBorder && getHasError && styles.errorBorder, getHasError && styles.error]}
+      style={[
+        { backgroundColor: componentBackgroundColor, color: mainColor, marginHorizontal: props.clearButtonMode !== "never" ? 10 : 0 },
+        props.style,
+        !props.hideErrorBorder && getHasError && styles.errorBorder,
+        getHasError && styles.error,
+      ]}
       placeholderTextColor={getHasError ? placeholderErrorColor : secondaryColor}
     />
   );
