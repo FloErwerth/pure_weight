@@ -1,52 +1,33 @@
 import { HStack } from "../HStack/HStack";
-import { View } from "react-native";
 import { PlainExerciseData } from "../../store/types";
-import { Button } from "../Button/Button";
-import { useMemo, useState } from "react";
-import { Modal } from "../Modal/Modal";
+import { useMemo } from "react";
 import { styles } from "./styles";
-import { borderRadius } from "../App/theme/border";
-import { componentBackgroundColor, mainColor, secondaryColor } from "../App/theme/colors";
+import { mainColor, secondaryColor, textFieldBackgroundColor } from "../App/theme/colors";
 import { Text } from "../Text/Text";
 import { useAppSelector } from "../../store";
 import { getSetIndex } from "../../store/selectors";
 import { useTranslation } from "react-i18next";
 
 interface DoneSetDisplayRowProps {
-  setNumber: number | string;
-  setData: PlainExerciseData;
+  setNumber?: number | string;
+  setData?: PlainExerciseData;
 }
-export const DoneSetDisplayRow = ({ setData: { weight, reps, note }, setNumber }: DoneSetDisplayRowProps) => {
-  const [showNote, setShowNote] = useState(false);
-  const { t } = useTranslation();
+export const DoneSetDisplayRow = ({ setData, setNumber }: DoneSetDisplayRowProps) => {
   const currentSetIndex = useAppSelector(getSetIndex);
+  const { t } = useTranslation();
   const highlight = useMemo(() => {
     if (typeof setNumber === "number") {
       return currentSetIndex === setNumber - 1;
     }
     return false;
   }, [currentSetIndex, setNumber]);
+  const highlightWrapperStyles = useMemo(() => ({ backgroundColor: highlight ? textFieldBackgroundColor : "transparent" }), [highlight]);
 
   return (
-    <HStack style={styles.innerWrapper}>
-      <Text style={{ flex: 0.45, textAlign: "center", color: highlight ? mainColor : secondaryColor, fontSize: 16 }}>{setNumber ?? ""}</Text>
-      <Text style={{ flex: 0.55, textAlign: "center", color: highlight ? mainColor : secondaryColor, fontSize: 16 }}>{weight ?? ""}</Text>
-      <Text style={{ flex: 0.55, textAlign: "center", color: highlight ? mainColor : secondaryColor, fontSize: 16 }}>{reps ?? ""}</Text>
-      {note ? (
-        <Button
-          theme="ghost"
-          title={note === t("training_header_note") ? t("training_header_note") : t("training_input_show_note")}
-          onPress={() => setShowNote(true)}
-          style={{ button: { flex: 1 }, text: { color: highlight ? mainColor : secondaryColor, fontSize: 16 } }}
-        />
-      ) : (
-        <View style={{ flex: 1 }} />
-      )}
-      <Modal title={t("previous_training_note_title")} isVisible={showNote} onRequestClose={() => setShowNote(false)}>
-        <View style={{ backgroundColor: componentBackgroundColor, padding: 10, borderRadius }}>
-          <Text style={{ minHeight: 140, color: mainColor }}>{note}</Text>
-        </View>
-      </Modal>
+    <HStack style={[styles.innerWrapper, highlightWrapperStyles]}>
+      <Text style={{ textAlign: "center", alignSelf: "stretch", flex: 0.85, color: highlight ? mainColor : secondaryColor, fontSize: 16 }}>{setNumber ?? "#"}</Text>
+      <Text style={{ textAlign: "center", flex: 1, color: highlight ? mainColor : secondaryColor, fontSize: 16 }}>{setData?.weight ?? t("training_header_weight")}</Text>
+      <Text style={{ textAlign: "center", flex: 1, color: highlight ? mainColor : secondaryColor, fontSize: 16 }}>{setData?.reps ?? t("training_header_reps")}</Text>
     </HStack>
   );
 };

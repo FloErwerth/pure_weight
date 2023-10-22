@@ -1,9 +1,12 @@
 import { StyleSheet } from "react-native";
+import { borderRadius } from "../App/theme/border";
 
 export const styles = StyleSheet.create({
   stack: {
     alignItems: "center",
     alignSelf: "stretch",
+    borderRadius,
+    marginHorizontal: 5,
   },
   set: {
     alignSelf: "center",

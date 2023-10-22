@@ -1,6 +1,5 @@
 import { ThemedTextInput } from "../TextInput/ThemedTextInput";
 import { Text } from "react-native";
-import { Center } from "../Center/Center";
 import { Dispatch, SetStateAction, useMemo } from "react";
 import { EditableExerciseTheme, styles } from "./styles";
 import { useTranslation } from "react-i18next";
@@ -8,6 +7,7 @@ import { AppState, ErrorFields } from "../../store/types";
 import { useAppSelector } from "../../store";
 import { getErrorByKey } from "../../store/selectors";
 import { errorColor } from "../App/theme/colors";
+import { Center } from "../Center/Center";
 
 interface EditableExerciseInputRowProps {
   value?: string;
@@ -21,12 +21,12 @@ export const EditableExerciseInputRow = ({ theme, value, setValue, errorKey, i18
   const classes = useMemo(() => styles(theme), [theme]);
   const hasError = useAppSelector((state: AppState) => getErrorByKey(state)(errorKey));
   return (
-    <Center style={{ width: "25%" }}>
+    <Center style={classes.wrapper}>
       <ThemedTextInput
         errorKey={errorKey}
         inputMode="decimal"
         textAlign="center"
-        style={[{ borderWidth: 1, borderColor: hasError ? errorColor : "transparent" }, classes.input]}
+        style={[{ borderColor: hasError ? errorColor : "transparent" }, classes.input]}
         onChangeText={setValue}
         value={value}
       ></ThemedTextInput>

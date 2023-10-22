@@ -23,8 +23,8 @@ export const PreviousTraining = () => {
       </Text>
       <View style={{ paddingTop: 10, paddingBottom: 15, borderRadius, backgroundColor: componentBackgroundColor }}>
         {previousTraining?.length > 0 && (
-          <VStack style={{ gap: 10 }}>
-            <DoneSetDisplayRow setNumber={"#"} setData={{ weight: t("training_header_weight"), reps: t("training_header_reps"), note: t("training_header_note") }} />
+          <VStack>
+            <DoneSetDisplayRow />
             {previousTraining?.map((data, index) => {
               if (data?.weight && data?.reps) {
                 const { weight, reps, note } = data;

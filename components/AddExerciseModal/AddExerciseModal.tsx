@@ -6,7 +6,7 @@ import { componentBackgroundColor } from "../App/theme/colors";
 type AddExerciseModalProps = ModalProps & Omit<EditableExerciseProps, "onCancel">;
 export const AddExerciseModal = (props: AddExerciseModalProps) => {
   return (
-    <Modal customContentStyle={{ backgroundColor: componentBackgroundColor, padding: 10, borderRadius }} {...props}>
+    <Modal customContentStyle={{ backgroundColor: componentBackgroundColor, borderRadius }} {...props}>
       <EditableExercise exercise={props.exercise} onConfirmEdit={props.onConfirmEdit} />
     </Modal>
   );

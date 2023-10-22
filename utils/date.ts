@@ -8,10 +8,9 @@ export const getDateTodayIso = (): IsoDate => {
   return isoDateDecoder.parse(now);
 };
 
-
-export const getDate = (date: IsoDate) => {
+export const getDate = (date: IsoDate, language?: "en" | "de") => {
   if (!date) {
     return "";
   }
-  return Temporal.PlainDate.from(date).toLocaleString(Locale.locale, { dateStyle: "short" });
+  return Temporal.PlainDate.from(date).toLocaleString(language ?? Locale.locale, { dateStyle: "short" });
 };

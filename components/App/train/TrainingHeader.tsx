@@ -1,8 +1,8 @@
-import { trainStyles } from "./trainStyles";
 import { View } from "react-native";
 import { HStack } from "../../HStack/HStack";
 import { Text } from "../../Text/Text";
 import { useTranslation } from "react-i18next";
+import { styles } from "../../SetInputRow/styles";
 
 interface TrainingHeaderProps {
   showPlaceholderForDoneButton?: boolean;
@@ -10,12 +10,13 @@ interface TrainingHeaderProps {
 export const TrainingHeader = ({ showPlaceholderForDoneButton = true }: TrainingHeaderProps) => {
   const { t } = useTranslation();
   return (
-    <HStack style={trainStyles.stack}>
-      <Text style={{ flex: 0.55, textAlign: "center", color: "rgb(130,130,130)", fontSize: 16 }}>#</Text>
-      <Text style={{ flex: 0.55, textAlign: "center", color: "rgb(130,130,130)", fontSize: 16 }}>{t("training_header_weight")}</Text>
-      <Text style={{ flex: 0.55, textAlign: "center", color: "rgb(130,130,130)", fontSize: 16 }}>{t("training_header_reps")}</Text>
-      <Text style={{ flex: 1, textAlign: "center", color: "rgb(130,130,130)", fontSize: 16 }}>{t("training_header_note")}</Text>
-      {showPlaceholderForDoneButton && <View style={{ flex: 0.6, width: 40 }}></View>}
+    <HStack style={[styles.stack, { marginBottom: 10 }]}>
+      <Text style={{ flex: 0.2, textAlign: "center", color: "rgb(130,130,130)", fontSize: 16 }}>#</Text>
+      <HStack style={{ flex: 1 }}>
+        <Text style={{ flex: 1, textAlign: "center", color: "rgb(130,130,130)", fontSize: 16 }}>{t("training_header_weight")}</Text>
+        <Text style={{ flex: 1, textAlign: "center", color: "rgb(130,130,130)", fontSize: 16 }}>{t("training_header_reps")}</Text>
+        {showPlaceholderForDoneButton && <View style={{ flex: 1, width: 40 }}></View>}
+      </HStack>
     </HStack>
   );
 };

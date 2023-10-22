@@ -73,14 +73,12 @@ export const EditableExercise = ({ exercise, onConfirmEdit, theme }: EditableExe
           style={classes.title}
         />
       </HStack>
-      <View style={classes.inputWrapper}>
-        <HStack style={{ gap: 10, justifyContent: "space-between" }}>
-          <EditableExerciseInputRow i18key="weight" setValue={setWeight} errorKey={"create_weight"} value={weight} />
-          <EditableExerciseInputRow i18key="sets" setValue={setSets} errorKey={"create_sets"} value={sets} />
-          <EditableExerciseInputRow i18key="reps" setValue={setReps} errorKey={"create_reps"} value={reps} />
-          <EditableExerciseInputRow i18key="pause" setValue={setPause} value={pause} />
-        </HStack>
-      </View>
+      <HStack style={classes.inputWrapper}>
+        <EditableExerciseInputRow i18key="weight" setValue={setWeight} errorKey={"create_weight"} value={weight} />
+        <EditableExerciseInputRow i18key="sets" setValue={setSets} errorKey={"create_sets"} value={sets} />
+        <EditableExerciseInputRow i18key="reps" setValue={setReps} errorKey={"create_reps"} value={reps} />
+        <EditableExerciseInputRow i18key="pause" setValue={setPause} value={pause} />
+      </HStack>
       <Pressable onPress={handleConfirm}>
         <HStack style={classes.button}>
           <Text style={classes.buttonText}>{t(isEditing ? "edit_exercise" : "create_exercise")}</Text>

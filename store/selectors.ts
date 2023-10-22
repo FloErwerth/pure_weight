@@ -36,11 +36,6 @@ export const getSelectedTrainingName = createSelector([getSelectedTrainingDay], 
 export const getSetIndex = createSelector([getState], (state) => state.setIndex ?? 0);
 export const getExerciseIndex = createSelector([getState], (state) => state.exerciseIndex);
 export const getTrainingIndex = createSelector([getState], (state) => state.trainingDayIndex);
-export const getPreviousTraining = createSelector([getSelectedTrainingDay, getExerciseIndex], (traininigDay, exerciseIndex) => {
-  const entries = Object.values(traininigDay?.exercises[exerciseIndex]?.doneExerciseEntries ?? {});
-  const date = Object.keys(traininigDay?.exercises[exerciseIndex]?.doneExerciseEntries ?? [])[entries.length - 1];
-  return { date: getDate(date as IsoDate), vals: Object.values(entries[entries.length - 1] ?? []) };
-});
 export const getErrors = createSelector([getState], (state) => state.errors);
 export const getErrorByKey = createSelector([getErrors], (state) => (errorField?: ErrorFields | undefined) => Boolean(errorField && state.includes(errorField)));
 export const getSettings = createSelector([getState], (state) => state.settings);
@@ -86,4 +81,9 @@ export const getSelectedTrainingDayData = createSelector([getTrainingDayData, ge
   }
 
   return data[index];
+});
+export const getPreviousTraining = createSelector([getSelectedTrainingDay, getExerciseIndex, getLanguage], (traininigDay, exerciseIndex, language) => {
+  const entries = Object.values(traininigDay?.exercises[exerciseIndex]?.doneExerciseEntries ?? {});
+  const date = Object.keys(traininigDay?.exercises[exerciseIndex]?.doneExerciseEntries ?? [])[entries.length - 1];
+  return { date: getDate(date as IsoDate, language), vals: Object.values(entries[entries.length - 1] ?? []) };
 });

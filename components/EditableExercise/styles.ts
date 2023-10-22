@@ -12,8 +12,7 @@ const Themes = {
   },
   Default: {
     innerWrapper: {
-      padding: 16,
-      paddingBottom: 0,
+      padding: 10,
       backgroundColor: componentBackgroundColor,
     },
   },
@@ -21,6 +20,9 @@ const Themes = {
 
 export const styles = (theme: EditableExerciseTheme = "Default") =>
   StyleSheet.create({
+    wrapper: {
+      flex: 1,
+    },
     headerWrapper: {
       alignSelf: "stretch",
       alignItems: "center",
@@ -38,16 +40,19 @@ export const styles = (theme: EditableExerciseTheme = "Default") =>
     input: {
       backgroundColor: textFieldBackgroundColor,
       alignSelf: "stretch",
-      padding: 10,
+      paddingVertical: 10,
+      paddingHorizontal: 5,
       borderRadius,
+      borderWidth: 1,
     },
     inputWrapper: {
-      paddingRight: 32,
-      top: -10,
-      paddingTop: 16,
+      paddingVertical: 10,
+      alignSelf: "stretch",
     },
     button: {
-      alignSelf: "center",
+      alignSelf: "stretch",
+      marginHorizontal: 10,
+      justifyContent: "center",
       gap: 10,
       padding: 10,
       paddingRight: 8,
