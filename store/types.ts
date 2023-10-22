@@ -33,7 +33,7 @@ export type Measurement = {
     [date: IsoDate]: string
   }
 }
-export type ErrorFields = "create_name" | "create_weight" | "create_sets" | "create_reps" | "workout_name" | "create_exercises_empty";
+export type ErrorFields = "create_name" | "create_weight" | "create_sets" | "create_reps" | "workout_name" | "create_exercises_empty" | "measurement_name" | "measurement_unit"|"measurement_value";
 
 export type AppState = {
   trainingDays: TrainingDay[];

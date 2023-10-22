@@ -21,7 +21,7 @@ interface TrainingNotDoneModalProps extends PropsWithChildren {
   title?: string;
   isVisible?: boolean;
 }
-export const AlertModal = ({ onConfirm, onCancel, isVisible = true, content, title, children }: TrainingNotDoneModalProps) => {
+export const AlertModal = ({ onConfirm, onCancel, isVisible, content, title, children }: TrainingNotDoneModalProps) => {
   const { t } = useTranslation();
 
   useEffect(() => {

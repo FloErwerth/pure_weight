@@ -16,7 +16,8 @@
       "**/*"
     ],
     "updates": {
-      "fallbackToCacheTimeout": 0
+      "fallbackToCacheTimeout": 0,
+      "url": "https://u.expo.dev/4dbee4e0-b75b-4eba-8ca6-67098ce6c3b5"
     },
     "ios": {
       "usesAppleSignIn": false,
@@ -25,7 +26,7 @@
       "usesIcloudStorage": false,
       "supportsTablet": false,
       "bundleIdentifier": "com.FlorianErwerth.PureWeight",
-      "buildNumber": "11"
+      "buildNumber": "11",
     },
     "android": {
       "permissions": [
@@ -45,6 +46,9 @@
         "projectId": "4dbee4e0-b75b-4eba-8ca6-67098ce6c3b5"
       }
     },
-    "owner": "florian_erwerth"
+    "owner": "florian_erwerth",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    }
   }
 }

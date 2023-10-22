@@ -1,7 +1,8 @@
 import { createSelector } from "@reduxjs/toolkit";
-import { AppState, ErrorFields, ExerciseMetaData, TrainingDay } from "./types";
+import {AppState, ErrorFields, ExerciseMetaData, Measurement, TrainingDay} from "./types";
 import { getDate } from "../utils/date";
 import { IsoDate } from "../types/date";
+import {useCallback} from "react";
 
 export const getState = (state: AppState) => state;
 export const getSavedTrainings = createSelector([getState], (state) => Array.from(state.trainingDays.values()).map((day) => day));
@@ -13,6 +14,18 @@ export const getSelectedTrainingDay = createSelector([getSavedTrainings, getSele
   return undefined;
 });
 export const getMeasurements = createSelector([getState], (state) => state.measurements);
+export const getDatesFromCurrentMeasurement = createSelector([getMeasurements], (measurements) => {
+  return (measurementKey?: string) => {
+    if(!measurementKey) {
+      return undefined;
+    }
+    const measurementIndex = measurements.findIndex((measurement) => measurement.name === measurementKey);
+    if(measurementIndex !== -1) {
+      return Object.keys(measurements[measurementIndex].data);
+    }
+    else return undefined;
+  }
+})
 export const getMeasurementNames = createSelector([getMeasurements], (measurements) => measurements?.map((measurement) => measurement.name));
 export const getNumberOfExercises = createSelector([getSelectedTrainingDay], (day) => {
   return day?.exercises.length;

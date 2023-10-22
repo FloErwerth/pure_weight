@@ -94,7 +94,9 @@ export function Workouts() {
       <Button title={"Use Mock State"} onPress={() => dispatch(setMockState())} />
       <Button
         title={"Use empty state"}
-        onPress={() => dispatch(setState({ exerciseIndex: 0, errors: [], settings: { language: "en" }, trainingDayIndex: undefined, trainingDays: [], setIndex: 0, isFirstTimeRendered: false }))}
+        onPress={() =>
+          dispatch(setState({ measurements: [], exerciseIndex: 0, errors: [], settings: { language: "en" }, trainingDayIndex: undefined, trainingDays: [], setIndex: 0, isFirstTimeRendered: false }))
+        }
       />
     </ThemedView>
   );
