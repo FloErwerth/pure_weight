@@ -10,6 +10,9 @@ export const styles = StyleSheet.create({
   singleButton: {
     flex: 1,
   },
+  noIconWrapper: {
+    paddingVertical: 12.5,
+  },
   innerWrapper: {
     padding: 10,
     paddingLeft: 16,

@@ -1,10 +1,10 @@
 import { SiteNavigationButtons } from "../../components/SiteNavigationButtons/SiteNavigationButtons";
 import { useTranslation } from "react-i18next";
 import { ThemedView } from "../../components/View/View";
-import { SettingsSection } from "../../components/App/settings/components/SettingsSection/SettingsSection";
+import { ProfileSection } from "../../components/App/settings/components/SettingsSection/ProfileSection";
 import { Routes, useNavigate } from "../../hooks/navigate";
 import { useCallback } from "react";
-import {VStack} from "../../components/VStack/VStack";
+import { PageContent } from "../../components/PageContent/PageContent";
 
 export function Profile() {
   const { t } = useTranslation();
@@ -20,10 +20,10 @@ export function Profile() {
   return (
     <ThemedView style={{ flex: 1 }}>
       <SiteNavigationButtons title={t("profile")} />
-        <VStack style={{padding: 10, paddingHorizontal: 20, gap: 10}}>
-      <SettingsSection onPress={() => handleNavigation("measurements")} title={t("measurements")} />
-      <SettingsSection onPress={() => handleNavigation("settings")} title={t("settings")} />
-        </VStack>
+      <PageContent style={{ gap: 10 }}>
+        <ProfileSection onPress={() => handleNavigation("measurements")} title={t("measurements")} />
+        <ProfileSection onPress={() => handleNavigation("settings")} title={t("settings")} />
+      </PageContent>
     </ThemedView>
   );
 }

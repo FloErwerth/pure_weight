@@ -1,4 +1,4 @@
-import { SettingsSection } from "../SettingsSection/SettingsSection";
+import { ProfileContent } from "../SettingsSection/ProfileSection";
 import { Pressable } from "react-native";
 import { HStack } from "../../../../HStack/HStack";
 import GermanFlag from "../../../../../media/icons/GermanFlag.svg";
@@ -32,7 +32,7 @@ export const LanguageSelection = () => {
   );
 
   return (
-    <SettingsSection title={t("settings_language")}>
+    <ProfileContent title={t("settings_language")}>
       <VStack style={styles.vStack}>
         <Pressable onPress={() => handleSelectLanguage("de")} style={[styles.innerWrapper, isGerman ? styles.selectedWrapper : undefined]}>
           <HStack style={styles.outerStack}>
@@ -53,6 +53,6 @@ export const LanguageSelection = () => {
           </HStack>
         </Pressable>
       </VStack>
-    </SettingsSection>
+    </ProfileContent>
   );
 };

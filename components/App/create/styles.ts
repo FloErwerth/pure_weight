@@ -53,21 +53,18 @@ export const styles = StyleSheet.create({
   },
   innerWrapper: {
     flex: 1,
-    padding: 10,
     gap: 20,
     alignSelf: "stretch",
   },
   contentWrapper: {
     flex: 1,
     justifyContent: "center",
-    alignSelf: "stretch",
-    padding: 10,
+    paddingTop: 20,
     gap: 10,
   },
   listContainer: {
     borderRadius,
     flex: 1,
-    padding: 10,
   },
   list: {
     elevation: 2,

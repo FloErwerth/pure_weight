@@ -15,9 +15,23 @@ export const styles = StyleSheet.create({
   selectedWrapper: {
     borderColor: secondaryColor,
   },
-  vStack: { alignSelf: "stretch", justifyContent: "flex-start", gap: 10 },
-  outerStack: { alignSelf: "stretch", alignItems: "center", justifyContent: "space-between", alignContent: "center" },
-  innerStack: { alignSelf: "stretch", alignItems: "center", justifyContent: "flex-start", gap: 10 },
+  vStack: {
+    alignSelf: "stretch",
+    justifyContent: "flex-start",
+    gap: 10,
+  },
+  outerStack: {
+    alignSelf: "stretch",
+    alignItems: "center",
+    justifyContent: "space-between",
+    alignContent: "center",
+  },
+  innerStack: {
+    alignSelf: "stretch",
+    alignItems: "center",
+    justifyContent: "flex-start",
+    gap: 10,
+  },
   text: {
     fontSize: 20,
     color: mainColor,

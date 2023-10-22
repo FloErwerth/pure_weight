@@ -16,6 +16,7 @@ import { addMeasurement } from "../../../store/reducer";
 import { MeasurementModal } from "../../../components/MeasurementModal/MeasurementModal";
 import { z } from "zod/lib/index";
 import { getDateTodayIso } from "../../../utils/date";
+import { PageContent } from "../../../components/PageContent/PageContent";
 
 export type Measurement = {
   name?: string;
@@ -84,7 +85,7 @@ export function Measurements() {
   return (
     <ThemedView style={{ flex: 1 }}>
       <SiteNavigationButtons handleBack={handleNavigateBack} title={t("measurements")} />
-      <View style={{ padding: 10, gap: 20 }}>
+      <PageContent style={{ gap: 20 }}>
         <View style={{ gap: 10 }}>
           {measurements?.map((measurement) => (
             <Pressable key={`${measurement.name}-pressable`} onPress={() => handleAddExistingMeasurement(measurement)}>
@@ -96,7 +97,7 @@ export function Measurements() {
           ))}
         </View>
         <AddButton title={t("measurement_add")} onPress={handleAddNewMesaurement}></AddButton>
-      </View>
+      </PageContent>
       <MeasurementModal
         isNewMeasurement={isNewMeasurement}
         saveMeasurement={handleDispatchNewMeasurement}

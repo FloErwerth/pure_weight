@@ -20,6 +20,7 @@ import { useTranslation } from "react-i18next";
 import { AddExerciseModal } from "../../../components/AddExerciseModal/AddExerciseModal";
 import { ThemedView } from "../../../components/View/View";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { PageContent } from "../../../components/PageContent/PageContent";
 
 function getAreValuesEmpty(exercise: ExerciseMetaData) {
   const values = Object.values(exercise);
@@ -52,6 +53,7 @@ export function Create() {
   const [workoutName, setWorkoutName] = useState(editedDay?.name);
   const [createdExercises, setCreatedExercises] = useState<ExerciseMetaDataWithDoneEntries>(editedDay?.exercises.map((exercise) => exercise) ?? []);
   const dispatch = useAppDispatch();
+
   useEffect(() => {
     setWorkoutName(editedDay?.name);
     setCreatedExercises(editedDay?.exercises ?? []);
@@ -190,9 +192,9 @@ export function Create() {
   return (
     <>
       <ThemedView style={styles.innerWrapper}>
-        <SiteNavigationButtons handleBack={handleBackButton} handleConfirm={handleConfirm} titleFontSize={30} title={title} />
-        <View style={styles.contentWrapper}>
-          <PlainInput showClear value={workoutName} setValue={handleSetWorkoutName} fontSize={26} placeholder={t("workout_name")} />
+        <SiteNavigationButtons handleBack={handleBackButton} handleConfirm={handleConfirm} titleFontSize={35} title={title} />
+        <PageContent style={styles.contentWrapper}>
+          <PlainInput showClear value={workoutName} setValue={handleSetWorkoutName} fontSize={30} placeholder={t("workout_name")} />
           <View style={styles.listContainer}>
             {mappedExercises.length > 0 ? (
               <DraggableFlatList
@@ -222,7 +224,7 @@ export function Create() {
               </View>
             )}
           </View>
-        </View>
+        </PageContent>
         <AddButton onPress={() => setEditedExerciseIndex(-1)} />
       </ThemedView>
       {alertConfig && <AlertModal title={alertConfig.title} content={alertConfig.content} onConfirm={alertConfig.onConfirm} onCancel={() => setAlertConfig(undefined)} />}

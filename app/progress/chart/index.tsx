@@ -7,10 +7,17 @@ import { Dimensions, ScrollView } from "react-native";
 import { Skeleton } from "../../../components/Skeleton/Skeleton";
 import { borderRadius } from "../../../components/App/theme/border";
 import { VStack } from "../../../components/VStack/VStack";
-import { componentBackgroundColor } from "../../../components/App/theme/colors";
 import { ThemedView } from "../../../components/View/View";
+import { PageContent } from "../../../components/PageContent/PageContent";
+import { HStack } from "../../../components/HStack/HStack";
+import { componentBackgroundColor } from "../../../components/App/theme/colors";
 
 const ExerciseCharts = lazy(() => import("../../../components/App/progress/chart/components/ExerciseCharts"));
+
+const PromiseTrigger = () => {
+  throw new Promise(() => {});
+};
+
 export function Charts() {
   const navigate = useNavigate();
   const trainingDayData = useAppSelector(getSelectedTrainingDayData);
@@ -26,12 +33,14 @@ export function Charts() {
   const Fallback = () => {
     const exerciseNames = trainingDayData?.exercises.map((exercise) => exercise.name);
     return (
-      <ScrollView style={{ flex: 1 }} contentContainerStyle={{ alignItems: "center", gap: 20, padding: 10 }}>
+      <ScrollView style={{ flex: 1 }} contentContainerStyle={{ alignItems: "center", backgroundColor: componentBackgroundColor, gap: 20, borderRadius }}>
         {exerciseNames?.map((name) => (
-          <VStack key={`${name}-skeleton`} style={{ borderRadius, backgroundColor: componentBackgroundColor, padding: 10, gap: 10 }}>
-            <Skeleton borderRadius={borderRadius} width={Dimensions.get("screen").width / 2 - 20} height={40} />
-            <Skeleton borderRadius={borderRadius} width={Dimensions.get("screen").width - 40} height={Dimensions.get("screen").height * 0.33} />
-            <Skeleton borderRadius={borderRadius} style={{ alignSelf: "center" }} width={Dimensions.get("screen").width - 100} height={40} />
+          <VStack key={`${name}-skeleton`} style={{ borderRadius, padding: 10, paddingBottom: 0, gap: 10 }}>
+            <HStack style={{ justifyContent: "space-between", paddingHorizontal: 10 }}>
+              <Skeleton borderRadius={borderRadius} width={140} height={40} />
+              <Skeleton borderRadius={borderRadius} width={140} height={40} />
+            </HStack>
+            <Skeleton borderRadius={borderRadius} width={Dimensions.get("screen").width - 40} height={Dimensions.get("screen").height * 0.35} />
           </VStack>
         ))}
       </ScrollView>
@@ -41,9 +50,11 @@ export function Charts() {
   return (
     <ThemedView style={{ flex: 1 }}>
       <SiteNavigationButtons handleBack={handleNavigateToProgress} title={trainingDayData?.name} />
-      <Suspense fallback={<Fallback />}>
-        <ExerciseCharts />
-      </Suspense>
+      <PageContent>
+        <Suspense fallback={<Fallback />}>
+          <ExerciseCharts />
+        </Suspense>
+      </PageContent>
     </ThemedView>
   );
 }

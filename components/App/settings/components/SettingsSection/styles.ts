@@ -11,8 +11,10 @@ export const styles = StyleSheet.create({
     gap: 20,
   },
   title: {
-    fontSize: 26,
+    fontSize: 24,
     color: mainColor,
+    paddingVertical: 2.5,
+    paddingHorizontal: 5,
   },
   outerWrapper: {
     backgroundColor: componentBackgroundColor,

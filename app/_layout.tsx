@@ -14,8 +14,8 @@ import { Create } from "./workouts/create";
 import { NavigationContainer } from "@react-navigation/native";
 import { navigationRef } from "../hooks/navigate";
 import { Settings } from "./profile/settings";
-import {Measurements} from "./profile/measurements";
-import {backgroundColor} from "../components/App/theme/colors";
+import { Measurements } from "./profile/measurements";
+import { backgroundColor } from "../components/App/theme/colors";
 
 const Stack = createNativeStackNavigator();
 
@@ -31,8 +31,8 @@ export default function index() {
               <NavigationContainer ref={navigationRef} independent={true}>
                 <Stack.Navigator screenOptions={{ headerShown: false }}>
                   <Stack.Screen component={TabsWrapper} options={{ headerShown: false }} name="tabs" />
-                  <Stack.Screen component={Train} options={{ headerShown: false }} name="workouts/train/index" />
-                  <Stack.Screen component={Create} options={{ headerShown: false }} name="workouts/create/index" />
+                  <Stack.Screen component={Train} options={{ gestureEnabled: false, headerShown: false }} name="workouts/train/index" />
+                  <Stack.Screen component={Create} options={{ gestureEnabled: false, headerShown: false }} name="workouts/create/index" />
                   <Stack.Screen component={Charts} options={{ headerShown: false }} name="progress/chart/index" />
                   <Stack.Screen component={Settings} options={{ headerShown: false }} name="profile/settings/index" />
                   <Stack.Screen component={Measurements} options={{ headerShown: false }} name="profile/measurements/index" />

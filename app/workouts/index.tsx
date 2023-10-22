@@ -1,17 +1,17 @@
 import { ScrollView, Text, View } from "react-native";
-import { ReactNode, useCallback, useEffect, useState } from "react";
+import { ReactNode, useCallback, useEffect, useMemo, useState } from "react";
 import { PressableRowWithIconSlots } from "../../components/PressableRowWithIconSlots/PressableRowWithIconSlots";
 import { useNavigate } from "../../hooks/navigate";
 import { useAppDispatch, useAppSelector } from "../../store";
 import { getLanguage, getSavedTrainings } from "../../store/selectors";
-import { cleanErrors, removeTrainingDay, setExerciseIndex, setMockState, setSetIndex, setState, setTrainingDayIndex } from "../../store/reducer";
+import { cleanErrors, removeTrainingDay, setExerciseIndex, setSetIndex, setTrainingDayIndex } from "../../store/reducer";
 import { styles } from "../../components/App/index/styles";
 import { AlertModal } from "../../components/AlertModal/AlertModal";
 import { SiteNavigationButtons } from "../../components/SiteNavigationButtons/SiteNavigationButtons";
-import { Button } from "../../components/Button/Button";
 import { useTranslation } from "react-i18next";
 import * as Locale from "expo-localization";
 import { ThemedView } from "../../components/View/View";
+import { PageContent } from "../../components/PageContent/PageContent";
 
 export function Workouts() {
   const language = useAppSelector(getLanguage);
@@ -69,11 +69,13 @@ export function Workouts() {
     [dispatch, handleNavigateToCreateTraining],
   );
 
+  const confirmIcon = useMemo((): { name: "plus"; size: number } => ({ name: "plus", size: 40 }), []);
+
   return (
     <ThemedView style={styles.view}>
-      <View style={styles.center}>
-        <View style={styles.stack}>
-          <SiteNavigationButtons title={t("workouts")} handleConfirmIcon={{ name: "plus", size: 40 }} handleConfirm={handlePress} />
+      <View style={styles.stack}>
+        <SiteNavigationButtons title={t("workouts")} handleConfirmIcon={confirmIcon} handleConfirm={handlePress} />
+        <PageContent>
           <ScrollView style={styles.view}>
             <View style={styles.savedTrainings}>
               {savedTrainings.map((trainingDay, index) => (
@@ -88,16 +90,9 @@ export function Workouts() {
               ))}
             </View>
           </ScrollView>
-        </View>
+        </PageContent>
       </View>
       {Alert}
-      <Button title={"Use Mock State"} onPress={() => dispatch(setMockState())} />
-      <Button
-        title={"Use empty state"}
-        onPress={() =>
-          dispatch(setState({ measurements: [], exerciseIndex: 0, errors: [], settings: { language: "en" }, trainingDayIndex: undefined, trainingDays: [], setIndex: 0, isFirstTimeRendered: false }))
-        }
-      />
     </ThemedView>
   );
 }

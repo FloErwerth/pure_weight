@@ -24,7 +24,7 @@ export interface PressableRowWithIconSlotsProps extends PropsWithChildren {
 export const PressableRowWithIconSlots = ({ children, onClick, Icon1, Icon2, onLongPress }: PressableRowWithIconSlotsProps) => {
   const showIcon1 = useMemo(() => (Icon1 && !Icon1.hide) ?? false, [Icon1]);
   const showIcon2 = useMemo(() => (Icon2 && !Icon2.hide) ?? false, [Icon2]);
-
+  const hasNoIcons = useMemo(() => !showIcon1 && !showIcon2, [showIcon2, showIcon1]);
   const handleClick = useCallback(() => {
     void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     onClick?.();
@@ -65,7 +65,7 @@ export const PressableRowWithIconSlots = ({ children, onClick, Icon1, Icon2, onL
   }, [onLongPress]);
 
   return (
-    <HStack style={styles.innerWrapper}>
+    <HStack style={[styles.innerWrapper, hasNoIcons && styles.noIconWrapper]}>
       <Pressable delayLongPress={200} onLongPress={handleLongPress} style={styles.singleButton} onPress={handleClick}>
         {children}
       </Pressable>

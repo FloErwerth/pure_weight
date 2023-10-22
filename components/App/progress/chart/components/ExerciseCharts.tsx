@@ -149,7 +149,7 @@ export const ExerciseChart = ({ exercise }: ExerciseChartProps) => {
   const width = useMemo(() => (numberEntries > 5 ? numberEntries * 80 : Dimensions.get("screen").width + 250 / (numberEntries * numberEntries * numberEntries)), [numberEntries]);
 
   return (
-    <View ref={viewRef} style={{ backgroundColor: componentBackgroundColor, overflow: "hidden", padding: 10, paddingBottom: 0, borderRadius, margin: 10, gap: 10 }}>
+    <View ref={viewRef} style={{ backgroundColor: componentBackgroundColor, overflow: "hidden", padding: 10, paddingBottom: 0, borderRadius, gap: 10 }}>
       <HStack style={styles.chartHeader}>
         <Text style={styles.headerTitle}>{exercise.name}</Text>
         <View style={styles.chartTypeSelection}>

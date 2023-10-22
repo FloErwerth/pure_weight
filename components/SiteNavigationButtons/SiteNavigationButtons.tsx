@@ -25,7 +25,10 @@ export const SiteNavigationButtons = ({
   handleConfirmIcon = { name: "check", size: 30 },
   confirmButtonRef,
 }: SiteNavigationButtonsProps) => {
-  const titleStyles = useMemo(() => ({ ...styles.title, fontSize: titleFontSize, marginLeft: handleBack ? 0 : 15 }), [handleBack, titleFontSize]);
+  const titleStyles = useMemo(
+    () => ({ ...styles.title, fontSize: titleFontSize, paddingVertical: titleFontSize <= 40 ? (40 - titleFontSize) / 2 : 0, marginLeft: handleBack ? 0 : 15 }),
+    [handleBack, titleFontSize],
+  );
 
   const handleBackButton = useCallback(() => {
     void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
