@@ -10,7 +10,7 @@ import { VStack } from "../../../components/VStack/VStack";
 import { ThemedView } from "../../../components/View/View";
 import { PageContent } from "../../../components/PageContent/PageContent";
 import { HStack } from "../../../components/HStack/HStack";
-import { componentBackgroundColor } from "../../../components/App/theme/colors";
+import { styles } from "../../../components/App/progress/chart/components/styles";
 
 const ExerciseCharts = lazy(() => import("../../../components/App/progress/chart/components/ExerciseCharts"));
 
@@ -27,20 +27,26 @@ export function Charts() {
   }, [navigate]);
 
   if (trainingDayData === undefined) {
-    navigate("progress");
+    handleNavigateToProgress();
   }
-
   const Fallback = () => {
     const exerciseNames = trainingDayData?.exercises.map((exercise) => exercise.name);
+    const navigate = useNavigate();
+
+    if (exerciseNames === undefined || exerciseNames.length === 0) {
+      navigate("workouts");
+      return null;
+    }
+
     return (
-      <ScrollView style={{ flex: 1 }} contentContainerStyle={{ alignItems: "center", backgroundColor: componentBackgroundColor, gap: 20, borderRadius }}>
-        {exerciseNames?.map((name) => (
-          <VStack key={`${name}-skeleton`} style={{ borderRadius, padding: 10, paddingBottom: 0, gap: 10 }}>
-            <HStack style={{ justifyContent: "space-between", paddingHorizontal: 10 }}>
+      <ScrollView contentContainerStyle={styles.scrollView}>
+        {exerciseNames.map(() => (
+          <VStack key={Math.random() * 10000} style={styles.vStack}>
+            <HStack style={styles.hStack}>
               <Skeleton borderRadius={borderRadius} width={140} height={40} />
               <Skeleton borderRadius={borderRadius} width={140} height={40} />
             </HStack>
-            <Skeleton borderRadius={borderRadius} width={Dimensions.get("screen").width - 40} height={Dimensions.get("screen").height * 0.35} />
+            <Skeleton borderRadius={borderRadius} width={Dimensions.get("screen").width - 40} height={300} />
           </VStack>
         ))}
       </ScrollView>
@@ -48,7 +54,7 @@ export function Charts() {
   };
 
   return (
-    <ThemedView style={{ flex: 1 }}>
+    <ThemedView stretch>
       <SiteNavigationButtons handleBack={handleNavigateToProgress} title={trainingDayData?.name} />
       <PageContent>
         <Suspense fallback={<Fallback />}>

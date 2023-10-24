@@ -3,7 +3,7 @@ import { mainColor } from "../theme/colors";
 import { borderRadius } from "../theme/border";
 
 export const styles = StyleSheet.create({
-  stack: {
+  vStack: {
     justifyContent: "space-between",
     flex: 1,
     alignItems: "center",

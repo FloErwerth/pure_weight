@@ -2,7 +2,7 @@ import { Dimensions, ScrollView, Text, View } from "react-native";
 import { LineChart } from "react-native-chart-kit";
 import { DoneExerciseData, ExerciseMetaDataWithDoneEntries, ExerciseSets, PlainExerciseData } from "../../../../../store/types";
 import { useCallback, useMemo, useRef, useState } from "react";
-import { backgroundColor, componentBackgroundColor, mainColor, secondaryColor } from "../../../theme/colors";
+import { backgroundColor, componentBackgroundColor, mainColor } from "../../../theme/colors";
 import { borderRadius } from "../../../theme/border";
 import { getDate } from "../../../../../utils/date";
 import { IsoDate } from "../../../../../types/date";
@@ -92,7 +92,8 @@ export const ExerciseChart = ({ exercise }: ExerciseChartProps) => {
   const viewRef = useRef<View>(null);
   const [showSelectionModal, setShowSelectionModal] = useState(false);
   const { t } = useTranslation();
-  const dotContent = useCallback(
+
+  const getDotContent = useCallback(
     ({ x, y, indexData }: { x: number; y: number; index: number; indexData: number }) => {
       return (
         <View style={{ position: "absolute", top: y - 25, left: x - 20, flex: 1, padding: 3, backgroundColor, borderRadius, alignItems: "center" }}>
@@ -139,39 +140,37 @@ export const ExerciseChart = ({ exercise }: ExerciseChartProps) => {
     return getDate(xValue as IsoDate);
   }, []);
 
+  const scrollEnabled = useMemo(() => numberEntries > 5, [numberEntries]);
   const width = useMemo(() => (numberEntries > 5 ? numberEntries * 80 : Dimensions.get("screen").width + 250 / (numberEntries * numberEntries * numberEntries)), [numberEntries]);
 
   return (
-    <View ref={viewRef} style={{ backgroundColor: componentBackgroundColor, overflow: "hidden", padding: 10, paddingBottom: 0, borderRadius, gap: 10 }}>
+    <View ref={viewRef} style={styles.wrapper}>
       <HStack style={styles.chartHeader}>
         <Text style={styles.headerTitle}>{exercise.name}</Text>
         <View style={styles.chartTypeSelection}>
           <Button onPress={() => setShowSelectionModal(true)} title={t(chartTypeMap[chartType].title)} style={{ text: styles.selectionText }} />
         </View>
       </HStack>
-      <ScrollView horizontal scrollEnabled={numberEntries > 5}>
+      <ScrollView horizontal scrollEnabled={scrollEnabled}>
         <LineChart
           data={data}
           width={width}
           height={Dimensions.get("screen").height * 0.33}
-          renderDotContent={dotContent}
+          renderDotContent={getDotContent}
           formatXLabel={getXLabel}
           chartConfig={config}
-          style={{
-            marginTop: 15,
-            borderRadius: 16,
-          }}
+          style={styles.lineChart}
           yLabelsOffset={25}
         />
       </ScrollView>
       {showSelectionModal && (
         <Modal title={t("progress_modal_title")} onRequestClose={() => setShowSelectionModal(false)} isVisible={showSelectionModal}>
-          <VStack style={{ gap: 10 }}>
+          <VStack style={styles.selectionModal}>
             {mappedChartProps.map(({ onPress, title, chartType }) => (
               <Button key={`${chartType}${title}`} onPress={onPress}>
-                <Text style={{ color: mainColor, fontSize: 20 }}>{t(chartTypeMap[chartType].title)}</Text>
+                <Text style={styles.chartTypeSelectonTitle}>{t(chartTypeMap[chartType].title)}</Text>
                 <View>
-                  <Text style={{ color: secondaryColor, fontSize: 12 }}>{t(chartTypeMap[chartType].hint)}</Text>
+                  <Text style={styles.chartTypeSelectionText}>{t(chartTypeMap[chartType].hint)}</Text>
                 </View>
               </Button>
             ))}
@@ -184,11 +183,14 @@ export const ExerciseChart = ({ exercise }: ExerciseChartProps) => {
 
 export default function Charts() {
   const trainingDayData = useAppSelector(getSelectedTrainingDayData);
+  if (trainingDayData === undefined) {
+    return null;
+  }
 
   return (
     <ScrollView>
       {trainingDayData?.exercises?.map((exercise) => {
-        return <ExerciseChart key={`${exercise.sets}${exercise.name}${exercise.weight}`} exercise={exercise} />;
+        return <ExerciseChart key={Math.random() * 100} exercise={exercise} />;
       })}
     </ScrollView>
   );

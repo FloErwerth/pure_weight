@@ -94,7 +94,7 @@ export const SetInputRow = ({ onSetDone, setIndex, isActiveSet, hasData, data, i
     return null;
   }
   return (
-    <HStack style={[styles.stack, activeStackStyles]}>
+    <HStack style={[styles.vStack, activeStackStyles]}>
       <Center style={styles.numberCenter}>
         <View style={{ borderRadius }}>
           <Text style={textNumberStyles}>{setIndex}</Text>

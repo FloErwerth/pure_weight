@@ -1,5 +1,5 @@
 import { ScrollView, Text, View } from "react-native";
-import { ReactNode, useCallback, useEffect, useMemo, useState } from "react";
+import { ComponentProps, useCallback, useEffect, useMemo, useState } from "react";
 import { PressableRowWithIconSlots } from "../../components/PressableRowWithIconSlots/PressableRowWithIconSlots";
 import { useNavigate } from "../../hooks/navigate";
 import { useAppDispatch, useAppSelector } from "../../store";
@@ -12,6 +12,7 @@ import { useTranslation } from "react-i18next";
 import * as Locale from "expo-localization";
 import { ThemedView } from "../../components/View/View";
 import { PageContent } from "../../components/PageContent/PageContent";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 export function Workouts() {
   const language = useAppSelector(getLanguage);
@@ -29,7 +30,7 @@ export function Workouts() {
 
   const navigate = useNavigate();
 
-  const [Alert, setAlert] = useState<ReactNode | null>(null);
+  const [deleteIndex, setDeleteIndex] = useState<number | undefined>(undefined);
 
   const savedTrainings = useAppSelector(getSavedTrainings);
 
@@ -53,46 +54,62 @@ export function Workouts() {
   const handleDelete = useCallback(
     (index: number) => {
       dispatch(removeTrainingDay(index));
-      setAlert(undefined);
     },
     [dispatch],
   );
-  const handleShowAlert = useCallback(
-    (index: number) => setAlert(<AlertModal onCancel={() => setAlert(null)} onConfirm={() => handleDelete(index)} title="Delete training?" content="This action can't be undone" isVisible={true} />),
-    [handleDelete],
-  );
+  const handleShowAlert = useCallback((index: number) => setDeleteIndex(index), []);
+
   const handleEdit = useCallback(
     (index: number) => {
-      dispatch(setTrainingDayIndex(index));
       handleNavigateToCreateTraining();
+      dispatch(setTrainingDayIndex(index));
     },
     [dispatch, handleNavigateToCreateTraining],
   );
 
   const confirmIcon = useMemo((): { name: "plus"; size: number } => ({ name: "plus", size: 40 }), []);
 
+  const mappedTrainings = useMemo(() => {
+    return savedTrainings.map((trainingDay, index) => {
+      const Icon1 = { icon: "delete" as ComponentProps<typeof MaterialCommunityIcons>["name"], onPress: () => handleShowAlert(index) };
+      const Icon2 = { icon: "pencil" as ComponentProps<typeof MaterialCommunityIcons>["name"], onPress: () => handleEdit(index) };
+      const key = trainingDay.name.concat("-key").concat(index.toString());
+      const onClick = () => handleNavigateToTrain(index);
+
+      return { Icon1, Icon2, key, onClick, trainingDayName: trainingDay.name };
+    });
+  }, [handleEdit, handleNavigateToTrain, handleShowAlert, savedTrainings]);
+
+  const handleCancelAlert = useCallback(() => {
+    setDeleteIndex(undefined);
+  }, []);
+
+  const handleConfirmAlert = useCallback(() => {
+    if (deleteIndex !== undefined) {
+      handleDelete(deleteIndex);
+      handleCancelAlert();
+    }
+  }, [deleteIndex, handleCancelAlert, handleDelete]);
+
+  const alertModalConfig = useMemo(() => ({ title: "Delete training?", content: "This action can't be undone" }), []);
+
   return (
     <ThemedView style={styles.view}>
-      <View style={styles.stack}>
+      <View style={styles.vStack}>
         <SiteNavigationButtons title={t("workouts")} handleConfirmIcon={confirmIcon} handleConfirm={handlePress} />
         <PageContent>
           <ScrollView style={styles.view}>
             <View style={styles.savedTrainings}>
-              {savedTrainings.map((trainingDay, index) => (
-                <PressableRowWithIconSlots
-                  key={trainingDay.name.concat("-key").concat(index.toString())}
-                  onClick={() => handleNavigateToTrain(index)}
-                  Icon2={{ icon: "pencil", onPress: () => handleEdit(index) }}
-                  Icon1={{ icon: "delete", onPress: () => handleShowAlert(index) }}
-                >
-                  <Text style={styles.trainingDayName}>{trainingDay.name}</Text>
+              {mappedTrainings.map(({ trainingDayName, key, Icon2, Icon1, onClick }) => (
+                <PressableRowWithIconSlots key={key} onClick={onClick} Icon2={Icon2} Icon1={Icon1}>
+                  <Text style={styles.trainingDayName}>{trainingDayName}</Text>
                 </PressableRowWithIconSlots>
               ))}
             </View>
           </ScrollView>
         </PageContent>
       </View>
-      {Alert}
+      {deleteIndex !== undefined && <AlertModal title={alertModalConfig.title} content={alertModalConfig.content} isVisible={true} onCancel={handleCancelAlert} onConfirm={handleConfirmAlert} />}
     </ThemedView>
   );
 }

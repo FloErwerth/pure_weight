@@ -29,7 +29,6 @@ export const PressableRowWithIconSlots = ({ children, onClick, Icon1, Icon2, onL
     void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     onClick?.();
   }, [onClick]);
-
   const handleClickIcon1 = useCallback(() => {
     if (Icon1?.onPress) {
       void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);

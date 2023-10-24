@@ -25,7 +25,7 @@ export const PlainInput = ({ keyboardType, placeholder, fontSize = 14, value, se
         clearButtonMode={showClear ? "while-editing" : "never"}
         hideErrorBorder={true}
         errorKey="workout_name"
-        ref={inputRef}
+        reference={inputRef}
         returnKeyType="done"
         keyboardType={keyboardType}
         onChangeText={setValue}

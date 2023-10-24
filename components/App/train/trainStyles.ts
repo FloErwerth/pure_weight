@@ -1,5 +1,6 @@
 import { StyleSheet } from "react-native";
-import { mainColor } from "../theme/colors";
+import { componentBackgroundColor, mainColor } from "../theme/colors";
+import { borderRadius } from "../theme/border";
 
 export const trainStyles = StyleSheet.create({
   singleButton: { marginTop: 15, justifyContent: "space-around", gap: 20, marginLeft: 10, marginRight: 10, alignSelf: "stretch" },
@@ -13,6 +14,8 @@ export const trainStyles = StyleSheet.create({
     position: "relative",
     left: 20,
   },
+
+  noteButtonWrapper: { padding: 10, borderRadius, backgroundColor: componentBackgroundColor },
   close: {
     width: 40,
     height: 40,
@@ -27,7 +30,7 @@ export const trainStyles = StyleSheet.create({
     gap: 20,
     justifyContent: "space-around",
   },
-  stack: {
+  vStack: {
     alignItems: "center",
     marginBottom: 5,
     alignSelf: "stretch",

@@ -199,6 +199,7 @@ export function Create() {
             {mappedExercises.length > 0 ? (
               <DraggableFlatList
                 scrollsToTop
+                removeClippedSubviews
                 keyboardShouldPersistTaps="handled"
                 keyExtractor={(item) => `${item.index}${item.exercise.name}${item.exercise.pause}`}
                 data={mappedExercises}
@@ -220,7 +221,7 @@ export function Create() {
               />
             ) : (
               <View style={{ flex: 1, justifyContent: "center" }}>
-                <MaterialCommunityIcons style={{ alignSelf: "center" }} name="clipboard-search-outline" size={256} color={"#444"} />
+                <MaterialCommunityIcons style={{ alignSelf: "center" }} name="clipboard-search-outline" size={256} color="#444" />
               </View>
             )}
           </View>

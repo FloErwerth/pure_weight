@@ -3,7 +3,7 @@ import { componentBackgroundColor, mainColor } from "../theme/colors";
 import { borderRadius } from "../theme/border";
 
 export const styles = StyleSheet.create({
-  stack: {
+  vStack: {
     padding: 15,
     gap: 10,
     justifyContent: "space-between",

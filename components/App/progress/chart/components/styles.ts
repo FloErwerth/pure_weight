@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import { backgroundColor, mainColor, textFieldBackgroundColor } from "../../../theme/colors";
+import { backgroundColor, componentBackgroundColor, mainColor, secondaryColor, textFieldBackgroundColor } from "../../../theme/colors";
 import { borderRadius } from "../../../theme/border";
 
 export const styles = StyleSheet.create({
@@ -7,6 +7,38 @@ export const styles = StyleSheet.create({
     padding: 10,
     marginBottom: 10,
     backgroundColor,
+  },
+  wrapper: { backgroundColor: componentBackgroundColor, overflow: "hidden", marginBottom: 10, padding: 10, paddingBottom: 0, borderRadius, gap: 10 },
+  scrollView: {
+    flex: 1,
+    alignItems: "center",
+    gap: 20,
+    borderRadius,
+  },
+  lineChart: {
+    marginTop: 15,
+    borderRadius: 16,
+  },
+  chartTypeSelectonTitle: {
+    color: mainColor,
+    fontSize: 20,
+  },
+  chartTypeSelectionText: {
+    color: secondaryColor,
+    fontSize: 12,
+  },
+  selectionModal: {
+    gap: 10,
+  },
+  vStack: {
+    borderRadius,
+    backgroundColor: componentBackgroundColor,
+    gap: 10,
+    paddingTop: 10,
+  },
+  hStack: {
+    justifyContent: "space-between",
+    paddingHorizontal: 10,
   },
   headerTitle: {
     color: mainColor,

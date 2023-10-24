@@ -1,7 +1,8 @@
 import { Animated, LayoutAnimation, View, ViewProps } from "react-native";
-import { useEffect, useLayoutEffect, useRef } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef } from "react";
 import { componentBackgroundColor } from "../App/theme/colors";
 import { LinearGradient } from "expo-linear-gradient";
+import { styles } from "./styles";
 
 interface SkeletonProps {
   width: number;
@@ -28,16 +29,18 @@ export const Skeleton = ({ width, height, shape = "rect", style, borderRadius }:
     return () => LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
   }, []);
 
+  const wrapperStyle = useMemo(() => [style, { ...styles.wrapper, width, height, borderRadius: shape === "circle" ? width : borderRadius }], [borderRadius, height, shape, style, width]);
+  const transformStyle = useMemo(() => [{ translateX: fadeAnim }], [fadeAnim]);
   return (
-    <View style={[style, { backgroundColor: componentBackgroundColor, width, height, overflow: "hidden", borderRadius: shape === "circle" ? width : borderRadius }]}>
+    <View style={wrapperStyle}>
       <Animated.View
         style={{
           width: "100%",
           height: "100%",
-          transform: [{ translateX: fadeAnim }],
+          transform: transformStyle,
         }}
       >
-        <LinearGradient style={{ width: "200%", height: "200%" }} start={{ x: 1, y: 1 }} colors={[componentBackgroundColor, "#777", componentBackgroundColor]} />
+        <LinearGradient style={styles.gradient} start={{ x: 1, y: 1 }} colors={[componentBackgroundColor, "#777", componentBackgroundColor]} />
       </Animated.View>
     </View>
   );

@@ -9,7 +9,7 @@ import { styles } from "./styles";
 import { cleanError } from "../../store/reducer";
 
 interface ThemedTextInputProps extends TextInputProps {
-  ref?: RefObject<TextInput>;
+  reference?: RefObject<TextInput>;
   errorKey?: ErrorFields;
   hideErrorBorder?: boolean;
 }
@@ -31,6 +31,7 @@ export const ThemedTextInput = (props: ThemedTextInputProps) => {
   return (
     <TextInput
       {...props}
+      ref={props.reference}
       onChangeText={handleTextInput}
       style={[
         { color: editable ? mainColor : mainDisabledColor, marginHorizontal: props.clearButtonMode !== "never" ? 10 : 0 },

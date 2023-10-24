@@ -10,7 +10,7 @@ interface TrainingHeaderProps {
 export const TrainingHeader = ({ showPlaceholderForDoneButton = true }: TrainingHeaderProps) => {
   const { t } = useTranslation();
   return (
-    <HStack style={[styles.stack, { marginBottom: 10 }]}>
+    <HStack style={[styles.vStack, { marginBottom: 10 }]}>
       <Text style={{ flex: 0.2, textAlign: "center", color: "rgb(130,130,130)", fontSize: 16 }}>#</Text>
       <HStack style={{ flex: 1 }}>
         <Text style={{ flex: 1, textAlign: "center", color: "rgb(130,130,130)", fontSize: 16 }}>{t("training_header_weight")}</Text>

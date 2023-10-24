@@ -2,7 +2,7 @@ import { StyleSheet } from "react-native";
 import { borderRadius } from "../App/theme/border";
 
 export const styles = StyleSheet.create({
-  stack: {
+  vStack: {
     alignItems: "center",
     alignSelf: "stretch",
     borderRadius,
