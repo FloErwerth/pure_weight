@@ -32,7 +32,7 @@ const fieldToErrorMap: Record<keyof Measurement, ErrorFields> = {
 
 export const MeasurementModal = ({ isNewMeasurement = true, onRequestClose, isVisible, measurement, setMeasurement, saveMeasurement }: MeasurementModalProps) => {
   const { t } = useTranslation();
-  const { mainColor, componentBackgroundColor, secondaryBackgroundColor, warningColor } = useTheme();
+  const { mainColor, componentBackgroundColor, warningColor } = useTheme();
 
   const dates = useAppSelector((state: AppState) => getDatesFromCurrentMeasurement(state)(measurement?.name));
   const opacity = useRef(new Animated.Value(0)).current;

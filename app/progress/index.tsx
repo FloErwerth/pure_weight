@@ -11,13 +11,10 @@ import { useTranslation } from "react-i18next";
 import { ThemedView } from "../../components/Themed/ThemedView/View";
 import { borderRadius } from "../../theme/border";
 import { PageContent } from "../../components/PageContent/PageContent";
-import { useTheme } from "../../theme/context";
 import { View } from "react-native";
 import { Text } from "../../components/Themed/ThemedText/Text";
 
 export function Progress() {
-  const { secondaryColor, secondaryBackgroundColor } = useTheme();
-
   const data = useAppSelector(getTrainingDayData);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();

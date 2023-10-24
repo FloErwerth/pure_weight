@@ -22,7 +22,7 @@ export const DoneSetDisplayRow = ({ setData, setNumber }: DoneSetDisplayRowProps
     }
     return false;
   }, [currentSetIndex, setNumber]);
-  const highlightWrapperStyles = useMemo(() => ({ backgroundColor: highlight ? inputFieldBackgroundColor : "transparent" }), [highlight]);
+  const highlightWrapperStyles = useMemo(() => ({ backgroundColor: highlight ? inputFieldBackgroundColor : "transparent" }), [highlight, inputFieldBackgroundColor]);
 
   return (
     <HStack style={[styles.innerWrapper, highlightWrapperStyles]}>

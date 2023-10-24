@@ -52,7 +52,7 @@ export const SetInputRow = ({ onSetDone, setIndex, isActiveSet, hasData, data, i
       handleOnFocus();
     }
   }, [isActiveSet, weight, reps, onSetDone, handleOnFocus]);
-  const activeStackStyles = useMemo(() => ({ backgroundColor: isActiveSet ? inputFieldBackgroundColor : "transparent" }), [isActiveSet]);
+  const activeStackStyles = useMemo(() => ({ backgroundColor: isActiveSet ? inputFieldBackgroundColor : "transparent" }), [inputFieldBackgroundColor, isActiveSet]);
 
   const computedTextfieldBackgroundColor = useMemo(() => {
     if (!isActiveSet) {
@@ -62,7 +62,7 @@ export const SetInputRow = ({ onSetDone, setIndex, isActiveSet, hasData, data, i
       return "transparent";
     }
     return componentBackgroundColor;
-  }, [isActiveSet, isEditable]);
+  }, [componentBackgroundColor, isActiveSet, isEditable, secondaryBackgroundColor]);
 
   const computedButtonBackgroundColor = useMemo(() => {
     if (!isActiveSet) {
@@ -72,7 +72,7 @@ export const SetInputRow = ({ onSetDone, setIndex, isActiveSet, hasData, data, i
       return "transparent";
     }
     return componentBackgroundColor;
-  }, [isActiveSet, isEditable]);
+  }, [componentBackgroundColor, isActiveSet, isEditable]);
 
   const computedColor = useMemo(() => {
     if (hasData) {
@@ -83,12 +83,12 @@ export const SetInputRow = ({ onSetDone, setIndex, isActiveSet, hasData, data, i
       }
       return mainColor;
     }
-  }, [hasData, isActiveSet]);
+  }, [hasData, isActiveSet, mainColor, secondaryColor]);
 
   const textNumberStyles = useMemo(() => [styles.textNumber, { color: computedColor }], [computedColor]);
   const textInputStyles = useMemo(() => [styles.textInput, { backgroundColor: computedTextfieldBackgroundColor, color: computedColor }], [computedTextfieldBackgroundColor, computedColor]);
   const buttonStyles = useMemo(() => ({ button: { ...styles.button, ...{ backgroundColor: computedButtonBackgroundColor } } }), [computedButtonBackgroundColor]);
-  const iconStyle = useMemo(() => ({ color: hasData ? "green" : isActiveSet ? mainColor : textDisabled }), [hasData, isActiveSet]);
+  const iconStyle = useMemo(() => ({ color: hasData ? "green" : isActiveSet ? mainColor : textDisabled }), [hasData, isActiveSet, mainColor, textDisabled]);
 
   if (trainingIndex === undefined) {
     navigate("workouts");

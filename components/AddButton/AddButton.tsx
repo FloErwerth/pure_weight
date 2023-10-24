@@ -17,7 +17,7 @@ export const AddButton = ({ onPress, title, disabled = false }: AddExerciseProps
   const { textDisabled, mainColor, errorColor, componentBackgroundColor } = useTheme();
   const { t } = useTranslation();
   const text = useMemo(() => title ?? t("add_exercise"), [title, t]);
-  const textStyles = useMemo(() => ({ ...styles.text, color: disabled ? textDisabled : mainColor }), [disabled]);
+  const textStyles = useMemo(() => ({ ...styles.text, color: disabled ? textDisabled : mainColor }), [disabled, mainColor, textDisabled]);
   const hasError = useAppSelector((state: AppState) => getErrorByKey(state)("create_exercises_empty"));
   const dispatch = useAppDispatch();
 
@@ -27,7 +27,7 @@ export const AddButton = ({ onPress, title, disabled = false }: AddExerciseProps
     }
     onPress?.();
   }, [dispatch, hasError, onPress]);
-  const buttonStyles = useMemo(() => [styles.add, { backgroundColor: componentBackgroundColor, borderColor: hasError ? errorColor : "transparent" }], [errorColor, hasError]);
+  const buttonStyles = useMemo(() => [styles.add, { backgroundColor: componentBackgroundColor, borderColor: hasError ? errorColor : "transparent" }], [componentBackgroundColor, errorColor, hasError]);
   return (
     <Pressable disabled={disabled} style={buttonStyles} onPress={handlePress}>
       <Text style={textStyles}>{text}</Text>

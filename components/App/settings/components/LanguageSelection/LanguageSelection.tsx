@@ -33,7 +33,7 @@ export const LanguageSelection = () => {
     [dispatch, i18n],
   );
   const stackStyles = useMemo(() => [styles.vStack, { backgroundColor: componentBackgroundColor }], [componentBackgroundColor]);
-  const getStyles = useCallback((isGerman: boolean) => [styles.innerWrapper, isGerman && { borderColor: secondaryColor }], [secondaryColor, isGerman]);
+  const getStyles = useCallback((isGerman: boolean) => [styles.innerWrapper, isGerman && { borderColor: secondaryColor }], [secondaryColor]);
   return (
     <ProfileContent title={t("settings_language")}>
       <VStack style={stackStyles}>

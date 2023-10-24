@@ -117,7 +117,7 @@ export function Train() {
     setNote(undefined);
     handleCloseEditNoteModal();
   }, [handleCloseEditNoteModal]);
-  const showEditNoteModalTitleStyle = useMemo(() => ({ button: { alignSelf: "stretch" }, text: { textAlign: "center", flex: 1, fontSize: 16, color: mainColor } }) as const, []);
+  const showEditNoteModalTitleStyle = useMemo(() => ({ button: { alignSelf: "stretch" }, text: { textAlign: "center", flex: 1, fontSize: 16, color: mainColor } }) as const, [mainColor]);
   const noteButtonTitle = useMemo(() => t(note ? "show_note_title" : "edit_note_title"), [note, t]);
   const alertModalConfig = useMemo(() => ({ title: t("alert_quit_title"), content: t("alert_quit_message") }), [t]);
   return (
