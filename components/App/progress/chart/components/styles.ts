@@ -1,14 +1,20 @@
 import { StyleSheet } from "react-native";
-import { backgroundColor, componentBackgroundColor, mainColor, secondaryColor, textFieldBackgroundColor } from "../../../theme/colors";
-import { borderRadius } from "../../../theme/border";
+import { borderRadius } from "../../../../../theme/border";
 
 export const styles = StyleSheet.create({
   selectionButton: {
-    padding: 10,
-    marginBottom: 10,
-    backgroundColor,
+    padding: 5,
+    flex: 0.5,
+    borderRadius,
   },
-  wrapper: { backgroundColor: componentBackgroundColor, overflow: "hidden", marginBottom: 10, padding: 10, paddingBottom: 0, borderRadius, gap: 10 },
+  wrapper: {
+    overflow: "hidden",
+    marginBottom: 10,
+    padding: 10,
+    paddingBottom: 0,
+    borderRadius,
+    gap: 10,
+  },
   scrollView: {
     flex: 1,
     alignItems: "center",
@@ -17,14 +23,13 @@ export const styles = StyleSheet.create({
   },
   lineChart: {
     marginTop: 15,
+    left: -30,
     borderRadius: 16,
   },
   chartTypeSelectonTitle: {
-    color: mainColor,
     fontSize: 20,
   },
   chartTypeSelectionText: {
-    color: secondaryColor,
     fontSize: 12,
   },
   selectionModal: {
@@ -32,7 +37,6 @@ export const styles = StyleSheet.create({
   },
   vStack: {
     borderRadius,
-    backgroundColor: componentBackgroundColor,
     gap: 10,
     paddingTop: 10,
   },
@@ -41,8 +45,8 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   headerTitle: {
-    color: mainColor,
     fontSize: 26,
+    flex: 1,
   },
   chartHeader: {
     justifyContent: "space-between",
@@ -51,10 +55,9 @@ export const styles = StyleSheet.create({
   chartTypeSelection: {
     borderRadius,
     alignSelf: "flex-end",
-    backgroundColor: textFieldBackgroundColor,
   },
   selectionText: {
-    fontSize: 20,
+    fontSize: 14,
   },
   selectionButtons: {
     gap: 10,

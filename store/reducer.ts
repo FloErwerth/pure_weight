@@ -1,12 +1,14 @@
 import { createAction, createReducer } from "@reduxjs/toolkit/src";
 import type { AppState, ErrorFields, ExerciseMetaData, ExerciseMetaDataWithDoneEntries, Measurement, PlainExerciseData, TrainingDay } from "./types";
 import { getDateTodayIso } from "../utils/date";
+import { ThemeKey } from "../theme/types";
 
 export const mockState: AppState = {
   measurements: [
     { name: "Körpergewicht", unit: "kg", data: { ["2023-10-11"]: "85" } },
     { name: "Körperfettanteil", unit: "%", data: { ["2023-10-11"]: "15" } },
   ],
+  theme: "dark",
   setIndex: 0,
   settings: { language: "en" },
   trainingDayIndex: undefined,
@@ -33,21 +35,21 @@ export const mockState: AppState = {
                 { reps: "5", weight: "50" },
               ],
             },
-          ],
-        },
-        {
-          name: "Bankdrücken",
-          weight: "50",
-          sets: "5",
-          reps: "5",
-          pause: " 2",
-          doneExerciseEntries: [
             {
-              date: "2023-01-01",
+              date: "2023-01-02",
               sets: [
                 { reps: "5", weight: "50" },
                 { reps: "5", weight: "50" },
+                { reps: "5", weight: "55" },
                 { reps: "5", weight: "50" },
+              ],
+            },
+            {
+              date: "2023-01-03",
+              sets: [
+                { reps: "5", weight: "55" },
+                { reps: "5", weight: "10" },
+                { reps: "5", weight: "550" },
                 { reps: "5", weight: "50" },
               ],
             },
@@ -141,6 +143,15 @@ export const mockState: AppState = {
                 { reps: "5", weight: "50" },
               ],
             },
+          ],
+        },
+        {
+          name: "Bankdrücken",
+          weight: "50",
+          sets: "5",
+          reps: "5",
+          pause: " 2",
+          doneExerciseEntries: [
             {
               date: "2023-01-01",
               sets: [
@@ -151,7 +162,7 @@ export const mockState: AppState = {
               ],
             },
             {
-              date: "2023-01-01",
+              date: "2023-01-02",
               sets: [
                 { reps: "5", weight: "50" },
                 { reps: "5", weight: "50" },
@@ -160,7 +171,7 @@ export const mockState: AppState = {
               ],
             },
             {
-              date: "2023-01-01",
+              date: "2023-01-03",
               sets: [
                 { reps: "5", weight: "50" },
                 { reps: "5", weight: "50" },
@@ -169,7 +180,7 @@ export const mockState: AppState = {
               ],
             },
             {
-              date: "2023-01-01",
+              date: "2023-01-04",
               sets: [
                 { reps: "5", weight: "50" },
                 { reps: "5", weight: "50" },
@@ -178,7 +189,7 @@ export const mockState: AppState = {
               ],
             },
             {
-              date: "2023-01-01",
+              date: "2023-01-05",
               sets: [
                 { reps: "5", weight: "50" },
                 { reps: "5", weight: "50" },
@@ -187,7 +198,7 @@ export const mockState: AppState = {
               ],
             },
             {
-              date: "2023-01-01",
+              date: "2023-01-06",
               sets: [
                 { reps: "5", weight: "50" },
                 { reps: "5", weight: "50" },
@@ -196,7 +207,7 @@ export const mockState: AppState = {
               ],
             },
             {
-              date: "2023-01-01",
+              date: "2023-01-07",
               sets: [
                 { reps: "5", weight: "50" },
                 { reps: "5", weight: "50" },
@@ -205,7 +216,16 @@ export const mockState: AppState = {
               ],
             },
             {
-              date: "2023-01-01",
+              date: "2023-01-08",
+              sets: [
+                { reps: "5", weight: "50" },
+                { reps: "5", weight: "50" },
+                { reps: "5", weight: "50" },
+                { reps: "5", weight: "50" },
+              ],
+            },
+            {
+              date: "2023-01-09",
               sets: [
                 { reps: "5", weight: "50" },
                 { reps: "5", weight: "50" },
@@ -311,9 +331,11 @@ export const emptyState: AppState = {
   trainingDays: [],
   setIndex: 0,
   isFirstTimeRendered: false,
+  theme: "dark",
 };
 
 export const addMeasurement = createAction<Measurement>("measurement_add");
+export const setTheme = createAction<ThemeKey>("theme_set");
 export const setMockState = createAction("set_mock_state");
 export const setFirstTimeRendered = createAction<boolean>("set_greeting");
 export const setState = createAction<AppState>("set_state");
@@ -349,6 +371,9 @@ export const storeReducer = createReducer<AppState>(emptyState, (builder) =>
         state.measurements = measurements;
       }
       //sort here
+    })
+    .addCase(setTheme, (state, action) => {
+      state.theme = action.payload;
     })
     .addCase(setMockState, () => mockState)
     .addCase(setError, (state, action) => {

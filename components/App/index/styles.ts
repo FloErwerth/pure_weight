@@ -1,6 +1,5 @@
 import { StyleSheet } from "react-native";
-import { mainColor } from "../theme/colors";
-import { borderRadius } from "../theme/border";
+import { borderRadius } from "../../../theme/border";
 
 export const styles = StyleSheet.create({
   vStack: {
@@ -11,7 +10,6 @@ export const styles = StyleSheet.create({
   },
   trainingDayName: {
     fontSize: 24,
-    color: mainColor,
   },
   view: {
     flex: 1,

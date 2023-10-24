@@ -2,17 +2,18 @@ import { HStack } from "../HStack/HStack";
 import { PlainExerciseData } from "../../store/types";
 import { useMemo } from "react";
 import { styles } from "./styles";
-import { mainColor, secondaryColor, textFieldBackgroundColor } from "../App/theme/colors";
-import { Text } from "../Text/Text";
 import { useAppSelector } from "../../store";
 import { getSetIndex } from "../../store/selectors";
 import { useTranslation } from "react-i18next";
+import { Text } from "../Themed/ThemedText/Text";
+import { useTheme } from "../../theme/context";
 
 interface DoneSetDisplayRowProps {
   setNumber?: number | string;
   setData?: PlainExerciseData;
 }
 export const DoneSetDisplayRow = ({ setData, setNumber }: DoneSetDisplayRowProps) => {
+  const { mainColor, secondaryColor, inputFieldBackgroundColor } = useTheme();
   const currentSetIndex = useAppSelector(getSetIndex);
   const { t } = useTranslation();
   const highlight = useMemo(() => {
@@ -21,7 +22,7 @@ export const DoneSetDisplayRow = ({ setData, setNumber }: DoneSetDisplayRowProps
     }
     return false;
   }, [currentSetIndex, setNumber]);
-  const highlightWrapperStyles = useMemo(() => ({ backgroundColor: highlight ? textFieldBackgroundColor : "transparent" }), [highlight]);
+  const highlightWrapperStyles = useMemo(() => ({ backgroundColor: highlight ? inputFieldBackgroundColor : "transparent" }), [highlight]);
 
   return (
     <HStack style={[styles.innerWrapper, highlightWrapperStyles]}>

@@ -1,4 +1,5 @@
 import { IsoDate } from "../types/date";
+import { ThemeKey } from "../theme/types";
 
 export type TrainingDay = {
   name: string;
@@ -48,4 +49,5 @@ export type AppState = {
   };
   measurements: Measurement[];
   errors: ErrorFields[];
+  theme: ThemeKey;
 };

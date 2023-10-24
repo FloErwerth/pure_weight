@@ -1,20 +1,23 @@
-import { Dimensions, ScrollView, Text, View } from "react-native";
+import { Dimensions, ScrollView, View } from "react-native";
 import { LineChart } from "react-native-chart-kit";
 import { DoneExerciseData, ExerciseMetaDataWithDoneEntries, ExerciseSets, PlainExerciseData } from "../../../../../store/types";
 import { useCallback, useMemo, useRef, useState } from "react";
-import { backgroundColor, componentBackgroundColor, mainColor } from "../../../theme/colors";
-import { borderRadius } from "../../../theme/border";
+import { borderRadius } from "../../../../../theme/border";
 import { getDate } from "../../../../../utils/date";
 import { IsoDate } from "../../../../../types/date";
 import { LineChartData } from "react-native-chart-kit/dist/line-chart/LineChart";
 import { VStack } from "../../../../VStack/VStack";
-import { Button } from "../../../../Button/Button";
+import { Button } from "../../../../Themed/Button/Button";
 import { Modal } from "../../../../Modal/Modal";
 import { useAppSelector } from "../../../../../store";
 import { getSelectedTrainingDayData } from "../../../../../store/selectors";
 import { HStack } from "../../../../HStack/HStack";
 import { styles } from "./styles";
 import { useTranslation } from "react-i18next";
+import { ThemedView } from "../../../../Themed/ThemedView/View";
+import { Text } from "../../../../Themed/ThemedText/Text";
+import { ThemedScrollView } from "../../../../Themed/ThemedScrollView/ThemedScrollView";
+import { useTheme } from "../../../../../theme/context";
 
 interface ExerciseChartProps {
   exercise: ExerciseMetaDataWithDoneEntries[number];
@@ -50,6 +53,7 @@ const getAveragePerDay = (data: ExerciseSets[], dataType: keyof PlainExerciseDat
 };
 
 const useExerciseData = (exerciseData: DoneExerciseData[], chartType: ChartType) => {
+  const { mainColor } = useTheme();
   const labels = useMemo(() => {
     return exerciseData.map(({ date }) => date);
   }, [exerciseData]);
@@ -92,18 +96,19 @@ export const ExerciseChart = ({ exercise }: ExerciseChartProps) => {
   const viewRef = useRef<View>(null);
   const [showSelectionModal, setShowSelectionModal] = useState(false);
   const { t } = useTranslation();
+  const { mainColor, componentBackgroundColor } = useTheme();
 
   const getDotContent = useCallback(
     ({ x, y, indexData }: { x: number; y: number; index: number; indexData: number }) => {
       return (
-        <View style={{ position: "absolute", top: y - 25, left: x - 20, flex: 1, padding: 3, backgroundColor, borderRadius, alignItems: "center" }}>
+        <ThemedView style={{ position: "absolute", top: y - 25, left: x - 20, flex: 1, padding: 3, borderRadius, alignItems: "center" }}>
           <Text style={{ fontSize: 12, color: mainColor }}>
             {indexData} {chartTypeLabel[chartType]}
           </Text>
-        </View>
+        </ThemedView>
       );
     },
-    [chartType],
+    [chartType, mainColor],
   );
 
   const mappedChartProps = useMemo(
@@ -133,7 +138,7 @@ export const ExerciseChart = ({ exercise }: ExerciseChartProps) => {
         fontSize: 12,
       },
     }),
-    [],
+    [componentBackgroundColor, mainColor],
   );
 
   const getXLabel = useCallback((xValue: string) => {
@@ -144,16 +149,15 @@ export const ExerciseChart = ({ exercise }: ExerciseChartProps) => {
   const width = useMemo(() => (numberEntries > 5 ? numberEntries * 80 : Dimensions.get("screen").width + 250 / (numberEntries * numberEntries * numberEntries)), [numberEntries]);
 
   return (
-    <View ref={viewRef} style={styles.wrapper}>
+    <View ref={viewRef} style={[styles.wrapper, { backgroundColor: componentBackgroundColor }]}>
       <HStack style={styles.chartHeader}>
         <Text style={styles.headerTitle}>{exercise.name}</Text>
-        <View style={styles.chartTypeSelection}>
-          <Button onPress={() => setShowSelectionModal(true)} title={t(chartTypeMap[chartType].title)} style={{ text: styles.selectionText }} />
-        </View>
+        <Button onPress={() => setShowSelectionModal(true)} title={t(chartTypeMap[chartType].title)} style={{ button: styles.selectionButton, text: styles.selectionText }} />
       </HStack>
       <ScrollView horizontal scrollEnabled={scrollEnabled}>
         <LineChart
           data={data}
+          formatYLabel={() => ""}
           width={width}
           height={Dimensions.get("screen").height * 0.33}
           renderDotContent={getDotContent}
@@ -188,10 +192,10 @@ export default function Charts() {
   }
 
   return (
-    <ScrollView>
+    <ThemedScrollView>
       {trainingDayData?.exercises?.map((exercise) => {
         return <ExerciseChart key={Math.random() * 100} exercise={exercise} />;
       })}
-    </ScrollView>
+    </ThemedScrollView>
   );
 }

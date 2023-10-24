@@ -1,5 +1,5 @@
 import { PropsWithChildren } from "react";
-import { ThemedView } from "../View/View";
+import { ThemedView } from "../Themed/ThemedView/View";
 import { styles } from "./styles";
 import { StyleProp, ViewStyle } from "react-native";
 

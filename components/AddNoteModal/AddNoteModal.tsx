@@ -3,11 +3,10 @@ import { TextInput } from "react-native";
 import { useTranslation } from "react-i18next";
 import { Modal } from "../Modal/Modal";
 import { VStack } from "../VStack/VStack";
-import { backgroundColor, secondaryColor } from "../App/theme/colors";
-import { borderRadius } from "../App/theme/border";
-import { ThemedTextInput } from "../TextInput/ThemedTextInput";
+import { borderRadius } from "../../theme/border";
 import { HStack } from "../HStack/HStack";
-import { Button } from "../Button/Button";
+import { Button } from "../Themed/Button/Button";
+import { ThemedTextInput } from "../Themed/ThemedTextInput/ThemedTextInput";
 
 interface EditNoteModalProps {
   showModal: boolean;
@@ -28,16 +27,8 @@ export const AddNoteModal = ({ showModal, setNote, note, onCancel, onConfirm }: 
 
   return (
     <Modal title={t("edit_note_title")} isVisible={showModal} onRequestClose={onCancel}>
-      <VStack style={{ backgroundColor, borderRadius, gap: 15 }}>
-        <ThemedTextInput
-          style={{ height: 140, padding: 10, borderRadius }}
-          multiline={true}
-          ref={inputRef}
-          onChangeText={setNote}
-          value={note}
-          placeholderTextColor={secondaryColor}
-          placeholder={t("edit_note_placeholder")}
-        />
+      <VStack style={{ borderRadius, gap: 15 }}>
+        <ThemedTextInput style={{ height: 140, padding: 10, borderRadius }} multiline={true} reference={inputRef} onChangeText={setNote} value={note} placeholder={t("edit_note_placeholder")} />
         <HStack style={{ justifyContent: "flex-end" }}>
           <Button style={{ button: { width: 100 } }} title={t("edit_note_done")} onPress={onConfirm} />
         </HStack>

@@ -1,6 +1,5 @@
 import { StyleSheet } from "react-native";
-import { componentBackgroundColor, mainColor } from "../../../theme/colors";
-import { borderRadius } from "../../../theme/border";
+import { borderRadius } from "../../../../../theme/border";
 
 export const styles = StyleSheet.create({
   innerWrapper: {
@@ -12,12 +11,10 @@ export const styles = StyleSheet.create({
   },
   title: {
     fontSize: 24,
-    color: mainColor,
     paddingVertical: 2.5,
     paddingHorizontal: 5,
   },
   outerWrapper: {
-    backgroundColor: componentBackgroundColor,
     padding: 10,
     borderRadius,
     alignSelf: "stretch",

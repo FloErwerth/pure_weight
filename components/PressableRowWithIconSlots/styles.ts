@@ -1,11 +1,9 @@
 import { StyleSheet } from "react-native";
-import { componentBackgroundColor, mainColor } from "../App/theme/colors";
-import { borderRadius } from "../App/theme/border";
+import { borderRadius } from "../../theme/border";
 
 export const styles = StyleSheet.create({
   text: {
     fontSize: 20,
-    color: mainColor,
   },
   singleButton: {
     flex: 1,
@@ -15,11 +13,11 @@ export const styles = StyleSheet.create({
   },
   innerWrapper: {
     padding: 10,
+    flexDirection: "row",
     paddingLeft: 16,
     paddingRight: 0,
     justifyContent: "space-between",
     alignItems: "center",
-    backgroundColor: componentBackgroundColor,
     borderRadius,
     alignSelf: "stretch",
   },
@@ -27,6 +25,7 @@ export const styles = StyleSheet.create({
     justifyContent: "flex-end",
     gap: 10,
     paddingRight: 16,
+    backgroundColor: "transparent",
   },
   icon: {
     padding: 5,

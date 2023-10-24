@@ -1,5 +1,4 @@
 import { StyleSheet } from "react-native";
-import { mainColor } from "../theme/colors";
 
 export const styles = StyleSheet.create({
   languageWrapper: {
@@ -8,7 +7,6 @@ export const styles = StyleSheet.create({
   },
   languageTitle: {
     fontSize: 20,
-    color: mainColor,
     alignSelf: "center",
   },
 });

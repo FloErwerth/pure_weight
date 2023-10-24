@@ -1,9 +1,7 @@
 import { Animated, LayoutAnimation, Pressable, View } from "react-native";
-import { ThemedTextInput } from "../TextInput/ThemedTextInput";
-import { borderRadius } from "../App/theme/border";
+import { ThemedTextInput } from "../Themed/ThemedTextInput/ThemedTextInput";
+import { borderRadius } from "../../theme/border";
 import { HStack } from "../HStack/HStack";
-import { componentBackgroundColor, mainColor, primaryColor, warningColor } from "../App/theme/colors";
-import { Button } from "../Button/Button";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Modal, ModalProps } from "../Modal/Modal";
 import { Dispatch, SetStateAction, useCallback, useEffect, useRef, useState } from "react";
@@ -13,9 +11,11 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import { getDateTodayIso } from "../../utils/date";
 import { useAppDispatch, useAppSelector } from "../../store";
 import { getDatesFromCurrentMeasurement, getLanguage } from "../../store/selectors";
-import { Text } from "../Text/Text";
+import { Text } from "../Themed/ThemedText/Text";
 import { AppState, ErrorFields } from "../../store/types";
 import { cleanError, setError } from "../../store/reducer";
+import { useTheme } from "../../theme/context";
+import { ThemedMaterialCommunityIcons } from "../Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
 
 interface MeasurementModalProps extends ModalProps {
   setMeasurement: Dispatch<SetStateAction<Measurement>>;
@@ -32,6 +32,8 @@ const fieldToErrorMap: Record<keyof Measurement, ErrorFields> = {
 
 export const MeasurementModal = ({ isNewMeasurement = true, onRequestClose, isVisible, measurement, setMeasurement, saveMeasurement }: MeasurementModalProps) => {
   const { t } = useTranslation();
+  const { mainColor, secondaryBackgroundColor, componentBackgroundColor, warningColor, primaryColor } = useTheme();
+
   const dates = useAppSelector((state: AppState) => getDatesFromCurrentMeasurement(state)(measurement?.name));
   const opacity = useRef(new Animated.Value(0)).current;
   const language = useAppSelector(getLanguage);
@@ -163,19 +165,22 @@ export const MeasurementModal = ({ isNewMeasurement = true, onRequestClose, isVi
             <Text style={{ fontSize: 16, color: warningColor }}>{t("measurement_warning_text")}</Text>
           </View>
         )}
-        <HStack
-          style={{
-            backgroundColor: primaryColor,
-            padding: 10,
-            margin: 10,
-            borderRadius,
-            gap: 15,
-            justifyContent: "center",
-          }}
-        >
-          <Button onPress={handleSaveMeasurement} style={{ text: { fontSize: 16 } }} theme="ghost" title={t(showWarning ? "measurement_warning_confirm" : "measurement_add")} />
-          <MaterialCommunityIcons name="table-large-plus" size={20} />
-        </HStack>
+
+        <Pressable onPress={handleSaveMeasurement}>
+          <HStack
+            style={{
+              backgroundColor: componentBackgroundColor,
+              borderRadius,
+              padding: 10,
+              margin: 10,
+              gap: 15,
+              justifyContent: "center",
+            }}
+          >
+            <Text>{t(showWarning ? "measurement_warning_confirm" : "measurement_add")}</Text>
+            <ThemedMaterialCommunityIcons name="table-large-plus" size={20} />
+          </HStack>
+        </Pressable>
       </View>
     </Modal>
   );

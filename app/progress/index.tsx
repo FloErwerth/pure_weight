@@ -1,20 +1,23 @@
 import { useAppDispatch, useAppSelector } from "../../store";
 import { getTrainingDayData } from "../../store/selectors";
-import { Text, View } from "react-native";
 import MissingData from "../../media/icons/MissingData.svg";
-import { secondaryColor, secondaryComponentBackgroundColor } from "../../components/App/theme/colors";
 import { useNavigate } from "../../hooks/navigate";
 import { SiteNavigationButtons } from "../../components/SiteNavigationButtons/SiteNavigationButtons";
 import { PressableRowWithIconSlots } from "../../components/PressableRowWithIconSlots/PressableRowWithIconSlots";
 import { styles } from "../../components/App/progress/styles";
-import { useCallback } from "react";
+import React, { useCallback } from "react";
 import { setTrainingDayIndex } from "../../store/reducer";
 import { useTranslation } from "react-i18next";
-import { ThemedView } from "../../components/View/View";
-import { borderRadius } from "../../components/App/theme/border";
+import { ThemedView } from "../../components/Themed/ThemedView/View";
+import { borderRadius } from "../../theme/border";
 import { PageContent } from "../../components/PageContent/PageContent";
+import { useTheme } from "../../theme/context";
+import { View } from "react-native";
+import { Text } from "../../components/Themed/ThemedText/Text";
 
 export function Progress() {
+  const { secondaryColor, secondaryBackgroundColor } = useTheme();
+
   const data = useAppSelector(getTrainingDayData);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
@@ -33,9 +36,9 @@ export function Progress() {
       <SiteNavigationButtons title={t("progress")} />
       <PageContent>
         {data.length === 0 && (
-          <View style={{ flex: 1, justifyContent: "center", backgroundColor: "black", alignItems: "center", borderRadius }}>
-            <MissingData fill={secondaryComponentBackgroundColor} />
-            <Text style={{ color: secondaryColor, textAlign: "center", fontSize: 16 }}>{t("progress_placeholder")}</Text>
+          <View style={{ flex: 1, justifyContent: "center", alignItems: "center", borderRadius }}>
+            <MissingData fill="#444" />
+            <Text style={{ fontSize: 16 }}>{t("progress_placeholder")}</Text>
           </View>
         )}
         {data.length > 0 && (

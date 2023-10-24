@@ -8,12 +8,12 @@ import { ExerciseMetaData } from "../../../../store/types";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { HStack } from "../../../HStack/HStack";
 import { VStack } from "../../../VStack/VStack";
-import { Text } from "../../../Text/Text";
-import { componentBackgroundColor, mainColor } from "../../theme/colors";
-import { borderRadius } from "../../theme/border";
+import { Text } from "../../../Themed/ThemedText/Text";
+import { borderRadius } from "../../../../theme/border";
 import * as Haptics from "expo-haptics";
 import { useTranslation } from "react-i18next";
 import { AddExerciseModal } from "../../../AddExerciseModal/AddExerciseModal";
+import { useTheme } from "../../../../theme/context";
 
 interface ExerciseMetaDataDisplayProps {
   showEdit: boolean;
@@ -54,6 +54,8 @@ export const SmallMetadataDisplay = ({ style }: SmallMetadataDisplayProps) => {
 };
 
 export const ExerciseMetaDataDisplay = ({ showEdit, setShowEdit }: ExerciseMetaDataDisplayProps) => {
+  const { mainColor, componentBackgroundColor } = useTheme();
+
   const exerciseMetaData = useAppSelector(getExerciseMetaData);
   const currentExerciseIndex = useAppSelector(getExerciseIndex);
   const trainingDayIndex = useAppSelector(getTrainingIndex);

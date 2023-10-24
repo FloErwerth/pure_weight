@@ -5,11 +5,11 @@ import { getExerciseMetaData, getNumberOfSets, getSelectedTrainingName, getSetIn
 import { useCallback, useEffect, useState } from "react";
 import { setSetIndex } from "../../../../store/reducer";
 import { TrainingHeader } from "../TrainingHeader/TrainingHeader";
-import { ThemedView } from "../../../View/View";
 import { View } from "react-native";
-import { borderRadius } from "../../theme/border";
+import { borderRadius } from "../../../../theme/border";
 import * as Haptics from "expo-haptics";
-import { componentBackgroundColor } from "../../theme/colors";
+import { ThemedView } from "../../../Themed/ThemedView/View";
+import { useTheme } from "../../../../theme/context";
 
 interface InputsProps {
   onSetDone: (data: PlainExerciseData, index: number) => void;
@@ -40,6 +40,7 @@ const useGeneratedSetData = (setData: (PlainExerciseData | undefined)[]) => {
 };
 
 export const Inputs = ({ onSetDone, setData }: InputsProps) => {
+  const { componentBackgroundColor } = useTheme();
   const currentSetIndex = useAppSelector(getSetIndex);
   const selectedTrainingName = useAppSelector(getSelectedTrainingName);
   const [sets] = useGeneratedSetData(setData);

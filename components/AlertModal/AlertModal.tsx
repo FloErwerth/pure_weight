@@ -1,11 +1,13 @@
-import { Text, View } from "react-native";
 import { styles } from "./styles";
-import { PropsWithChildren, useCallback, useEffect } from "react";
+import { PropsWithChildren, useCallback, useEffect, useMemo } from "react";
 import { Modal } from "../Modal/Modal";
 import { HStack } from "../HStack/HStack";
-import { Button } from "../Button/Button";
+import { Button } from "../Themed/Button/Button";
 import * as Haptics from "expo-haptics";
 import { useTranslation } from "react-i18next";
+import { borderRadius } from "../../theme/border";
+import { ThemedView } from "../Themed/ThemedView/View";
+import { Text } from "../Themed/ThemedText/Text";
 
 export type AlertConfig = {
   title: string;
@@ -40,17 +42,19 @@ export const AlertModal = ({ onConfirm, onCancel, isVisible, content, title, chi
     onCancel();
   }, [onCancel]);
 
+  const buttonStyle = useMemo(() => ({ button: { flex: 1, padding: 10, borderRadius } }), []);
+
   return (
     <Modal isVisible={isVisible}>
-      <View style={styles.innerWrapper}>
+      <ThemedView style={styles.innerWrapper}>
         <Text style={styles.title}>{title}</Text>
         <Text style={styles.text}>{content}</Text>
         {children}
         <HStack style={styles.singleButton}>
-          <Button style={{ button: { flex: 1 } }} title={t("alert_delete_cancel")} theme="secondary" onPress={handleCancelButton} />
-          <Button style={{ button: { flex: 1 } }} title={t("alert_delete_confirm")} theme="primary" onPress={handleConfirmButton} />
+          <Button style={buttonStyle} title={t("alert_delete_cancel")} onPress={handleCancelButton} />
+          <Button style={buttonStyle} title={t("alert_delete_confirm")} onPress={handleConfirmButton} />
         </HStack>
-      </View>
+      </ThemedView>
     </Modal>
   );
 };

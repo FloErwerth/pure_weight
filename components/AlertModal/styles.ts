@@ -1,6 +1,5 @@
 import { StyleSheet } from "react-native";
-import { borderRadius } from "../App/theme/border";
-import { mainColor } from "../App/theme/colors";
+import { borderRadius } from "../../theme/border";
 
 export const styles = StyleSheet.create({
   innerWrapper: {
@@ -21,11 +20,9 @@ export const styles = StyleSheet.create({
     marginRight: 10,
   },
   title: {
-    color: mainColor,
     fontSize: 20,
   },
   text: {
-    color: mainColor,
     textAlign: "center",
   },
 });

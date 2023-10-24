@@ -1,22 +1,22 @@
-import { ThemedView } from "../../../components/View/View";
 import { SiteNavigationButtons } from "../../../components/SiteNavigationButtons/SiteNavigationButtons";
 import { useTranslation } from "react-i18next";
 import { useCallback, useState } from "react";
 import { useNavigate } from "../../../hooks/navigate";
 import { Pressable, View } from "react-native";
 import { AddButton } from "../../../components/AddButton/AddButton";
-import { borderRadius } from "../../../components/App/theme/border";
+import { borderRadius } from "../../../theme/border";
 import { HStack } from "../../../components/HStack/HStack";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { componentBackgroundColor, mainColor } from "../../../components/App/theme/colors";
 import { useAppDispatch, useAppSelector } from "../../../store";
 import { getMeasurements } from "../../../store/selectors";
-import { Text } from "../../../components/Text/Text";
 import { addMeasurement } from "../../../store/reducer";
 import { MeasurementModal } from "../../../components/MeasurementModal/MeasurementModal";
 import { z } from "zod/lib/index";
 import { getDateTodayIso } from "../../../utils/date";
 import { PageContent } from "../../../components/PageContent/PageContent";
+import { ThemedView } from "../../../components/Themed/ThemedView/View";
+import { Text } from "../../../components/Themed/ThemedText/Text";
+import { useTheme } from "../../../theme/context";
+import { ThemedMaterialCommunityIcons } from "../../../components/Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
 
 export type Measurement = {
   name?: string;
@@ -31,6 +31,7 @@ const dateParser = z.date().transform((date) => {
 });
 
 export function Measurements() {
+  const { mainColor, componentBackgroundColor } = useTheme();
   const { t } = useTranslation();
   const [showMeasurementModal, setShowMeasurementModal] = useState(false);
   const measurements = useAppSelector(getMeasurements);
@@ -91,7 +92,7 @@ export function Measurements() {
             <Pressable key={`${measurement.name}-pressable`} onPress={() => handleAddExistingMeasurement(measurement)}>
               <HStack style={{ padding: 15, backgroundColor: componentBackgroundColor, borderRadius, justifyContent: "space-between" }}>
                 <Text style={{ fontSize: 20, color: mainColor }}>{measurement.name}</Text>
-                <MaterialCommunityIcons name="plus" color={mainColor} size={26} />
+                <ThemedMaterialCommunityIcons name="plus" size={26} />
               </HStack>
             </Pressable>
           ))}

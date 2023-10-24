@@ -1,13 +1,13 @@
 import { ReactNativeModal } from "react-native-modal";
 import React, { PropsWithChildren, ReactNode, useEffect } from "react";
 import { LayoutAnimation, View, ViewStyle } from "react-native";
-import { Button } from "../Button/Button";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { borderRadius } from "../App/theme/border";
-import { ThemedView } from "../View/View";
-import { mainColor } from "../App/theme/colors";
-import { Text } from "../Text/Text";
+import { Button } from "../Themed/Button/Button";
+import { borderRadius } from "../../theme/border";
+import { ThemedView } from "../Themed/ThemedView/View";
+import { Text } from "../Themed/ThemedText/Text";
 import { HStack } from "../HStack/HStack";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { useTheme } from "../../theme/context";
 
 export interface ModalProps extends PropsWithChildren {
   isVisible?: boolean;
@@ -27,6 +27,7 @@ const Backdrop = () => {
 };
 
 export const Modal = ({ customContentStyle, backgroundOpacity, isVisible = true, children, onRequestClose, title, customBackdrop }: ModalProps) => {
+  const { mainColor } = useTheme();
   return (
     <ReactNativeModal
       backdropOpacity={backgroundOpacity ?? 0.9}
@@ -38,10 +39,10 @@ export const Modal = ({ customContentStyle, backgroundOpacity, isVisible = true,
       isVisible={isVisible}
     >
       <HStack style={{ justifyContent: "space-between", alignItems: "center" }}>
-        <View>{title && <Text style={{ color: mainColor, fontSize: 20, paddingLeft: 10, padding: 0, margin: 0 }}>{title}</Text>}</View>
+        <View>{title && <Text style={{ fontSize: 20, paddingLeft: 10, padding: 0, margin: 0 }}>{title}</Text>}</View>
         {onRequestClose && (
-          <Button onPress={() => onRequestClose()} style={{ button: { padding: 10 } }} theme="ghost">
-            <MaterialCommunityIcons name="close" color={mainColor} size={24} />
+          <Button theme="ghost" onPress={() => onRequestClose()} style={{ button: { padding: 10 } }}>
+            <MaterialCommunityIcons name="close" size={24} color={mainColor} />
           </Button>
         )}
       </HStack>

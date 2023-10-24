@@ -3,11 +3,12 @@ import { styles } from "./styles";
 import { Pressable } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { HStack } from "../HStack/HStack";
-import { mainColor, mainDisabledColor } from "../App/theme/colors";
 import * as Haptics from "expo-haptics";
+import { ThemedMaterialCommunityIcons } from "../Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
+import { ComponentBackground } from "../Themed/ComponentBackground/ComponentBackground";
 
 type IconType = {
-  icon?: ComponentProps<typeof MaterialCommunityIcons>["name"];
+  icon: ComponentProps<typeof MaterialCommunityIcons>["name"];
   hide?: boolean;
   size?: number;
   disabled?: boolean;
@@ -64,22 +65,22 @@ export const PressableRowWithIconSlots = ({ children, onClick, Icon1, Icon2, onL
   }, [onLongPress]);
 
   return (
-    <HStack style={[styles.innerWrapper, hasNoIcons && styles.noIconWrapper]}>
+    <ComponentBackground style={[styles.innerWrapper, hasNoIcons && styles.noIconWrapper]}>
       <Pressable delayLongPress={200} onLongPress={handleLongPress} style={styles.singleButton} onPress={handleClick}>
         {children}
       </Pressable>
       <HStack style={styles.iconWrapper}>
-        {showIcon1 && (
+        {Icon1 && !Icon1?.hide && (
           <Pressable delayLongPress={200} onLongPress={handleLongPressIcon1} style={styles.icon} disabled={Icon1?.disabled} onPress={handleClickIcon1}>
-            <MaterialCommunityIcons size={Icon1?.size ?? 24} name={Icon1?.icon} color={Icon1?.disabled ? mainDisabledColor : mainColor} />
+            <ThemedMaterialCommunityIcons size={Icon1?.size ?? 24} name={Icon1.icon} />
           </Pressable>
         )}
-        {showIcon2 && (
+        {Icon2 && !Icon2?.hide && (
           <Pressable delayLongPress={200} onLongPress={handleLongPressIcon2} style={styles.icon} disabled={Icon2?.disabled} onPress={handleClickIcon2}>
-            <MaterialCommunityIcons size={Icon2?.size ?? 24} name={Icon2?.icon} color={Icon2?.disabled ? mainDisabledColor : mainColor} />
+            <ThemedMaterialCommunityIcons size={Icon2?.size ?? 24} name={Icon2.icon} />
           </Pressable>
         )}
       </HStack>
-    </HStack>
+    </ComponentBackground>
   );
 };

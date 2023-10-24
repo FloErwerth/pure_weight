@@ -1,8 +1,8 @@
 import { KeyboardType, StyleProp, TextInput, TextStyle, ViewStyle } from "react-native";
 import { HStack } from "../HStack/HStack";
-import { mainColor, secondaryColor } from "../App/theme/colors";
 import { useRef } from "react";
-import { ThemedTextInput } from "../TextInput/ThemedTextInput";
+import { ThemedTextInput } from "../Themed/ThemedTextInput/ThemedTextInput";
+import { useTheme } from "../../theme/context";
 
 interface PlainInputProps {
   placeholder?: string;
@@ -17,6 +17,7 @@ interface PlainInputProps {
 }
 export const PlainInput = ({ keyboardType, placeholder, fontSize = 14, value, setValue, style, autoFocus, showClear }: PlainInputProps) => {
   const inputRef = useRef<TextInput>(null);
+  const { mainColor, secondaryColor } = useTheme();
 
   return (
     <HStack>

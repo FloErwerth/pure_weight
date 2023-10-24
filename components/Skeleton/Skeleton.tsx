@@ -1,8 +1,8 @@
 import { Animated, LayoutAnimation, View, ViewProps } from "react-native";
 import { useEffect, useLayoutEffect, useMemo, useRef } from "react";
-import { componentBackgroundColor } from "../App/theme/colors";
 import { LinearGradient } from "expo-linear-gradient";
 import { styles } from "./styles";
+import { useTheme } from "../../theme/context";
 
 interface SkeletonProps {
   width: number;
@@ -13,6 +13,7 @@ interface SkeletonProps {
 }
 export const Skeleton = ({ width, height, shape = "rect", style, borderRadius }: SkeletonProps) => {
   const fadeAnim = useRef(new Animated.Value(-width * 2)).current;
+  const { componentBackgroundColor } = useTheme();
 
   useEffect(() => {
     Animated.loop(

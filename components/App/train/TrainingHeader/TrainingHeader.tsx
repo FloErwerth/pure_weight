@@ -1,6 +1,6 @@
 import { View } from "react-native";
 import { HStack } from "../../../HStack/HStack";
-import { Text } from "../../../Text/Text";
+import { Text } from "../../../Themed/ThemedText/Text";
 import { useTranslation } from "react-i18next";
 import { styles } from "../../../SetInputRow/styles";
 

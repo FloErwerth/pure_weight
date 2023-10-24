@@ -7,13 +7,13 @@ import { useAppDispatch, useAppSelector } from "../../store";
 import { getExerciseIndex, getTrainingIndex } from "../../store/selectors";
 import { PlainExerciseData } from "../../store/types";
 import { HStack } from "../HStack/HStack";
-import { Button } from "../Button/Button";
+import { Button } from "../Themed/Button/Button";
 import { Center } from "../Center/Center";
-import { Text } from "../Text/Text";
-import { borderRadius } from "../App/theme/border";
-import { ThemedTextInput } from "../TextInput/ThemedTextInput";
-import { componentBackgroundColor, mainColor, mainDisabledColor, secondaryColor, secondaryComponentBackgroundColor, textFieldBackgroundColor } from "../App/theme/colors";
+import { Text } from "../Themed/ThemedText/Text";
+import { borderRadius } from "../../theme/border";
+import { ThemedTextInput } from "../Themed/ThemedTextInput/ThemedTextInput";
 import { setSetIndex } from "../../store/reducer";
+import { useTheme } from "../../theme/context";
 
 interface SetInputRowProps {
   setIndex: number;
@@ -26,6 +26,7 @@ interface SetInputRowProps {
 
 export const SetInputRow = ({ onSetDone, setIndex, isActiveSet, hasData, data, isEditable = true }: SetInputRowProps) => {
   const navigate = useNavigate();
+  const { mainColor, secondaryBackgroundColor, componentBackgroundColor, inputFieldBackgroundColor, textDisabled, secondaryColor } = useTheme();
   const trainingIndex = useAppSelector(getTrainingIndex);
   const exerciseIndex = useAppSelector(getExerciseIndex);
   const [weight, setWeight] = useState(data?.weight);
@@ -51,12 +52,12 @@ export const SetInputRow = ({ onSetDone, setIndex, isActiveSet, hasData, data, i
       handleOnFocus();
     }
   }, [isActiveSet, weight, reps, onSetDone, handleOnFocus]);
-  const activeStackStyles = useMemo(() => ({ backgroundColor: isActiveSet ? textFieldBackgroundColor : "transparent" }), [isActiveSet]);
+  const activeStackStyles = useMemo(() => ({ backgroundColor: isActiveSet ? inputFieldBackgroundColor : "transparent" }), [isActiveSet]);
 
   const computedTextfieldBackgroundColor = useMemo(() => {
     if (!isActiveSet) {
       if (isEditable) {
-        return secondaryComponentBackgroundColor;
+        return secondaryBackgroundColor;
       }
       return "transparent";
     }
@@ -87,7 +88,7 @@ export const SetInputRow = ({ onSetDone, setIndex, isActiveSet, hasData, data, i
   const textNumberStyles = useMemo(() => [styles.textNumber, { color: computedColor }], [computedColor]);
   const textInputStyles = useMemo(() => [styles.textInput, { backgroundColor: computedTextfieldBackgroundColor, color: computedColor }], [computedTextfieldBackgroundColor, computedColor]);
   const buttonStyles = useMemo(() => ({ button: { ...styles.button, ...{ backgroundColor: computedButtonBackgroundColor } } }), [computedButtonBackgroundColor]);
-  const iconStyle = useMemo(() => ({ color: hasData ? "green" : isActiveSet ? mainColor : mainDisabledColor }), [hasData, isActiveSet]);
+  const iconStyle = useMemo(() => ({ color: hasData ? "green" : isActiveSet ? mainColor : textDisabled }), [hasData, isActiveSet]);
 
   if (trainingIndex === undefined) {
     navigate("workouts");

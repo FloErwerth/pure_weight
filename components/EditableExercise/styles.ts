@@ -1,19 +1,16 @@
 import { StyleSheet } from "react-native";
-import { componentBackgroundColor, errorColor, mainColor, secondaryColor, secondaryComponentBackgroundColor, textFieldBackgroundColor } from "../App/theme/colors";
-import { borderRadius } from "../App/theme/border";
+import { borderRadius } from "../../theme/border";
 
 export type EditableExerciseTheme = "Inline" | "Default";
 const Themes = {
   Inline: {
     innerWrapper: {
       padding: 0,
-      backgroundColor: componentBackgroundColor,
     },
   },
   Default: {
     innerWrapper: {
       padding: 10,
-      backgroundColor: componentBackgroundColor,
     },
   },
 };
@@ -27,18 +24,10 @@ export const styles = (theme: EditableExerciseTheme = "Default") =>
       alignSelf: "stretch",
       alignItems: "center",
     },
-    wrapperError: {
-      borderColor: errorColor,
-    },
-    text: {
-      color: secondaryColor,
-    },
     buttonText: {
-      color: mainColor,
       fontSize: 16,
     },
     input: {
-      backgroundColor: textFieldBackgroundColor,
       alignSelf: "stretch",
       paddingVertical: 10,
       paddingHorizontal: 5,
@@ -56,7 +45,6 @@ export const styles = (theme: EditableExerciseTheme = "Default") =>
       gap: 10,
       padding: 10,
       paddingRight: 8,
-      backgroundColor: secondaryComponentBackgroundColor,
       borderRadius,
     },
     buttons: {
@@ -71,16 +59,13 @@ export const styles = (theme: EditableExerciseTheme = "Default") =>
     },
     saveText: {
       fontSize: 16,
-      color: mainColor,
     },
     title: {
-      color: mainColor,
       flex: 1,
       fontSize: 20,
       lineHeight: 23,
       borderWidth: 1,
       borderColor: "transparent",
-      backgroundColor: textFieldBackgroundColor,
       alignSelf: "stretch",
       padding: 10,
       borderRadius,

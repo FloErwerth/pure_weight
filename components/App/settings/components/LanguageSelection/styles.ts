@@ -1,6 +1,5 @@
 import { StyleSheet } from "react-native";
-import { mainColor, secondaryColor } from "../../../theme/colors";
-import { borderRadius } from "../../../theme/border";
+import { borderRadius } from "../../../../../theme/border";
 
 export const styles = StyleSheet.create({
   innerWrapper: {
@@ -11,9 +10,6 @@ export const styles = StyleSheet.create({
     borderColor: "transparent",
     borderRadius,
     borderWidth: 1,
-  },
-  selectedWrapper: {
-    borderColor: secondaryColor,
   },
   vStack: {
     alignSelf: "stretch",
@@ -34,6 +30,5 @@ export const styles = StyleSheet.create({
   },
   text: {
     fontSize: 20,
-    color: mainColor,
   },
 });

@@ -2,7 +2,7 @@ import { ProfileContent } from "../SettingsSection/ProfileSection";
 import { Pressable } from "react-native";
 import { HStack } from "../../../../HStack/HStack";
 import GermanFlag from "../../../../../media/icons/GermanFlag.svg";
-import { Text } from "../../../../Text/Text";
+import { Text } from "../../../../Themed/ThemedText/Text";
 import UsaFlag from "../../../../../media/icons/UsaFlag.svg";
 import { VStack } from "../../../../VStack/VStack";
 import { useTranslation } from "react-i18next";
@@ -12,12 +12,14 @@ import { useAppDispatch, useAppSelector } from "../../../../../store";
 import { setLanguage } from "../../../../../store/reducer";
 import { getLanguage } from "../../../../../store/selectors";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { secondaryColor } from "../../../theme/colors";
 import * as Haptics from "expo-haptics";
 import { ImpactFeedbackStyle } from "expo-haptics";
+import { useTheme } from "../../../../../theme/context";
 
 export const LanguageSelection = () => {
   const { t, i18n } = useTranslation();
+  const { secondaryColor, componentBackgroundColor } = useTheme();
+
   const dispatch = useAppDispatch();
   const lang = useAppSelector(getLanguage);
   const isGerman = useMemo(() => lang === "de", [lang]);
@@ -30,11 +32,12 @@ export const LanguageSelection = () => {
     },
     [dispatch, i18n],
   );
-
+  const stackStyles = useMemo(() => [styles.vStack, { backgroundColor: componentBackgroundColor }], [componentBackgroundColor]);
+  const getStyles = useCallback((isGerman: boolean) => [styles.innerWrapper, isGerman && { borderColor: secondaryColor }], [secondaryColor, isGerman]);
   return (
     <ProfileContent title={t("settings_language")}>
-      <VStack style={styles.vStack}>
-        <Pressable onPress={() => handleSelectLanguage("de")} style={[styles.innerWrapper, isGerman ? styles.selectedWrapper : undefined]}>
+      <VStack style={stackStyles}>
+        <Pressable onPress={() => handleSelectLanguage("de")} style={getStyles(isGerman)}>
           <HStack style={styles.outerStack}>
             <HStack style={styles.innerStack}>
               <GermanFlag width={30} height={30} />
@@ -43,7 +46,7 @@ export const LanguageSelection = () => {
             {isGerman && <MaterialCommunityIcons name="check" size={30} color={secondaryColor} />}
           </HStack>
         </Pressable>
-        <Pressable onPress={() => handleSelectLanguage("en")} style={[styles.innerWrapper, !isGerman ? styles.selectedWrapper : undefined]}>
+        <Pressable onPress={() => handleSelectLanguage("en")} style={getStyles(!isGerman)}>
           <HStack style={styles.outerStack}>
             <HStack style={styles.innerStack}>
               <UsaFlag width={30} height={30} />

@@ -1,11 +1,9 @@
 import { StyleSheet } from "react-native";
-import { mainColor } from "../App/theme/colors";
 
 export const styles = StyleSheet.create({
   title: {
     fontSize: 40,
     fontWeight: "600",
-    color: mainColor,
   },
   titleWrapper: {
     justifyContent: "flex-start",

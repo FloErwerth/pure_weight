@@ -10,16 +10,18 @@ import { SiteNavigationButtons } from "../../../components/SiteNavigationButtons
 import { ExerciseMetaDataDisplay } from "../../../components/App/train/ExerciseMetaDataDisplay/ExerciseMetaDataDisplay";
 import { ScrollView, View } from "react-native";
 import { Inputs } from "../../../components/App/train/Inputs/Inputs";
-import { Button } from "../../../components/Button/Button";
+import { Button } from "../../../components/Themed/Button/Button";
 import { HStack } from "../../../components/HStack/HStack";
 import { getNumberOfExercises, getSpecificNumberOfSets } from "../../../store/selectors";
 import { PreviousTraining } from "../../../components/PreviousTraining/PreviousTraining";
 import { useTranslation } from "react-i18next";
-import { ThemedView } from "../../../components/View/View";
 import { AddNoteModal } from "../../../components/AddNoteModal/AddNoteModal";
-import { mainColor } from "../../../components/App/theme/colors";
+import { ThemedView } from "../../../components/Themed/ThemedView/View";
+import { useTheme } from "../../../theme/context";
 
 export function Train() {
+  const { mainColor } = useTheme();
+
   const { t } = useTranslation();
   const numberOfExercises = useAppSelector(getNumberOfExercises);
   const { showPreviousExercise, hasNextExercise, previousExerciseName, nextExerciseName, currentExerciseIndex, selectedTrainingName } = useTrainingProps();
@@ -133,7 +135,7 @@ export function Train() {
         {showModal && <AlertModal title={alertModalConfig.title} content={alertModalConfig.content} isVisible={showModal} onConfirm={handleNotDoneConfirm} onCancel={handleCloseAlert}></AlertModal>}
       </ScrollView>
       <HStack style={trainStyles.singleButton}>
-        <ThemedView stretch>{showPreviousExercise && <Button title={previousExerciseName} theme="secondary" disabled={showEdit} onPress={handlePreviousExercise} />}</ThemedView>
+        <ThemedView stretch>{showPreviousExercise && <Button title={previousExerciseName} disabled={showEdit} onPress={handlePreviousExercise} />}</ThemedView>
         <Button theme="primary" title={hasNextExercise ? nextExerciseName : t("training_done")} disabled={showEdit} onPress={handleNextOrDone} />
       </HStack>
       {showEditNoteModal && <AddNoteModal onConfirm={handleCloseEditNoteModal} setNote={handleCloseEditNoteModal} note={note} onCancel={handleCancelEditNoteModal} showModal={showEditNoteModal} />}

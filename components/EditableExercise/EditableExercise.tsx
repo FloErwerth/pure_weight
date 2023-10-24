@@ -4,14 +4,14 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { ErrorFields, ExerciseMetaData } from "../../store/types";
 import { EditableExerciseTheme, styles } from "./styles";
 import { HStack } from "../HStack/HStack";
-import { ThemedTextInput } from "../TextInput/ThemedTextInput";
-import { mainColor } from "../App/theme/colors";
+import { ThemedTextInput } from "../Themed/ThemedTextInput/ThemedTextInput";
 import * as Haptics from "expo-haptics";
 import { useTranslation } from "react-i18next";
 import { useAppDispatch } from "../../store";
 import { setError } from "../../store/reducer";
 import { EditableExerciseInputRow } from "./EditableExerciseInputRow";
-import { Text } from "../Text/Text";
+import { Text } from "../Themed/ThemedText/Text";
+import { useTheme } from "../../theme/context";
 
 export interface EditableExerciseProps {
   exercise?: ExerciseMetaData;
@@ -38,6 +38,7 @@ const validateData = (data: Partial<ExerciseMetaData>) => {
 
 export const EditableExercise = ({ exercise, onConfirmEdit, theme }: EditableExerciseProps) => {
   const { t } = useTranslation();
+  const { mainColor, componentBackgroundColor } = useTheme();
   const [name, setName] = useState<string | undefined>(exercise?.name);
   const [weight, setWeight] = useState<string | undefined>(exercise?.weight);
   const [sets, setSets] = useState<string | undefined>(exercise?.sets);
@@ -59,6 +60,8 @@ export const EditableExercise = ({ exercise, onConfirmEdit, theme }: EditableExe
     }
   }, [reps, sets, weight, name, dispatch, onConfirmEdit, pause]);
 
+  const confirmStyle = useMemo(() => [classes.button, { backgroundColor: componentBackgroundColor }], [classes.button, componentBackgroundColor]);
+
   return (
     <View style={classes.innerWrapper}>
       <HStack style={classes.headerWrapper}>
@@ -67,7 +70,7 @@ export const EditableExercise = ({ exercise, onConfirmEdit, theme }: EditableExe
           autoFocus={true}
           errorKey="create_name"
           placeholder={t("exercise_name")}
-          ref={inputRef}
+          reference={inputRef}
           value={name}
           onChangeText={setName}
           style={classes.title}
@@ -80,7 +83,7 @@ export const EditableExercise = ({ exercise, onConfirmEdit, theme }: EditableExe
         <EditableExerciseInputRow i18key="pause" setValue={setPause} value={pause} />
       </HStack>
       <Pressable onPress={handleConfirm}>
-        <HStack style={classes.button}>
+        <HStack style={confirmStyle}>
           <Text style={classes.buttonText}>{t(isEditing ? "edit_exercise" : "create_exercise")}</Text>
           <MaterialCommunityIcons color={mainColor} name="pencil-plus-outline" size={20}></MaterialCommunityIcons>
         </HStack>

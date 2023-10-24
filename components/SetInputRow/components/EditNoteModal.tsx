@@ -1,13 +1,13 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Modal } from "../../Modal/Modal";
 import { TextInput } from "react-native";
-import { Button } from "../../Button/Button";
+import { Button } from "../../Themed/Button/Button";
 import { HStack } from "../../HStack/HStack";
 import { VStack } from "../../VStack/VStack";
-import { borderRadius } from "../../App/theme/border";
-import { backgroundColor, secondaryColor } from "../../App/theme/colors";
-import { ThemedTextInput } from "../../TextInput/ThemedTextInput";
+import { borderRadius } from "../../../theme/border";
+import { ThemedTextInput } from "../../Themed/ThemedTextInput/ThemedTextInput";
 import { useTranslation } from "react-i18next";
+import { useTheme } from "../../../theme/context";
 
 interface EditNoteModalProps {
   showModal: boolean;
@@ -19,6 +19,7 @@ export const EditNoteModal = ({ showModal, note, onDoneEdit, onCancel }: EditNot
   const [internalNote, setInternalNote] = useState(note);
   const inputRef = useRef<TextInput>(null);
   const { t } = useTranslation();
+  const { backgroundColor, secondaryColor } = useTheme();
 
   const handleSetNote = useCallback((note: string) => {
     setInternalNote(note);
@@ -40,7 +41,7 @@ export const EditNoteModal = ({ showModal, note, onDoneEdit, onCancel }: EditNot
         <ThemedTextInput
           style={{ height: 140, padding: 10, borderRadius }}
           multiline={true}
-          ref={inputRef}
+          reference={inputRef}
           onChangeText={handleSetNote}
           value={internalNote}
           placeholderTextColor={secondaryColor}

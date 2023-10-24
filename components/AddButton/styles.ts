@@ -1,6 +1,5 @@
 import { StyleSheet } from "react-native";
-import { componentBackgroundColor } from "../App/theme/colors";
-import { borderRadius } from "../App/theme/border";
+import { borderRadius } from "../../theme/border";
 
 export const styles = StyleSheet.create({
   add: {
@@ -8,7 +7,6 @@ export const styles = StyleSheet.create({
     justifyContent: "center",
     borderRadius,
     padding: 15,
-    backgroundColor: componentBackgroundColor,
   },
   text: {
     textAlign: "center",

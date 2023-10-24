@@ -1,17 +1,18 @@
 import { Modal } from "../../Modal/Modal";
 import { VStack } from "../../VStack/VStack";
 import { Text, View } from "react-native";
-import { componentBackgroundColor, mainColor } from "../../App/theme/colors";
 import { HStack } from "../../HStack/HStack";
-import { borderRadius } from "../../App/theme/border";
+import { borderRadius } from "../../../theme/border";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { Button } from "../../Button/Button";
+import { Button } from "../../Themed/Button/Button";
 import { useAppDispatch, useAppSelector } from "../../../store";
 import { getIsFirstTimeRendered } from "../../../store/selectors";
 import { useCallback, useEffect, useState } from "react";
 import { setFirstTimeRendered } from "../../../store/reducer";
+import { useTheme } from "../../../theme/context";
 
 export const Welcome = () => {
+  const { mainColor, componentBackgroundColor } = useTheme();
   const isFirstTimeRendered = useAppSelector(getIsFirstTimeRendered);
   const [renderModal, setRenderModal] = useState(false);
   const dispatch = useAppDispatch();

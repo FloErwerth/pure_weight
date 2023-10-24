@@ -1,11 +1,11 @@
-import { Text, View } from "react-native";
 import { styles } from "./styles";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { RefObject, useCallback, useMemo } from "react";
 import { HStack } from "../HStack/HStack";
-import { Button } from "../Button/Button";
-import { mainColor, mainDisabledColor } from "../App/theme/colors";
 import * as Haptics from "expo-haptics";
+import { Pressable, View } from "react-native";
+import { Text } from "../Themed/ThemedText/Text";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { useTheme } from "../../theme/context";
 
 interface SiteNavigationButtonsProps {
   handleBack?: () => void;
@@ -29,6 +29,7 @@ export const SiteNavigationButtons = ({
     () => ({ ...styles.title, fontSize: titleFontSize, paddingVertical: titleFontSize <= 40 ? (40 - titleFontSize) / 2 : 0, marginLeft: handleBack ? 0 : 15 }),
     [handleBack, titleFontSize],
   );
+  const { mainColor } = useTheme();
 
   const handleBackButton = useCallback(() => {
     void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
@@ -51,9 +52,9 @@ export const SiteNavigationButtons = ({
     <HStack style={styles.headerWrapper}>
       <HStack style={styles.titleWrapper}>
         {handleBack && (
-          <Button theme="ghost" disabled={disabled} onPress={handleBackButton}>
-            <MaterialCommunityIcons color={disabled ? mainDisabledColor : mainColor} size={28} name="arrow-left" />
-          </Button>
+          <Pressable disabled={disabled} onPress={handleBackButton}>
+            <MaterialCommunityIcons color={mainColor} size={28} name="arrow-left" />
+          </Pressable>
         )}
         <Text numberOfLines={1} style={titleStyles}>
           {title}
@@ -61,9 +62,9 @@ export const SiteNavigationButtons = ({
       </HStack>
       <View>
         {handleConfirm && (
-          <Button reference={confirmButtonRef} theme="ghost" disabled={disabled} onPress={handleConfirmButton}>
-            <MaterialCommunityIcons color={disabled ? mainDisabledColor : mainColor} size={handleConfirmIcon?.size} name={handleConfirmIcon?.name} />
-          </Button>
+          <Pressable ref={confirmButtonRef} disabled={disabled} onPress={handleConfirmButton}>
+            <MaterialCommunityIcons color={mainColor} size={handleConfirmIcon?.size} name={handleConfirmIcon?.name} />
+          </Pressable>
         )}
       </View>
     </HStack>

@@ -1,4 +1,4 @@
-import { Text } from "../../../components/Text/Text";
+import { Text } from "../../../components/Themed/ThemedText/Text";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "../../../hooks/navigate";
 import { ExerciseMetaData, ExerciseMetaDataWithDoneEntries } from "../../../store/types";
@@ -18,9 +18,9 @@ import DraggableFlatList from "react-native-draggable-flatlist/src/components/Dr
 import { ScaleDecorator } from "react-native-draggable-flatlist";
 import { useTranslation } from "react-i18next";
 import { AddExerciseModal } from "../../../components/AddExerciseModal/AddExerciseModal";
-import { ThemedView } from "../../../components/View/View";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { PageContent } from "../../../components/PageContent/PageContent";
+import { ThemedView } from "../../../components/Themed/ThemedView/View";
 
 function getAreValuesEmpty(exercise: ExerciseMetaData) {
   const values = Object.values(exercise);

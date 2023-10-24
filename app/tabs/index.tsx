@@ -1,4 +1,3 @@
-import { componentBackgroundColor, mainColor, secondaryColor } from "../../components/App/theme/colors";
 import { TabBarIcon } from "../../components/App/TabBar/TabBarIcon";
 import { TabBarButton } from "../../components/App/TabBar/TabBarButton";
 import { TabBarLabel } from "../../components/App/TabBar/TabBarLabel";
@@ -8,11 +7,13 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Progress } from "../progress";
 import { Workouts } from "../workouts";
 import { Profile } from "../profile";
+import { useTheme } from "../../theme/context";
 
 const Tabs = createBottomTabNavigator();
 
 export function TabsWrapper() {
   const App = () => {
+    const { componentBackgroundColor, secondaryColor, mainColor } = useTheme();
     const { t } = useTranslation();
     return (
       <Tabs.Navigator

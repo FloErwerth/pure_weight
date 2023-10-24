@@ -1,6 +1,5 @@
 import { StyleSheet } from "react-native";
-import { componentBackgroundColor, mainColor } from "../theme/colors";
-import { borderRadius } from "../theme/border";
+import { borderRadius } from "../../../theme/border";
 
 export const styles = StyleSheet.create({
   vStack: {
@@ -14,7 +13,6 @@ export const styles = StyleSheet.create({
   text: {
     paddingLeft: 10,
     fontSize: 20,
-    color: mainColor,
   },
   title: {
     fontSize: 40,
@@ -36,7 +34,6 @@ export const styles = StyleSheet.create({
   },
   addWrapper: {
     padding: 16,
-    backgroundColor: componentBackgroundColor,
     borderRadius,
   },
   errorBox: {

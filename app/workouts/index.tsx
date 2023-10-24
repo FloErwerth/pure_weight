@@ -1,4 +1,4 @@
-import { ScrollView, Text, View } from "react-native";
+import { View } from "react-native";
 import { ComponentProps, useCallback, useEffect, useMemo, useState } from "react";
 import { PressableRowWithIconSlots } from "../../components/PressableRowWithIconSlots/PressableRowWithIconSlots";
 import { useNavigate } from "../../hooks/navigate";
@@ -10,9 +10,11 @@ import { AlertModal } from "../../components/AlertModal/AlertModal";
 import { SiteNavigationButtons } from "../../components/SiteNavigationButtons/SiteNavigationButtons";
 import { useTranslation } from "react-i18next";
 import * as Locale from "expo-localization";
-import { ThemedView } from "../../components/View/View";
+import { ThemedView } from "../../components/Themed/ThemedView/View";
 import { PageContent } from "../../components/PageContent/PageContent";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { Text } from "../../components/Themed/ThemedText/Text";
+import { ThemedScrollView } from "../../components/Themed/ThemedScrollView/ThemedScrollView";
 
 export function Workouts() {
   const language = useAppSelector(getLanguage);
@@ -98,15 +100,15 @@ export function Workouts() {
       <View style={styles.vStack}>
         <SiteNavigationButtons title={t("workouts")} handleConfirmIcon={confirmIcon} handleConfirm={handlePress} />
         <PageContent>
-          <ScrollView style={styles.view}>
-            <View style={styles.savedTrainings}>
+          <ThemedScrollView style={styles.view}>
+            <ThemedView style={styles.savedTrainings}>
               {mappedTrainings.map(({ trainingDayName, key, Icon2, Icon1, onClick }) => (
                 <PressableRowWithIconSlots key={key} onClick={onClick} Icon2={Icon2} Icon1={Icon1}>
                   <Text style={styles.trainingDayName}>{trainingDayName}</Text>
                 </PressableRowWithIconSlots>
               ))}
-            </View>
-          </ScrollView>
+            </ThemedView>
+          </ThemedScrollView>
         </PageContent>
       </View>
       {deleteIndex !== undefined && <AlertModal title={alertModalConfig.title} content={alertModalConfig.content} isVisible={true} onCancel={handleCancelAlert} onConfirm={handleConfirmAlert} />}
