@@ -14,8 +14,21 @@ const DarkThemeColors: ThemeColors = {
   primaryColor: "#8f8f8f",
   warningColor: "#af7d00",
 };
+const LightThemeColors: ThemeColors = {
+  backgroundColor: "#ddd",
+  secondaryBackgroundColor: "#aaa",
+  inputFieldBackgroundColor: "white",
+  componentBackgroundColor: "#eee",
+  textDisabled,
+  errorColor: "rgba(255,0,0,0.5)",
+  secondaryErrorColor: "rgba(170,0,0,0.5)",
+  mainColor: "#111",
+  secondaryColor: "#444",
+  primaryColor: "#fff",
+  warningColor: "#af7d00",
+};
 
 export const ThemeConfig: Record<ThemeKey, ThemeColors> = {
   dark: DarkThemeColors,
-  light: DarkThemeColors,
+  light: LightThemeColors,
 };

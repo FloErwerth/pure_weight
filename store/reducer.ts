@@ -8,7 +8,7 @@ export const mockState: AppState = {
     { name: "Körpergewicht", unit: "kg", data: { ["2023-10-11"]: "85" } },
     { name: "Körperfettanteil", unit: "%", data: { ["2023-10-11"]: "15" } },
   ],
-  theme: "dark",
+  theme: "light",
   setIndex: 0,
   settings: { language: "en" },
   trainingDayIndex: undefined,
@@ -331,7 +331,7 @@ export const emptyState: AppState = {
   trainingDays: [],
   setIndex: 0,
   isFirstTimeRendered: false,
-  theme: "dark",
+  theme: "light",
 };
 
 export const addMeasurement = createAction<Measurement>("measurement_add");

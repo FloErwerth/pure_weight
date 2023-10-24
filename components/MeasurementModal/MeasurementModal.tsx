@@ -32,7 +32,7 @@ const fieldToErrorMap: Record<keyof Measurement, ErrorFields> = {
 
 export const MeasurementModal = ({ isNewMeasurement = true, onRequestClose, isVisible, measurement, setMeasurement, saveMeasurement }: MeasurementModalProps) => {
   const { t } = useTranslation();
-  const { mainColor, secondaryBackgroundColor, componentBackgroundColor, warningColor, primaryColor } = useTheme();
+  const { mainColor, componentBackgroundColor, secondaryBackgroundColor, warningColor } = useTheme();
 
   const dates = useAppSelector((state: AppState) => getDatesFromCurrentMeasurement(state)(measurement?.name));
   const opacity = useRef(new Animated.Value(0)).current;
@@ -156,8 +156,18 @@ export const MeasurementModal = ({ isNewMeasurement = true, onRequestClose, isVi
           </Pressable>
         </HStack>
         {showDatePicker && (
-          <Animated.View style={{ opacity, paddingHorizontal: 10 }}>
-            <DateTimePicker display="inline" locale={language} onChange={(_, date) => handleAddMeasurementData("date", date)} value={measurement?.date ?? new Date(getDateTodayIso())} />
+          <Animated.View style={{ opacity, paddingHorizontal: 10, borderRadius }}>
+            <DateTimePicker
+              display="inline"
+              locale={language}
+              textColor={mainColor}
+              themeVariant="light"
+              accentColor={mainColor}
+              style={{ borderColor: mainColor, borderWidth: 1, borderRadius, overflow: "hidden" }}
+              onChange={(_, date) => handleAddMeasurementData("date", date)}
+              removeClippedSubviews={true}
+              value={measurement?.date ?? new Date(getDateTodayIso())}
+            />
           </Animated.View>
         )}
         {showWarning && (

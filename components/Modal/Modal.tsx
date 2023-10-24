@@ -8,6 +8,8 @@ import { Text } from "../Themed/ThemedText/Text";
 import { HStack } from "../HStack/HStack";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useTheme } from "../../theme/context";
+import { useAppSelector } from "../../store";
+import { getTheme } from "../../store/selectors";
 
 export interface ModalProps extends PropsWithChildren {
   isVisible?: boolean;
@@ -27,7 +29,8 @@ const Backdrop = () => {
 };
 
 export const Modal = ({ customContentStyle, backgroundOpacity, isVisible = true, children, onRequestClose, title, customBackdrop }: ModalProps) => {
-  const { mainColor } = useTheme();
+  const { mainColor, backgroundColor } = useTheme();
+  const theme = useAppSelector(getTheme);
   return (
     <ReactNativeModal
       backdropOpacity={backgroundOpacity ?? 0.9}
@@ -42,7 +45,7 @@ export const Modal = ({ customContentStyle, backgroundOpacity, isVisible = true,
         <View>{title && <Text style={{ fontSize: 20, paddingLeft: 10, padding: 0, margin: 0 }}>{title}</Text>}</View>
         {onRequestClose && (
           <Button theme="ghost" onPress={() => onRequestClose()} style={{ button: { padding: 10 } }}>
-            <MaterialCommunityIcons name="close" size={24} color={mainColor} />
+            <MaterialCommunityIcons name="close" size={24} color={theme === "dark" ? mainColor : backgroundColor} />
           </Button>
         )}
       </HStack>
