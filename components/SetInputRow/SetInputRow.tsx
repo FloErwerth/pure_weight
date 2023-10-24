@@ -26,13 +26,11 @@ export const SetInputRow = ({ onSetDone, setIndex, isActiveSet, hasData, data }:
   const navigate = useNavigate();
   const trainingIndex = useAppSelector(getTrainingIndex);
   const exerciseIndex = useAppSelector(getExerciseIndex);
-  const [note, setNote] = useState(data?.note ?? "");
   const [weight, setWeight] = useState(data?.weight);
   const [reps, setReps] = useState(data?.reps);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    setNote(data?.note ?? "");
     setWeight(data?.weight);
     setReps(data?.reps);
   }, [data, exerciseIndex]);
@@ -45,12 +43,12 @@ export const SetInputRow = ({ onSetDone, setIndex, isActiveSet, hasData, data }:
     if (isActiveSet) {
       Keyboard.dismiss();
       if (weight && reps) {
-        onSetDone?.({ weight, reps, note });
+        onSetDone?.({ weight, reps });
       }
     } else {
       handleOnFocus();
     }
-  }, [isActiveSet, weight, reps, onSetDone, note, handleOnFocus]);
+  }, [isActiveSet, weight, reps, onSetDone, handleOnFocus]);
   const activeStackStyles = useMemo(() => ({ backgroundColor: isActiveSet ? textFieldBackgroundColor : "transparent" }), [isActiveSet]);
 
   if (trainingIndex === undefined) {

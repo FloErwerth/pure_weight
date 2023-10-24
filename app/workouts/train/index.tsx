@@ -16,6 +16,9 @@ import { getNumberOfExercises, getSpecificNumberOfSets } from "../../../store/se
 import { PreviousTraining } from "../../../components/PreviousTraining/PreviousTraining";
 import { useTranslation } from "react-i18next";
 import { ThemedView } from "../../../components/View/View";
+import { AddNoteModal } from "../../../components/AddNoteModal/AddNoteModal";
+import { componentBackgroundColor, mainColor } from "../../../components/App/theme/colors";
+import { borderRadius } from "../../../components/App/theme/border";
 
 export function Train() {
   const { t } = useTranslation();
@@ -23,7 +26,9 @@ export function Train() {
   const { showPreviousExercise, hasNextExercise, previousExerciseName, nextExerciseName, currentExerciseIndex, selectedTrainingName } = useTrainingProps();
   const [showModal, setShowAlert] = useState(false);
   const [doneSetsThisExercise, setDoneSetsThisExercise] = useState<PlainExerciseData[][]>(Array(numberOfExercises ?? 0).fill([]));
+  const [note, setNote] = useState<string | undefined>(undefined);
   const [showEdit, setShowEdit] = useState(false);
+  const [showEditNoteModal, setShowEditNoteModal] = useState(false);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const getNumberOfSetsWithIndex = useAppSelector(getSpecificNumberOfSets);
@@ -105,6 +110,15 @@ export function Train() {
     [currentExerciseIndex, doneSetsThisExercise, setDoneSetsThisExercise],
   );
 
+  const handleShowEditNoteModal = useCallback(() => setShowEditNoteModal(true), []);
+  const handleCloseEditNoteModal = useCallback(() => setShowEditNoteModal(false), []);
+  const handleCancelEditNoteModal = useCallback(() => {
+    setNote(undefined);
+    handleCloseEditNoteModal();
+  }, [handleCloseEditNoteModal]);
+
+  const showEditNoteModalTitleStyle = useMemo(() => ({ button: { alignSelf: "stretch" }, text: { textAlign: "center", flex: 1, fontSize: 16, color: mainColor } }) as const, []);
+
   return (
     <ThemedView style={{ flex: 1 }}>
       <View style={trainStyles.header}>
@@ -112,6 +126,9 @@ export function Train() {
       </View>
       <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={trainStyles.innerWrapper}>
         <ExerciseMetaDataDisplay showEdit={showEdit} setShowEdit={setShowEdit} />
+        <View style={{ padding: 10, borderRadius, backgroundColor: componentBackgroundColor }}>
+          <Button onPress={handleShowEditNoteModal} theme="ghost" style={showEditNoteModalTitleStyle} title={t(note ? "show_note_title" : "edit_note_title")} />
+        </View>
         <View style={{ flex: 1 }}>{!showEdit && <Inputs setData={doneSetsThisExercise[currentExerciseIndex] ?? []} onSetDone={handleSetDone} />}</View>
         {!showEdit && <PreviousTraining />}
         {showModal && <AlertModal title={t("alert_quit_title")} content={t("alert_quit_message")} isVisible={showModal} onConfirm={handleNotDoneConfirm} onCancel={handleCloseAlert}></AlertModal>}
@@ -120,6 +137,7 @@ export function Train() {
         <View style={{ flex: 1 }}>{showPreviousExercise && <Button title={previousExerciseName} theme="secondary" disabled={showEdit} onPress={handlePreviousExercise} />}</View>
         <Button style={{ button: { flex: 1, borderWidth: 0 } }} theme="primary" title={hasNextExercise ? nextExerciseName : t("training_done")} disabled={showEdit} onPress={handleNextOrDone} />
       </HStack>
+      {showEditNoteModal && <AddNoteModal onConfirm={handleCloseEditNoteModal} setNote={handleCloseEditNoteModal} note={note} onCancel={handleCancelEditNoteModal} showModal={showEditNoteModal} />}
     </ThemedView>
   );
 }

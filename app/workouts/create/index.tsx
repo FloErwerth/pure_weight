@@ -80,7 +80,7 @@ export function Create() {
         newExercises.splice(editedExerciseIndex, 1, { ...exercise, doneExerciseEntries: extractedExercise.doneExerciseEntries });
         setCreatedExercises(newExercises);
       } else {
-        setCreatedExercises([...createdExercises, { doneExerciseEntries: {}, ...exercise }]);
+        setCreatedExercises([...createdExercises, { doneExerciseEntries: [], ...exercise }]);
         setEditedExerciseIndex(createdExercises.length);
       }
       setEditedExerciseIndex(undefined);

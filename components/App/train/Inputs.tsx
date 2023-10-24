@@ -46,9 +46,9 @@ export const Inputs = ({ onSetDone, setData }: InputsProps) => {
   const dispatch = useAppDispatch();
 
   const handleSetDone = useCallback(
-    ({ weight, reps, note }: PlainExerciseData, setIndex: number) => {
+    ({ weight, reps }: PlainExerciseData, setIndex: number) => {
       if (setIndex !== undefined) {
-        onSetDone({ weight, reps, note }, setIndex);
+        onSetDone({ weight, reps }, setIndex);
         dispatch(setSetIndex(currentSetIndex + 1));
         void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
       }

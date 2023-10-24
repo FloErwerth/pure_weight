@@ -9,9 +9,15 @@ import { VStack } from "../VStack/VStack";
 import { useTranslation } from "react-i18next";
 
 export const PreviousTraining = () => {
-  const { date, vals: previousTraining } = useAppSelector(getPreviousTraining);
+  const previousTraining = useAppSelector(getPreviousTraining);
   const { t } = useTranslation();
-  if (previousTraining === undefined || previousTraining.length === 0 || previousTraining.some((data) => data?.weight === undefined || data?.reps === undefined)) {
+
+  if (!previousTraining) {
+    return null;
+  }
+
+  const { date, vals } = previousTraining;
+  if (!vals || vals?.length === 0 || vals?.some((val) => val === undefined)) {
     return null;
   }
 
@@ -22,13 +28,13 @@ export const PreviousTraining = () => {
         {date}
       </Text>
       <View style={{ paddingTop: 10, paddingBottom: 15, borderRadius, backgroundColor: componentBackgroundColor }}>
-        {previousTraining?.length > 0 && (
+        {vals?.length > 0 && (
           <VStack>
             <DoneSetDisplayRow />
-            {previousTraining?.map((data, index) => {
+            {vals.map((data, index) => {
               if (data?.weight && data?.reps) {
-                const { weight, reps, note } = data;
-                return <DoneSetDisplayRow key={weight + reps + index} setNumber={index + 1} setData={{ weight, reps, note }} />;
+                const { weight, reps } = data;
+                return <DoneSetDisplayRow key={weight + reps + index} setNumber={index + 1} setData={{ weight, reps }} />;
               }
             })}
           </VStack>

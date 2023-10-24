@@ -1,6 +1,6 @@
 import { Dimensions, ScrollView, Text, View } from "react-native";
 import { LineChart } from "react-native-chart-kit";
-import { DoneExerciseData, ExerciseMetaData, ExerciseSets, PlainExerciseData } from "../../../../../store/types";
+import { DoneExerciseData, ExerciseMetaDataWithDoneEntries, ExerciseSets, PlainExerciseData } from "../../../../../store/types";
 import { useCallback, useMemo, useRef, useState } from "react";
 import { backgroundColor, componentBackgroundColor, mainColor, secondaryColor } from "../../../theme/colors";
 import { borderRadius } from "../../../theme/border";
@@ -17,7 +17,7 @@ import { styles } from "./styles";
 import { useTranslation } from "react-i18next";
 
 interface ExerciseChartProps {
-  exercise: { doneExerciseEntries: DoneExerciseData } & ExerciseMetaData;
+  exercise: ExerciseMetaDataWithDoneEntries[number];
 }
 
 const chartTypeMap: Record<string, { title: string; hint: string }> = {
@@ -37,41 +37,34 @@ const chartTypeMap: Record<string, { title: string; hint: string }> = {
 export type ChartType = keyof typeof chartTypeMap;
 
 const getCumulativeExerciseData = (data: ExerciseSets[]) => {
-  return data.reduce((values, sets) => {
-    return [
-      ...values,
-      Object.values(sets)
-        .map((set) => parseFloat(set?.weight ?? "0") * parseFloat(set?.reps ?? "0"))
-        .reduce((cumulative, entry) => cumulative + entry, 0),
-    ];
+  return data.reduce((vals, sets) => {
+    return [...vals, sets.map((set) => parseFloat(set?.weight ?? "0") * parseFloat(set?.reps ?? "0")).reduce((cumulative, entry) => cumulative + entry, 0)];
   }, [] as number[]);
 };
 
 const getAveragePerDay = (data: ExerciseSets[], dataType: keyof PlainExerciseData) => {
   return data.reduce((values, sets) => {
-    const setValues = Object.values(sets);
+    const setValues = sets;
     return [...values, parseFloat((setValues.map((set) => parseFloat(set?.[dataType] ?? "0")).reduce((cumulative, entry) => cumulative + entry, 0) / setValues.length).toFixed(3))];
   }, [] as number[]);
 };
 
-const useExerciseData = (exerciseData: DoneExerciseData, chartType: ChartType) => {
-  const rawEntries = Object.entries(exerciseData);
-
+const useExerciseData = (exerciseData: DoneExerciseData[], chartType: ChartType) => {
   const labels = useMemo(() => {
-    return Array.from(rawEntries.values()).map(([key]) => key);
-  }, [rawEntries]);
+    return exerciseData.map(({ date }) => date);
+  }, [exerciseData]);
 
   const data = useMemo(() => {
-    const data = Array.from(rawEntries.values()).map(([_, entry]) => entry);
+    const sets = exerciseData.map(({ sets }) => sets);
 
     if (chartType === "AVG_REPS") {
-      return getAveragePerDay(data, "reps");
+      return getAveragePerDay(sets, "reps");
     }
     if (chartType === "AVG_WEIGHT") {
-      return getAveragePerDay(data, "weight");
+      return getAveragePerDay(sets, "weight");
     }
-    return getCumulativeExerciseData(data);
-  }, [chartType, rawEntries]);
+    return getCumulativeExerciseData(sets);
+  }, [chartType, exerciseData]);
 
   const chartData: LineChartData = {
     labels,
@@ -84,7 +77,7 @@ const useExerciseData = (exerciseData: DoneExerciseData, chartType: ChartType) =
     ],
   };
 
-  return [chartData, rawEntries.length] as const;
+  return [chartData, exerciseData.length] as const;
 };
 
 const chartTypeLabel: Record<ChartType, string> = {

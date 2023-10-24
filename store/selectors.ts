@@ -1,7 +1,6 @@
 import { createSelector } from "@reduxjs/toolkit";
 import { AppState, ErrorFields, ExerciseMetaData, TrainingDay } from "./types";
 import { getDate } from "../utils/date";
-import { IsoDate } from "../types/date";
 
 export const getState = (state: AppState) => state;
 export const getSavedTrainings = createSelector([getState], (state) => Array.from(state.trainingDays.values()).map((day) => day));
@@ -67,13 +66,15 @@ export const getSpecificNumberOfSets = createSelector([getSelectedTrainingDay], 
   };
 });
 export const getTrainingDayData = createSelector([getState], (state) => {
-  return state.trainingDays.reduce((days, day) => {
-    const exerciseEntries = day.exercises.filter((exercise) => Object.values(exercise.doneExerciseEntries).length > 1);
-    if (exerciseEntries.length > 0) {
-      return [...days, { name: day.name, exercises: exerciseEntries }];
-    }
-    return days;
-  }, [] as TrainingDay[]);
+  return state.trainingDays
+    .filter((day) => day.exercises.length > 0)
+    .reduce((days, day) => {
+      const exerciseEntries = day.exercises.filter((exercise) => exercise.doneExerciseEntries && exercise.doneExerciseEntries.length > 1);
+      if (exerciseEntries.length > 0) {
+        return [...days, { name: day.name, exercises: exerciseEntries }];
+      }
+      return days;
+    }, [] as TrainingDay[]);
 });
 export const getSelectedTrainingDayData = createSelector([getTrainingDayData, getTrainingIndex], (data, index) => {
   if (index === undefined) {
@@ -82,8 +83,11 @@ export const getSelectedTrainingDayData = createSelector([getTrainingDayData, ge
 
   return data[index];
 });
+export const getExercises = createSelector([getSelectedTrainingDay], (selectedDay) => selectedDay?.exercises);
 export const getPreviousTraining = createSelector([getSelectedTrainingDay, getExerciseIndex, getLanguage], (traininigDay, exerciseIndex, language) => {
-  const entries = Object.values(traininigDay?.exercises[exerciseIndex]?.doneExerciseEntries ?? {});
-  const date = Object.keys(traininigDay?.exercises[exerciseIndex]?.doneExerciseEntries ?? [])[entries.length - 1];
-  return { date: getDate(date as IsoDate, language), vals: Object.values(entries[entries.length - 1] ?? []) };
+  const entries = traininigDay?.exercises[exerciseIndex]?.doneExerciseEntries;
+  if (entries) {
+    const latestEntry = entries[entries.length - 1];
+    return { date: latestEntry?.date ? getDate(latestEntry.date, language) : "", vals: latestEntry?.sets ?? [] };
+  }
 });

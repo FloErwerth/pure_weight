@@ -1,5 +1,5 @@
 import { createAction, createReducer } from "@reduxjs/toolkit/src";
-import type { AppState, DoneExerciseData, ErrorFields, ExerciseMetaData, ExerciseMetaDataWithDoneEntries, Measurement, PlainExerciseData, TrainingDay } from "./types";
+import type { AppState, ErrorFields, ExerciseMetaData, ExerciseMetaDataWithDoneEntries, Measurement, PlainExerciseData, TrainingDay } from "./types";
 import { getDateTodayIso } from "../utils/date";
 
 export const mockState: AppState = {
@@ -23,14 +23,17 @@ export const mockState: AppState = {
           sets: "5",
           reps: "5",
           pause: " 2",
-          doneExerciseEntries: {
-            "2023-01-01": {
-              0: { reps: "5", weight: "50" },
-              1: { reps: "5", weight: "50" },
-              3: { reps: "5", weight: "50" },
-              4: { reps: "5", weight: "50" },
+          doneExerciseEntries: [
+            {
+              date: "2023-01-01",
+              sets: [
+                { reps: "5", weight: "50" },
+                { reps: "5", weight: "50" },
+                { reps: "5", weight: "50" },
+                { reps: "5", weight: "50" },
+              ],
             },
-          },
+          ],
         },
         {
           name: "Bankdrücken",
@@ -38,14 +41,17 @@ export const mockState: AppState = {
           sets: "5",
           reps: "5",
           pause: " 2",
-          doneExerciseEntries: {
-            "2023-01-01": {
-              0: { reps: "5", weight: "50" },
-              1: { reps: "5", weight: "50" },
-              3: { reps: "5", weight: "50" },
-              4: { reps: "5", weight: "50" },
+          doneExerciseEntries: [
+            {
+              date: "2023-01-01",
+              sets: [
+                { reps: "5", weight: "50" },
+                { reps: "5", weight: "50" },
+                { reps: "5", weight: "50" },
+                { reps: "5", weight: "50" },
+              ],
             },
-          },
+          ],
         },
         {
           name: "Bankdrücken",
@@ -53,14 +59,17 @@ export const mockState: AppState = {
           sets: "5",
           reps: "5",
           pause: " 2",
-          doneExerciseEntries: {
-            "2023-01-01": {
-              0: { reps: "5", weight: "50" },
-              1: { reps: "5", weight: "50" },
-              3: { reps: "5", weight: "50" },
-              4: { reps: "5", weight: "50" },
+          doneExerciseEntries: [
+            {
+              date: "2023-01-01",
+              sets: [
+                { reps: "5", weight: "50" },
+                { reps: "5", weight: "50" },
+                { reps: "5", weight: "50" },
+                { reps: "5", weight: "50" },
+              ],
             },
-          },
+          ],
         },
         {
           name: "Bankdrücken",
@@ -68,14 +77,17 @@ export const mockState: AppState = {
           sets: "5",
           reps: "5",
           pause: " 2",
-          doneExerciseEntries: {
-            "2023-01-01": {
-              0: { reps: "5", weight: "50" },
-              1: { reps: "5", weight: "50" },
-              3: { reps: "5", weight: "50" },
-              4: { reps: "5", weight: "50" },
+          doneExerciseEntries: [
+            {
+              date: "2023-01-01",
+              sets: [
+                { reps: "5", weight: "50" },
+                { reps: "5", weight: "50" },
+                { reps: "5", weight: "50" },
+                { reps: "5", weight: "50" },
+              ],
             },
-          },
+          ],
         },
         {
           name: "Bankdrücken",
@@ -83,14 +95,17 @@ export const mockState: AppState = {
           sets: "5",
           reps: "5",
           pause: " 2",
-          doneExerciseEntries: {
-            "2023-01-01": {
-              0: { reps: "5", weight: "50" },
-              1: { reps: "5", weight: "50" },
-              3: { reps: "5", weight: "50" },
-              4: { reps: "5", weight: "50" },
+          doneExerciseEntries: [
+            {
+              date: "2023-01-01",
+              sets: [
+                { reps: "5", weight: "50" },
+                { reps: "5", weight: "50" },
+                { reps: "5", weight: "50" },
+                { reps: "5", weight: "50" },
+              ],
             },
-          },
+          ],
         },
         {
           name: "Bankdrücken",
@@ -98,14 +113,17 @@ export const mockState: AppState = {
           sets: "5",
           reps: "5",
           pause: " 2",
-          doneExerciseEntries: {
-            "2023-01-01": {
-              0: { reps: "5", weight: "50" },
-              1: { reps: "5", weight: "50" },
-              3: { reps: "5", weight: "50" },
-              4: { reps: "5", weight: "50" },
+          doneExerciseEntries: [
+            {
+              date: "2023-01-01",
+              sets: [
+                { reps: "5", weight: "50" },
+                { reps: "5", weight: "50" },
+                { reps: "5", weight: "50" },
+                { reps: "5", weight: "50" },
+              ],
             },
-          },
+          ],
         },
         {
           name: "Bankdrücken",
@@ -113,14 +131,89 @@ export const mockState: AppState = {
           sets: "5",
           reps: "5",
           pause: " 2",
-          doneExerciseEntries: {
-            "2023-01-01": {
-              0: { reps: "5", weight: "50" },
-              1: { reps: "5", weight: "50" },
-              3: { reps: "5", weight: "50" },
-              4: { reps: "5", weight: "50" },
+          doneExerciseEntries: [
+            {
+              date: "2023-01-01",
+              sets: [
+                { reps: "5", weight: "50" },
+                { reps: "5", weight: "50" },
+                { reps: "5", weight: "50" },
+                { reps: "5", weight: "50" },
+              ],
             },
-          },
+            {
+              date: "2023-01-01",
+              sets: [
+                { reps: "5", weight: "50" },
+                { reps: "5", weight: "50" },
+                { reps: "5", weight: "50" },
+                { reps: "5", weight: "50" },
+              ],
+            },
+            {
+              date: "2023-01-01",
+              sets: [
+                { reps: "5", weight: "50" },
+                { reps: "5", weight: "50" },
+                { reps: "5", weight: "50" },
+                { reps: "5", weight: "50" },
+              ],
+            },
+            {
+              date: "2023-01-01",
+              sets: [
+                { reps: "5", weight: "50" },
+                { reps: "5", weight: "50" },
+                { reps: "5", weight: "50" },
+                { reps: "5", weight: "50" },
+              ],
+            },
+            {
+              date: "2023-01-01",
+              sets: [
+                { reps: "5", weight: "50" },
+                { reps: "5", weight: "50" },
+                { reps: "5", weight: "50" },
+                { reps: "5", weight: "50" },
+              ],
+            },
+            {
+              date: "2023-01-01",
+              sets: [
+                { reps: "5", weight: "50" },
+                { reps: "5", weight: "50" },
+                { reps: "5", weight: "50" },
+                { reps: "5", weight: "50" },
+              ],
+            },
+            {
+              date: "2023-01-01",
+              sets: [
+                { reps: "5", weight: "50" },
+                { reps: "5", weight: "50" },
+                { reps: "5", weight: "50" },
+                { reps: "5", weight: "50" },
+              ],
+            },
+            {
+              date: "2023-01-01",
+              sets: [
+                { reps: "5", weight: "50" },
+                { reps: "5", weight: "50" },
+                { reps: "5", weight: "50" },
+                { reps: "5", weight: "50" },
+              ],
+            },
+            {
+              date: "2023-01-01",
+              sets: [
+                { reps: "5", weight: "50" },
+                { reps: "5", weight: "50" },
+                { reps: "5", weight: "50" },
+                { reps: "5", weight: "50" },
+              ],
+            },
+          ],
         },
         {
           name: "Butterfly",
@@ -128,26 +221,17 @@ export const mockState: AppState = {
           sets: "5",
           reps: "5",
           pause: " 2",
-          doneExerciseEntries: {
-            "2023-01-01": {
-              0: { reps: "5", weight: "50" },
-              1: { reps: "5", weight: "50" },
-              3: { reps: "5", weight: "50" },
-              4: { reps: "5", weight: "50" },
+          doneExerciseEntries: [
+            {
+              date: "2023-01-01",
+              sets: [
+                { reps: "5", weight: "50" },
+                { reps: "5", weight: "50" },
+                { reps: "5", weight: "50" },
+                { reps: "5", weight: "50" },
+              ],
             },
-            "2023-01-02": {
-              0: { reps: "5", weight: "50" },
-              1: { reps: "5", weight: "50" },
-              3: { reps: "5", weight: "50" },
-              4: { reps: "5", weight: "50" },
-            },
-            "2023-01-23": {
-              0: { reps: "5", weight: "50" },
-              1: { reps: "5", weight: "50" },
-              3: { reps: "5", weight: "50" },
-              4: { reps: "5", weight: "50" },
-            },
-          },
+          ],
         },
       ],
     },
@@ -160,7 +244,7 @@ export const mockState: AppState = {
           sets: "5",
           reps: "5",
           pause: " 2",
-          doneExerciseEntries: {},
+          doneExerciseEntries: [],
         },
         {
           name: "Butterfly",
@@ -168,7 +252,7 @@ export const mockState: AppState = {
           sets: "5",
           reps: "5",
           pause: " 2",
-          doneExerciseEntries: {},
+          doneExerciseEntries: [],
         },
       ],
     },
@@ -238,7 +322,7 @@ export const editTrainingDay = createAction<{ index: number; trainingDay: Traini
 export const overwriteTrainingDayExercises = createAction<ExerciseMetaDataWithDoneEntries>("adjust_exercises");
 export const removeTrainingDay = createAction<number>("remove_training_day");
 export const setTrainingDayIndex = createAction<number | undefined>("edit_day");
-export const addSetDataToTrainingDay = createAction<(PlainExerciseData | undefined)[][]>("set_training_data");
+export const addSetDataToTrainingDay = createAction<PlainExerciseData[][]>("set_training_data");
 export const setSetIndex = createAction<number>("set_set_index");
 export const setExerciseIndex = createAction<number>("set_exercise_index");
 export const editExerciseMetaData = createAction<Partial<ExerciseMetaData>>("edit_exercise_metadata");
@@ -301,10 +385,15 @@ export const storeReducer = createReducer<AppState>(emptyState, (builder) =>
       if (state.trainingDays && state.trainingDayIndex !== undefined && state.exerciseIndex !== undefined) {
         const dateToday = getDateTodayIso();
         for (let exerciseIndex = 0; exerciseIndex < state.trainingDays[state.trainingDayIndex].exercises.length; exerciseIndex++) {
-          const currentSetData: DoneExerciseData = state.trainingDays[state.trainingDayIndex]?.exercises[exerciseIndex]?.doneExerciseEntries ?? {};
-          if (action.payload[exerciseIndex]) {
-            currentSetData[dateToday] = action.payload[exerciseIndex]?.reduce((obj = {}, entry, index) => ({ ...obj, [index]: entry }), {});
+          if (action.payload[exerciseIndex] === undefined) {
+            return;
           }
+
+          const existingData = state.trainingDays[state.trainingDayIndex]?.exercises[exerciseIndex]?.doneExerciseEntries;
+          (existingData ?? []).push({
+            date: dateToday,
+            sets: action.payload[exerciseIndex],
+          });
         }
       }
     })

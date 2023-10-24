@@ -2,21 +2,23 @@ import { IsoDate } from "../types/date";
 
 export type TrainingDay = {
   name: string;
-  exercises: ({ doneExerciseEntries: DoneExerciseData } & ExerciseMetaData)[];
+  exercises: ExerciseMetaDataWithDoneEntries;
 };
+
 export type PlainExerciseData = {
   weight: string;
   reps: string;
+};
+
+export type ExerciseMetaDataWithDoneEntries = ({ doneExerciseEntries: DoneExerciseData[] } & ExerciseMetaData)[];
+
+export type DoneExerciseData = {
+  date: IsoDate;
+  sets: ExerciseSets;
   note?: string;
 };
 
-export type ExerciseMetaDataWithDoneEntries = ({ doneExerciseEntries: DoneExerciseData } & ExerciseMetaData)[];
-
-export type DoneExerciseData = {
-  [date: IsoDate]: ExerciseSets;
-};
-
-export type ExerciseSets = Partial<{ [set: string]: PlainExerciseData }>;
+export type ExerciseSets = PlainExerciseData[];
 
 export type ExerciseMetaData = {
   name: string;
@@ -27,13 +29,13 @@ export type ExerciseMetaData = {
 };
 
 export type Measurement = {
-  name: string
+  name: string;
   unit: string;
   data: {
-    [date: IsoDate]: string
-  }
-}
-export type ErrorFields = "create_name" | "create_weight" | "create_sets" | "create_reps" | "workout_name" | "create_exercises_empty" | "measurement_name" | "measurement_unit"|"measurement_value";
+    [date: IsoDate]: string;
+  };
+};
+export type ErrorFields = "create_name" | "create_weight" | "create_sets" | "create_reps" | "workout_name" | "create_exercises_empty" | "measurement_name" | "measurement_unit" | "measurement_value";
 
 export type AppState = {
   trainingDays: TrainingDay[];
@@ -44,6 +46,6 @@ export type AppState = {
   settings: {
     language?: "en" | "de";
   };
-  measurements: Measurement[],
+  measurements: Measurement[];
   errors: ErrorFields[];
 };

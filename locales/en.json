@@ -39,6 +39,7 @@
   "training_input_show_note": "show",
   "edit_note_placeholder": "Once upon a time in...",
   "edit_note_title": "Add note",
+  "show_note_title": "Edit note",
   "edit_note_done": "Save",
   "previous_training_title": "Your previous training",
   "previous_training_title_with_date": "Your workout from ",
