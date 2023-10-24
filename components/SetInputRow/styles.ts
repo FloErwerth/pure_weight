@@ -8,6 +8,16 @@ export const styles = StyleSheet.create({
     borderRadius,
     marginHorizontal: 5,
   },
+  numberCenter: { flex: 0.2, height: 50 },
+  center: { flex: 1, height: 50 },
+  textNumber: { padding: 10, fontSize: 16 },
+  textInput: {
+    padding: 10,
+    alignSelf: "stretch",
+    borderRadius,
+    fontSize: 16,
+  },
+  button: { width: 40, padding: 7, borderRadius },
   set: {
     alignSelf: "center",
   },

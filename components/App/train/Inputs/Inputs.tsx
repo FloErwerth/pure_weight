@@ -1,15 +1,15 @@
-import { SetInputRow } from "../../SetInputRow/SetInputRow";
-import { PlainExerciseData } from "../../../store/types";
-import { useAppDispatch, useAppSelector } from "../../../store";
-import { getExerciseMetaData, getNumberOfSets, getSelectedTrainingName, getSetIndex } from "../../../store/selectors";
+import { SetInputRow } from "../../../SetInputRow/SetInputRow";
+import { PlainExerciseData } from "../../../../store/types";
+import { useAppDispatch, useAppSelector } from "../../../../store";
+import { getExerciseMetaData, getNumberOfSets, getSelectedTrainingName, getSetIndex } from "../../../../store/selectors";
 import { useCallback, useEffect, useState } from "react";
-import { setSetIndex } from "../../../store/reducer";
-import { TrainingHeader } from "./TrainingHeader";
-import { ThemedView } from "../../View/View";
+import { setSetIndex } from "../../../../store/reducer";
+import { TrainingHeader } from "../TrainingHeader/TrainingHeader";
+import { ThemedView } from "../../../View/View";
 import { View } from "react-native";
-import { borderRadius } from "../theme/border";
+import { borderRadius } from "../../theme/border";
 import * as Haptics from "expo-haptics";
-import { componentBackgroundColor } from "../theme/colors";
+import { componentBackgroundColor } from "../../theme/colors";
 
 interface InputsProps {
   onSetDone: (data: PlainExerciseData, index: number) => void;
@@ -68,6 +68,7 @@ export const Inputs = ({ onSetDone, setData }: InputsProps) => {
           return (
             <SetInputRow
               data={exerciseMetaData}
+              isEditable={setData?.[index - 1] !== undefined || index === 0}
               hasData={Boolean(setData?.[index])}
               onSetDone={(plainExerciseData) => handleSetDone(plainExerciseData, index)}
               setIndex={index + 1}

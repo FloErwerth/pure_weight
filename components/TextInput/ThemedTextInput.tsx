@@ -1,11 +1,5 @@
 import { TextInput, TextInputProps } from "react-native";
-import {
-    componentBackgroundColor,
-    mainColor,
-    mainDisabledColor,
-    placeholderErrorColor,
-    secondaryColor
-} from "../App/theme/colors";
+import { mainColor, mainDisabledColor, placeholderErrorColor, secondaryColor } from "../App/theme/colors";
 import * as React from "react";
 import { RefObject, useCallback } from "react";
 import { AppState, ErrorFields } from "../../store/types";
@@ -20,7 +14,7 @@ interface ThemedTextInputProps extends TextInputProps {
   hideErrorBorder?: boolean;
 }
 export const ThemedTextInput = (props: ThemedTextInputProps) => {
-    const { editable = true } = props
+  const { editable = true } = props;
   const getHasError = useAppSelector((state: AppState) => getErrorByKey(state)(props.errorKey));
 
   const dispatch = useAppDispatch();
@@ -39,7 +33,7 @@ export const ThemedTextInput = (props: ThemedTextInputProps) => {
       {...props}
       onChangeText={handleTextInput}
       style={[
-        { borderWidth: editable ? 0 : 1, backgroundColor: editable ? componentBackgroundColor : "transparent", color: editable ? mainColor : mainDisabledColor, marginHorizontal: props.clearButtonMode !== "never" ? 10 : 0 },
+        { color: editable ? mainColor : mainDisabledColor, marginHorizontal: props.clearButtonMode !== "never" ? 10 : 0 },
         props.style,
         !props.hideErrorBorder && getHasError && styles.errorBorder,
         getHasError && styles.error,

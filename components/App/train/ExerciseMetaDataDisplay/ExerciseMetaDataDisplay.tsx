@@ -1,19 +1,19 @@
-import { trainStyles } from "./trainStyles";
-import { useAppDispatch, useAppSelector } from "../../../store";
-import { getExerciseIndex, getExerciseMetaData, getSelectedTrainingDay, getTrainingIndex } from "../../../store/selectors";
+import { trainStyles } from "../trainStyles";
+import { useAppDispatch, useAppSelector } from "../../../../store";
+import { getExerciseIndex, getExerciseMetaData, getSelectedTrainingDay, getTrainingIndex } from "../../../../store/selectors";
 import { Pressable, TextStyle } from "react-native";
 import { Dispatch, SetStateAction, useCallback, useEffect, useMemo } from "react";
-import { editTrainingDay } from "../../../store/reducer";
-import { ExerciseMetaData } from "../../../store/types";
+import { editTrainingDay } from "../../../../store/reducer";
+import { ExerciseMetaData } from "../../../../store/types";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { HStack } from "../../HStack/HStack";
-import { VStack } from "../../VStack/VStack";
-import { Text } from "../../Text/Text";
-import { componentBackgroundColor, mainColor } from "../theme/colors";
-import { borderRadius } from "../theme/border";
+import { HStack } from "../../../HStack/HStack";
+import { VStack } from "../../../VStack/VStack";
+import { Text } from "../../../Text/Text";
+import { componentBackgroundColor, mainColor } from "../../theme/colors";
+import { borderRadius } from "../../theme/border";
 import * as Haptics from "expo-haptics";
 import { useTranslation } from "react-i18next";
-import { AddExerciseModal } from "../../AddExerciseModal/AddExerciseModal";
+import { AddExerciseModal } from "../../../AddExerciseModal/AddExerciseModal";
 
 interface ExerciseMetaDataDisplayProps {
   showEdit: boolean;

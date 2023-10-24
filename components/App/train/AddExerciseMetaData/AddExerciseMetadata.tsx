@@ -1,6 +1,6 @@
-import { DoneExerciseData, ExerciseMetaData } from "../../../store/types";
+import { DoneExerciseData, ExerciseMetaData } from "../../../../store/types";
 import { useCallback } from "react";
-import { TrainingFormControl } from "../../TrainingFormControl/TrainingFormControl";
+import { TrainingFormControl } from "../../../TrainingFormControl/TrainingFormControl";
 import { View } from "react-native";
 
 export type AddExerciseMetadataFields = Partial<Pick<ExerciseMetaData, "weight" | "reps" | "sets" | "pause">>;
