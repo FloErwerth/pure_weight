@@ -39,7 +39,6 @@ export const getErrors = createSelector([getState], (state) => state.errors);
 export const getErrorByKey = createSelector([getErrors], (state) => (errorField?: ErrorFields | undefined) => Boolean(errorField && state.includes(errorField)));
 export const getSettings = createSelector([getState], (state) => state.settings);
 export const getLanguage = createSelector([getSettings], (settings) => settings.language);
-
 export const getExerciseMetaData = createSelector([getSelectedTrainingDay, getExerciseIndex], (traininigDay, exerciseIndex) => {
   const exercise = traininigDay?.exercises[exerciseIndex];
   return { weight: exercise?.weight, reps: exercise?.reps, name: exercise?.name, sets: exercise?.sets, pause: exercise?.pause } as ExerciseMetaData;
@@ -94,3 +93,4 @@ export const getPreviousTraining = createSelector([getSelectedTrainingDay, getEx
 export const getThemeKey = createSelector([getState], (state) => {
   return state.theme;
 });
+export const getPauseTime = createSelector([getExerciseMetaData], (metaData) => metaData.pause);

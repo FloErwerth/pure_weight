@@ -18,6 +18,7 @@ import { useTranslation } from "react-i18next";
 import { AddNoteModal } from "../../../components/AddNoteModal/AddNoteModal";
 import { ThemedView } from "../../../components/Themed/ThemedView/View";
 import { useTheme } from "../../../theme/context";
+import { StopwatchModal } from "../../../components/StopwatchModal/StopwatchModal";
 
 export function Train() {
   const { mainColor } = useTheme();
@@ -33,6 +34,7 @@ export function Train() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const getNumberOfSetsWithIndex = useAppSelector(getSpecificNumberOfSets);
+  const [showTimerModal, setShowTimerModal] = useState(false);
 
   const isDone = useMemo(() => {
     return doneSetsThisExercise.every((exercise, index) => {
@@ -111,6 +113,12 @@ export function Train() {
     [currentExerciseIndex, doneSetsThisExercise, setDoneSetsThisExercise],
   );
 
+  const showTimer = useCallback(() => {
+    setShowTimerModal(true);
+  }, []);
+  const hideTimer = useCallback(() => {
+    setShowTimerModal(false);
+  }, []);
   const handleShowEditNoteModal = useCallback(() => setShowEditNoteModal(true), []);
   const handleCloseEditNoteModal = useCallback(() => setShowEditNoteModal(false), []);
   const handleCancelEditNoteModal = useCallback(() => {
@@ -134,6 +142,8 @@ export function Train() {
         {!showEdit && <PreviousTraining />}
         {showModal && <AlertModal title={alertModalConfig.title} content={alertModalConfig.content} isVisible={showModal} onConfirm={handleNotDoneConfirm} onCancel={handleCloseAlert}></AlertModal>}
       </ScrollView>
+      <Button title="Timer" onPress={showTimer} />
+      {showTimerModal && <StopwatchModal onRequestClose={hideTimer} isVisible={true} />}
       <HStack style={trainStyles.singleButton}>
         <ThemedView stretch>{showPreviousExercise && <Button title={previousExerciseName} disabled={showEdit} onPress={handlePreviousExercise} />}</ThemedView>
         <Button theme="primary" title={hasNextExercise ? nextExerciseName : t("training_done")} disabled={showEdit} onPress={handleNextOrDone} />
