@@ -1,7 +1,7 @@
 import { VStack } from "../../../../VStack/VStack";
 import { Appearance, Pressable } from "react-native";
 import { HStack } from "../../../../HStack/HStack";
-import { styles } from "../LanguageSelection/styles";
+import { styles } from "./styles";
 import { Text } from "../../../../Themed/ThemedText/Text";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { ProfileContent } from "../SettingsSection/ProfileSection";
@@ -42,27 +42,21 @@ export const ThemeSelection = () => {
     <ProfileContent title={t("settings_theme")}>
       <VStack style={stackStyles}>
         <Pressable onPress={() => handleSelectLanguage("light")} style={getStyles(!usesDeviceTheme && theme === "light")}>
-          <HStack style={styles.outerStack}>
-            <HStack style={styles.innerStack}>
-              <Text style={styles.text}>{t("theme_light")}</Text>
-            </HStack>
-            {!usesDeviceTheme && theme === "light" && <MaterialCommunityIcons name="check" size={30} color={secondaryColor} />}
+          <HStack style={styles.innerStack}>
+            <Text style={styles.text}>{t("theme_light")}</Text>
+            {!usesDeviceTheme && theme === "light" && <MaterialCommunityIcons name="check" size={24} color={secondaryColor} />}
           </HStack>
         </Pressable>
         <Pressable onPress={() => handleSelectLanguage("dark")} style={getStyles(!usesDeviceTheme && theme === "dark")}>
-          <HStack style={styles.outerStack}>
-            <HStack style={styles.innerStack}>
-              <Text style={styles.text}>{t("theme_dark")}</Text>
-            </HStack>
-            {!usesDeviceTheme && theme === "dark" && <MaterialCommunityIcons name="check" size={30} color={secondaryColor} />}
+          <HStack style={styles.innerStack}>
+            <Text style={styles.text}>{t("theme_dark")}</Text>
+            {!usesDeviceTheme && theme === "dark" && <MaterialCommunityIcons name="check" size={24} color={secondaryColor} />}
           </HStack>
         </Pressable>
         <Pressable onPress={() => handleSelectLanguage("device")} style={getStyles(usesDeviceTheme)}>
-          <HStack style={styles.outerStack}>
-            <HStack style={styles.innerStack}>
-              <Text style={styles.text}>{t("theme_device")}</Text>
-            </HStack>
-            {usesDeviceTheme && <MaterialCommunityIcons name="check" size={30} color={secondaryColor} />}
+          <HStack style={styles.innerStack}>
+            <Text style={styles.text}>{t("theme_device")}</Text>
+            {usesDeviceTheme && <MaterialCommunityIcons name="check" size={24} color={secondaryColor} />}
           </HStack>
         </Pressable>
       </VStack>

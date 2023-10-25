@@ -4,8 +4,6 @@ import { borderRadius } from "../../../../../theme/border";
 export const styles = StyleSheet.create({
   innerWrapper: {
     padding: 15,
-    alignSelf: "stretch",
-    justifyContent: "space-around",
     borderColor: "transparent",
     borderRadius,
     borderWidth: 1,
@@ -24,8 +22,9 @@ export const styles = StyleSheet.create({
   innerStack: {
     alignSelf: "stretch",
     alignItems: "center",
-    justifyContent: "flex-start",
     gap: 10,
+    justifyContent: "space-between",
+    alignContent: "center",
   },
   text: {
     fontSize: 20,

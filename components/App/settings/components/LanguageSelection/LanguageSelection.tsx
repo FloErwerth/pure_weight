@@ -40,19 +40,19 @@ export const LanguageSelection = () => {
         <Pressable onPress={() => handleSelectLanguage("de")} style={getStyles(isGerman)}>
           <HStack style={styles.outerStack}>
             <HStack style={styles.innerStack}>
-              <GermanFlag width={30} height={30} />
+              <GermanFlag width={24} height={24} />
               <Text style={styles.text}>Deutsch</Text>
             </HStack>
-            {isGerman && <MaterialCommunityIcons name="check" size={30} color={secondaryColor} />}
+            {isGerman && <MaterialCommunityIcons name="check" size={24} color={secondaryColor} />}
           </HStack>
         </Pressable>
         <Pressable onPress={() => handleSelectLanguage("en")} style={getStyles(!isGerman)}>
           <HStack style={styles.outerStack}>
             <HStack style={styles.innerStack}>
-              <UsaFlag width={30} height={30} />
+              <UsaFlag width={24} height={24} />
               <Text style={styles.text}>English</Text>
             </HStack>
-            {!isGerman && <MaterialCommunityIcons name="check" size={30} color={secondaryColor} />}
+            {!isGerman && <MaterialCommunityIcons name="check" size={24} color={secondaryColor} />}
           </HStack>
         </Pressable>
       </VStack>
