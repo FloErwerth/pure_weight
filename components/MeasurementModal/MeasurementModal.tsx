@@ -10,7 +10,7 @@ import { Measurement } from "../../app/profile/measurements";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { getDateTodayIso } from "../../utils/date";
 import { useAppDispatch, useAppSelector } from "../../store";
-import { getDatesFromCurrentMeasurement, getLanguage } from "../../store/selectors";
+import { getDatesFromCurrentMeasurement, getLanguage, getThemeKey } from "../../store/selectors";
 import { Text } from "../Themed/ThemedText/Text";
 import { AppState, ErrorFields } from "../../store/types";
 import { cleanError, setError } from "../../store/reducer";
@@ -33,6 +33,7 @@ const fieldToErrorMap: Record<keyof Measurement, ErrorFields> = {
 export const MeasurementModal = ({ isNewMeasurement = true, onRequestClose, isVisible, measurement, setMeasurement, saveMeasurement }: MeasurementModalProps) => {
   const { t } = useTranslation();
   const { mainColor, componentBackgroundColor, warningColor } = useTheme();
+  const themeKey = useAppSelector(getThemeKey);
 
   const dates = useAppSelector((state: AppState) => getDatesFromCurrentMeasurement(state)(measurement?.name));
   const opacity = useRef(new Animated.Value(0)).current;
@@ -159,10 +160,10 @@ export const MeasurementModal = ({ isNewMeasurement = true, onRequestClose, isVi
           <Animated.View style={{ opacity, paddingHorizontal: 10, borderRadius }}>
             <DateTimePicker
               display="inline"
+              mode={"date"}
               locale={language}
-              textColor={mainColor}
-              themeVariant="light"
               accentColor={mainColor}
+              themeVariant={themeKey}
               style={{ borderColor: mainColor, borderWidth: 1, borderRadius, overflow: "hidden" }}
               onChange={(_, date) => handleAddMeasurementData("date", date)}
               removeClippedSubviews={true}

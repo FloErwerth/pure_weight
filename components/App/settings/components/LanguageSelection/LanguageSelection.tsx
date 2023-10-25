@@ -18,7 +18,7 @@ import { useTheme } from "../../../../../theme/context";
 
 export const LanguageSelection = () => {
   const { t, i18n } = useTranslation();
-  const { secondaryColor, componentBackgroundColor } = useTheme();
+  const { secondaryColor, componentBackgroundColor, primaryColor } = useTheme();
 
   const dispatch = useAppDispatch();
   const lang = useAppSelector(getLanguage);
@@ -33,7 +33,7 @@ export const LanguageSelection = () => {
     [dispatch, i18n],
   );
   const stackStyles = useMemo(() => [styles.vStack, { backgroundColor: componentBackgroundColor }], [componentBackgroundColor]);
-  const getStyles = useCallback((isGerman: boolean) => [styles.innerWrapper, isGerman && { borderColor: secondaryColor }], [secondaryColor]);
+  const getStyles = useCallback((isGerman: boolean) => [styles.innerWrapper, isGerman && { borderColor: secondaryColor }, { backgroundColor: primaryColor }], [primaryColor, secondaryColor]);
   return (
     <ProfileContent title={t("settings_language")}>
       <VStack style={stackStyles}>

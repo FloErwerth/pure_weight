@@ -91,6 +91,6 @@ export const getPreviousTraining = createSelector([getSelectedTrainingDay, getEx
     return { date: latestEntry?.date ? getDate(latestEntry.date, language) : "", vals: latestEntry?.sets ?? [] };
   }
 });
-export const getTheme = createSelector([getState], (state) => {
+export const getThemeKey = createSelector([getState], (state) => {
   return state.theme;
 });

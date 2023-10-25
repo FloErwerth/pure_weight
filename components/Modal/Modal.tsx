@@ -9,7 +9,7 @@ import { HStack } from "../HStack/HStack";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useTheme } from "../../theme/context";
 import { useAppSelector } from "../../store";
-import { getTheme } from "../../store/selectors";
+import { getThemeKey } from "../../store/selectors";
 
 export interface ModalProps extends PropsWithChildren {
   isVisible?: boolean;
@@ -30,7 +30,7 @@ const Backdrop = () => {
 
 export const Modal = ({ customContentStyle, backgroundOpacity, isVisible = true, children, onRequestClose, title, customBackdrop }: ModalProps) => {
   const { mainColor, backgroundColor } = useTheme();
-  const theme = useAppSelector(getTheme);
+  const theme = useAppSelector(getThemeKey);
   return (
     <ReactNativeModal
       backdropOpacity={backgroundOpacity ?? 0.9}
