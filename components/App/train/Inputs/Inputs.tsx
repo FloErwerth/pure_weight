@@ -5,7 +5,6 @@ import { getExerciseMetaData, getNumberOfSets, getSelectedTrainingName, getSetIn
 import { useCallback, useEffect, useState } from "react";
 import { setSetIndex } from "../../../../store/reducer";
 import { TrainingHeader } from "../TrainingHeader/TrainingHeader";
-import { View } from "react-native";
 import { borderRadius } from "../../../../theme/border";
 import * as Haptics from "expo-haptics";
 import { ThemedView } from "../../../Themed/ThemedView/View";
@@ -62,23 +61,21 @@ export const Inputs = ({ onSetDone, setData }: InputsProps) => {
   }, [dispatch]);
 
   return (
-    <View style={{ flex: 1 }}>
-      <ThemedView style={{ paddingTop: 15, paddingBottom: 10, alignSelf: "stretch", borderRadius, backgroundColor: componentBackgroundColor }}>
-        <TrainingHeader />
-        {sets?.map((exerciseMetaData, index) => {
-          return (
-            <SetInputRow
-              data={exerciseMetaData}
-              isEditable={setData?.[index - 1] !== undefined || index === 0}
-              hasData={Boolean(setData?.[index])}
-              onSetDone={(plainExerciseData) => handleSetDone(plainExerciseData, index)}
-              setIndex={index + 1}
-              isActiveSet={index === currentSetIndex}
-              key={`${index}-${selectedTrainingName}`}
-            />
-          );
-        })}
-      </ThemedView>
-    </View>
+    <ThemedView style={{ paddingTop: 15, paddingBottom: 10, borderRadius, backgroundColor: componentBackgroundColor }}>
+      <TrainingHeader />
+      {sets?.map((exerciseMetaData, index) => {
+        return (
+          <SetInputRow
+            data={exerciseMetaData}
+            isEditable={setData?.[index - 1] !== undefined || index === 0}
+            hasData={Boolean(setData?.[index])}
+            onSetDone={(plainExerciseData) => handleSetDone(plainExerciseData, index)}
+            setIndex={index + 1}
+            isActiveSet={index === currentSetIndex}
+            key={`${index}-${selectedTrainingName}`}
+          />
+        );
+      })}
+    </ThemedView>
   );
 };

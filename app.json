@@ -20,6 +20,9 @@
       "url": "https://u.expo.dev/4dbee4e0-b75b-4eba-8ca6-67098ce6c3b5"
     },
     "ios": {
+        "infoPlist": {
+          "UIBackgroundModes": ["fetch"]
+        },
       "usesAppleSignIn": false,
       "accessesContactNotes": false,
       "backgroundColor": "#2e2e2e",

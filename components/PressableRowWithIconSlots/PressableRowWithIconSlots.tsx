@@ -66,7 +66,7 @@ export const PressableRowWithIconSlots = ({ children, onClick, Icon1, Icon2, onL
 
   return (
     <ComponentBackground style={[styles.innerWrapper, hasNoIcons && styles.noIconWrapper]}>
-      <Pressable delayLongPress={200} onLongPress={handleLongPress} style={styles.singleButton} onPress={handleClick}>
+      <Pressable delayLongPress={200} onLongPress={handleLongPress} style={styles.buttons} onPress={handleClick}>
         {children}
       </Pressable>
       <HStack style={styles.iconWrapper}>

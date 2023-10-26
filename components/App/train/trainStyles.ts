@@ -2,7 +2,18 @@ import { StyleSheet } from "react-native";
 import { borderRadius } from "../../../theme/border";
 
 export const trainStyles = StyleSheet.create({
-  singleButton: { marginTop: 15, justifyContent: "space-around", gap: 20, marginLeft: 10, marginRight: 10, alignSelf: "stretch" },
+  buttons: {
+    justifyContent: "space-around",
+    gap: 20,
+    alignItems: "center",
+  },
+  flexOneView: {
+    flex: 1,
+  },
+  button: {
+    padding: 10,
+    borderRadius,
+  },
   header: {
     alignSelf: "stretch",
     alignItems: "center",
@@ -13,8 +24,10 @@ export const trainStyles = StyleSheet.create({
     position: "relative",
     left: 20,
   },
-
-  noteButtonWrapper: { padding: 10, borderRadius },
+  noteButtonWrapper: {
+    justifyContent: "center",
+    borderRadius,
+  },
   close: {
     width: 40,
     height: 40,
@@ -22,10 +35,6 @@ export const trainStyles = StyleSheet.create({
     justifyContent: "center",
   },
   innerWrapper: {
-    paddingTop: 10,
-    paddingBottom: 20,
-    paddingLeft: 10,
-    paddingRight: 10,
     gap: 20,
     justifyContent: "space-around",
   },
@@ -46,7 +55,7 @@ export const trainStyles = StyleSheet.create({
   },
   exerciseMetaText: {
     color: "grey",
-    fontSize: 16,
+    fontSize: 14,
   },
   setInformation: {
     fontSize: 12,

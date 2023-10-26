@@ -83,13 +83,13 @@ export const ExerciseMetaDataDisplay = ({ showEdit, setShowEdit }: ExerciseMetaD
 
   return (
     <>
-      <HStack style={{ justifyContent: "space-between", borderRadius, backgroundColor: componentBackgroundColor, padding: 10 }}>
-        <VStack style={{ width: showEdit ? "100%" : "auto" }}>
+      <HStack style={{ justifyContent: "space-between", borderRadius, backgroundColor: componentBackgroundColor, padding: 10, flex: 1 }}>
+        <VStack>
           <Text style={trainStyles.exerciseName}>{exerciseMetaData?.name}</Text>
           <SmallMetadataDisplay />
         </VStack>
         <Pressable onPress={() => setShowEdit(true)} style={{ width: 50, alignItems: "center", justifyContent: "center" }}>
-          <MaterialCommunityIcons name="pencil" color={mainColor} size={20} />
+          <MaterialCommunityIcons name="pencil" color={mainColor} size={30} />
         </Pressable>
       </HStack>
       {showEdit && <AddExerciseModal onConfirmEdit={handleUpdateMetaData} exercise={exerciseMetaData} onRequestClose={() => setShowEdit(false)} />}

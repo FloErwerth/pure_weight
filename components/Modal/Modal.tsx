@@ -18,6 +18,7 @@ export interface ModalProps extends PropsWithChildren {
   title?: string;
   backgroundOpacity?: number;
   customContentStyle?: ViewStyle;
+  style?: ViewStyle;
 }
 
 const Backdrop = () => {
@@ -28,7 +29,7 @@ const Backdrop = () => {
   return <View style={{ flex: 1, backgroundColor: "black" }} />;
 };
 
-export const Modal = ({ customContentStyle, backgroundOpacity, isVisible = true, children, onRequestClose, title, customBackdrop }: ModalProps) => {
+export const Modal = ({ customContentStyle, backgroundOpacity, isVisible = true, children, onRequestClose, title, customBackdrop, style }: ModalProps) => {
   const { mainColor, backgroundColor } = useTheme();
   const theme = useAppSelector(getThemeKey);
   return (
@@ -40,6 +41,7 @@ export const Modal = ({ customContentStyle, backgroundOpacity, isVisible = true,
       backdropTransitionInTiming={0}
       backdropTransitionOutTiming={0}
       isVisible={isVisible}
+      style={style}
     >
       <HStack style={{ justifyContent: "space-between", alignItems: "center" }}>
         <View>{title && <Text style={{ fontSize: 20, paddingLeft: 10, padding: 0, margin: 0 }}>{title}</Text>}</View>
