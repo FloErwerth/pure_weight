@@ -117,14 +117,15 @@ export function Train() {
     setNote(undefined);
     handleCloseEditNoteModal();
   }, [handleCloseEditNoteModal]);
+  const buttonsStyle = useMemo(() => [trainStyles.buttons, { marginBottom: bottom }], [bottom]);
   const showEditNoteModalTitleStyle = useMemo(() => ({ padding: 10, paddingHorizontal: 15, alignSelf: "center" }) as const, []);
   const alertModalConfig = useMemo(() => ({ title: t("alert_quit_title"), content: t("alert_quit_message") }), [t]);
   return (
-    <ThemedView style={{ padding: 10, gap: 10 }} stretch>
-      <ThemedView style={trainStyles.header}>
+    <ThemedView style={trainStyles.wrapper} stretch>
+      <ThemedView style={trainStyles.navigationWrapper}>
         <SiteNavigationButtons disabled={showEdit} handleBack={handleCloseButton} titleFontSize={30} title={selectedTrainingName} />
       </ThemedView>
-      <HStack style={{ gap: 10 }}>
+      <HStack style={trainStyles.headerWrapper}>
         <ExerciseMetaDataDisplay showEdit={showEdit} setShowEdit={setShowEdit} />
         <ThemedView component style={trainStyles.noteButtonWrapper}>
           <Pressable style={showEditNoteModalTitleStyle} onPress={handleShowEditNoteModal}>
@@ -136,9 +137,9 @@ export function Train() {
         <Inputs setData={doneSetsThisExercise[currentExerciseIndex] ?? []} onSetDone={handleSetDone} />
         <PreviousTraining />
       </ScrollView>
-      <HStack style={[trainStyles.buttons, { marginBottom: bottom }]}>
+      <HStack style={buttonsStyle}>
         <View style={trainStyles.flexOneView}>{showPreviousExercise && <Button title={previousExerciseName} disabled={showEdit} onPress={handlePreviousExercise} />}</View>
-        <View style={trainStyles.flexOneView}>
+        <View style={trainStyles.stopwatchButton}>
           <StopwatchPopover />
         </View>
         <View style={trainStyles.flexOneView}>

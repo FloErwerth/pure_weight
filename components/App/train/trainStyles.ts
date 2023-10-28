@@ -14,10 +14,21 @@ export const trainStyles = StyleSheet.create({
     padding: 10,
     borderRadius,
   },
-  header: {
+  stopwatchButton: {
+    flex: 1,
+    zIndex: 1,
+  },
+  wrapper: {
+    padding: 10,
+    gap: 10,
+  },
+  navigationWrapper: {
     alignSelf: "stretch",
     alignItems: "center",
     marginBottom: 10,
+  },
+  headerWrapper: {
+    gap: 10,
   },
   title: {
     flex: 1,
