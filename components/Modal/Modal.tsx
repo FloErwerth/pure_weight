@@ -1,6 +1,6 @@
 import { ReactNativeModal } from "react-native-modal";
-import React, { PropsWithChildren, ReactNode, useEffect } from "react";
-import { LayoutAnimation, View, ViewStyle } from "react-native";
+import React, { PropsWithChildren, ReactNode } from "react";
+import { View, ViewStyle } from "react-native";
 import { Button } from "../Themed/Button/Button";
 import { borderRadius } from "../../theme/border";
 import { ThemedView } from "../Themed/ThemedView/View";
@@ -18,17 +18,14 @@ export interface ModalProps extends PropsWithChildren {
   title?: string;
   backgroundOpacity?: number;
   customContentStyle?: ViewStyle;
+  style?: ViewStyle;
 }
 
 const Backdrop = () => {
-  useEffect(() => {
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-  }, []);
-
   return <View style={{ flex: 1, backgroundColor: "black" }} />;
 };
 
-export const Modal = ({ customContentStyle, backgroundOpacity, isVisible = true, children, onRequestClose, title, customBackdrop }: ModalProps) => {
+export const Modal = ({ customContentStyle, backgroundOpacity, isVisible = true, children, onRequestClose, title, customBackdrop, style }: ModalProps) => {
   const { mainColor, backgroundColor } = useTheme();
   const theme = useAppSelector(getThemeKey);
   return (
@@ -40,6 +37,7 @@ export const Modal = ({ customContentStyle, backgroundOpacity, isVisible = true,
       backdropTransitionInTiming={0}
       backdropTransitionOutTiming={0}
       isVisible={isVisible}
+      style={style}
     >
       <HStack style={{ justifyContent: "space-between", alignItems: "center" }}>
         <View>{title && <Text style={{ fontSize: 20, paddingLeft: 10, padding: 0, margin: 0 }}>{title}</Text>}</View>

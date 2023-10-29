@@ -5,7 +5,7 @@ export const styles = StyleSheet.create({
   text: {
     fontSize: 20,
   },
-  singleButton: {
+  buttons: {
     flex: 1,
   },
   noIconWrapper: {

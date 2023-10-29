@@ -276,50 +276,6 @@ export const mockState: AppState = {
         },
       ],
     },
-    {
-      name: "Rücken 1",
-      exercises: [],
-    },
-    {
-      name: "Rücken 1",
-      exercises: [],
-    },
-    {
-      name: "Rücken 1",
-      exercises: [],
-    },
-    {
-      name: "Rücken 1",
-      exercises: [],
-    },
-    {
-      name: "Rücken 1",
-      exercises: [],
-    },
-    {
-      name: "Rücken 1",
-      exercises: [],
-    },
-    {
-      name: "Rücken 1",
-      exercises: [],
-    },
-    {
-      name: "Rücken 1",
-      exercises: [],
-    },
-    {
-      name: "Rücken 1",
-      exercises: [],
-    },
-    {
-      name: "Rücken 1",
-      exercises: [],
-    },
-    {
-      name: "Rücken 1",
-      exercises: [],
-    },
   ],
 };
 export const emptyState: AppState = {

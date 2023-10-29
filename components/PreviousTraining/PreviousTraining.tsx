@@ -28,9 +28,9 @@ export const PreviousTraining = () => {
         {t("previous_training_title_with_date")}
         {date}
       </Text>
-      <View style={{ paddingTop: 10, paddingBottom: 15, borderRadius, backgroundColor: componentBackgroundColor }}>
+      <View style={{ padding: 10, borderRadius, backgroundColor: componentBackgroundColor }}>
         {vals?.length > 0 && (
-          <VStack>
+          <VStack style={{ backgroundColor: componentBackgroundColor }}>
             <DoneSetDisplayRow />
             {vals.map((data, index) => {
               if (data?.weight && data?.reps) {

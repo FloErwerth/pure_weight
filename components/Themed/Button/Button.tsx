@@ -1,5 +1,5 @@
 import { PropsWithChildren, RefObject, useCallback, useMemo } from "react";
-import { Pressable, Text, TextStyle, View, ViewStyle } from "react-native";
+import { Pressable, Text, TextStyle, View, ViewProps, ViewStyle } from "react-native";
 import { styles } from "./styles";
 import * as Haptics from "expo-haptics";
 import { HStack } from "../../HStack/HStack";
@@ -13,10 +13,11 @@ interface ButtonProps extends PropsWithChildren {
   theme?: ButtonThemes;
   style?: { button?: ViewStyle; text?: TextStyle };
   reference?: RefObject<View>;
+  onLayout?: ViewProps["onLayout"];
 }
-export const Button = ({ onPress, children, theme = "primary", title, disabled, style, reference }: ButtonProps) => {
+export const Button = ({ onLayout, onPress, children, theme = "primary", title, disabled, style, reference }: ButtonProps) => {
   const { primaryColor, mainColor } = useTheme();
-  const buttonStyles = useMemo(() => [{ backgroundColor: theme === "primary" ? primaryColor : "transparent" }, style?.button], [primaryColor, style, theme]);
+  const buttonStyles = useMemo(() => [{ backgroundColor: theme === "primary" ? primaryColor : "transparent" }, styles.button, style?.button], [primaryColor, style, theme]);
   const textStyles = useMemo(() => [styles.text, { backgroundColor: primaryColor, color: mainColor }], [mainColor, primaryColor]);
   const handlePress = useCallback(() => {
     if (onPress) {
@@ -26,7 +27,7 @@ export const Button = ({ onPress, children, theme = "primary", title, disabled, 
   }, [onPress]);
 
   return (
-    <Pressable ref={reference} disabled={disabled} style={buttonStyles} onPress={handlePress}>
+    <Pressable onLayout={onLayout} ref={reference} disabled={disabled} style={buttonStyles} onPress={handlePress}>
       <HStack>
         {title && <Text style={[textStyles, style?.text]}>{title}</Text>}
         {children}

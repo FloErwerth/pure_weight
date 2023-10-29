@@ -8,7 +8,7 @@ import { useTrainingProps } from "../../../hooks/training/useTrainingProps";
 import { useNavigate } from "../../../hooks/navigate";
 import { SiteNavigationButtons } from "../../../components/SiteNavigationButtons/SiteNavigationButtons";
 import { ExerciseMetaDataDisplay } from "../../../components/App/train/ExerciseMetaDataDisplay/ExerciseMetaDataDisplay";
-import { ScrollView, View } from "react-native";
+import { Pressable, ScrollView, View } from "react-native";
 import { Inputs } from "../../../components/App/train/Inputs/Inputs";
 import { Button } from "../../../components/Themed/Button/Button";
 import { HStack } from "../../../components/HStack/HStack";
@@ -17,11 +17,12 @@ import { PreviousTraining } from "../../../components/PreviousTraining/PreviousT
 import { useTranslation } from "react-i18next";
 import { AddNoteModal } from "../../../components/AddNoteModal/AddNoteModal";
 import { ThemedView } from "../../../components/Themed/ThemedView/View";
-import { useTheme } from "../../../theme/context";
+import { StopwatchPopover } from "../../../components/StopwatchPopover/StopwatchPopover";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export function Train() {
-  const { mainColor } = useTheme();
-
+  const { bottom } = useSafeAreaInsets();
   const { t } = useTranslation();
   const numberOfExercises = useAppSelector(getNumberOfExercises);
   const { showPreviousExercise, hasNextExercise, previousExerciseName, nextExerciseName, currentExerciseIndex, selectedTrainingName } = useTrainingProps();
@@ -110,34 +111,42 @@ export function Train() {
     },
     [currentExerciseIndex, doneSetsThisExercise, setDoneSetsThisExercise],
   );
-
   const handleShowEditNoteModal = useCallback(() => setShowEditNoteModal(true), []);
   const handleCloseEditNoteModal = useCallback(() => setShowEditNoteModal(false), []);
   const handleCancelEditNoteModal = useCallback(() => {
     setNote(undefined);
     handleCloseEditNoteModal();
   }, [handleCloseEditNoteModal]);
-  const showEditNoteModalTitleStyle = useMemo(() => ({ button: { alignSelf: "stretch" }, text: { textAlign: "center", flex: 1, fontSize: 16, color: mainColor } }) as const, [mainColor]);
-  const noteButtonTitle = useMemo(() => t(note ? "show_note_title" : "edit_note_title"), [note, t]);
+  const buttonsStyle = useMemo(() => [trainStyles.buttons, { marginBottom: bottom }], [bottom]);
+  const showEditNoteModalTitleStyle = useMemo(() => ({ padding: 10, paddingHorizontal: 15, alignSelf: "center" }) as const, []);
   const alertModalConfig = useMemo(() => ({ title: t("alert_quit_title"), content: t("alert_quit_message") }), [t]);
   return (
-    <ThemedView stretch>
-      <ThemedView style={trainStyles.header}>
+    <ThemedView style={trainStyles.wrapper} stretch>
+      <ThemedView style={trainStyles.navigationWrapper}>
         <SiteNavigationButtons disabled={showEdit} handleBack={handleCloseButton} titleFontSize={30} title={selectedTrainingName} />
       </ThemedView>
-      <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={trainStyles.innerWrapper}>
+      <HStack style={trainStyles.headerWrapper}>
         <ExerciseMetaDataDisplay showEdit={showEdit} setShowEdit={setShowEdit} />
-        <View style={trainStyles.noteButtonWrapper}>
-          <Button onPress={handleShowEditNoteModal} theme="ghost" style={showEditNoteModalTitleStyle} title={noteButtonTitle} />
-        </View>
-        <ThemedView stretch>{!showEdit && <Inputs setData={doneSetsThisExercise[currentExerciseIndex] ?? []} onSetDone={handleSetDone} />}</ThemedView>
-        {!showEdit && <PreviousTraining />}
-        {showModal && <AlertModal title={alertModalConfig.title} content={alertModalConfig.content} isVisible={showModal} onConfirm={handleNotDoneConfirm} onCancel={handleCloseAlert}></AlertModal>}
-      </ScrollView>
-      <HStack style={trainStyles.singleButton}>
-        <ThemedView stretch>{showPreviousExercise && <Button title={previousExerciseName} disabled={showEdit} onPress={handlePreviousExercise} />}</ThemedView>
-        <Button theme="primary" title={hasNextExercise ? nextExerciseName : t("training_done")} disabled={showEdit} onPress={handleNextOrDone} />
+        <ThemedView component style={trainStyles.noteButtonWrapper}>
+          <Pressable style={showEditNoteModalTitleStyle} onPress={handleShowEditNoteModal}>
+            <MaterialCommunityIcons name="note-edit-outline" size={30} />
+          </Pressable>
+        </ThemedView>
       </HStack>
+      <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={trainStyles.innerWrapper}>
+        <Inputs setData={doneSetsThisExercise[currentExerciseIndex] ?? []} onSetDone={handleSetDone} />
+        <PreviousTraining />
+      </ScrollView>
+      <HStack style={buttonsStyle}>
+        <View style={trainStyles.flexOneView}>{showPreviousExercise && <Button title={previousExerciseName} disabled={showEdit} onPress={handlePreviousExercise} />}</View>
+        <View style={trainStyles.stopwatchButton}>
+          <StopwatchPopover />
+        </View>
+        <View style={trainStyles.flexOneView}>
+          <Button theme="primary" title={hasNextExercise ? nextExerciseName : t("training_done")} disabled={showEdit} onPress={handleNextOrDone} />
+        </View>
+      </HStack>
+      {showModal && <AlertModal title={alertModalConfig.title} content={alertModalConfig.content} isVisible={showModal} onConfirm={handleNotDoneConfirm} onCancel={handleCloseAlert}></AlertModal>}
       {showEditNoteModal && <AddNoteModal onConfirm={handleCloseEditNoteModal} setNote={handleCloseEditNoteModal} note={note} onCancel={handleCancelEditNoteModal} showModal={showEditNoteModal} />}
     </ThemedView>
   );
