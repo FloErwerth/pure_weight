@@ -1,8 +1,8 @@
 import { trainStyles } from "../trainStyles";
 import { useAppDispatch, useAppSelector } from "../../../../store";
-import { getExerciseIndex, getExerciseMetaData, getSelectedTrainingDay, getTrainingIndex } from "../../../../store/selectors";
+import { getSelectedTrainingDay, getTrainingIndex } from "../../../../store/selectors";
 import { Pressable, TextStyle } from "react-native";
-import { Dispatch, SetStateAction, useCallback, useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { editTrainingDay } from "../../../../store/reducer";
 import { ExerciseMetaData } from "../../../../store/types";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -16,15 +16,15 @@ import { AddExerciseModal } from "../../../AddExerciseModal/AddExerciseModal";
 import { useTheme } from "../../../../theme/context";
 
 interface ExerciseMetaDataDisplayProps {
-  showEdit: boolean;
-  setShowEdit: Dispatch<SetStateAction<boolean>>;
+  exerciseIndex: number;
+  exerciseMetaData: ExerciseMetaData;
 }
 
 interface SmallMetadataDisplayProps {
+  exerciseMetaData: ExerciseMetaData;
   style?: TextStyle;
 }
-export const SmallMetadataDisplay = ({ style }: SmallMetadataDisplayProps) => {
-  const exerciseMetaData = useAppSelector(getExerciseMetaData);
+export const SmallMetadataDisplay = ({ style, exerciseMetaData }: SmallMetadataDisplayProps) => {
   const { t } = useTranslation();
   const textStyle = useMemo(() => [trainStyles.exerciseMetaText, style], [style]);
 
@@ -53,11 +53,9 @@ export const SmallMetadataDisplay = ({ style }: SmallMetadataDisplayProps) => {
   );
 };
 
-export const ExerciseMetaDataDisplay = ({ showEdit, setShowEdit }: ExerciseMetaDataDisplayProps) => {
+export const ExerciseMetaDataDisplay = ({ exerciseIndex, exerciseMetaData }: ExerciseMetaDataDisplayProps) => {
   const { mainColor, componentBackgroundColor } = useTheme();
-
-  const exerciseMetaData = useAppSelector(getExerciseMetaData);
-  const currentExerciseIndex = useAppSelector(getExerciseIndex);
+  const [showEdit, setShowEdit] = useState(false);
   const trainingDayIndex = useAppSelector(getTrainingIndex);
   const selectedTraining = useAppSelector(getSelectedTrainingDay);
   const dispatch = useAppDispatch();
@@ -68,11 +66,11 @@ export const ExerciseMetaDataDisplay = ({ showEdit, setShowEdit }: ExerciseMetaD
         return;
       }
       const newExercises = [...(selectedTraining?.exercises ?? [])];
-      newExercises.splice(currentExerciseIndex, 1, { ...exercise, doneExerciseEntries: selectedTraining?.exercises[currentExerciseIndex].doneExerciseEntries ?? [] });
+      newExercises.splice(exerciseIndex, 1, { ...exercise, doneExerciseEntries: selectedTraining?.exercises[exerciseIndex].doneExerciseEntries ?? [] });
       dispatch(editTrainingDay({ index: trainingDayIndex, trainingDay: { name: selectedTraining?.name ?? "", exercises: newExercises } }));
       setShowEdit(false);
     },
-    [currentExerciseIndex, dispatch, selectedTraining?.exercises, selectedTraining?.name, setShowEdit, trainingDayIndex],
+    [exerciseIndex, dispatch, selectedTraining?.exercises, selectedTraining?.name, setShowEdit, trainingDayIndex],
   );
 
   useEffect(() => {
@@ -86,13 +84,13 @@ export const ExerciseMetaDataDisplay = ({ showEdit, setShowEdit }: ExerciseMetaD
       <HStack style={{ justifyContent: "space-between", borderRadius, backgroundColor: componentBackgroundColor, padding: 10, flex: 1 }}>
         <VStack>
           <Text style={trainStyles.exerciseName}>{exerciseMetaData?.name}</Text>
-          <SmallMetadataDisplay />
+          <SmallMetadataDisplay exerciseMetaData={exerciseMetaData} />
         </VStack>
         <Pressable onPress={() => setShowEdit(true)} style={{ width: 50, alignItems: "center", justifyContent: "center" }}>
           <MaterialCommunityIcons name="pencil" color={mainColor} size={30} />
         </Pressable>
       </HStack>
-      {showEdit && <AddExerciseModal onConfirmEdit={handleUpdateMetaData} exercise={exerciseMetaData} onRequestClose={() => setShowEdit(false)} />}
+      <AddExerciseModal isVisible={showEdit} onConfirmEdit={handleUpdateMetaData} exercise={exerciseMetaData} onRequestClose={() => setShowEdit(false)} />
     </>
   );
 };

@@ -7,17 +7,19 @@ import { borderRadius } from "../../theme/border";
 import { VStack } from "../VStack/VStack";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "../../theme/context";
+import { useMemo } from "react";
 
-export const PreviousTraining = () => {
-  const previousTraining = useAppSelector(getPreviousTraining);
+export const PreviousTraining = ({ exerciseIndex }: { exerciseIndex: number }) => {
+  const getPreviousTrainingFn = useAppSelector(getPreviousTraining);
+  const receivedPreviousTraining = useMemo(() => getPreviousTrainingFn(exerciseIndex), [exerciseIndex, getPreviousTrainingFn]);
   const { t } = useTranslation();
   const { textDisabled, componentBackgroundColor } = useTheme();
 
-  if (!previousTraining) {
+  if (!receivedPreviousTraining) {
     return null;
   }
 
-  const { date, vals } = previousTraining;
+  const { date, vals } = receivedPreviousTraining;
   if (!vals || vals?.length === 0 || vals?.some((val) => val === undefined)) {
     return null;
   }

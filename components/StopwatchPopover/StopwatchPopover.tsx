@@ -32,7 +32,7 @@ export const StopwatchPopover = () => {
   const [unmountTime, setUnmountTime] = useState<number>(0);
   const [showPopover, setShowPopover] = useState(false);
   const [buttonPos, setButtonPos] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
-  const top = useRef(new Animated.Value(0)).current;
+  const top = useRef(new Animated.Value(200)).current;
   const stopwatchRef = useRef<StopwatchTimerMethods>(null);
 
   const buttonRef = useRef<View>(null);

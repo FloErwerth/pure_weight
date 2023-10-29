@@ -40,132 +40,6 @@ export const mockState: AppState = {
               sets: [
                 { reps: "5", weight: "50" },
                 { reps: "5", weight: "50" },
-                { reps: "5", weight: "55" },
-                { reps: "5", weight: "50" },
-              ],
-            },
-            {
-              date: "2023-01-03",
-              sets: [
-                { reps: "5", weight: "55" },
-                { reps: "5", weight: "10" },
-                { reps: "5", weight: "550" },
-                { reps: "5", weight: "50" },
-              ],
-            },
-          ],
-        },
-        {
-          name: "Bankdrücken",
-          weight: "50",
-          sets: "5",
-          reps: "5",
-          pause: " 2",
-          doneExerciseEntries: [
-            {
-              date: "2023-01-01",
-              sets: [
-                { reps: "5", weight: "50" },
-                { reps: "5", weight: "50" },
-                { reps: "5", weight: "50" },
-                { reps: "5", weight: "50" },
-              ],
-            },
-          ],
-        },
-        {
-          name: "Bankdrücken",
-          weight: "50",
-          sets: "5",
-          reps: "5",
-          pause: " 2",
-          doneExerciseEntries: [
-            {
-              date: "2023-01-01",
-              sets: [
-                { reps: "5", weight: "50" },
-                { reps: "5", weight: "50" },
-                { reps: "5", weight: "50" },
-                { reps: "5", weight: "50" },
-              ],
-            },
-          ],
-        },
-        {
-          name: "Bankdrücken",
-          weight: "50",
-          sets: "5",
-          reps: "5",
-          pause: " 2",
-          doneExerciseEntries: [
-            {
-              date: "2023-01-01",
-              sets: [
-                { reps: "5", weight: "50" },
-                { reps: "5", weight: "50" },
-                { reps: "5", weight: "50" },
-                { reps: "5", weight: "50" },
-              ],
-            },
-          ],
-        },
-        {
-          name: "Bankdrücken",
-          weight: "50",
-          sets: "5",
-          reps: "5",
-          pause: " 2",
-          doneExerciseEntries: [
-            {
-              date: "2023-01-01",
-              sets: [
-                { reps: "5", weight: "50" },
-                { reps: "5", weight: "50" },
-                { reps: "5", weight: "50" },
-                { reps: "5", weight: "50" },
-              ],
-            },
-          ],
-        },
-        {
-          name: "Bankdrücken",
-          weight: "50",
-          sets: "5",
-          reps: "5",
-          pause: " 2",
-          doneExerciseEntries: [
-            {
-              date: "2023-01-01",
-              sets: [
-                { reps: "5", weight: "50" },
-                { reps: "5", weight: "50" },
-                { reps: "5", weight: "50" },
-                { reps: "5", weight: "50" },
-              ],
-            },
-          ],
-        },
-        {
-          name: "Bankdrücken",
-          weight: "50",
-          sets: "5",
-          reps: "5",
-          pause: " 2",
-          doneExerciseEntries: [
-            {
-              date: "2023-01-01",
-              sets: [
-                { reps: "5", weight: "50" },
-                { reps: "5", weight: "50" },
-                { reps: "5", weight: "50" },
-                { reps: "5", weight: "50" },
-              ],
-            },
-            {
-              date: "2023-01-02",
-              sets: [
-                { reps: "5", weight: "50" },
-                { reps: "5", weight: "50" },
                 { reps: "5", weight: "50" },
                 { reps: "5", weight: "50" },
               ],
@@ -268,9 +142,9 @@ export const mockState: AppState = {
         },
         {
           name: "Butterfly",
-          weight: "50",
+          weight: "40",
           sets: "5",
-          reps: "5",
+          reps: "6",
           pause: " 2",
           doneExerciseEntries: [],
         },

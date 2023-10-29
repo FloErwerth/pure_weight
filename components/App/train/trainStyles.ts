@@ -14,6 +14,10 @@ export const trainStyles = StyleSheet.create({
     padding: 10,
     borderRadius,
   },
+  carouselWrapper: {
+    paddingRight: 20,
+    gap: 10,
+  },
   stopwatchButton: {
     flex: 1,
     zIndex: 1,
