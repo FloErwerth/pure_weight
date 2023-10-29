@@ -69,9 +69,6 @@ export const StopwatchPopover = () => {
 
   const handleAppStateChange = useCallback(
     (state: AppState["currentState"]) => {
-      if (state === "background") {
-        console.log("background");
-      }
       if (timerStarted) {
         if (state === "inactive") {
           setTimestamp(Temporal.Now.instant().epochMilliseconds);
