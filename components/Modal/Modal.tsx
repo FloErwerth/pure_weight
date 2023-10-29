@@ -1,6 +1,6 @@
 import { ReactNativeModal } from "react-native-modal";
-import React, { PropsWithChildren, ReactNode, useEffect } from "react";
-import { LayoutAnimation, View, ViewStyle } from "react-native";
+import React, { PropsWithChildren, ReactNode } from "react";
+import { View, ViewStyle } from "react-native";
 import { Button } from "../Themed/Button/Button";
 import { borderRadius } from "../../theme/border";
 import { ThemedView } from "../Themed/ThemedView/View";
@@ -22,10 +22,6 @@ export interface ModalProps extends PropsWithChildren {
 }
 
 const Backdrop = () => {
-  useEffect(() => {
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-  }, []);
-
   return <View style={{ flex: 1, backgroundColor: "black" }} />;
 };
 

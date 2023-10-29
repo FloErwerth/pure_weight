@@ -27,7 +27,7 @@ export const StopwatchPopover = () => {
   const iconOpacity = useRef(new Animated.Value(1)).current;
   const [trackedTime, setTrackedTime] = useState(0);
   const [timerStarted, setTimerStarted] = useState(false);
-  const [startingTime, setStartingTime] = useState<number>();
+  const [startingTime, setStartingTime] = useState<number>(0);
   const [timestamp, setTimestamp] = useState<number>(0);
   const [unmountTime, setUnmountTime] = useState<number>(0);
   const [showPopover, setShowPopover] = useState(false);
@@ -69,26 +69,27 @@ export const StopwatchPopover = () => {
 
   const handleAppStateChange = useCallback(
     (state: AppState["currentState"]) => {
+      if (state === "background") {
+        console.log("background");
+      }
       if (timerStarted) {
         if (state === "inactive") {
           setTimestamp(Temporal.Now.instant().epochMilliseconds);
           setUnmountTime(stopwatchRef.current?.getSnapshot() ?? 0);
+          stopwatchRef.current?.pause();
         }
       }
       if (state === "active") {
         const timeDifference = Temporal.Now.instant().epochMilliseconds - timestamp;
-        const parsedTime = pauseTimeDecoder.parse(currentPauseTime);
-        if (timeDifference <= parsedTime) {
-          const newTime = unmountTime - timeDifference;
-          if (newTime <= 250) {
-            handleTimerFinished();
-            return;
-          }
-          setStartingTime(newTime);
+        const newTime = unmountTime - timeDifference;
+        if (unmountTime <= 0 || newTime <= 250) {
+          handleTimerFinished();
+          return;
         }
+        setStartingTime(newTime);
       }
     },
-    [currentPauseTime, handleTimerFinished, timerStarted, timestamp, unmountTime],
+    [handleTimerFinished, timerStarted, timestamp, unmountTime],
   );
 
   useEffect(() => {
@@ -237,8 +238,8 @@ export const StopwatchPopover = () => {
     <View>
       <Animated.View style={[styles.wrapper, animatedViewStyles]}>
         <HStack style={styles.hStack}>
-          <Pressable onPress={handleRewind15}>
-            <MaterialCommunityIcons size={40} color={mainColor} name="rewind-15" />
+          <Pressable disabled={fastForwardDisabled} onPress={handleFastForward15}>
+            <MaterialCommunityIcons size={40} color={fastForwardColor} name="rewind-15" />
           </Pressable>
           <StopWatch
             animationDuration={0}
@@ -252,8 +253,8 @@ export const StopwatchPopover = () => {
             initialTimeInMs={startingTime}
             ref={stopwatchRef}
           />
-          <Pressable disabled={fastForwardDisabled} onPress={handleFastForward15}>
-            <MaterialCommunityIcons size={40} color={fastForwardColor} name="fast-forward-15" />
+          <Pressable onPress={handleRewind15}>
+            <MaterialCommunityIcons size={40} color={mainColor} name="fast-forward-15" />
           </Pressable>
         </HStack>
         <HStack style={styles.buttons}>
