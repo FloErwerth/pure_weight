@@ -264,7 +264,7 @@ export const StopwatchPopover = () => {
         </HStack>
       </Animated.View>
 
-      <Button onLayout={getButtonPos} reference={buttonRef} onPress={togglePopover}>
+      <Button theme="secondary" onLayout={getButtonPos} reference={buttonRef} onPress={togglePopover}>
         <Animated.View style={{ opacity: iconOpacity, position: "absolute", alignItems: "center", width: "100%" }}>
           <MaterialCommunityIcons name="timer-outline" color={mainColor} size={40} />
         </Animated.View>

@@ -5,7 +5,7 @@ import * as Haptics from "expo-haptics";
 import { HStack } from "../../HStack/HStack";
 import { useTheme } from "../../../theme/context";
 
-export type ButtonThemes = "primary" | "ghost";
+export type ButtonThemes = "primary" | "secondary" | "ghost";
 interface ButtonProps extends PropsWithChildren {
   onPress?: () => void;
   title?: string;
@@ -16,8 +16,17 @@ interface ButtonProps extends PropsWithChildren {
   onLayout?: ViewProps["onLayout"];
 }
 export const Button = ({ onLayout, onPress, children, theme = "primary", title, disabled, style, reference }: ButtonProps) => {
-  const { primaryColor, mainColor } = useTheme();
-  const buttonStyles = useMemo(() => [{ backgroundColor: theme === "primary" ? primaryColor : "transparent" }, styles.button, style?.button], [primaryColor, style, theme]);
+  const { primaryColor, mainColor, secondaryBackgroundColor } = useTheme();
+  const computedBackgroundColor = useMemo(() => {
+    if (theme === "primary") {
+      return primaryColor;
+    }
+    if (theme === "secondary") {
+      return secondaryBackgroundColor;
+    }
+    return "transparent";
+  }, [primaryColor, secondaryBackgroundColor, theme]);
+  const buttonStyles = useMemo(() => [{ backgroundColor: computedBackgroundColor }, styles.button, style?.button], [primaryColor, style, theme]);
   const textStyles = useMemo(() => [styles.text, { backgroundColor: primaryColor, color: mainColor }], [mainColor, primaryColor]);
   const handlePress = useCallback(() => {
     if (onPress) {

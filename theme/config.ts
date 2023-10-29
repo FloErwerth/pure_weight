@@ -1,30 +1,29 @@
 import { ThemeColors, ThemeKey } from "./types";
 
-export const textDisabled = "#666";
 const DarkThemeColors: ThemeColors = {
   backgroundColor: "#2e2e2e",
   secondaryBackgroundColor: "#333",
   inputFieldBackgroundColor: "#222",
   componentBackgroundColor: "#3c3c3c",
-  textDisabled,
+  textDisabled: "#666",
   errorColor: "rgba(255,0,0,0.5)",
   secondaryErrorColor: "rgba(170,0,0,0.5)",
   mainColor: "#ddd",
   secondaryColor: "#888",
-  primaryColor: "#333",
+  primaryColor: "#0066aa",
   warningColor: "#af7d00",
 };
 const LightThemeColors: ThemeColors = {
   backgroundColor: "#ddd",
-  secondaryBackgroundColor: "#aaa",
-  inputFieldBackgroundColor: "white",
+  secondaryBackgroundColor: "#ccc",
+  inputFieldBackgroundColor: "#ddd",
   componentBackgroundColor: "#eee",
-  textDisabled,
+  textDisabled: "#ccc",
   errorColor: "rgba(255,0,0,0.5)",
   secondaryErrorColor: "rgba(170,0,0,0.5)",
   mainColor: "#111",
-  secondaryColor: "#444",
-  primaryColor: "#fff",
+  secondaryColor: "#777",
+  primaryColor: "#5544ff",
   warningColor: "#af7d00",
 };
 

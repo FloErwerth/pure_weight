@@ -26,7 +26,7 @@ interface SetInputRowProps {
 
 export const SetInputRow = ({ onSetDone, setIndex, isActiveSet, hasData, data, isEditable = true }: SetInputRowProps) => {
   const navigate = useNavigate();
-  const { mainColor, secondaryBackgroundColor, componentBackgroundColor, inputFieldBackgroundColor, textDisabled, secondaryColor } = useTheme();
+  const { primaryColor, mainColor, secondaryBackgroundColor, componentBackgroundColor, inputFieldBackgroundColor, textDisabled, secondaryColor } = useTheme();
   const trainingIndex = useAppSelector(getTrainingIndex);
   const exerciseIndex = useAppSelector(getExerciseIndex);
   const [weight, setWeight] = useState(data?.weight);
@@ -61,8 +61,8 @@ export const SetInputRow = ({ onSetDone, setIndex, isActiveSet, hasData, data, i
       }
       return "transparent";
     }
-    return componentBackgroundColor;
-  }, [componentBackgroundColor, isActiveSet, isEditable, secondaryBackgroundColor]);
+    return secondaryBackgroundColor;
+  }, [isActiveSet, isEditable, secondaryBackgroundColor]);
 
   const computedButtonBackgroundColor = useMemo(() => {
     if (!isActiveSet) {
@@ -75,20 +75,19 @@ export const SetInputRow = ({ onSetDone, setIndex, isActiveSet, hasData, data, i
   }, [componentBackgroundColor, isActiveSet, isEditable]);
 
   const computedColor = useMemo(() => {
-    if (hasData) {
-      return mainColor;
-    } else {
-      if (!isActiveSet) {
-        return secondaryColor;
-      }
-      return mainColor;
+    if (!isEditable) {
+      return textDisabled;
     }
-  }, [hasData, isActiveSet, mainColor, secondaryColor]);
+    if (!isActiveSet) {
+      return secondaryColor;
+    }
+    return mainColor;
+  }, [isActiveSet, isEditable, mainColor, secondaryColor, textDisabled]);
 
   const textNumberStyles = useMemo(() => [styles.textNumber, { color: computedColor }], [computedColor]);
   const textInputStyles = useMemo(() => [styles.textInput, { backgroundColor: computedTextfieldBackgroundColor, color: computedColor }], [computedTextfieldBackgroundColor, computedColor]);
   const buttonStyles = useMemo(() => ({ button: { ...styles.button, ...{ backgroundColor: computedButtonBackgroundColor } } }), [computedButtonBackgroundColor]);
-  const iconStyle = useMemo(() => ({ color: hasData ? "green" : isActiveSet ? mainColor : textDisabled }), [hasData, isActiveSet, mainColor, textDisabled]);
+  const iconStyle = useMemo(() => ({ color: hasData ? "green" : isActiveSet ? primaryColor : textDisabled }), [hasData, isActiveSet, secondaryColor, textDisabled]);
 
   if (trainingIndex === undefined) {
     navigate("workouts");
