@@ -120,6 +120,7 @@ export function Train() {
   const buttonsStyle = useMemo(() => [trainStyles.buttons, { marginBottom: bottom }], [bottom]);
   const showEditNoteModalTitleStyle = useMemo(() => ({ padding: 10, paddingHorizontal: 15, alignSelf: "center" }) as const, []);
   const alertModalConfig = useMemo(() => ({ title: t("alert_quit_title"), content: t("alert_quit_message") }), [t]);
+
   return (
     <ThemedView style={trainStyles.wrapper} stretch>
       <ThemedView style={trainStyles.navigationWrapper}>

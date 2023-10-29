@@ -26,7 +26,7 @@ export const Button = ({ onLayout, onPress, children, theme = "primary", title, 
     }
     return "transparent";
   }, [primaryColor, secondaryBackgroundColor, theme]);
-  const buttonStyles = useMemo(() => [{ backgroundColor: computedBackgroundColor }, styles.button, style?.button], [primaryColor, style, theme]);
+  const buttonStyles = useMemo(() => [{ backgroundColor: computedBackgroundColor }, styles.button, style?.button], [computedBackgroundColor, style?.button]);
   const textStyles = useMemo(() => [styles.text, { backgroundColor: primaryColor, color: mainColor }], [mainColor, primaryColor]);
   const handlePress = useCallback(() => {
     if (onPress) {

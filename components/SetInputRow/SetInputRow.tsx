@@ -87,7 +87,7 @@ export const SetInputRow = ({ onSetDone, setIndex, isActiveSet, hasData, data, i
   const textNumberStyles = useMemo(() => [styles.textNumber, { color: computedColor }], [computedColor]);
   const textInputStyles = useMemo(() => [styles.textInput, { backgroundColor: computedTextfieldBackgroundColor, color: computedColor }], [computedTextfieldBackgroundColor, computedColor]);
   const buttonStyles = useMemo(() => ({ button: { ...styles.button, ...{ backgroundColor: computedButtonBackgroundColor } } }), [computedButtonBackgroundColor]);
-  const iconStyle = useMemo(() => ({ color: hasData ? "green" : isActiveSet ? primaryColor : textDisabled }), [hasData, isActiveSet, secondaryColor, textDisabled]);
+  const iconStyle = useMemo(() => ({ color: hasData ? "green" : isActiveSet ? primaryColor : textDisabled }), [hasData, isActiveSet, primaryColor, textDisabled]);
 
   if (trainingIndex === undefined) {
     navigate("workouts");
