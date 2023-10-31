@@ -16,6 +16,14 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Carousel from "react-native-reanimated-carousel/src/Carousel";
 import { Exercise } from "../../../components/App/train/Exercise/Exercise";
 
+function mapOfMapsTo2DArray(map: Map<number, Map<number, PlainExerciseData>>) {
+  const result: PlainExerciseData[][] = [];
+  map.forEach((innerMap, key) => {
+    result[key] = [...innerMap.values()];
+  });
+  return result;
+}
+
 export function Train() {
   const { bottom } = useSafeAreaInsets();
   const { t } = useTranslation();
@@ -52,7 +60,7 @@ export function Train() {
   }, [isDone]);
 
   const handleSaveTrainingData = useCallback(() => {
-    const doneSetsArray = Array.of(doneSetsThisExercise.values()).map(([_, entryMap]) => Array.from(entryMap.values()));
+    const doneSetsArray = mapOfMapsTo2DArray(doneSetsThisExercise);
     dispatch(addSetDataToTrainingDay(doneSetsArray));
   }, [dispatch, doneSetsThisExercise]);
 

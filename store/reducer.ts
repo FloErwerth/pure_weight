@@ -8,7 +8,7 @@ export const mockState: AppState = {
     { name: "Körpergewicht", unit: "kg", data: { ["2023-10-11"]: "85" } },
     { name: "Körperfettanteil", unit: "%", data: { ["2023-10-11"]: "15" } },
   ],
-  theme: "light",
+  theme: "dark",
   setIndex: 0,
   settings: { language: "en" },
   trainingDayIndex: undefined,
@@ -29,6 +29,7 @@ export const mockState: AppState = {
             {
               date: "2023-01-01",
               sets: [
+                { reps: "1", weight: "1" },
                 { reps: "5", weight: "50" },
                 { reps: "5", weight: "50" },
                 { reps: "5", weight: "50" },
@@ -101,6 +102,7 @@ export const mockState: AppState = {
             {
               date: "2023-01-09",
               sets: [
+                { reps: "1", weight: "1" },
                 { reps: "5", weight: "50" },
                 { reps: "5", weight: "50" },
                 { reps: "5", weight: "50" },
@@ -135,7 +137,7 @@ export const mockState: AppState = {
         {
           name: "Bankdrücken",
           weight: "50",
-          sets: "5",
+          sets: "3",
           reps: "5",
           pause: " 2",
           doneExerciseEntries: [],
@@ -143,7 +145,7 @@ export const mockState: AppState = {
         {
           name: "Butterfly",
           weight: "40",
-          sets: "5",
+          sets: "3",
           reps: "6",
           pause: " 2",
           doneExerciseEntries: [],
