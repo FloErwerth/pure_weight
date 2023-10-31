@@ -1,14 +1,17 @@
 import { useAppSelector } from "../../store";
 import { getPreviousTraining } from "../../store/selectors";
 import { Text } from "../Themed/ThemedText/Text";
-import { View } from "react-native";
+import { Pressable, View } from "react-native";
 import { borderRadius } from "../../theme/border";
 import { VStack } from "../VStack/VStack";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "../../theme/context";
-import { useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { HStack } from "../HStack/HStack";
 import { styles } from "./styles";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { ThemedView } from "../Themed/ThemedView/View";
+import { Modal } from "../Modal/Modal";
 
 interface PreviousTrainingProps {
   exerciseIndex: number;
@@ -19,7 +22,7 @@ export const PreviousTraining = ({ exerciseIndex, activeSetIndex }: PreviousTrai
   const receivedPreviousTraining = useMemo(() => getPreviousTrainingFn(exerciseIndex), [exerciseIndex, getPreviousTrainingFn]);
   const { t } = useTranslation();
   const { textDisabled, componentBackgroundColor, mainColor, secondaryColor, inputFieldBackgroundColor } = useTheme();
-
+  const [showNote, setShowNote] = useState(false);
   const mappedData = useMemo(
     () =>
       receivedPreviousTraining?.vals.map(({ weight, reps }, index) => {
@@ -38,21 +41,41 @@ export const PreviousTraining = ({ exerciseIndex, activeSetIndex }: PreviousTrai
     [activeSetIndex, inputFieldBackgroundColor, mainColor, receivedPreviousTraining?.vals, secondaryColor],
   );
 
+  const handleShowEditNoteModal = useCallback(() => {
+    setShowNote(true);
+  }, []);
+
+  const handleCloseNote = useCallback(() => {
+    setShowNote(false);
+  }, []);
+
   if (!receivedPreviousTraining) {
     return null;
   }
 
-  const { date, vals } = receivedPreviousTraining;
+  const { date, vals, note } = receivedPreviousTraining;
   if (!vals || vals?.length === 0 || vals?.some((val) => val === undefined)) {
     return null;
   }
 
   return (
     <View>
-      <Text style={{ fontSize: 16, marginBottom: 10, color: textDisabled }}>
-        {t("previous_training_title_with_date")}
-        {date}
-      </Text>
+      <HStack style={{ flex: 1, justifyContent: "space-between", alignItems: "center" }}>
+        <Text style={{ fontSize: 16, color: textDisabled, padding: note ? 0 : 10 }}>
+          {t("previous_training_title_with_date")}
+          {date}
+        </Text>
+        {note && (
+          <ThemedView>
+            <Pressable onPress={handleShowEditNoteModal}>
+              <HStack style={styles.noteButtonWrapper}>
+                <Text>Show note</Text>
+                <MaterialCommunityIcons name="note-text-outline" color={mainColor} size={20} />
+              </HStack>
+            </Pressable>
+          </ThemedView>
+        )}
+      </HStack>
       <View style={{ padding: 10, borderRadius, backgroundColor: componentBackgroundColor }}>
         {vals?.length > 0 && (
           <VStack style={{ backgroundColor: componentBackgroundColor }}>
@@ -65,6 +88,9 @@ export const PreviousTraining = ({ exerciseIndex, activeSetIndex }: PreviousTrai
           </VStack>
         )}
       </View>
+      <Modal title={`Your note from ${date}`} backgroundOpacity={0.5} onRequestClose={handleCloseNote} isVisible={showNote}>
+        <Text style={{ fontSize: 20 }}>{note}</Text>
+      </Modal>
     </View>
   );
 };

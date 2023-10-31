@@ -176,7 +176,7 @@ export const editTrainingDay = createAction<{ index: number; trainingDay: Traini
 export const overwriteTrainingDayExercises = createAction<ExerciseMetaDataWithDoneEntries>("adjust_exercises");
 export const removeTrainingDay = createAction<number>("remove_training_day");
 export const setTrainingDayIndex = createAction<number | undefined>("edit_day");
-export const addSetDataToTrainingDay = createAction<PlainExerciseData[][]>("set_training_data");
+export const addSetDataToTrainingDay = createAction<Array<{ note?: string; sets: Array<PlainExerciseData> }>>("set_training_data");
 export const setSetIndex = createAction<number>("set_set_index");
 export const setExerciseIndex = createAction<number>("set_exercise_index");
 export const editExerciseMetaData = createAction<Partial<ExerciseMetaData>>("edit_exercise_metadata");
@@ -249,7 +249,8 @@ export const storeReducer = createReducer<AppState>(emptyState, (builder) =>
           const existingData = state.trainingDays[state.trainingDayIndex]?.exercises[exerciseIndex]?.doneExerciseEntries;
           (existingData ?? []).push({
             date: dateToday,
-            sets: action.payload[exerciseIndex],
+            sets: action.payload[exerciseIndex].sets,
+            note: action.payload[exerciseIndex].note,
           });
         }
       }

@@ -20,6 +20,8 @@ interface Exercise {
   metaData: ExerciseMetaData;
   exerciseIndex: number;
   onSetDone: (exerciseIndex: number, setIndex: number, data: PlainExerciseData) => void;
+  onSaveNote: (exerciseIndex: number, note: string | undefined) => void;
+  note?: string;
 }
 const useGeneratedSetData = (exerciseIndex: number) => {
   const getNumberOfSets = useAppSelector(getSpecificNumberOfSets);
@@ -39,20 +41,25 @@ const useGeneratedSetData = (exerciseIndex: number) => {
   return useState(generatedSets);
 };
 
-export const Exercise = ({ metaData, exerciseIndex, onSetDone }: Exercise) => {
+export const Exercise = ({ note, metaData, exerciseIndex, onSetDone, onSaveNote }: Exercise) => {
   const [currentSetIndex, setCurrentSetIndex] = useState<number>(0);
   const [showEditNoteModal, setShowEditNoteModal] = useState(false);
   const showEditNoteModalTitleStyle = useMemo(() => ({ padding: 10, paddingHorizontal: 15, alignSelf: "center" }) as const, []);
   const { mainColor, componentBackgroundColor } = useTheme();
-  const [note, setNote] = useState<string | undefined>(undefined);
-  const handleCloseEditNoteModal = useCallback(() => setShowEditNoteModal(false), []);
   const [doneSets, setDoneSets] = useGeneratedSetData(exerciseIndex);
   const [activeSetIndex, setActiveSetIndex] = useState(0);
 
+  const handleConfirmNote = useCallback(
+    (note?: string) => {
+      setShowEditNoteModal(false);
+      onSaveNote(exerciseIndex, note);
+    },
+    [exerciseIndex, onSaveNote],
+  );
+
   const handleCancelEditNoteModal = useCallback(() => {
-    setNote(undefined);
-    handleCloseEditNoteModal();
-  }, [handleCloseEditNoteModal]);
+    setShowEditNoteModal(false);
+  }, []);
 
   const handleShowEditNoteModal = useCallback(() => {
     setShowEditNoteModal(true);
@@ -103,7 +110,7 @@ export const Exercise = ({ metaData, exerciseIndex, onSetDone }: Exercise) => {
         </ThemedView>
         <PreviousTraining activeSetIndex={activeSetIndex} exerciseIndex={exerciseIndex} />
       </ScrollView>
-      {showEditNoteModal && <AddNoteModal onConfirm={handleCloseEditNoteModal} setNote={handleCloseEditNoteModal} note={note} onCancel={handleCancelEditNoteModal} showModal={showEditNoteModal} />}
+      <AddNoteModal externalNote={note} onConfirm={handleConfirmNote} onCancel={handleCancelEditNoteModal} showModal={showEditNoteModal} />
     </View>
   );
 };

@@ -16,10 +16,11 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Carousel from "react-native-reanimated-carousel/src/Carousel";
 import { Exercise } from "../../../components/App/train/Exercise/Exercise";
 
-function mapOfMapsTo2DArray(map: Map<number, Map<number, PlainExerciseData>>) {
-  const result: PlainExerciseData[][] = [];
+type DoneExercises = Map<number, { note?: string; sets: Map<number, PlainExerciseData> }>;
+function mapOfMapsTo2DArray(map: DoneExercises) {
+  const result: Array<{ note?: string; sets: Array<PlainExerciseData> }> = [];
   map.forEach((innerMap, key) => {
-    result[key] = [...innerMap.values()];
+    result[key] = { note: innerMap.note, sets: [...innerMap.sets.values()] };
   });
   return result;
 }
@@ -29,7 +30,7 @@ export function Train() {
   const { t } = useTranslation();
   const trainingDay = useAppSelector(getSelectedTrainingDay);
   const [showModal, setShowAlert] = useState(false);
-  const [doneSetsThisExercise, setDoneSetsThisExercise] = useState<Map<number, Map<number, PlainExerciseData>>>(new Map());
+  const [doneSetsThisExercise, setDoneSetsThisExercise] = useState<DoneExercises>(new Map());
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const getNumberOfSetsWithIndex = useAppSelector(getSpecificNumberOfSets);
@@ -42,7 +43,7 @@ export function Train() {
     }
     let hasEnoughSets = true;
     doneSetsThisExercise.forEach((exercise, index) => {
-      if (exercise.size !== getNumberOfSetsWithIndex(index)) {
+      if (exercise.sets.size !== getNumberOfSetsWithIndex(index)) {
         hasEnoughSets = false;
       }
     });
@@ -98,10 +99,20 @@ export function Train() {
   const handleSetDone = useCallback(
     (exerciseIndex: number, setIndex: number, data: PlainExerciseData) => {
       const newDoneSets = new Map(doneSetsThisExercise.entries());
-      const newSetMap = new Map(newDoneSets.get(exerciseIndex)?.entries());
+      const newSetMap = new Map(newDoneSets.get(exerciseIndex)?.sets);
       newSetMap.set(setIndex, data);
-      newDoneSets.set(exerciseIndex, newSetMap);
+      newDoneSets.set(exerciseIndex, { note: newDoneSets.get(exerciseIndex)?.note, sets: newSetMap });
       setDoneSetsThisExercise(newDoneSets);
+    },
+    [doneSetsThisExercise],
+  );
+
+  const handleSaveNote = useCallback(
+    (exerciseIndex: number, note: string | undefined) => {
+      const newDoneExercises = new Map(doneSetsThisExercise.entries());
+      const existingSets = newDoneExercises.get(exerciseIndex)?.sets;
+      newDoneExercises.set(exerciseIndex, { note, sets: existingSets ?? new Map() });
+      setDoneSetsThisExercise(newDoneExercises);
     },
     [doneSetsThisExercise],
   );
@@ -112,18 +123,19 @@ export function Train() {
   const mappedExercises = useMemo(() => {
     if (!trainingDay) {
       navigate("workouts");
-      return [] as { metaData: ExerciseMetaData }[];
+      return [] as { metaData: ExerciseMetaData; note?: string }[];
     }
-    return trainingDay.exercises.map((exercise) => ({
-      metaData: { reps: exercise.reps, weight: exercise.weight, name: exercise.name, sets: exercise.sets, pause: exercise.pause } satisfies ExerciseMetaData,
+    return trainingDay.exercises.map((exercise, index) => ({
+      metaData: { reps: exercise.reps, weight: exercise.weight, name: exercise.name, sets: exercise.sets, pause: exercise.pause },
+      note: doneSetsThisExercise.get(index)?.note,
     }));
-  }, [navigate, trainingDay]);
+  }, [doneSetsThisExercise, navigate, trainingDay]);
 
   const renderItem = useCallback(
-    ({ item: { metaData }, index }: { item: { metaData: ExerciseMetaData }; index: number }) => {
-      return <Exercise onSetDone={handleSetDone} exerciseIndex={index} metaData={metaData} />;
+    ({ item: { metaData, note }, index }: { item: { metaData: ExerciseMetaData; note?: string }; index: number }) => {
+      return <Exercise note={note} onSaveNote={handleSaveNote} onSetDone={handleSetDone} exerciseIndex={index} metaData={metaData} />;
     },
-    [handleSetDone],
+    [handleSaveNote, handleSetDone],
   );
 
   const handleScrollEnd = useCallback(
