@@ -61,11 +61,7 @@ export function Train() {
 
   const handleSaveTrainingData = useCallback(() => {
     const doneSetsArray = mapOfMapsTo2DArray(doneSetsThisExercise);
-    dispatch(addSetDataToTrainingDay(doneSetsArray));
-  }, [dispatch, doneSetsThisExercise]);
-
-  const handleSavePartialData = useCallback(() => {
-    const doneSetsArray = Array.of(doneSetsThisExercise.values()).map(([_, entryMap]) => Array.from(entryMap.values()));
+    console.log(doneSetsArray);
     dispatch(addSetDataToTrainingDay(doneSetsArray));
   }, [dispatch, doneSetsThisExercise]);
 
@@ -86,9 +82,9 @@ export function Train() {
 
   const handleNotDoneConfirm = useCallback(() => {
     setShowAlert(false);
-    handleSavePartialData();
+    handleSaveTrainingData();
     handleReset();
-  }, [handleReset, handleSavePartialData]);
+  }, [handleReset, handleSaveTrainingData]);
 
   const handleCloseButton = useCallback(() => {
     if (!isDone) {
@@ -99,10 +95,12 @@ export function Train() {
     }
   }, [handleReset, handleSaveTrainingData, isDone]);
 
-  const handleSetsDone = useCallback(
-    (sets: Map<number, PlainExerciseData>, exerciseIndex: number) => {
+  const handleSetDone = useCallback(
+    (exerciseIndex: number, setIndex: number, data: PlainExerciseData) => {
       const newDoneSets = new Map(doneSetsThisExercise.entries());
-      newDoneSets.set(exerciseIndex, sets);
+      const newSetMap = new Map(newDoneSets.get(exerciseIndex)?.entries());
+      newSetMap.set(setIndex, data);
+      newDoneSets.set(exerciseIndex, newSetMap);
       setDoneSetsThisExercise(newDoneSets);
     },
     [doneSetsThisExercise],
@@ -121,23 +119,11 @@ export function Train() {
     }));
   }, [navigate, trainingDay]);
 
-  const requestSets = useCallback(
-    (exerciseIndex: number, sets: Map<number, PlainExerciseData>) => {
-      const newDoneSets = new Map(doneSetsThisExercise.entries());
-      newDoneSets.set(exerciseIndex, sets);
-      setDoneSetsThisExercise(newDoneSets);
-    },
-    [doneSetsThisExercise],
-  );
-
   const renderItem = useCallback(
     ({ item: { metaData }, index }: { item: { metaData: ExerciseMetaData }; index: number }) => {
-      const handleRequest = (sets: Map<number, PlainExerciseData>) => {
-        return requestSets(index, sets);
-      };
-      return <Exercise onRequestSets={handleRequest} handleSetsDone={handleSetsDone} exerciseIndex={index} metaData={metaData} />;
+      return <Exercise onSetDone={handleSetDone} exerciseIndex={index} metaData={metaData} />;
     },
-    [handleSetsDone, requestSets],
+    [handleSetDone],
   );
 
   const handleScrollEnd = useCallback(

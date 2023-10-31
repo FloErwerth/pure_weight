@@ -6,7 +6,7 @@ import { Pressable, ScrollView, View } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { PreviousTraining } from "../../../PreviousTraining/PreviousTraining";
 import { ExerciseMetaData, PlainExerciseData } from "../../../../store/types";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { AddNoteModal } from "../../../AddNoteModal/AddNoteModal";
 import { useTheme } from "../../../../theme/context";
 import { borderRadius } from "../../../../theme/border";
@@ -19,8 +19,7 @@ import { getSpecificMetaDataRaw, getSpecificNumberOfSets } from "../../../../sto
 interface Exercise {
   metaData: ExerciseMetaData;
   exerciseIndex: number;
-  onRequestSets: (sets: Map<number, PlainExerciseData>) => void;
-  handleSetsDone: (sets: Map<number, PlainExerciseData>, exerciseIndex: number) => void;
+  onSetDone: (exerciseIndex: number, setIndex: number, data: PlainExerciseData) => void;
 }
 const useGeneratedSetData = (exerciseIndex: number) => {
   const getNumberOfSets = useAppSelector(getSpecificNumberOfSets);
@@ -40,7 +39,7 @@ const useGeneratedSetData = (exerciseIndex: number) => {
   return useState(generatedSets);
 };
 
-export const Exercise = ({ metaData, exerciseIndex, handleSetsDone }: Exercise) => {
+export const Exercise = ({ metaData, exerciseIndex, onSetDone }: Exercise) => {
   const [currentSetIndex, setCurrentSetIndex] = useState<number>(0);
   const [showEditNoteModal, setShowEditNoteModal] = useState(false);
   const showEditNoteModalTitleStyle = useMemo(() => ({ padding: 10, paddingHorizontal: 15, alignSelf: "center" }) as const, []);
@@ -68,17 +67,10 @@ export const Exercise = ({ metaData, exerciseIndex, handleSetsDone }: Exercise) 
       const newDoneSets = new Map(doneSets.entries());
       newDoneSets.set(index, { ...data, filled: true });
       setDoneSets(newDoneSets);
+      onSetDone(exerciseIndex, index, data);
     },
-    [currentSetIndex, doneSets, setDoneSets],
+    [currentSetIndex, doneSets, exerciseIndex, onSetDone, setDoneSets],
   );
-
-  const hasAllSetsFilled = useMemo(() => Array.from(doneSets.values()).every((entry) => entry.filled), [doneSets]);
-
-  useEffect(() => {
-    if (hasAllSetsFilled) {
-      handleSetsDone(doneSets, exerciseIndex);
-    }
-  }, [hasAllSetsFilled]);
 
   const mappedDoneSets = useMemo(
     () =>
