@@ -68,7 +68,7 @@ export const SetInputRow = ({ onSetDone, setIndex, hasData, data, isEditable = t
       return textDisabled;
     }
     return mainColor;
-  }, [isActiveSet, isEditable, mainColor, secondaryColor, textDisabled]);
+  }, [isEditable, mainColor, textDisabled]);
 
   const textNumberStyles = useMemo(() => [styles.textNumber, { color: computedColor }], [computedColor]);
   const textInputStyles = useMemo(() => [styles.textInput, { backgroundColor: computedTextfieldBackgroundColor, color: computedColor }], [computedTextfieldBackgroundColor, computedColor]);
