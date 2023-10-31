@@ -94,7 +94,7 @@ export const getPreviousTraining = createSelector([getSelectedTrainingDay, getLa
     const entries = traininigDay?.exercises[exerciseIndex]?.doneExerciseEntries;
     if (entries) {
       const latestEntry = entries[entries.length - 1];
-      return { date: latestEntry?.date ? getDate(latestEntry.date, language) : "", vals: latestEntry?.sets ?? [], note: latestEntry.note };
+      return { date: latestEntry?.date ? getDate(latestEntry.date, language) : "", vals: latestEntry?.sets ?? [], note: latestEntry?.note };
     }
   };
 });
