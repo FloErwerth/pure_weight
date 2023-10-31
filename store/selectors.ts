@@ -51,6 +51,13 @@ export const getSpecificMetaData = createSelector([getSelectedTrainingDay], (tra
   };
 });
 
+export const getSpecificMetaDataRaw = createSelector([getSelectedTrainingDay], (traininigDay) => {
+  return (exerciseIndex: number) => {
+    const exercise = traininigDay?.exercises[exerciseIndex];
+    return { weight: exercise?.weight, reps: exercise?.reps } as ExerciseMetaData;
+  };
+});
+
 export const getNumberOfSets = createSelector([getExerciseMetaData], (exerciseMetaDataRaw) => {
   if (exerciseMetaDataRaw?.sets) {
     return parseFloat(exerciseMetaDataRaw.sets);

@@ -3,7 +3,7 @@ import { borderRadius } from "../../../theme/border";
 
 export const trainStyles = StyleSheet.create({
   buttons: {
-    justifyContent: "space-around",
+    justifyContent: "space-evenly",
     gap: 20,
     alignItems: "center",
   },

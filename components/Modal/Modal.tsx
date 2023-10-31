@@ -1,8 +1,7 @@
 import { ReactNativeModal } from "react-native-modal";
-import React, { PropsWithChildren, ReactNode } from "react";
+import React, { PropsWithChildren, ReactNode, useMemo } from "react";
 import { View, ViewStyle } from "react-native";
 import { Button } from "../Themed/Button/Button";
-import { borderRadius } from "../../theme/border";
 import { ThemedView } from "../Themed/ThemedView/View";
 import { Text } from "../Themed/ThemedText/Text";
 import { HStack } from "../HStack/HStack";
@@ -10,6 +9,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useTheme } from "../../theme/context";
 import { useAppSelector } from "../../store";
 import { getThemeKey } from "../../store/selectors";
+import { styles } from "./styles";
 
 export interface ModalProps extends PropsWithChildren {
   isVisible?: boolean;
@@ -28,6 +28,10 @@ const Backdrop = () => {
 export const Modal = ({ customContentStyle, backgroundOpacity, isVisible = true, children, onRequestClose, title, customBackdrop, style }: ModalProps) => {
   const { mainColor, backgroundColor } = useTheme();
   const theme = useAppSelector(getThemeKey);
+
+  const computedColor = theme === "dark" ? mainColor : backgroundColor;
+  const buttonStyle = useMemo(() => ({ button: styles.buttonStyle }), []);
+
   return (
     <ReactNativeModal
       backdropOpacity={backgroundOpacity ?? 0.9}
@@ -39,15 +43,15 @@ export const Modal = ({ customContentStyle, backgroundOpacity, isVisible = true,
       isVisible={isVisible}
       style={style}
     >
-      <HStack style={{ justifyContent: "space-between", alignItems: "center" }}>
-        <View>{title && <Text style={{ fontSize: 20, paddingLeft: 10, padding: 0, margin: 0 }}>{title}</Text>}</View>
+      <HStack style={styles.wrapper}>
+        <View>{title && <Text style={styles.title}>{title}</Text>}</View>
         {onRequestClose && (
-          <Button theme="ghost" onPress={() => onRequestClose()} style={{ button: { padding: 10 } }}>
-            <MaterialCommunityIcons name="close" size={24} color={theme === "dark" ? mainColor : backgroundColor} />
+          <Button theme="ghost" onPress={() => onRequestClose()} style={buttonStyle}>
+            <MaterialCommunityIcons name="close" size={24} color={computedColor} />
           </Button>
         )}
       </HStack>
-      <ThemedView style={customContentStyle ?? { borderRadius, padding: 10 }}>{children}</ThemedView>
+      <ThemedView style={customContentStyle ?? styles.defaultContentStyle}>{children}</ThemedView>
     </ReactNativeModal>
   );
 };

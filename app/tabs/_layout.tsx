@@ -4,7 +4,7 @@ import React from "react";
 export default function index() {
   return (
     <Stack initialRouteName="index" screenOptions={{ headerShown: false }}>
-      <Stack.Screen options={{ headerShown: false }} name="index" />
+      <Stack.Screen options={{ headerShown: false }} name="exerciseIndex" />
     </Stack>
   );
 }

@@ -17,14 +17,13 @@ import { useTheme } from "../../theme/context";
 
 interface SetInputRowProps {
   setIndex: number;
-  isActiveSet: boolean;
   onSetDone?: (plainExerciseData: PlainExerciseData) => void;
   hasData: boolean;
   data: PlainExerciseData | undefined;
   isEditable: boolean;
 }
 
-export const SetInputRow = ({ onSetDone, setIndex, isActiveSet, hasData, data, isEditable = true }: SetInputRowProps) => {
+export const SetInputRow = ({ onSetDone, setIndex, hasData, data, isEditable = true }: SetInputRowProps) => {
   const navigate = useNavigate();
   const { primaryColor, mainColor, secondaryBackgroundColor, componentBackgroundColor, inputFieldBackgroundColor, textDisabled, secondaryColor } = useTheme();
   const trainingIndex = useAppSelector(getTrainingIndex);
@@ -32,6 +31,7 @@ export const SetInputRow = ({ onSetDone, setIndex, isActiveSet, hasData, data, i
   const [weight, setWeight] = useState(data?.weight);
   const [reps, setReps] = useState(data?.reps);
   const dispatch = useAppDispatch();
+  const [isActiveSet, setIsActiveSet] = useState(false);
 
   useEffect(() => {
     setWeight(data?.weight);
@@ -40,7 +40,12 @@ export const SetInputRow = ({ onSetDone, setIndex, isActiveSet, hasData, data, i
 
   const handleOnFocus = useCallback(() => {
     dispatch(setSetIndex(setIndex - 1));
+    setIsActiveSet(true);
   }, [dispatch, setIndex]);
+
+  const handleOnBlur = useCallback(() => {
+    setIsActiveSet(false);
+  }, []);
 
   const handleSetDone = useCallback(() => {
     if (isActiveSet) {
@@ -106,6 +111,7 @@ export const SetInputRow = ({ onSetDone, setIndex, isActiveSet, hasData, data, i
             editable={isEditable}
             returnKeyType="done"
             onFocus={handleOnFocus}
+            onBlur={handleOnBlur}
             style={textInputStyles}
             value={weight}
             onChangeText={setWeight}
@@ -118,6 +124,7 @@ export const SetInputRow = ({ onSetDone, setIndex, isActiveSet, hasData, data, i
             editable={isEditable}
             returnKeyType="done"
             onFocus={handleOnFocus}
+            onBlur={handleOnBlur}
             style={textInputStyles}
             value={reps}
             onChangeText={setReps}

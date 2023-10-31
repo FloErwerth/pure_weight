@@ -27,7 +27,7 @@ export const Button = ({ onLayout, onPress, children, theme = "primary", title, 
     return "transparent";
   }, [primaryColor, secondaryBackgroundColor, theme]);
   const buttonStyles = useMemo(() => [{ backgroundColor: computedBackgroundColor }, styles.button, style?.button], [computedBackgroundColor, style?.button]);
-  const textStyles = useMemo(() => [styles.text, { backgroundColor: primaryColor, color: mainColor }], [mainColor, primaryColor]);
+  const textStyles = useMemo(() => [styles.text, { color: mainColor }], [mainColor]);
   const handlePress = useCallback(() => {
     if (onPress) {
       void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);

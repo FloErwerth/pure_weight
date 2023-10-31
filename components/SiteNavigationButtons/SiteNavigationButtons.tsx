@@ -2,7 +2,7 @@ import { styles } from "./styles";
 import { RefObject, useCallback, useMemo } from "react";
 import { HStack } from "../HStack/HStack";
 import * as Haptics from "expo-haptics";
-import { Pressable, View } from "react-native";
+import { Animated, Pressable, View } from "react-native";
 import { Text } from "../Themed/ThemedText/Text";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useTheme } from "../../theme/context";
@@ -10,12 +10,14 @@ import { useTheme } from "../../theme/context";
 interface SiteNavigationButtonsProps {
   handleBack?: () => void;
   handleConfirm?: () => void;
+  handleConfirmOpacity?: Animated.Value;
   handleConfirmIcon?: { name: "check" | "plus"; size: number };
   title?: string;
   titleFontSize?: number;
   disabled?: boolean;
   confirmButtonRef?: RefObject<View>;
 }
+
 export const SiteNavigationButtons = ({
   handleBack,
   title,
@@ -24,6 +26,7 @@ export const SiteNavigationButtons = ({
   disabled = false,
   handleConfirmIcon = { name: "check", size: 30 },
   confirmButtonRef,
+  handleConfirmOpacity,
 }: SiteNavigationButtonsProps) => {
   const titleStyles = useMemo(
     () => ({ ...styles.title, fontSize: titleFontSize, paddingVertical: titleFontSize <= 40 ? (40 - titleFontSize) / 2 : 0, marginLeft: handleBack ? 0 : 15 }),
@@ -60,13 +63,13 @@ export const SiteNavigationButtons = ({
           {title}
         </Text>
       </HStack>
-      <View>
+      <Animated.View style={{ opacity: handleConfirmOpacity !== undefined ? handleConfirmOpacity : 1 }}>
         {handleConfirm && (
           <Pressable ref={confirmButtonRef} disabled={disabled} onPress={handleConfirmButton}>
             <MaterialCommunityIcons color={mainColor} size={handleConfirmIcon?.size} name={handleConfirmIcon?.name} />
           </Pressable>
         )}
-      </View>
+      </Animated.View>
     </HStack>
   );
 };
