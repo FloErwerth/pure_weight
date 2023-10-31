@@ -1,6 +1,5 @@
 import { useAppSelector } from "../../store";
 import { getPreviousTraining } from "../../store/selectors";
-import { DoneSetDisplayRow } from "../DoneSetDisplayRow/DoneSetDisplayRow";
 import { Text } from "../Themed/ThemedText/Text";
 import { View } from "react-native";
 import { borderRadius } from "../../theme/border";
@@ -8,12 +7,36 @@ import { VStack } from "../VStack/VStack";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "../../theme/context";
 import { useMemo } from "react";
+import { HStack } from "../HStack/HStack";
+import { styles } from "./styles";
 
-export const PreviousTraining = ({ exerciseIndex }: { exerciseIndex: number }) => {
+interface PreviousTrainingProps {
+  exerciseIndex: number;
+  activeSetIndex: number;
+}
+export const PreviousTraining = ({ exerciseIndex, activeSetIndex }: PreviousTrainingProps) => {
   const getPreviousTrainingFn = useAppSelector(getPreviousTraining);
   const receivedPreviousTraining = useMemo(() => getPreviousTrainingFn(exerciseIndex), [exerciseIndex, getPreviousTrainingFn]);
   const { t } = useTranslation();
-  const { textDisabled, componentBackgroundColor } = useTheme();
+  const { textDisabled, componentBackgroundColor, mainColor, secondaryColor, inputFieldBackgroundColor } = useTheme();
+
+  const mappedData = useMemo(
+    () =>
+      receivedPreviousTraining?.vals.map(({ weight, reps }, index) => {
+        const highlight = activeSetIndex === index;
+        const filled = activeSetIndex > index;
+        const highlightWrapperStyles = { backgroundColor: highlight ? inputFieldBackgroundColor : "transparent" };
+        const computedColor = highlight || filled ? mainColor : secondaryColor;
+        return (
+          <HStack key={Math.random() * 102} style={[styles.innerWrapper, highlightWrapperStyles]}>
+            <Text style={[styles.setDisplayStyle, { color: computedColor }]}>{index + 1}</Text>
+            <Text style={[{ color: computedColor }, styles.set]}>{weight}</Text>
+            <Text style={[{ color: computedColor }, styles.set]}>{reps}</Text>
+          </HStack>
+        );
+      }),
+    [activeSetIndex, inputFieldBackgroundColor, mainColor, receivedPreviousTraining?.vals, secondaryColor],
+  );
 
   if (!receivedPreviousTraining) {
     return null;
@@ -33,13 +56,12 @@ export const PreviousTraining = ({ exerciseIndex }: { exerciseIndex: number }) =
       <View style={{ padding: 10, borderRadius, backgroundColor: componentBackgroundColor }}>
         {vals?.length > 0 && (
           <VStack style={{ backgroundColor: componentBackgroundColor }}>
-            <DoneSetDisplayRow />
-            {vals.map((data, index) => {
-              if (data?.weight && data?.reps) {
-                const { weight, reps } = data;
-                return <DoneSetDisplayRow key={weight + reps + index} setNumber={index + 1} setData={{ weight, reps }} />;
-              }
-            })}
+            <HStack style={styles.innerWrapper}>
+              <Text style={[styles.setDisplayStyle, { color: secondaryColor }]}>{"#"}</Text>
+              <Text style={[{ color: secondaryColor }, styles.set]}>{t("training_header_weight")}</Text>
+              <Text style={[{ color: secondaryColor }, styles.set]}>{t("training_header_reps")}</Text>
+            </HStack>
+            {mappedData}
           </VStack>
         )}
       </View>

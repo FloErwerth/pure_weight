@@ -48,6 +48,7 @@ export const Exercise = ({ metaData, exerciseIndex, handleSetsDone }: Exercise) 
   const [note, setNote] = useState<string | undefined>(undefined);
   const handleCloseEditNoteModal = useCallback(() => setShowEditNoteModal(false), []);
   const [doneSets, setDoneSets] = useGeneratedSetData(exerciseIndex);
+  const [activeSetIndex, setActiveSetIndex] = useState(0);
 
   const handleCancelEditNoteModal = useCallback(() => {
     setNote(undefined);
@@ -63,6 +64,7 @@ export const Exercise = ({ metaData, exerciseIndex, handleSetsDone }: Exercise) 
       void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
       const newIndex = currentSetIndex + 1;
       setCurrentSetIndex(newIndex);
+      setActiveSetIndex(newIndex);
       const newDoneSets = new Map(doneSets.entries());
       newDoneSets.set(index, { ...data, filled: true });
       setDoneSets(newDoneSets);
@@ -85,8 +87,7 @@ export const Exercise = ({ metaData, exerciseIndex, handleSetsDone }: Exercise) 
         editable: doneSets.get(index)?.filled || index === currentSetIndex,
         hasData: Boolean(doneSets.get(index)?.filled),
         onSetDone: (plainExerciseData: PlainExerciseData) => handleSetDone(plainExerciseData, index),
-        setIndex: index + 1,
-        key: `${index}-${Math.random() * 10}`,
+        key: index * Math.random(),
       })),
     [currentSetIndex, doneSets, handleSetDone],
   );
@@ -104,11 +105,11 @@ export const Exercise = ({ metaData, exerciseIndex, handleSetsDone }: Exercise) 
       <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={trainStyles.innerWrapper}>
         <ThemedView style={{ paddingTop: 15, paddingBottom: 10, borderRadius, backgroundColor: componentBackgroundColor }}>
           <TrainingHeader />
-          {mappedDoneSets.map(({ data, editable, hasData, onSetDone, setIndex, key }) => {
-            return <SetInputRow data={data} isEditable={editable} hasData={hasData} onSetDone={onSetDone} setIndex={setIndex} key={key} />;
+          {mappedDoneSets.map(({ data, editable, hasData, onSetDone, key }, index) => {
+            return <SetInputRow key={key} isActiveSet={activeSetIndex === index} data={data} isEditable={editable} hasData={hasData} onSetDone={onSetDone} setIndex={index + 1} />;
           })}
         </ThemedView>
-        <PreviousTraining exerciseIndex={exerciseIndex} />
+        <PreviousTraining activeSetIndex={activeSetIndex} exerciseIndex={exerciseIndex} />
       </ScrollView>
       {showEditNoteModal && <AddNoteModal onConfirm={handleCloseEditNoteModal} setNote={handleCloseEditNoteModal} note={note} onCancel={handleCancelEditNoteModal} showModal={showEditNoteModal} />}
     </View>

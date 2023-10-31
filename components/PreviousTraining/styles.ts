@@ -7,4 +7,11 @@ export const styles = StyleSheet.create({
     padding: 10,
     borderRadius,
   },
+  setDisplayStyle: {
+    textAlign: "center",
+    alignSelf: "stretch",
+    fontSize: 16,
+    flex: 0.85,
+  },
+  set: { textAlign: "center", flex: 1, fontSize: 16 },
 });
