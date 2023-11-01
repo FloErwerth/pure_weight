@@ -1,9 +1,8 @@
-import { View } from "react-native";
+import { FlatList, View } from "react-native";
 import { ComponentProps, useCallback, useEffect, useMemo, useState } from "react";
-import { PressableRowWithIconSlots } from "../../components/PressableRowWithIconSlots/PressableRowWithIconSlots";
 import { useNavigate } from "../../hooks/navigate";
 import { useAppDispatch, useAppSelector } from "../../store";
-import { getLanguage, getSavedTrainings } from "../../store/selectors";
+import { getLanguage, getOverallTrainingTrend, getSavedTrainings } from "../../store/selectors";
 import { cleanErrors, removeTrainingDay, setExerciseIndex, setSetIndex, setTrainingDayIndex } from "../../store/reducer";
 import { styles } from "../../components/App/index/styles";
 import { AlertModal } from "../../components/AlertModal/AlertModal";
@@ -13,13 +12,13 @@ import * as Locale from "expo-localization";
 import { ThemedView } from "../../components/Themed/ThemedView/View";
 import { PageContent } from "../../components/PageContent/PageContent";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { Text } from "../../components/Themed/ThemedText/Text";
-import { ThemedScrollView } from "../../components/Themed/ThemedScrollView/ThemedScrollView";
+import { WorkoutCard } from "../../components/WorkoutCard/WorkoutCard";
 
 export function Workouts() {
   const language = useAppSelector(getLanguage);
   const dispatch = useAppDispatch();
   const { t, i18n } = useTranslation();
+  const previousTrainingByIndex = useAppSelector(getOverallTrainingTrend);
 
   useEffect(() => {
     i18n.changeLanguage(language ?? Locale.getLocales()[0].languageCode ?? "en");
@@ -75,12 +74,17 @@ export function Workouts() {
     return savedTrainings.map((trainingDay, index) => {
       const Icon1 = { icon: "delete" as ComponentProps<typeof MaterialCommunityIcons>["name"], onPress: () => handleShowAlert(index) };
       const Icon2 = { icon: "pencil" as ComponentProps<typeof MaterialCommunityIcons>["name"], onPress: () => handleEdit(index) };
-      const key = trainingDay.name.concat("-key").concat(index.toString());
+      const key = trainingDay.name.concat("-key").concat((index * Math.random() * 2).toString());
       const onClick = () => handleNavigateToTrain(index);
+      const overallTrainingData = previousTrainingByIndex(index);
+      const handleNavigateToProgress = () => {
+        dispatch(setTrainingDayIndex(index));
+        navigate("progress");
+      };
 
-      return { Icon1, Icon2, key, onClick, trainingDayName: trainingDay.name };
+      return { handleNavigateToProgress, Icon1, Icon2, key, onClick, workoutName: trainingDay.name, overallTrainingData };
     });
-  }, [handleEdit, handleNavigateToTrain, handleShowAlert, savedTrainings]);
+  }, [dispatch, handleEdit, handleNavigateToTrain, handleShowAlert, navigate, previousTrainingByIndex, savedTrainings]);
 
   const handleCancelAlert = useCallback(() => {
     setDeleteIndex(undefined);
@@ -100,15 +104,22 @@ export function Workouts() {
       <View style={styles.vStack}>
         <SiteNavigationButtons title={t("workouts")} handleConfirmIcon={confirmIcon} handleConfirm={handlePress} />
         <PageContent>
-          <ThemedScrollView style={styles.view}>
-            <ThemedView style={styles.savedTrainings}>
-              {mappedTrainings.map(({ trainingDayName, key, Icon2, Icon1, onClick }) => (
-                <PressableRowWithIconSlots key={key} onClick={onClick} Icon2={Icon2} Icon1={Icon1}>
-                  <Text style={styles.trainingDayName}>{trainingDayName}</Text>
-                </PressableRowWithIconSlots>
-              ))}
-            </ThemedView>
-          </ThemedScrollView>
+          <FlatList
+            keyExtractor={(item) => item.key}
+            style={styles.savedTrainings}
+            data={mappedTrainings}
+            renderItem={({ item: { handleNavigateToProgress, workoutName, key, Icon1, Icon2, onClick, overallTrainingData } }) => (
+              <WorkoutCard
+                handleNavigateToProgress={handleNavigateToProgress}
+                overallTrainingData={overallTrainingData}
+                Icon1={Icon1}
+                Icon2={Icon2}
+                onClick={onClick}
+                key={key}
+                workoutName={workoutName}
+              />
+            )}
+          ></FlatList>
         </PageContent>
       </View>
       {deleteIndex !== undefined && <AlertModal title={alertModalConfig.title} content={alertModalConfig.content} isVisible={true} onCancel={handleCancelAlert} onConfirm={handleConfirmAlert} />}

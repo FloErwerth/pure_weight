@@ -59,5 +59,10 @@
   "progress_placeholder": "Messdaten oder Daten von Einheiten hinzufügen, um Graphen anzeigen zu können",
   "create_missing_data_text": "Es sind keine Übungen zum Anzeigen vorhanden",
   "create_exercise": "Übung erstellen",
-  "edit_exercise": "Änderungen bestätigen"
+  "edit_exercise": "Änderungen bestätigen",
+  "progress_increased": "gestiegen",
+  "progress_decreased": "gefallen",
+  "progress_text_1": "Deine Leistung ist um",
+  "progress_text_hint": "Tippe, um Details zu jeder Einheit zu sehen",
+  "workout_new": "Neues Workout starten"
 }

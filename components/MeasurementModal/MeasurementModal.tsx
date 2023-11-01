@@ -6,7 +6,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Modal, ModalProps } from "../Modal/Modal";
 import { Dispatch, SetStateAction, useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Measurement } from "../../app/profile/measurements";
+import { Measurement } from "../../app/measurements";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { getDateTodayIso } from "../../utils/date";
 import { useAppDispatch, useAppSelector } from "../../store";

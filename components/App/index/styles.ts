@@ -27,6 +27,5 @@ export const styles = StyleSheet.create({
   },
   savedTrainings: {
     flex: 1,
-    gap: 10,
   },
 });

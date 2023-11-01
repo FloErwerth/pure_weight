@@ -2,8 +2,15 @@ import { ComponentProps, useMemo } from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useTheme } from "../../../theme/context";
 
-export const ThemedMaterialCommunityIcons = (props: ComponentProps<typeof MaterialCommunityIcons>) => {
-  const { mainColor, componentBackgroundColor } = useTheme();
-  const style = useMemo(() => [{ backgroundColor: componentBackgroundColor }, props.style], [componentBackgroundColor, props.style]);
+interface ThemedMaterialCommunityIconsProps extends ComponentProps<typeof MaterialCommunityIcons> {
+  secondary?: boolean;
+}
+
+export const ThemedMaterialCommunityIcons = (props: ThemedMaterialCommunityIconsProps) => {
+  const { mainColor, componentBackgroundColor, secondaryBackgroundColor } = useTheme();
+  const style = useMemo(
+    () => [{ backgroundColor: props.secondary ? secondaryBackgroundColor : componentBackgroundColor }, props.style],
+    [componentBackgroundColor, props.secondary, props.style, secondaryBackgroundColor],
+  );
   return <MaterialCommunityIcons {...props} style={style} color={props.color ?? mainColor} />;
 };

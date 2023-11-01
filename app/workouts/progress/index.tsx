@@ -19,16 +19,16 @@ const PromiseTrigger = () => {
   throw new Promise(() => {});
 };
 
-export function Charts() {
+export function Progress() {
   const navigate = useNavigate();
   const trainingDayData = useAppSelector(getSelectedTrainingDayData);
 
-  const handleNavigateToProgress = useCallback(() => {
-    navigate("progress");
+  const handleNavigateToWorkouts = useCallback(() => {
+    navigate("workouts");
   }, [navigate]);
 
   if (trainingDayData === undefined) {
-    handleNavigateToProgress();
+    handleNavigateToWorkouts();
   }
   const Fallback = () => {
     const exerciseNames = trainingDayData?.exercises.map((exercise) => exercise.name);
@@ -58,7 +58,7 @@ export function Charts() {
 
   return (
     <ThemedView stretch>
-      <SiteNavigationButtons handleBack={handleNavigateToProgress} title={trainingDayData?.name} />
+      <SiteNavigationButtons handleBack={handleNavigateToWorkouts} title={trainingDayData?.name} />
       <PageContent>
         <Suspense fallback={<Fallback />}>
           <ExerciseCharts />

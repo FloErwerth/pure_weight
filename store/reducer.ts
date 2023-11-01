@@ -18,6 +18,7 @@ export const mockState: AppState = {
   trainingDays: [
     {
       name: "Brust 1",
+      latestDate: "2023-01-01",
       exercises: [
         {
           name: "Bankdrücken",
@@ -29,7 +30,7 @@ export const mockState: AppState = {
             {
               date: "2023-01-01",
               sets: [
-                { reps: "1", weight: "1" },
+                { reps: "5", weight: "50" },
                 { reps: "5", weight: "50" },
                 { reps: "5", weight: "50" },
                 { reps: "5", weight: "50" },
@@ -39,74 +40,10 @@ export const mockState: AppState = {
             {
               date: "2023-01-02",
               sets: [
-                { reps: "5", weight: "50" },
-                { reps: "5", weight: "50" },
-                { reps: "5", weight: "50" },
-                { reps: "5", weight: "50" },
-              ],
-            },
-            {
-              date: "2023-01-03",
-              sets: [
-                { reps: "5", weight: "50" },
-                { reps: "5", weight: "50" },
-                { reps: "5", weight: "50" },
-                { reps: "5", weight: "50" },
-              ],
-            },
-            {
-              date: "2023-01-04",
-              sets: [
-                { reps: "5", weight: "50" },
-                { reps: "5", weight: "50" },
-                { reps: "5", weight: "50" },
-                { reps: "5", weight: "50" },
-              ],
-            },
-            {
-              date: "2023-01-05",
-              sets: [
-                { reps: "5", weight: "50" },
-                { reps: "5", weight: "50" },
-                { reps: "5", weight: "50" },
-                { reps: "5", weight: "50" },
-              ],
-            },
-            {
-              date: "2023-01-06",
-              sets: [
-                { reps: "5", weight: "50" },
-                { reps: "5", weight: "50" },
-                { reps: "5", weight: "50" },
-                { reps: "5", weight: "50" },
-              ],
-            },
-            {
-              date: "2023-01-07",
-              sets: [
-                { reps: "5", weight: "50" },
-                { reps: "5", weight: "50" },
-                { reps: "5", weight: "50" },
-                { reps: "5", weight: "50" },
-              ],
-            },
-            {
-              date: "2023-01-08",
-              sets: [
-                { reps: "5", weight: "50" },
-                { reps: "5", weight: "50" },
-                { reps: "5", weight: "50" },
-                { reps: "5", weight: "50" },
-              ],
-            },
-            {
-              date: "2023-01-09",
-              sets: [
-                { reps: "1", weight: "1" },
-                { reps: "5", weight: "50" },
-                { reps: "5", weight: "50" },
-                { reps: "5", weight: "50" },
-                { reps: "5", weight: "50" },
+                { reps: "5", weight: "51" },
+                { reps: "5", weight: "51" },
+                { reps: "5", weight: "51" },
+                { reps: "5", weight: "51" },
               ],
             },
           ],
@@ -125,6 +62,18 @@ export const mockState: AppState = {
                 { reps: "5", weight: "50" },
                 { reps: "5", weight: "50" },
                 { reps: "5", weight: "50" },
+                { reps: "5", weight: "50" },
+              ],
+            },
+            {
+              date: "2023-01-02",
+              sets: [
+                { reps: "5", weight: "51" },
+                { reps: "5", weight: "51" },
+                { reps: "5", weight: "51" },
+                { reps: "5", weight: "51" },
+                { reps: "5", weight: "51" },
+                { reps: "5", weight: "51" },
               ],
             },
           ],
@@ -133,22 +82,63 @@ export const mockState: AppState = {
     },
     {
       name: "Brust 2",
+      latestDate: "2023-01-01",
       exercises: [
         {
           name: "Bankdrücken",
           weight: "50",
-          sets: "3",
+          sets: "5",
           reps: "5",
           pause: " 2",
-          doneExerciseEntries: [],
+          doneExerciseEntries: [
+            {
+              date: "2023-01-01",
+              sets: [
+                { reps: "5", weight: "50" },
+                { reps: "5", weight: "50" },
+                { reps: "5", weight: "50" },
+                { reps: "5", weight: "50" },
+                { reps: "5", weight: "50" },
+              ],
+            },
+            {
+              date: "2023-01-02",
+              sets: [
+                { reps: "5", weight: "51" },
+                { reps: "5", weight: "51" },
+                { reps: "5", weight: "51" },
+                { reps: "5", weight: "51" },
+              ],
+            },
+          ],
         },
         {
           name: "Butterfly",
-          weight: "40",
-          sets: "3",
-          reps: "6",
+          weight: "50",
+          sets: "5",
+          reps: "5",
           pause: " 2",
-          doneExerciseEntries: [],
+          doneExerciseEntries: [
+            {
+              date: "2023-01-01",
+              sets: [
+                { reps: "5", weight: "50" },
+                { reps: "5", weight: "50" },
+                { reps: "5", weight: "50" },
+                { reps: "5", weight: "50" },
+                { reps: "5", weight: "50" },
+              ],
+            },
+            {
+              date: "2023-01-02",
+              sets: [
+                { reps: "5", weight: "51" },
+                { reps: "5", weight: "51" },
+                { reps: "5", weight: "51" },
+                { reps: "5", weight: "51" },
+              ],
+            },
+          ],
         },
       ],
     },
@@ -252,6 +242,7 @@ export const storeReducer = createReducer<AppState>(emptyState, (builder) =>
             sets: action.payload[exerciseIndex].sets,
             note: action.payload[exerciseIndex].note,
           });
+          state.trainingDays[state.trainingDayIndex].latestDate = dateToday;
         }
       }
     })

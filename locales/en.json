@@ -61,5 +61,11 @@
   "alert_edit_workout_discard_title": "Cancel workout edit",
   "alert_edit_workout_discard_content": "All changes made so far will be lost",
   "progress_placeholder": "Add workout or measurement data to display graphs",
-  "create_missing_data_text": "There are no exercises to display here"
+  "create_missing_data_text": "There are no exercises to display here",
+  "progress_increased": "increased",
+  "progress_decreased": "decreased",
+  "progress_text_1": "Your performance ",
+  "progress_text_2": " by ",
+  "progress_text_hint": "Press to see details for each exercise",
+  "workout_new": "Start new workout"
 }

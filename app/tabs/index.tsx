@@ -4,8 +4,8 @@ import { TabBarLabel } from "../../components/App/TabBar/TabBarLabel";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { Progress } from "../progress";
 import { Workouts } from "../workouts";
+import { Measurements } from "../measurements";
 import { Profile } from "../profile";
 import { useTheme } from "../../theme/context";
 
@@ -36,13 +36,13 @@ export function TabsWrapper() {
           name="workouts"
         />
         <Tabs.Screen
-          component={Progress}
+          component={Measurements}
           options={{
             headerShown: false,
-            tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} Icon={"chart-box"} />,
+            tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} Icon={"ruler"} />,
             tabBarLabelStyle: { fontSize: 13 },
             tabBarButton: TabBarButton,
-            tabBarLabel: ({ focused }) => <TabBarLabel focused={focused} title={t("progress")} />,
+            tabBarLabel: ({ focused }) => <TabBarLabel focused={focused} title={t("measurements")} />,
           }}
           name="progress"
         />

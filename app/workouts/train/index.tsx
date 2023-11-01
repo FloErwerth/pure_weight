@@ -62,7 +62,6 @@ export function Train() {
 
   const handleSaveTrainingData = useCallback(() => {
     const doneSetsArray = mapOfMapsTo2DArray(doneSetsThisExercise);
-    console.log(doneSetsArray);
     dispatch(addSetDataToTrainingDay(doneSetsArray));
   }, [dispatch, doneSetsThisExercise]);
 

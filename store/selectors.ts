@@ -1,6 +1,7 @@
 import { createSelector } from "@reduxjs/toolkit";
 import { AppState, ErrorFields, ExerciseMetaData, TrainingDay } from "./types";
 import { getDate } from "../utils/date";
+import { IsoDate } from "../types/date";
 
 export const getSetIndex = (state: AppState) => state.setIndex ?? 0;
 export const getExerciseIndex = (state: AppState) => state.exerciseIndex;
@@ -18,6 +19,13 @@ export const getSelectedTrainingDay = createSelector([getSavedTrainings, getSele
   }
   return undefined;
 });
+
+export const getSelectedTrainingDayByIndex = createSelector([getSavedTrainings], (trainings) => {
+  return (index: number) => {
+    return trainings[index];
+  };
+});
+
 export const getDatesFromCurrentMeasurement = createSelector([getMeasurements], (measurements) => {
   return (measurementKey?: string) => {
     if (!measurementKey) {
@@ -82,6 +90,7 @@ export const getTrainingDayData = createSelector([getSavedTrainings], (trainingD
       return days;
     }, [] as TrainingDay[]);
 });
+
 export const getSelectedTrainingDayData = createSelector([getTrainingDayData, getTrainingIndex], (data, index) => {
   if (index === undefined) {
     return undefined;
@@ -89,6 +98,7 @@ export const getSelectedTrainingDayData = createSelector([getTrainingDayData, ge
 
   return data[index];
 });
+
 export const getPreviousTraining = createSelector([getSelectedTrainingDay, getLanguage], (traininigDay, language) => {
   return (exerciseIndex: number) => {
     const entries = traininigDay?.exercises[exerciseIndex]?.doneExerciseEntries;
@@ -96,6 +106,69 @@ export const getPreviousTraining = createSelector([getSelectedTrainingDay, getLa
       const latestEntry = entries[entries.length - 1];
       return { date: latestEntry?.date ? getDate(latestEntry.date, language) : "", vals: latestEntry?.sets ?? [], note: latestEntry?.note };
     }
+  };
+});
+export const getOverallTrainingTrend = createSelector([getSelectedTrainingDayByIndex], (trainingDayByIndex) => {
+  return (workoutIndex: number) => {
+    const workout = trainingDayByIndex(workoutIndex);
+
+    const sumOfFirstDoneExercises = workout.exercises.reduce((data, exercise, exerciseIndex) => {
+      const secondLastEntry = exercise.doneExerciseEntries[exercise.doneExerciseEntries.length - 2];
+      if (exerciseIndex === 0) {
+        return secondLastEntry?.sets?.reduce((sum, data) => {
+          const reps = parseFloat(data.reps);
+          const weight = parseFloat(data.weight);
+          return sum + reps * weight;
+        }, 0);
+      } else {
+        const lastExercises = workout.exercises[exerciseIndex - 1];
+        const latestEntriesLastExercise = lastExercises.doneExerciseEntries[lastExercises.doneExerciseEntries.length - 2];
+        const date = latestEntriesLastExercise?.date;
+        if (date === secondLastEntry?.date) {
+          return secondLastEntry?.sets?.reduce((sum, data) => {
+            const reps = parseFloat(data.reps);
+            const weight = parseFloat(data.weight);
+            return sum + reps * weight;
+          }, 0);
+        } else {
+          return 0;
+        }
+      }
+    }, 0);
+
+    const sumOfLatestDoneExercises = workout.exercises.reduce((data, exercise, exerciseIndex) => {
+      const latestExerciseEntry = exercise.doneExerciseEntries[exercise.doneExerciseEntries.length - 1];
+      if (exerciseIndex === 0) {
+        return latestExerciseEntry?.sets?.reduce((sum, data) => {
+          const reps = parseFloat(data.reps);
+          const weight = parseFloat(data.weight);
+          return sum + reps * weight;
+        }, 0);
+      } else {
+        const lastExercises = workout.exercises[exerciseIndex - 1];
+        const latestEntriesLastExercise = lastExercises.doneExerciseEntries[lastExercises.doneExerciseEntries.length - 1];
+        const date = latestEntriesLastExercise?.date;
+        if (date === latestExerciseEntry?.date) {
+          return latestExerciseEntry?.sets?.reduce((sum, data) => {
+            const reps = parseFloat(data.reps);
+            const weight = parseFloat(data.weight);
+            return sum + reps * weight;
+          }, 0);
+        } else {
+          return 0;
+        }
+      }
+    }, 0);
+
+    const diffAbsolute = sumOfFirstDoneExercises > 0 && sumOfLatestDoneExercises > 0 ? sumOfLatestDoneExercises - sumOfFirstDoneExercises : undefined;
+    let diffPercent = (100 * sumOfFirstDoneExercises) / sumOfLatestDoneExercises;
+    if (diffPercent > 100) {
+      diffPercent -= 100;
+    } else if (diffPercent < 100) {
+      diffPercent = 100 - diffPercent;
+    }
+
+    return { date: workout?.latestDate as IsoDate, diff: diffAbsolute ? { absolute: diffAbsolute, percent: diffPercent.toFixed(1) } : undefined };
   };
 });
 

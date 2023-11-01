@@ -11,7 +11,7 @@ export const Routes = {
     screen: "workouts/create/index",
   },
   progress: {
-    screen: "tabs",
+    screen: "workouts/progress/index",
   },
   chart: {
     screen: "progress/chart/index",

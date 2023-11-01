@@ -21,7 +21,6 @@ export function Profile() {
     <ThemedView style={{ flex: 1 }}>
       <SiteNavigationButtons title={t("profile")} />
       <PageContent style={{ gap: 10 }}>
-        <ProfileSection onPress={() => handleNavigation("measurements")} title={t("measurements")} />
         <ProfileSection onPress={() => handleNavigation("settings")} title={t("settings")} />
       </PageContent>
     </ThemedView>

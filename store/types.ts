@@ -3,6 +3,7 @@ import { ThemeKey } from "../theme/types";
 
 export type TrainingDay = {
   name: string;
+  latestDate?: string;
   exercises: ExerciseMetaDataWithDoneEntries;
 };
 
