@@ -41,7 +41,7 @@ export const ProgressDisplay = ({ overallTrainingData, handleNavigateToProgress 
     if (isPositive) {
       return { color: "green" };
     } else {
-      return { color: "red", style: { transform: "rotate(180deg)" } };
+      return { color: "grey" };
     }
   }, [isPositive]);
   const hintStyles = useMemo(() => [styles.hint, { color: secondaryColor }], [secondaryColor]);
@@ -55,7 +55,7 @@ export const ProgressDisplay = ({ overallTrainingData, handleNavigateToProgress 
       <ThemedView style={styles.progressWrapper} secondary>
         <HStack style={styles.diffWrapper}>
           <HStack style={styles.diffWrapper}>
-            <ThemedMaterialCommunityIcons secondary name="arrow-up" style={chartStyle.style} color={chartStyle.color} size={26} />
+            <ThemedMaterialCommunityIcons secondary name={isPositive ? "arrow-up" : "arrow-down"} color={chartStyle.color} size={26} />
             <View>
               <Text style={styles.text}>{text}</Text>
               <Text style={hintStyles}>{t("progress_text_hint")}</Text>
