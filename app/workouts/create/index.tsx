@@ -192,7 +192,7 @@ export function Create() {
   return (
     <>
       <ThemedView style={styles.innerWrapper}>
-        <SiteNavigationButtons handleBack={handleBackButton} handleConfirm={handleConfirm} titleFontSize={35} title={title} />
+        <SiteNavigationButtons handleBack={handleBackButton} handleConfirm={handleConfirm} titleFontSize={30} title={title} />
         <PageContent style={styles.contentWrapper}>
           <PlainInput showClear value={workoutName} setValue={handleSetWorkoutName} fontSize={30} placeholder={t("workout_name")} />
           <View style={styles.listContainer}>

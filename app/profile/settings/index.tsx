@@ -20,7 +20,7 @@ export function Settings() {
   const dispatch = useAppDispatch();
   return (
     <ThemedView style={{ flex: 1 }}>
-      <SiteNavigationButtons handleBack={handleNavigateBack} title={t("settings")} />
+      <SiteNavigationButtons titleFontSize={30} handleBack={handleNavigateBack} title={t("settings")} />
       <PageContent style={{ gap: 10 }}>
         <LanguageSelection />
         <ThemeSelection />

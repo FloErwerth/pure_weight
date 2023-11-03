@@ -4,6 +4,7 @@ import { borderRadius } from "../../theme/border";
 export const styles = StyleSheet.create({
   title: {
     fontSize: 26,
+    padding: 10,
   },
   diffWrapper: {
     flex: 1,

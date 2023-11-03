@@ -1,5 +1,5 @@
 import { FlatList, View } from "react-native";
-import { ComponentProps, useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "../../hooks/navigate";
 import { useAppDispatch, useAppSelector } from "../../store";
 import { getLanguage, getOverallTrainingTrend, getSavedTrainings } from "../../store/selectors";
@@ -11,7 +11,6 @@ import { useTranslation } from "react-i18next";
 import * as Locale from "expo-localization";
 import { ThemedView } from "../../components/Themed/ThemedView/View";
 import { PageContent } from "../../components/PageContent/PageContent";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { WorkoutCard } from "../../components/WorkoutCard/WorkoutCard";
 
 export function Workouts() {
@@ -72,8 +71,8 @@ export function Workouts() {
 
   const mappedTrainings = useMemo(() => {
     return savedTrainings.map((trainingDay, index) => {
-      const Icon1 = { icon: "delete" as ComponentProps<typeof MaterialCommunityIcons>["name"], onPress: () => handleShowAlert(index) };
-      const Icon2 = { icon: "pencil" as ComponentProps<typeof MaterialCommunityIcons>["name"], onPress: () => handleEdit(index) };
+      const onEdit = () => handleEdit(index);
+      const onDelete = () => handleShowAlert(index);
       const key = trainingDay.name.concat("-key").concat((index * Math.random() * 2).toString());
       const onClick = () => handleNavigateToTrain(index);
       const overallTrainingData = previousTrainingByIndex(index);
@@ -82,7 +81,7 @@ export function Workouts() {
         navigate("progress");
       };
 
-      return { handleNavigateToProgress, Icon1, Icon2, key, onClick, workoutName: trainingDay.name, overallTrainingData };
+      return { handleNavigateToProgress, onEdit, onDelete, key, onClick, workoutName: trainingDay.name, overallTrainingData };
     });
   }, [dispatch, handleEdit, handleNavigateToTrain, handleShowAlert, navigate, previousTrainingByIndex, savedTrainings]);
 
@@ -108,12 +107,12 @@ export function Workouts() {
             keyExtractor={(item) => item.key}
             style={styles.savedTrainings}
             data={mappedTrainings}
-            renderItem={({ item: { handleNavigateToProgress, workoutName, key, Icon1, Icon2, onClick, overallTrainingData } }) => (
+            renderItem={({ item: { handleNavigateToProgress, workoutName, key, onEdit, onDelete, onClick, overallTrainingData } }) => (
               <WorkoutCard
                 handleNavigateToProgress={handleNavigateToProgress}
                 overallTrainingData={overallTrainingData}
-                Icon1={Icon1}
-                Icon2={Icon2}
+                onEdit={onEdit}
+                onDelete={onDelete}
                 onClick={onClick}
                 key={key}
                 workoutName={workoutName}

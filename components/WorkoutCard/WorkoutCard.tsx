@@ -1,40 +1,144 @@
-import { ThemedView } from "../Themed/ThemedView/View";
 import { Text } from "../Themed/ThemedText/Text";
 import { styles } from "./styles";
-import { ComponentProps } from "react";
+import { useCallback, useRef, useState } from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { PressableRowWithIconSlots } from "../PressableRowWithIconSlots/PressableRowWithIconSlots";
 import { IsoDate } from "../../types/date";
 import { ProgressDisplay } from "./components/ProgressDisplay/ProgressDisplay";
 import { BeginnWorkoutButton } from "./components/BeginnWorkoutButton/BeginnWorkoutButton";
-
-type Option = {
-  icon: ComponentProps<typeof MaterialCommunityIcons>["name"];
-  hide?: boolean;
-  size?: number;
-  disabled?: boolean;
-  onLongPress?: () => void;
-  onPress?: () => void;
-  text?: string;
-};
+import { Gesture, GestureDetector, GestureStateChangeEvent, GestureUpdateEvent, PanGestureChangeEventPayload, PanGestureHandlerEventPayload } from "react-native-gesture-handler";
+import { Animated, Pressable, View } from "react-native";
+import { ThemedView } from "../Themed/ThemedView/View";
+import { borderRadius } from "../../theme/border";
+import { useTheme } from "../../theme/context";
+import * as Haptics from "expo-haptics";
 
 interface WorkoutCardProps {
   workoutName: string;
   onClick: () => void;
-  Icon1: Option;
-  Icon2: Option;
+  onEdit: () => void;
+  onDelete: () => void;
   overallTrainingData: { date?: IsoDate; diff?: { absolute: number; percent: string } };
   handleNavigateToProgress: () => void;
 }
 
-export const WorkoutCard = ({ handleNavigateToProgress, overallTrainingData, workoutName, Icon2, Icon1, onClick }: WorkoutCardProps) => {
+const DELETE_THRESHOLD = -60;
+const EDIT_THRESHOLD = 60;
+
+const useWorkoutGesturePan = ({ onEdit, onDelete }: { onEdit: () => void; onDelete: () => void }) => {
+  const gesture = useRef(Gesture.Pan()).current;
+  const offsetX = useRef(new Animated.Value(0)).current;
+
+  const handleGestureUpdate = useCallback(
+    (e: GestureUpdateEvent<PanGestureHandlerEventPayload & PanGestureChangeEventPayload>) => {
+      const translation = e.translationX;
+      if (translation > 0) {
+        if (translation < EDIT_THRESHOLD) {
+          offsetX.setValue(translation);
+        }
+      } else {
+        if (translation > DELETE_THRESHOLD) {
+          offsetX.setValue(translation);
+        }
+      }
+    },
+    [offsetX],
+  );
+
+  const handleGestureEnd = useCallback(
+    (e: GestureStateChangeEvent<PanGestureHandlerEventPayload>) => {
+      const translation = e.translationX;
+      if (translation > 0) {
+        if (translation > EDIT_THRESHOLD) {
+          onEdit();
+          void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+        }
+      } else {
+        if (translation < DELETE_THRESHOLD) {
+          onDelete();
+          void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+        }
+      }
+      Animated.timing(offsetX, {
+        toValue: 0,
+        duration: 100,
+        useNativeDriver: false,
+      }).start();
+    },
+    [onEdit, onDelete, offsetX],
+  );
+
+  gesture.config = {
+    maxPointers: 1,
+    minPointers: 1,
+    userSelect: "none",
+    needsPointerData: true,
+  };
+  gesture.onChange(handleGestureUpdate);
+  gesture.onEnd(handleGestureEnd);
+
+  return [gesture, offsetX] as const;
+};
+
+export const WorkoutCard = ({ handleNavigateToProgress, overallTrainingData, workoutName, onEdit, onDelete, onClick }: WorkoutCardProps) => {
+  const [gesture, offsetX] = useWorkoutGesturePan({ onEdit, onDelete });
+  const { secondaryBackgroundColor, mainColor } = useTheme();
+  const viewRef = useRef<View>(null);
+  const [containerHeight, setContainerHeight] = useState(120);
+  const containerMeasurement = useCallback(() => {
+    viewRef.current?.measure((x, y, width, height) => {
+      setContainerHeight(height - 10);
+    });
+  }, []);
+
   return (
-    <ThemedView component style={styles.wrapper}>
-      <PressableRowWithIconSlots Icon1={Icon1} Icon2={Icon2}>
-        <Text style={styles.title}>{workoutName}</Text>
-      </PressableRowWithIconSlots>
-      <ProgressDisplay handleNavigateToProgress={handleNavigateToProgress} overallTrainingData={overallTrainingData} />
-      <BeginnWorkoutButton onClick={onClick} />
-    </ThemedView>
+    <GestureDetector gesture={gesture}>
+      <View ref={viewRef} onLayout={containerMeasurement}>
+        <Animated.View style={{ zIndex: 1, transform: [{ translateX: offsetX }] }}>
+          <ThemedView component style={styles.wrapper}>
+            <Text style={styles.title}>{workoutName}</Text>
+            <ProgressDisplay handleNavigateToProgress={handleNavigateToProgress} overallTrainingData={overallTrainingData} />
+            <BeginnWorkoutButton onClick={onClick} />
+          </ThemedView>
+        </Animated.View>
+        <Animated.View
+          style={{
+            height: containerHeight,
+            left: 0,
+            width: 200,
+            position: "absolute",
+            borderTopStartRadius: borderRadius,
+            borderBottomStartRadius: borderRadius,
+            backgroundColor: offsetX.interpolate({
+              inputRange: [0, 20, 60],
+              outputRange: [secondaryBackgroundColor, secondaryBackgroundColor, "#116633"],
+            }),
+            justifyContent: "center",
+          }}
+        >
+          <Pressable style={{ position: "absolute", left: 15 }}>
+            <MaterialCommunityIcons color={mainColor} name="pencil" size={30} />
+          </Pressable>
+        </Animated.View>
+        <Animated.View
+          style={{
+            height: containerHeight,
+            right: 0,
+            width: 80,
+            position: "absolute",
+            borderTopEndRadius: borderRadius,
+            borderBottomRightRadius: borderRadius,
+            backgroundColor: offsetX.interpolate({
+              inputRange: [-60, -20, 0],
+              outputRange: ["red", secondaryBackgroundColor, secondaryBackgroundColor],
+            }),
+            justifyContent: "center",
+          }}
+        >
+          <Pressable style={{ position: "absolute", right: 15, alignItems: "center" }}>
+            <MaterialCommunityIcons color={mainColor} name="delete" size={32} />
+          </Pressable>
+        </Animated.View>
+      </View>
+    </GestureDetector>
   );
 };
