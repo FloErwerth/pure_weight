@@ -68,6 +68,7 @@ const useWorkoutGesturePan = ({ onEdit, onDelete }: { onEdit: () => void; onDele
   gesture.config = {
     maxPointers: 1,
     minPointers: 1,
+    minDist: 20,
     userSelect: "none",
     needsPointerData: true,
   };
