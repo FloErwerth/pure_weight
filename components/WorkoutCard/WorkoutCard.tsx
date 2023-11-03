@@ -4,9 +4,8 @@ import { useCallback, useMemo, useRef, useState } from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { IsoDate } from "../../types/date";
 import { ProgressDisplay } from "./components/ProgressDisplay/ProgressDisplay";
-import { BeginnWorkoutButton } from "./components/BeginnWorkoutButton/BeginnWorkoutButton";
 import { Gesture, GestureDetector, GestureStateChangeEvent, GestureUpdateEvent, PanGestureChangeEventPayload, PanGestureHandlerEventPayload } from "react-native-gesture-handler";
-import { Animated, View } from "react-native";
+import { Animated, Pressable, View } from "react-native";
 import { ThemedView } from "../Themed/ThemedView/View";
 import { useTheme } from "../../theme/context";
 import * as Haptics from "expo-haptics";
@@ -122,21 +121,22 @@ export const WorkoutCard = ({ handleNavigateToProgress, overallTrainingData, wor
 
   return (
     <GestureDetector gesture={gesture}>
-      <View ref={viewRef} onLayout={containerMeasurement}>
-        <Animated.View style={wrapperStyles}>
-          <ThemedView component style={styles.wrapper}>
-            <Text style={styles.title}>{workoutName}</Text>
-            <ProgressDisplay handleNavigateToProgress={handleNavigateToProgress} overallTrainingData={overallTrainingData} />
-            <BeginnWorkoutButton onClick={onClick} />
-          </ThemedView>
-        </Animated.View>
-        <Animated.View style={editContainerStyles}>
-          <MaterialCommunityIcons style={styles.editIcon} color={mainColor} name="pencil" size={30} />
-        </Animated.View>
-        <Animated.View style={deleteContainerStyles}>
-          <MaterialCommunityIcons style={styles.deleteIcon} color={mainColor} name="delete" size={32} />
-        </Animated.View>
-      </View>
+      <Pressable onPress={onClick}>
+        <View ref={viewRef} onLayout={containerMeasurement}>
+          <Animated.View style={wrapperStyles}>
+            <ThemedView component style={styles.wrapper}>
+              <Text style={styles.title}>{workoutName}</Text>
+              <ProgressDisplay handleNavigateToProgress={handleNavigateToProgress} overallTrainingData={overallTrainingData} />
+            </ThemedView>
+          </Animated.View>
+          <Animated.View style={editContainerStyles}>
+            <MaterialCommunityIcons style={styles.editIcon} color={mainColor} name="pencil" size={30} />
+          </Animated.View>
+          <Animated.View style={deleteContainerStyles}>
+            <MaterialCommunityIcons style={styles.deleteIcon} color={mainColor} name="delete" size={32} />
+          </Animated.View>
+        </View>
+      </Pressable>
     </GestureDetector>
   );
 };

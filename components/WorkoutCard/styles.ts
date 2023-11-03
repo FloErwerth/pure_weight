@@ -12,8 +12,7 @@ export const styles = StyleSheet.create({
   iconContainer: {
     width: 200,
     position: "absolute",
-    borderTopStartRadius: borderRadius,
-    borderBottomStartRadius: borderRadius,
+    borderRadius,
     justifyContent: "center",
   },
   editIcon: { position: "absolute", left: 15 },
