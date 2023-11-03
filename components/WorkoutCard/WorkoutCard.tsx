@@ -6,7 +6,7 @@ import { IsoDate } from "../../types/date";
 import { ProgressDisplay } from "./components/ProgressDisplay/ProgressDisplay";
 import { BeginnWorkoutButton } from "./components/BeginnWorkoutButton/BeginnWorkoutButton";
 import { Gesture, GestureDetector, GestureStateChangeEvent, GestureUpdateEvent, PanGestureChangeEventPayload, PanGestureHandlerEventPayload } from "react-native-gesture-handler";
-import { Animated, Pressable, View } from "react-native";
+import { Animated, View } from "react-native";
 import { ThemedView } from "../Themed/ThemedView/View";
 import { borderRadius } from "../../theme/border";
 import { useTheme } from "../../theme/context";
@@ -115,9 +115,7 @@ export const WorkoutCard = ({ handleNavigateToProgress, overallTrainingData, wor
             justifyContent: "center",
           }}
         >
-          <Pressable style={{ position: "absolute", left: 15 }}>
-            <MaterialCommunityIcons color={mainColor} name="pencil" size={30} />
-          </Pressable>
+          <MaterialCommunityIcons style={{ position: "absolute", left: 15 }} color={mainColor} name="pencil" size={30} />
         </Animated.View>
         <Animated.View
           style={{
@@ -134,9 +132,7 @@ export const WorkoutCard = ({ handleNavigateToProgress, overallTrainingData, wor
             justifyContent: "center",
           }}
         >
-          <Pressable style={{ position: "absolute", right: 15, alignItems: "center" }}>
-            <MaterialCommunityIcons color={mainColor} name="delete" size={32} />
-          </Pressable>
+          <MaterialCommunityIcons style={{ position: "absolute", right: 15, alignItems: "center" }} color={mainColor} name="delete" size={32} />
         </Animated.View>
       </View>
     </GestureDetector>
