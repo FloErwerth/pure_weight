@@ -6,6 +6,18 @@ export const styles = StyleSheet.create({
     fontSize: 26,
     padding: 10,
   },
+  animatedWrapper: {
+    zIndex: 1,
+  },
+  iconContainer: {
+    width: 200,
+    position: "absolute",
+    borderTopStartRadius: borderRadius,
+    borderBottomStartRadius: borderRadius,
+    justifyContent: "center",
+  },
+  editIcon: { position: "absolute", left: 15 },
+  deleteIcon: { position: "absolute", right: 15 },
   diffWrapper: {
     flex: 1,
     gap: 7,
