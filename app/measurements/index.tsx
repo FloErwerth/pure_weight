@@ -69,7 +69,7 @@ export function Measurements() {
   }, []);
 
   const pressableWrapperStyle = useMemo(() => [styles.pressableWrapper, { backgroundColor: componentBackgroundColor }], [componentBackgroundColor]);
-  const textStyle = useMemo(() => [styles.text, { color: mainColor }], [componentBackgroundColor]);
+  const textStyle = useMemo(() => [styles.text, { color: mainColor }], [mainColor]);
 
   return (
     <ThemedView style={{ flex: 1 }}>
