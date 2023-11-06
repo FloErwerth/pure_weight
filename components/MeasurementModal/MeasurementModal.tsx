@@ -1,10 +1,10 @@
-import { Animated, LayoutAnimation, Pressable, View } from "react-native";
+import { Animated, Pressable, View } from "react-native";
 import { ThemedTextInput } from "../Themed/ThemedTextInput/ThemedTextInput";
 import { borderRadius } from "../../theme/border";
 import { HStack } from "../HStack/HStack";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Modal, ModalProps } from "../Modal/Modal";
-import { Dispatch, SetStateAction, useCallback, useEffect, useRef, useState } from "react";
+import { Dispatch, SetStateAction, useCallback, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Measurement } from "../../app/measurements";
 import DateTimePicker from "@react-native-community/datetimepicker";
@@ -50,18 +50,6 @@ export const MeasurementModal = ({ isNewMeasurement = true, onRequestClose, isVi
     },
     [dispatch, measurement, setMeasurement],
   );
-
-  useEffect(() => {
-    if (isVisible) {
-      LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-      Animated.timing(opacity, {
-        toValue: showDatePicker ? 1 : 0,
-        duration: showDatePicker ? 300 : 150,
-        delay: showDatePicker ? 200 : 150,
-        useNativeDriver: false,
-      }).start();
-    }
-  }, [showWarning, isVisible, opacity, showDatePicker]);
 
   const collectErrors = useCallback(() => {
     const errors: ErrorFields[] = [];

@@ -1,9 +1,7 @@
 import { SiteNavigationButtons } from "../../components/SiteNavigationButtons/SiteNavigationButtons";
 import { useTranslation } from "react-i18next";
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { Pressable, View } from "react-native";
-import { AddButton } from "../../components/AddButton/AddButton";
-import { borderRadius } from "../../theme/border";
 import { HStack } from "../../components/HStack/HStack";
 import { useAppDispatch, useAppSelector } from "../../store";
 import { getMeasurements } from "../../store/selectors";
@@ -16,6 +14,7 @@ import { ThemedView } from "../../components/Themed/ThemedView/View";
 import { Text } from "../../components/Themed/ThemedText/Text";
 import { useTheme } from "../../theme/context";
 import { ThemedMaterialCommunityIcons } from "../../components/Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
+import { styles } from "../../components/App/measurements/styles";
 
 export type Measurement = {
   name?: string;
@@ -69,21 +68,23 @@ export function Measurements() {
     setShowMeasurementModal(false);
   }, []);
 
+  const pressableWrapperStyle = useMemo(() => [styles.pressableWrapper, { backgroundColor: componentBackgroundColor }], [componentBackgroundColor]);
+  const textStyle = useMemo(() => [styles.text, { color: mainColor }], [componentBackgroundColor]);
+
   return (
     <ThemedView style={{ flex: 1 }}>
-      <SiteNavigationButtons title={t("measurements")} />
-      <PageContent style={{ gap: 20 }}>
-        <View style={{ gap: 10 }}>
+      <SiteNavigationButtons title={t("measurements")} handleConfirm={handleAddNewMesaurement} handleConfirmIcon={{ name: "plus", size: 40 }} />
+      <PageContent style={styles.contentWrapper}>
+        <View style={styles.measurementsWrapper}>
           {measurements?.map((measurement) => (
             <Pressable key={`${measurement.name}-pressable`} onPress={() => handleAddExistingMeasurement(measurement)}>
-              <HStack style={{ padding: 15, backgroundColor: componentBackgroundColor, borderRadius, justifyContent: "space-between" }}>
-                <Text style={{ fontSize: 20, color: mainColor }}>{measurement.name}</Text>
+              <HStack style={pressableWrapperStyle}>
+                <Text style={textStyle}>{measurement.name}</Text>
                 <ThemedMaterialCommunityIcons name="plus" size={26} />
               </HStack>
             </Pressable>
           ))}
         </View>
-        <AddButton title={t("measurement_add")} onPress={handleAddNewMesaurement}></AddButton>
       </PageContent>
       <MeasurementModal
         isNewMeasurement={isNewMeasurement}

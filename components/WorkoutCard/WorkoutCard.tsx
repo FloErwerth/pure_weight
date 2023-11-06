@@ -133,7 +133,7 @@ export const WorkoutCard = ({ handleNavigateToProgress, overallTrainingData, wor
   }, [offsetX]);
 
   const animatedWrapperStyles = useMemo(() => [styles.animatedWrapper, { transform: [{ translateX: offsetX }] }], [offsetX]);
-  const outerIconOpacity = useMemo(() => offsetX.interpolate({ inputRange: [-1, 0, 1], outputRange: [1, 0, 1], extrapolate: "clamp" }), []);
+  const outerIconOpacity = useMemo(() => offsetX.interpolate({ inputRange: [-1, 0, 1], outputRange: [1, 0, 1], extrapolate: "clamp" }), [offsetX]);
   const outerIconWrapperStyles = useMemo(
     () => [
       styles.iconContainer,
