@@ -10,7 +10,7 @@ const DarkThemeColors: ThemeColors = {
   secondaryErrorColor: "rgba(170,0,0,0.5)",
   mainColor: "#ddd",
   secondaryColor: "#888",
-  primaryColor: "#0066aa",
+  primaryColor: "#222",
   warningColor: "#af7d00",
 };
 const LightThemeColors: ThemeColors = {

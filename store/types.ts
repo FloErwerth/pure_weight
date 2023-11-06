@@ -48,6 +48,10 @@ export type AppState = {
   settings: {
     language?: "en" | "de";
   };
+  latestDeletions: {
+    measurement?: { index: number; data: Measurement };
+    trainingDay?: { index: number; data: TrainingDay; exercise?: { index: number; data: ExerciseMetaDataWithDoneEntries } };
+  };
   measurements: Measurement[];
   errors: ErrorFields[];
   theme: ThemeKey;

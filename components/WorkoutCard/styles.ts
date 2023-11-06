@@ -2,9 +2,6 @@ import { StyleSheet } from "react-native";
 import { borderRadius } from "../../theme/border";
 
 export const styles = StyleSheet.create({
-  title: {
-    fontSize: 26,
-  },
   animatedWrapper: {
     zIndex: 1,
   },

@@ -9,12 +9,13 @@ import { HStack } from "../../../HStack/HStack";
 import { ThemedMaterialCommunityIcons } from "../../../Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
 import { Text } from "../../../Themed/ThemedText/Text";
 
+export type ProgressData = { date?: IsoDate; diff?: { absolute: number; percent: string } };
 export interface ProgressDisplayProps {
-  overallTrainingData: { date?: IsoDate; diff?: { absolute: number; percent: string } };
-  handleNavigateToProgress: () => void;
+  progressData: ProgressData;
+  onPress: () => void;
 }
-export const ProgressDisplay = ({ overallTrainingData, handleNavigateToProgress }: ProgressDisplayProps) => {
-  const isPositive = overallTrainingData.diff !== undefined && overallTrainingData.diff.absolute > 0;
+export const WorkoutProgress = ({ progressData, onPress }: ProgressDisplayProps) => {
+  const isPositive = progressData.diff !== undefined && progressData.diff.absolute > 0;
   const {
     t,
     i18n: { language },
@@ -25,17 +26,17 @@ export const ProgressDisplay = ({ overallTrainingData, handleNavigateToProgress 
     if (language === "en") {
       return (
         <>
-          {t("progress_text_1").concat("", t(isPositive ? "progress_increased" : "progress_decreased"))} by {overallTrainingData.diff?.percent}&thinsp;%
+          {t("progress_text_1").concat("", t(isPositive ? "progress_increased" : "progress_decreased"))} by {progressData.diff?.percent}&thinsp;%
         </>
       );
     } else {
       return (
         <>
-          {t("progress_text_1")} {overallTrainingData.diff?.percent}&thinsp;% {t(isPositive ? "progress_increased" : "progress_decreased")}
+          {t("progress_text_1")} {progressData.diff?.percent}&thinsp;% {t(isPositive ? "progress_increased" : "progress_decreased")}
         </>
       );
     }
-  }, [isPositive, language, overallTrainingData.diff?.percent, t]);
+  }, [isPositive, language, progressData.diff?.percent, t]);
 
   const chartStyle = useMemo(() => {
     if (isPositive) {
@@ -46,12 +47,12 @@ export const ProgressDisplay = ({ overallTrainingData, handleNavigateToProgress 
   }, [isPositive]);
   const hintStyles = useMemo(() => [styles.hint, { color: secondaryColor }], [secondaryColor]);
 
-  if (overallTrainingData.diff === undefined) {
+  if (progressData.diff === undefined) {
     return null;
   }
 
   return (
-    <Pressable onPress={handleNavigateToProgress}>
+    <Pressable onPress={onPress}>
       <ThemedView style={styles.progressWrapper} secondary>
         <HStack style={styles.diffWrapper}>
           <HStack style={styles.diffWrapper}>

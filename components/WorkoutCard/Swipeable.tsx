@@ -1,9 +1,6 @@
-import { Text } from "../Themed/ThemedText/Text";
 import { styles } from "./styles";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { PropsWithChildren, useCallback, useMemo, useRef, useState } from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { IsoDate } from "../../types/date";
-import { ProgressDisplay } from "./components/ProgressDisplay/ProgressDisplay";
 import { Gesture, GestureDetector, GestureStateChangeEvent, GestureUpdateEvent, PanGestureChangeEventPayload, PanGestureHandlerEventPayload } from "react-native-gesture-handler";
 import { Animated, Dimensions, Pressable, View } from "react-native";
 import { ThemedView } from "../Themed/ThemedView/View";
@@ -11,14 +8,12 @@ import { useTheme } from "../../theme/context";
 import * as Haptics from "expo-haptics";
 import { useAppSelector } from "../../store";
 import { getThemeKey } from "../../store/selectors";
+import ReAnimated, { FadeIn, FadeOut, Layout } from "react-native-reanimated";
 
-interface WorkoutCardProps {
-  workoutName: string;
+interface SwipeableProps extends PropsWithChildren {
   onClick: () => void;
-  onEdit: () => void;
-  onDelete: () => void;
-  overallTrainingData: { date?: IsoDate; diff?: { absolute: number; percent: string } };
-  handleNavigateToProgress: () => void;
+  onEdit?: () => void;
+  onDelete?: () => void;
 }
 
 const HALF_SCREEN = Dimensions.get("screen").width / 2;
@@ -29,17 +24,15 @@ const LIGHT_BACKGROUND_OUTPUT = ["#ff1111", "#aa1111", "#aa1111", "transparent",
 const DARK_BACKGROUND_OUTPUT = ["#991111", "#331111", "#331111", "transparent", "#115511", "#115511", "#118811"];
 const POSITION_RANGE = [-250, -100, 0, 100, 250];
 const POSITION_OUTPUT = [HALF_SCREEN - 50, 0, 0, 0, -HALF_SCREEN + 50];
-const useWorkoutGesturePan = ({ onEdit, onDelete }: { onEdit: () => void; onDelete: () => void }) => {
+const useWorkoutGesturePan = ({ onEdit, onDelete }: { onEdit?: () => void; onDelete?: () => void }) => {
   const gesture = useRef(Gesture.Pan()).current;
+  const [active, setActive] = useState(false);
 
-  useEffect(() => {
-    gesture.config = {
-      maxPointers: 1,
-      minPointers: 1,
-      minDist: 30,
-      userSelect: "none",
-    };
-  }, [gesture]);
+  gesture.config = {
+    maxPointers: 1,
+    minPointers: 1,
+    minDist: 30,
+  };
 
   const offsetX = useRef(new Animated.Value(0)).current;
   const theme = useAppSelector(getThemeKey);
@@ -64,44 +57,82 @@ const useWorkoutGesturePan = ({ onEdit, onDelete }: { onEdit: () => void; onDele
 
   const handleGestureUpdate = useCallback(
     (e: GestureUpdateEvent<PanGestureHandlerEventPayload & PanGestureChangeEventPayload>) => {
+      if (!active) {
+        setActive(true);
+      }
       const translation = e.translationX;
-      offsetX.setValue(translation);
+      if (onEdit && translation > 0) {
+        offsetX.setValue(translation);
+      }
+      if (onDelete && translation < 0) {
+        offsetX.setValue(translation);
+      }
     },
-    [offsetX],
+    [active, offsetX, onDelete, onEdit],
   );
 
   const handleGestureEnd = useCallback(
     (e: GestureStateChangeEvent<PanGestureHandlerEventPayload>) => {
       const translation = e.translationX;
       if (translation > 0) {
-        if (translation > EDIT_THRESHOLD) {
-          onEdit();
+        if (onEdit && translation > EDIT_THRESHOLD) {
+          Animated.timing(offsetX, {
+            toValue: 500,
+            duration: 200,
+            useNativeDriver: false,
+          }).start(() => {
+            Animated.timing(offsetX, {
+              toValue: 0,
+              duration: 200,
+              useNativeDriver: false,
+            }).start(() => setActive(false));
+          });
+          setTimeout(() => onEdit(), 200);
           void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+        } else {
+          Animated.timing(offsetX, {
+            toValue: 0,
+            duration: 200,
+            useNativeDriver: false,
+          }).start(() => setActive(false));
         }
       } else {
-        if (translation < DELETE_THRESHOLD) {
-          onDelete();
+        if (onDelete && translation < DELETE_THRESHOLD) {
+          Animated.timing(offsetX, {
+            toValue: -500,
+            duration: 200,
+            useNativeDriver: false,
+          }).start(() => {
+            Animated.timing(offsetX, {
+              toValue: 0,
+              duration: 200,
+              useNativeDriver: false,
+            }).start(() => setActive(false));
+          });
+          setTimeout(() => onDelete(), 200);
           void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+        } else {
+          Animated.timing(offsetX, {
+            toValue: 0,
+            duration: 200,
+            useNativeDriver: false,
+          }).start(() => setActive(false));
         }
       }
-      Animated.timing(offsetX, {
-        toValue: 0,
-        duration: 200,
-        useNativeDriver: false,
-      }).start();
     },
     [onEdit, onDelete, offsetX],
   );
 
+  gesture.onStart(() => setActive(false));
   gesture.onChange(handleGestureUpdate);
   gesture.onEnd(handleGestureEnd);
 
-  return [gesture, offsetX, interpolatedBackgroundColor] as const;
+  return [gesture, offsetX, interpolatedBackgroundColor, active] as const;
 };
 
-export const WorkoutCard = ({ handleNavigateToProgress, overallTrainingData, workoutName, onEdit, onDelete, onClick }: WorkoutCardProps) => {
-  const [gesture, offsetX, interpolatedBackgroundColor] = useWorkoutGesturePan({ onEdit, onDelete });
-  const [active, setActive] = useState(false);
+export const Swipeable = ({ onEdit, onDelete, onClick, children }: SwipeableProps) => {
+  const [gesture, offsetX, interpolatedBackgroundColor, active] = useWorkoutGesturePan({ onEdit, onDelete });
+
   const viewRef = useRef<View>(null);
   const { mainColor } = useTheme();
   const [containerMeasures, setContainerMeasures] = useState<{ width: number; height: number }>({ width: 200, height: 120 });
@@ -113,16 +144,6 @@ export const WorkoutCard = ({ handleNavigateToProgress, overallTrainingData, wor
       setContainerMeasures({ width, height: height - 10 });
     });
   }, []);
-
-  const handleOffsetX = useCallback(({ value }: { value: number }) => {
-    if (value !== 0) {
-      setActive(true);
-    } else {
-      setActive(false);
-    }
-  }, []);
-
-  offsetX.addListener(handleOffsetX);
 
   const interpolatedIconPosition = useMemo(() => {
     return offsetX.interpolate({
@@ -158,24 +179,32 @@ export const WorkoutCard = ({ handleNavigateToProgress, overallTrainingData, wor
     [containerMeasures.height, interpolatedIconPosition],
   );
 
+  const handleClick = useCallback(() => {
+    if (active) {
+      return;
+    }
+    onClick();
+  }, [onClick, active]);
+
   return (
-    <GestureDetector gesture={gesture}>
-      <Pressable disabled={active} onPress={onClick}>
-        <View ref={viewRef} onLayout={containerMeasurement}>
-          <Animated.View style={animatedWrapperStyles}>
-            <ThemedView component style={styles.wrapper}>
-              <Text style={styles.title}>{workoutName}</Text>
-              <ProgressDisplay handleNavigateToProgress={handleNavigateToProgress} overallTrainingData={overallTrainingData} />
-            </ThemedView>
-          </Animated.View>
-          <Animated.View style={outerIconWrapperStyles}>
-            <Animated.View style={innerIconWrapperStyles}>
-              <MaterialCommunityIcons style={styles.editIcon} color={computedColor} name="pencil" size={30} />
-              <MaterialCommunityIcons style={styles.deleteIcon} color={computedColor} name="delete" size={32} />
+    <ReAnimated.View exiting={FadeOut} entering={FadeIn} layout={Layout}>
+      <GestureDetector gesture={gesture}>
+        <Pressable onPress={handleClick}>
+          <View pointerEvents={"none"} ref={viewRef} onLayout={containerMeasurement}>
+            <Animated.View style={animatedWrapperStyles}>
+              <ThemedView component style={styles.wrapper}>
+                {children}
+              </ThemedView>
             </Animated.View>
-          </Animated.View>
-        </View>
-      </Pressable>
-    </GestureDetector>
+            <Animated.View style={outerIconWrapperStyles}>
+              <Animated.View style={innerIconWrapperStyles}>
+                {onEdit && <MaterialCommunityIcons style={styles.editIcon} color={computedColor} name="pencil" size={30} />}
+                {onDelete && <MaterialCommunityIcons style={styles.deleteIcon} color={computedColor} name="delete" size={32} />}
+              </Animated.View>
+            </Animated.View>
+          </View>
+        </Pressable>
+      </GestureDetector>
+    </ReAnimated.View>
   );
 };

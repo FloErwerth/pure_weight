@@ -5,8 +5,17 @@ import { ThemeKey } from "../theme/types";
 
 export const mockState: AppState = {
   measurements: [
-    { name: "Körpergewicht", unit: "kg", data: { ["2023-10-11"]: "85" } },
-    { name: "Körperfettanteil", unit: "%", data: { ["2023-10-11"]: "15" } },
+    { name: "Körpergewicht", unit: "kg", data: { ["2023-10-11"]: "85", ["2023-10-12"]: "86" } },
+    { name: "Körperfettanteil", unit: "%", data: { ["2023-10-11"]: "15", ["2023-10-12"]: "16" } },
+    { name: "Körperfettanteil1", unit: "%", data: { ["2023-10-11"]: "15", ["2023-10-12"]: "16" } },
+    { name: "Körperfettanteil2", unit: "%", data: { ["2023-10-11"]: "15", ["2023-10-12"]: "16" } },
+    { name: "Körperfettanteil3", unit: "%", data: { ["2023-10-11"]: "15", ["2023-10-12"]: "16" } },
+    { name: "Körperfettanteil4", unit: "%", data: { ["2023-10-11"]: "15", ["2023-10-12"]: "16" } },
+    { name: "Körperfettanteil5", unit: "%", data: { ["2023-10-11"]: "15", ["2023-10-12"]: "16" } },
+    { name: "Körperfettanteil6", unit: "%", data: { ["2023-10-11"]: "15", ["2023-10-12"]: "16" } },
+    { name: "Körperfettanteil7", unit: "%", data: { ["2023-10-11"]: "15", ["2023-10-12"]: "16" } },
+    { name: "Körperfettanteil8", unit: "%", data: { ["2023-10-11"]: "15", ["2023-10-12"]: "16" } },
+    { name: "Körperfettanteil9", unit: "%", data: { ["2023-10-11"]: "15", ["2023-10-12"]: "16" } },
   ],
   theme: "dark",
   setIndex: 0,
@@ -143,9 +152,11 @@ export const mockState: AppState = {
       ],
     },
   ],
+  latestDeletions: {},
 };
 export const emptyState: AppState = {
   measurements: [],
+  latestDeletions: {},
   exerciseIndex: 0,
   errors: [],
   settings: { language: "en" },
@@ -157,6 +168,9 @@ export const emptyState: AppState = {
 };
 
 export const addMeasurement = createAction<Measurement>("measurement_add");
+export const deleteMeasurement = createAction<number>("measurement_delete");
+export const recoverMeasurement = createAction("measurement_recover");
+export const recoverWorkout = createAction("workout_recover");
 export const setTheme = createAction<ThemeKey>("theme_set");
 export const setMockState = createAction("set_mock_state");
 export const setFirstTimeRendered = createAction<boolean>("set_greeting");
@@ -192,7 +206,22 @@ export const storeReducer = createReducer<AppState>(emptyState, (builder) =>
         measurements.push(action.payload);
         state.measurements = measurements;
       }
-      //sort here
+    })
+    .addCase(deleteMeasurement, (state, action) => {
+      const newMeasurements = [...state.measurements];
+      const deletedMeasurement = newMeasurements.splice(action.payload, 1);
+      state.latestDeletions = { ...state.latestDeletions, measurement: { index: action.payload, data: deletedMeasurement[0] } };
+      state.measurements = newMeasurements;
+    })
+    .addCase(recoverMeasurement, (state) => {
+      if (state.latestDeletions.measurement?.index !== undefined && state.latestDeletions.measurement?.data) {
+        state.measurements.splice(state.latestDeletions.measurement.index, 0, state.latestDeletions.measurement.data);
+      }
+    })
+    .addCase(recoverWorkout, (state) => {
+      if (state.latestDeletions.trainingDay?.index !== undefined && state.latestDeletions.trainingDay?.data) {
+        state.trainingDays.splice(state.latestDeletions.trainingDay.index, 0, state.latestDeletions.trainingDay.data);
+      }
     })
     .addCase(setTheme, (state, action) => {
       state.theme = action.payload;
@@ -223,7 +252,10 @@ export const storeReducer = createReducer<AppState>(emptyState, (builder) =>
       state.trainingDays.splice(action.payload.index, 1, action.payload.trainingDay);
     })
     .addCase(removeTrainingDay, (state, action) => {
-      state.trainingDays.splice(action.payload, 1);
+      const newTrainingDays = [...state.trainingDays];
+      const deletedTrainingDay = newTrainingDays.splice(action.payload, 1);
+      state.trainingDays = newTrainingDays;
+      state.latestDeletions = { ...state.latestDeletions, trainingDay: { index: action.payload, data: deletedTrainingDay[0] } };
     })
     .addCase(setTrainingDayIndex, (state, action) => {
       state.trainingDayIndex = action.payload;

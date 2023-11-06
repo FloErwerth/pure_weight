@@ -1,5 +1,5 @@
-import { Animated, LayoutAnimation, View, ViewProps } from "react-native";
-import { useEffect, useLayoutEffect, useMemo, useRef } from "react";
+import { Animated, View, ViewProps } from "react-native";
+import { useEffect, useMemo, useRef } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { styles } from "./styles";
 import { useTheme } from "../../theme/context";
@@ -24,11 +24,6 @@ export const Skeleton = ({ width, height, shape = "rect", style, borderRadius }:
       }),
     ).start();
   }, [fadeAnim, width]);
-
-  useLayoutEffect(() => {
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-    return () => LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-  }, []);
 
   const wrapperStyle = useMemo(() => [style, { ...styles.wrapper, width, height, borderRadius: shape === "circle" ? width : borderRadius }], [borderRadius, height, shape, style, width]);
   const transformStyle = useMemo(() => [{ translateX: fadeAnim }], [fadeAnim]);

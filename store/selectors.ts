@@ -11,6 +11,46 @@ export const getTrainingIndex = (state: AppState) => state.trainingDayIndex;
 export const getErrors = (state: AppState) => state.errors;
 export const getIsFirstTimeRendered = (state: AppState) => state.isFirstTimeRendered;
 export const getMeasurements = (state: AppState) => state.measurements;
+export const getLatestMeasurements = createSelector([getMeasurements], (measurements) =>
+  measurements.map(({ data }) => {
+    const dates = Object.keys(data);
+    return dates[dates.length - 1] as IsoDate;
+  }),
+);
+export const getMeasurementDataFromIndex = createSelector([getMeasurements], (measurements) => {
+  return (index: number) => {
+    const measurement = measurements[index];
+    if (measurement?.data) {
+      return Object.values(measurement?.data).map((data) => parseFloat(data));
+    }
+    return undefined;
+  };
+});
+
+export const getMeasurementUnitByIndex = createSelector([getMeasurements], (measurements) => {
+  return (index: number) => {
+    const measurement = measurements[index];
+    if (measurement?.unit) {
+      return measurement?.unit;
+    }
+    return undefined;
+  };
+});
+
+export const getMeasurmentProgress = createSelector([getMeasurementDataFromIndex, getMeasurementUnitByIndex], (measurementDataGetter, unitGetter) => {
+  return (measurementIndex: number) => {
+    const data = measurementDataGetter(measurementIndex);
+    if (data && data?.length >= 2) {
+      const latest = data[data?.length - 1];
+      const secondLatest = data[data?.length - 2];
+
+      return { absolute: latest - secondLatest, unit: unitGetter(measurementIndex) };
+    }
+
+    return undefined;
+  };
+});
+
 export const getSavedTrainings = (state: AppState) => state.trainingDays;
 export const getSelectedTrainingDayIndex = (state: AppState) => state.trainingDayIndex;
 export const getSelectedTrainingDay = createSelector([getSavedTrainings, getSelectedTrainingDayIndex], (trainings, index) => {

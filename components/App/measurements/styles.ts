@@ -8,6 +8,11 @@ export const styles = StyleSheet.create({
   measurementsWrapper: {
     gap: 10,
   },
-  pressableWrapper: { padding: 15, borderRadius, justifyContent: "space-between" },
-  text: { fontSize: 20 },
+  pressableWrapper: {
+    padding: 15,
+    borderRadius,
+    justifyContent: "space-between",
+    alignItems: "flex-start",
+  },
+  text: { fontSize: 26 },
 });

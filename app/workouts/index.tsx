@@ -1,23 +1,32 @@
-import { FlatList, View } from "react-native";
+import { FlatList, Pressable, View } from "react-native";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "../../hooks/navigate";
 import { useAppDispatch, useAppSelector } from "../../store";
 import { getLanguage, getOverallTrainingTrend, getSavedTrainings } from "../../store/selectors";
-import { cleanErrors, removeTrainingDay, setExerciseIndex, setSetIndex, setTrainingDayIndex } from "../../store/reducer";
+import { cleanErrors, recoverWorkout, removeTrainingDay, setExerciseIndex, setSetIndex, setTrainingDayIndex } from "../../store/reducer";
 import { styles } from "../../components/App/index/styles";
-import { AlertModal } from "../../components/AlertModal/AlertModal";
 import { SiteNavigationButtons } from "../../components/SiteNavigationButtons/SiteNavigationButtons";
 import { useTranslation } from "react-i18next";
 import * as Locale from "expo-localization";
 import { ThemedView } from "../../components/Themed/ThemedView/View";
 import { PageContent } from "../../components/PageContent/PageContent";
-import { WorkoutCard } from "../../components/WorkoutCard/WorkoutCard";
+import { Swipeable } from "../../components/WorkoutCard/Swipeable";
+import { Text } from "../../components/Themed/ThemedText/Text";
+import { WorkoutProgress } from "../../components/WorkoutCard/components/ProgressDisplay/WorkoutProgress";
+import Toast from "react-native-root-toast";
+import { VStack } from "../../components/VStack/VStack";
+import { borderRadius } from "../../theme/border";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { ThemedToast } from "../../components/Themed/ThemedToast/ThemedToast";
+import { useTheme } from "../../theme/context";
 
 export function Workouts() {
   const language = useAppSelector(getLanguage);
+  const { mainColor, secondaryColor, secondaryBackgroundColor } = useTheme();
   const dispatch = useAppDispatch();
   const { t, i18n } = useTranslation();
   const previousTrainingByIndex = useAppSelector(getOverallTrainingTrend);
+  const [showToast, setShowToast] = useState(false);
 
   useEffect(() => {
     i18n.changeLanguage(language ?? Locale.getLocales()[0].languageCode ?? "en");
@@ -29,8 +38,6 @@ export function Workouts() {
   }, []);
 
   const navigate = useNavigate();
-
-  const [deleteIndex, setDeleteIndex] = useState<number | undefined>(undefined);
 
   const savedTrainings = useAppSelector(getSavedTrainings);
 
@@ -54,10 +61,10 @@ export function Workouts() {
   const handleDelete = useCallback(
     (index: number) => {
       dispatch(removeTrainingDay(index));
+      setShowToast(true);
     },
     [dispatch],
   );
-  const handleShowAlert = useCallback((index: number) => setDeleteIndex(index), []);
 
   const handleEdit = useCallback(
     (index: number) => {
@@ -72,7 +79,7 @@ export function Workouts() {
   const mappedTrainings = useMemo(() => {
     return savedTrainings.map((trainingDay, index) => {
       const onEdit = () => handleEdit(index);
-      const onDelete = () => handleShowAlert(index);
+      const onDelete = () => handleDelete(index);
       const key = trainingDay.name.concat("-key").concat((index * Math.random() * 2).toString());
       const onClick = () => handleNavigateToTrain(index);
       const overallTrainingData = previousTrainingByIndex(index);
@@ -83,20 +90,12 @@ export function Workouts() {
 
       return { handleNavigateToProgress, onEdit, onDelete, key, onClick, workoutName: trainingDay.name, overallTrainingData };
     });
-  }, [dispatch, handleEdit, handleNavigateToTrain, handleShowAlert, navigate, previousTrainingByIndex, savedTrainings]);
+  }, [dispatch, handleDelete, handleEdit, handleNavigateToTrain, navigate, previousTrainingByIndex, savedTrainings]);
 
-  const handleCancelAlert = useCallback(() => {
-    setDeleteIndex(undefined);
-  }, []);
-
-  const handleConfirmAlert = useCallback(() => {
-    if (deleteIndex !== undefined) {
-      handleDelete(deleteIndex);
-      handleCancelAlert();
-    }
-  }, [deleteIndex, handleCancelAlert, handleDelete]);
-
-  const alertModalConfig = useMemo(() => ({ title: "Delete training?", content: "This action can't be undone" }), []);
+  const handleRecoverWorkout = useCallback(() => {
+    dispatch(recoverWorkout());
+    setShowToast(false);
+  }, [dispatch]);
 
   return (
     <ThemedView style={styles.view}>
@@ -109,20 +108,23 @@ export function Workouts() {
             style={styles.savedTrainings}
             data={mappedTrainings}
             renderItem={({ item: { handleNavigateToProgress, workoutName, key, onEdit, onDelete, onClick, overallTrainingData } }) => (
-              <WorkoutCard
-                handleNavigateToProgress={handleNavigateToProgress}
-                overallTrainingData={overallTrainingData}
-                onEdit={onEdit}
-                onDelete={onDelete}
-                onClick={onClick}
-                key={key}
-                workoutName={workoutName}
-              />
+              <Swipeable onEdit={onEdit} onDelete={onDelete} onClick={onClick} key={key}>
+                <Text style={styles.title}>{workoutName}</Text>
+                <WorkoutProgress onPress={handleNavigateToProgress} progressData={overallTrainingData} />
+              </Swipeable>
             )}
           ></FlatList>
         </PageContent>
       </View>
-      {deleteIndex !== undefined && <AlertModal title={alertModalConfig.title} content={alertModalConfig.content} isVisible={true} onCancel={handleCancelAlert} onConfirm={handleConfirmAlert} />}
+      <ThemedToast onPress={() => setShowToast(false)} opacity={1} position={Toast.positions.BOTTOM - 75} visible={showToast}>
+        <VStack style={{ gap: 10, justifyContent: "space-evenly" }}>
+          <Text style={{ fontSize: 16, fontWeight: "bold" }}>{t("measurement_deleted_message")}</Text>
+          <Pressable style={{ padding: 10, justifyContent: "space-between", flexDirection: "row", borderRadius, backgroundColor: secondaryBackgroundColor }} onPress={handleRecoverWorkout}>
+            <Text style={{ alignSelf: "center", fontSize: 16, color: secondaryColor }}>{t("measurement_deleted_undo")}</Text>
+            <MaterialCommunityIcons color={mainColor} name="undo" size={20} />
+          </Pressable>
+        </VStack>
+      </ThemedToast>
     </ThemedView>
   );
 }

@@ -14,6 +14,9 @@ export const styles = StyleSheet.create({
   view: {
     flex: 1,
   },
+  title: {
+    fontSize: 26,
+  },
   listContainer: {
     borderRadius,
   },
