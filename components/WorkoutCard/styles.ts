@@ -10,9 +10,10 @@ export const styles = StyleSheet.create({
     zIndex: 1,
   },
   iconContainer: {
-    width: 200,
     position: "absolute",
     borderRadius,
+  },
+  innerIconContainer: {
     justifyContent: "center",
   },
   editIcon: { position: "absolute", left: 15 },

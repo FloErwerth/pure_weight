@@ -104,6 +104,7 @@ export function Workouts() {
         <SiteNavigationButtons title={t("workouts")} handleConfirmIcon={confirmIcon} handleConfirm={handlePress} />
         <PageContent>
           <FlatList
+            decelerationRate="normal"
             keyExtractor={(item) => item.key}
             style={styles.savedTrainings}
             data={mappedTrainings}
