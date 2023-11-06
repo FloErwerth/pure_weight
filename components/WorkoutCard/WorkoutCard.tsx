@@ -25,8 +25,8 @@ const HALF_SCREEN = Dimensions.get("screen").width / 2;
 const DELETE_THRESHOLD = -60;
 const EDIT_THRESHOLD = 60;
 const BACKGROUND_INPUT = [DELETE_THRESHOLD - 5, DELETE_THRESHOLD, -1, 0, 1, EDIT_THRESHOLD, EDIT_THRESHOLD + 5];
-const LIGHT_BACKGROUND_OUTPUT = ["#ff1111", "#aa1111", "#aa1111", "white", "#113311", "#11aa11", "#11cc11"];
-const DARK_BACKGROUND_OUTPUT = ["#991111", "#331111", "#331111", "black", "#115511", "#115511", "#118811"];
+const LIGHT_BACKGROUND_OUTPUT = ["#ff1111", "#aa1111", "#aa1111", "transparent", "#113311", "#11aa11", "#11cc11"];
+const DARK_BACKGROUND_OUTPUT = ["#991111", "#331111", "#331111", "transparent", "#115511", "#115511", "#118811"];
 const POSITION_RANGE = [-250, -100, 0, 100, 250];
 const POSITION_OUTPUT = [HALF_SCREEN - 50, 0, 0, 0, -HALF_SCREEN + 50];
 const useWorkoutGesturePan = ({ onEdit, onDelete }: { onEdit: () => void; onDelete: () => void }) => {
@@ -36,18 +36,13 @@ const useWorkoutGesturePan = ({ onEdit, onDelete }: { onEdit: () => void; onDele
     gesture.config = {
       maxPointers: 1,
       minPointers: 1,
-      minDist: 10,
+      minDist: 30,
       userSelect: "none",
     };
   }, [gesture]);
 
   const offsetX = useRef(new Animated.Value(0)).current;
-  const [active, setActive] = useState(false);
   const theme = useAppSelector(getThemeKey);
-
-  const handleGestureStart = useCallback(() => {
-    setActive(true);
-  }, []);
 
   const outputRange = useMemo(() => {
     if (theme === "dark") {
@@ -94,20 +89,19 @@ const useWorkoutGesturePan = ({ onEdit, onDelete }: { onEdit: () => void; onDele
         duration: 200,
         useNativeDriver: false,
       }).start();
-      setActive(false);
     },
     [onEdit, onDelete, offsetX],
   );
 
-  gesture.onBegin(handleGestureStart);
   gesture.onChange(handleGestureUpdate);
   gesture.onEnd(handleGestureEnd);
 
-  return [gesture, offsetX, active, interpolatedBackgroundColor] as const;
+  return [gesture, offsetX, interpolatedBackgroundColor] as const;
 };
 
 export const WorkoutCard = ({ handleNavigateToProgress, overallTrainingData, workoutName, onEdit, onDelete, onClick }: WorkoutCardProps) => {
-  const [gesture, offsetX, active, interpolatedBackgroundColor] = useWorkoutGesturePan({ onEdit, onDelete });
+  const [gesture, offsetX, interpolatedBackgroundColor] = useWorkoutGesturePan({ onEdit, onDelete });
+  const [active, setActive] = useState(false);
   const viewRef = useRef<View>(null);
   const { mainColor } = useTheme();
   const [containerMeasures, setContainerMeasures] = useState<{ width: number; height: number }>({ width: 200, height: 120 });
@@ -120,6 +114,16 @@ export const WorkoutCard = ({ handleNavigateToProgress, overallTrainingData, wor
     });
   }, []);
 
+  const handleOffsetX = useCallback(({ value }: { value: number }) => {
+    if (value !== 0) {
+      setActive(true);
+    } else {
+      setActive(false);
+    }
+  }, []);
+
+  offsetX.addListener(handleOffsetX);
+
   const interpolatedIconPosition = useMemo(() => {
     return offsetX.interpolate({
       inputRange: POSITION_RANGE,
@@ -129,17 +133,18 @@ export const WorkoutCard = ({ handleNavigateToProgress, overallTrainingData, wor
   }, [offsetX]);
 
   const animatedWrapperStyles = useMemo(() => [styles.animatedWrapper, { transform: [{ translateX: offsetX }] }], [offsetX]);
-
+  const outerIconOpacity = useMemo(() => offsetX.interpolate({ inputRange: [-1, 0, 1], outputRange: [1, 0, 1], extrapolate: "clamp" }), []);
   const outerIconWrapperStyles = useMemo(
     () => [
       styles.iconContainer,
       {
+        opacity: outerIconOpacity,
         height: containerMeasures.height,
         width: containerMeasures.width,
         backgroundColor: interpolatedBackgroundColor,
       },
     ],
-    [containerMeasures, interpolatedBackgroundColor],
+    [containerMeasures.height, containerMeasures.width, interpolatedBackgroundColor, outerIconOpacity],
   );
 
   const innerIconWrapperStyles = useMemo(

@@ -266,7 +266,7 @@ export const StopwatchPopover = () => {
 
       <Button theme="secondary" onLayout={getButtonPos} reference={buttonRef} onPress={togglePopover}>
         <Animated.View style={{ opacity: iconOpacity, position: "absolute", alignItems: "center", width: "100%" }}>
-          <MaterialCommunityIcons name="timer-outline" color={mainColor} size={40} />
+          <MaterialCommunityIcons name="timer-outline" color={mainColor} size={35} />
         </Animated.View>
         <Animated.View style={{ opacity }}>
           <StopWatch

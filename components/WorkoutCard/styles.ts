@@ -4,7 +4,6 @@ import { borderRadius } from "../../theme/border";
 export const styles = StyleSheet.create({
   title: {
     fontSize: 26,
-    padding: 10,
   },
   animatedWrapper: {
     zIndex: 1,
@@ -38,6 +37,6 @@ export const styles = StyleSheet.create({
     borderRadius,
     gap: 10,
     marginBottom: 10,
-    paddingBottom: 10,
+    padding: 10,
   },
 });

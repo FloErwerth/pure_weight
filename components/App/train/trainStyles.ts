@@ -3,9 +3,7 @@ import { borderRadius } from "../../../theme/border";
 
 export const trainStyles = StyleSheet.create({
   buttons: {
-    justifyContent: "space-evenly",
-    gap: 20,
-    alignItems: "center",
+    justifyContent: "center",
   },
   flexOneView: {
     flex: 1,
