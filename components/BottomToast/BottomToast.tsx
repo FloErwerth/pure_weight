@@ -7,26 +7,50 @@ import { borderRadius } from "../../theme/border";
 import { HStack } from "../HStack/HStack";
 import { ThemedMaterialCommunityIcons } from "../Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
 import { Button } from "../Themed/Button/Button";
-import { useCallback } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import * as Progress from "react-native-progress";
+import { useTheme } from "../../theme/context";
 
 interface BottomToastProps {
   titleKey: string;
   messageKey: string;
   onRedo?: () => void;
-  onRequestClose?: () => void;
+  onRequestClose: () => void;
   open: boolean;
 }
 const deviceWidth = Dimensions.get("screen").width;
-
+const TIME = 5000;
+const TIME_STEP = 25;
 export const BottomToast = ({ titleKey, messageKey, onRedo, open, onRequestClose }: BottomToastProps) => {
   const { t } = useTranslation();
+  const { primaryColor, secondaryColor } = useTheme();
+  const timer = useRef<NodeJS.Timeout>();
+  const time = useRef<number>(TIME);
+  const [progress, setProgress] = useState(1);
 
   const handleRequestClose = useCallback(() => {
-    if (!onRequestClose) {
-      return;
-    }
     onRequestClose();
+    setProgress(1);
+    clearInterval(timer.current);
   }, [onRequestClose]);
+
+  useEffect(() => {
+    if (progress < -0.05) {
+      handleRequestClose();
+    }
+  }, [handleRequestClose, progress]);
+
+  useEffect(() => {
+    if (open) {
+      time.current = TIME;
+      timer.current = setInterval(() => {
+        setProgress((time.current - TIME_STEP) / TIME);
+        time.current -= TIME_STEP;
+      }, TIME_STEP);
+    } else {
+      clearInterval(timer.current);
+    }
+  }, [open]);
 
   if (!open) {
     return null;
@@ -55,6 +79,7 @@ export const BottomToast = ({ titleKey, messageKey, onRedo, open, onRequestClose
             </HStack>
           </Button>
         </ThemedView>
+        <Progress.Bar width={deviceWidth} indeterminate={false} borderWidth={0} borderRadius={0} unfilledColor={secondaryColor} color={primaryColor} progress={progress}></Progress.Bar>
       </Pressable>
     </ReAnimated.View>
   );
