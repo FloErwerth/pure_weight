@@ -13,6 +13,8 @@
   "measurement_latest": "Latest measurement:",
   "measurement_deleted_message": "Measurement successfully deleted",
   "measurement_deleted_undo": "Undo the deletion",
+  "workout_deleted_title": "Workout successfully deleted",
+  "workout_deleted_message": "Undo the deletion",
   "edit_workout": "Edit workout",
   "create_workout": "Create workout",
   "workout_name": "Workout name",

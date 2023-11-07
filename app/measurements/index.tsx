@@ -1,7 +1,7 @@
 import { SiteNavigationButtons } from "../../components/SiteNavigationButtons/SiteNavigationButtons";
 import { useTranslation } from "react-i18next";
 import { useCallback, useState } from "react";
-import { Pressable, ScrollView } from "react-native";
+import { ScrollView } from "react-native";
 import { useAppDispatch, useAppSelector } from "../../store";
 import { getMeasurements } from "../../store/selectors";
 import { addMeasurement, deleteMeasurement, recoverMeasurement } from "../../store/reducer";
@@ -10,16 +10,11 @@ import { z } from "zod/lib/index";
 import { getDateTodayIso } from "../../utils/date";
 import { PageContent } from "../../components/PageContent/PageContent";
 import { ThemedView } from "../../components/Themed/ThemedView/View";
-import { Text } from "../../components/Themed/ThemedText/Text";
 import { useTheme } from "../../theme/context";
 import { styles } from "../../components/App/measurements/styles";
-import { VStack } from "../../components/VStack/VStack";
 import { Swipeable } from "../../components/WorkoutCard/Swipeable";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { borderRadius } from "../../theme/border";
-import Toast from "react-native-root-toast";
-import { ThemedToast } from "../../components/Themed/ThemedToast/ThemedToast";
 import { RenderedMeasurement } from "../../components/App/measurements/Measurement";
+import { BottomToast } from "../../components/BottomToast/BottomToast";
 
 export type Measurement = {
   name?: string;
@@ -107,15 +102,7 @@ export function Measurements() {
         onRequestClose={handleDiscardMeasurment}
         measurement={measurement}
       />
-      <ThemedToast onPress={() => setShowToast(false)} opacity={1} position={Toast.positions.BOTTOM - 75} visible={showToast}>
-        <VStack style={{ gap: 10, justifyContent: "space-evenly" }}>
-          <Text style={{ fontSize: 16, fontWeight: "bold" }}>{t("measurement_deleted_message")}</Text>
-          <Pressable style={{ padding: 10, justifyContent: "space-between", flexDirection: "row", borderRadius, backgroundColor: secondaryBackgroundColor }} onPress={handleRecoverMeasurement}>
-            <Text style={{ alignSelf: "center", fontSize: 16, color: secondaryColor }}>{t("measurement_deleted_undo")}</Text>
-            <MaterialCommunityIcons color={mainColor} name="undo" size={20} />
-          </Pressable>
-        </VStack>
-      </ThemedToast>
+      <BottomToast onRequestClose={() => setShowToast(false)} open={showToast} messageKey={"measurement_deleted_undo"} titleKey={"measurement_deleted_message"} onRedo={handleRecoverMeasurement} />
     </ThemedView>
   );
 }

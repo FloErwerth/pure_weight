@@ -1,4 +1,4 @@
-import { FlatList, Pressable, View } from "react-native";
+import { FlatList, View } from "react-native";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "../../hooks/navigate";
 import { useAppDispatch, useAppSelector } from "../../store";
@@ -13,12 +13,8 @@ import { PageContent } from "../../components/PageContent/PageContent";
 import { Swipeable } from "../../components/WorkoutCard/Swipeable";
 import { Text } from "../../components/Themed/ThemedText/Text";
 import { WorkoutProgress } from "../../components/WorkoutCard/components/ProgressDisplay/WorkoutProgress";
-import Toast from "react-native-root-toast";
-import { VStack } from "../../components/VStack/VStack";
-import { borderRadius } from "../../theme/border";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { ThemedToast } from "../../components/Themed/ThemedToast/ThemedToast";
 import { useTheme } from "../../theme/context";
+import { BottomToast } from "../../components/BottomToast/BottomToast";
 
 export function Workouts() {
   const language = useAppSelector(getLanguage);
@@ -116,15 +112,7 @@ export function Workouts() {
           ></FlatList>
         </PageContent>
       </View>
-      <ThemedToast onPress={() => setShowToast(false)} opacity={1} position={Toast.positions.BOTTOM - 75} visible={showToast}>
-        <VStack style={{ gap: 10, justifyContent: "space-evenly" }}>
-          <Text style={{ fontSize: 16, fontWeight: "bold" }}>{t("measurement_deleted_message")}</Text>
-          <Pressable style={{ padding: 10, justifyContent: "space-between", flexDirection: "row", borderRadius, backgroundColor: secondaryBackgroundColor }} onPress={handleRecoverWorkout}>
-            <Text style={{ alignSelf: "center", fontSize: 16, color: secondaryColor }}>{t("measurement_deleted_undo")}</Text>
-            <MaterialCommunityIcons color={mainColor} name="undo" size={20} />
-          </Pressable>
-        </VStack>
-      </ThemedToast>
+      <BottomToast onRequestClose={() => setShowToast(false)} open={showToast} messageKey={"workout_deleted_message"} titleKey={"workout_deleted_title"} onRedo={handleRecoverWorkout} />
     </ThemedView>
   );
 }

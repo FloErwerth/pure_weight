@@ -28,6 +28,8 @@
   "alert_quit_message": "Der bisherige Fortschritt wird gespeichert",
   "alert_delete_confirm": "Bestätigen",
   "alert_delete_cancel": "Abbrechen",
+  "workout_deleted_title": "Workout erfolgreich gelöscht",
+  "workout_deleted_message": "Löschung rückgängig machen",
   "training_done": "Workout abschließen",
   "training_header_reps": "Wdh.",
   "training_header_sets_single": "Satz",

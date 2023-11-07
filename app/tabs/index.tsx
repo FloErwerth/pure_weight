@@ -19,7 +19,7 @@ export function TabsWrapper() {
       <Tabs.Navigator
         initialRouteName="workouts"
         screenOptions={{
-          tabBarStyle: { backgroundColor: componentBackgroundColor, borderTopWidth: 0, paddingTop: 5 },
+          tabBarStyle: { backgroundColor: componentBackgroundColor, borderTopWidth: 0, paddingTop: 5, height: 80, zIndex: 1 },
         }}
       >
         <Tabs.Screen
