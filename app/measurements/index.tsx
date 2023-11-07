@@ -1,19 +1,17 @@
 import { SiteNavigationButtons } from "../../components/SiteNavigationButtons/SiteNavigationButtons";
 import { useTranslation } from "react-i18next";
-import { useCallback, useMemo, useState } from "react";
-import { Pressable, ScrollView, View } from "react-native";
-import { HStack } from "../../components/HStack/HStack";
+import { useCallback, useState } from "react";
+import { Pressable, ScrollView } from "react-native";
 import { useAppDispatch, useAppSelector } from "../../store";
-import { getLanguage, getLatestMeasurements, getMeasurements } from "../../store/selectors";
+import { getMeasurements } from "../../store/selectors";
 import { addMeasurement, deleteMeasurement, recoverMeasurement } from "../../store/reducer";
 import { MeasurementModal } from "../../components/MeasurementModal/MeasurementModal";
 import { z } from "zod/lib/index";
-import { getDate, getDateTodayIso } from "../../utils/date";
+import { getDateTodayIso } from "../../utils/date";
 import { PageContent } from "../../components/PageContent/PageContent";
 import { ThemedView } from "../../components/Themed/ThemedView/View";
 import { Text } from "../../components/Themed/ThemedText/Text";
 import { useTheme } from "../../theme/context";
-import { ThemedMaterialCommunityIcons } from "../../components/Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
 import { styles } from "../../components/App/measurements/styles";
 import { VStack } from "../../components/VStack/VStack";
 import { Swipeable } from "../../components/WorkoutCard/Swipeable";
@@ -21,6 +19,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { borderRadius } from "../../theme/border";
 import Toast from "react-native-root-toast";
 import { ThemedToast } from "../../components/Themed/ThemedToast/ThemedToast";
+import { RenderedMeasurement } from "../../components/App/measurements/Measurement";
 
 export type Measurement = {
   name?: string;
@@ -35,11 +34,10 @@ const dateParser = z.date().transform((date) => {
 });
 
 export function Measurements() {
-  const { mainColor, componentBackgroundColor, secondaryBackgroundColor, secondaryColor } = useTheme();
+  const { mainColor, secondaryBackgroundColor, secondaryColor } = useTheme();
   const { t } = useTranslation();
   const [showMeasurementModal, setShowMeasurementModal] = useState(false);
   const measurements = useAppSelector(getMeasurements);
-  const latestMeasurements = useAppSelector(getLatestMeasurements);
   const [measurement, setMeasurement] = useState<Measurement>(emptyMeasurement);
   const [isNewMeasurement, setIsNewMeasurement] = useState(false);
   const dispatch = useAppDispatch();
@@ -76,10 +74,6 @@ export function Measurements() {
     setTimeout(() => setMeasurement(emptyMeasurement), 200);
   }, []);
 
-  const pressableWrapperStyle = useMemo(() => [styles.pressableWrapper, { backgroundColor: componentBackgroundColor }], [componentBackgroundColor]);
-  const textStyle = useMemo(() => [styles.text, { color: mainColor }], [mainColor]);
-  const language = useAppSelector(getLanguage);
-
   const handleDeleteMeasurement = useCallback(
     (index: number) => {
       dispatch(deleteMeasurement(index));
@@ -100,20 +94,7 @@ export function Measurements() {
         <ScrollView style={styles.measurementsWrapper}>
           {measurements?.map((measurement, index) => (
             <Swipeable onDelete={() => handleDeleteMeasurement(index)} key={`${measurement.name}-pressable`} onClick={() => handleAddExistingMeasurement(measurement)}>
-              <HStack style={pressableWrapperStyle}>
-                <VStack style={{ gap: 15, flex: 1, paddingRight: 10 }}>
-                  <View>
-                    <Text style={textStyle}>{measurement.name}</Text>
-                    <Text>
-                      {t("measurement_latest")} {getDate(latestMeasurements[index], language)}
-                    </Text>
-                  </View>
-                  <Pressable>
-                    <Text>Show progress</Text>
-                  </Pressable>
-                </VStack>
-                <ThemedMaterialCommunityIcons name="table-large-plus" size={26} />
-              </HStack>
+              <RenderedMeasurement index={index} measurement={measurement} />
             </Swipeable>
           ))}
         </ScrollView>

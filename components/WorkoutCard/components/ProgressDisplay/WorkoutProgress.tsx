@@ -1,13 +1,14 @@
 import { IsoDate } from "../../../../types/date";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "../../../../theme/context";
-import { useMemo } from "react";
+import { useCallback, useContext, useMemo } from "react";
 import { styles } from "../../styles";
 import { Pressable, View } from "react-native";
 import { ThemedView } from "../../../Themed/ThemedView/View";
 import { HStack } from "../../../HStack/HStack";
 import { ThemedMaterialCommunityIcons } from "../../../Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
 import { Text } from "../../../Themed/ThemedText/Text";
+import { swipableContext } from "../../Swipeable";
 
 export type ProgressData = { date?: IsoDate; diff?: { absolute: number; percent: string } };
 export interface ProgressDisplayProps {
@@ -16,6 +17,7 @@ export interface ProgressDisplayProps {
 }
 export const WorkoutProgress = ({ progressData, onPress }: ProgressDisplayProps) => {
   const isPositive = progressData.diff !== undefined && progressData.diff.absolute > 0;
+  const active = useContext(swipableContext);
   const {
     t,
     i18n: { language },
@@ -47,12 +49,19 @@ export const WorkoutProgress = ({ progressData, onPress }: ProgressDisplayProps)
   }, [isPositive]);
   const hintStyles = useMemo(() => [styles.hint, { color: secondaryColor }], [secondaryColor]);
 
+  const handlePress = useCallback(() => {
+    if (active) {
+      return;
+    }
+    onPress();
+  }, [active, onPress]);
+
   if (progressData.diff === undefined) {
     return null;
   }
 
   return (
-    <Pressable onPress={onPress}>
+    <Pressable onPress={handlePress}>
       <ThemedView style={styles.progressWrapper} secondary>
         <HStack style={styles.diffWrapper}>
           <HStack style={styles.diffWrapper}>

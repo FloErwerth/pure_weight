@@ -1,5 +1,5 @@
 import { styles } from "./styles";
-import { PropsWithChildren, useCallback, useMemo, useRef, useState } from "react";
+import { createContext, PropsWithChildren, useCallback, useMemo, useRef, useState } from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Gesture, GestureDetector, GestureStateChangeEvent, GestureUpdateEvent, PanGestureChangeEventPayload, PanGestureHandlerEventPayload } from "react-native-gesture-handler";
 import { Animated, Dimensions, Pressable, View } from "react-native";
@@ -130,8 +130,16 @@ const useWorkoutGesturePan = ({ onEdit, onDelete }: { onEdit?: () => void; onDel
   return [gesture, offsetX, interpolatedBackgroundColor, active] as const;
 };
 
+export const swipableContext = createContext<boolean>(false);
 export const Swipeable = ({ onEdit, onDelete, onClick, children }: SwipeableProps) => {
   const [gesture, offsetX, interpolatedBackgroundColor, active] = useWorkoutGesturePan({ onEdit, onDelete });
+
+  const Provider = useCallback(
+    ({ children }: PropsWithChildren) => {
+      return <swipableContext.Provider value={active}>{children}</swipableContext.Provider>;
+    },
+    [active],
+  );
 
   const viewRef = useRef<View>(null);
   const { mainColor } = useTheme();
@@ -193,7 +201,7 @@ export const Swipeable = ({ onEdit, onDelete, onClick, children }: SwipeableProp
           <View pointerEvents={"none"} ref={viewRef} onLayout={containerMeasurement}>
             <Animated.View style={animatedWrapperStyles}>
               <ThemedView component style={styles.wrapper}>
-                {children}
+                <Provider>{children}</Provider>
               </ThemedView>
             </Animated.View>
             <Animated.View style={outerIconWrapperStyles}>
