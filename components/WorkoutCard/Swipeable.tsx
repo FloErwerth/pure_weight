@@ -198,7 +198,7 @@ export const Swipeable = ({ onEdit, onDelete, onClick, children }: SwipeableProp
     <ReAnimated.View exiting={FadeOut} entering={FadeIn} layout={Layout}>
       <GestureDetector gesture={gesture}>
         <Pressable onPress={handleClick}>
-          <View pointerEvents={"none"} ref={viewRef} onLayout={containerMeasurement}>
+          <View ref={viewRef} onLayout={containerMeasurement}>
             <Animated.View style={animatedWrapperStyles}>
               <ThemedView component style={styles.wrapper}>
                 <Provider>{children}</Provider>

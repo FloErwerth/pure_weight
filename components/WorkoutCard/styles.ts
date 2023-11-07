@@ -24,6 +24,7 @@ export const styles = StyleSheet.create({
   },
   text: {
     fontSize: 13,
+    paddingRight: 40,
   },
   progressWrapper: {
     padding: 10,

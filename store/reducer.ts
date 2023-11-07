@@ -81,8 +81,7 @@ export const mockState: AppState = {
                 { reps: "5", weight: "51" },
                 { reps: "5", weight: "51" },
                 { reps: "5", weight: "51" },
-                { reps: "5", weight: "51" },
-                { reps: "5", weight: "51" },
+                { reps: "5", weight: "52" },
               ],
             },
           ],
@@ -94,34 +93,6 @@ export const mockState: AppState = {
       latestDate: "2023-01-01",
       exercises: [
         {
-          name: "Bankdrücken",
-          weight: "50",
-          sets: "5",
-          reps: "5",
-          pause: " 2",
-          doneExerciseEntries: [
-            {
-              date: "2023-01-01",
-              sets: [
-                { reps: "5", weight: "50" },
-                { reps: "5", weight: "50" },
-                { reps: "5", weight: "50" },
-                { reps: "5", weight: "50" },
-                { reps: "5", weight: "50" },
-              ],
-            },
-            {
-              date: "2023-01-02",
-              sets: [
-                { reps: "5", weight: "51" },
-                { reps: "5", weight: "51" },
-                { reps: "5", weight: "51" },
-                { reps: "5", weight: "51" },
-              ],
-            },
-          ],
-        },
-        {
           name: "Butterfly",
           weight: "50",
           sets: "5",
@@ -131,20 +102,31 @@ export const mockState: AppState = {
             {
               date: "2023-01-01",
               sets: [
-                { reps: "5", weight: "50" },
-                { reps: "5", weight: "50" },
-                { reps: "5", weight: "50" },
-                { reps: "5", weight: "50" },
-                { reps: "5", weight: "50" },
+                { reps: "10", weight: "1" },
+                { reps: "10", weight: "1" },
+                { reps: "10", weight: "1" },
+                { reps: "10", weight: "1" },
+                { reps: "10", weight: "1" },
               ],
             },
             {
               date: "2023-01-02",
               sets: [
-                { reps: "5", weight: "51" },
-                { reps: "5", weight: "51" },
-                { reps: "5", weight: "51" },
-                { reps: "5", weight: "51" },
+                { reps: "10", weight: "1" },
+                { reps: "10", weight: "1" },
+                { reps: "10", weight: "1" },
+                { reps: "10", weight: "1" },
+                { reps: "10", weight: "2" },
+              ],
+            },
+            {
+              date: "2023-01-03",
+              sets: [
+                { reps: "10", weight: "1" },
+                { reps: "10", weight: "1" },
+                { reps: "10", weight: "1" },
+                { reps: "10", weight: "1" },
+                { reps: "10", weight: "3" },
               ],
             },
           ],

@@ -1,5 +1,5 @@
 import { createSelector } from "@reduxjs/toolkit";
-import { AppState, ErrorFields, ExerciseMetaData, TrainingDay } from "./types";
+import { AppState, DoneExerciseData, ErrorFields, ExerciseMetaData, TrainingDay } from "./types";
 import { getDate } from "../utils/date";
 import { IsoDate } from "../types/date";
 
@@ -112,6 +112,7 @@ export const getNumberOfSets = createSelector([getExerciseMetaData], (exerciseMe
   }
   return undefined;
 });
+
 export const getSpecificNumberOfSets = createSelector([getSelectedTrainingDay], (day) => {
   return (exerciseIndex: number) => {
     if (day && day.exercises) {
@@ -119,6 +120,7 @@ export const getSpecificNumberOfSets = createSelector([getSelectedTrainingDay], 
     }
   };
 });
+
 export const getTrainingDayData = createSelector([getSavedTrainings], (trainingDays) => {
   return trainingDays
     .filter((day) => day.exercises.length > 0)
@@ -148,67 +150,42 @@ export const getPreviousTraining = createSelector([getSelectedTrainingDay, getLa
     }
   };
 });
+
 export const getOverallTrainingTrend = createSelector([getSelectedTrainingDayByIndex], (trainingDayByIndex) => {
   return (workoutIndex: number) => {
     const workout = trainingDayByIndex(workoutIndex);
+    const filteredDoneExercises = workout.exercises.filter(({ doneExerciseEntries }) => doneExerciseEntries.length >= 2);
 
-    const sumOfFirstDoneExercises = workout.exercises.reduce((data, exercise, exerciseIndex) => {
-      const secondLastEntry = exercise.doneExerciseEntries[exercise.doneExerciseEntries.length - 2];
-      if (exerciseIndex === 0) {
-        return secondLastEntry?.sets?.reduce((sum, data) => {
-          const reps = parseFloat(data.reps);
-          const weight = parseFloat(data.weight);
-          return sum + reps * weight;
-        }, 0);
-      } else {
-        const lastExercises = workout.exercises[exerciseIndex - 1];
-        const latestEntriesLastExercise = lastExercises.doneExerciseEntries[lastExercises.doneExerciseEntries.length - 2];
-        const date = latestEntriesLastExercise?.date;
-        if (date === secondLastEntry?.date) {
-          return secondLastEntry?.sets?.reduce((sum, data) => {
-            const reps = parseFloat(data.reps);
-            const weight = parseFloat(data.weight);
-            return sum + reps * weight;
-          }, 0);
-        } else {
-          return 0;
-        }
-      }
-    }, 0);
-
-    const sumOfLatestDoneExercises = workout.exercises.reduce((data, exercise, exerciseIndex) => {
-      const latestExerciseEntry = exercise.doneExerciseEntries[exercise.doneExerciseEntries.length - 1];
-      if (exerciseIndex === 0) {
-        return latestExerciseEntry?.sets?.reduce((sum, data) => {
-          const reps = parseFloat(data.reps);
-          const weight = parseFloat(data.weight);
-          return sum + reps * weight;
-        }, 0);
-      } else {
-        const lastExercises = workout.exercises[exerciseIndex - 1];
-        const latestEntriesLastExercise = lastExercises.doneExerciseEntries[lastExercises.doneExerciseEntries.length - 1];
-        const date = latestEntriesLastExercise?.date;
-        if (date === latestExerciseEntry?.date) {
-          return latestExerciseEntry?.sets?.reduce((sum, data) => {
-            const reps = parseFloat(data.reps);
-            const weight = parseFloat(data.weight);
-            return sum + reps * weight;
-          }, 0);
-        } else {
-          return 0;
-        }
-      }
-    }, 0);
-
-    const diffAbsolute = sumOfFirstDoneExercises > 0 && sumOfLatestDoneExercises > 0 ? sumOfLatestDoneExercises - sumOfFirstDoneExercises : undefined;
-    let diffPercent = (100 * sumOfFirstDoneExercises) / sumOfLatestDoneExercises;
-    if (diffPercent > 100) {
-      diffPercent -= 100;
-    } else if (diffPercent < 100) {
-      diffPercent = 100 - diffPercent;
+    if (filteredDoneExercises.length === 0) {
+      return undefined;
     }
 
-    return { date: workout?.latestDate as IsoDate, diff: diffAbsolute ? { absolute: diffAbsolute, percent: diffPercent.toFixed(1) } : undefined };
+    const getPercent = (data: DoneExerciseData[]) => {
+      const first = data[data.length - 2];
+      const second = data[data.length - 1];
+      const sumFirst = first.sets.reduce((set, current) => {
+        return set + parseFloat(current.reps) * parseFloat(current.weight);
+      }, 0);
+      const sumSecond = second.sets.reduce((set, current) => {
+        return set + parseFloat(current.reps) * parseFloat(current.weight);
+      }, 0);
+
+      return (100 * sumSecond) / sumFirst;
+    };
+
+    return filteredDoneExercises.reduce(
+      (bestEntry, currentEntry) => {
+        if (!bestEntry?.name) {
+          return { name: currentEntry.name, percent: getPercent(currentEntry.doneExerciseEntries) };
+        }
+        const nextPercent = getPercent(currentEntry.doneExerciseEntries);
+        if (bestEntry.percent < nextPercent) {
+          return { name: currentEntry.name, percent: nextPercent };
+        }
+        return { name: bestEntry.name, percent: bestEntry.percent };
+      },
+      {} as { name?: string; percent: number } | undefined,
+    );
   };
 });
 

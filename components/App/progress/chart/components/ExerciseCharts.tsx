@@ -1,6 +1,6 @@
 import { Dimensions, ScrollView, View } from "react-native";
 import { LineChart } from "react-native-chart-kit";
-import { DoneExerciseData, ExerciseMetaDataWithDoneEntries, ExerciseSets, PlainExerciseData } from "../../../../../store/types";
+import { DoneExerciseData, ExerciseSets, PlainExerciseData } from "../../../../../store/types";
 import { useCallback, useMemo, useRef, useState } from "react";
 import { borderRadius } from "../../../../../theme/border";
 import { getDate } from "../../../../../utils/date";
@@ -20,7 +20,7 @@ import { ThemedScrollView } from "../../../../Themed/ThemedScrollView/ThemedScro
 import { useTheme } from "../../../../../theme/context";
 
 interface ExerciseChartProps {
-  exercise: ExerciseMetaDataWithDoneEntries[number];
+  exercise: { name: string; data: DoneExerciseData[] };
 }
 
 const chartTypeMap: Record<string, { title: string; hint: string }> = {
@@ -92,7 +92,7 @@ const chartTypeLabel: Record<ChartType, string> = {
 
 export const ExerciseChart = ({ exercise }: ExerciseChartProps) => {
   const [chartType, setChartType] = useState<ChartType>("CUMULATIVE");
-  const [data, numberEntries] = useExerciseData(exercise.doneExerciseEntries, chartType);
+  const [data, numberEntries] = useExerciseData(exercise.data, chartType);
   const viewRef = useRef<View>(null);
   const [showSelectionModal, setShowSelectionModal] = useState(false);
   const { t } = useTranslation();
@@ -187,15 +187,14 @@ export const ExerciseChart = ({ exercise }: ExerciseChartProps) => {
 
 export default function Charts() {
   const trainingDayData = useAppSelector(getSelectedTrainingDayData);
+
   if (trainingDayData === undefined) {
     return null;
   }
 
   return (
     <ThemedScrollView>
-      {trainingDayData?.exercises?.map((exercise) => {
-        return <ExerciseChart key={Math.random() * 100} exercise={exercise} />;
-      })}
+      {trainingDayData?.exercises?.map((exercise) => <ExerciseChart key={Math.random() * 100} exercise={{ name: exercise.name, data: exercise.doneExerciseEntries }} />)}
     </ThemedScrollView>
   );
 }

@@ -13,12 +13,10 @@ import { PageContent } from "../../components/PageContent/PageContent";
 import { Swipeable } from "../../components/WorkoutCard/Swipeable";
 import { Text } from "../../components/Themed/ThemedText/Text";
 import { WorkoutProgress } from "../../components/WorkoutCard/components/ProgressDisplay/WorkoutProgress";
-import { useTheme } from "../../theme/context";
 import { BottomToast } from "../../components/BottomToast/BottomToast";
 
 export function Workouts() {
   const language = useAppSelector(getLanguage);
-  const { mainColor, secondaryColor, secondaryBackgroundColor } = useTheme();
   const dispatch = useAppDispatch();
   const { t, i18n } = useTranslation();
   const previousTrainingByIndex = useAppSelector(getOverallTrainingTrend);
@@ -106,7 +104,7 @@ export function Workouts() {
             renderItem={({ item: { handleNavigateToProgress, workoutName, key, onEdit, onDelete, onClick, overallTrainingData } }) => (
               <Swipeable onEdit={onEdit} onDelete={onDelete} onClick={onClick} key={key}>
                 <Text style={styles.title}>{workoutName}</Text>
-                <WorkoutProgress onPress={handleNavigateToProgress} progressData={overallTrainingData} />
+                {overallTrainingData && <WorkoutProgress onPress={handleNavigateToProgress} progressData={overallTrainingData} />}
               </Swipeable>
             )}
           ></FlatList>
