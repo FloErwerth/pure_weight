@@ -22,12 +22,14 @@ export const styles = StyleSheet.create({
   },
   dateWrapper: {
     borderRadius,
+    zIndex: -1,
     paddingHorizontal: 10,
     justifyContent: "center",
   },
   calendarButtonsWrapper: {
     gap: 10,
     paddingHorizontal: 10,
+    zIndex: -1,
   },
   calendar: {
     borderWidth: 1,
@@ -47,8 +49,12 @@ export const styles = StyleSheet.create({
     padding: 10,
     margin: 10,
     gap: 15,
+    zIndex: -1,
     justifyContent: "center",
     alignItems: "center",
+  },
+  pressable: {
+    zIndex: -1,
   },
   addMeasurement: {
     fontSize: 20,

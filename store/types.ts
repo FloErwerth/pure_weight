@@ -1,5 +1,6 @@
 import { IsoDate } from "../types/date";
 import { ThemeKey } from "../theme/types";
+import { MeasurementUnit } from "../components/MeasurementModal/measurementUnits";
 
 export type TrainingDay = {
   name: string;
@@ -32,7 +33,7 @@ export type ExerciseMetaData = {
 
 export type Measurement = {
   name: string;
-  unit: string;
+  unit: MeasurementUnit;
   data: {
     [date: IsoDate]: string;
   };

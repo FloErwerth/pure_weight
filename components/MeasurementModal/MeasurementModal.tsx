@@ -1,11 +1,10 @@
 import { Pressable, View } from "react-native";
 import { ThemedTextInput } from "../Themed/ThemedTextInput/ThemedTextInput";
 import { HStack } from "../HStack/HStack";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Modal, ModalProps } from "../Modal/Modal";
-import { Dispatch, SetStateAction, useCallback, useState } from "react";
+import { Dispatch, SetStateAction, useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Measurement } from "../../app/measurements";
+import { WorkingMeasurement } from "../../app/measurements";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { getDateTodayIso } from "../../utils/date";
 import { useAppDispatch, useAppSelector } from "../../store";
@@ -18,14 +17,16 @@ import { ThemedMaterialCommunityIcons } from "../Themed/ThemedMaterialCommunityI
 import { styles } from "./styles";
 import { ThemedPressable } from "../Themed/Pressable/Pressable";
 import Animated, { FadeIn, Layout } from "react-native-reanimated";
+import { MeasurementUnit, measurementUnits } from "./measurementUnits";
+import { ThemedDropdown } from "../Themed/Dropdown/ThemedDropdown";
 
 interface MeasurementModalProps extends ModalProps {
-  setMeasurement: Dispatch<SetStateAction<Measurement>>;
-  measurement?: Measurement;
+  setMeasurement: Dispatch<SetStateAction<WorkingMeasurement>>;
+  measurement?: WorkingMeasurement;
   saveMeasurement: () => void;
   isNewMeasurement?: boolean;
 }
-const fieldToErrorMap: Record<keyof Measurement, ErrorFields> = {
+const fieldToErrorMap: Record<keyof WorkingMeasurement, ErrorFields> = {
   unit: "measurement_unit",
   value: "measurement_value",
   name: "measurement_name",
@@ -34,9 +35,8 @@ const fieldToErrorMap: Record<keyof Measurement, ErrorFields> = {
 
 export const MeasurementModal = ({ isNewMeasurement = true, onRequestClose, isVisible, measurement, setMeasurement, saveMeasurement }: MeasurementModalProps) => {
   const { t } = useTranslation();
-  const { mainColor, componentBackgroundColor, warningColor } = useTheme();
+  const { mainColor } = useTheme();
   const themeKey = useAppSelector(getThemeKey);
-
   const dates = useAppSelector((state: AppState) => getDatesFromCurrentMeasurement(state)(measurement?.name));
   const language = useAppSelector(getLanguage);
   const [showDatePicker, setShowDatePicker] = useState(false);
@@ -44,13 +44,19 @@ export const MeasurementModal = ({ isNewMeasurement = true, onRequestClose, isVi
   const dispatch = useAppDispatch();
 
   const handleAddMeasurementData = useCallback(
-    (field: keyof Measurement, value: Measurement[keyof Measurement]) => {
+    (field: keyof WorkingMeasurement, value: WorkingMeasurement[keyof WorkingMeasurement]) => {
       const newMeasurement = { ...measurement, [field]: value };
       dispatch(cleanError([fieldToErrorMap[field]]));
       setMeasurement(newMeasurement);
     },
     [dispatch, measurement, setMeasurement],
   );
+
+  useEffect(() => {
+    if (isVisible) {
+      dispatch(cleanError(["measurement_name", "measurement_value", "measurement_unit"]));
+    }
+  }, [dispatch, isVisible]);
 
   const collectErrors = useCallback(() => {
     const errors: ErrorFields[] = [];
@@ -106,15 +112,13 @@ export const MeasurementModal = ({ isNewMeasurement = true, onRequestClose, isVi
             clearButtonMode="while-editing"
             placeholder={t("measurement")}
           />
-          <ThemedTextInput
-            stretch
+          <ThemedDropdown
+            isSelectable={isNewMeasurement}
+            options={measurementUnits}
             errorKey="measurement_unit"
-            editable={isNewMeasurement}
-            style={styles.textInput}
-            onChangeText={(value) => handleAddMeasurementData("unit", value)}
             value={measurement?.unit}
-            clearButtonMode="while-editing"
-            placeholder={t("measurement_unit")}
+            placeholderTranslationKey="measurement_unit"
+            onSelectItem={(value) => handleAddMeasurementData("unit", value as MeasurementUnit)}
           />
         </HStack>
         <HStack style={styles.calendarButtonsWrapper}>
@@ -122,7 +126,7 @@ export const MeasurementModal = ({ isNewMeasurement = true, onRequestClose, isVi
             <Text style={styles.text}>{measurement?.date?.toLocaleDateString(language)}</Text>
           </ThemedPressable>
           <ThemedPressable onPress={() => setShowDatePicker((open) => !open)} style={styles.calendarWrapper}>
-            <MaterialCommunityIcons name="calendar" size={26} color={mainColor} />
+            <ThemedMaterialCommunityIcons ghost name="calendar" size={26} />
           </ThemedPressable>
         </HStack>
         {showDatePicker && (
@@ -130,6 +134,7 @@ export const MeasurementModal = ({ isNewMeasurement = true, onRequestClose, isVi
             <DateTimePicker
               display="inline"
               mode={"date"}
+              maximumDate={new Date(getDateTodayIso())}
               locale={language}
               accentColor={mainColor}
               themeVariant={themeKey}
@@ -147,7 +152,7 @@ export const MeasurementModal = ({ isNewMeasurement = true, onRequestClose, isVi
             </Text>
           </View>
         )}
-        <Pressable onPress={handleSaveMeasurement}>
+        <Pressable style={styles.pressable} onPress={handleSaveMeasurement}>
           <HStack component style={styles.addWrapper}>
             <Text style={styles.addMeasurement}>{t(showWarning ? "measurement_warning_confirm" : "measurement_add")}</Text>
             <ThemedMaterialCommunityIcons name="table-large-plus" size={20} />

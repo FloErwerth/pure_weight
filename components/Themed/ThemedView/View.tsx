@@ -7,14 +7,18 @@ export interface ThemedViewProps extends ViewProps {
   component?: boolean;
   secondary?: boolean;
   ghost?: boolean;
+  input?: boolean;
 }
 
 export const ThemedView = (props: ThemedViewProps) => {
-  const { backgroundColor, componentBackgroundColor, secondaryBackgroundColor } = useTheme();
+  const { backgroundColor, componentBackgroundColor, secondaryBackgroundColor, inputFieldBackgroundColor } = useTheme();
 
   const computedBackgroundColor = useMemo(() => {
     if (props.component) {
       return componentBackgroundColor;
+    }
+    if (props.input) {
+      return inputFieldBackgroundColor;
     }
     if (props.ghost) {
       return "transparent";
