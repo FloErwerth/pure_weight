@@ -12,8 +12,6 @@ export const styles = StyleSheet.create({
   innerIconContainer: {
     justifyContent: "center",
   },
-  editIcon: { position: "absolute", left: 15 },
-  deleteIcon: { position: "absolute", right: 15 },
   diffWrapper: {
     flex: 1,
     gap: 7,
@@ -28,7 +26,6 @@ export const styles = StyleSheet.create({
   },
   progressWrapper: {
     padding: 10,
-    marginHorizontal: 10,
     borderRadius,
   },
   wrapper: {

@@ -82,6 +82,8 @@ export function Measurements() {
     setShowToast(false);
   }, [dispatch]);
 
+  console.log(measurements);
+
   return (
     <ThemedView style={{ flex: 1 }}>
       <SiteNavigationButtons title={t("measurements")} handleConfirm={handleAddNewMesaurement} handleConfirmIcon={{ name: "plus", size: 40 }} />

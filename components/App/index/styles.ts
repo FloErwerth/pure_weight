@@ -14,8 +14,14 @@ export const styles = StyleSheet.create({
   view: {
     flex: 1,
   },
+  trainWrapper: {
+    justifyContent: "space-between",
+  },
+  progressWrapper: {
+    paddingRight: 35,
+  },
   title: {
-    fontSize: 26,
+    fontSize: 30,
   },
   listContainer: {
     borderRadius,

@@ -1,10 +1,9 @@
-import { Animated, Pressable, View } from "react-native";
+import { Pressable, View } from "react-native";
 import { ThemedTextInput } from "../Themed/ThemedTextInput/ThemedTextInput";
-import { borderRadius } from "../../theme/border";
 import { HStack } from "../HStack/HStack";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Modal, ModalProps } from "../Modal/Modal";
-import { Dispatch, SetStateAction, useCallback, useRef, useState } from "react";
+import { Dispatch, SetStateAction, useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Measurement } from "../../app/measurements";
 import DateTimePicker from "@react-native-community/datetimepicker";
@@ -16,6 +15,9 @@ import { AppState, ErrorFields } from "../../store/types";
 import { cleanError, setError } from "../../store/reducer";
 import { useTheme } from "../../theme/context";
 import { ThemedMaterialCommunityIcons } from "../Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
+import { styles } from "./styles";
+import { ThemedPressable } from "../Themed/Pressable/Pressable";
+import Animated, { FadeIn, Layout } from "react-native-reanimated";
 
 interface MeasurementModalProps extends ModalProps {
   setMeasurement: Dispatch<SetStateAction<Measurement>>;
@@ -36,7 +38,6 @@ export const MeasurementModal = ({ isNewMeasurement = true, onRequestClose, isVi
   const themeKey = useAppSelector(getThemeKey);
 
   const dates = useAppSelector((state: AppState) => getDatesFromCurrentMeasurement(state)(measurement?.name));
-  const opacity = useRef(new Animated.Value(0)).current;
   const language = useAppSelector(getLanguage);
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showWarning, setShowWarnining] = useState(false);
@@ -83,11 +84,11 @@ export const MeasurementModal = ({ isNewMeasurement = true, onRequestClose, isVi
 
   return (
     <Modal onRequestClose={onRequestClose} isVisible={isVisible}>
-      <View style={{ gap: 10, marginTop: 10 }}>
+      <Animated.View style={styles.outerWrapper}>
         <ThemedTextInput
           errorKey="measurement_name"
           editable={isNewMeasurement}
-          style={{ fontSize: 20, borderRadius, padding: 10 }}
+          style={styles.textInput}
           onChangeText={(value) => handleAddMeasurementData("name", value)}
           value={measurement?.name}
           clearButtonMode="while-editing"
@@ -95,64 +96,44 @@ export const MeasurementModal = ({ isNewMeasurement = true, onRequestClose, isVi
         />
         <HStack style={{ alignSelf: "stretch" }}>
           <ThemedTextInput
+            stretch
             errorKey="measurement_value"
             returnKeyType="done"
             keyboardType="decimal-pad"
-            style={{
-              flex: 1,
-              fontSize: 20,
-              borderRadius,
-              padding: 10,
-            }}
+            style={styles.textInput}
             onChangeText={(value) => handleAddMeasurementData("value", value)}
             value={measurement?.value}
             clearButtonMode="while-editing"
             placeholder={t("measurement")}
           />
           <ThemedTextInput
+            stretch
             errorKey="measurement_unit"
             editable={isNewMeasurement}
-            style={{ flex: 1, fontSize: 20, borderRadius, padding: 10 }}
+            style={styles.textInput}
             onChangeText={(value) => handleAddMeasurementData("unit", value)}
             value={measurement?.unit}
             clearButtonMode="while-editing"
             placeholder={t("measurement_unit")}
           />
         </HStack>
-        <HStack style={{ gap: 10, paddingHorizontal: 10 }}>
-          <Pressable style={{ backgroundColor: componentBackgroundColor, borderRadius, flex: 1, padding: 10 }} onPress={() => setShowDatePicker((open) => !open)}>
-            <Text
-              style={{
-                flex: 1,
-                fontSize: 20,
-                color: mainColor,
-              }}
-            >
-              {measurement?.date?.toLocaleDateString(language)}
-            </Text>
-          </Pressable>
-          <Pressable
-            onPress={() => setShowDatePicker((open) => !open)}
-            style={{
-              alignItems: "center",
-              justifyContent: "center",
-              padding: 10,
-              backgroundColor: componentBackgroundColor,
-              borderRadius,
-            }}
-          >
+        <HStack style={styles.calendarButtonsWrapper}>
+          <ThemedPressable stretch style={styles.dateWrapper} onPress={() => setShowDatePicker((open) => !open)}>
+            <Text style={styles.text}>{measurement?.date?.toLocaleDateString(language)}</Text>
+          </ThemedPressable>
+          <ThemedPressable onPress={() => setShowDatePicker((open) => !open)} style={styles.calendarWrapper}>
             <MaterialCommunityIcons name="calendar" size={26} color={mainColor} />
-          </Pressable>
+          </ThemedPressable>
         </HStack>
         {showDatePicker && (
-          <Animated.View style={{ opacity, paddingHorizontal: 10, borderRadius }}>
+          <Animated.View layout={Layout} entering={FadeIn} style={styles.dateWrapper}>
             <DateTimePicker
               display="inline"
               mode={"date"}
               locale={language}
               accentColor={mainColor}
               themeVariant={themeKey}
-              style={{ borderColor: mainColor, borderWidth: 1, borderRadius, overflow: "hidden" }}
+              style={styles.calendar}
               onChange={(_, date) => handleAddMeasurementData("date", date)}
               removeClippedSubviews={true}
               value={measurement?.date ?? new Date(getDateTodayIso())}
@@ -160,27 +141,19 @@ export const MeasurementModal = ({ isNewMeasurement = true, onRequestClose, isVi
           </Animated.View>
         )}
         {showWarning && (
-          <View style={{ padding: 10, paddingBottom: 0 }}>
-            <Text style={{ fontSize: 16, color: warningColor }}>{t("measurement_warning_text")}</Text>
+          <View style={styles.warningWrapper}>
+            <Text warning style={styles.warningText}>
+              {t("measurement_warning_text")}
+            </Text>
           </View>
         )}
-
         <Pressable onPress={handleSaveMeasurement}>
-          <HStack
-            style={{
-              backgroundColor: componentBackgroundColor,
-              borderRadius,
-              padding: 10,
-              margin: 10,
-              gap: 15,
-              justifyContent: "center",
-            }}
-          >
-            <Text>{t(showWarning ? "measurement_warning_confirm" : "measurement_add")}</Text>
+          <HStack component style={styles.addWrapper}>
+            <Text style={styles.addMeasurement}>{t(showWarning ? "measurement_warning_confirm" : "measurement_add")}</Text>
             <ThemedMaterialCommunityIcons name="table-large-plus" size={20} />
           </HStack>
         </Pressable>
-      </View>
+      </Animated.View>
     </Modal>
   );
 };

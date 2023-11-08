@@ -175,7 +175,7 @@ export const getOverallTrainingTrend = createSelector([getSelectedTrainingDayByI
 
     return filteredDoneExercises.reduce(
       (bestEntry, currentEntry) => {
-        if (!bestEntry?.name) {
+        if (bestEntry === undefined) {
           return { name: currentEntry.name, percent: getPercent(currentEntry.doneExerciseEntries) };
         }
         const nextPercent = getPercent(currentEntry.doneExerciseEntries);
@@ -184,7 +184,7 @@ export const getOverallTrainingTrend = createSelector([getSelectedTrainingDayByI
         }
         return { name: bestEntry.name, percent: bestEntry.percent };
       },
-      {} as { name?: string; percent: number } | undefined,
+      undefined as { name: string; percent: number } | undefined,
     );
   };
 });

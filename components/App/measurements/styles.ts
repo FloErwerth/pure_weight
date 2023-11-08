@@ -9,7 +9,6 @@ export const styles = StyleSheet.create({
     gap: 10,
   },
   pressableWrapper: {
-    padding: 15,
     borderRadius,
     justifyContent: "space-between",
     alignItems: "flex-start",

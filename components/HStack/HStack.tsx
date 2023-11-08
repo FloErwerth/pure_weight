@@ -1,8 +1,32 @@
-import { View, ViewProps } from "react-native";
 import { styles } from "./styles";
 import { useMemo } from "react";
+import { ThemedView, ThemedViewProps } from "../Themed/ThemedView/View";
+import { useTheme } from "../../theme/context";
 
-export function HStack(props: ViewProps & { stretch?: boolean }) {
-  const wrapperStyles = useMemo(() => ({ ...styles.innerWrapper, flex: props.stretch ? 1 : 0 }), [props.stretch]);
-  return <View style={[wrapperStyles, props.style]}>{props.children}</View>;
+interface HStackProps extends ThemedViewProps {
+  background?: boolean;
+}
+export function HStack(props: HStackProps) {
+  const { componentBackgroundColor, secondaryBackgroundColor, backgroundColor } = useTheme();
+
+  const computedBackgroundColor = useMemo(() => {
+    if (props.component) {
+      return componentBackgroundColor;
+    }
+    if (props.background) {
+      return backgroundColor;
+    }
+    if (props.secondary) {
+      return secondaryBackgroundColor;
+    }
+    return "transparent";
+  }, [backgroundColor, componentBackgroundColor, props.background, props.component, props.secondary, secondaryBackgroundColor]);
+
+  const style = useMemo(() => [styles.innerWrapper, { backgroundColor: computedBackgroundColor }], [computedBackgroundColor]);
+
+  return (
+    <ThemedView {...props} style={[style, props.style]}>
+      {props.children}
+    </ThemedView>
+  );
 }

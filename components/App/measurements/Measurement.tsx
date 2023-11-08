@@ -1,10 +1,10 @@
 import { VStack } from "../../VStack/VStack";
-import { Pressable, View } from "react-native";
+import { View } from "react-native";
 import { Text } from "../../Themed/ThemedText/Text";
 import { getDate } from "../../../utils/date";
 import { ThemedMaterialCommunityIcons } from "../../Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
 import { HStack } from "../../HStack/HStack";
-import { useContext, useMemo } from "react";
+import { useCallback, useContext, useMemo } from "react";
 import { styles } from "./styles";
 import { useAppSelector } from "../../../store";
 import { getLanguage, getLatestMeasurements } from "../../../store/selectors";
@@ -12,6 +12,7 @@ import { useTheme } from "../../../theme/context";
 import { Measurement } from "../../../store/types";
 import { useTranslation } from "react-i18next";
 import { swipableContext } from "../../WorkoutCard/Swipeable";
+import { ProgressDisplay } from "../../WorkoutCard/components/ProgressDisplay/ProgressDisplay";
 
 interface MeasurementProps {
   index: number;
@@ -26,6 +27,12 @@ export const RenderedMeasurement = ({ index, measurement }: MeasurementProps) =>
   const textStyle = useMemo(() => [styles.text, { color: mainColor }], [mainColor]);
   const language = useAppSelector(getLanguage);
 
+  const handleNavigateToChart = useCallback(() => {
+    if (active) {
+      return;
+    }
+  }, [active]);
+
   return (
     <HStack style={pressableWrapperStyle}>
       <VStack style={{ gap: 15, flex: 1, paddingRight: 10 }}>
@@ -35,9 +42,7 @@ export const RenderedMeasurement = ({ index, measurement }: MeasurementProps) =>
             {t("measurement_latest")} {getDate(latestMeasurements[index], language)}
           </Text>
         </View>
-        <Pressable disabled={active}>
-          <Text>Show progress</Text>
-        </Pressable>
+        <ProgressDisplay progressData={{ name: measurement.name, percent: 120 }} onPress={handleNavigateToChart} />
       </VStack>
       <ThemedMaterialCommunityIcons name="table-large-plus" size={26} />
     </HStack>

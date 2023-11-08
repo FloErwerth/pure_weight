@@ -24,15 +24,17 @@ function truncateTo3rdSignificantDigit(number: number) {
 }
 
 export type ProgressData = { name: string; percent: number };
+type ProgressDisplayType = "WORKOUT" | "MEASUREMENT";
 export interface ProgressDisplayProps {
   progressData: ProgressData;
   onPress: () => void;
 }
-export const WorkoutProgress = ({ progressData, onPress }: ProgressDisplayProps) => {
+
+export const ProgressDisplay = ({ progressData, onPress }: ProgressDisplayProps) => {
   const isPositive = progressData.percent > 100;
 
   const processedPercent = truncateTo3rdSignificantDigit(isPositive ? progressData.percent - 100 : 100 - progressData.percent);
-  const stayed = processedPercent === 0;
+  const even = processedPercent === 0;
 
   const active = useContext(swipableContext);
   const {
@@ -42,17 +44,17 @@ export const WorkoutProgress = ({ progressData, onPress }: ProgressDisplayProps)
   const { secondaryColor } = useTheme();
 
   const icon = useMemo(() => {
-    if (stayed) {
+    if (even) {
       return "arrow-right";
     }
     if (isPositive) {
       return "arrow-up";
     }
     return "arrow-down";
-  }, [isPositive, stayed]);
+  }, [isPositive, even]);
 
   const text = useMemo(() => {
-    if (stayed) {
+    if (even) {
       return <>{t("progress_text_1").concat(t("progress_stayed"))}</>;
     }
     if (language === "en") {
@@ -61,24 +63,23 @@ export const WorkoutProgress = ({ progressData, onPress }: ProgressDisplayProps)
           {t("progress_text_1").concat(progressData.name, " ", t(isPositive ? "progress_increased" : "progress_decreased"))} by {processedPercent}&thinsp;%
         </>
       );
-    } else {
-      return (
-        <>
-          {t("progress_text_1")} {progressData?.percent}&thinsp;% {t(isPositive ? "progress_increased" : "progress_decreased")}
-        </>
-      );
     }
-  }, [isPositive, language, processedPercent, progressData.name, progressData?.percent, stayed, t]);
+    return (
+      <>
+        {t("progress_text_1")} {processedPercent}&thinsp;% {t(isPositive ? "progress_increased" : "progress_decreased")}
+      </>
+    );
+  }, [even, language, t, progressData.name, isPositive, processedPercent]);
 
   const chartStyle = useMemo(() => {
     if (isPositive) {
       return { color: "green" };
     }
-    if (stayed) {
+    if (even) {
       return { color: secondaryColor };
     }
     return { color: "rgb(255,100,100)" };
-  }, [isPositive, secondaryColor, stayed]);
+  }, [isPositive, secondaryColor, even]);
   const hintStyles = useMemo(() => [styles.hint, { color: secondaryColor }], [secondaryColor]);
 
   const handlePress = useCallback(() => {
@@ -99,7 +100,6 @@ export const WorkoutProgress = ({ progressData, onPress }: ProgressDisplayProps)
               <Text style={hintStyles}>{t("progress_text_hint")}</Text>
             </View>
           </HStack>
-          <ThemedMaterialCommunityIcons secondary name="arrow-right" size={16} />
         </HStack>
       </ThemedView>
     </Pressable>

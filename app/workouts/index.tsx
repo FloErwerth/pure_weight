@@ -12,8 +12,10 @@ import { ThemedView } from "../../components/Themed/ThemedView/View";
 import { PageContent } from "../../components/PageContent/PageContent";
 import { Swipeable } from "../../components/WorkoutCard/Swipeable";
 import { Text } from "../../components/Themed/ThemedText/Text";
-import { WorkoutProgress } from "../../components/WorkoutCard/components/ProgressDisplay/WorkoutProgress";
+import { ProgressDisplay } from "../../components/WorkoutCard/components/ProgressDisplay/ProgressDisplay";
 import { BottomToast } from "../../components/BottomToast/BottomToast";
+import { HStack } from "../../components/HStack/HStack";
+import { ThemedMaterialCommunityIcons } from "../../components/Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
 
 export function Workouts() {
   const language = useAppSelector(getLanguage);
@@ -103,8 +105,15 @@ export function Workouts() {
             data={mappedTrainings}
             renderItem={({ item: { handleNavigateToProgress, workoutName, key, onEdit, onDelete, onClick, overallTrainingData } }) => (
               <Swipeable onEdit={onEdit} onDelete={onDelete} onClick={onClick} key={key}>
-                <Text style={styles.title}>{workoutName}</Text>
-                {overallTrainingData && <WorkoutProgress onPress={handleNavigateToProgress} progressData={overallTrainingData} />}
+                <HStack style={styles.trainWrapper}>
+                  <Text style={styles.title}>{workoutName}</Text>
+                  <ThemedMaterialCommunityIcons name="chevron-right" size={30} />
+                </HStack>
+                {overallTrainingData && (
+                  <View style={styles.progressWrapper}>
+                    <ProgressDisplay onPress={handleNavigateToProgress} progressData={overallTrainingData} />
+                  </View>
+                )}
               </Swipeable>
             )}
           ></FlatList>

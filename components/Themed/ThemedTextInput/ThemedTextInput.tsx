@@ -11,6 +11,7 @@ interface ThemedTextInputProps extends TextInputProps {
   reference?: RefObject<TextInput>;
   errorKey?: ErrorFields;
   hideErrorBorder?: boolean;
+  stretch?: boolean;
 }
 export const ThemedTextInput = (props: ThemedTextInputProps) => {
   const { editable = true } = props;
@@ -34,13 +35,16 @@ export const ThemedTextInput = (props: ThemedTextInputProps) => {
     return secondaryColor;
   }, [getHasError, secondaryColor, secondaryErrorColor]);
   const textInputStyle = useMemo(() => {
-    const baseStyle = [{ backgroundColor: inputFieldBackgroundColor, color: editable ? mainColor : textDisabled, marginHorizontal: props.clearButtonMode !== "never" ? 10 : 0 }, props.style];
+    const baseStyle = [
+      { flex: props.stretch ? 1 : 0, backgroundColor: inputFieldBackgroundColor, color: editable ? mainColor : textDisabled, marginHorizontal: props.clearButtonMode !== "never" ? 10 : 0 },
+      props.style,
+    ];
     if (!getHasError) {
       return baseStyle;
     }
     const errorStyle = { color: errorColor, borderWidth: props.hideErrorBorder ? 0 : 1, borderColor: errorColor };
     return [errorStyle, baseStyle];
-  }, [editable, errorColor, getHasError, inputFieldBackgroundColor, mainColor, props.clearButtonMode, props.hideErrorBorder, props.style, textDisabled]);
+  }, [editable, errorColor, getHasError, inputFieldBackgroundColor, mainColor, props.clearButtonMode, props.hideErrorBorder, props.stretch, props.style, textDisabled]);
 
   return <TextInput {...props} ref={props.reference} onChangeText={handleTextInput} style={textInputStyle} placeholderTextColor={placeholderColor} />;
 };

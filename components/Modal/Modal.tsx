@@ -1,15 +1,14 @@
 import { ReactNativeModal } from "react-native-modal";
-import React, { PropsWithChildren, ReactNode, useMemo } from "react";
-import { View, ViewStyle } from "react-native";
-import { Button } from "../Themed/Button/Button";
+import React, { PropsWithChildren, ReactNode } from "react";
+import { Pressable, View, ViewStyle } from "react-native";
 import { ThemedView } from "../Themed/ThemedView/View";
 import { Text } from "../Themed/ThemedText/Text";
 import { HStack } from "../HStack/HStack";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useTheme } from "../../theme/context";
 import { useAppSelector } from "../../store";
 import { getThemeKey } from "../../store/selectors";
 import { styles } from "./styles";
+import { ThemedMaterialCommunityIcons } from "../Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
 
 export interface ModalProps extends PropsWithChildren {
   isVisible?: boolean;
@@ -30,7 +29,6 @@ export const Modal = ({ customContentStyle, backgroundOpacity, isVisible = true,
   const theme = useAppSelector(getThemeKey);
 
   const computedColor = theme === "dark" ? mainColor : backgroundColor;
-  const buttonStyle = useMemo(() => ({ button: styles.buttonStyle }), []);
 
   return (
     <ReactNativeModal
@@ -43,12 +41,12 @@ export const Modal = ({ customContentStyle, backgroundOpacity, isVisible = true,
       isVisible={isVisible}
       style={style}
     >
-      <HStack style={styles.wrapper}>
+      <HStack ghost style={styles.wrapper}>
         <View>{title && <Text style={styles.title}>{title}</Text>}</View>
         {onRequestClose && (
-          <Button theme="ghost" onPress={() => onRequestClose()} style={buttonStyle}>
-            <MaterialCommunityIcons name="close" size={24} color={computedColor} />
-          </Button>
+          <Pressable onPress={() => onRequestClose()} style={styles.buttonStyle}>
+            <ThemedMaterialCommunityIcons ghost name="close" size={24} color={computedColor} />
+          </Pressable>
         )}
       </HStack>
       <ThemedView style={customContentStyle ?? styles.defaultContentStyle}>{children}</ThemedView>
