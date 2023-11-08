@@ -21,8 +21,9 @@ export type WorkingMeasurement = {
   unit?: MeasurementUnit;
   value?: string;
   date?: Date;
+  higherIsBetter?: boolean;
 };
-const emptyMeasurement: WorkingMeasurement = { name: "", value: "", date: new Date() };
+const emptyMeasurement: WorkingMeasurement = { name: "", value: "", date: new Date(), higherIsBetter: false };
 
 const dateParser = z.date().transform((date) => {
   return date.toISOString().split("T")[0];

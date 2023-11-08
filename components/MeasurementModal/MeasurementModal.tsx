@@ -19,6 +19,7 @@ import { ThemedPressable } from "../Themed/Pressable/Pressable";
 import Animated, { FadeIn, Layout } from "react-native-reanimated";
 import { MeasurementUnit, measurementUnits } from "./measurementUnits";
 import { ThemedDropdown } from "../Themed/Dropdown/ThemedDropdown";
+import { CheckBox } from "../Themed/CheckBox/CheckBox";
 
 interface MeasurementModalProps extends ModalProps {
   setMeasurement: Dispatch<SetStateAction<WorkingMeasurement>>;
@@ -26,7 +27,7 @@ interface MeasurementModalProps extends ModalProps {
   saveMeasurement: () => void;
   isNewMeasurement?: boolean;
 }
-const fieldToErrorMap: Record<keyof WorkingMeasurement, ErrorFields> = {
+const fieldToErrorMap: Record<keyof Omit<WorkingMeasurement, "higherIsBetter">, ErrorFields> = {
   unit: "measurement_unit",
   value: "measurement_value",
   name: "measurement_name",
@@ -46,7 +47,9 @@ export const MeasurementModal = ({ isNewMeasurement = true, onRequestClose, isVi
   const handleAddMeasurementData = useCallback(
     (field: keyof WorkingMeasurement, value: WorkingMeasurement[keyof WorkingMeasurement]) => {
       const newMeasurement = { ...measurement, [field]: value };
-      dispatch(cleanError([fieldToErrorMap[field]]));
+      if (field !== "higherIsBetter") {
+        dispatch(cleanError([fieldToErrorMap[field]]));
+      }
       setMeasurement(newMeasurement);
     },
     [dispatch, measurement, setMeasurement],
@@ -100,7 +103,7 @@ export const MeasurementModal = ({ isNewMeasurement = true, onRequestClose, isVi
           clearButtonMode="while-editing"
           placeholder={t("measurement_placeholder")}
         />
-        <HStack style={{ alignSelf: "stretch" }}>
+        <HStack style={{ alignSelf: "stretch", gap: 10 }}>
           <ThemedTextInput
             stretch
             errorKey="measurement_value"
@@ -121,6 +124,15 @@ export const MeasurementModal = ({ isNewMeasurement = true, onRequestClose, isVi
             onSelectItem={(value) => handleAddMeasurementData("unit", value as MeasurementUnit)}
           />
         </HStack>
+        {isNewMeasurement && measurement?.unit === "%" && (
+          <CheckBox
+            label={t("measurement_higher_is_better")}
+            helpText={t("measurement_higher_is_better_help")}
+            checked={measurement.higherIsBetter ?? false}
+            size={26}
+            onChecked={(val) => handleAddMeasurementData("higherIsBetter", val)}
+          />
+        )}
         <HStack style={styles.calendarButtonsWrapper}>
           <ThemedPressable stretch style={styles.dateWrapper} onPress={() => setShowDatePicker((open) => !open)}>
             <Text style={styles.text}>{measurement?.date?.toLocaleDateString(language)}</Text>

@@ -50,6 +50,8 @@
   "theme_light": "Hell",
   "theme_dark": "Dunkel",
   "select_key": "Auswählen",
+  "measurement_higher_is_better": "Höher ist besser",
+  "measurement_higher_is_better_help": "Um festzustellen, ob Du dich verbessert hast müssen wir wissen, ob ein höherer Wert ein besserer Wert ist",
   "theme_device": "Geräteeinstellung verwenden",
   "progress_cumulative": "Kumulativ",
   "progress_modal_title": "Auswahl der Diagramm-Art",

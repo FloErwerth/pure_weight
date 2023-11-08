@@ -4,7 +4,7 @@ import { borderRadius } from "../../theme/border";
 export const styles = StyleSheet.create({
   outerWrapper: {
     gap: 10,
-    marginTop: 10,
+    padding: 10,
   },
   textInput: {
     fontSize: 20,
@@ -28,7 +28,6 @@ export const styles = StyleSheet.create({
   },
   calendarButtonsWrapper: {
     gap: 10,
-    paddingHorizontal: 10,
     zIndex: -1,
   },
   calendar: {
@@ -47,7 +46,7 @@ export const styles = StyleSheet.create({
   addWrapper: {
     borderRadius,
     padding: 10,
-    margin: 10,
+    marginTop: 20,
     gap: 15,
     zIndex: -1,
     justifyContent: "center",

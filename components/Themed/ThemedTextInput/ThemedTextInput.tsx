@@ -35,10 +35,7 @@ export const ThemedTextInput = (props: ThemedTextInputProps) => {
     return secondaryColor;
   }, [errorColor, getHasError, secondaryColor]);
   const textInputStyle = useMemo(() => {
-    const baseStyle = [
-      { flex: props.stretch ? 1 : 0, backgroundColor: inputFieldBackgroundColor, color: editable ? mainColor : textDisabled, marginHorizontal: props.clearButtonMode !== "never" ? 10 : 0 },
-      props.style,
-    ];
+    const baseStyle = [{ flex: props.stretch ? 1 : 0, backgroundColor: inputFieldBackgroundColor, color: editable ? mainColor : textDisabled }, props.style];
     if (!getHasError) {
       return baseStyle;
     }

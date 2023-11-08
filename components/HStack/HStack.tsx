@@ -7,7 +7,7 @@ interface HStackProps extends ThemedViewProps {
   background?: boolean;
 }
 export function HStack(props: HStackProps) {
-  const { componentBackgroundColor, secondaryBackgroundColor, backgroundColor } = useTheme();
+  const { componentBackgroundColor, secondaryBackgroundColor, backgroundColor, inputFieldBackgroundColor } = useTheme();
 
   const computedBackgroundColor = useMemo(() => {
     if (props.component) {
@@ -19,8 +19,11 @@ export function HStack(props: HStackProps) {
     if (props.secondary) {
       return secondaryBackgroundColor;
     }
+    if (props.input) {
+      return inputFieldBackgroundColor;
+    }
     return "transparent";
-  }, [backgroundColor, componentBackgroundColor, props.background, props.component, props.secondary, secondaryBackgroundColor]);
+  }, [backgroundColor, componentBackgroundColor, inputFieldBackgroundColor, props.background, props.component, props.input, props.secondary, secondaryBackgroundColor]);
 
   const style = useMemo(() => [styles.innerWrapper, { backgroundColor: computedBackgroundColor }], [computedBackgroundColor]);
 

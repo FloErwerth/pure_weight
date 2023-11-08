@@ -4,7 +4,6 @@ import { borderRadius } from "../../../theme/border";
 export const styles = StyleSheet.create({
   wrapper: {
     flex: 0.6,
-    marginRight: 10,
   },
   item: {
     padding: 10,
@@ -16,7 +15,7 @@ export const styles = StyleSheet.create({
     position: "absolute",
   },
   selectedItem: {
-    fontSize: 22,
+    fontSize: 20,
   },
   selectedItemWrapper: {
     padding: 10,
