@@ -21,7 +21,14 @@ export const getLatestMeasurements = createSelector([getMeasurements], (measurem
 export const getMeasurementDataFromIndex = createSelector([getMeasurements, (byIndex, index: number) => index], (measurements, index) => {
   const measurement = measurements[index];
   if (measurement?.data) {
-    return Object.values(measurement?.data).map((data) => parseFloat(data));
+    const labels: string[] = [];
+    const data: number[] = [];
+    const entries = Object.entries(measurement?.data);
+    entries.forEach(([date, value]) => {
+      labels.push(getDate(date as IsoDate));
+      data.push(parseFloat(value));
+    });
+    return { labels, datasets: [{ data }] };
   }
   return undefined;
 });

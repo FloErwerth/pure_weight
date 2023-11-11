@@ -114,6 +114,7 @@ export const MeasurementModal = ({
     <Modal onRequestClose={onRequestClose} isVisible={isVisible}>
       <Animated.View style={styles.outerWrapper}>
         <ThemedTextInput
+          maxLength={20}
           errorKey="measurement_name"
           editable={isEditingMeasurement || isNewMeasurement}
           style={styles.textInput}

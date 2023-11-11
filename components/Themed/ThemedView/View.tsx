@@ -31,5 +31,5 @@ export const ThemedView = (props: ThemedViewProps) => {
   }, [backgroundColor, componentBackgroundColor, inputFieldBackgroundColor, props.component, props.ghost, props.input, props.secondary, secondaryBackgroundColor]);
 
   const wrapperStyle = useMemo(() => [{ backgroundColor: computedBackgroundColor, flex: props.stretch ? 1 : 0 }, props.style], [computedBackgroundColor, props.stretch, props.style]);
-  return <View {...props} style={wrapperStyle} />;
+  return <View {...props} ref={props.reference} style={wrapperStyle} />;
 };

@@ -33,17 +33,17 @@ export function Measurements() {
   const [showToast, setShowToast] = useState(false);
 
   const reset = useCallback(() => {
-    setCurrentMeasurement(emptyMeasurement);
     setShowMeasurementModal(false);
+    setCurrentMeasurement(emptyMeasurement);
     setIsNewMeasurement(true);
     setIsEditingMeasurement(false);
   }, []);
 
   const handleConfirmMeasurementModal = useCallback(() => {
-    reset();
     const { measurement, index } = currentMeasurement;
     if (isEditingMeasurement && index !== undefined) {
       dispatch(editMeasurement({ measurement, index }));
+      reset();
       return;
     }
     if (measurement.name && measurement.unit && measurement.value) {
@@ -58,6 +58,7 @@ export function Measurements() {
           index,
         }),
       );
+      reset();
     }
   }, [currentMeasurement, dispatch, isEditingMeasurement, reset]);
 

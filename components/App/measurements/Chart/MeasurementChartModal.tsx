@@ -1,12 +1,14 @@
-import { Dimensions, View } from "react-native";
 import { Modal } from "../../../Modal/Modal";
-import { useCallback, useRef, useState } from "react";
-import { Grid, LineChart, YAxis } from "react-native-svg-charts";
-import { HStack } from "../../../HStack/HStack";
+import { useCallback, useState } from "react";
 import { useAppSelector } from "../../../../store";
 import { AppState } from "../../../../store/types";
 import { getMeasurementDataFromIndex } from "../../../../store/selectors";
 import { MeasurementUnit } from "../types";
+import { ThemedView } from "../../../Themed/ThemedView/View";
+import { borderRadius } from "../../../../theme/border";
+import { Text } from "../../../Themed/ThemedText/Text";
+import { useTheme } from "../../../../theme/context";
+import { Chart } from "../../../Chart/Chart";
 
 interface MeasurementChartModalProps {
   isVisible: boolean;
@@ -16,46 +18,32 @@ interface MeasurementChartModalProps {
   index: number;
 }
 
-const WIDTH = Dimensions.get("screen").width - 100;
-const HEIGHT = Dimensions.get("screen").height * 0.33;
 export const MeasurementChartModal = ({ isVisible, onRequestClose, index, unit, name }: MeasurementChartModalProps) => {
   const handleRequestClose = useCallback(() => {
     onRequestClose();
   }, [onRequestClose]);
-
+  const [{ width, height }, setModalSizes] = useState<{ width: number; height: number }>({ width: 0, height: 0 });
+  const { mainColor } = useTheme();
   const data = useAppSelector((state: AppState) => getMeasurementDataFromIndex(state, index));
-  const [modalWidth, setModalWidth] = useState(WIDTH);
-  const containerRef = useRef<View>(null);
-
-  const measureContainer = useCallback(() => {
-    if (containerRef.current) {
-      containerRef.current.measure((x, y, width) => {
-        setModalWidth(width);
-      });
-    }
-  }, []);
-
-  const contentInset = { top: 20, bottom: 20 };
-
-  const getYLabel = useCallback(
-    (value: unknown) => {
-      return `${value} ${unit}`;
+  const getDotContent = useCallback(
+    ({ x, y, indexData }: { x: number; y: number; index: number; indexData: number }) => {
+      return (
+        <ThemedView key={x + y} style={{ position: "absolute", top: y - 25, left: x - 20, flex: 1, padding: 3, borderRadius, alignItems: "center" }}>
+          <Text style={{ fontSize: 12, color: mainColor }}>
+            {indexData} {unit}
+          </Text>
+        </ThemedView>
+      );
     },
-    [unit],
+    [mainColor, unit],
   );
-
   if (!data) {
     return null;
   }
 
   return (
     <Modal title={name} onRequestClose={handleRequestClose} isVisible={isVisible}>
-      <HStack style={{ height: HEIGHT, width: WIDTH }} reference={containerRef} onLayout={measureContainer}>
-        <YAxis formatLabel={getYLabel} contentInset={contentInset} data={data} />
-        <LineChart style={{ height: HEIGHT, flex: 1, marginLeft: 10, width: WIDTH }} data={data} svg={{ stroke: "rgb(134, 65, 244)" }} contentInset={contentInset}>
-          <Grid direction={"BOTH"} ticks={[2, 1, 2, 1, 1]} />
-        </LineChart>
-      </HStack>
+      <Chart transparent lineChartStyles={{ left: -45, top: 20, borderRadius }} getYLabel={() => ""} data={data} getDotContent={getDotContent} />
     </Modal>
   );
 };
