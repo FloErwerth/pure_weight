@@ -111,7 +111,7 @@ export function Workouts() {
                 </HStack>
                 {overallTrainingData && (
                   <View style={styles.progressWrapper}>
-                    <ProgressDisplay onPress={handleNavigateToProgress} name={overallTrainingData.name} percent={overallTrainingData.percent} />
+                    <ProgressDisplay type="Workout" onPress={handleNavigateToProgress} name={overallTrainingData.name} percent={overallTrainingData.percent} />
                   </View>
                 )}
               </Swipeable>

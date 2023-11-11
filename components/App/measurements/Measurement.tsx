@@ -52,7 +52,9 @@ export const RenderedMeasurement = ({ index, measurement }: MeasurementProps) =>
             {t("measurement_latest")} {getDate(latestMeasurements[index], language)}
           </Text>
         </View>
-        {measurement.name && progress && <ProgressDisplay higherIsBetter={measurement?.higherIsBetter} name={measurement?.name} percent={progress} onPress={handleNavigateToChart} />}
+        {measurement.name && progress && (
+          <ProgressDisplay type="Measurement" higherIsBetter={measurement?.higherIsBetter} name={measurement?.name} percent={progress} onPress={handleNavigateToChart} />
+        )}
       </VStack>
       <ThemedMaterialCommunityIcons name="table-large-plus" size={26} />
       {showMeasurementChart && <MeasurementChartModal index={index} name={measurement.name} unit={measurement.unit} isVisible={showMeasurementChart} onRequestClose={handleRequestClose} />}

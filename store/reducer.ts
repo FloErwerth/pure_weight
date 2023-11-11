@@ -6,10 +6,10 @@ import { Measurement } from "../components/App/measurements/types";
 
 export const mockState: AppState = {
   measurements: [
-    { name: "Körpergewicht", unit: "kg", data: { ["2023-10-11"]: "85", ["2023-10-12"]: "86" } },
-    { name: "Körperfettanteil", unit: "%", data: { ["2023-10-11"]: "15", ["2023-10-12"]: "16" } },
-    { name: "Körperfettanteil1", unit: "%", data: { ["2023-10-11"]: "15", ["2023-10-12"]: "16" } },
-    { name: "Körperfettanteil2", unit: "%", data: { ["2023-10-11"]: "15", ["2023-10-12"]: "16" } },
+    { name: "Körpergewicht", unit: "kg", data: { ["2023-10-11"]: "85", ["2023-10-12"]: "86" }, higherIsBetter: true },
+    { name: "Körperfettanteil", unit: "%", data: { ["2023-10-11"]: "15", ["2023-10-12"]: "15" } },
+    { name: "Körperfettanteil1", unit: "%", data: { ["2023-10-11"]: "15", ["2023-10-12"]: "16" }, higherIsBetter: false },
+    { name: "Körperfettanteil2", unit: "%", data: { ["2023-10-11"]: "15", ["2023-10-12"]: "14" }, higherIsBetter: true },
     { name: "Körperfettanteil3", unit: "%", data: { ["2023-10-11"]: "15", ["2023-10-12"]: "16" } },
     { name: "Körperfettanteil4", unit: "%", data: { ["2023-10-11"]: "15", ["2023-10-12"]: "16" } },
     { name: "Körperfettanteil5", unit: "%", data: { ["2023-10-11"]: "15", ["2023-10-12"]: "16" } },

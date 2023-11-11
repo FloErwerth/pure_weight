@@ -8,6 +8,8 @@ import { HStack } from "../../../HStack/HStack";
 import { ThemedMaterialCommunityIcons } from "../../../Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
 import { Text } from "../../../Themed/ThemedText/Text";
 import { swipableContext } from "../../Swipeable";
+import { useAppSelector } from "../../../../store";
+import { getLanguage } from "../../../../store/selectors";
 
 function truncateTo3rdSignificantDigit(number: number) {
   // Find the 3rd significant digit by converting the number to a string
@@ -28,33 +30,14 @@ export interface ProgressDisplayProps {
   higherIsBetter?: boolean;
   percent: number;
   name: string;
+  type: "Workout" | "Measurement";
 }
 
-export const ProgressDisplay = ({ percent, onPress, higherIsBetter = true, name }: ProgressDisplayProps) => {
-  const higherPercentage = percent > 100;
-  const isPositive = higherPercentage && higherIsBetter;
+const useText = (type: "Workout" | "Measurement", even: boolean, higherPercentage: boolean, processedPercent: number, name: string) => {
+  const language = useAppSelector(getLanguage);
+  const { t } = useTranslation();
 
-  const processedPercent = truncateTo3rdSignificantDigit(higherPercentage ? percent - 100 : 100 - percent);
-  const even = processedPercent === 0;
-
-  const active = useContext(swipableContext);
-  const {
-    t,
-    i18n: { language },
-  } = useTranslation();
-  const { secondaryColor } = useTheme();
-
-  const icon = useMemo(() => {
-    if (even) {
-      return "arrow-right";
-    }
-    if (isPositive) {
-      return "arrow-up";
-    }
-    return "arrow-down";
-  }, [even, isPositive]);
-
-  const text = useMemo(() => {
+  const workoutText = useMemo(() => {
     if (even) {
       return <>{t("progress_text_1").concat(t("progress_stayed"))}</>;
     }
@@ -71,6 +54,69 @@ export const ProgressDisplay = ({ percent, onPress, higherIsBetter = true, name 
       </>
     );
   }, [even, language, t, processedPercent, higherPercentage, name]);
+
+  const measurementText = useMemo(() => {
+    if (even) {
+      if (language === "en") {
+        return <>No changes on your measurement</>;
+      }
+      return <>Keine Veränderung für deine Messung</>;
+    }
+    if (higherPercentage) {
+      if (language === "en") {
+        return (
+          <>
+            Your measurement {name} {t("progress_increased")} by {processedPercent}&thinsp;%
+          </>
+        );
+      }
+      return (
+        <>
+          Deine Messung {name} ist um {processedPercent}&thinsp;% {t("progress_increased")}
+        </>
+      );
+    }
+    if (language === "en") {
+      return (
+        <>
+          Your measurement {name} {t("progress_decreased")} by {processedPercent}&thinsp;%
+        </>
+      );
+    }
+    return (
+      <>
+        Deine Messung {name} ist um {processedPercent}&thinsp;% {t("progress_decreased")}
+      </>
+    );
+  }, [even, higherPercentage, language, name, processedPercent, t]);
+
+  if (type === "Measurement") {
+    return measurementText;
+  }
+  return workoutText;
+};
+
+export const ProgressDisplay = ({ percent, onPress, higherIsBetter = true, name, type }: ProgressDisplayProps) => {
+  const higherPercentage = percent > 100;
+  const isPositive = higherPercentage && higherIsBetter;
+
+  const processedPercent = truncateTo3rdSignificantDigit(higherPercentage ? percent - 100 : 100 - percent);
+  const even = processedPercent === 0;
+  const text = useText(type, even, higherPercentage, processedPercent, name);
+
+  const active = useContext(swipableContext);
+  const { t } = useTranslation();
+  const { secondaryColor } = useTheme();
+
+  const icon = useMemo(() => {
+    if (even) {
+      return "arrow-right";
+    }
+    if (higherPercentage) {
+      return "arrow-up";
+    }
+    return "arrow-down";
+  }, [even, higherPercentage]);
 
   const chartStyle = useMemo(() => {
     if (isPositive) {
