@@ -1,7 +1,8 @@
 import { createAction, createReducer } from "@reduxjs/toolkit/src";
-import type { AppState, ErrorFields, ExerciseMetaData, ExerciseMetaDataWithDoneEntries, Measurement, PlainExerciseData, TrainingDay } from "./types";
+import type { AppState, ErrorFields, ExerciseMetaData, ExerciseMetaDataWithDoneEntries, PlainExerciseData, TrainingDay } from "./types";
 import { getDateTodayIso } from "../utils/date";
 import { ThemeKey } from "../theme/types";
+import { Measurement } from "../components/App/measurements/types";
 
 export const mockState: AppState = {
   measurements: [

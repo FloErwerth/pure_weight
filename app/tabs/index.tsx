@@ -44,7 +44,7 @@ export function TabsWrapper() {
             tabBarButton: TabBarButton,
             tabBarLabel: ({ focused }) => <TabBarLabel focused={focused} title={t("measurements")} />,
           }}
-          name="progress"
+          name="measurements"
         />
         <Tabs.Screen
           component={Profile}

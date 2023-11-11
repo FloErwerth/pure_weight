@@ -1,6 +1,6 @@
 import { IsoDate } from "../types/date";
 import { ThemeKey } from "../theme/types";
-import { MeasurementUnit } from "../components/MeasurementModal/measurementUnits";
+import { Measurement } from "../components/App/measurements/types";
 
 export type TrainingDay = {
   name: string;
@@ -31,13 +31,6 @@ export type ExerciseMetaData = {
   pause?: string;
 };
 
-export type Measurement = {
-  name: string;
-  unit: MeasurementUnit;
-  data: {
-    [date: IsoDate]: string;
-  };
-};
 export type ErrorFields = "create_name" | "create_weight" | "create_sets" | "create_reps" | "workout_name" | "create_exercises_empty" | "measurement_name" | "measurement_unit" | "measurement_value";
 
 export type AppState = {

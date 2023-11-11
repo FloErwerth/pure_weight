@@ -23,7 +23,7 @@ export const Routes = {
     screen: "tabs",
   },
   measurements: {
-    screen: "profile/measurements/index",
+    screen: "measurements/index",
   },
 };
 

@@ -88,7 +88,7 @@ export const PreviousTraining = ({ exerciseIndex, activeSetIndex }: PreviousTrai
           </VStack>
         )}
       </View>
-      <Modal title={`Your note from ${date}`} backgroundOpacity={0.5} onRequestClose={handleCloseNote} isVisible={showNote}>
+      <Modal title={`Your note from ${date}`} onRequestClose={handleCloseNote} isVisible={showNote}>
         <Text style={{ fontSize: 20 }}>{note}</Text>
       </Modal>
     </View>

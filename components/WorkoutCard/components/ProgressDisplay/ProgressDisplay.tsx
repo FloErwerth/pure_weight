@@ -23,17 +23,18 @@ function truncateTo3rdSignificantDigit(number: number) {
   return parseFloat(significantDigits);
 }
 
-export type ProgressData = { name: string; percent: number };
-type ProgressDisplayType = "WORKOUT" | "MEASUREMENT";
 export interface ProgressDisplayProps {
-  progressData: ProgressData;
   onPress: () => void;
+  higherIsBetter?: boolean;
+  percent: number;
+  name: string;
 }
 
-export const ProgressDisplay = ({ progressData, onPress }: ProgressDisplayProps) => {
-  const isPositive = progressData.percent > 100;
+export const ProgressDisplay = ({ percent, onPress, higherIsBetter = true, name }: ProgressDisplayProps) => {
+  const higherPercentage = percent > 100;
+  const isPositive = higherPercentage && higherIsBetter;
 
-  const processedPercent = truncateTo3rdSignificantDigit(isPositive ? progressData.percent - 100 : 100 - progressData.percent);
+  const processedPercent = truncateTo3rdSignificantDigit(higherPercentage ? percent - 100 : 100 - percent);
   const even = processedPercent === 0;
 
   const active = useContext(swipableContext);
@@ -51,7 +52,7 @@ export const ProgressDisplay = ({ progressData, onPress }: ProgressDisplayProps)
       return "arrow-up";
     }
     return "arrow-down";
-  }, [isPositive, even]);
+  }, [even, isPositive]);
 
   const text = useMemo(() => {
     if (even) {
@@ -60,16 +61,16 @@ export const ProgressDisplay = ({ progressData, onPress }: ProgressDisplayProps)
     if (language === "en") {
       return (
         <>
-          {t("progress_text_1").concat(progressData.name, " ", t(isPositive ? "progress_increased" : "progress_decreased"))} by {processedPercent}&thinsp;%
+          {t("progress_text_1").concat(name, " ", t(higherPercentage ? "progress_increased" : "progress_decreased"))} by {processedPercent}&thinsp;%
         </>
       );
     }
     return (
       <>
-        {t("progress_text_1")} {processedPercent}&thinsp;% {t(isPositive ? "progress_increased" : "progress_decreased")}
+        {t("progress_text_1")} {processedPercent}&thinsp;% {t(higherPercentage ? "progress_increased" : "progress_decreased")}
       </>
     );
-  }, [even, language, t, progressData.name, isPositive, processedPercent]);
+  }, [even, language, t, processedPercent, higherPercentage, name]);
 
   const chartStyle = useMemo(() => {
     if (isPositive) {

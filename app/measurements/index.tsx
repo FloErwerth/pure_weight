@@ -14,16 +14,9 @@ import { styles } from "../../components/App/measurements/styles";
 import { Swipeable } from "../../components/WorkoutCard/Swipeable";
 import { RenderedMeasurement } from "../../components/App/measurements/Measurement";
 import { BottomToast } from "../../components/BottomToast/BottomToast";
-import { MeasurementUnit } from "../../components/MeasurementModal/measurementUnits";
+import { Measurement } from "../../components/App/measurements/types";
 
-export type WorkingMeasurement = {
-  name?: string;
-  unit?: MeasurementUnit;
-  value?: string;
-  date?: Date;
-  higherIsBetter?: boolean;
-};
-const emptyMeasurement: WorkingMeasurement = { name: "", value: "", date: new Date(), higherIsBetter: false };
+const emptyMeasurement: Measurement = { name: "", value: "", date: new Date(), higherIsBetter: false };
 
 const dateParser = z.date().transform((date) => {
   return date.toISOString().split("T")[0];
@@ -33,7 +26,7 @@ export function Measurements() {
   const { t } = useTranslation();
   const [showMeasurementModal, setShowMeasurementModal] = useState(false);
   const measurements = useAppSelector(getMeasurements);
-  const [measurement, setMeasurement] = useState<WorkingMeasurement>(emptyMeasurement);
+  const [measurement, setMeasurement] = useState<Measurement>(emptyMeasurement);
   const [isNewMeasurement, setIsNewMeasurement] = useState(false);
   const dispatch = useAppDispatch();
   const [showToast, setShowToast] = useState(false);
@@ -58,7 +51,7 @@ export function Measurements() {
     setIsNewMeasurement(true);
   }, []);
 
-  const handleAddExistingMeasurement = useCallback((measurement: WorkingMeasurement) => {
+  const handleAddExistingMeasurement = useCallback((measurement: Measurement) => {
     setMeasurement({ name: measurement.name, unit: measurement.unit, value: "", date: new Date(getDateTodayIso()) });
     setShowMeasurementModal(true);
     setIsNewMeasurement(false);

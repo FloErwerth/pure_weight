@@ -4,7 +4,6 @@ import { HStack } from "../HStack/HStack";
 import { Modal, ModalProps } from "../Modal/Modal";
 import { Dispatch, SetStateAction, useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { WorkingMeasurement } from "../../app/measurements";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { getDateTodayIso } from "../../utils/date";
 import { useAppDispatch, useAppSelector } from "../../store";
@@ -17,17 +16,18 @@ import { ThemedMaterialCommunityIcons } from "../Themed/ThemedMaterialCommunityI
 import { styles } from "./styles";
 import { ThemedPressable } from "../Themed/Pressable/Pressable";
 import Animated, { FadeIn, Layout } from "react-native-reanimated";
-import { MeasurementUnit, measurementUnits } from "./measurementUnits";
 import { ThemedDropdown } from "../Themed/Dropdown/ThemedDropdown";
 import { CheckBox } from "../Themed/CheckBox/CheckBox";
+import { Measurement, measurementUnits } from "../App/measurements/types";
 
 interface MeasurementModalProps extends ModalProps {
-  setMeasurement: Dispatch<SetStateAction<WorkingMeasurement>>;
-  measurement?: WorkingMeasurement;
+  setMeasurement: Dispatch<SetStateAction<Measurement>>;
+  measurement?: Measurement;
   saveMeasurement: () => void;
   isNewMeasurement?: boolean;
 }
-const fieldToErrorMap: Record<keyof Omit<WorkingMeasurement, "higherIsBetter">, ErrorFields> = {
+
+const fieldToErrorMap: Record<keyof Omit<Measurement, "higherIsBetter" | "data">, ErrorFields> = {
   unit: "measurement_unit",
   value: "measurement_value",
   name: "measurement_name",
@@ -45,9 +45,9 @@ export const MeasurementModal = ({ isNewMeasurement = true, onRequestClose, isVi
   const dispatch = useAppDispatch();
 
   const handleAddMeasurementData = useCallback(
-    (field: keyof WorkingMeasurement, value: WorkingMeasurement[keyof WorkingMeasurement]) => {
-      const newMeasurement = { ...measurement, [field]: value };
-      if (field !== "higherIsBetter") {
+    (field: keyof Measurement, value: Measurement[keyof Measurement]) => {
+      const newMeasurement: Measurement = { ...measurement, [field]: value };
+      if (field !== "higherIsBetter" && field !== "data") {
         dispatch(cleanError([fieldToErrorMap[field]]));
       }
       setMeasurement(newMeasurement);
@@ -121,7 +121,7 @@ export const MeasurementModal = ({ isNewMeasurement = true, onRequestClose, isVi
             errorKey="measurement_unit"
             value={measurement?.unit}
             placeholderTranslationKey="measurement_unit"
-            onSelectItem={(value) => handleAddMeasurementData("unit", value as MeasurementUnit)}
+            onSelectItem={(value) => handleAddMeasurementData("unit", value)}
           />
         </HStack>
         {isNewMeasurement && measurement?.unit === "%" && (

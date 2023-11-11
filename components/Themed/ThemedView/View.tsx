@@ -1,5 +1,5 @@
 import { View, ViewProps } from "react-native";
-import { useMemo } from "react";
+import { RefObject, useMemo } from "react";
 import { useTheme } from "../../../theme/context";
 
 export interface ThemedViewProps extends ViewProps {
@@ -8,6 +8,7 @@ export interface ThemedViewProps extends ViewProps {
   secondary?: boolean;
   ghost?: boolean;
   input?: boolean;
+  reference?: RefObject<View>;
 }
 
 export const ThemedView = (props: ThemedViewProps) => {
@@ -27,7 +28,7 @@ export const ThemedView = (props: ThemedViewProps) => {
       return secondaryBackgroundColor;
     }
     return backgroundColor;
-  }, [backgroundColor, componentBackgroundColor, props.component, props.ghost, props.secondary, secondaryBackgroundColor]);
+  }, [backgroundColor, componentBackgroundColor, inputFieldBackgroundColor, props.component, props.ghost, props.input, props.secondary, secondaryBackgroundColor]);
 
   const wrapperStyle = useMemo(() => [{ backgroundColor: computedBackgroundColor, flex: props.stretch ? 1 : 0 }, props.style], [computedBackgroundColor, props.stretch, props.style]);
   return <View {...props} style={wrapperStyle} />;

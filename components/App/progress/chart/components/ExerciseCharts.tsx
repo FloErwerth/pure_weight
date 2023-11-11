@@ -75,8 +75,8 @@ const useExerciseData = (exerciseData: DoneExerciseData[], chartType: ChartType)
     datasets: [
       {
         data,
-        color: () => mainColor, // optional
-        strokeWidth: 1, // optional
+        color: () => mainColor,
+        strokeWidth: 1,
       },
     ],
   };
