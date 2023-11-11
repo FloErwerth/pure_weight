@@ -41,7 +41,7 @@ export const ThemedTextInput = (props: ThemedTextInputProps) => {
     }
     const errorStyle = { color: errorColor, borderWidth: props.hideErrorBorder ? 0 : 1, borderColor: errorColor };
     return [errorStyle, baseStyle];
-  }, [editable, errorColor, getHasError, inputFieldBackgroundColor, mainColor, props.clearButtonMode, props.hideErrorBorder, props.stretch, props.style, textDisabled]);
+  }, [editable, errorColor, getHasError, inputFieldBackgroundColor, mainColor, props.hideErrorBorder, props.stretch, props.style, textDisabled]);
 
   return <TextInput {...props} ref={props.reference} onChangeText={handleTextInput} style={textInputStyle} placeholderTextColor={placeholderColor} />;
 };

@@ -2,7 +2,7 @@ import { Pressable, View } from "react-native";
 import { ThemedTextInput } from "../Themed/ThemedTextInput/ThemedTextInput";
 import { HStack } from "../HStack/HStack";
 import { Modal, ModalProps } from "../Modal/Modal";
-import { Dispatch, SetStateAction, useCallback, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { getDateTodayIso } from "../../utils/date";
@@ -21,10 +21,11 @@ import { CheckBox } from "../Themed/CheckBox/CheckBox";
 import { Measurement, measurementUnits } from "../App/measurements/types";
 
 interface MeasurementModalProps extends ModalProps {
-  setMeasurement: Dispatch<SetStateAction<Measurement>>;
-  measurement?: Measurement;
+  setCurrentMeasurement: Dispatch<SetStateAction<{ measurement: Measurement; index?: number }>>;
+  currentMeasurement: { measurement: Measurement; index?: number };
   saveMeasurement: () => void;
   isNewMeasurement?: boolean;
+  isEditingMeasurement?: boolean;
 }
 
 const fieldToErrorMap: Record<keyof Omit<Measurement, "higherIsBetter" | "data">, ErrorFields> = {
@@ -34,7 +35,15 @@ const fieldToErrorMap: Record<keyof Omit<Measurement, "higherIsBetter" | "data">
   date: "measurement_value",
 };
 
-export const MeasurementModal = ({ isNewMeasurement = true, onRequestClose, isVisible, measurement, setMeasurement, saveMeasurement }: MeasurementModalProps) => {
+export const MeasurementModal = ({
+  isNewMeasurement = true,
+  onRequestClose,
+  isVisible,
+  currentMeasurement: { measurement, index },
+  setCurrentMeasurement,
+  saveMeasurement,
+  isEditingMeasurement,
+}: MeasurementModalProps) => {
   const { t } = useTranslation();
   const { mainColor } = useTheme();
   const themeKey = useAppSelector(getThemeKey);
@@ -50,9 +59,9 @@ export const MeasurementModal = ({ isNewMeasurement = true, onRequestClose, isVi
       if (field !== "higherIsBetter" && field !== "data") {
         dispatch(cleanError([fieldToErrorMap[field]]));
       }
-      setMeasurement(newMeasurement);
+      setCurrentMeasurement({ measurement: newMeasurement, index });
     },
-    [dispatch, measurement, setMeasurement],
+    [dispatch, index, measurement, setCurrentMeasurement],
   );
 
   useEffect(() => {
@@ -61,13 +70,23 @@ export const MeasurementModal = ({ isNewMeasurement = true, onRequestClose, isVi
     }
   }, [dispatch, isVisible]);
 
+  const measurementButtonText = useMemo(() => {
+    if (isEditingMeasurement) {
+      return t("measurement_edit_confirm");
+    }
+    if (showWarning) {
+      return t("measurement_warning_confirm");
+    }
+    return t("measurement_add");
+  }, [isEditingMeasurement, showWarning, t]);
+
   const collectErrors = useCallback(() => {
     const errors: ErrorFields[] = [];
     if (!measurement?.name || !measurement?.unit || !measurement?.value) {
       if (!measurement?.name) {
         errors.push("measurement_name");
       }
-      if (!measurement?.value) {
+      if (!measurement?.value && !isEditingMeasurement) {
         errors.push("measurement_value");
       }
       if (!measurement?.unit) {
@@ -75,7 +94,7 @@ export const MeasurementModal = ({ isNewMeasurement = true, onRequestClose, isVi
       }
     }
     return errors;
-  }, [measurement?.name, measurement?.unit, measurement?.value]);
+  }, [isEditingMeasurement, measurement?.name, measurement?.unit, measurement?.value]);
 
   const handleSaveMeasurement = useCallback(() => {
     const errors = collectErrors();
@@ -96,7 +115,7 @@ export const MeasurementModal = ({ isNewMeasurement = true, onRequestClose, isVi
       <Animated.View style={styles.outerWrapper}>
         <ThemedTextInput
           errorKey="measurement_name"
-          editable={isNewMeasurement}
+          editable={isEditingMeasurement || isNewMeasurement}
           style={styles.textInput}
           onChangeText={(value) => handleAddMeasurementData("name", value)}
           value={measurement?.name}
@@ -108,6 +127,7 @@ export const MeasurementModal = ({ isNewMeasurement = true, onRequestClose, isVi
             stretch
             errorKey="measurement_value"
             returnKeyType="done"
+            editable={!isEditingMeasurement}
             keyboardType="decimal-pad"
             style={styles.textInput}
             onChangeText={(value) => handleAddMeasurementData("value", value)}
@@ -116,7 +136,7 @@ export const MeasurementModal = ({ isNewMeasurement = true, onRequestClose, isVi
             placeholder={t("measurement")}
           />
           <ThemedDropdown
-            isSelectable={isNewMeasurement}
+            isSelectable={isNewMeasurement || isEditingMeasurement}
             options={measurementUnits}
             errorKey="measurement_unit"
             value={measurement?.unit}
@@ -124,7 +144,7 @@ export const MeasurementModal = ({ isNewMeasurement = true, onRequestClose, isVi
             onSelectItem={(value) => handleAddMeasurementData("unit", value)}
           />
         </HStack>
-        {isNewMeasurement && measurement?.unit === "%" && (
+        {(isNewMeasurement || isEditingMeasurement) && measurement?.unit === "%" && (
           <CheckBox
             label={t("measurement_higher_is_better")}
             helpText={t("measurement_higher_is_better_help")}
@@ -133,14 +153,16 @@ export const MeasurementModal = ({ isNewMeasurement = true, onRequestClose, isVi
             onChecked={(val) => handleAddMeasurementData("higherIsBetter", val)}
           />
         )}
-        <HStack style={styles.calendarButtonsWrapper}>
-          <ThemedPressable stretch style={styles.dateWrapper} onPress={() => setShowDatePicker((open) => !open)}>
-            <Text style={styles.text}>{measurement?.date?.toLocaleDateString(language)}</Text>
-          </ThemedPressable>
-          <ThemedPressable onPress={() => setShowDatePicker((open) => !open)} style={styles.calendarWrapper}>
-            <ThemedMaterialCommunityIcons ghost name="calendar" size={26} />
-          </ThemedPressable>
-        </HStack>
+        {!isEditingMeasurement && (
+          <HStack style={styles.calendarButtonsWrapper}>
+            <ThemedPressable stretch style={styles.dateWrapper} onPress={() => setShowDatePicker((open) => !open)}>
+              <Text style={styles.text}>{measurement?.date?.toLocaleDateString(language)}</Text>
+            </ThemedPressable>
+            <ThemedPressable onPress={() => setShowDatePicker((open) => !open)} style={styles.calendarWrapper}>
+              <ThemedMaterialCommunityIcons ghost name="calendar" size={26} />
+            </ThemedPressable>
+          </HStack>
+        )}
         {showDatePicker && (
           <Animated.View layout={Layout} entering={FadeIn} style={styles.dateWrapper}>
             <DateTimePicker
@@ -166,8 +188,8 @@ export const MeasurementModal = ({ isNewMeasurement = true, onRequestClose, isVi
         )}
         <Pressable style={styles.pressable} onPress={handleSaveMeasurement}>
           <HStack component style={styles.addWrapper}>
-            <Text style={styles.addMeasurement}>{t(showWarning ? "measurement_warning_confirm" : "measurement_add")}</Text>
-            <ThemedMaterialCommunityIcons name="table-large-plus" size={20} />
+            <Text style={styles.addMeasurement}>{measurementButtonText}</Text>
+            <ThemedMaterialCommunityIcons name={isEditingMeasurement ? "table-check" : "table-large-plus"} size={20} />
           </HStack>
         </Pressable>
       </Animated.View>

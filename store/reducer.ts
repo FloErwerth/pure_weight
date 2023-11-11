@@ -150,7 +150,8 @@ export const emptyState: AppState = {
   theme: "light",
 };
 
-export const addMeasurement = createAction<Measurement>("measurement_add");
+export const addMeasurement = createAction<{ measurement: Measurement; index?: number }>("measurement_add");
+export const editMeasurement = createAction<{ measurement: Measurement; index: number }>("measurement_edit");
 export const deleteMeasurement = createAction<number>("measurement_delete");
 export const recoverMeasurement = createAction("measurement_recover");
 export const recoverWorkout = createAction("workout_recover");
@@ -176,17 +177,21 @@ export const storeReducer = createReducer<AppState>(emptyState, (builder) =>
     .addCase(setState, (state, action) => {
       return action.payload;
     })
+    .addCase(editMeasurement, (state, action) => {
+      const measurements = [...state.measurements];
+      measurements.splice(action.payload.index, 1, action.payload.measurement);
+      state.measurements = measurements;
+    })
     .addCase(addMeasurement, (state, action) => {
-      const possibleIndex = state.measurements.findIndex((measurement) => measurement.name === action.payload.name);
-      if (possibleIndex >= 0) {
+      if (action.payload.index !== undefined) {
         const measurements = [...state.measurements];
-        const measurement = state.measurements[possibleIndex];
-        const newMeasurement = { name: measurement.name, unit: measurement.unit, data: { ...measurement.data, ...action.payload.data } };
-        measurements.splice(possibleIndex, 1, newMeasurement);
+        const measurement = state.measurements[action.payload.index];
+        const newMeasurement = { name: measurement.name, unit: measurement.unit, data: { ...measurement.data, ...action.payload.measurement.data } };
+        measurements.splice(action.payload.index, 1, newMeasurement);
         state.measurements = measurements;
       } else {
         const measurements = [...state.measurements];
-        measurements.push(action.payload);
+        measurements.push(action.payload.measurement);
         state.measurements = measurements;
       }
     })

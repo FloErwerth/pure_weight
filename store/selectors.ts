@@ -33,8 +33,6 @@ export const getMeasurmentProgress = createSelector([getMeasurements, (byIndex, 
   if (data && data?.length >= 2) {
     const latest = parseFloat(data[data?.length - 1]);
     const secondLatest = parseFloat(data[data?.length - 2]);
-    console.log((100 * latest) / secondLatest);
-
     return (latest / secondLatest) * 100;
   }
 
