@@ -68,6 +68,7 @@
   "measurements": "Messungen",
   "measurement": "Messung",
   "measurement_add": "Messung hinzufügen",
+  "measurement_edit_confirm": "Änderungen bestätigen",
   "measurement_warning_confirm": "Überschreiben bestätigen",
   "measurement_warning_text": "Es ist bereits eine Messung am angegebenen Datum vorhanden. Bitte bestätige, dass Du die Messung überschreiben möchtest.",
   "measurement_placeholder": "Name der Messung",
