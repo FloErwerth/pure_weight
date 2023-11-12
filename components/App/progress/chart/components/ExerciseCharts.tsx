@@ -97,6 +97,7 @@ export const ExerciseChart = ({ exerciseName, data }: ExerciseChartProps) => {
   const [showSelectionModal, setShowSelectionModal] = useState(false);
   const { t } = useTranslation();
   const { mainColor, componentBackgroundColor } = useTheme();
+
   const getDotContent = useCallback(
     ({ x, y, indexData }: { x: number; y: number; index: number; indexData: number }) => {
       return (

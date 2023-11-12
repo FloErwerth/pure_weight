@@ -1,5 +1,5 @@
 import { Modal } from "../../../Modal/Modal";
-import { useCallback, useState } from "react";
+import { useCallback } from "react";
 import { useAppSelector } from "../../../../store";
 import { AppState } from "../../../../store/types";
 import { getMeasurementDataFromIndex } from "../../../../store/selectors";
@@ -22,7 +22,6 @@ export const MeasurementChartModal = ({ isVisible, onRequestClose, index, unit, 
   const handleRequestClose = useCallback(() => {
     onRequestClose();
   }, [onRequestClose]);
-  const [{ width, height }, setModalSizes] = useState<{ width: number; height: number }>({ width: 0, height: 0 });
   const { mainColor } = useTheme();
   const data = useAppSelector((state: AppState) => getMeasurementDataFromIndex(state, index));
   const getDotContent = useCallback(

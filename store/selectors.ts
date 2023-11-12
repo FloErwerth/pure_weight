@@ -32,7 +32,7 @@ export const getMeasurementDataFromIndex = createSelector([getMeasurements, (byI
     const labels: string[] = [];
     const data: number[] = [];
     const entries = Object.entries(measurement?.data);
-    const vals = crampToNEntries(50, entries);
+    const vals = crampToNEntries(100, entries);
     vals.forEach(([date, value]) => {
       labels.push(getDate(date as IsoDate));
       data.push(parseFloat(value));
@@ -129,15 +129,13 @@ export const getTrainingDayData = createSelector([getSavedTrainings], (trainingD
   return trainingDays
     .filter((day) => day.exercises.length > 0)
     .reduce(
-      (exerciseNameEntryPairs, day, currentIndex) => {
+      (exerciseNameEntryPairs, day) => {
         const newData = Array(day.exercises.length)
           .fill(undefined)
-          .map((_, index) => crampToNEntries(50, day.exercises[index].doneExerciseEntries))
+          .map((_, index) => crampToNEntries(20, day.exercises[index].doneExerciseEntries))
           .map((data, index) => ({ exerciseName: day.exercises[index].name, data }));
-        console.log(newData.map((data) => data.data.length));
         const newEntries = [...exerciseNameEntryPairs];
         newEntries.push(newData);
-
         return newEntries;
       },
       [] as { exerciseName: string; data: DoneExerciseData[] }[][],
