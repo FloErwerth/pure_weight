@@ -139,10 +139,12 @@ export const ExerciseChart = ({ exerciseName, data }: ExerciseChartProps) => {
           <VStack style={styles.selectionModal}>
             {mappedChartProps.map(({ onPress, title, chartType }) => (
               <Button key={`${chartType}${title}`} onPress={onPress}>
-                <Text style={styles.chartTypeSelectonTitle}>{t(chartTypeMap[chartType].title)}</Text>
-                <View>
-                  <Text style={styles.chartTypeSelectionText}>{t(chartTypeMap[chartType].hint)}</Text>
-                </View>
+                <VStack>
+                  <Text style={styles.chartTypeSelectonTitle}>{t(chartTypeMap[chartType].title)}</Text>
+                  <View>
+                    <Text style={styles.chartTypeSelectionText}>{t(chartTypeMap[chartType].hint)}</Text>
+                  </View>
+                </VStack>
               </Button>
             ))}
           </VStack>

@@ -7,7 +7,7 @@ import { IsoDate } from "../types/date";
 
 const data: Array<{ date: IsoDate; sets: [{ reps: string; weight: string }] }> = [];
 
-for (let i = 0; i < 6000; i++) {
+for (let i = 0; i < 100; i++) {
   const currentDate = new Date(getDateTodayIso());
   currentDate.setDate(currentDate.getDate() + i);
 
