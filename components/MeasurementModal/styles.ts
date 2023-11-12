@@ -39,6 +39,8 @@ export const styles = StyleSheet.create({
   warningWrapper: {
     padding: 10,
     paddingBottom: 0,
+    alignItems: "center",
+    gap: 5,
   },
   warningText: {
     fontSize: 16,

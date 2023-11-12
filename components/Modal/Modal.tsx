@@ -30,18 +30,20 @@ export const Modal = ({ customContentStyle, isVisible = true, children, onReques
   const computedColor = theme === "dark" ? mainColor : backgroundColor;
 
   return (
-    <ReactNativeModal
-      useNativeDriver={false}
-      useNativeDriverForBackdrop={false}
-      customBackdrop={<Backdrop />}
-      animationIn="fadeIn"
-      animationOut="fadeOut"
-      backdropTransitionInTiming={0}
-      backdropTransitionOutTiming={0}
-      isVisible={isVisible}
-      style={style}
-    >
-      <Animated.View layout={Layout} entering={FadeIn.duration(100)} exiting={FadeOut.duration(100)}>
+    <Animated.View layout={Layout} entering={FadeIn.duration(100)} exiting={FadeOut.duration(100)}>
+      <ReactNativeModal
+        useNativeDriver={false}
+        useNativeDriverForBackdrop={false}
+        customBackdrop={<Backdrop />}
+        onBackdropPress={onRequestClose}
+        coverScreen
+        animationIn="slideInUp"
+        animationOut="slideOutDown"
+        backdropTransitionInTiming={0}
+        backdropTransitionOutTiming={0}
+        isVisible={isVisible}
+        style={style}
+      >
         <HStack ghost style={styles.wrapper}>
           <View>{title && <Text style={styles.title}>{title}</Text>}</View>
           {onRequestClose && (
@@ -51,7 +53,7 @@ export const Modal = ({ customContentStyle, isVisible = true, children, onReques
           )}
         </HStack>
         <ThemedView style={customContentStyle ?? styles.defaultContentStyle}>{children}</ThemedView>
-      </Animated.View>
-    </ReactNativeModal>
+      </ReactNativeModal>
+    </Animated.View>
   );
 };

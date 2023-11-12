@@ -1,4 +1,4 @@
-import { Pressable, View } from "react-native";
+import { Pressable } from "react-native";
 import { ThemedTextInput } from "../Themed/ThemedTextInput/ThemedTextInput";
 import { HStack } from "../HStack/HStack";
 import { Modal, ModalProps } from "../Modal/Modal";
@@ -18,7 +18,7 @@ import { ThemedPressable } from "../Themed/Pressable/Pressable";
 import Animated, { FadeIn, Layout } from "react-native-reanimated";
 import { ThemedDropdown } from "../Themed/Dropdown/ThemedDropdown";
 import { CheckBox } from "../Themed/CheckBox/CheckBox";
-import { Measurement, measurementUnits } from "../App/measurements/types";
+import { getMeasurementUnits, Measurement } from "../App/measurements/types";
 
 interface MeasurementModalProps extends ModalProps {
   setCurrentMeasurement: Dispatch<SetStateAction<{ measurement: Measurement; index?: number }>>;
@@ -45,7 +45,7 @@ export const MeasurementModal = ({
   isEditingMeasurement,
 }: MeasurementModalProps) => {
   const { t } = useTranslation();
-  const { mainColor } = useTheme();
+  const { mainColor, warningColor } = useTheme();
   const themeKey = useAppSelector(getThemeKey);
   const dates = useAppSelector((state: AppState) => getDatesFromCurrentMeasurement(state)(measurement?.name));
   const language = useAppSelector(getLanguage);
@@ -110,6 +110,15 @@ export const MeasurementModal = ({
     saveMeasurement();
   }, [collectErrors, dates, dispatch, measurement?.date, saveMeasurement, showWarning]);
 
+  const measurementUnits = useMemo(() => {
+    if (isEditingMeasurement) {
+      return getMeasurementUnits(measurement.unit);
+    }
+    return getMeasurementUnits();
+  }, [isEditingMeasurement, measurement.unit]);
+
+  const unitDropdownSelectable = Boolean((isNewMeasurement || isEditingMeasurement) && measurementUnits.length > 1);
+
   return (
     <Modal onRequestClose={onRequestClose} isVisible={isVisible}>
       <Animated.View style={styles.outerWrapper}>
@@ -137,7 +146,7 @@ export const MeasurementModal = ({
             placeholder={t("measurement")}
           />
           <ThemedDropdown
-            isSelectable={isNewMeasurement || isEditingMeasurement}
+            isSelectable={unitDropdownSelectable}
             options={measurementUnits}
             errorKey="measurement_unit"
             value={measurement?.unit}
@@ -145,15 +154,13 @@ export const MeasurementModal = ({
             onSelectItem={(value) => handleAddMeasurementData("unit", value)}
           />
         </HStack>
-        {(isNewMeasurement || isEditingMeasurement) && measurement?.unit === "%" && (
-          <CheckBox
-            label={t("measurement_higher_is_better")}
-            helpText={t("measurement_higher_is_better_help")}
-            checked={measurement.higherIsBetter ?? false}
-            size={26}
-            onChecked={(val) => handleAddMeasurementData("higherIsBetter", val)}
-          />
-        )}
+        <CheckBox
+          label={t("measurement_higher_is_better")}
+          helpText={t("measurement_higher_is_better_help")}
+          checked={measurement.higherIsBetter ?? false}
+          size={26}
+          onChecked={(val) => handleAddMeasurementData("higherIsBetter", val)}
+        />
         {!isEditingMeasurement && (
           <HStack style={styles.calendarButtonsWrapper}>
             <ThemedPressable stretch style={styles.dateWrapper} onPress={() => setShowDatePicker((open) => !open)}>
@@ -181,11 +188,12 @@ export const MeasurementModal = ({
           </Animated.View>
         )}
         {showWarning && (
-          <View style={styles.warningWrapper}>
+          <HStack style={styles.warningWrapper}>
+            <ThemedMaterialCommunityIcons ghost name="alert-circle-outline" size={20} color={warningColor} />
             <Text warning style={styles.warningText}>
-              {t("measurement_warning_text")}
+              {t(`measurement_warning_text`)}
             </Text>
-          </View>
+          </HStack>
         )}
         <Pressable style={styles.pressable} onPress={handleSaveMeasurement}>
           <HStack component style={styles.addWrapper}>

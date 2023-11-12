@@ -26,7 +26,11 @@ function crampToNEntries<T extends Array<unknown>>(n: number, entries: T): T {
   return entries;
 }
 
-export const getMeasurementDataFromIndex = createSelector([getMeasurements, (byIndex, index: number) => index], (measurements, index) => {
+export const getMeasurementDataFromIndex = createSelector([getMeasurements, (byIndex, index?: number) => index], (measurements, index) => {
+  if (index === undefined) {
+    return undefined;
+  }
+
   const measurement = measurements[index];
   if (measurement?.data) {
     const labels: string[] = [];

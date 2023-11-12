@@ -4,6 +4,7 @@ import { getDateTodayIso } from "../utils/date";
 import { ThemeKey } from "../theme/types";
 import { Measurement } from "../components/App/measurements/types";
 import { IsoDate } from "../types/date";
+import { convertMeasurements } from "../components/App/measurements/utils";
 
 const data: Array<{ date: IsoDate; sets: [{ reps: string; weight: string }] }> = [];
 
@@ -212,7 +213,15 @@ export const storeReducer = createReducer<AppState>(emptyState, (builder) =>
     })
     .addCase(editMeasurement, (state, action) => {
       const measurements = [...state.measurements];
-      measurements.splice(action.payload.index, 1, action.payload.measurement);
+      const previouisMeasurement = measurements[action.payload.index];
+      const newData = measurements[action.payload.index].data;
+      if (previouisMeasurement.unit && newData && action.payload.measurement.unit !== previouisMeasurement.unit) {
+        const convertedMeasurements = convertMeasurements(previouisMeasurement.unit, newData);
+        measurements.splice(action.payload.index, 1, { ...action.payload.measurement, data: convertedMeasurements });
+      } else {
+        measurements.splice(action.payload.index, 1, action.payload.measurement);
+      }
+
       state.measurements = measurements;
     })
     .addCase(addMeasurement, (state, action) => {
