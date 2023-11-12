@@ -27,10 +27,11 @@ export const MeasurementChartModal = ({ isVisible, onRequestClose, index, unit, 
   const data = useAppSelector((state: AppState) => getMeasurementDataFromIndex(state, index));
   const getDotContent = useCallback(
     ({ x, y, indexData }: { x: number; y: number; index: number; indexData: number }) => {
+      console.log(indexData + 0.0012121221);
       return (
         <ThemedView key={x + y} style={{ position: "absolute", top: y - 25, left: x - 20, flex: 1, padding: 3, borderRadius, alignItems: "center" }}>
           <Text style={{ fontSize: 12, color: mainColor }}>
-            {truncateToNthSignificantDigit(indexData)} {unit}
+            {truncateToNthSignificantDigit(indexData + 0.0012121221, false, 1)} {unit}
           </Text>
         </ThemedView>
       );

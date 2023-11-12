@@ -8,9 +8,12 @@ export function truncateToNthSignificantDigit(number: number, toNumber?: boolean
     return number;
   }
 
-  const significantDigits = numberString.substring(0, dotIndex + (n ?? 3));
+  const significantDigits = numberString.substring(0, dotIndex + (n ?? 2) + 1);
 
   if (!toNumber) {
+    if (n === 0) {
+      return significantDigits.replace(".", "");
+    }
     return significantDigits;
   }
 
