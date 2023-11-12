@@ -2,7 +2,7 @@ import { lazy, Suspense, useCallback, useMemo } from "react";
 import { useNavigate } from "../../../hooks/navigate";
 import { SiteNavigationButtons } from "../../../components/SiteNavigationButtons/SiteNavigationButtons";
 import { useAppSelector } from "../../../store";
-import { getSelectedTrainingDayData } from "../../../store/selectors";
+import { getExerciseNames, getSelectedTrainingName } from "../../../store/selectors";
 import { Dimensions, ScrollView } from "react-native";
 import { Skeleton } from "../../../components/Skeleton/Skeleton";
 import { borderRadius } from "../../../theme/border";
@@ -21,25 +21,20 @@ const PromiseTrigger = () => {
 
 export function Progress() {
   const navigate = useNavigate();
-  const trainingDayData = useAppSelector(getSelectedTrainingDayData);
+  const exerciseNames = useAppSelector(getExerciseNames);
+  const trainingDayName = useAppSelector(getSelectedTrainingName);
 
   const handleNavigateToWorkouts = useCallback(() => {
     navigate("workouts");
   }, [navigate]);
 
-  if (trainingDayData === undefined) {
+  if (exerciseNames === undefined) {
     handleNavigateToWorkouts();
   }
+
   const Fallback = () => {
-    const exerciseNames = trainingDayData?.exercises.map((exercise) => exercise.name);
-    const navigate = useNavigate();
     const { componentBackgroundColor } = useTheme();
     const containerStyles = useMemo(() => [styles.vStack, { backgroundColor: componentBackgroundColor }], [componentBackgroundColor]);
-
-    if (exerciseNames === undefined || exerciseNames.length === 0) {
-      navigate("workouts");
-      return null;
-    }
 
     return (
       <ScrollView contentContainerStyle={styles.scrollView}>
@@ -50,7 +45,7 @@ export function Progress() {
           </HStack>
           <Skeleton borderRadius={borderRadius} width={Dimensions.get("screen").width - 40} height={300} />
         </VStack>
-        {exerciseNames.map(() => (
+        {exerciseNames?.map(() => (
           <VStack key={Math.random() * 10000} style={containerStyles}>
             <HStack style={styles.hStack}>
               <Skeleton borderRadius={borderRadius} width={140} height={40} />
@@ -65,7 +60,7 @@ export function Progress() {
 
   return (
     <ThemedView stretch>
-      <SiteNavigationButtons handleBack={handleNavigateToWorkouts} title={trainingDayData?.name} />
+      <SiteNavigationButtons handleBack={handleNavigateToWorkouts} title={trainingDayName} />
       <PageContent>
         <Suspense fallback={<Fallback />}>
           <ExerciseCharts />

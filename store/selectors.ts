@@ -1,5 +1,5 @@
 import { createSelector } from "@reduxjs/toolkit";
-import { AppState, DoneExerciseData, ErrorFields, ExerciseMetaData, TrainingDay } from "./types";
+import { AppState, DoneExerciseData, ErrorFields, ExerciseMetaData } from "./types";
 import { getDate } from "../utils/date";
 import { IsoDate } from "../types/date";
 
@@ -18,13 +18,26 @@ export const getLatestMeasurements = createSelector([getMeasurements], (measurem
     return dates[dates.length - 1] as IsoDate;
   }),
 );
+
+function getEveryNthEntry<T extends Array<unknown>>(n: number, entries: T): T {
+  if (entries.length > 50) {
+    const vals = [];
+    for (let i = 0; i < entries.length; i += Math.floor(entries.length / n)) {
+      vals.push(entries[i]);
+    }
+    return vals as T;
+  }
+  return entries;
+}
+
 export const getMeasurementDataFromIndex = createSelector([getMeasurements, (byIndex, index: number) => index], (measurements, index) => {
   const measurement = measurements[index];
   if (measurement?.data) {
     const labels: string[] = [];
     const data: number[] = [];
     const entries = Object.entries(measurement?.data);
-    entries.forEach(([date, value]) => {
+    const vals = getEveryNthEntry(4, entries);
+    vals.forEach(([date, value]) => {
       labels.push(getDate(date as IsoDate));
       data.push(parseFloat(value));
     });
@@ -119,13 +132,20 @@ export const getSpecificNumberOfSets = createSelector([getSelectedTrainingDay], 
 export const getTrainingDayData = createSelector([getSavedTrainings], (trainingDays) => {
   return trainingDays
     .filter((day) => day.exercises.length > 0)
-    .reduce((days, day) => {
-      const exerciseEntries = day.exercises.filter((exercise) => exercise.doneExerciseEntries && exercise.doneExerciseEntries.length > 1);
-      if (exerciseEntries.length > 0) {
-        return [...days, { name: day.name, exercises: exerciseEntries }];
-      }
-      return days;
-    }, [] as TrainingDay[]);
+    .reduce(
+      (exerciseNameEntryPairs, day) => {
+        const newData = Array(day.exercises.length)
+          .fill(undefined)
+          .map((_, index) => getEveryNthEntry(4, day.exercises[index].doneExerciseEntries))
+          .map((data, index) => ({ exerciseName: day.exercises[index].name, data }));
+
+        const newEntries = [...exerciseNameEntryPairs];
+        newEntries.push(newData);
+
+        return newEntries;
+      },
+      [] as { exerciseName: string; data: DoneExerciseData[] }[][],
+    );
 });
 
 export const getSelectedTrainingDayData = createSelector([getTrainingDayData, getTrainingIndex], (data, index) => {

@@ -3,30 +3,24 @@ import type { AppState, ErrorFields, ExerciseMetaData, ExerciseMetaDataWithDoneE
 import { getDateTodayIso } from "../utils/date";
 import { ThemeKey } from "../theme/types";
 import { Measurement } from "../components/App/measurements/types";
+import { IsoDate } from "../types/date";
+
+const data: Array<{ date: IsoDate; sets: [{ reps: string; weight: string }] }> = [];
+
+for (let i = 0; i < 6000; i++) {
+  const currentDate = new Date(getDateTodayIso());
+  currentDate.setDate(currentDate.getDate() + i);
+
+  const dateStr = currentDate.toISOString().split("T")[0];
+  data.push({ date: dateStr as IsoDate, sets: [{ reps: i.toString(), weight: i.toString() }] });
+}
 
 export const mockState: AppState = {
   measurements: [
     {
       name: "Körpergewicht",
       unit: "kg",
-      data: {
-        ["2023-10-10"]: "15",
-        ["2023-10-11"]: "15",
-        ["2023-10-12"]: "16",
-        ["2023-10-13"]: "17",
-        ["2023-10-14"]: "18",
-        ["2023-10-15"]: "20",
-        ["2023-10-16"]: "19",
-        ["2023-10-17"]: "23",
-        ["2023-10-18"]: "24",
-        ["2023-10-19"]: "19",
-        ["2023-10-20"]: "18",
-        ["2023-10-23"]: "18",
-        ["2023-10-24"]: "18",
-        ["2023-12-21"]: "18",
-        ["2023-10-21"]: "18",
-        ["2023-10-25"]: "18",
-      },
+      data: { ["2023-10-11"]: "15", ["2023-10-12"]: "16", ["2023-10-13"]: "17", ["2023-10-14"]: "18", ["2023-10-15"]: "20", ["2023-10-16"]: "19", ["2023-10-17"]: "23" },
       higherIsBetter: true,
     },
     {
@@ -53,27 +47,7 @@ export const mockState: AppState = {
           sets: "5",
           reps: "5",
           pause: " 2",
-          doneExerciseEntries: [
-            {
-              date: "2023-01-01",
-              sets: [
-                { reps: "5", weight: "50" },
-                { reps: "5", weight: "50" },
-                { reps: "5", weight: "50" },
-                { reps: "5", weight: "50" },
-                { reps: "5", weight: "50" },
-              ],
-            },
-            {
-              date: "2023-01-02",
-              sets: [
-                { reps: "5", weight: "51" },
-                { reps: "5", weight: "51" },
-                { reps: "5", weight: "51" },
-                { reps: "5", weight: "51" },
-              ],
-            },
-          ],
+          doneExerciseEntries: data,
         },
         {
           name: "Butterfly",

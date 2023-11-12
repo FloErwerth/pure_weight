@@ -45,26 +45,10 @@ export const Chart = ({ data, getXLabel, getDotContent, getYLabel, lineChartStyl
     [getDotColor, mainColor],
   );
 
-  const getHidePointArray = useMemo(() => {
-    const indicies: number[] = [];
-    numberEntriesArray.forEach((_, index) => {
-      if (index % Math.floor(numberEntriesArray.length / 3) !== 0) {
-        indicies.push(index);
-      }
-    });
-    return indicies;
-  }, [numberEntriesArray]);
-
-  const getYAxisInterval = useMemo(() => {
-    return Math.floor(numberEntriesArray.length / 3);
-  }, [numberEntriesArray]);
-
   return (
     <ScrollView horizontal scrollEnabled={scrollEnabled}>
       <LineChart
         data={data}
-        yAxisInterval={getYAxisInterval}
-        hidePointsAtIndex={getHidePointArray}
         transparent={transparent}
         bezier
         formatYLabel={getYLabel}

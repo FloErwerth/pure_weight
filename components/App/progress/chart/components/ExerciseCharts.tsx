@@ -20,7 +20,8 @@ import { getDate } from "../../../../../utils/date";
 import { IsoDate } from "../../../../../types/date";
 
 interface ExerciseChartProps {
-  exercise: { name: string; data: DoneExerciseData[] };
+  exerciseName: string;
+  data: DoneExerciseData[];
 }
 
 const chartTypeMap: Record<string, { title: string; hint: string }> = {
@@ -90,13 +91,12 @@ const chartTypeLabel: Record<ChartType, string> = {
   AVG_REPS: "reps",
 };
 
-export const ExerciseChart = ({ exercise }: ExerciseChartProps) => {
+export const ExerciseChart = ({ exerciseName, data }: ExerciseChartProps) => {
   const [chartType, setChartType] = useState<ChartType>("CUMULATIVE");
-  const [data] = useExerciseData(exercise.data, chartType);
+  const [lineChartData] = useExerciseData(data, chartType);
   const [showSelectionModal, setShowSelectionModal] = useState(false);
   const { t } = useTranslation();
   const { mainColor, componentBackgroundColor } = useTheme();
-
   const getDotContent = useCallback(
     ({ x, y, indexData }: { x: number; y: number; index: number; indexData: number }) => {
       return (
@@ -130,10 +130,10 @@ export const ExerciseChart = ({ exercise }: ExerciseChartProps) => {
   return (
     <View style={[styles.wrapper, { backgroundColor: componentBackgroundColor }]}>
       <HStack style={styles.chartHeader}>
-        <Text style={styles.headerTitle}>{exercise.name}</Text>
+        <Text style={styles.headerTitle}>{exerciseName}</Text>
         <Button onPress={() => setShowSelectionModal(true)} title={t(chartTypeMap[chartType].title)} style={{ button: styles.selectionButton, text: styles.selectionText }} />
       </HStack>
-      <Chart lineChartStyles={styles.lineChart} getYLabel={() => ""} getXLabel={getXLabel} getDotContent={getDotContent} data={data} />
+      <Chart lineChartStyles={styles.lineChart} getYLabel={() => ""} getXLabel={getXLabel} getDotContent={getDotContent} data={lineChartData} />
       {showSelectionModal && (
         <Modal title={t("progress_modal_title")} onRequestClose={() => setShowSelectionModal(false)} isVisible={showSelectionModal}>
           <VStack style={styles.selectionModal}>
@@ -161,7 +161,9 @@ export default function Charts() {
 
   return (
     <ThemedScrollView>
-      {trainingDayData?.exercises?.map((exercise) => <ExerciseChart key={Math.random() * 100} exercise={{ name: exercise.name, data: exercise.doneExerciseEntries }} />)}
+      {trainingDayData.map(({ exerciseName, data }) => (
+        <ExerciseChart key={Math.random() * 100} exerciseName={exerciseName} data={data} />
+      ))}
     </ThemedScrollView>
   );
 }
