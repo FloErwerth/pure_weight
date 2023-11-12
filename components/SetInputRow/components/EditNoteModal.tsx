@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Modal } from "../../Modal/Modal";
+import { ThemedButtomSheetModal, useBottomSheetRef } from "../../BottomSheetModal/ThemedButtomSheetModal";
 import { TextInput } from "react-native";
 import { Button } from "../../Themed/Button/Button";
 import { HStack } from "../../HStack/HStack";
@@ -20,6 +20,7 @@ export const EditNoteModal = ({ showModal, note, onDoneEdit, onCancel }: EditNot
   const inputRef = useRef<TextInput>(null);
   const { t } = useTranslation();
   const { backgroundColor, secondaryColor } = useTheme();
+  const ref = useBottomSheetRef();
 
   const handleSetNote = useCallback((note: string) => {
     setInternalNote(note);
@@ -36,7 +37,7 @@ export const EditNoteModal = ({ showModal, note, onDoneEdit, onCancel }: EditNot
   }, [showModal]);
 
   return (
-    <Modal title={t("edit_note_title")} isVisible={showModal} onRequestClose={onCancel}>
+    <ThemedButtomSheetModal title={t("edit_note_title")} onRequestClose={onCancel} ref={ref}>
       <VStack style={{ backgroundColor, borderRadius, gap: 15 }}>
         <ThemedTextInput
           style={{ height: 140, padding: 10, borderRadius }}
@@ -51,6 +52,6 @@ export const EditNoteModal = ({ showModal, note, onDoneEdit, onCancel }: EditNot
           <Button style={{ button: { width: 100 } }} title={t("edit_note_done")} onPress={handlePressDone} />
         </HStack>
       </VStack>
-    </Modal>
+    </ThemedButtomSheetModal>
   );
 };

@@ -90,7 +90,7 @@ export const ExerciseMetaDataDisplay = ({ exerciseIndex, exerciseMetaData }: Exe
           <MaterialCommunityIcons name="pencil" color={mainColor} size={30} />
         </Pressable>
       </HStack>
-      <AddExerciseModal isVisible={showEdit} onConfirmEdit={handleUpdateMetaData} exercise={exerciseMetaData} onRequestClose={() => setShowEdit(false)} />
+      <AddExerciseModal onConfirmEdit={handleUpdateMetaData} exercise={exerciseMetaData} onRequestClose={() => setShowEdit(false)} />
     </>
   );
 };

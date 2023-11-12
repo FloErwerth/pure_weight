@@ -1,6 +1,6 @@
 import { styles } from "./styles";
 import { PropsWithChildren, useCallback, useEffect, useMemo } from "react";
-import { Modal } from "../Modal/Modal";
+import { ThemedButtomSheetModal, useBottomSheetRef } from "../BottomSheetModal/ThemedButtomSheetModal";
 import { HStack } from "../HStack/HStack";
 import { Button } from "../Themed/Button/Button";
 import * as Haptics from "expo-haptics";
@@ -25,6 +25,7 @@ interface TrainingNotDoneModalProps extends PropsWithChildren {
 }
 export const AlertModal = ({ onConfirm, onCancel, isVisible, content, title, children }: TrainingNotDoneModalProps) => {
   const { t } = useTranslation();
+  const ref = useBottomSheetRef();
 
   useEffect(() => {
     if (isVisible) {
@@ -45,7 +46,7 @@ export const AlertModal = ({ onConfirm, onCancel, isVisible, content, title, chi
   const buttonStyle = useMemo(() => ({ button: { flex: 1, padding: 10, borderRadius } }), []);
 
   return (
-    <Modal isVisible={isVisible}>
+    <ThemedButtomSheetModal ref={ref}>
       <ThemedView style={styles.innerWrapper}>
         <Text style={styles.title}>{title}</Text>
         <Text style={styles.text}>{content}</Text>
@@ -55,6 +56,6 @@ export const AlertModal = ({ onConfirm, onCancel, isVisible, content, title, chi
           <Button style={buttonStyle} title={t("alert_delete_confirm")} onPress={handleConfirmButton} />
         </HStack>
       </ThemedView>
-    </Modal>
+    </ThemedButtomSheetModal>
   );
 };

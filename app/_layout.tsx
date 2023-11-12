@@ -15,6 +15,7 @@ import { Settings } from "./profile/settings";
 import { SafeAreaView } from "../components/Themed/ThemedSaveAreaView/SafeAreaView";
 import { ThemeProvider } from "../theme/context";
 import { RootSiblingParent } from "react-native-root-siblings";
+import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 
 const Stack = createNativeStackNavigator();
 
@@ -23,17 +24,19 @@ const ThemedApp = () => {
     <NavigationContainer ref={navigationRef} independent={true}>
       <ThemeProvider>
         <RootSiblingParent>
-          <GestureHandlerRootView style={{ flex: 1 }}>
-            <SafeAreaView>
-              <Stack.Navigator screenOptions={{ headerShown: false }}>
-                <Stack.Screen component={TabsWrapper} options={{ headerShown: false }} name="tabs" />
-                <Stack.Screen component={Train} options={{ gestureEnabled: false, headerShown: false }} name="workouts/train/index" />
-                <Stack.Screen component={Create} options={{ gestureEnabled: false, headerShown: false }} name="workouts/create/index" />
-                <Stack.Screen component={Progress} options={{ headerShown: false }} name="workouts/progress/index" />
-                <Stack.Screen component={Settings} options={{ headerShown: false }} name="profile/settings/index" />
-              </Stack.Navigator>
-            </SafeAreaView>
-          </GestureHandlerRootView>
+          <BottomSheetModalProvider>
+            <GestureHandlerRootView style={{ flex: 1 }}>
+              <SafeAreaView>
+                <Stack.Navigator screenOptions={{ headerShown: false }}>
+                  <Stack.Screen component={TabsWrapper} options={{ headerShown: false }} name="tabs" />
+                  <Stack.Screen component={Train} options={{ gestureEnabled: false, headerShown: false }} name="workouts/train/index" />
+                  <Stack.Screen component={Create} options={{ gestureEnabled: false, headerShown: false }} name="workouts/create/index" />
+                  <Stack.Screen component={Progress} options={{ headerShown: false }} name="workouts/progress/index" />
+                  <Stack.Screen component={Settings} options={{ headerShown: false }} name="profile/settings/index" />
+                </Stack.Navigator>
+              </SafeAreaView>
+            </GestureHandlerRootView>
+          </BottomSheetModalProvider>
         </RootSiblingParent>
       </ThemeProvider>
     </NavigationContainer>

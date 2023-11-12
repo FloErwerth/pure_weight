@@ -4,7 +4,7 @@ import { Text } from "../../Themed/ThemedText/Text";
 import { getDate } from "../../../utils/date";
 import { ThemedMaterialCommunityIcons } from "../../Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
 import { HStack } from "../../HStack/HStack";
-import { useCallback, useContext, useMemo, useState } from "react";
+import { useCallback, useContext, useMemo } from "react";
 import { styles } from "./styles";
 import { useAppSelector } from "../../../store";
 import { getLanguage, getLatestMeasurements, getMeasurmentProgress } from "../../../store/selectors";
@@ -15,6 +15,7 @@ import { swipableContext } from "../../WorkoutCard/Swipeable";
 import { ProgressDisplay } from "../../WorkoutCard/components/ProgressDisplay/ProgressDisplay";
 import { MeasurementChartModal } from "./Chart/MeasurementChartModal";
 import { Measurement } from "./types";
+import { useBottomSheetRef } from "../../BottomSheetModal/ThemedButtomSheetModal";
 
 interface MeasurementProps {
   index: number;
@@ -29,19 +30,15 @@ export const RenderedMeasurement = ({ index, measurement }: MeasurementProps) =>
   const pressableWrapperStyle = useMemo(() => [styles.pressableWrapper, { backgroundColor: componentBackgroundColor }], [componentBackgroundColor]);
   const textStyle = useMemo(() => [styles.text, { color: mainColor }], [mainColor]);
   const language = useAppSelector(getLanguage);
-  const [showMeasurementChart, setShowMeasurementChart] = useState(false);
   const progress = useAppSelector((state: AppState) => getMeasurmentProgress(state, index));
+  const reference = useBottomSheetRef();
 
   const handleNavigateToChart = useCallback(() => {
     if (active) {
       return;
     }
-    setShowMeasurementChart(true);
-  }, [active]);
-
-  const handleRequestClose = useCallback(() => {
-    setShowMeasurementChart(false);
-  }, []);
+    reference.current?.present();
+  }, [active, reference]);
 
   return (
     <HStack style={pressableWrapperStyle}>
@@ -57,7 +54,7 @@ export const RenderedMeasurement = ({ index, measurement }: MeasurementProps) =>
         )}
       </VStack>
       <ThemedMaterialCommunityIcons name="table-large-plus" size={26} />
-      {showMeasurementChart && <MeasurementChartModal index={index} name={measurement.name} unit={measurement.unit} isVisible={showMeasurementChart} onRequestClose={handleRequestClose} />}
+      <MeasurementChartModal reference={reference} index={index} name={measurement.name} unit={measurement.unit} />
     </HStack>
   );
 };

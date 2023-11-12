@@ -6,12 +6,12 @@ import { borderRadius } from "../../theme/border";
 import { VStack } from "../VStack/VStack";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "../../theme/context";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo } from "react";
 import { HStack } from "../HStack/HStack";
 import { styles } from "./styles";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { ThemedView } from "../Themed/ThemedView/View";
-import { Modal } from "../Modal/Modal";
+import { ThemedButtomSheetModal, useBottomSheetRef } from "../BottomSheetModal/ThemedButtomSheetModal";
 
 interface PreviousTrainingProps {
   exerciseIndex: number;
@@ -22,7 +22,7 @@ export const PreviousTraining = ({ exerciseIndex, activeSetIndex }: PreviousTrai
   const receivedPreviousTraining = useMemo(() => getPreviousTrainingFn(exerciseIndex), [exerciseIndex, getPreviousTrainingFn]);
   const { t } = useTranslation();
   const { textDisabled, componentBackgroundColor, mainColor, secondaryColor, inputFieldBackgroundColor } = useTheme();
-  const [showNote, setShowNote] = useState(false);
+  const ref = useBottomSheetRef();
   const mappedData = useMemo(
     () =>
       receivedPreviousTraining?.vals.map(({ weight, reps }, index) => {
@@ -42,12 +42,12 @@ export const PreviousTraining = ({ exerciseIndex, activeSetIndex }: PreviousTrai
   );
 
   const handleShowEditNoteModal = useCallback(() => {
-    setShowNote(true);
-  }, []);
+    ref.current?.present();
+  }, [ref]);
 
   const handleCloseNote = useCallback(() => {
-    setShowNote(false);
-  }, []);
+    ref.current?.dismiss();
+  }, [ref]);
 
   if (!receivedPreviousTraining) {
     return null;
@@ -88,9 +88,9 @@ export const PreviousTraining = ({ exerciseIndex, activeSetIndex }: PreviousTrai
           </VStack>
         )}
       </View>
-      <Modal title={`Your note from ${date}`} onRequestClose={handleCloseNote} isVisible={showNote}>
+      <ThemedButtomSheetModal title={`Your note from ${date}`} onRequestClose={handleCloseNote} ref={ref}>
         <Text style={{ fontSize: 20 }}>{note}</Text>
-      </Modal>
+      </ThemedButtomSheetModal>
     </View>
   );
 };

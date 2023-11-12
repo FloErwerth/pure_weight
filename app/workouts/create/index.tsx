@@ -230,11 +230,7 @@ export function Create() {
       </ThemedView>
       {alertConfig && <AlertModal title={alertConfig.title} content={alertConfig.content} onConfirm={alertConfig.onConfirm} onCancel={() => setAlertConfig(undefined)} />}
       {editedExerciseIndex !== undefined && (
-        <AddExerciseModal
-          onRequestClose={() => setEditedExerciseIndex(undefined)}
-          exercise={editedExerciseIndex !== -1 ? createdExercises[editedExerciseIndex] : emptyExercise}
-          onConfirmEdit={handleConfirmExerciseModal}
-        />
+        <AddExerciseModal exercise={editedExerciseIndex !== -1 ? createdExercises[editedExerciseIndex] : emptyExercise} onConfirmEdit={handleConfirmExerciseModal} />
       )}
     </>
   );

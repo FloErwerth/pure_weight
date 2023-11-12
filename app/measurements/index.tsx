@@ -15,6 +15,7 @@ import { Swipeable } from "../../components/WorkoutCard/Swipeable";
 import { RenderedMeasurement } from "../../components/App/measurements/Measurement";
 import { BottomToast } from "../../components/BottomToast/BottomToast";
 import { Measurement } from "../../components/App/measurements/types";
+import { useBottomSheetRef } from "../../components/BottomSheetModal/ThemedButtomSheetModal";
 
 const emptyMeasurement = { measurement: { name: "", value: "", date: new Date(), higherIsBetter: false } };
 
@@ -24,20 +25,32 @@ const dateParser = z.date().transform((date) => {
 
 export function Measurements() {
   const { t } = useTranslation();
-  const [showMeasurementModal, setShowMeasurementModal] = useState(false);
   const measurements = useAppSelector(getMeasurements);
   const [currentMeasurement, setCurrentMeasurement] = useState<{ measurement: Measurement; index?: number }>(emptyMeasurement);
   const [isNewMeasurement, setIsNewMeasurement] = useState(false);
   const [isEditingMeasurement, setIsEditingMeasurement] = useState(false);
   const dispatch = useAppDispatch();
   const [showToast, setShowToast] = useState(false);
+  const ref = useBottomSheetRef();
+
+  const handleCloseModal = useCallback(() => {
+    if (ref.current) {
+      ref.current.dismiss();
+    }
+  }, [ref]);
+
+  const handleOpenModal = useCallback(() => {
+    if (ref.current) {
+      ref.current.present();
+    }
+  }, [ref]);
 
   const reset = useCallback(() => {
-    setShowMeasurementModal(false);
+    handleCloseModal();
     setCurrentMeasurement(emptyMeasurement);
     setIsNewMeasurement(true);
     setIsEditingMeasurement(false);
-  }, []);
+  }, [handleCloseModal]);
 
   const handleConfirmMeasurementModal = useCallback(() => {
     const { measurement, index } = currentMeasurement;
@@ -62,24 +75,23 @@ export function Measurements() {
     }
   }, [currentMeasurement, dispatch, isEditingMeasurement, reset]);
 
-  const handlePrepareAddingNewMeasurement = useCallback(() => {
-    setShowMeasurementModal(true);
-  }, []);
-
-  const handleAddExistingMeasurement = useCallback((measurement: Measurement, index: number) => {
-    setCurrentMeasurement({
-      measurement: {
-        name: measurement.name,
-        unit: measurement.unit,
-        value: "",
-        date: new Date(getDateTodayIso()),
-      },
-      index,
-    });
-    setShowMeasurementModal(true);
-    setIsNewMeasurement(false);
-    setIsEditingMeasurement(false);
-  }, []);
+  const handleAddExistingMeasurement = useCallback(
+    (measurement: Measurement, index: number) => {
+      setCurrentMeasurement({
+        measurement: {
+          name: measurement.name,
+          unit: measurement.unit,
+          value: "",
+          date: new Date(getDateTodayIso()),
+        },
+        index,
+      });
+      handleOpenModal();
+      setIsNewMeasurement(false);
+      setIsEditingMeasurement(false);
+    },
+    [handleOpenModal],
+  );
 
   const handleDeleteMeasurement = useCallback(
     (index: number) => {
@@ -89,11 +101,14 @@ export function Measurements() {
     [dispatch, setShowToast],
   );
 
-  const handleEditMeasurement = useCallback((measurement: Measurement, index: number) => {
-    setCurrentMeasurement({ measurement, index });
-    setIsEditingMeasurement(true);
-    setShowMeasurementModal(true);
-  }, []);
+  const handleEditMeasurement = useCallback(
+    (measurement: Measurement, index: number) => {
+      setCurrentMeasurement({ measurement, index });
+      setIsEditingMeasurement(true);
+      handleOpenModal();
+    },
+    [handleOpenModal],
+  );
 
   const handleRecoverMeasurement = useCallback(() => {
     dispatch(recoverMeasurement());
@@ -102,7 +117,7 @@ export function Measurements() {
 
   return (
     <ThemedView style={{ flex: 1 }}>
-      <SiteNavigationButtons title={t("measurements")} handleConfirm={handlePrepareAddingNewMeasurement} handleConfirmIcon={{ name: "plus", size: 40 }} />
+      <SiteNavigationButtons title={t("measurements")} handleConfirm={handleOpenModal} handleConfirmIcon={{ name: "plus", size: 40 }} />
       <PageContent style={styles.contentWrapper}>
         <ScrollView style={styles.measurementsWrapper}>
           {measurements?.map((measurement, index) => (
@@ -118,11 +133,10 @@ export function Measurements() {
         </ScrollView>
       </PageContent>
       <MeasurementModal
+        reference={ref}
         isNewMeasurement={isNewMeasurement}
         saveMeasurement={handleConfirmMeasurementModal}
-        isVisible={showMeasurementModal}
         setCurrentMeasurement={setCurrentMeasurement}
-        onRequestClose={reset}
         currentMeasurement={currentMeasurement}
         isEditingMeasurement={isEditingMeasurement}
       />

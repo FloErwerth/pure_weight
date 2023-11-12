@@ -1,11 +1,11 @@
 import { EditableExercise, EditableExerciseProps } from "../EditableExercise/EditableExercise";
-import { Modal, ModalProps } from "../Modal/Modal";
+import { ThemedBottomSheetModalProps, ThemedButtomSheetModal } from "../BottomSheetModal/ThemedButtomSheetModal";
 
-type AddExerciseModalProps = ModalProps & Omit<EditableExerciseProps, "onCancel">;
+type AddExerciseModalProps = ThemedBottomSheetModalProps & Omit<EditableExerciseProps, "onCancel">;
 export const AddExerciseModal = (props: AddExerciseModalProps) => {
   return (
-    <Modal {...props}>
+    <ThemedButtomSheetModal {...props}>
       <EditableExercise exercise={props.exercise} onConfirmEdit={props.onConfirmEdit} />
-    </Modal>
+    </ThemedButtomSheetModal>
   );
 };

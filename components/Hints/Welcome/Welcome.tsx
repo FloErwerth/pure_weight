@@ -1,4 +1,3 @@
-import { Modal } from "../../Modal/Modal";
 import { VStack } from "../../VStack/VStack";
 import { Text, View } from "react-native";
 import { HStack } from "../../HStack/HStack";
@@ -7,14 +6,15 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Button } from "../../Themed/Button/Button";
 import { useAppDispatch, useAppSelector } from "../../../store";
 import { getIsFirstTimeRendered } from "../../../store/selectors";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect } from "react";
 import { setFirstTimeRendered } from "../../../store/reducer";
 import { useTheme } from "../../../theme/context";
+import { ThemedButtomSheetModal, useBottomSheetRef } from "../../BottomSheetModal/ThemedButtomSheetModal";
 
 export const Welcome = () => {
   const { mainColor, componentBackgroundColor } = useTheme();
   const isFirstTimeRendered = useAppSelector(getIsFirstTimeRendered);
-  const [renderModal, setRenderModal] = useState(false);
+  const ref = useBottomSheetRef();
   const dispatch = useAppDispatch();
   const handleConfirmInitialModal = useCallback(() => {
     dispatch(setFirstTimeRendered(false));
@@ -22,14 +22,14 @@ export const Welcome = () => {
 
   useEffect(() => {
     if (isFirstTimeRendered) {
-      setTimeout(() => setRenderModal(true), 150);
+      setTimeout(() => ref.current?.present(), 150);
     }
-  }, [isFirstTimeRendered]);
+  }, [isFirstTimeRendered, ref]);
 
   return (
     <>
       {isFirstTimeRendered && (
-        <Modal isVisible={renderModal}>
+        <ThemedButtomSheetModal ref={ref}>
           <VStack style={{ gap: 15 }}>
             <Text style={{ fontSize: 26, textAlign: "center", color: mainColor }}>Welcome to Pure Weight</Text>
             <HStack style={{ backgroundColor: componentBackgroundColor, borderRadius, padding: 10, alignItems: "center", gap: 5 }}>
@@ -51,7 +51,7 @@ export const Welcome = () => {
             </View>
             <Button onPress={handleConfirmInitialModal} title="Got it!"></Button>
           </VStack>
-        </Modal>
+        </ThemedButtomSheetModal>
       )}
     </>
   );

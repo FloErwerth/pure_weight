@@ -1,5 +1,5 @@
 import { FlatList, View } from "react-native";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "../../hooks/navigate";
 import { useAppDispatch, useAppSelector } from "../../store";
 import { getLanguage, getOverallTrainingTrend, getSavedTrainings } from "../../store/selectors";
@@ -119,6 +119,7 @@ export function Workouts() {
           ></FlatList>
         </PageContent>
       </View>
+
       <BottomToast onRequestClose={() => setShowToast(false)} open={showToast} messageKey={"workout_deleted_message"} titleKey={"workout_deleted_title"} onRedo={handleRecoverWorkout} />
     </ThemedView>
   );

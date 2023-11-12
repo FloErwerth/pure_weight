@@ -1,8 +1,8 @@
 import { Pressable } from "react-native";
 import { ThemedTextInput } from "../Themed/ThemedTextInput/ThemedTextInput";
 import { HStack } from "../HStack/HStack";
-import { Modal, ModalProps } from "../Modal/Modal";
-import { Dispatch, SetStateAction, useCallback, useEffect, useMemo, useState } from "react";
+import { ThemedBottomSheetModalProps, ThemedButtomSheetModal } from "../BottomSheetModal/ThemedButtomSheetModal";
+import { Dispatch, RefObject, SetStateAction, useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { getDateTodayIso } from "../../utils/date";
@@ -19,13 +19,15 @@ import Animated, { FadeIn, Layout } from "react-native-reanimated";
 import { ThemedDropdown } from "../Themed/Dropdown/ThemedDropdown";
 import { CheckBox } from "../Themed/CheckBox/CheckBox";
 import { getMeasurementUnits, Measurement } from "../App/measurements/types";
+import { BottomSheetModal } from "@gorhom/bottom-sheet";
 
-interface MeasurementModalProps extends ModalProps {
+interface MeasurementModalProps extends ThemedBottomSheetModalProps {
   setCurrentMeasurement: Dispatch<SetStateAction<{ measurement: Measurement; index?: number }>>;
   currentMeasurement: { measurement: Measurement; index?: number };
   saveMeasurement: () => void;
   isNewMeasurement?: boolean;
   isEditingMeasurement?: boolean;
+  reference: RefObject<BottomSheetModal>;
 }
 
 const fieldToErrorMap: Record<keyof Omit<Measurement, "higherIsBetter" | "data">, ErrorFields> = {
@@ -36,9 +38,8 @@ const fieldToErrorMap: Record<keyof Omit<Measurement, "higherIsBetter" | "data">
 };
 
 export const MeasurementModal = ({
+  reference,
   isNewMeasurement = true,
-  onRequestClose,
-  isVisible,
   currentMeasurement: { measurement, index },
   setCurrentMeasurement,
   saveMeasurement,
@@ -63,12 +64,6 @@ export const MeasurementModal = ({
     },
     [dispatch, index, measurement, setCurrentMeasurement],
   );
-
-  useEffect(() => {
-    if (isVisible) {
-      dispatch(cleanError(["measurement_name", "measurement_value", "measurement_unit"]));
-    }
-  }, [dispatch, isVisible]);
 
   const measurementButtonText = useMemo(() => {
     if (isEditingMeasurement) {
@@ -120,7 +115,7 @@ export const MeasurementModal = ({
   const unitDropdownSelectable = Boolean((isNewMeasurement || isEditingMeasurement) && measurementUnits.length > 1);
 
   return (
-    <Modal onRequestClose={onRequestClose} isVisible={isVisible}>
+    <ThemedButtomSheetModal snapPoints={["100%"]} ref={reference}>
       <Animated.View style={styles.outerWrapper}>
         <ThemedTextInput
           maxLength={20}
@@ -202,6 +197,6 @@ export const MeasurementModal = ({
           </HStack>
         </Pressable>
       </Animated.View>
-    </Modal>
+    </ThemedButtomSheetModal>
   );
 };

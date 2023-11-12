@@ -5,7 +5,7 @@ import { borderRadius } from "../../../../../theme/border";
 import { LineChartData } from "react-native-chart-kit/dist/line-chart/LineChart";
 import { VStack } from "../../../../VStack/VStack";
 import { Button } from "../../../../Themed/Button/Button";
-import { Modal } from "../../../../Modal/Modal";
+import { ThemedButtomSheetModal, useBottomSheetRef } from "../../../../BottomSheetModal/ThemedButtomSheetModal";
 import { useAppSelector } from "../../../../../store";
 import { getSelectedTrainingDayData } from "../../../../../store/selectors";
 import { HStack } from "../../../../HStack/HStack";
@@ -97,6 +97,7 @@ export const ExerciseChart = ({ exerciseName, data }: ExerciseChartProps) => {
   const [showSelectionModal, setShowSelectionModal] = useState(false);
   const { t } = useTranslation();
   const { mainColor, componentBackgroundColor } = useTheme();
+  const ref = useBottomSheetRef();
 
   const getDotContent = useCallback(
     ({ x, y, indexData }: { x: number; y: number; index: number; indexData: number }) => {
@@ -136,7 +137,7 @@ export const ExerciseChart = ({ exerciseName, data }: ExerciseChartProps) => {
       </HStack>
       <Chart lineChartStyles={styles.lineChart} getYLabel={() => ""} getXLabel={getXLabel} getDotContent={getDotContent} data={lineChartData} />
       {showSelectionModal && (
-        <Modal title={t("progress_modal_title")} onRequestClose={() => setShowSelectionModal(false)} isVisible={showSelectionModal}>
+        <ThemedButtomSheetModal title={t("progress_modal_title")} ref={ref}>
           <VStack style={styles.selectionModal}>
             {mappedChartProps.map(({ onPress, title, chartType }) => (
               <Button key={`${chartType}${title}`} onPress={onPress}>
@@ -149,7 +150,7 @@ export const ExerciseChart = ({ exerciseName, data }: ExerciseChartProps) => {
               </Button>
             ))}
           </VStack>
-        </Modal>
+        </ThemedButtomSheetModal>
       )}
     </View>
   );
