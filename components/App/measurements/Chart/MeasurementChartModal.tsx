@@ -9,6 +9,7 @@ import { borderRadius } from "../../../../theme/border";
 import { Text } from "../../../Themed/ThemedText/Text";
 import { useTheme } from "../../../../theme/context";
 import { Chart } from "../../../Chart/Chart";
+import { truncateToNthSignificantDigit } from "../../../../utils/number";
 
 interface MeasurementChartModalProps {
   isVisible: boolean;
@@ -29,7 +30,7 @@ export const MeasurementChartModal = ({ isVisible, onRequestClose, index, unit, 
       return (
         <ThemedView key={x + y} style={{ position: "absolute", top: y - 25, left: x - 20, flex: 1, padding: 3, borderRadius, alignItems: "center" }}>
           <Text style={{ fontSize: 12, color: mainColor }}>
-            {indexData} {unit}
+            {truncateToNthSignificantDigit(indexData)} {unit}
           </Text>
         </ThemedView>
       );
