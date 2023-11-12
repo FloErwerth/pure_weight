@@ -19,13 +19,9 @@ export const getLatestMeasurements = createSelector([getMeasurements], (measurem
   }),
 );
 
-function getEveryNthEntry<T extends Array<unknown>>(n: number, entries: T): T {
-  if (entries.length > 50) {
-    const vals = [];
-    for (let i = 0; i < entries.length; i += Math.floor(entries.length / n)) {
-      vals.push(entries[i]);
-    }
-    return vals as T;
+function crampToNEntries<T extends Array<unknown>>(n: number, entries: T): T {
+  if (entries.length > n) {
+    return entries.slice(entries.length - n, entries.length) as T;
   }
   return entries;
 }
@@ -36,7 +32,7 @@ export const getMeasurementDataFromIndex = createSelector([getMeasurements, (byI
     const labels: string[] = [];
     const data: number[] = [];
     const entries = Object.entries(measurement?.data);
-    const vals = getEveryNthEntry(4, entries);
+    const vals = crampToNEntries(50, entries);
     vals.forEach(([date, value]) => {
       labels.push(getDate(date as IsoDate));
       data.push(parseFloat(value));
@@ -133,12 +129,12 @@ export const getTrainingDayData = createSelector([getSavedTrainings], (trainingD
   return trainingDays
     .filter((day) => day.exercises.length > 0)
     .reduce(
-      (exerciseNameEntryPairs, day) => {
+      (exerciseNameEntryPairs, day, currentIndex) => {
         const newData = Array(day.exercises.length)
           .fill(undefined)
-          .map((_, index) => getEveryNthEntry(4, day.exercises[index].doneExerciseEntries))
+          .map((_, index) => crampToNEntries(50, day.exercises[index].doneExerciseEntries))
           .map((data, index) => ({ exerciseName: day.exercises[index].name, data }));
-
+        console.log(newData.map((data) => data.data.length));
         const newEntries = [...exerciseNameEntryPairs];
         newEntries.push(newData);
 

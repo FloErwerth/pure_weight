@@ -17,7 +17,7 @@ export const Chart = ({ data, getXLabel, getDotContent, getYLabel, lineChartStyl
   const { mainColor, componentBackgroundColor, secondaryColor } = useTheme();
   const numberEntries = data.datasets[0].data.length;
   const scrollEnabled = useMemo(() => numberEntries > 5, [numberEntries]);
-  const width = useMemo(() => Dimensions.get("screen").width - 30, []);
+  const width = useMemo(() => (numberEntries < 7 ? Dimensions.get("screen").width - 30 : numberEntries * 100), [numberEntries]);
 
   const numberEntriesArray = useMemo(() => Array(numberEntries).fill(0), [numberEntries]);
 

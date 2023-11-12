@@ -10,7 +10,6 @@ const data: Array<{ date: IsoDate; sets: [{ reps: string; weight: string }] }> =
 for (let i = 0; i < 100; i++) {
   const currentDate = new Date(getDateTodayIso());
   currentDate.setDate(currentDate.getDate() + i);
-
   const dateStr = currentDate.toISOString().split("T")[0];
   data.push({ date: dateStr as IsoDate, sets: [{ reps: i.toString(), weight: i.toString() }] });
 }
