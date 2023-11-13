@@ -84,19 +84,19 @@ export function Train() {
   const handleCloseAlert = useCallback(() => setShowAlert(false), []);
 
   const handleNotDoneConfirm = useCallback(() => {
-    setShowAlert(false);
+    ref.current?.close();
     handleSaveTrainingData();
     handleReset();
-  }, [handleReset, handleSaveTrainingData]);
+  }, [handleReset, handleSaveTrainingData, ref]);
 
   const handleCloseButton = useCallback(() => {
     if (!isDone) {
-      setShowAlert(true);
+      ref.current?.present();
     } else {
       handleSaveTrainingData();
       handleReset();
     }
-  }, [handleReset, handleSaveTrainingData, isDone]);
+  }, [handleReset, handleSaveTrainingData, isDone, ref]);
 
   const handleSetDone = useCallback(
     (exerciseIndex: number, setIndex: number, data: PlainExerciseData) => {
