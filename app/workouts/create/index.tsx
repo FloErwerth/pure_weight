@@ -153,7 +153,7 @@ export function Create() {
 
       return { onDelete, edited, handleCancel, onEdit, exercise, index, handleOnConfirmEdit };
     });
-  }, [addRef, closeAlert, createdExercises, editedExerciseIndex, handleConfirmDiscardChanges, handleDeleteExercise, t]);
+  }, [addRef, alertRef, closeAlert, createdExercises, editedExerciseIndex, handleConfirmDiscardChanges, handleDeleteExercise, t]);
 
   const handleNavigateHome = useCallback(() => {
     handleCleanErrors();
