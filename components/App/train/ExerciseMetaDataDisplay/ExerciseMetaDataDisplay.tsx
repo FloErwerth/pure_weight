@@ -91,7 +91,7 @@ export const ExerciseMetaDataDisplay = ({ exerciseIndex, exerciseMetaData }: Exe
           <ThemedMaterialCommunityIcons name="pencil" size={30} />
         </Pressable>
       </HStack>
-      <AddExerciseModal reference={addExerciseRef} onConfirmEdit={handleUpdateMetaData} onRequestClose={handleClose} />
+      <AddExerciseModal isEditingExercise={true} reference={addExerciseRef} onConfirmEdit={handleUpdateMetaData} onRequestClose={handleClose} />
     </>
   );
 };

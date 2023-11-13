@@ -200,7 +200,7 @@ export const Swipeable = ({ onEdit, onDelete, onClick, children }: SwipeableProp
         <Pressable onPress={handleClick}>
           <View ref={viewRef} onLayout={containerMeasurement}>
             <Animated.View style={animatedWrapperStyles}>
-              <ThemedView component style={styles.wrapper}>
+              <ThemedView style={styles.wrapper}>
                 <Provider>{children}</Provider>
               </ThemedView>
             </Animated.View>

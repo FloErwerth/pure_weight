@@ -22,10 +22,10 @@ const Stack = createNativeStackNavigator();
 const ThemedApp = () => {
   return (
     <NavigationContainer ref={navigationRef} independent={true}>
-      <ThemeProvider>
-        <RootSiblingParent>
-          <BottomSheetModalProvider>
-            <GestureHandlerRootView style={{ flex: 1 }}>
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <ThemeProvider>
+          <RootSiblingParent>
+            <BottomSheetModalProvider>
               <SafeAreaView>
                 <Stack.Navigator screenOptions={{ headerShown: false }}>
                   <Stack.Screen component={TabsWrapper} options={{ headerShown: false }} name="tabs" />
@@ -35,10 +35,10 @@ const ThemedApp = () => {
                   <Stack.Screen component={Settings} options={{ headerShown: false }} name="profile/settings/index" />
                 </Stack.Navigator>
               </SafeAreaView>
-            </GestureHandlerRootView>
-          </BottomSheetModalProvider>
-        </RootSiblingParent>
-      </ThemeProvider>
+            </BottomSheetModalProvider>
+          </RootSiblingParent>
+        </ThemeProvider>
+      </GestureHandlerRootView>
     </NavigationContainer>
   );
 };

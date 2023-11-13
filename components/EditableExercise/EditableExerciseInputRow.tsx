@@ -1,5 +1,5 @@
 import { ThemedTextInput } from "../Themed/ThemedTextInput/ThemedTextInput";
-import { Dispatch, SetStateAction, useMemo } from "react";
+import { useMemo } from "react";
 import { EditableExerciseTheme, styles } from "./styles";
 import { useTranslation } from "react-i18next";
 import { AppState, ErrorFields } from "../../store/types";
@@ -11,7 +11,7 @@ import { useTheme } from "../../theme/context";
 
 interface EditableExerciseInputRowProps {
   value?: string;
-  setValue: Dispatch<SetStateAction<string | undefined>>;
+  setValue: (value: string) => void;
   theme?: EditableExerciseTheme;
   errorKey?: ErrorFields;
   i18key?: string;

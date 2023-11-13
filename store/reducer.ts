@@ -205,9 +205,6 @@ export const setLanguage = createAction<"de" | "en" | undefined>("settings_langa
 export const setError = createAction<ErrorFields[]>("error_set");
 export const cleanError = createAction<ErrorFields[]>("error_clean");
 export const cleanErrors = createAction("error_clean_all");
-
-export const editNote = createAction<string>("edit_note");
-
 export const storeReducer = createReducer<AppState>(emptyState, (builder) =>
   builder
     .addCase(setState, (state, action) => {

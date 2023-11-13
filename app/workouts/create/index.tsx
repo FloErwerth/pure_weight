@@ -22,6 +22,7 @@ import { PageContent } from "../../../components/PageContent/PageContent";
 import { ThemedView } from "../../../components/Themed/ThemedView/View";
 import { useBottomSheetRef } from "../../../components/BottomSheetModal/ThemedButtomSheetModal";
 import { AddExerciseModal } from "../../../components/AddExerciseModal/AddExerciseModal";
+import { EditedExercise, emptyExercise } from "../../../components/App/create/context";
 
 function getAreValuesEmpty(exercise: ExerciseMetaData) {
   const values = Object.values(exercise);
@@ -48,6 +49,7 @@ export function Create() {
   const [alertConfig, setAlertConfig] = useState<AlertConfig | undefined>(undefined);
   const editedDay = useAppSelector(getSelectedTrainingDay);
   const title = useMemo(() => (editedDay ? t("edit_workout") : t("create_workout")), [editedDay, t]);
+  const [editedExercise, setEditedExercise] = useState<EditedExercise>(emptyExercise);
   const [editedExerciseIndex, setEditedExerciseIndex] = useState<number | undefined>(undefined);
   const [workoutName, setWorkoutName] = useState(editedDay?.name);
   const [createdExercises, setCreatedExercises] = useState<ExerciseMetaDataWithDoneEntries>(editedDay?.exercises.map((exercise) => exercise) ?? []);
@@ -65,6 +67,7 @@ export function Create() {
   }, []);
 
   const handleAddExercise = useCallback(() => {
+    setEditedExercise(emptyExercise);
     setEditedExerciseIndex(undefined);
     addRef.current?.present();
   }, [addRef]);
@@ -78,22 +81,20 @@ export function Create() {
     [createdExercises],
   );
 
-  const handleConfirmExerciseModal = useCallback(
-    (exercise: ExerciseMetaData) => {
-      if (editedExerciseIndex !== undefined && editedExerciseIndex !== -1) {
-        const extractedExercise = createdExercises[editedExerciseIndex];
+  const handleConfirmExerciseModal = useCallback(() => {
+    if (editedExercise) {
+      if (editedExerciseIndex !== undefined) {
         const newExercises = [...createdExercises];
-        newExercises.splice(editedExerciseIndex, 1, { ...exercise, doneExerciseEntries: extractedExercise.doneExerciseEntries });
+        newExercises.splice(editedExerciseIndex, 1, editedExercise);
         setCreatedExercises(newExercises);
       } else {
-        setCreatedExercises([...createdExercises, { doneExerciseEntries: [], ...exercise }]);
+        setCreatedExercises([...createdExercises, editedExercise]);
         setEditedExerciseIndex(createdExercises.length);
       }
-      setEditedExerciseIndex(undefined);
-      addRef.current?.close();
-    },
-    [createdExercises, editedExerciseIndex],
-  );
+    }
+    setEditedExerciseIndex(undefined);
+    addRef.current?.close();
+  }, [addRef, createdExercises, editedExercise, editedExerciseIndex]);
 
   const handleCleanErrors = useCallback(() => {
     dispatch(cleanErrors());
@@ -114,6 +115,7 @@ export function Create() {
       const onEdit = () => {
         void Haptics.selectionAsync();
         setEditedExerciseIndex(index);
+        setEditedExercise(createdExercises[index]);
         addRef.current?.present();
       };
 
@@ -132,6 +134,7 @@ export function Create() {
           addRef.current?.close();
         }
       };
+
       const handleCancel = () => {
         if (getAreValuesEmpty(createdExercises[index])) {
           const newExercises = [...createdExercises];
@@ -141,7 +144,11 @@ export function Create() {
         setEditedExerciseIndex(undefined);
         addRef.current?.close();
       };
-      const onDelete = () => setAlertConfig({ title: t("alert_delete_title"), content: t("alert_delete_message"), onConfirm: handleConfirmDelete, onCancel: handleConfirmDiscardChanges });
+
+      const onDelete = () => {
+        setAlertConfig({ title: t("alert_delete_title"), content: t("alert_delete_message"), onConfirm: handleConfirmDelete, onCancel: handleConfirmDiscardChanges });
+        alertRef.current?.present();
+      };
       const edited = index === editedExerciseIndex;
 
       return { onDelete, edited, handleCancel, onEdit, exercise, index, handleOnConfirmEdit };
@@ -204,6 +211,14 @@ export function Create() {
     [createdExercises, dispatch],
   );
 
+  const handleEditExercise = useCallback(
+    (field: keyof ExerciseMetaData, value: string) => {
+      const exercise = { ...editedExercise, [field]: value };
+      setEditedExercise(exercise);
+    },
+    [editedExercise],
+  );
+
   return (
     <>
       <ThemedView background style={styles.innerWrapper}>
@@ -244,7 +259,13 @@ export function Create() {
         </PageContent>
       </ThemedView>
       <AlertModal reference={alertRef} title={alertConfig?.title} content={alertConfig?.content} onConfirm={handleNavigateHome} onCancel={() => setAlertConfig(undefined)} />
-      <AddExerciseModal reference={addRef} onConfirmEdit={handleConfirmExerciseModal} />
+      <AddExerciseModal
+        isEditingExercise={editedExerciseIndex !== undefined}
+        handleEditExercise={handleEditExercise}
+        editedExercise={editedExercise}
+        reference={addRef}
+        onConfirmEdit={handleConfirmExerciseModal}
+      />
     </>
   );
 }
