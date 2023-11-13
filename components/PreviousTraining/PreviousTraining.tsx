@@ -32,13 +32,13 @@ export const PreviousTraining = ({ exerciseIndex, activeSetIndex }: PreviousTrai
         const computedColor = highlight || filled ? mainColor : secondaryColor;
         return (
           <HStack key={Math.random() * 102} style={[styles.innerWrapper, highlightWrapperStyles]}>
-            <Text input style={[styles.setDisplayStyle, { color: computedColor }]}>
+            <Text ghost style={[styles.setDisplayStyle, { color: computedColor }]}>
               {index + 1}
             </Text>
-            <Text input style={[{ color: computedColor }, styles.set]}>
+            <Text ghost style={[{ color: computedColor }, styles.set]}>
               {weight}
             </Text>
-            <Text input style={[{ color: computedColor }, styles.set]}>
+            <Text ghost style={[{ color: computedColor }, styles.set]}>
               {reps}
             </Text>
           </HStack>
@@ -84,7 +84,7 @@ export const PreviousTraining = ({ exerciseIndex, activeSetIndex }: PreviousTrai
       </HStack>
       <ThemedView style={{ padding: 10, borderRadius }}>
         {vals?.length > 0 && (
-          <VStack ghost style={{ backgroundColor: componentBackgroundColor }}>
+          <VStack style={{ backgroundColor: componentBackgroundColor }}>
             <HStack ghost style={styles.innerWrapper}>
               <Text style={[styles.setDisplayStyle, { color: secondaryColor }]}>{"#"}</Text>
               <Text style={[{ color: secondaryColor }, styles.set]}>{t("training_header_weight")}</Text>
