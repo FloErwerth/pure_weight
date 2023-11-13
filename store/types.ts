@@ -49,4 +49,5 @@ export type AppState = {
   measurements: Measurement[];
   errors: ErrorFields[];
   theme: ThemeKey;
+  appInstallEpochMilliseconds?: number;
 };

@@ -16,9 +16,11 @@
       "**/*"
     ],
     "ios": {
-        "infoPlist": {
-          "UIBackgroundModes": ["fetch"]
-        },
+      "infoPlist": {
+        "UIBackgroundModes": [
+          "fetch"
+        ]
+      },
       "usesAppleSignIn": false,
       "accessesContactNotes": false,
       "backgroundColor": "#2e2e2e",
@@ -35,7 +37,8 @@
     },
     "plugins": [
       "expo-router",
-      "expo-localization"
+      "expo-localization",
+      "react-native-health"
     ],
     "extra": {
       "router": {

@@ -11,6 +11,7 @@ export const getTrainingIndex = (state: AppState) => state.trainingDayIndex;
 export const getErrors = (state: AppState) => state.errors;
 export const getIsFirstTimeRendered = (state: AppState) => state.isFirstTimeRendered;
 export const getMeasurements = (state: AppState) => state.measurements;
+export const getAppInstallTime = (state: AppState) => state.appInstallEpochMilliseconds;
 
 export const getLatestMeasurements = createSelector([getMeasurements], (measurements) =>
   measurements.map(({ data }) => {

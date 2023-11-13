@@ -205,12 +205,17 @@ export const setLanguage = createAction<"de" | "en" | undefined>("settings_langa
 export const setError = createAction<ErrorFields[]>("error_set");
 export const cleanError = createAction<ErrorFields[]>("error_clean");
 export const cleanErrors = createAction("error_clean_all");
+export const setInstallAppTime = createAction<number>("set_app_install_time");
 export const storeReducer = createReducer<AppState>(emptyState, (builder) =>
   builder
     .addCase(setState, (state, action) => {
       return action.payload;
     })
-
+    .addCase(setInstallAppTime, (state, action) => {
+      if (!state.appInstallEpochMilliseconds) {
+        state.appInstallEpochMilliseconds = action.payload;
+      }
+    })
     .addCase(editMeasurement, (state, action) => {
       const measurements = [...state.measurements];
       const previouisMeasurement = measurements[action.payload.index];

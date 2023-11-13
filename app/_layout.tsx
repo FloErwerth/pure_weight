@@ -1,4 +1,4 @@
-import { persistor, store } from "../store";
+import { persistor, store, useAppDispatch } from "../store";
 import React from "react";
 import { PersistGate } from "redux-persist/integration/react";
 import { Provider } from "react-redux";
@@ -16,10 +16,18 @@ import { SafeAreaView } from "../components/Themed/ThemedSaveAreaView/SafeAreaVi
 import { ThemeProvider } from "../theme/context";
 import { RootSiblingParent } from "react-native-root-siblings";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
+import * as Application from "expo-application";
+import { setInstallAppTime } from "../store/reducer";
 
 const Stack = createNativeStackNavigator();
 
 const ThemedApp = () => {
+  const dispatch = useAppDispatch();
+
+  Application.getInstallationTimeAsync().then((date) => {
+    dispatch(setInstallAppTime(date.getTime()));
+  });
+
   return (
     <NavigationContainer ref={navigationRef} independent={true}>
       <GestureHandlerRootView style={{ flex: 1 }}>
