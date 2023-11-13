@@ -35,8 +35,11 @@ export const ThemedTextInput = (props: ThemedTextInputProps) => {
     if (getHasError) {
       return errorColor;
     }
+    if (!editable) {
+      return textDisabled;
+    }
     return secondaryColor;
-  }, [errorColor, getHasError, secondaryColor]);
+  }, [editable, errorColor, getHasError, secondaryColor, textDisabled]);
 
   const textInputStyle = useMemo(() => {
     const baseStyle = [{ flex: props.stretch ? 1 : 0, backgroundColor: inputFieldBackgroundColor, color: editable ? mainColor : textDisabled }, props.style];

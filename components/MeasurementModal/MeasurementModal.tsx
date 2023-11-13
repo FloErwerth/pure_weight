@@ -38,14 +38,7 @@ const fieldToErrorMap: Record<keyof Omit<Measurement, "higherIsBetter" | "data">
   date: "measurement_value",
 };
 
-export const MeasurementModal = ({
-  reference,
-  isNewMeasurement = true,
-  currentMeasurement: { measurement, index },
-  setCurrentMeasurement,
-  saveMeasurement,
-  isEditingMeasurement,
-}: MeasurementModalProps) => {
+export const MeasurementModal = ({ reference, isNewMeasurement = true, currentMeasurement: { measurement, index }, setCurrentMeasurement, saveMeasurement }: MeasurementModalProps) => {
   const { t } = useTranslation();
   const { mainColor, warningColor } = useTheme();
   const themeKey = useAppSelector(getThemeKey);
@@ -67,14 +60,14 @@ export const MeasurementModal = ({
   );
 
   const measurementButtonText = useMemo(() => {
-    if (isEditingMeasurement) {
-      return t("measurement_edit_confirm");
+    if (!isNewMeasurement) {
+      return t("measurement_add_existing");
     }
     if (showWarning) {
       return t("measurement_warning_confirm");
     }
     return t("measurement_add");
-  }, [isEditingMeasurement, showWarning, t]);
+  }, [isNewMeasurement, showWarning, t]);
 
   const collectErrors = useCallback(() => {
     const errors: ErrorFields[] = [];
@@ -82,7 +75,7 @@ export const MeasurementModal = ({
       if (!measurement?.name) {
         errors.push("measurement_name");
       }
-      if (!measurement?.value && !isEditingMeasurement) {
+      if (!measurement?.value) {
         errors.push("measurement_value");
       }
       if (!measurement?.unit) {
@@ -90,7 +83,7 @@ export const MeasurementModal = ({
       }
     }
     return errors;
-  }, [isEditingMeasurement, measurement?.name, measurement?.unit, measurement?.value]);
+  }, [measurement?.name, measurement?.unit, measurement?.value]);
 
   const handleSaveMeasurement = useCallback(() => {
     const errors = collectErrors();
@@ -107,21 +100,19 @@ export const MeasurementModal = ({
   }, [collectErrors, dates, dispatch, measurement?.date, saveMeasurement, showWarning]);
 
   const measurementUnits = useMemo(() => {
-    if (isEditingMeasurement) {
+    if (!isNewMeasurement) {
       return getMeasurementUnits(measurement.unit);
     }
     return getMeasurementUnits();
-  }, [isEditingMeasurement, measurement.unit]);
+  }, [isNewMeasurement, measurement.unit]);
 
-  const unitDropdownSelectable = Boolean((isNewMeasurement || isEditingMeasurement) && measurementUnits.length > 1);
-
+  const unitDropdownSelectable = Boolean(isNewMeasurement && measurementUnits.length > 1);
   return (
-    <ThemedButtomSheetModal title={t("measurement_add")} snapPoints={["100%"]} ref={reference}>
+    <ThemedButtomSheetModal title={measurementButtonText} snapPoints={["100%"]} ref={reference}>
       <AnimatedView style={styles.outerWrapper}>
         <ThemedTextInput
           maxLength={20}
           errorKey="measurement_name"
-          editable={isEditingMeasurement || isNewMeasurement}
           style={styles.textInput}
           onChangeText={(value) => handleAddMeasurementData("name", value)}
           value={measurement?.name}
@@ -133,7 +124,6 @@ export const MeasurementModal = ({
             stretch
             errorKey="measurement_value"
             returnKeyType="done"
-            editable={!isEditingMeasurement}
             keyboardType="decimal-pad"
             style={styles.textInput}
             onChangeText={(value) => handleAddMeasurementData("value", value)}
@@ -157,18 +147,16 @@ export const MeasurementModal = ({
           size={26}
           onChecked={(val) => handleAddMeasurementData("higherIsBetter", val)}
         />
-        {!isEditingMeasurement && (
-          <HStack style={styles.calendarButtonsWrapper}>
-            <ThemedPressable input stretch style={styles.dateWrapper} onPress={() => setShowDatePicker((open) => !open)}>
-              <Text ghost style={styles.text}>
-                {measurement?.date?.toLocaleDateString(language)}
-              </Text>
-            </ThemedPressable>
-            <ThemedPressable input onPress={() => setShowDatePicker((open) => !open)} style={styles.calendarWrapper}>
-              <ThemedMaterialCommunityIcons ghost name="calendar" size={26} />
-            </ThemedPressable>
-          </HStack>
-        )}
+        <HStack style={styles.calendarButtonsWrapper}>
+          <ThemedPressable input stretch style={styles.dateWrapper} onPress={() => setShowDatePicker((open) => !open)}>
+            <Text ghost style={styles.text}>
+              {measurement?.date?.toLocaleDateString(language)}
+            </Text>
+          </ThemedPressable>
+          <ThemedPressable input onPress={() => setShowDatePicker((open) => !open)} style={styles.calendarWrapper}>
+            <ThemedMaterialCommunityIcons ghost name="calendar" size={26} />
+          </ThemedPressable>
+        </HStack>
         {showDatePicker && (
           <Animated.View layout={Layout} entering={FadeIn} style={styles.dateWrapper}>
             <DateTimePicker
@@ -198,7 +186,7 @@ export const MeasurementModal = ({
             <Text ghost style={styles.addMeasurement}>
               {measurementButtonText}
             </Text>
-            <ThemedMaterialCommunityIcons ghost name={isEditingMeasurement ? "table-check" : "table-large-plus"} size={20} />
+            <ThemedMaterialCommunityIcons ghost name={!isNewMeasurement ? "table-check" : "table-large-plus"} size={20} />
           </HStack>
         </Pressable>
       </AnimatedView>

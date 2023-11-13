@@ -5,11 +5,11 @@ const DarkThemeColors: ThemeColors = {
   secondaryBackgroundColor: "#333",
   inputFieldBackgroundColor: "#222",
   componentBackgroundColor: "#3c3c3c",
-  textDisabled: "#666",
+  textDisabled: "#444",
   errorColor: "rgba(255,0,0,0.5)",
   secondaryErrorColor: "rgba(170,0,0,0.5)",
   mainColor: "#ddd",
-  secondaryColor: "#888",
+  secondaryColor: "#aaa",
   primaryColor: "#222",
   warningColor: "#af7d00",
 };

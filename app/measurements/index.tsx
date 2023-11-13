@@ -45,6 +45,13 @@ export function Measurements() {
     }
   }, [ref]);
 
+  const handleAddNewMeasurement = useCallback(() => {
+    setIsNewMeasurement(true);
+    setIsEditingMeasurement(false);
+    setCurrentMeasurement(emptyMeasurement);
+    handleOpenModal();
+  }, [handleOpenModal]);
+
   const reset = useCallback(() => {
     handleCloseModal();
     setCurrentMeasurement(emptyMeasurement);
@@ -103,6 +110,7 @@ export function Measurements() {
 
   const handleEditMeasurement = useCallback(
     (measurement: Measurement, index: number) => {
+      console.log();
       setCurrentMeasurement({ measurement, index });
       setIsEditingMeasurement(true);
       handleOpenModal();
@@ -117,7 +125,7 @@ export function Measurements() {
 
   return (
     <ThemedView style={{ flex: 1 }}>
-      <SiteNavigationButtons title={t("measurements")} handleConfirm={handleOpenModal} handleConfirmIcon={{ name: "plus", size: 40 }} />
+      <SiteNavigationButtons title={t("measurements")} handleConfirm={handleAddNewMeasurement} handleConfirmIcon={{ name: "plus", size: 40 }} />
       <PageContent style={styles.contentWrapper}>
         <ScrollView style={styles.measurementsWrapper}>
           {measurements?.map((measurement, index) => (
@@ -138,7 +146,6 @@ export function Measurements() {
         saveMeasurement={handleConfirmMeasurementModal}
         setCurrentMeasurement={setCurrentMeasurement}
         currentMeasurement={currentMeasurement}
-        isEditingMeasurement={isEditingMeasurement}
       />
       <BottomToast onRequestClose={() => setShowToast(false)} open={showToast} messageKey={"measurement_deleted_undo"} titleKey={"measurement_deleted_message"} onRedo={handleRecoverMeasurement} />
     </ThemedView>
