@@ -29,7 +29,7 @@ export const AddNoteModal = ({ reference, onRequestClose, index }: EditNoteModal
     [handleSaveNote, index],
   );
 
-  const buttonStyle = useMemo(() => ({ button: styles.button }), [styles.button]);
+  const buttonStyle = useMemo(() => ({ button: styles.button }), []);
 
   return (
     <ThemedButtomSheetModal onRequestClose={onRequestClose} ref={reference} title={t("edit_note_title")}>

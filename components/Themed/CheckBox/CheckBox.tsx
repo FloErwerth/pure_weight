@@ -1,6 +1,5 @@
 import { ThemedPressable } from "../Pressable/Pressable";
 import { useCallback, useEffect, useMemo } from "react";
-import { useTheme } from "../../../theme/context";
 import { ThemedMaterialCommunityIcons } from "../ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
 import Animated, { useSharedValue, withTiming } from "react-native-reanimated";
 import { HStack } from "../../Stack/HStack/HStack";
@@ -19,9 +18,8 @@ interface CheckBoxProps {
 }
 
 export const CheckBox = ({ checked, onChecked, size = 20, label, helpText }: CheckBoxProps) => {
-  const { inputFieldBackgroundColor } = useTheme();
   const opacity = useSharedValue(0);
-  const checkBoxWrapperStyle = useMemo(() => ({ borderRadius: borderRadius < size ? size / 4 : borderRadius, width: size, height: size }), [inputFieldBackgroundColor, size]);
+  const checkBoxWrapperStyle = useMemo(() => ({ borderRadius: borderRadius < size ? size / 4 : borderRadius, width: size, height: size }), [size]);
   const checkStyle = useMemo(() => ({ opacity: opacity }), [opacity]);
 
   useEffect(() => {

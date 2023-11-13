@@ -23,7 +23,7 @@ interface SetInputRowProps {
 }
 
 export const SetInputRow = ({ onSetDone, setIndex, hasData, data, isEditable = true, isActiveSet }: SetInputRowProps) => {
-  const { primaryColor, mainColor, secondaryBackgroundColor, componentBackgroundColor, inputFieldBackgroundColor, textDisabled, secondaryColor } = useTheme();
+  const { primaryColor, mainColor, secondaryBackgroundColor, componentBackgroundColor, inputFieldBackgroundColor, textDisabled } = useTheme();
   const exerciseIndex = useAppSelector(getExerciseIndex);
   const [weight, setWeight] = useState(data?.weight);
   const [reps, setReps] = useState(data?.reps);
