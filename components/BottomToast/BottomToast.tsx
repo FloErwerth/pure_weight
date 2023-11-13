@@ -6,10 +6,10 @@ import ReAnimated, { Layout, SlideInDown, SlideOutDown } from "react-native-rean
 import { borderRadius } from "../../theme/border";
 import { HStack } from "../Stack/HStack/HStack";
 import { ThemedMaterialCommunityIcons } from "../Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
-import { Button } from "../Themed/Button/Button";
 import { useCallback, useEffect, useRef, useState } from "react";
 import * as Progress from "react-native-progress";
 import { useTheme } from "../../theme/context";
+import { ThemedPressable } from "../Themed/Pressable/Pressable";
 
 interface BottomToastProps {
   titleKey: string;
@@ -71,13 +71,15 @@ export const BottomToast = ({ titleKey, messageKey, onRedo, open, onRequestClose
             borderTopEndRadius: borderRadius,
           }}
         >
-          <Text style={{ fontSize: 20, textAlign: "center", fontWeight: "bold" }}>{t(titleKey)}</Text>
-          <Button onPress={onRedo}>
+          <Text ghost style={{ fontSize: 20, textAlign: "center", fontWeight: "bold" }}>
+            {t(titleKey)}
+          </Text>
+          <ThemedPressable style={{ padding: 10, borderRadius }} onPress={onRedo}>
             <HStack style={{ flex: 1, justifyContent: "space-between", paddingHorizontal: 10 }}>
               <Text>{t(messageKey)}</Text>
               <ThemedMaterialCommunityIcons ghost name="undo" size={16} />
             </HStack>
-          </Button>
+          </ThemedPressable>
         </ThemedView>
         <Progress.Bar width={deviceWidth} indeterminate={false} borderWidth={0} borderRadius={0} unfilledColor={secondaryColor} color={primaryColor} progress={progress}></Progress.Bar>
       </Pressable>
