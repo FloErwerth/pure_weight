@@ -2,7 +2,7 @@ import { PropsWithChildren, useMemo } from "react";
 import { styles } from "./styles";
 import { Pressable, View } from "react-native";
 import { Text } from "../../../../Themed/ThemedText/Text";
-import { HStack } from "../../../../HStack/HStack";
+import { HStack } from "../../../../Stack/HStack/HStack";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useTheme } from "../../../../../theme/context";
 

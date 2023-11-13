@@ -1,7 +1,7 @@
 import React, { forwardRef, PropsWithChildren, useMemo, useRef } from "react";
 import { View, ViewStyle } from "react-native";
 import { Text } from "../Themed/ThemedText/Text";
-import { HStack } from "../HStack/HStack";
+import { HStack } from "../Stack/HStack/HStack";
 import { styles } from "./styles";
 import { BottomSheetBackdrop, BottomSheetBackdropProps, BottomSheetModal } from "@gorhom/bottom-sheet";
 import { useTheme } from "../../theme/context";
@@ -20,7 +20,7 @@ export const useBottomSheetRef = () => {
   return useRef<BottomSheetModal>(null);
 };
 
-const defaultSnapshots = ["50%", "50%"];
+const defaultSnapshots = ["50%", "50%", "100%"];
 const renderBackdrop = (props: BottomSheetBackdropProps) => <BottomSheetBackdrop appearsOnIndex={0} disappearsOnIndex={-1} {...props} />;
 
 // eslint-disable-next-line react/display-name
@@ -29,6 +29,7 @@ export const ThemedButtomSheetModal = forwardRef<BottomSheetModal, ThemedBottomS
   const { top } = useSafeAreaInsets();
   const defaultStyle = useMemo(() => [customContentStyle, styles.defaultContentStyle, { backgroundColor: inputFieldBackgroundColor }], [inputFieldBackgroundColor, customContentStyle]);
   const containerRef = useRef<View>(null);
+
   const combinedSnapshots = useMemo(() => {
     if (!snapPoints) {
       return defaultSnapshots;
@@ -39,6 +40,7 @@ export const ThemedButtomSheetModal = forwardRef<BottomSheetModal, ThemedBottomS
   return (
     <BottomSheetModal
       index={1}
+      enableDynamicSizing={false}
       backdropComponent={renderBackdrop}
       backgroundStyle={defaultStyle}
       enableDismissOnClose

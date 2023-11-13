@@ -45,10 +45,10 @@ export const AddExerciseMetadata = ({ exerciseMetadata, handleSetMetadata }: Add
 
   return (
     <View>
-      <TrainingFormControl label="Weight" inputMode="decimal" value={exerciseMetadata?.weight} setValue={handleSetWeight} helper="in kg" />
+      <TrainingFormControl label="Weight" inputMode="decimal" value={exerciseMetadata?.weight} setValue={handleSetWeight} />
       <TrainingFormControl label="Number of sets" inputMode="numeric" value={exerciseMetadata?.sets} setValue={handleSetSets} />
       <TrainingFormControl label="Number of repetitions" inputMode="numeric" value={exerciseMetadata?.reps} setValue={handleSetReps} />
-      <TrainingFormControl label="Pause duration" inputMode="decimal" value={exerciseMetadata?.pause} setValue={handleSetPause} helper="in minutes" />
+      <TrainingFormControl label="Pause duration" inputMode="decimal" value={exerciseMetadata?.pause} setValue={handleSetPause} />
     </View>
   );
 };

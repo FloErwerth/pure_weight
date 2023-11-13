@@ -5,7 +5,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { useAppSelector } from "../../store";
 import { getExerciseIndex } from "../../store/selectors";
 import { PlainExerciseData } from "../../store/types";
-import { HStack } from "../HStack/HStack";
+import { HStack } from "../Stack/HStack/HStack";
 import { Button } from "../Themed/Button/Button";
 import { Center } from "../Center/Center";
 import { Text } from "../Themed/ThemedText/Text";

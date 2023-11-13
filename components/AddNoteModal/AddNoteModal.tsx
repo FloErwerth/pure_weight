@@ -1,42 +1,42 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { RefObject, useCallback, useContext, useMemo, useRef } from "react";
 import { TextInput } from "react-native";
 import { useTranslation } from "react-i18next";
-import { ThemedButtomSheetModal, useBottomSheetRef } from "../BottomSheetModal/ThemedButtomSheetModal";
-import { VStack } from "../VStack/VStack";
-import { borderRadius } from "../../theme/border";
-import { HStack } from "../HStack/HStack";
+import { ThemedButtomSheetModal } from "../BottomSheetModal/ThemedButtomSheetModal";
+import { VStack } from "../Stack/VStack/VStack";
+import { HStack } from "../Stack/HStack/HStack";
 import { Button } from "../Themed/Button/Button";
 import { ThemedTextInput } from "../Themed/ThemedTextInput/ThemedTextInput";
+import { BottomSheetModal } from "@gorhom/bottom-sheet";
+import { workoutContext } from "../App/train/workoutContext";
+import { styles } from "./styles";
 
 interface EditNoteModalProps {
-  showModal: boolean;
-  onCancel: () => void;
-  onConfirm: (note?: string) => void;
-  externalNote?: string;
+  onRequestClose: () => void;
+  reference: RefObject<BottomSheetModal>;
+  index: number;
 }
-export const AddNoteModal = ({ showModal, onCancel, onConfirm, externalNote }: EditNoteModalProps) => {
+
+export const AddNoteModal = ({ reference, onRequestClose, index }: EditNoteModalProps) => {
+  const { doneSetsThisExercise, handleSaveNote } = useContext(workoutContext);
   const inputRef = useRef<TextInput>(null);
   const { t } = useTranslation();
-  const [note, setNote] = useState<string | undefined>(externalNote);
-  const ref = useBottomSheetRef();
+  const note = doneSetsThisExercise.get(index)?.note;
 
-  const handleConfirm = useCallback(() => {
-    onConfirm(note);
-  }, [note, onConfirm]);
+  const handleInput = useCallback(
+    (note: string | undefined) => {
+      handleSaveNote(index, note);
+    },
+    [handleSaveNote, index],
+  );
 
-  useEffect(() => {
-    if (showModal) {
-      setNote(externalNote);
-      inputRef.current?.focus();
-    }
-  }, [externalNote, showModal]);
+  const buttonStyle = useMemo(() => ({ button: styles.button }), [styles.button]);
 
   return (
-    <ThemedButtomSheetModal onRequestClose={onCancel} ref={ref} title={t("edit_note_title")}>
-      <VStack style={{ borderRadius, gap: 15 }}>
-        <ThemedTextInput style={{ height: 140, padding: 10, borderRadius }} multiline={true} reference={inputRef} onChangeText={setNote} value={note} placeholder={t("edit_note_placeholder")} />
-        <HStack style={{ justifyContent: "flex-end" }}>
-          <Button style={{ button: { width: 100 } }} title={t("edit_note_done")} onPress={handleConfirm} />
+    <ThemedButtomSheetModal onRequestClose={onRequestClose} ref={reference} title={t("edit_note_title")}>
+      <VStack component style={styles.wrapper}>
+        <ThemedTextInput bottomSheet={true} returnKeyType="done" autoFocus style={styles.input} reference={inputRef} onChangeText={handleInput} value={note} placeholder={t("edit_note_placeholder")} />
+        <HStack style={styles.buttonWrapper}>
+          <Button style={buttonStyle} title={t("edit_note_done")} onPress={onRequestClose} />
         </HStack>
       </VStack>
     </ThemedButtomSheetModal>

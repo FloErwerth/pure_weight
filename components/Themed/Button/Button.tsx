@@ -2,7 +2,7 @@ import { PropsWithChildren, RefObject, useCallback, useMemo } from "react";
 import { Pressable, Text, TextStyle, View, ViewProps, ViewStyle } from "react-native";
 import { styles } from "./styles";
 import * as Haptics from "expo-haptics";
-import { HStack } from "../../HStack/HStack";
+import { HStack } from "../../Stack/HStack/HStack";
 import { useTheme } from "../../../theme/context";
 
 export type ButtonThemes = "primary" | "secondary" | "ghost";
@@ -17,6 +17,7 @@ interface ButtonProps extends PropsWithChildren {
 }
 export const Button = ({ onLayout, onPress, children, theme = "primary", title, disabled, style, reference }: ButtonProps) => {
   const { primaryColor, mainColor, secondaryBackgroundColor } = useTheme();
+
   const computedBackgroundColor = useMemo(() => {
     if (theme === "primary") {
       return primaryColor;
@@ -26,6 +27,7 @@ export const Button = ({ onLayout, onPress, children, theme = "primary", title, 
     }
     return "transparent";
   }, [primaryColor, secondaryBackgroundColor, theme]);
+
   const buttonStyles = useMemo(() => [{ backgroundColor: computedBackgroundColor }, styles.button, style?.button], [computedBackgroundColor, style?.button]);
   const textStyles = useMemo(() => [styles.text, { color: mainColor }], [mainColor]);
   const handlePress = useCallback(() => {

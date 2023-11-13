@@ -1,6 +1,6 @@
 import { Pressable } from "react-native";
 import { ThemedTextInput } from "../Themed/ThemedTextInput/ThemedTextInput";
-import { HStack } from "../HStack/HStack";
+import { HStack } from "../Stack/HStack/HStack";
 import { ThemedBottomSheetModalProps, ThemedButtomSheetModal } from "../BottomSheetModal/ThemedButtomSheetModal";
 import { Dispatch, RefObject, SetStateAction, useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";

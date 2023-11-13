@@ -3,12 +3,12 @@ import { DoneExerciseData, ExerciseSets, PlainExerciseData } from "../../../../.
 import { useCallback, useMemo, useState } from "react";
 import { borderRadius } from "../../../../../theme/border";
 import { LineChartData } from "react-native-chart-kit/dist/line-chart/LineChart";
-import { VStack } from "../../../../VStack/VStack";
+import { VStack } from "../../../../Stack/VStack/VStack";
 import { Button } from "../../../../Themed/Button/Button";
 import { ThemedButtomSheetModal, useBottomSheetRef } from "../../../../BottomSheetModal/ThemedButtomSheetModal";
 import { useAppSelector } from "../../../../../store";
 import { getSelectedTrainingDayData } from "../../../../../store/selectors";
-import { HStack } from "../../../../HStack/HStack";
+import { HStack } from "../../../../Stack/HStack/HStack";
 import { styles } from "./styles";
 import { useTranslation } from "react-i18next";
 import { ThemedView } from "../../../../Themed/ThemedView/View";

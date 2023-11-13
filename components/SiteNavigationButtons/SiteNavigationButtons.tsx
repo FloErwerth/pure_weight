@@ -1,6 +1,6 @@
 import { styles } from "./styles";
 import { RefObject, useCallback, useMemo } from "react";
-import { HStack } from "../HStack/HStack";
+import { HStack } from "../Stack/HStack/HStack";
 import * as Haptics from "expo-haptics";
 import { Animated, Pressable, View } from "react-native";
 import { Text } from "../Themed/ThemedText/Text";

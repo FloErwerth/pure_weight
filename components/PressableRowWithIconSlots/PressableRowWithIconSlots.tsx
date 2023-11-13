@@ -2,7 +2,7 @@ import { ComponentProps, PropsWithChildren, useCallback, useMemo } from "react";
 import { styles } from "./styles";
 import { Pressable } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { HStack } from "../HStack/HStack";
+import { HStack } from "../Stack/HStack/HStack";
 import * as Haptics from "expo-haptics";
 import { ThemedMaterialCommunityIcons } from "../Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
 import { ComponentBackground } from "../Themed/ComponentBackground/ComponentBackground";

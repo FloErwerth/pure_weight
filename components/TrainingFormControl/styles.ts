@@ -17,4 +17,5 @@ export const styles = StyleSheet.create({
     borderRadius,
     backgroundColor: "lightgrey",
   },
+  center: { alignItems: "center" },
 });

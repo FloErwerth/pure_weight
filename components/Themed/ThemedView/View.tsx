@@ -1,6 +1,6 @@
 import { View, ViewProps } from "react-native";
 import { RefObject, useMemo } from "react";
-import { useTheme } from "../../../theme/context";
+import { useComputedBackgroundColor } from "../../../hooks/useComputedBackgroundColor";
 
 export interface ThemedViewProps extends ViewProps {
   stretch?: boolean;
@@ -12,24 +12,8 @@ export interface ThemedViewProps extends ViewProps {
 }
 
 export const ThemedView = (props: ThemedViewProps) => {
-  const { backgroundColor, componentBackgroundColor, secondaryBackgroundColor, inputFieldBackgroundColor } = useTheme();
+  const backgroundColor = useComputedBackgroundColor(props);
 
-  const computedBackgroundColor = useMemo(() => {
-    if (props.component) {
-      return componentBackgroundColor;
-    }
-    if (props.input) {
-      return inputFieldBackgroundColor;
-    }
-    if (props.ghost) {
-      return "transparent";
-    }
-    if (props.secondary) {
-      return secondaryBackgroundColor;
-    }
-    return backgroundColor;
-  }, [backgroundColor, componentBackgroundColor, inputFieldBackgroundColor, props.component, props.ghost, props.input, props.secondary, secondaryBackgroundColor]);
-
-  const wrapperStyle = useMemo(() => [{ backgroundColor: computedBackgroundColor, flex: props.stretch ? 1 : 0 }, props.style], [computedBackgroundColor, props.stretch, props.style]);
+  const wrapperStyle = useMemo(() => [{ backgroundColor, flex: props.stretch ? 1 : 0 }, props.style], [backgroundColor, props.stretch, props.style]);
   return <View {...props} ref={props.reference} style={wrapperStyle} />;
 };

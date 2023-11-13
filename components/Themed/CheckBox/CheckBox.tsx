@@ -3,7 +3,7 @@ import { useCallback, useEffect, useMemo } from "react";
 import { useTheme } from "../../../theme/context";
 import { ThemedMaterialCommunityIcons } from "../ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
 import Animated, { useSharedValue, withTiming } from "react-native-reanimated";
-import { HStack } from "../../HStack/HStack";
+import { HStack } from "../../Stack/HStack/HStack";
 import { Text } from "../ThemedText/Text";
 import { styles } from "./styles";
 import { ThemedView } from "../ThemedView/View";

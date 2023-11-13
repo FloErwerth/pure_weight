@@ -13,14 +13,15 @@ import { AlertConfig, AlertModal } from "../../../components/AlertModal/AlertMod
 import { View } from "react-native";
 import * as Haptics from "expo-haptics";
 import { NotificationFeedbackType } from "expo-haptics";
-import { getSelectedTrainingDay, getSelectedTrainingDayIndex } from "../../../store/selectors";
+import { getSelectedTrainingDay } from "../../../store/selectors";
 import DraggableFlatList from "react-native-draggable-flatlist/src/components/DraggableFlatList";
 import { ScaleDecorator } from "react-native-draggable-flatlist";
 import { useTranslation } from "react-i18next";
-import { AddExerciseModal } from "../../../components/AddExerciseModal/AddExerciseModal";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { PageContent } from "../../../components/PageContent/PageContent";
 import { ThemedView } from "../../../components/Themed/ThemedView/View";
+import { useBottomSheetRef } from "../../../components/BottomSheetModal/ThemedButtomSheetModal";
+import { AddExerciseModal } from "../../../components/AddExerciseModal/AddExerciseModal";
 
 function getAreValuesEmpty(exercise: ExerciseMetaData) {
   const values = Object.values(exercise);
@@ -41,18 +42,18 @@ type MappedExercises = {
   index: number;
   handleOnConfirmEdit: (exercise: ExerciseMetaData) => void;
 };
-const emptyExercise: ExerciseMetaData = { reps: "", pause: "", sets: "", weight: "", name: "" };
 export function Create() {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const [alertConfig, setAlertConfig] = useState<AlertConfig | undefined>(undefined);
   const editedDay = useAppSelector(getSelectedTrainingDay);
   const title = useMemo(() => (editedDay ? t("edit_workout") : t("create_workout")), [editedDay, t]);
-  const editedDayIndex = useAppSelector(getSelectedTrainingDayIndex);
   const [editedExerciseIndex, setEditedExerciseIndex] = useState<number | undefined>(undefined);
   const [workoutName, setWorkoutName] = useState(editedDay?.name);
   const [createdExercises, setCreatedExercises] = useState<ExerciseMetaDataWithDoneEntries>(editedDay?.exercises.map((exercise) => exercise) ?? []);
   const dispatch = useAppDispatch();
+  const alertRef = useBottomSheetRef();
+  const addRef = useBottomSheetRef();
 
   useEffect(() => {
     setWorkoutName(editedDay?.name);
@@ -92,11 +93,15 @@ export function Create() {
     dispatch(cleanErrors());
   }, [dispatch]);
 
+  const closeAlert = useCallback(() => {
+    alertRef.current?.close();
+  }, [alertRef]);
+
   const handleConfirmDiscardChanges = useCallback(() => {
-    setAlertConfig(undefined);
+    closeAlert();
     handleCleanErrors();
     navigate("workouts");
-  }, [handleCleanErrors, navigate]);
+  }, [closeAlert, handleCleanErrors, navigate]);
 
   const mappedExercises = useMemo(() => {
     return createdExercises.map((exercise, index) => {
@@ -108,7 +113,7 @@ export function Create() {
       const handleConfirmDelete = () => {
         void Haptics.notificationAsync(NotificationFeedbackType.Success);
         handleDeleteExercise(index);
-        setAlertConfig(undefined);
+        closeAlert();
       };
 
       const handleOnConfirmEdit = (exercise: ExerciseMetaData) => {
@@ -132,7 +137,7 @@ export function Create() {
 
       return { onDelete, edited, handleCancel, onEdit, exercise, index, handleOnConfirmEdit };
     });
-  }, [createdExercises, editedExerciseIndex, handleConfirmDiscardChanges, handleDeleteExercise, t]);
+  }, [closeAlert, createdExercises, editedExerciseIndex, handleConfirmDiscardChanges, handleDeleteExercise, t]);
 
   const handleNavigateHome = useCallback(() => {
     handleCleanErrors();
@@ -157,12 +162,12 @@ export function Create() {
       return;
     }
     if (editedDay) {
-      dispatch(editTrainingDay({ index: editedDayIndex ?? 0, trainingDay: { name: workoutName ?? editedDay.name, exercises: createdExercises } }));
+      dispatch(editTrainingDay({ trainingDay: { name: workoutName ?? editedDay.name, exercises: createdExercises } }));
     } else {
       dispatch(addTrainingDay({ name: workoutName ?? "", exercises: createdExercises }));
     }
     handleNavigateHome();
-  }, [workoutName, createdExercises, editedDay, handleNavigateHome, dispatch, editedDayIndex]);
+  }, [workoutName, createdExercises, editedDay, handleNavigateHome, dispatch]);
 
   const handleBackButton = useCallback(() => {
     if (createdExercises.length === 0 && !workoutName) {
@@ -175,10 +180,11 @@ export function Create() {
         content,
         onConfirm: handleNavigateHome,
       });
+      alertRef.current?.present();
     } else {
       handleNavigateHome();
     }
-  }, [createdExercises.length, editedDay, handleNavigateHome, t, workoutName]);
+  }, [alertRef, createdExercises.length, editedDay, handleNavigateHome, t, workoutName]);
 
   const handleOnDragEnd = useCallback(
     ({ data }: { data: MappedExercises[] }) => {
@@ -228,10 +234,8 @@ export function Create() {
         </PageContent>
         <AddButton onPress={() => setEditedExerciseIndex(-1)} />
       </ThemedView>
-      {alertConfig && <AlertModal title={alertConfig.title} content={alertConfig.content} onConfirm={alertConfig.onConfirm} onCancel={() => setAlertConfig(undefined)} />}
-      {editedExerciseIndex !== undefined && (
-        <AddExerciseModal exercise={editedExerciseIndex !== -1 ? createdExercises[editedExerciseIndex] : emptyExercise} onConfirmEdit={handleConfirmExerciseModal} />
-      )}
+      <AlertModal reference={alertRef} title={alertConfig?.title} content={alertConfig?.content} onConfirm={handleNavigateHome} onCancel={() => setAlertConfig(undefined)} />
+      <AddExerciseModal reference={addRef} onConfirmEdit={handleConfirmExerciseModal} />
     </>
   );
 }

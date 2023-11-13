@@ -1,9 +1,9 @@
-import { VStack } from "../../VStack/VStack";
+import { VStack } from "../../Stack/VStack/VStack";
 import { View } from "react-native";
 import { Text } from "../../Themed/ThemedText/Text";
 import { getDate } from "../../../utils/date";
 import { ThemedMaterialCommunityIcons } from "../../Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
-import { HStack } from "../../HStack/HStack";
+import { HStack } from "../../Stack/HStack/HStack";
 import { useCallback, useContext, useMemo } from "react";
 import { styles } from "./styles";
 import { useAppSelector } from "../../../store";

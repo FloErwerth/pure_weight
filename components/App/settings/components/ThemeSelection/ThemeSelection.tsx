@@ -1,6 +1,6 @@
-import { VStack } from "../../../../VStack/VStack";
+import { VStack } from "../../../../Stack/VStack/VStack";
 import { Appearance, Pressable } from "react-native";
-import { HStack } from "../../../../HStack/HStack";
+import { HStack } from "../../../../Stack/HStack/HStack";
 import { styles } from "./styles";
 import { Text } from "../../../../Themed/ThemedText/Text";
 import { MaterialCommunityIcons } from "@expo/vector-icons";

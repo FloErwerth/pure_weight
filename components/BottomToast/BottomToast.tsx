@@ -4,7 +4,7 @@ import { Dimensions, Pressable } from "react-native";
 import { ThemedView } from "../Themed/ThemedView/View";
 import ReAnimated, { Layout, SlideInDown, SlideOutDown } from "react-native-reanimated";
 import { borderRadius } from "../../theme/border";
-import { HStack } from "../HStack/HStack";
+import { HStack } from "../Stack/HStack/HStack";
 import { ThemedMaterialCommunityIcons } from "../Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
 import { Button } from "../Themed/Button/Button";
 import { useCallback, useEffect, useRef, useState } from "react";

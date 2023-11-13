@@ -14,7 +14,7 @@ import { Swipeable } from "../../components/WorkoutCard/Swipeable";
 import { Text } from "../../components/Themed/ThemedText/Text";
 import { ProgressDisplay } from "../../components/WorkoutCard/components/ProgressDisplay/ProgressDisplay";
 import { BottomToast } from "../../components/BottomToast/BottomToast";
-import { HStack } from "../../components/HStack/HStack";
+import { HStack } from "../../components/Stack/HStack/HStack";
 import { ThemedMaterialCommunityIcons } from "../../components/Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
 
 export function Workouts() {

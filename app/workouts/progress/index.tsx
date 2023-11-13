@@ -6,10 +6,10 @@ import { getExerciseNames, getSelectedTrainingName } from "../../../store/select
 import { Dimensions, ScrollView } from "react-native";
 import { Skeleton } from "../../../components/Skeleton/Skeleton";
 import { borderRadius } from "../../../theme/border";
-import { VStack } from "../../../components/VStack/VStack";
+import { VStack } from "../../../components/Stack/VStack/VStack";
 import { ThemedView } from "../../../components/Themed/ThemedView/View";
 import { PageContent } from "../../../components/PageContent/PageContent";
-import { HStack } from "../../../components/HStack/HStack";
+import { HStack } from "../../../components/Stack/HStack/HStack";
 import { styles } from "../../../components/App/progress/chart/components/styles";
 import { useTheme } from "../../../theme/context";
 

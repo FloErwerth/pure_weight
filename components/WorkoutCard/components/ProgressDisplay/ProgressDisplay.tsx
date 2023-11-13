@@ -4,7 +4,7 @@ import { useCallback, useContext, useMemo } from "react";
 import { styles } from "../../styles";
 import { Pressable, View } from "react-native";
 import { ThemedView } from "../../../Themed/ThemedView/View";
-import { HStack } from "../../../HStack/HStack";
+import { HStack } from "../../../Stack/HStack/HStack";
 import { ThemedMaterialCommunityIcons } from "../../../Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
 import { Text } from "../../../Themed/ThemedText/Text";
 import { swipableContext } from "../../Swipeable";

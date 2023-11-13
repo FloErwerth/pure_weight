@@ -5,7 +5,7 @@ import { z } from "zod/lib/index";
 import { Animated, AppState, Dimensions, Easing, Pressable, View } from "react-native";
 import StopWatch, { StopwatchTimerMethods } from "react-native-animated-stopwatch-timer";
 import { useTheme } from "../../theme/context";
-import { HStack } from "../HStack/HStack";
+import { HStack } from "../Stack/HStack/HStack";
 import { Button } from "../Themed/Button/Button";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { stopWatchStyles, styles } from "./styles";

@@ -3,18 +3,18 @@ import { useCallback, useMemo, useRef, useState } from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { ErrorFields, ExerciseMetaData } from "../../store/types";
 import { EditableExerciseTheme, styles } from "./styles";
-import { HStack } from "../HStack/HStack";
+import { HStack } from "../Stack/HStack/HStack";
 import { ThemedTextInput } from "../Themed/ThemedTextInput/ThemedTextInput";
 import * as Haptics from "expo-haptics";
 import { useTranslation } from "react-i18next";
-import { useAppDispatch } from "../../store";
+import { useAppDispatch, useAppSelector } from "../../store";
 import { setError } from "../../store/reducer";
 import { EditableExerciseInputRow } from "./EditableExerciseInputRow";
 import { Text } from "../Themed/ThemedText/Text";
 import { useTheme } from "../../theme/context";
+import { getEditedExercise } from "../../store/selectors";
 
 export interface EditableExerciseProps {
-  exercise?: ExerciseMetaData;
   onConfirmEdit: (exercise: ExerciseMetaData) => void;
   theme?: EditableExerciseTheme;
 }
@@ -36,9 +36,10 @@ const validateData = (data: Partial<ExerciseMetaData>) => {
   return errors;
 };
 
-export const EditableExercise = ({ exercise, onConfirmEdit, theme }: EditableExerciseProps) => {
+export const EditableExercise = ({ onConfirmEdit, theme }: EditableExerciseProps) => {
   const { t } = useTranslation();
   const { mainColor, componentBackgroundColor } = useTheme();
+  const exercise = useAppSelector(getEditedExercise);
   const [name, setName] = useState<string | undefined>(exercise?.name);
   const [weight, setWeight] = useState<string | undefined>(exercise?.weight);
   const [sets, setSets] = useState<string | undefined>(exercise?.sets);

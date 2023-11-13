@@ -1,10 +1,10 @@
 import { ProfileContent } from "../SettingsSection/ProfileSection";
 import { Pressable } from "react-native";
-import { HStack } from "../../../../HStack/HStack";
+import { HStack } from "../../../../Stack/HStack/HStack";
 import GermanFlag from "../../../../../media/icons/GermanFlag.svg";
 import { Text } from "../../../../Themed/ThemedText/Text";
 import UsaFlag from "../../../../../media/icons/UsaFlag.svg";
-import { VStack } from "../../../../VStack/VStack";
+import { VStack } from "../../../../Stack/VStack/VStack";
 import { useTranslation } from "react-i18next";
 import { useCallback, useMemo } from "react";
 import { styles } from "./styles";

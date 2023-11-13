@@ -1,5 +1,5 @@
 import { KeyboardType, StyleProp, TextInput, TextStyle, ViewStyle } from "react-native";
-import { HStack } from "../HStack/HStack";
+import { HStack } from "../Stack/HStack/HStack";
 import { useRef } from "react";
 import { ThemedTextInput } from "../Themed/ThemedTextInput/ThemedTextInput";
 import { useTheme } from "../../theme/context";

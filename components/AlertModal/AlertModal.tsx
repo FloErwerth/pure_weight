@@ -1,13 +1,14 @@
 import { styles } from "./styles";
-import { PropsWithChildren, useCallback, useEffect, useMemo } from "react";
-import { ThemedButtomSheetModal, useBottomSheetRef } from "../BottomSheetModal/ThemedButtomSheetModal";
-import { HStack } from "../HStack/HStack";
+import { PropsWithChildren, RefObject, useCallback, useEffect, useMemo } from "react";
+import { ThemedButtomSheetModal } from "../BottomSheetModal/ThemedButtomSheetModal";
+import { HStack } from "../Stack/HStack/HStack";
 import { Button } from "../Themed/Button/Button";
 import * as Haptics from "expo-haptics";
 import { useTranslation } from "react-i18next";
 import { borderRadius } from "../../theme/border";
 import { ThemedView } from "../Themed/ThemedView/View";
 import { Text } from "../Themed/ThemedText/Text";
+import { BottomSheetModal } from "@gorhom/bottom-sheet";
 
 export type AlertConfig = {
   title: string;
@@ -22,10 +23,10 @@ interface TrainingNotDoneModalProps extends PropsWithChildren {
   content?: string;
   title?: string;
   isVisible?: boolean;
+  reference: RefObject<BottomSheetModal>;
 }
-export const AlertModal = ({ onConfirm, onCancel, isVisible, content, title, children }: TrainingNotDoneModalProps) => {
+export const AlertModal = ({ reference, onConfirm, onCancel, isVisible, content, title, children }: TrainingNotDoneModalProps) => {
   const { t } = useTranslation();
-  const ref = useBottomSheetRef();
 
   useEffect(() => {
     if (isVisible) {
@@ -46,7 +47,7 @@ export const AlertModal = ({ onConfirm, onCancel, isVisible, content, title, chi
   const buttonStyle = useMemo(() => ({ button: { flex: 1, padding: 10, borderRadius } }), []);
 
   return (
-    <ThemedButtomSheetModal ref={ref}>
+    <ThemedButtomSheetModal ref={reference}>
       <ThemedView style={styles.innerWrapper}>
         <Text style={styles.title}>{title}</Text>
         <Text style={styles.text}>{content}</Text>

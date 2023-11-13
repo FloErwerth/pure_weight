@@ -1,6 +1,6 @@
-import { VStack } from "../../VStack/VStack";
+import { VStack } from "../../Stack/VStack/VStack";
 import { Text, View } from "react-native";
-import { HStack } from "../../HStack/HStack";
+import { HStack } from "../../Stack/HStack/HStack";
 import { borderRadius } from "../../../theme/border";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Button } from "../../Themed/Button/Button";

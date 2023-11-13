@@ -194,7 +194,7 @@ export const setMockState = createAction("set_mock_state");
 export const setFirstTimeRendered = createAction<boolean>("set_greeting");
 export const setState = createAction<AppState>("set_state");
 export const addTrainingDay = createAction<TrainingDay>("add_training_day");
-export const editTrainingDay = createAction<{ index: number; trainingDay: TrainingDay }>("edit_training_day");
+export const editTrainingDay = createAction<{ trainingDay: TrainingDay }>("edit_training_day");
 export const overwriteTrainingDayExercises = createAction<ExerciseMetaDataWithDoneEntries>("adjust_exercises");
 export const removeTrainingDay = createAction<number>("remove_training_day");
 export const setTrainingDayIndex = createAction<number | undefined>("edit_day");
@@ -206,11 +206,15 @@ export const setLanguage = createAction<"de" | "en" | undefined>("settings_langa
 export const setError = createAction<ErrorFields[]>("error_set");
 export const cleanError = createAction<ErrorFields[]>("error_clean");
 export const cleanErrors = createAction("error_clean_all");
+
+export const editNote = createAction<string>("edit_note");
+
 export const storeReducer = createReducer<AppState>(emptyState, (builder) =>
   builder
     .addCase(setState, (state, action) => {
       return action.payload;
     })
+
     .addCase(editMeasurement, (state, action) => {
       const measurements = [...state.measurements];
       const previouisMeasurement = measurements[action.payload.index];
@@ -279,7 +283,9 @@ export const storeReducer = createReducer<AppState>(emptyState, (builder) =>
       state.isFirstTimeRendered = action.payload;
     })
     .addCase(editTrainingDay, (state, action) => {
-      state.trainingDays.splice(action.payload.index, 1, action.payload.trainingDay);
+      if (state.trainingDayIndex) {
+        state.trainingDays.splice(state.trainingDayIndex, 1, action.payload.trainingDay);
+      }
     })
     .addCase(removeTrainingDay, (state, action) => {
       const newTrainingDays = [...state.trainingDays];

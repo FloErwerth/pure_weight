@@ -1,12 +1,12 @@
 import { trainStyles } from "../trainStyles";
-import { HStack } from "../../../HStack/HStack";
+import { HStack } from "../../../Stack/HStack/HStack";
 import { ExerciseMetaDataDisplay } from "../ExerciseMetaDataDisplay/ExerciseMetaDataDisplay";
 import { ThemedView } from "../../../Themed/ThemedView/View";
 import { Pressable, ScrollView, View } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { PreviousTraining } from "../../../PreviousTraining/PreviousTraining";
-import { ExerciseMetaData, PlainExerciseData } from "../../../../store/types";
-import { useCallback, useMemo, useState } from "react";
+import { AppState, PlainExerciseData } from "../../../../store/types";
+import { useCallback, useId, useMemo, useState } from "react";
 import { AddNoteModal } from "../../../AddNoteModal/AddNoteModal";
 import { useTheme } from "../../../../theme/context";
 import { borderRadius } from "../../../../theme/border";
@@ -14,10 +14,10 @@ import { TrainingHeader } from "../TrainingHeader/TrainingHeader";
 import { SetInputRow } from "../../../SetInputRow/SetInputRow";
 import * as Haptics from "expo-haptics";
 import { useAppSelector } from "../../../../store";
-import { getSpecificMetaDataRaw, getSpecificNumberOfSets } from "../../../../store/selectors";
+import { getSpecificMetaData, getSpecificNumberOfSets } from "../../../../store/selectors";
+import { useBottomSheetRef } from "../../../BottomSheetModal/ThemedButtomSheetModal";
 
 interface Exercise {
-  metaData: ExerciseMetaData;
   exerciseIndex: number;
   onSetDone: (exerciseIndex: number, setIndex: number, data: PlainExerciseData) => void;
   onSaveNote: (exerciseIndex: number, note: string | undefined) => void;
@@ -25,10 +25,8 @@ interface Exercise {
 }
 const useGeneratedSetData = (exerciseIndex: number) => {
   const getNumberOfSets = useAppSelector(getSpecificNumberOfSets);
-  const getMetaData = useAppSelector(getSpecificMetaDataRaw);
-  const metaData = useMemo(() => getMetaData(exerciseIndex), [exerciseIndex, getMetaData]);
+  const metaData = useAppSelector((state: AppState) => getSpecificMetaData(state, exerciseIndex));
   const numberOfSets = useMemo(() => getNumberOfSets(exerciseIndex), [exerciseIndex, getNumberOfSets]);
-
   const generatedSets = useMemo(() => {
     const map = new Map<number, PlainExerciseData & { filled: boolean }>();
     Array(numberOfSets)
@@ -38,32 +36,27 @@ const useGeneratedSetData = (exerciseIndex: number) => {
       });
     return map;
   }, [metaData, numberOfSets]);
-  return useState(generatedSets);
+  const [doneSets, setDoneSets] = useState(generatedSets);
+
+  return [metaData, doneSets, setDoneSets] as const;
 };
 
-export const Exercise = ({ note, metaData, exerciseIndex, onSetDone, onSaveNote }: Exercise) => {
+export const Exercise = ({ exerciseIndex, onSetDone }: Exercise) => {
   const [currentSetIndex, setCurrentSetIndex] = useState<number>(0);
-  const [showEditNoteModal, setShowEditNoteModal] = useState(false);
+  const editNoteModalRef = useBottomSheetRef();
   const showEditNoteModalTitleStyle = useMemo(() => ({ padding: 10, paddingHorizontal: 15, alignSelf: "center" }) as const, []);
   const { mainColor, componentBackgroundColor } = useTheme();
-  const [doneSets, setDoneSets] = useGeneratedSetData(exerciseIndex);
+  const [metaData, doneSets, setDoneSets] = useGeneratedSetData(exerciseIndex);
+
   const [activeSetIndex, setActiveSetIndex] = useState(0);
+  const id = useId();
+  const hideNoteModal = useCallback(() => {
+    editNoteModalRef.current?.close();
+  }, [editNoteModalRef]);
 
-  const handleConfirmNote = useCallback(
-    (note?: string) => {
-      setShowEditNoteModal(false);
-      onSaveNote(exerciseIndex, note);
-    },
-    [exerciseIndex, onSaveNote],
-  );
-
-  const handleCancelEditNoteModal = useCallback(() => {
-    setShowEditNoteModal(false);
-  }, []);
-
-  const handleShowEditNoteModal = useCallback(() => {
-    setShowEditNoteModal(true);
-  }, []);
+  const showNoteModal = useCallback(() => {
+    editNoteModalRef.current?.present();
+  }, [editNoteModalRef]);
 
   const handleSetDone = useCallback(
     (data: PlainExerciseData, index: number) => {
@@ -92,11 +85,11 @@ export const Exercise = ({ note, metaData, exerciseIndex, onSetDone, onSaveNote 
   );
 
   return (
-    <View key={metaData.name.length * Math.random() * 10} style={trainStyles.carouselWrapper}>
+    <View key={id} style={trainStyles.carouselWrapper}>
       <HStack style={trainStyles.headerWrapper}>
         <ExerciseMetaDataDisplay exerciseMetaData={metaData} exerciseIndex={exerciseIndex} />
         <ThemedView component style={trainStyles.noteButtonWrapper}>
-          <Pressable style={showEditNoteModalTitleStyle} onPress={handleShowEditNoteModal}>
+          <Pressable style={showEditNoteModalTitleStyle} onPress={showNoteModal}>
             <MaterialCommunityIcons name="note-edit-outline" color={mainColor} size={30} />
           </Pressable>
         </ThemedView>
@@ -110,7 +103,7 @@ export const Exercise = ({ note, metaData, exerciseIndex, onSetDone, onSaveNote 
         </ThemedView>
         <PreviousTraining activeSetIndex={activeSetIndex} exerciseIndex={exerciseIndex} />
       </ScrollView>
-      <AddNoteModal externalNote={note} onConfirm={handleConfirmNote} onCancel={handleCancelEditNoteModal} showModal={showEditNoteModal} />
+      <AddNoteModal index={exerciseIndex} reference={editNoteModalRef} onRequestClose={hideNoteModal} />
     </View>
   );
 };
