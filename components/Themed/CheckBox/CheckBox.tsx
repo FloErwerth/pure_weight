@@ -31,7 +31,7 @@ export const CheckBox = ({ checked, onChecked, size = 20, label, helpText }: Che
   }, [checked, onChecked]);
 
   return (
-    <ThemedPressable ghost onPress={handleCheck}>
+    <ThemedPressable style={styles.outerWrapper} ghost onPress={handleCheck}>
       <HStack input style={styles.wrapper}>
         <Text ghost style={styles.text}>
           {label}

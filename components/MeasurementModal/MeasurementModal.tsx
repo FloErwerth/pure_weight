@@ -38,7 +38,7 @@ const fieldToErrorMap: Record<keyof Omit<Measurement, "higherIsBetter" | "data">
   date: "measurement_value",
 };
 
-export const MeasurementModal = ({ reference, isNewMeasurement = true, currentMeasurement: { measurement, index }, setCurrentMeasurement, saveMeasurement }: MeasurementModalProps) => {
+export const MeasurementModal = ({ onRequestClose, reference, isNewMeasurement = true, currentMeasurement: { measurement, index }, setCurrentMeasurement, saveMeasurement }: MeasurementModalProps) => {
   const { t } = useTranslation();
   const { mainColor, warningColor } = useTheme();
   const themeKey = useAppSelector(getThemeKey);
@@ -75,9 +75,6 @@ export const MeasurementModal = ({ reference, isNewMeasurement = true, currentMe
       if (!measurement?.name) {
         errors.push("measurement_name");
       }
-      if (!measurement?.value) {
-        errors.push("measurement_value");
-      }
       if (!measurement?.unit) {
         errors.push("measurement_unit");
       }
@@ -108,7 +105,7 @@ export const MeasurementModal = ({ reference, isNewMeasurement = true, currentMe
 
   const unitDropdownSelectable = Boolean(isNewMeasurement && measurementUnits.length > 1);
   return (
-    <ThemedButtomSheetModal title={measurementButtonText} snapPoints={["100%"]} ref={reference}>
+    <ThemedButtomSheetModal onRequestClose={onRequestClose} title={measurementButtonText} snapPoints={["100%"]} ref={reference}>
       <AnimatedView style={styles.outerWrapper}>
         <ThemedTextInput
           maxLength={20}

@@ -228,7 +228,7 @@ export const storeReducer = createReducer<AppState>(emptyState, (builder) =>
       if (action.payload.index !== undefined) {
         const measurements = [...state.measurements];
         const measurement = state.measurements[action.payload.index];
-        const newMeasurement = { name: measurement.name, unit: measurement.unit, data: { ...measurement.data, ...action.payload.measurement.data } };
+        const newMeasurement = { ...action.payload.measurement, data: { ...measurement.data, ...action.payload.measurement.data } };
         measurements.splice(action.payload.index, 1, newMeasurement);
         state.measurements = measurements;
       } else {

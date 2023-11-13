@@ -4,7 +4,7 @@ import { useCallback, useState } from "react";
 import { ScrollView } from "react-native";
 import { useAppDispatch, useAppSelector } from "../../store";
 import { getMeasurements } from "../../store/selectors";
-import { addMeasurement, deleteMeasurement, editMeasurement, recoverMeasurement } from "../../store/reducer";
+import { addMeasurement, cleanError, deleteMeasurement, recoverMeasurement } from "../../store/reducer";
 import { MeasurementModal } from "../../components/MeasurementModal/MeasurementModal";
 import { z } from "zod/lib/index";
 import { getDateTodayIso } from "../../utils/date";
@@ -28,16 +28,9 @@ export function Measurements() {
   const measurements = useAppSelector(getMeasurements);
   const [currentMeasurement, setCurrentMeasurement] = useState<{ measurement: Measurement; index?: number }>(emptyMeasurement);
   const [isNewMeasurement, setIsNewMeasurement] = useState(false);
-  const [isEditingMeasurement, setIsEditingMeasurement] = useState(false);
   const dispatch = useAppDispatch();
   const [showToast, setShowToast] = useState(false);
   const ref = useBottomSheetRef();
-
-  const handleCloseModal = useCallback(() => {
-    if (ref.current) {
-      ref.current.dismiss();
-    }
-  }, [ref]);
 
   const handleOpenModal = useCallback(() => {
     if (ref.current) {
@@ -47,40 +40,41 @@ export function Measurements() {
 
   const handleAddNewMeasurement = useCallback(() => {
     setIsNewMeasurement(true);
-    setIsEditingMeasurement(false);
     setCurrentMeasurement(emptyMeasurement);
     handleOpenModal();
   }, [handleOpenModal]);
 
   const reset = useCallback(() => {
-    handleCloseModal();
     setCurrentMeasurement(emptyMeasurement);
     setIsNewMeasurement(true);
-    setIsEditingMeasurement(false);
-  }, [handleCloseModal]);
+    dispatch(cleanError(["measurement_unit", "measurement_name", "measurement_value"]));
+  }, [dispatch]);
+
+  const handleCloseModal = useCallback(() => {
+    if (ref.current) {
+      ref.current.dismiss();
+      reset();
+    }
+  }, [ref, reset]);
 
   const handleConfirmMeasurementModal = useCallback(() => {
     const { measurement, index } = currentMeasurement;
-    if (isEditingMeasurement && index !== undefined) {
-      dispatch(editMeasurement({ measurement, index }));
-      reset();
-      return;
-    }
-    if (measurement.name && measurement.unit && measurement.value) {
+    if (measurement.name && measurement.unit) {
       const parsedDate = dateParser.safeParse(measurement.date);
+      const data = measurement.value ? { [(parsedDate.success && parsedDate.data) || getDateTodayIso()]: measurement.value } : undefined;
       dispatch(
         addMeasurement({
           measurement: {
             name: measurement.name,
             unit: measurement.unit,
-            data: { [(parsedDate.success && parsedDate.data) || getDateTodayIso()]: measurement.value },
+            data,
           },
           index,
         }),
       );
-      reset();
     }
-  }, [currentMeasurement, dispatch, isEditingMeasurement, reset]);
+    handleCloseModal();
+  }, [currentMeasurement, dispatch, handleCloseModal]);
 
   const handleAddExistingMeasurement = useCallback(
     (measurement: Measurement, index: number) => {
@@ -95,7 +89,6 @@ export function Measurements() {
       });
       handleOpenModal();
       setIsNewMeasurement(false);
-      setIsEditingMeasurement(false);
     },
     [handleOpenModal],
   );
@@ -106,16 +99,6 @@ export function Measurements() {
       setShowToast(true);
     },
     [dispatch, setShowToast],
-  );
-
-  const handleEditMeasurement = useCallback(
-    (measurement: Measurement, index: number) => {
-      console.log();
-      setCurrentMeasurement({ measurement, index });
-      setIsEditingMeasurement(true);
-      handleOpenModal();
-    },
-    [handleOpenModal],
   );
 
   const handleRecoverMeasurement = useCallback(() => {
@@ -129,12 +112,7 @@ export function Measurements() {
       <PageContent style={styles.contentWrapper}>
         <ScrollView style={styles.measurementsWrapper}>
           {measurements?.map((measurement, index) => (
-            <Swipeable
-              onEdit={() => handleEditMeasurement(measurement, index)}
-              onDelete={() => handleDeleteMeasurement(index)}
-              key={`${measurement.name}-pressable`}
-              onClick={() => handleAddExistingMeasurement(measurement, index)}
-            >
+            <Swipeable onDelete={() => handleDeleteMeasurement(index)} key={`${measurement.name}-pressable`} onClick={() => handleAddExistingMeasurement(measurement, index)}>
               <RenderedMeasurement index={index} measurement={measurement} />
             </Swipeable>
           ))}
@@ -146,6 +124,7 @@ export function Measurements() {
         saveMeasurement={handleConfirmMeasurementModal}
         setCurrentMeasurement={setCurrentMeasurement}
         currentMeasurement={currentMeasurement}
+        onRequestClose={handleCloseModal}
       />
       <BottomToast onRequestClose={() => setShowToast(false)} open={showToast} messageKey={"measurement_deleted_undo"} titleKey={"measurement_deleted_message"} onRedo={handleRecoverMeasurement} />
     </ThemedView>

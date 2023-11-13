@@ -2,7 +2,7 @@ import { useTranslation } from "react-i18next";
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { styles } from "./styles";
 import { AppState, ErrorFields } from "../../../store/types";
-import { Keyboard, Pressable, View } from "react-native";
+import { Keyboard, View } from "react-native";
 import { ThemedPressable } from "../Pressable/Pressable";
 import { ThemedView } from "../ThemedView/View";
 import { Text } from "../ThemedText/Text";
@@ -37,9 +37,11 @@ function Separator({ show }: { show: boolean }) {
 }
 function Item<T extends string>({ value, onSelectItem }: ItemProps<T>) {
   return (
-    <Pressable key={value} onPress={() => onSelectItem(value)}>
-      <Text style={styles.item}>{value}</Text>
-    </Pressable>
+    <ThemedPressable ghost key={value} onPress={() => onSelectItem(value)}>
+      <Text ghost style={styles.item}>
+        {value}
+      </Text>
+    </ThemedPressable>
   );
 }
 
@@ -49,7 +51,7 @@ export function ThemedDropdown<T extends readonly string[]>({ isSelectable, erro
   const containerRef = useRef<View>(null);
   const [containerMeasures, setContainerMeasures] = useState<{ width: number; height: number }>({ width: 100, height: 50 });
   const error = useAppSelector((state: AppState) => getErrorByKey(state)(errorKey));
-
+  const { componentBackgroundColor } = useTheme();
   const togglePicker = useCallback(() => setOpen((open) => !open), []);
   const measureContainer = useCallback(() => {
     if (containerRef.current) {
@@ -84,7 +86,7 @@ export function ThemedDropdown<T extends readonly string[]>({ isSelectable, erro
       </ThemedPressable>
       {open && (
         <Animated.View style={dropdownStyles} layout={Layout} entering={FadeIn.duration(200)} exiting={FadeOut.duration(200)}>
-          <ThemedView input style={{ borderRadius }}>
+          <ThemedView input style={{ borderColor: componentBackgroundColor, borderWidth: 1, borderRadius }}>
             {options.map((value, index) => (
               <>
                 <Item key={value} onSelectItem={handleSelectItem} value={value} />
