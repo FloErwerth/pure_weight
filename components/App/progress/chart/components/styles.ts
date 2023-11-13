@@ -34,6 +34,7 @@ export const styles = StyleSheet.create({
   },
   selectionModal: {
     gap: 10,
+    padding: 10,
   },
   vStack: {
     borderRadius,

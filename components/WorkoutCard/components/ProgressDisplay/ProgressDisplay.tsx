@@ -2,8 +2,6 @@ import { useTranslation } from "react-i18next";
 import { useTheme } from "../../../../theme/context";
 import { useCallback, useContext, useMemo } from "react";
 import { styles } from "../../styles";
-import { Pressable, View } from "react-native";
-import { ThemedView } from "../../../Themed/ThemedView/View";
 import { HStack } from "../../../Stack/HStack/HStack";
 import { ThemedMaterialCommunityIcons } from "../../../Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
 import { Text } from "../../../Themed/ThemedText/Text";
@@ -11,6 +9,8 @@ import { swipableContext } from "../../Swipeable";
 import { useAppSelector } from "../../../../store";
 import { getLanguage } from "../../../../store/selectors";
 import { truncateToNthSignificantDigit } from "../../../../utils/number";
+import { ThemedPressable } from "../../../Themed/Pressable/Pressable";
+import { ThemedView } from "../../../Themed/ThemedView/View";
 
 export interface ProgressDisplayProps {
   onPress: () => void;
@@ -114,7 +114,6 @@ export const ProgressDisplay = ({ percent, onPress, higherIsBetter = true, name,
     }
     return { color: "rgb(255,100,100)" };
   }, [isPositive, secondaryColor, even]);
-  const hintStyles = useMemo(() => [styles.hint, { color: secondaryColor }], [secondaryColor]);
 
   const handlePress = useCallback(() => {
     if (active) {
@@ -124,18 +123,20 @@ export const ProgressDisplay = ({ percent, onPress, higherIsBetter = true, name,
   }, [active, onPress]);
 
   return (
-    <Pressable onPress={handlePress}>
-      <ThemedView style={styles.progressWrapper} secondary>
-        <HStack style={styles.diffWrapper}>
-          <HStack style={styles.diffWrapper}>
-            <ThemedMaterialCommunityIcons secondary name={icon} color={chartStyle.color} size={26} />
-            <View>
-              <Text style={styles.text}>{text}</Text>
-              <Text style={hintStyles}>{t("progress_text_hint")}</Text>
-            </View>
-          </HStack>
+    <ThemedPressable secondary style={styles.progressWrapper} onPress={handlePress}>
+      <HStack secondary style={styles.diffWrapper}>
+        <HStack secondary style={styles.diffWrapper}>
+          <ThemedMaterialCommunityIcons secondary name={icon} color={chartStyle.color} size={26} />
+          <ThemedView stretch secondary>
+            <Text secondary style={styles.text}>
+              {text}
+            </Text>
+            <Text secondary style={styles.hint}>
+              {t("progress_text_hint")}
+            </Text>
+          </ThemedView>
         </HStack>
-      </ThemedView>
-    </Pressable>
+      </HStack>
+    </ThemedPressable>
   );
 };

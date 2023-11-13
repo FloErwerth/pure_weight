@@ -149,16 +149,16 @@ export function Train() {
   const contextValue = useMemo(() => ({ doneSetsThisExercise, handleSaveNote }), [doneSetsThisExercise, handleSaveNote]);
 
   return (
-    <ThemedView style={trainStyles.wrapper} stretch>
-      <ThemedView style={trainStyles.navigationWrapper}>
+    <ThemedView background style={trainStyles.wrapper} stretch>
+      <ThemedView background style={trainStyles.navigationWrapper}>
         <SiteNavigationButtons handleConfirmOpacity={confirmButtonOpacity} handleBack={handleCloseButton} handleConfirm={handleDone} titleFontSize={30} title={trainingDay?.name} />
       </ThemedView>
-      <ThemedView stretch>
+      <ThemedView background stretch>
         <workoutContext.Provider value={contextValue}>
           <Carousel scrollAnimationDuration={200} onSnapToItem={handleScrollEnd} width={Dimensions.get("screen").width} loop={false} vertical={false} renderItem={renderItem} data={mappedExercises} />
         </workoutContext.Provider>
       </ThemedView>
-      <HStack style={buttonsStyle}>
+      <HStack background style={buttonsStyle}>
         <StopwatchPopover />
       </HStack>
       <AlertModal reference={ref} title={alertModalConfig.title} content={alertModalConfig.content} isVisible={showModal} onConfirm={handleNotDoneConfirm} onCancel={handleCloseAlert} />

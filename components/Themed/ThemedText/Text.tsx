@@ -8,16 +8,21 @@ interface ThemedTextProps extends TextProps {
   warning?: boolean;
   secondary?: boolean;
   component?: boolean;
+  ghost?: boolean;
+  background?: boolean;
+  input?: boolean;
   error?: boolean;
   placeholder?: boolean;
+  center?: boolean;
 }
+
 export const Text = (props: ThemedTextProps) => {
   const computedBackgroundColor = useComputedBackgroundColor(props);
   const computedColor = useComputedColor(props);
 
   const styles = useMemo(
-    () => [{ flex: props.stretch ? 1 : 0, color: computedColor, backgroundColor: computedBackgroundColor }, props.style],
-    [computedBackgroundColor, computedColor, props.stretch, props.style],
+    () => [{ flex: props.stretch ? 1 : 0, textAlign: props.center ? "center" : "left", color: computedColor, backgroundColor: computedBackgroundColor } as const, props.style],
+    [computedBackgroundColor, computedColor, props.center, props.stretch, props.style],
   );
 
   return <_Text {...props} style={styles} />;

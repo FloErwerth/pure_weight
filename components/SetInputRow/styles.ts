@@ -8,6 +8,7 @@ export const styles = StyleSheet.create({
     borderRadius,
     marginHorizontal: 5,
   },
+  inputStack: { gap: 10 },
   numberCenter: { flex: 0.2, height: 50 },
   center: { flex: 1, height: 50 },
   textNumber: { padding: 10, fontSize: 16 },

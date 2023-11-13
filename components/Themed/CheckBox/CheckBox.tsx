@@ -33,9 +33,11 @@ export const CheckBox = ({ checked, onChecked, size = 20, label, helpText }: Che
   return (
     <ThemedPressable ghost onPress={handleCheck}>
       <HStack input style={styles.wrapper}>
-        <Text style={styles.text}>{label}</Text>
-        <HStack style={{ gap: 10 }}>
-          <ThemedView component style={checkBoxWrapperStyle}>
+        <Text ghost style={styles.text}>
+          {label}
+        </Text>
+        <HStack ghost style={{ gap: 10 }}>
+          <ThemedView secondary style={checkBoxWrapperStyle}>
             <Animated.View style={checkStyle}>
               <ThemedMaterialCommunityIcons ghost name="check" size={size} />
             </Animated.View>

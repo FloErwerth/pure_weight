@@ -4,7 +4,6 @@ import { useCallback, useMemo, useState } from "react";
 import { borderRadius } from "../../../../../theme/border";
 import { LineChartData } from "react-native-chart-kit/dist/line-chart/LineChart";
 import { VStack } from "../../../../Stack/VStack/VStack";
-import { Button } from "../../../../Themed/Button/Button";
 import { ThemedButtomSheetModal, useBottomSheetRef } from "../../../../BottomSheetModal/ThemedButtomSheetModal";
 import { useAppSelector } from "../../../../../store";
 import { getSelectedTrainingDayData } from "../../../../../store/selectors";
@@ -18,6 +17,7 @@ import { useTheme } from "../../../../../theme/context";
 import { Chart } from "../../../../Chart/Chart";
 import { getDate } from "../../../../../utils/date";
 import { IsoDate } from "../../../../../types/date";
+import { ThemedPressable } from "../../../../Themed/Pressable/Pressable";
 
 interface ExerciseChartProps {
   exerciseName: string;
@@ -94,7 +94,6 @@ const chartTypeLabel: Record<ChartType, string> = {
 export const ExerciseChart = ({ exerciseName, data }: ExerciseChartProps) => {
   const [chartType, setChartType] = useState<ChartType>("CUMULATIVE");
   const [lineChartData] = useExerciseData(data, chartType);
-  const [showSelectionModal, setShowSelectionModal] = useState(false);
   const { t } = useTranslation();
   const { mainColor, componentBackgroundColor } = useTheme();
   const ref = useBottomSheetRef();
@@ -112,6 +111,14 @@ export const ExerciseChart = ({ exerciseName, data }: ExerciseChartProps) => {
     [chartType, mainColor],
   );
 
+  const openSelectionModal = useCallback(() => {
+    ref.current?.present();
+  }, [ref]);
+
+  const closeSelectionModal = useCallback(() => {
+    ref.current?.close();
+  }, [ref]);
+
   const getXLabel = useCallback((xValue: string) => {
     return getDate(xValue as IsoDate);
   }, []);
@@ -121,37 +128,43 @@ export const ExerciseChart = ({ exerciseName, data }: ExerciseChartProps) => {
       Object.entries(chartTypeMap).map(([type, text]) => {
         const onPress = () => {
           setChartType(type as ChartType);
-          setShowSelectionModal(false);
+          closeSelectionModal();
         };
 
         return { onPress, title: text, chartType: type };
       }),
-    [],
+    [closeSelectionModal],
   );
 
   return (
     <View style={[styles.wrapper, { backgroundColor: componentBackgroundColor }]}>
       <HStack style={styles.chartHeader}>
-        <Text style={styles.headerTitle}>{exerciseName}</Text>
-        <Button onPress={() => setShowSelectionModal(true)} title={t(chartTypeMap[chartType].title)} style={{ button: styles.selectionButton, text: styles.selectionText }} />
+        <Text ghost style={styles.headerTitle}>
+          {exerciseName}
+        </Text>
+        <ThemedPressable input onPress={openSelectionModal} style={styles.selectionButton}>
+          <Text input center style={styles.selectionText}>
+            {t(chartTypeMap[chartType].title)}
+          </Text>
+        </ThemedPressable>
       </HStack>
       <Chart lineChartStyles={styles.lineChart} getYLabel={() => ""} getXLabel={getXLabel} getDotContent={getDotContent} data={lineChartData} />
-      {showSelectionModal && (
-        <ThemedButtomSheetModal title={t("progress_modal_title")} ref={ref}>
-          <VStack style={styles.selectionModal}>
-            {mappedChartProps.map(({ onPress, title, chartType }) => (
-              <Button key={`${chartType}${title}`} onPress={onPress}>
-                <VStack>
-                  <Text style={styles.chartTypeSelectonTitle}>{t(chartTypeMap[chartType].title)}</Text>
-                  <View>
-                    <Text style={styles.chartTypeSelectionText}>{t(chartTypeMap[chartType].hint)}</Text>
-                  </View>
-                </VStack>
-              </Button>
-            ))}
-          </VStack>
-        </ThemedButtomSheetModal>
-      )}
+      <ThemedButtomSheetModal title={t("progress_modal_title")} ref={ref}>
+        <VStack ghost style={styles.selectionModal}>
+          {mappedChartProps.map(({ onPress, title, chartType }) => (
+            <ThemedPressable style={{ borderRadius, padding: 10 }} input key={`${chartType}${title}`} onPress={onPress}>
+              <VStack input>
+                <Text center ghost style={styles.chartTypeSelectonTitle}>
+                  {t(chartTypeMap[chartType].title)}
+                </Text>
+                <Text center input style={styles.chartTypeSelectionText}>
+                  {t(chartTypeMap[chartType].hint)}
+                </Text>
+              </VStack>
+            </ThemedPressable>
+          ))}
+        </VStack>
+      </ThemedButtomSheetModal>
     </View>
   );
 };

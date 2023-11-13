@@ -85,8 +85,12 @@ export const getDatesFromCurrentMeasurement = createSelector([getMeasurements], 
     } else return undefined;
   };
 });
+
 export const getEditedExercise = createSelector([getSelectedTrainingDay, getExerciseIndex], (workout, exerciseIndex) => {
   return workout?.exercises[exerciseIndex];
+});
+export const getIsEditingExercise = createSelector([getEditedExercise], (workout) => {
+  return Boolean(workout);
 });
 export const getExerciseNames = createSelector([getSelectedTrainingDay], (day) => {
   return day?.exercises.map((exercise) => exercise.name);

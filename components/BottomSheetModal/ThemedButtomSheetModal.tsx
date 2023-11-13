@@ -1,5 +1,5 @@
 import React, { forwardRef, PropsWithChildren, useMemo, useRef } from "react";
-import { View, ViewStyle } from "react-native";
+import { ViewStyle } from "react-native";
 import { Text } from "../Themed/ThemedText/Text";
 import { HStack } from "../Stack/HStack/HStack";
 import { styles } from "./styles";
@@ -25,10 +25,9 @@ const renderBackdrop = (props: BottomSheetBackdropProps) => <BottomSheetBackdrop
 
 // eslint-disable-next-line react/display-name
 export const ThemedButtomSheetModal = forwardRef<BottomSheetModal, ThemedBottomSheetModalProps>(({ snapPoints, customContentStyle, children, title, onRequestClose }, ref) => {
-  const { inputFieldBackgroundColor } = useTheme();
+  const { mainColor } = useTheme();
   const { top } = useSafeAreaInsets();
-  const defaultStyle = useMemo(() => [customContentStyle, styles.defaultContentStyle, { backgroundColor: inputFieldBackgroundColor }], [inputFieldBackgroundColor, customContentStyle]);
-  const containerRef = useRef<View>(null);
+  const defaultStyle = useMemo(() => [customContentStyle, styles.defaultContentStyle, { backgroundColor: "#111" }], [customContentStyle]);
 
   const combinedSnapshots = useMemo(() => {
     if (!snapPoints) {
@@ -40,6 +39,7 @@ export const ThemedButtomSheetModal = forwardRef<BottomSheetModal, ThemedBottomS
   return (
     <BottomSheetModal
       index={1}
+      handleIndicatorStyle={{ backgroundColor: mainColor }}
       enableDynamicSizing={false}
       backdropComponent={renderBackdrop}
       backgroundStyle={defaultStyle}
@@ -52,9 +52,13 @@ export const ThemedButtomSheetModal = forwardRef<BottomSheetModal, ThemedBottomS
       snapPoints={combinedSnapshots}
     >
       <HStack ghost style={styles.wrapper}>
-        <View>{title && <Text style={styles.title}>{title}</Text>}</View>
+        {title && (
+          <Text ghost style={styles.title}>
+            {title}
+          </Text>
+        )}
       </HStack>
-      <View ref={containerRef}>{children}</View>
+      {children}
     </BottomSheetModal>
   );
 });

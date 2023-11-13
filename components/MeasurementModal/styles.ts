@@ -4,6 +4,7 @@ import { borderRadius } from "../../theme/border";
 export const styles = StyleSheet.create({
   outerWrapper: {
     gap: 10,
+    borderRadius,
     padding: 10,
   },
   textInput: {

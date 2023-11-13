@@ -20,6 +20,7 @@ import { ThemedDropdown } from "../Themed/Dropdown/ThemedDropdown";
 import { CheckBox } from "../Themed/CheckBox/CheckBox";
 import { getMeasurementUnits, Measurement } from "../App/measurements/types";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
+import { AnimatedView } from "../Themed/AnimatedView/AnimatedView";
 
 interface MeasurementModalProps extends ThemedBottomSheetModalProps {
   setCurrentMeasurement: Dispatch<SetStateAction<{ measurement: Measurement; index?: number }>>;
@@ -115,8 +116,8 @@ export const MeasurementModal = ({
   const unitDropdownSelectable = Boolean((isNewMeasurement || isEditingMeasurement) && measurementUnits.length > 1);
 
   return (
-    <ThemedButtomSheetModal snapPoints={["100%"]} ref={reference}>
-      <Animated.View style={styles.outerWrapper}>
+    <ThemedButtomSheetModal title={t("measurement_add")} snapPoints={["100%"]} ref={reference}>
+      <AnimatedView style={styles.outerWrapper}>
         <ThemedTextInput
           maxLength={20}
           errorKey="measurement_name"
@@ -127,7 +128,7 @@ export const MeasurementModal = ({
           clearButtonMode="while-editing"
           placeholder={t("measurement_placeholder")}
         />
-        <HStack style={{ alignSelf: "stretch", gap: 10 }}>
+        <HStack ghost style={{ alignSelf: "stretch", gap: 10 }}>
           <ThemedTextInput
             stretch
             errorKey="measurement_value"
@@ -158,10 +159,12 @@ export const MeasurementModal = ({
         />
         {!isEditingMeasurement && (
           <HStack style={styles.calendarButtonsWrapper}>
-            <ThemedPressable stretch style={styles.dateWrapper} onPress={() => setShowDatePicker((open) => !open)}>
-              <Text style={styles.text}>{measurement?.date?.toLocaleDateString(language)}</Text>
+            <ThemedPressable input stretch style={styles.dateWrapper} onPress={() => setShowDatePicker((open) => !open)}>
+              <Text ghost style={styles.text}>
+                {measurement?.date?.toLocaleDateString(language)}
+              </Text>
             </ThemedPressable>
-            <ThemedPressable onPress={() => setShowDatePicker((open) => !open)} style={styles.calendarWrapper}>
+            <ThemedPressable input onPress={() => setShowDatePicker((open) => !open)} style={styles.calendarWrapper}>
               <ThemedMaterialCommunityIcons ghost name="calendar" size={26} />
             </ThemedPressable>
           </HStack>
@@ -191,12 +194,14 @@ export const MeasurementModal = ({
           </HStack>
         )}
         <Pressable style={styles.pressable} onPress={handleSaveMeasurement}>
-          <HStack component style={styles.addWrapper}>
-            <Text style={styles.addMeasurement}>{measurementButtonText}</Text>
-            <ThemedMaterialCommunityIcons name={isEditingMeasurement ? "table-check" : "table-large-plus"} size={20} />
+          <HStack input style={styles.addWrapper}>
+            <Text ghost style={styles.addMeasurement}>
+              {measurementButtonText}
+            </Text>
+            <ThemedMaterialCommunityIcons ghost name={isEditingMeasurement ? "table-check" : "table-large-plus"} size={20} />
           </HStack>
         </Pressable>
-      </Animated.View>
+      </AnimatedView>
     </ThemedButtomSheetModal>
   );
 };

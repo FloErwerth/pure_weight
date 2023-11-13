@@ -11,6 +11,8 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { stopWatchStyles, styles } from "./styles";
 import { Temporal } from "@js-temporal/polyfill";
 import { noop } from "lodash";
+import { ThemedMaterialCommunityIcons } from "../Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
+import { AnimatedView } from "../Themed/AnimatedView/AnimatedView";
 
 const pauseTimeDecoder = z
   .string()
@@ -233,8 +235,8 @@ export const StopwatchPopover = () => {
 
   return (
     <View>
-      <Animated.View style={[styles.wrapper, animatedViewStyles]}>
-        <HStack style={styles.hStack}>
+      <AnimatedView style={[styles.wrapper, animatedViewStyles]}>
+        <HStack input style={styles.hStack}>
           <Pressable disabled={fastForwardDisabled} onPress={handleFastForward15}>
             <MaterialCommunityIcons size={40} color={fastForwardColor} name="rewind-15" />
           </Pressable>
@@ -254,7 +256,7 @@ export const StopwatchPopover = () => {
             <MaterialCommunityIcons size={40} color={mainColor} name="fast-forward-15" />
           </Pressable>
         </HStack>
-        <HStack style={styles.buttons}>
+        <HStack input style={styles.buttons}>
           <Pressable onPress={toggleTimer}>
             <MaterialCommunityIcons size={40} color={mainColor} name={timerStarted ? "pause-circle" : "play-circle"} />
           </Pressable>
@@ -262,24 +264,24 @@ export const StopwatchPopover = () => {
             <MaterialCommunityIcons size={40} color={mainColor} name="sync-circle" />
           </Pressable>
         </HStack>
-      </Animated.View>
+      </AnimatedView>
 
       <Button theme="secondary" onLayout={getButtonPos} reference={buttonRef} onPress={togglePopover}>
-        <Animated.View style={{ opacity: iconOpacity, position: "absolute", alignItems: "center", width: "100%" }}>
-          <MaterialCommunityIcons name="timer-outline" color={mainColor} size={35} />
-        </Animated.View>
-        <Animated.View style={{ opacity }}>
+        <AnimatedView secondary style={{ opacity: iconOpacity, position: "absolute", alignItems: "center", width: "100%" }}>
+          <ThemedMaterialCommunityIcons secondary name="timer-outline" size={35} />
+        </AnimatedView>
+        <AnimatedView secondary style={{ opacity }}>
           <StopWatch
             animationDuration={0}
             separatorStyle={separatorStyle}
-            containerStyle={[stopWatchStyles.container]}
+            containerStyle={stopWatchStyles.container}
             digitStyle={{ fontSize: 35, textAlign: "center", color: mainColor }}
             mode="timer"
             leadingZeros={2}
             trailingZeros={0}
             initialTimeInMs={trackedTime}
           />
-        </Animated.View>
+        </AnimatedView>
       </Button>
     </View>
   );

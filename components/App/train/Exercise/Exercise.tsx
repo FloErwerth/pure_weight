@@ -86,9 +86,9 @@ export const Exercise = ({ exerciseIndex, onSetDone }: Exercise) => {
 
   return (
     <View key={id} style={trainStyles.carouselWrapper}>
-      <HStack style={trainStyles.headerWrapper}>
+      <HStack background style={trainStyles.headerWrapper}>
         <ExerciseMetaDataDisplay exerciseMetaData={metaData} exerciseIndex={exerciseIndex} />
-        <ThemedView component style={trainStyles.noteButtonWrapper}>
+        <ThemedView style={trainStyles.noteButtonWrapper}>
           <Pressable style={showEditNoteModalTitleStyle} onPress={showNoteModal}>
             <MaterialCommunityIcons name="note-edit-outline" color={mainColor} size={30} />
           </Pressable>

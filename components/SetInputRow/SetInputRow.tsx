@@ -79,10 +79,12 @@ export const SetInputRow = ({ onSetDone, setIndex, hasData, data, isEditable = t
     <HStack style={[styles.vStack, activeStackStyles]}>
       <Center style={styles.numberCenter}>
         <View style={{ borderRadius }}>
-          <Text style={textNumberStyles}>{setIndex}</Text>
+          <Text ghost style={textNumberStyles}>
+            {setIndex}
+          </Text>
         </View>
       </Center>
-      <HStack stretch>
+      <HStack ghost stretch style={styles.inputStack}>
         <Center style={styles.center}>
           <ThemedTextInput
             onStartShouldSetResponder={() => true}

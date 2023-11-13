@@ -38,19 +38,23 @@ export const LanguageSelection = () => {
     <ProfileContent title={t("settings_language")}>
       <VStack style={stackStyles}>
         <Pressable onPress={() => handleSelectLanguage("de")} style={getStyles(isGerman)}>
-          <HStack style={styles.outerStack}>
-            <HStack style={styles.innerStack}>
+          <HStack ghost style={styles.outerStack}>
+            <HStack ghost style={styles.innerStack}>
               <GermanFlag width={24} height={24} />
-              <Text style={styles.text}>Deutsch</Text>
+              <Text ghost style={styles.text}>
+                Deutsch
+              </Text>
             </HStack>
             {isGerman && <MaterialCommunityIcons name="check" size={24} color={secondaryColor} />}
           </HStack>
         </Pressable>
         <Pressable onPress={() => handleSelectLanguage("en")} style={getStyles(!isGerman)}>
-          <HStack style={styles.outerStack}>
-            <HStack style={styles.innerStack}>
+          <HStack ghost style={styles.outerStack}>
+            <HStack ghost style={styles.innerStack}>
               <UsaFlag width={24} height={24} />
-              <Text style={styles.text}>English</Text>
+              <Text ghost style={styles.text}>
+                English
+              </Text>
             </HStack>
             {!isGerman && <MaterialCommunityIcons name="check" size={24} color={secondaryColor} />}
           </HStack>

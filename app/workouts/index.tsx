@@ -94,7 +94,7 @@ export function Workouts() {
   }, [dispatch]);
 
   return (
-    <ThemedView style={styles.view}>
+    <ThemedView background style={styles.view}>
       <View style={styles.vStack}>
         <SiteNavigationButtons title={t("workouts")} handleConfirmIcon={confirmIcon} handleConfirm={handlePress} />
         <PageContent>
@@ -107,7 +107,7 @@ export function Workouts() {
               <Swipeable onEdit={onEdit} onDelete={onDelete} onClick={onClick} key={key}>
                 <HStack style={styles.trainWrapper}>
                   <Text style={styles.title}>{workoutName}</Text>
-                  <ThemedMaterialCommunityIcons name="chevron-right" size={30} />
+                  <ThemedMaterialCommunityIcons ghost name="chevron-right" size={30} />
                 </HStack>
                 {overallTrainingData && (
                   <View style={styles.progressWrapper}>
@@ -119,7 +119,6 @@ export function Workouts() {
           ></FlatList>
         </PageContent>
       </View>
-
       <BottomToast onRequestClose={() => setShowToast(false)} open={showToast} messageKey={"workout_deleted_message"} titleKey={"workout_deleted_title"} onRedo={handleRecoverWorkout} />
     </ThemedView>
   );

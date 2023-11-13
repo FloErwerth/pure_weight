@@ -1,4 +1,4 @@
-import { Pressable, TextInput, View } from "react-native";
+import { Pressable, TextInput } from "react-native";
 import { useCallback, useMemo, useRef, useState } from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { ErrorFields, ExerciseMetaData } from "../../store/types";
@@ -13,6 +13,7 @@ import { EditableExerciseInputRow } from "./EditableExerciseInputRow";
 import { Text } from "../Themed/ThemedText/Text";
 import { useTheme } from "../../theme/context";
 import { getEditedExercise } from "../../store/selectors";
+import { ThemedView } from "../Themed/ThemedView/View";
 
 export interface EditableExerciseProps {
   onConfirmEdit: (exercise: ExerciseMetaData) => void;
@@ -61,14 +62,15 @@ export const EditableExercise = ({ onConfirmEdit, theme }: EditableExerciseProps
     }
   }, [reps, sets, weight, name, dispatch, onConfirmEdit, pause]);
 
-  const confirmStyle = useMemo(() => [classes.button, { backgroundColor: componentBackgroundColor }], [classes.button, componentBackgroundColor]);
+  const confirmStyle = useMemo(() => [, { backgroundColor: componentBackgroundColor }], [classes.button, componentBackgroundColor]);
 
   return (
-    <View style={classes.innerWrapper}>
-      <HStack style={classes.headerWrapper}>
+    <ThemedView style={classes.innerWrapper}>
+      <HStack ghost style={classes.headerWrapper}>
         <ThemedTextInput
+          bottomSheet
           clearButtonMode="while-editing"
-          autoFocus={true}
+          autoFocus
           errorKey="create_name"
           placeholder={t("exercise_name")}
           reference={inputRef}
@@ -84,11 +86,13 @@ export const EditableExercise = ({ onConfirmEdit, theme }: EditableExerciseProps
         <EditableExerciseInputRow i18key="pause" setValue={setPause} value={pause} />
       </HStack>
       <Pressable onPress={handleConfirm}>
-        <HStack style={confirmStyle}>
-          <Text style={classes.buttonText}>{t(isEditing ? "edit_exercise" : "create_exercise")}</Text>
+        <HStack input style={classes.button}>
+          <Text input style={classes.buttonText}>
+            {t(isEditing ? "edit_exercise" : "create_exercise")}
+          </Text>
           <MaterialCommunityIcons color={mainColor} name="pencil-plus-outline" size={20}></MaterialCommunityIcons>
         </HStack>
       </Pressable>
-    </View>
+    </ThemedView>
   );
 };

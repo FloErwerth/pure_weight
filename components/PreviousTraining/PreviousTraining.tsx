@@ -32,9 +32,15 @@ export const PreviousTraining = ({ exerciseIndex, activeSetIndex }: PreviousTrai
         const computedColor = highlight || filled ? mainColor : secondaryColor;
         return (
           <HStack key={Math.random() * 102} style={[styles.innerWrapper, highlightWrapperStyles]}>
-            <Text style={[styles.setDisplayStyle, { color: computedColor }]}>{index + 1}</Text>
-            <Text style={[{ color: computedColor }, styles.set]}>{weight}</Text>
-            <Text style={[{ color: computedColor }, styles.set]}>{reps}</Text>
+            <Text input style={[styles.setDisplayStyle, { color: computedColor }]}>
+              {index + 1}
+            </Text>
+            <Text input style={[{ color: computedColor }, styles.set]}>
+              {weight}
+            </Text>
+            <Text input style={[{ color: computedColor }, styles.set]}>
+              {reps}
+            </Text>
           </HStack>
         );
       }),
@@ -60,8 +66,8 @@ export const PreviousTraining = ({ exerciseIndex, activeSetIndex }: PreviousTrai
 
   return (
     <View>
-      <HStack style={{ flex: 1, justifyContent: "space-between", alignItems: "center" }}>
-        <Text style={{ fontSize: 16, color: textDisabled, padding: note ? 0 : 10 }}>
+      <HStack ghost style={{ flex: 1, justifyContent: "space-between", alignItems: "center" }}>
+        <Text background style={{ fontSize: 16, color: textDisabled, padding: note ? 0 : 10 }}>
           {t("previous_training_title_with_date")}
           {date}
         </Text>
@@ -76,10 +82,10 @@ export const PreviousTraining = ({ exerciseIndex, activeSetIndex }: PreviousTrai
           </ThemedView>
         )}
       </HStack>
-      <View style={{ padding: 10, borderRadius, backgroundColor: componentBackgroundColor }}>
+      <ThemedView style={{ padding: 10, borderRadius }}>
         {vals?.length > 0 && (
-          <VStack style={{ backgroundColor: componentBackgroundColor }}>
-            <HStack style={styles.innerWrapper}>
+          <VStack ghost style={{ backgroundColor: componentBackgroundColor }}>
+            <HStack ghost style={styles.innerWrapper}>
               <Text style={[styles.setDisplayStyle, { color: secondaryColor }]}>{"#"}</Text>
               <Text style={[{ color: secondaryColor }, styles.set]}>{t("training_header_weight")}</Text>
               <Text style={[{ color: secondaryColor }, styles.set]}>{t("training_header_reps")}</Text>
@@ -87,7 +93,7 @@ export const PreviousTraining = ({ exerciseIndex, activeSetIndex }: PreviousTrai
             {mappedData}
           </VStack>
         )}
-      </View>
+      </ThemedView>
       <ThemedButtomSheetModal title={`Your note from ${date}`} onRequestClose={handleCloseNote} ref={ref}>
         <Text style={{ fontSize: 20 }}>{note}</Text>
       </ThemedButtomSheetModal>

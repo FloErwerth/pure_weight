@@ -2,13 +2,13 @@ import { styles } from "./styles";
 import { PropsWithChildren, RefObject, useCallback, useEffect, useMemo } from "react";
 import { ThemedButtomSheetModal } from "../BottomSheetModal/ThemedButtomSheetModal";
 import { HStack } from "../Stack/HStack/HStack";
-import { Button } from "../Themed/Button/Button";
 import * as Haptics from "expo-haptics";
 import { useTranslation } from "react-i18next";
 import { borderRadius } from "../../theme/border";
 import { ThemedView } from "../Themed/ThemedView/View";
 import { Text } from "../Themed/ThemedText/Text";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
+import { ThemedPressable } from "../Themed/Pressable/Pressable";
 
 export type AlertConfig = {
   title: string;
@@ -44,7 +44,7 @@ export const AlertModal = ({ reference, onConfirm, onCancel, isVisible, content,
     onCancel();
   }, [onCancel]);
 
-  const buttonStyle = useMemo(() => ({ button: { flex: 1, padding: 10, borderRadius } }), []);
+  const buttonStyle = useMemo(() => ({ flex: 1, padding: 10, borderRadius }), []);
 
   return (
     <ThemedButtomSheetModal ref={reference}>
@@ -53,8 +53,16 @@ export const AlertModal = ({ reference, onConfirm, onCancel, isVisible, content,
         <Text style={styles.text}>{content}</Text>
         {children}
         <HStack style={styles.buttons}>
-          <Button style={buttonStyle} title={t("alert_delete_cancel")} onPress={handleCancelButton} />
-          <Button style={buttonStyle} title={t("alert_delete_confirm")} onPress={handleConfirmButton} />
+          <ThemedPressable input style={buttonStyle} onPress={handleCancelButton}>
+            <Text center input>
+              {t("alert_delete_cancel")}
+            </Text>
+          </ThemedPressable>
+          <ThemedPressable input style={buttonStyle} onPress={handleConfirmButton}>
+            <Text center input>
+              {t("alert_delete_confirm")}
+            </Text>
+          </ThemedPressable>
         </HStack>
       </ThemedView>
     </ThemedButtomSheetModal>

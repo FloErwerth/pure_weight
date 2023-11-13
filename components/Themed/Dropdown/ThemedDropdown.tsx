@@ -78,7 +78,7 @@ export function ThemedDropdown<T extends readonly string[]>({ isSelectable, erro
   return (
     <ThemedView ghost style={styles.wrapper}>
       <ThemedPressable error={error} disabled={!isSelectable} input reference={containerRef} onLayout={measureContainer} style={styles.selectedItemWrapper} onPress={togglePicker}>
-        <Text disabled={!isSelectable} error={error} style={styles.selectedItem}>
+        <Text ghost disabled={!isSelectable} error={error} style={styles.selectedItem}>
           {value ?? t(placeholderTranslationKey)}
         </Text>
       </ThemedPressable>

@@ -49,14 +49,14 @@ export const SiteNavigationButtons = ({
   }, [handleConfirm, handleConfirmIcon]);
 
   return (
-    <HStack style={styles.headerWrapper}>
-      <HStack style={styles.titleWrapper}>
+    <HStack background style={styles.headerWrapper}>
+      <HStack background style={styles.titleWrapper}>
         {handleBack && (
           <Pressable disabled={disabled} onPress={handleBackButton}>
             <MaterialCommunityIcons color={mainColor} size={28} name="arrow-left" />
           </Pressable>
         )}
-        <Text numberOfLines={1} style={titleStyles}>
+        <Text background numberOfLines={1} style={titleStyles}>
           {title}
         </Text>
       </HStack>

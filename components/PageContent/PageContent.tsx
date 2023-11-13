@@ -7,5 +7,9 @@ interface PageContentProps extends PropsWithChildren {
   style?: StyleProp<ViewStyle>;
 }
 export const PageContent = ({ children, style }: PageContentProps) => {
-  return <ThemedView style={[styles.wrapper, style]}>{children}</ThemedView>;
+  return (
+    <ThemedView background style={[styles.wrapper, style]}>
+      {children}
+    </ThemedView>
+  );
 };
