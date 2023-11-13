@@ -82,7 +82,7 @@ export const ExerciseMetaDataDisplay = ({ exerciseIndex, exerciseMetaData }: Exe
 
   return (
     <>
-      <HStack component style={styles.wrapper}>
+      <HStack style={styles.wrapper}>
         <VStack>
           <Text style={trainStyles.exerciseName}>{exerciseMetaData?.name}</Text>
           <SmallMetadataDisplay exerciseMetaData={exerciseMetaData} />

@@ -64,6 +64,11 @@ export function Create() {
     setWorkoutName(value);
   }, []);
 
+  const handleAddExercise = useCallback(() => {
+    setEditedExerciseIndex(undefined);
+    addRef.current?.present();
+  }, [addRef]);
+
   const handleDeleteExercise = useCallback(
     (index: number) => {
       const newExercises = [...createdExercises];
@@ -85,6 +90,7 @@ export function Create() {
         setEditedExerciseIndex(createdExercises.length);
       }
       setEditedExerciseIndex(undefined);
+      addRef.current?.close();
     },
     [createdExercises, editedExerciseIndex],
   );
@@ -108,6 +114,7 @@ export function Create() {
       const onEdit = () => {
         void Haptics.selectionAsync();
         setEditedExerciseIndex(index);
+        addRef.current?.present();
       };
 
       const handleConfirmDelete = () => {
@@ -121,7 +128,8 @@ export function Create() {
           const newExercises = [...createdExercises];
           newExercises.splice(index, 1, { doneExerciseEntries: createdExercises[index].doneExerciseEntries, ...exercise });
           setCreatedExercises(newExercises);
-          setEditedExerciseIndex(-1);
+          setEditedExerciseIndex(undefined);
+          addRef.current?.close();
         }
       };
       const handleCancel = () => {
@@ -130,14 +138,15 @@ export function Create() {
           newExercises.splice(index, 1);
           setCreatedExercises(newExercises);
         }
-        setEditedExerciseIndex(-1);
+        setEditedExerciseIndex(undefined);
+        addRef.current?.close();
       };
       const onDelete = () => setAlertConfig({ title: t("alert_delete_title"), content: t("alert_delete_message"), onConfirm: handleConfirmDelete, onCancel: handleConfirmDiscardChanges });
       const edited = index === editedExerciseIndex;
 
       return { onDelete, edited, handleCancel, onEdit, exercise, index, handleOnConfirmEdit };
     });
-  }, [closeAlert, createdExercises, editedExerciseIndex, handleConfirmDiscardChanges, handleDeleteExercise, t]);
+  }, [addRef, closeAlert, createdExercises, editedExerciseIndex, handleConfirmDiscardChanges, handleDeleteExercise, t]);
 
   const handleNavigateHome = useCallback(() => {
     handleCleanErrors();
@@ -197,7 +206,7 @@ export function Create() {
 
   return (
     <>
-      <ThemedView style={styles.innerWrapper}>
+      <ThemedView background style={styles.innerWrapper}>
         <SiteNavigationButtons handleBack={handleBackButton} handleConfirm={handleConfirm} titleFontSize={30} title={title} />
         <PageContent style={styles.contentWrapper}>
           <PlainInput showClear value={workoutName} setValue={handleSetWorkoutName} fontSize={30} placeholder={t("workout_name")} />
@@ -231,8 +240,8 @@ export function Create() {
               </View>
             )}
           </View>
+          <AddButton onPress={handleAddExercise} />
         </PageContent>
-        <AddButton onPress={() => setEditedExerciseIndex(-1)} />
       </ThemedView>
       <AlertModal reference={alertRef} title={alertConfig?.title} content={alertConfig?.content} onConfirm={handleNavigateHome} onCancel={() => setAlertConfig(undefined)} />
       <AddExerciseModal reference={addRef} onConfirmEdit={handleConfirmExerciseModal} />

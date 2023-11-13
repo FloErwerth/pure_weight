@@ -1,5 +1,5 @@
 import { createAction, createReducer } from "@reduxjs/toolkit/src";
-import type { AppState, ErrorFields, ExerciseMetaData, ExerciseMetaDataWithDoneEntries, PlainExerciseData, TrainingDay } from "./types";
+import type { AppState, ErrorFields, ExerciseMetaDataWithDoneEntries, PlainExerciseData, TrainingDay } from "./types";
 import { getDateTodayIso } from "../utils/date";
 import { ThemeKey } from "../theme/types";
 import { Measurement } from "../components/App/measurements/types";
@@ -201,7 +201,6 @@ export const setTrainingDayIndex = createAction<number | undefined>("edit_day");
 export const addSetDataToTrainingDay = createAction<Array<{ note?: string; sets: Array<PlainExerciseData> }>>("set_training_data");
 export const setSetIndex = createAction<number>("set_set_index");
 export const setExerciseIndex = createAction<number>("set_exercise_index");
-export const editExerciseMetaData = createAction<Partial<ExerciseMetaData>>("edit_exercise_metadata");
 export const setLanguage = createAction<"de" | "en" | undefined>("settings_langauge");
 export const setError = createAction<ErrorFields[]>("error_set");
 export const cleanError = createAction<ErrorFields[]>("error_clean");
@@ -319,11 +318,6 @@ export const storeReducer = createReducer<AppState>(emptyState, (builder) =>
     })
     .addCase(setExerciseIndex, (state, action) => {
       state.exerciseIndex = action.payload;
-    })
-    .addCase(editExerciseMetaData, (state, action) => {
-      if (state.trainingDays && state.trainingDayIndex !== undefined && state.trainingDays[state.trainingDayIndex].exercises !== undefined && state.exerciseIndex !== undefined) {
-        state.trainingDays[state.trainingDayIndex].exercises[state.exerciseIndex] = { ...state.trainingDays[state.trainingDayIndex].exercises[state.exerciseIndex], ...action.payload };
-      }
     })
     .addCase(setLanguage, (state, action) => {
       state.settings.language = action.payload;

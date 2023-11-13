@@ -1,5 +1,4 @@
 import { KeyboardType, StyleProp, TextInput, TextStyle, ViewStyle } from "react-native";
-import { HStack } from "../Stack/HStack/HStack";
 import { useRef } from "react";
 import { ThemedTextInput } from "../Themed/ThemedTextInput/ThemedTextInput";
 import { useTheme } from "../../theme/context";
@@ -20,21 +19,19 @@ export const PlainInput = ({ keyboardType, placeholder, fontSize = 14, value, se
   const { mainColor, secondaryColor } = useTheme();
 
   return (
-    <HStack>
-      <ThemedTextInput
-        autoFocus={autoFocus}
-        clearButtonMode={showClear ? "while-editing" : "never"}
-        hideErrorBorder={true}
-        errorKey="workout_name"
-        reference={inputRef}
-        returnKeyType="done"
-        keyboardType={keyboardType}
-        onChangeText={setValue}
-        value={value}
-        placeholderTextColor={secondaryColor}
-        placeholder={placeholder}
-        style={[{ fontSize, color: mainColor, backgroundColor: "transparent", flex: 1 }, style]}
-      ></ThemedTextInput>
-    </HStack>
+    <ThemedTextInput
+      autoFocus={autoFocus}
+      clearButtonMode={showClear ? "while-editing" : "never"}
+      hideErrorBorder={true}
+      errorKey="workout_name"
+      reference={inputRef}
+      returnKeyType="done"
+      keyboardType={keyboardType}
+      onChangeText={setValue}
+      value={value}
+      placeholderTextColor={secondaryColor}
+      placeholder={placeholder}
+      style={[{ fontSize, color: mainColor, backgroundColor: "transparent" }, style]}
+    />
   );
 };
