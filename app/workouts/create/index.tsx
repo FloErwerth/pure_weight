@@ -1,7 +1,7 @@
 import { Text } from "../../../components/Themed/ThemedText/Text";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "../../../hooks/navigate";
-import { ExerciseMetaData, ExerciseMetaDataWithDoneEntries } from "../../../store/types";
+import { DoneWorkouts, ExerciseMetaData } from "../../../store/types";
 import { useAppDispatch, useAppSelector } from "../../../store";
 import { addTrainingDay, cleanErrors, editTrainingDay, overwriteTrainingDayExercises, setError, setTrainingDayIndex } from "../../../store/reducer";
 import { AddButton } from "../../../components/AddButton/AddButton";
@@ -52,14 +52,14 @@ export function Create() {
   const [editedExercise, setEditedExercise] = useState<EditedExercise>(emptyExercise);
   const [editedExerciseIndex, setEditedExerciseIndex] = useState<number | undefined>(undefined);
   const [workoutName, setWorkoutName] = useState(editedDay?.name);
-  const [createdExercises, setCreatedExercises] = useState<ExerciseMetaDataWithDoneEntries>(editedDay?.exercises.map((exercise) => exercise) ?? []);
+  const [createdExercises, setCreatedExercises] = useState<DoneWorkouts>(editedDay?.doneWorkouts.map((exercise) => exercise) ?? []);
   const dispatch = useAppDispatch();
   const [alertRef] = useBottomSheetRef();
   const [addRef] = useBottomSheetRef();
 
   useEffect(() => {
     setWorkoutName(editedDay?.name);
-    setCreatedExercises(editedDay?.exercises ?? []);
+    setCreatedExercises(editedDay?.doneWorkouts ?? []);
   }, [editedDay]);
 
   const handleSetWorkoutName = useCallback((value?: string) => {
@@ -178,9 +178,9 @@ export function Create() {
       return;
     }
     if (editedDay) {
-      dispatch(editTrainingDay({ trainingDay: { name: workoutName ?? editedDay.name, exercises: createdExercises } }));
+      dispatch(editTrainingDay({ trainingDay: { name: workoutName ?? editedDay.name, doneWorkouts: createdExercises } }));
     } else {
-      dispatch(addTrainingDay({ name: workoutName ?? "", exercises: createdExercises }));
+      dispatch(addTrainingDay({ name: workoutName ?? "", doneWorkouts: createdExercises }));
     }
     handleNavigateHome();
   }, [workoutName, createdExercises, editedDay, handleNavigateHome, dispatch]);

@@ -1,5 +1,5 @@
 import { createAction, createReducer } from "@reduxjs/toolkit/src";
-import type { AppState, DoneExerciseData, ErrorFields, ExerciseMetaDataWithDoneEntries, PlainExerciseData, Workout } from "./types";
+import type { AppState, DoneExerciseData, DoneWorkouts, ErrorFields, PlainExerciseData, Workout } from "./types";
 import { getDateTodayIso } from "../utils/date";
 import { ThemeKey } from "../theme/types";
 import { Measurement } from "../components/App/measurements/types";
@@ -64,7 +64,7 @@ export const mockState: AppState = {
     {
       name: "Brust 1",
       dates: ["2023-01-01"],
-      exercises: [
+      doneWorkouts: [
         {
           name: "Bankdrücken",
           weight: "50",
@@ -150,7 +150,7 @@ export const mockState: AppState = {
     {
       name: "Brust 2",
       dates: ["2023-11-01", "2023-11-02", "2023-11-03", "2023-12-11"],
-      exercises: [
+      doneWorkouts: [
         {
           name: "Butterfly",
           weight: "50",
@@ -219,7 +219,7 @@ export const setFirstTimeRendered = createAction<boolean>("set_greeting");
 export const setState = createAction<AppState>("set_state");
 export const addTrainingDay = createAction<Workout>("add_training_day");
 export const editTrainingDay = createAction<{ trainingDay: Workout }>("edit_training_day");
-export const overwriteTrainingDayExercises = createAction<ExerciseMetaDataWithDoneEntries>("adjust_exercises");
+export const overwriteTrainingDayExercises = createAction<DoneWorkouts>("adjust_exercises");
 export const removeTrainingDay = createAction<number>("remove_training_day");
 export const setTrainingDayIndex = createAction<number | undefined>("edit_day");
 export const addSetDataToTrainingDay = createAction<Array<{ note?: string; sets: Array<PlainExerciseData> }>>("set_training_data");
@@ -296,7 +296,7 @@ export const storeReducer = createReducer<AppState>(emptyState, (builder) =>
     })
     .addCase(overwriteTrainingDayExercises, (state, action) => {
       if (state.trainingDayIndex) {
-        state.trainingDays[state.trainingDayIndex].exercises = action.payload;
+        state.trainingDays[state.trainingDayIndex].doneWorkouts = action.payload;
       }
     })
     .addCase(addTrainingDay, (state, action) => {
@@ -322,12 +322,12 @@ export const storeReducer = createReducer<AppState>(emptyState, (builder) =>
     .addCase(addSetDataToTrainingDay, (state, action) => {
       if (state.trainingDays && state.trainingDayIndex !== undefined && state.exerciseIndex !== undefined) {
         const dateToday = getDateTodayIso();
-        for (let exerciseIndex = 0; exerciseIndex < state.trainingDays[state.trainingDayIndex].exercises.length; exerciseIndex++) {
+        for (let exerciseIndex = 0; exerciseIndex < state.trainingDays[state.trainingDayIndex].doneWorkouts.length; exerciseIndex++) {
           if (action.payload[exerciseIndex] === undefined) {
             return;
           }
 
-          const existingData = state.trainingDays[state.trainingDayIndex]?.exercises[exerciseIndex]?.doneExerciseEntries;
+          const existingData = state.trainingDays[state.trainingDayIndex]?.doneWorkouts[exerciseIndex]?.doneExerciseEntries;
           (existingData ?? []).push({
             date: dateToday,
             sets: action.payload[exerciseIndex].sets,

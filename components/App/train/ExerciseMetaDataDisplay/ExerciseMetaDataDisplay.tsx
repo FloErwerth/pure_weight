@@ -72,9 +72,9 @@ export const ExerciseMetaDataDisplay = ({ exerciseIndex, exerciseMetaData }: Exe
       if (selectedTraining === undefined) {
         return;
       }
-      const newExercises = [...(selectedTraining?.exercises ?? [])];
-      newExercises.splice(exerciseIndex, 1, { ...exercise, doneExerciseEntries: selectedTraining?.exercises[exerciseIndex].doneExerciseEntries ?? [] });
-      dispatch(editTrainingDay({ trainingDay: { name: selectedTraining?.name ?? "", exercises: newExercises } }));
+      const newExercises = [...(selectedTraining?.doneWorkouts ?? [])];
+      newExercises.splice(exerciseIndex, 1, { ...exercise, doneExerciseEntries: selectedTraining?.doneWorkouts[exerciseIndex].doneExerciseEntries ?? [] });
+      dispatch(editTrainingDay({ trainingDay: { name: selectedTraining?.name ?? "", doneWorkouts: newExercises } }));
       handleClose();
     },
     [selectedTraining, exerciseIndex, dispatch, handleClose],

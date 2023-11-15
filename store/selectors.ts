@@ -78,8 +78,8 @@ export const getLatestWorkoutDate = createSelector([getWorkoutDates], (dates) =>
     (dateA, dateB) => Temporal.Instant.from(dateA.concat("T00:00+00:00") as string).epochMilliseconds - Temporal.Instant.from(dateB.concat("T00:00+00:00") as string).epochMilliseconds,
   )[dates.length - 1];
 });
-export const getHistoryByDate = createSelector([getSavedTrainings, (trainings, date: IsoDate) => date], (trainings, date) => {
-  return trainings.filter((workout) => workout.dates?.includes(date));
+export const getHistoryByMonth = createSelector([getSavedTrainings, (trainings, month: string) => month], (trainings, date) => {
+  return [{ name: "Workout Name" }];
 });
 export const getSelectedTrainingDayIndex = (state: AppState) => state.trainingDayIndex;
 export const getSelectedTrainingDay = createSelector([getSavedTrainings, getSelectedTrainingDayIndex], (trainings, index) => {
@@ -108,19 +108,19 @@ export const getDatesFromCurrentMeasurement = createSelector([getMeasurements], 
 });
 
 export const getExerciseNames = createSelector([getSelectedTrainingDay], (day) => {
-  return day?.exercises.map((exercise) => exercise.name);
+  return day?.doneWorkouts.map((exercise) => exercise.name);
 });
 export const getSelectedTrainingName = createSelector([getSelectedTrainingDay], (day) => day?.name);
 
 export const getErrorByKey = createSelector([getErrors], (state) => (errorField?: ErrorFields | undefined) => Boolean(errorField && state.includes(errorField)));
 export const getLanguage = createSelector([getSettings], (settings) => settings.language);
 export const getExerciseMetaData = createSelector([getSelectedTrainingDay, getExerciseIndex], (traininigDay, exerciseIndex) => {
-  const exercise = traininigDay?.exercises[exerciseIndex];
+  const exercise = traininigDay?.doneWorkouts[exerciseIndex];
   return { weight: exercise?.weight, reps: exercise?.reps, name: exercise?.name, sets: exercise?.sets, pause: exercise?.pause } as ExerciseMetaData;
 });
 
 export const getSpecificMetaData = createSelector([getSelectedTrainingDay, (workout, index: number) => index], (traininigDay, exerciseIndex) => {
-  const exercise = traininigDay?.exercises[exerciseIndex];
+  const exercise = traininigDay?.doneWorkouts[exerciseIndex];
   return { weight: exercise?.weight, reps: exercise?.reps, name: exercise?.name, sets: exercise?.sets, pause: exercise?.pause } as ExerciseMetaData;
 });
 
@@ -133,21 +133,21 @@ export const getNumberOfSets = createSelector([getExerciseMetaData], (exerciseMe
 
 export const getSpecificNumberOfSets = createSelector([getSelectedTrainingDay], (day) => {
   return (exerciseIndex: number) => {
-    if (day && day.exercises) {
-      return parseFloat(day.exercises[exerciseIndex].sets);
+    if (day && day.doneWorkouts) {
+      return parseFloat(day.doneWorkouts[exerciseIndex].sets);
     }
   };
 });
 
 export const getTrainingDayData = createSelector([getSavedTrainings], (trainingDays) => {
   return trainingDays
-    .filter((day) => day.exercises.length > 0)
+    .filter((day) => day.doneWorkouts.length > 0)
     .reduce(
       (exerciseNameEntryPairs, day) => {
-        const newData = Array(day.exercises.length)
+        const newData = Array(day.doneWorkouts.length)
           .fill(undefined)
-          .map((_, index) => crampToNEntries(20, day.exercises[index].doneExerciseEntries))
-          .map((data, index) => ({ exerciseName: day.exercises[index].name, data }));
+          .map((_, index) => crampToNEntries(20, day.doneWorkouts[index].doneExerciseEntries))
+          .map((data, index) => ({ exerciseName: day.doneWorkouts[index].name, data }));
         const newEntries = [...exerciseNameEntryPairs];
         newEntries.push(newData);
         return newEntries;
@@ -166,7 +166,7 @@ export const getSelectedTrainingDayData = createSelector([getTrainingDayData, ge
 
 export const getPreviousTraining = createSelector([getSelectedTrainingDay, getLanguage], (traininigDay, language) => {
   return (exerciseIndex: number) => {
-    const entries = traininigDay?.exercises[exerciseIndex]?.doneExerciseEntries;
+    const entries = traininigDay?.doneWorkouts[exerciseIndex]?.doneExerciseEntries;
     if (entries) {
       const latestEntry = entries[entries.length - 1];
       return { date: latestEntry?.date ? getDate(latestEntry.date, language) : "", vals: latestEntry?.sets ?? [], note: latestEntry?.note };
@@ -177,7 +177,7 @@ export const getPreviousTraining = createSelector([getSelectedTrainingDay, getLa
 export const getOverallTrainingTrend = createSelector([getSelectedTrainingDayByIndex], (trainingDayByIndex) => {
   return (workoutIndex: number) => {
     const workout = trainingDayByIndex(workoutIndex);
-    const filteredDoneExercises = workout.exercises.filter(({ doneExerciseEntries }) => doneExerciseEntries.length >= 2);
+    const filteredDoneExercises = workout.doneWorkouts.filter(({ doneExerciseEntries }) => doneExerciseEntries.length >= 2);
 
     if (filteredDoneExercises.length === 0) {
       return undefined;

@@ -40,7 +40,7 @@ export function Train() {
   const [ref] = useBottomSheetRef();
 
   const isDone = useMemo(() => {
-    const hasEntryForEveryExercise = doneSetsThisExercise.size === (trainingDay?.exercises.length ?? -1);
+    const hasEntryForEveryExercise = doneSetsThisExercise.size === (trainingDay?.doneWorkouts.length ?? -1);
     if (!hasEntryForEveryExercise) {
       return false;
     }
@@ -51,7 +51,7 @@ export function Train() {
       }
     });
     return hasEnoughSets;
-  }, [doneSetsThisExercise, getNumberOfSetsWithIndex, trainingDay?.exercises.length]);
+  }, [doneSetsThisExercise, getNumberOfSetsWithIndex, trainingDay?.doneWorkouts.length]);
 
   useEffect(() => {
     if (isDone) {
@@ -127,7 +127,7 @@ export function Train() {
       navigate("workouts");
       return [] as { index: number }[];
     }
-    return trainingDay.exercises.map((_, index) => ({
+    return trainingDay.doneWorkouts.map((_, index) => ({
       index,
     }));
   }, [navigate, trainingDay]);

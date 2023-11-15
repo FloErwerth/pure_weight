@@ -5,7 +5,7 @@ import { useNavigate } from "../../../hooks/navigate";
 import { useAppSelector } from "../../../store";
 import { PageContent } from "../../../components/PageContent/PageContent";
 import { ThemedView } from "../../../components/Themed/ThemedView/View";
-import { getAppInstallDate, getHistoryByDate, getLatestWorkoutDate, getWorkoutDates } from "../../../store/selectors";
+import { getAppInstallDate, getHistoryByMonth, getLanguage, getLatestWorkoutDate, getWorkoutDates } from "../../../store/selectors";
 import { useTheme } from "../../../theme/context";
 import { CalendarList, DateData } from "react-native-calendars";
 import { ThemedButtomSheetModal, useBottomSheetRef } from "../../../components/BottomSheetModal/ThemedButtomSheetModal";
@@ -16,6 +16,8 @@ import { IsoDate } from "../../../types/date";
 import { getDate, getDateToday, getDateTodayIso } from "../../../utils/date";
 import { HStack } from "../../../components/Stack/HStack/HStack";
 import { ThemedPressable } from "../../../components/Themed/Pressable/Pressable";
+import { Temporal } from "@js-temporal/polyfill";
+import { ScrollView } from "react-native";
 
 const useMarkedDates = () => {
   const { mainColor } = useTheme();
@@ -30,7 +32,9 @@ export function WorkoutHistory() {
   const installDate = useAppSelector(getAppInstallDate);
   const latestWorkoutDate = useAppSelector(getLatestWorkoutDate);
   const [date, setDate] = useState<IsoDate>(latestWorkoutDate);
-  const dateData = useAppSelector((state: AppState) => getHistoryByDate(state, date));
+  const lang = useAppSelector(getLanguage);
+  const month = useMemo(() => Temporal.PlainDate.from(date).toLocaleString(lang, { day: undefined, month: "long", year: "numeric" }), [date, lang]);
+  const dateData = useAppSelector((state: AppState) => getHistoryByMonth(state, month));
   const pastScrollRange = useMemo(() => Math.floor(getDateToday().since(installDate ?? getDateTodayIso()).days / 30), [installDate]);
 
   const calendarTheme = useMemo(
@@ -68,14 +72,17 @@ export function WorkoutHistory() {
     <ThemedView stretch>
       <SiteNavigationButtons titleFontSize={30} handleBack={handleNavigateBack} title={t("history")} />
       <PageContent style={styles.pageWrapper}>
-        <ThemedView ghost stretch>
+        <Text style={styles.title} ghost>
+          {month}
+        </Text>
+        <ScrollView>
           {dateData.map((workout) => (
             <HStack key={workout.name} style={styles.displayedWorkoutWrapper}>
               <Text>{workout.name}</Text>
               <Text>{getDate(date)}</Text>
             </HStack>
           ))}
-        </ThemedView>
+        </ScrollView>
         <ThemedPressable style={styles.browseButtonWrapper} onPress={open}>
           <Text style={styles.browseButton}>Browse History</Text>
         </ThemedPressable>
@@ -89,6 +96,7 @@ export function WorkoutHistory() {
           showScrollIndicator
           onDayPress={handleSelectDate}
           theme={calendarTheme}
+          disabledByDefault
           horizontal
           markedDates={markedDates}
         />

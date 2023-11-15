@@ -5,7 +5,7 @@ import { Measurement } from "../components/App/measurements/types";
 export type Workout = {
   name: string;
   dates?: IsoDate[];
-  exercises: ExerciseMetaDataWithDoneEntries;
+  doneWorkouts: DoneWorkouts;
 };
 
 export type PlainExerciseData = {
@@ -13,7 +13,7 @@ export type PlainExerciseData = {
   reps: string;
 };
 
-export type ExerciseMetaDataWithDoneEntries = ({ doneExerciseEntries: DoneExerciseData[] } & ExerciseMetaData)[];
+export type DoneWorkouts = ({ doneExerciseEntries: DoneExerciseData[] } & ExerciseMetaData)[];
 
 export type DoneExerciseData = {
   date: IsoDate;
@@ -44,7 +44,7 @@ export type AppState = {
   };
   latestDeletions: {
     measurement?: { index: number; data: Measurement };
-    trainingDay?: { index: number; data: Workout; exercise?: { index: number; data: ExerciseMetaDataWithDoneEntries } };
+    trainingDay?: { index: number; data: Workout; exercise?: { index: number; data: DoneWorkouts } };
   };
   measurements: Measurement[];
   errors: ErrorFields[];

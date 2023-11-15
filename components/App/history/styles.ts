@@ -5,6 +5,9 @@ export const styles = StyleSheet.create({
   pageWrapper: {
     gap: 10,
   },
+  title: {
+    fontSize: 26,
+  },
   calendarWrapper: { borderRadius, overflow: "hidden" },
   browseButton: {
     textAlign: "center",
