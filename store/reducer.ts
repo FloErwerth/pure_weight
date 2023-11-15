@@ -1,21 +1,45 @@
 import { createAction, createReducer } from "@reduxjs/toolkit/src";
-import type { AppState, ErrorFields, ExerciseMetaDataWithDoneEntries, PlainExerciseData, TrainingDay } from "./types";
+import type { AppState, DoneExerciseData, ErrorFields, ExerciseMetaDataWithDoneEntries, PlainExerciseData, Workout } from "./types";
 import { getDateTodayIso } from "../utils/date";
 import { ThemeKey } from "../theme/types";
 import { Measurement } from "../components/App/measurements/types";
 import { IsoDate } from "../types/date";
 import { convertMeasurements } from "../components/App/measurements/utils";
 
-const data: Array<{ date: IsoDate; sets: [{ reps: string; weight: string }] }> = [];
-
-for (let i = 0; i < 100; i++) {
-  const currentDate = new Date(getDateTodayIso());
-  currentDate.setDate(currentDate.getDate() + i);
-  const dateStr = currentDate.toISOString().split("T")[0];
-  data.push({ date: dateStr as IsoDate, sets: [{ reps: i.toString(), weight: i.toString() }] });
-}
-
+const data: DoneExerciseData[] = [
+  {
+    date: "2023-01-01",
+    sets: [
+      { reps: "10", weight: "1" },
+      { reps: "10", weight: "1" },
+      { reps: "10", weight: "1" },
+      { reps: "10", weight: "1" },
+      { reps: "10", weight: "1" },
+    ],
+  },
+  {
+    date: "2023-01-02",
+    sets: [
+      { reps: "10", weight: "1" },
+      { reps: "10", weight: "1" },
+      { reps: "10", weight: "1" },
+      { reps: "10", weight: "1" },
+      { reps: "10", weight: "2" },
+    ],
+  },
+  {
+    date: "2023-01-03",
+    sets: [
+      { reps: "10", weight: "1" },
+      { reps: "10", weight: "1" },
+      { reps: "10", weight: "1" },
+      { reps: "10", weight: "1" },
+      { reps: "10", weight: "3" },
+    ],
+  },
+];
 export const mockState: AppState = {
+  appInstallDate: "2023-09-01",
   measurements: [
     {
       name: "Körpergewicht",
@@ -39,7 +63,7 @@ export const mockState: AppState = {
   trainingDays: [
     {
       name: "Brust 1",
-      latestDate: "2023-01-01",
+      dates: ["2023-01-01"],
       exercises: [
         {
           name: "Bankdrücken",
@@ -125,7 +149,7 @@ export const mockState: AppState = {
     },
     {
       name: "Brust 2",
-      latestDate: "2023-01-01",
+      dates: ["2023-11-01", "2023-11-02", "2023-11-03", "2023-12-11"],
       exercises: [
         {
           name: "Butterfly",
@@ -193,8 +217,8 @@ export const setTheme = createAction<ThemeKey>("theme_set");
 export const setMockState = createAction("set_mock_state");
 export const setFirstTimeRendered = createAction<boolean>("set_greeting");
 export const setState = createAction<AppState>("set_state");
-export const addTrainingDay = createAction<TrainingDay>("add_training_day");
-export const editTrainingDay = createAction<{ trainingDay: TrainingDay }>("edit_training_day");
+export const addTrainingDay = createAction<Workout>("add_training_day");
+export const editTrainingDay = createAction<{ trainingDay: Workout }>("edit_training_day");
 export const overwriteTrainingDayExercises = createAction<ExerciseMetaDataWithDoneEntries>("adjust_exercises");
 export const removeTrainingDay = createAction<number>("remove_training_day");
 export const setTrainingDayIndex = createAction<number | undefined>("edit_day");
@@ -205,16 +229,14 @@ export const setLanguage = createAction<"de" | "en" | undefined>("settings_langa
 export const setError = createAction<ErrorFields[]>("error_set");
 export const cleanError = createAction<ErrorFields[]>("error_clean");
 export const cleanErrors = createAction("error_clean_all");
-export const setInstallAppTime = createAction<number>("set_app_install_time");
+export const setAppInstallDate = createAction<IsoDate>("set_app_install_date");
 export const storeReducer = createReducer<AppState>(emptyState, (builder) =>
   builder
     .addCase(setState, (state, action) => {
       return action.payload;
     })
-    .addCase(setInstallAppTime, (state, action) => {
-      if (!state.appInstallEpochMilliseconds) {
-        state.appInstallEpochMilliseconds = action.payload;
-      }
+    .addCase(setAppInstallDate, (state, action) => {
+      state.appInstallDate = action.payload;
     })
     .addCase(editMeasurement, (state, action) => {
       const measurements = [...state.measurements];
@@ -311,7 +333,10 @@ export const storeReducer = createReducer<AppState>(emptyState, (builder) =>
             sets: action.payload[exerciseIndex].sets,
             note: action.payload[exerciseIndex].note,
           });
-          state.trainingDays[state.trainingDayIndex].latestDate = dateToday;
+          if (!state.trainingDays[state.trainingDayIndex].dates) {
+            state.trainingDays[state.trainingDayIndex].dates = [];
+          }
+          state.trainingDays[state.trainingDayIndex].dates?.push(dateToday);
         }
       }
     })

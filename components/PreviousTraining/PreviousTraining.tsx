@@ -22,7 +22,7 @@ export const PreviousTraining = ({ exerciseIndex, activeSetIndex }: PreviousTrai
   const receivedPreviousTraining = useMemo(() => getPreviousTrainingFn(exerciseIndex), [exerciseIndex, getPreviousTrainingFn]);
   const { t } = useTranslation();
   const { textDisabled, componentBackgroundColor, mainColor, secondaryColor, inputFieldBackgroundColor } = useTheme();
-  const ref = useBottomSheetRef();
+  const [ref] = useBottomSheetRef();
   const mappedData = useMemo(
     () =>
       receivedPreviousTraining?.vals.map(({ weight, reps }, index) => {

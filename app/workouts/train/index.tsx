@@ -37,7 +37,7 @@ export function Train() {
   const navigate = useNavigate();
   const getNumberOfSetsWithIndex = useAppSelector(getSpecificNumberOfSets);
   const confirmButtonOpacity = useRef(new Animated.Value(0)).current;
-  const ref = useBottomSheetRef();
+  const [ref] = useBottomSheetRef();
 
   const isDone = useMemo(() => {
     const hasEntryForEveryExercise = doneSetsThisExercise.size === (trainingDay?.exercises.length ?? -1);

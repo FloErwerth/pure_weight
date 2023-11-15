@@ -54,8 +54,8 @@ export function Create() {
   const [workoutName, setWorkoutName] = useState(editedDay?.name);
   const [createdExercises, setCreatedExercises] = useState<ExerciseMetaDataWithDoneEntries>(editedDay?.exercises.map((exercise) => exercise) ?? []);
   const dispatch = useAppDispatch();
-  const alertRef = useBottomSheetRef();
-  const addRef = useBottomSheetRef();
+  const [alertRef] = useBottomSheetRef();
+  const [addRef] = useBottomSheetRef();
 
   useEffect(() => {
     setWorkoutName(editedDay?.name);

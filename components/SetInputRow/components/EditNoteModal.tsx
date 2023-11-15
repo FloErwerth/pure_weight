@@ -1,26 +1,25 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { ThemedButtomSheetModal, useBottomSheetRef } from "../../BottomSheetModal/ThemedButtomSheetModal";
-import { TextInput } from "react-native";
-import { Button } from "../../Themed/Button/Button";
+import { Pressable, TextInput } from "react-native";
 import { HStack } from "../../Stack/HStack/HStack";
 import { VStack } from "../../Stack/VStack/VStack";
-import { borderRadius } from "../../../theme/border";
 import { ThemedTextInput } from "../../Themed/ThemedTextInput/ThemedTextInput";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "../../../theme/context";
+import { styles } from "./styles";
+import { Text } from "../../Themed/ThemedText/Text";
 
 interface EditNoteModalProps {
-  showModal: boolean;
   note?: string;
   onDoneEdit?: (note?: string) => void;
   onCancel: () => void;
 }
-export const EditNoteModal = ({ showModal, note, onDoneEdit, onCancel }: EditNoteModalProps) => {
+export const EditNoteModal = ({ note, onDoneEdit, onCancel }: EditNoteModalProps) => {
   const [internalNote, setInternalNote] = useState(note);
   const inputRef = useRef<TextInput>(null);
   const { t } = useTranslation();
-  const { backgroundColor, secondaryColor } = useTheme();
-  const ref = useBottomSheetRef();
+  const { secondaryColor } = useTheme();
+  const [ref] = useBottomSheetRef();
 
   const handleSetNote = useCallback((note: string) => {
     setInternalNote(note);
@@ -30,17 +29,12 @@ export const EditNoteModal = ({ showModal, note, onDoneEdit, onCancel }: EditNot
     onDoneEdit?.(internalNote);
   }, [internalNote, onDoneEdit]);
 
-  useEffect(() => {
-    if (showModal) {
-      inputRef.current?.focus();
-    }
-  }, [showModal]);
-
   return (
     <ThemedButtomSheetModal title={t("edit_note_title")} onRequestClose={onCancel} ref={ref}>
-      <VStack style={{ backgroundColor, borderRadius, gap: 15 }}>
+      <VStack background style={styles.wrapper}>
         <ThemedTextInput
-          style={{ height: 140, padding: 10, borderRadius }}
+          autoFocus
+          style={styles.textInput}
           multiline={true}
           reference={inputRef}
           onChangeText={handleSetNote}
@@ -48,8 +42,10 @@ export const EditNoteModal = ({ showModal, note, onDoneEdit, onCancel }: EditNot
           placeholderTextColor={secondaryColor}
           placeholder={t("edit_note_placeholder")}
         />
-        <HStack style={{ justifyContent: "flex-end" }}>
-          <Button style={{ button: { width: 100 } }} title={t("edit_note_done")} onPress={handlePressDone} />
+        <HStack style={styles.stack}>
+          <Pressable style={styles.pressable} onPress={handlePressDone}>
+            <Text>{t("edit_note_done")}</Text>
+          </Pressable>
         </HStack>
       </VStack>
     </ThemedButtomSheetModal>

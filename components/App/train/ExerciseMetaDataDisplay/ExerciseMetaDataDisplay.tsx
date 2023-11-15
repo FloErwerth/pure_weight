@@ -56,7 +56,7 @@ export const SmallMetadataDisplay = ({ style, exerciseMetaData }: SmallMetadataD
 export const ExerciseMetaDataDisplay = ({ exerciseIndex, exerciseMetaData }: ExerciseMetaDataDisplayProps) => {
   const selectedTraining = useAppSelector(getSelectedTrainingDay);
   const dispatch = useAppDispatch();
-  const addExerciseRef = useBottomSheetRef();
+  const [addExerciseRef] = useBottomSheetRef();
 
   const handleShowModal = useCallback(() => {
     void Haptics.selectionAsync();

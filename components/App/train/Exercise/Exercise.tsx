@@ -43,7 +43,7 @@ const useGeneratedSetData = (exerciseIndex: number) => {
 
 export const Exercise = ({ exerciseIndex, onSetDone }: Exercise) => {
   const [currentSetIndex, setCurrentSetIndex] = useState<number>(0);
-  const editNoteModalRef = useBottomSheetRef();
+  const [editNoteModalRef, open, close] = useBottomSheetRef();
   const showEditNoteModalTitleStyle = useMemo(() => ({ padding: 10, paddingHorizontal: 15, alignSelf: "center" }) as const, []);
   const { mainColor, componentBackgroundColor } = useTheme();
   const [metaData, doneSets, setDoneSets] = useGeneratedSetData(exerciseIndex);
@@ -51,12 +51,12 @@ export const Exercise = ({ exerciseIndex, onSetDone }: Exercise) => {
   const [activeSetIndex, setActiveSetIndex] = useState(0);
   const id = useId();
   const hideNoteModal = useCallback(() => {
-    editNoteModalRef.current?.close();
-  }, [editNoteModalRef]);
+    close();
+  }, [close]);
 
   const showNoteModal = useCallback(() => {
-    editNoteModalRef.current?.present();
-  }, [editNoteModalRef]);
+    open();
+  }, [open]);
 
   const handleSetDone = useCallback(
     (data: PlainExerciseData, index: number) => {

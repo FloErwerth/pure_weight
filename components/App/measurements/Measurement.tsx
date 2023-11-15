@@ -31,7 +31,7 @@ export const RenderedMeasurement = ({ index, measurement }: MeasurementProps) =>
   const textStyle = useMemo(() => [styles.text, { color: mainColor }], [mainColor]);
   const language = useAppSelector(getLanguage);
   const progress = useAppSelector((state: AppState) => getMeasurmentProgress(state, index));
-  const reference = useBottomSheetRef();
+  const [reference] = useBottomSheetRef();
 
   const handleNavigateToChart = useCallback(() => {
     if (active) {

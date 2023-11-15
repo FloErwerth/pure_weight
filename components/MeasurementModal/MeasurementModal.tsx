@@ -165,7 +165,6 @@ export const MeasurementModal = ({ onRequestClose, reference, isNewMeasurement =
               themeVariant={themeKey}
               style={styles.calendar}
               onChange={(_, date) => handleAddMeasurementData("date", date)}
-              removeClippedSubviews={true}
               value={measurement?.date ?? new Date(getDateTodayIso())}
             />
           </Animated.View>

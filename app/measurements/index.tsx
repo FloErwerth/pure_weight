@@ -30,19 +30,13 @@ export function Measurements() {
   const [isNewMeasurement, setIsNewMeasurement] = useState(false);
   const dispatch = useAppDispatch();
   const [showToast, setShowToast] = useState(false);
-  const ref = useBottomSheetRef();
-
-  const handleOpenModal = useCallback(() => {
-    if (ref.current) {
-      ref.current.present();
-    }
-  }, [ref]);
+  const [ref, open, close] = useBottomSheetRef();
 
   const handleAddNewMeasurement = useCallback(() => {
     setIsNewMeasurement(true);
     setCurrentMeasurement(emptyMeasurement);
-    handleOpenModal();
-  }, [handleOpenModal]);
+    open();
+  }, [open]);
 
   const reset = useCallback(() => {
     setCurrentMeasurement(emptyMeasurement);
@@ -51,11 +45,9 @@ export function Measurements() {
   }, [dispatch]);
 
   const handleCloseModal = useCallback(() => {
-    if (ref.current) {
-      ref.current.dismiss();
-      reset();
-    }
-  }, [ref, reset]);
+    close();
+    reset();
+  }, [close, reset]);
 
   const handleConfirmMeasurementModal = useCallback(() => {
     const { measurement, index } = currentMeasurement;
@@ -87,10 +79,10 @@ export function Measurements() {
         },
         index,
       });
-      handleOpenModal();
+      open();
       setIsNewMeasurement(false);
     },
-    [handleOpenModal],
+    [open],
   );
 
   const handleDeleteMeasurement = useCallback(

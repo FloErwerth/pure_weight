@@ -19,6 +19,9 @@ export const Routes = {
   settings: {
     screen: "profile/settings/index",
   },
+  history: {
+    screen: "profile/workoutHistory/index",
+  },
   profile: {
     screen: "tabs",
   },

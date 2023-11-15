@@ -22,6 +22,7 @@ export function Profile() {
       <SiteNavigationButtons title={t("profile")} />
       <PageContent style={{ gap: 10 }}>
         <ProfileSection onPress={() => handleNavigation("settings")} title={t("settings")} />
+        <ProfileSection onPress={() => handleNavigation("history")} title={t("history")} />
       </PageContent>
     </ThemedView>
   );

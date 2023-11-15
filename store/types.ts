@@ -2,9 +2,9 @@ import { IsoDate } from "../types/date";
 import { ThemeKey } from "../theme/types";
 import { Measurement } from "../components/App/measurements/types";
 
-export type TrainingDay = {
+export type Workout = {
   name: string;
-  latestDate?: string;
+  dates?: IsoDate[];
   exercises: ExerciseMetaDataWithDoneEntries;
 };
 
@@ -34,7 +34,7 @@ export type ExerciseMetaData = {
 export type ErrorFields = "create_name" | "create_weight" | "create_sets" | "create_reps" | "workout_name" | "create_exercises_empty" | "measurement_name" | "measurement_unit" | "measurement_value";
 
 export type AppState = {
-  trainingDays: TrainingDay[];
+  trainingDays: Workout[];
   trainingDayIndex: number | undefined;
   setIndex: number;
   exerciseIndex: number;
@@ -44,10 +44,10 @@ export type AppState = {
   };
   latestDeletions: {
     measurement?: { index: number; data: Measurement };
-    trainingDay?: { index: number; data: TrainingDay; exercise?: { index: number; data: ExerciseMetaDataWithDoneEntries } };
+    trainingDay?: { index: number; data: Workout; exercise?: { index: number; data: ExerciseMetaDataWithDoneEntries } };
   };
   measurements: Measurement[];
   errors: ErrorFields[];
   theme: ThemeKey;
-  appInstallEpochMilliseconds?: number;
+  appInstallDate?: IsoDate;
 };

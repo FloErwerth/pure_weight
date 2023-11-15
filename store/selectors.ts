@@ -2,6 +2,7 @@ import { createSelector } from "@reduxjs/toolkit";
 import { AppState, DoneExerciseData, ErrorFields, ExerciseMetaData } from "./types";
 import { getDate } from "../utils/date";
 import { IsoDate } from "../types/date";
+import { Temporal } from "@js-temporal/polyfill";
 
 export const getSetIndex = (state: AppState) => state.setIndex ?? 0;
 export const getExerciseIndex = (state: AppState) => state.exerciseIndex;
@@ -11,7 +12,7 @@ export const getTrainingIndex = (state: AppState) => state.trainingDayIndex;
 export const getErrors = (state: AppState) => state.errors;
 export const getIsFirstTimeRendered = (state: AppState) => state.isFirstTimeRendered;
 export const getMeasurements = (state: AppState) => state.measurements;
-export const getAppInstallTime = (state: AppState) => state.appInstallEpochMilliseconds;
+export const getAppInstallDate = (state: AppState) => state.appInstallDate;
 
 export const getLatestMeasurements = createSelector([getMeasurements], (measurements) =>
   measurements.map(({ data }) => {
@@ -61,6 +62,25 @@ export const getMeasurmentProgress = createSelector([getMeasurements, (byIndex, 
 });
 
 export const getSavedTrainings = (state: AppState) => state.trainingDays;
+export const getWorkoutDates = createSelector([getSavedTrainings], (workouts) => {
+  const dates: IsoDate[] = [];
+  workouts.forEach((workout) => {
+    workout.dates?.forEach((date) => {
+      if (!dates.includes(date)) {
+        dates.push(date);
+      }
+    });
+  });
+  return dates;
+});
+export const getLatestWorkoutDate = createSelector([getWorkoutDates], (dates) => {
+  return dates.sort(
+    (dateA, dateB) => Temporal.Instant.from(dateA.concat("T00:00+00:00") as string).epochMilliseconds - Temporal.Instant.from(dateB.concat("T00:00+00:00") as string).epochMilliseconds,
+  )[dates.length - 1];
+});
+export const getHistoryByDate = createSelector([getSavedTrainings, (trainings, date: IsoDate) => date], (trainings, date) => {
+  return trainings.filter((workout) => workout.dates?.includes(date));
+});
 export const getSelectedTrainingDayIndex = (state: AppState) => state.trainingDayIndex;
 export const getSelectedTrainingDay = createSelector([getSavedTrainings, getSelectedTrainingDayIndex], (trainings, index) => {
   if (index !== undefined) {

@@ -96,7 +96,7 @@ export const ExerciseChart = ({ exerciseName, data }: ExerciseChartProps) => {
   const [lineChartData] = useExerciseData(data, chartType);
   const { t } = useTranslation();
   const { mainColor, componentBackgroundColor } = useTheme();
-  const ref = useBottomSheetRef();
+  const [ref, open, close] = useBottomSheetRef();
 
   const getDotContent = useCallback(
     ({ x, y, indexData }: { x: number; y: number; index: number; indexData: number }) => {
@@ -112,12 +112,12 @@ export const ExerciseChart = ({ exerciseName, data }: ExerciseChartProps) => {
   );
 
   const openSelectionModal = useCallback(() => {
-    ref.current?.present();
-  }, [ref]);
+    open();
+  }, [open]);
 
   const closeSelectionModal = useCallback(() => {
-    ref.current?.close();
-  }, [ref]);
+    close();
+  }, [close]);
 
   const getXLabel = useCallback((xValue: string) => {
     return getDate(xValue as IsoDate);

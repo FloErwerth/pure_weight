@@ -3,6 +3,9 @@ import { isoDateDecoder } from "../decoders/date";
 import { IsoDate } from "../types/date";
 import * as Locale from "expo-localization";
 
+export const getDateToday = () => {
+  return Temporal.Now.plainDateISO();
+};
 export const getDateTodayIso = (): IsoDate => {
   const now = Temporal.Now.plainDateISO().toString();
   return isoDateDecoder.parse(now);

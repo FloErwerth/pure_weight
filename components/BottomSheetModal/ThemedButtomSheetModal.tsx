@@ -1,4 +1,4 @@
-import React, { forwardRef, PropsWithChildren, useMemo, useRef } from "react";
+import React, { forwardRef, PropsWithChildren, useCallback, useMemo, useRef } from "react";
 import { ViewStyle } from "react-native";
 import { Text } from "../Themed/ThemedText/Text";
 import { HStack } from "../Stack/HStack/HStack";
@@ -17,7 +17,17 @@ export interface ThemedBottomSheetModalProps extends PropsWithChildren {
 }
 
 export const useBottomSheetRef = () => {
-  return useRef<BottomSheetModal>(null);
+  const ref = useRef<BottomSheetModal>(null);
+
+  const handleOpen = useCallback(() => {
+    ref.current?.present();
+  }, []);
+
+  const handleClose = useCallback(() => {
+    ref.current?.close();
+  }, []);
+
+  return [ref, handleOpen, handleClose] as const;
 };
 
 const defaultSnapshots = ["50%", "50%", "100%"];
@@ -25,9 +35,9 @@ const renderBackdrop = (props: BottomSheetBackdropProps) => <BottomSheetBackdrop
 
 // eslint-disable-next-line react/display-name
 export const ThemedButtomSheetModal = forwardRef<BottomSheetModal, ThemedBottomSheetModalProps>(({ snapPoints, customContentStyle, children, title, onRequestClose }, ref) => {
-  const { mainColor } = useTheme();
+  const { mainColor, inputFieldBackgroundColor } = useTheme();
   const { top } = useSafeAreaInsets();
-  const defaultStyle = useMemo(() => [customContentStyle, styles.defaultContentStyle, { backgroundColor: "#111" }], [customContentStyle]);
+  const defaultStyle = useMemo(() => [customContentStyle, styles.defaultContentStyle, { backgroundColor: inputFieldBackgroundColor }], [customContentStyle, inputFieldBackgroundColor]);
 
   const combinedSnapshots = useMemo(() => {
     if (!snapPoints) {
