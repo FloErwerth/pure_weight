@@ -1,43 +1,11 @@
 import { createAction, createReducer } from "@reduxjs/toolkit/src";
-import type { AppState, DoneExerciseData, DoneWorkouts, ErrorFields, PlainExerciseData, Workout } from "./types";
+import type { AppState, ErrorFields, ExerciseMetaData, PlainExerciseData } from "./types";
 import { getDateTodayIso } from "../utils/date";
 import { ThemeKey } from "../theme/types";
 import { Measurement } from "../components/App/measurements/types";
 import { IsoDate } from "../types/date";
 import { convertMeasurements } from "../components/App/measurements/utils";
 
-const data: DoneExerciseData[] = [
-  {
-    date: "2023-01-01",
-    sets: [
-      { reps: "10", weight: "1" },
-      { reps: "10", weight: "1" },
-      { reps: "10", weight: "1" },
-      { reps: "10", weight: "1" },
-      { reps: "10", weight: "1" },
-    ],
-  },
-  {
-    date: "2023-01-02",
-    sets: [
-      { reps: "10", weight: "1" },
-      { reps: "10", weight: "1" },
-      { reps: "10", weight: "1" },
-      { reps: "10", weight: "1" },
-      { reps: "10", weight: "2" },
-    ],
-  },
-  {
-    date: "2023-01-03",
-    sets: [
-      { reps: "10", weight: "1" },
-      { reps: "10", weight: "1" },
-      { reps: "10", weight: "1" },
-      { reps: "10", weight: "1" },
-      { reps: "10", weight: "3" },
-    ],
-  },
-];
 export const mockState: AppState = {
   appInstallDate: "2023-09-01",
   measurements: [
@@ -64,133 +32,17 @@ export const mockState: AppState = {
     {
       name: "Brust 1",
       dates: ["2023-01-01"],
-      doneWorkouts: [
-        {
-          name: "Bankdrücken",
-          weight: "50",
-          sets: "5",
-          reps: "5",
-          pause: " 2",
-          doneExerciseEntries: data,
-        },
-        {
-          name: "Butterfly",
-          weight: "50",
-          sets: "5",
-          reps: "5",
-          pause: " 2",
-          doneExerciseEntries: data,
-        },
-        {
-          name: "Butterfly",
-          weight: "50",
-          sets: "5",
-          reps: "5",
-          pause: " 2",
-          doneExerciseEntries: data,
-        },
-        {
-          name: "Butterfly",
-          weight: "50",
-          sets: "5",
-          reps: "5",
-          pause: " 2",
-          doneExerciseEntries: data,
-        },
-        {
-          name: "Butterfly",
-          weight: "50",
-          sets: "5",
-          reps: "5",
-          pause: " 2",
-          doneExerciseEntries: data,
-        },
-        {
-          name: "Butterfly",
-          weight: "50",
-          sets: "5",
-          reps: "5",
-          pause: " 2",
-          doneExerciseEntries: data,
-        },
-        {
-          name: "Butterfly",
-          weight: "50",
-          sets: "5",
-          reps: "5",
-          pause: " 2",
-          doneExerciseEntries: data,
-        },
-        {
-          name: "Butterfly",
-          weight: "50",
-          sets: "5",
-          reps: "5",
-          pause: " 2",
-          doneExerciseEntries: data,
-        },
-        {
-          name: "Butterfly",
-          weight: "50",
-          sets: "5",
-          reps: "5",
-          pause: " 2",
-          doneExerciseEntries: data,
-        },
-        {
-          name: "Butterfly",
-          weight: "50",
-          sets: "5",
-          reps: "5",
-          pause: " 2",
-          doneExerciseEntries: data,
-        },
-      ],
+      exercises: [{ name: "Bankdrücken", weight: "50", sets: "5", pause: "2", reps: "5" }],
+      doneWorkouts: [{ date: "2023-01-01", duration: "120", doneExercises: [{ name: "Bankdrücken", sets: [{ reps: "5", weight: "50" }], note: "" }] }],
     },
     {
       name: "Brust 2",
-      dates: ["2023-11-01", "2023-11-02", "2023-11-03", "2023-12-11"],
-      doneWorkouts: [
-        {
-          name: "Butterfly",
-          weight: "50",
-          sets: "5",
-          reps: "5",
-          pause: " 2",
-          doneExerciseEntries: [
-            {
-              date: "2023-01-01",
-              sets: [
-                { reps: "10", weight: "1" },
-                { reps: "10", weight: "1" },
-                { reps: "10", weight: "1" },
-                { reps: "10", weight: "1" },
-                { reps: "10", weight: "1" },
-              ],
-            },
-            {
-              date: "2023-01-02",
-              sets: [
-                { reps: "10", weight: "1" },
-                { reps: "10", weight: "1" },
-                { reps: "10", weight: "1" },
-                { reps: "10", weight: "1" },
-                { reps: "10", weight: "2" },
-              ],
-            },
-            {
-              date: "2023-01-03",
-              sets: [
-                { reps: "10", weight: "1" },
-                { reps: "10", weight: "1" },
-                { reps: "10", weight: "1" },
-                { reps: "10", weight: "1" },
-                { reps: "10", weight: "3" },
-              ],
-            },
-          ],
-        },
+      dates: ["2023-01-01"],
+      exercises: [
+        { name: "Bankdrücken", weight: "50", sets: "5", pause: "2", reps: "5" },
+        { name: "Butterfly", weight: "42.5", sets: "4", pause: "2", reps: "8" },
       ],
+      doneWorkouts: [{ date: "2023-01-01", duration: "120", doneExercises: [{ name: "Bankdrücken", sets: [{ reps: "5", weight: "50" }], note: "" }] }],
     },
   ],
   latestDeletions: {},
@@ -217,9 +69,9 @@ export const setTheme = createAction<ThemeKey>("theme_set");
 export const setMockState = createAction("set_mock_state");
 export const setFirstTimeRendered = createAction<boolean>("set_greeting");
 export const setState = createAction<AppState>("set_state");
-export const addTrainingDay = createAction<Workout>("add_training_day");
-export const editTrainingDay = createAction<{ trainingDay: Workout }>("edit_training_day");
-export const overwriteTrainingDayExercises = createAction<DoneWorkouts>("adjust_exercises");
+export const addTrainingDay = createAction<{ name: string; exercises: ExerciseMetaData[] }>("add_training_day");
+export const editTrainingDay = createAction<{ name: string; exercises: ExerciseMetaData[] }>("edit_training_day");
+export const overwriteTrainingDayExercises = createAction<ExerciseMetaData[]>("adjust_exercises");
 export const removeTrainingDay = createAction<number>("remove_training_day");
 export const setTrainingDayIndex = createAction<number | undefined>("edit_day");
 export const addSetDataToTrainingDay = createAction<Array<{ note?: string; sets: Array<PlainExerciseData> }>>("set_training_data");
@@ -296,18 +148,19 @@ export const storeReducer = createReducer<AppState>(emptyState, (builder) =>
     })
     .addCase(overwriteTrainingDayExercises, (state, action) => {
       if (state.trainingDayIndex) {
-        state.trainingDays[state.trainingDayIndex].doneWorkouts = action.payload;
+        state.trainingDays[state.trainingDayIndex].exercises = action.payload;
       }
     })
     .addCase(addTrainingDay, (state, action) => {
-      state.trainingDays.push(action.payload);
+      state.trainingDays.push({ name: action.payload.name, exercises: action.payload.exercises, doneWorkouts: [] });
     })
     .addCase(setFirstTimeRendered, (state, action) => {
       state.isFirstTimeRendered = action.payload;
     })
-    .addCase(editTrainingDay, (state, action) => {
+    .addCase(editTrainingDay, (state, { payload: { name, exercises } }) => {
       if (state.trainingDayIndex) {
-        state.trainingDays.splice(state.trainingDayIndex, 1, action.payload.trainingDay);
+        const editedDay = state.trainingDays[state.trainingDayIndex];
+        state.trainingDays.splice(state.trainingDayIndex, 1, { ...editedDay, exercises, name });
       }
     })
     .addCase(removeTrainingDay, (state, action) => {
@@ -322,14 +175,14 @@ export const storeReducer = createReducer<AppState>(emptyState, (builder) =>
     .addCase(addSetDataToTrainingDay, (state, action) => {
       if (state.trainingDays && state.trainingDayIndex !== undefined && state.exerciseIndex !== undefined) {
         const dateToday = getDateTodayIso();
-        for (let exerciseIndex = 0; exerciseIndex < state.trainingDays[state.trainingDayIndex].doneWorkouts.length; exerciseIndex++) {
+        for (let exerciseIndex = 0; exerciseIndex < state.trainingDays[state.trainingDayIndex].doneWorkouts?.length; exerciseIndex++) {
           if (action.payload[exerciseIndex] === undefined) {
             return;
           }
 
-          const existingData = state.trainingDays[state.trainingDayIndex]?.doneWorkouts[exerciseIndex]?.doneExerciseEntries;
+          const existingData = state.trainingDays[state.trainingDayIndex]?.doneWorkouts[exerciseIndex]?.doneExercises;
           (existingData ?? []).push({
-            date: dateToday,
+            name: state.trainingDays[state.trainingDayIndex]?.exercises[exerciseIndex].name,
             sets: action.payload[exerciseIndex].sets,
             note: action.payload[exerciseIndex].note,
           });

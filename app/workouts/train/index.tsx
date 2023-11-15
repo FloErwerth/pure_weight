@@ -32,7 +32,7 @@ export function Train() {
   const { t } = useTranslation();
   const trainingDay = useAppSelector(getSelectedTrainingDay);
   const [showModal, setShowAlert] = useState(false);
-  const [doneSetsThisExercise, setDoneSetsThisExercise] = useState<DoneExercises>(new Map());
+  const [doneExercises, setDoneExercises] = useState<DoneExercises>(new Map());
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const getNumberOfSetsWithIndex = useAppSelector(getSpecificNumberOfSets);
@@ -40,18 +40,18 @@ export function Train() {
   const [ref] = useBottomSheetRef();
 
   const isDone = useMemo(() => {
-    const hasEntryForEveryExercise = doneSetsThisExercise.size === (trainingDay?.doneWorkouts.length ?? -1);
+    const hasEntryForEveryExercise = doneExercises.size === (trainingDay?.exercises.length ?? -1);
     if (!hasEntryForEveryExercise) {
       return false;
     }
     let hasEnoughSets = true;
-    doneSetsThisExercise.forEach((exercise, index) => {
+    doneExercises.forEach((exercise, index) => {
       if (exercise.sets.size !== getNumberOfSetsWithIndex(index)) {
         hasEnoughSets = false;
       }
     });
     return hasEnoughSets;
-  }, [doneSetsThisExercise, getNumberOfSetsWithIndex, trainingDay?.doneWorkouts.length]);
+  }, [doneExercises, getNumberOfSetsWithIndex, trainingDay?.exercises.length]);
 
   useEffect(() => {
     if (isDone) {
@@ -64,17 +64,17 @@ export function Train() {
   }, [isDone]);
 
   const handleSaveTrainingData = useCallback(() => {
-    const doneSetsArray = mapOfMapsTo2DArray(doneSetsThisExercise);
+    const doneSetsArray = mapOfMapsTo2DArray(doneExercises);
     dispatch(addSetDataToTrainingDay(doneSetsArray));
-  }, [dispatch, doneSetsThisExercise]);
+  }, [dispatch, doneExercises]);
 
   const handleReset = useCallback(() => {
     dispatch(setExerciseIndex(0));
     dispatch(setTrainingDayIndex(undefined));
     dispatch(setSetIndex(0));
-    setDoneSetsThisExercise(new Map());
+    setDoneExercises(new Map());
     navigate("workouts");
-  }, [dispatch, navigate, setDoneSetsThisExercise]);
+  }, [dispatch, navigate, setDoneExercises]);
 
   const handleDone = useCallback(() => {
     handleSaveTrainingData();
@@ -100,23 +100,23 @@ export function Train() {
 
   const handleSetDone = useCallback(
     (exerciseIndex: number, setIndex: number, data: PlainExerciseData) => {
-      const newDoneSets = new Map(doneSetsThisExercise.entries());
+      const newDoneSets = new Map(doneExercises.entries());
       const newSetMap = new Map(newDoneSets.get(exerciseIndex)?.sets);
       newSetMap.set(setIndex, data);
       newDoneSets.set(exerciseIndex, { note: newDoneSets.get(exerciseIndex)?.note, sets: newSetMap });
-      setDoneSetsThisExercise(newDoneSets);
+      setDoneExercises(newDoneSets);
     },
-    [doneSetsThisExercise],
+    [doneExercises],
   );
 
   const handleSaveNote = useCallback(
     (exerciseIndex: number, note: string | undefined) => {
-      const newDoneExercises = new Map(doneSetsThisExercise.entries());
+      const newDoneExercises = new Map(doneExercises.entries());
       const existingSets = newDoneExercises.get(exerciseIndex)?.sets;
       newDoneExercises.set(exerciseIndex, { note, sets: existingSets ?? new Map() });
-      setDoneSetsThisExercise(newDoneExercises);
+      setDoneExercises(newDoneExercises);
     },
-    [doneSetsThisExercise],
+    [doneExercises],
   );
 
   const buttonsStyle = useMemo(() => [trainStyles.buttons, { marginBottom: bottom }], [bottom]);
@@ -127,7 +127,7 @@ export function Train() {
       navigate("workouts");
       return [] as { index: number }[];
     }
-    return trainingDay.doneWorkouts.map((_, index) => ({
+    return trainingDay.exercises.map((_, index) => ({
       index,
     }));
   }, [navigate, trainingDay]);
@@ -146,7 +146,7 @@ export function Train() {
     [dispatch],
   );
 
-  const contextValue = useMemo(() => ({ doneSetsThisExercise, handleSaveNote }), [doneSetsThisExercise, handleSaveNote]);
+  const contextValue = useMemo(() => ({ doneSetsThisExercise: doneExercises, handleSaveNote }), [doneExercises, handleSaveNote]);
 
   return (
     <ThemedView background style={trainStyles.wrapper} stretch>

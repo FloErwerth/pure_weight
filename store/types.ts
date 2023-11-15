@@ -5,6 +5,7 @@ import { Measurement } from "../components/App/measurements/types";
 export type Workout = {
   name: string;
   dates?: IsoDate[];
+  exercises: ExerciseMetaData[];
   doneWorkouts: DoneWorkouts;
 };
 
@@ -13,10 +14,10 @@ export type PlainExerciseData = {
   reps: string;
 };
 
-export type DoneWorkouts = ({ doneExerciseEntries: DoneExerciseData[] } & ExerciseMetaData)[];
+export type DoneWorkouts = { date: IsoDate; duration: string; doneExercises: DoneExerciseData[] }[];
 
 export type DoneExerciseData = {
-  date: IsoDate;
+  name: string;
   sets: ExerciseSets;
   note?: string;
 };

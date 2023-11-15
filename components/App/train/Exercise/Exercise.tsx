@@ -14,7 +14,7 @@ import { TrainingHeader } from "../TrainingHeader/TrainingHeader";
 import { SetInputRow } from "../../../SetInputRow/SetInputRow";
 import * as Haptics from "expo-haptics";
 import { useAppSelector } from "../../../../store";
-import { getSpecificMetaData, getSpecificNumberOfSets } from "../../../../store/selectors";
+import { getExerciseMetaDataByIndex, getSpecificNumberOfSets } from "../../../../store/selectors";
 import { useBottomSheetRef } from "../../../BottomSheetModal/ThemedButtomSheetModal";
 
 interface Exercise {
@@ -25,7 +25,7 @@ interface Exercise {
 }
 const useGeneratedSetData = (exerciseIndex: number) => {
   const getNumberOfSets = useAppSelector(getSpecificNumberOfSets);
-  const metaData = useAppSelector((state: AppState) => getSpecificMetaData(state, exerciseIndex));
+  const metaData = useAppSelector((state: AppState) => getExerciseMetaDataByIndex(state, exerciseIndex));
   const numberOfSets = useMemo(() => getNumberOfSets(exerciseIndex), [exerciseIndex, getNumberOfSets]);
   const generatedSets = useMemo(() => {
     const map = new Map<number, PlainExerciseData & { filled: boolean }>();

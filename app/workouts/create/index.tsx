@@ -1,7 +1,7 @@
 import { Text } from "../../../components/Themed/ThemedText/Text";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "../../../hooks/navigate";
-import { DoneWorkouts, ExerciseMetaData } from "../../../store/types";
+import { ExerciseMetaData } from "../../../store/types";
 import { useAppDispatch, useAppSelector } from "../../../store";
 import { addTrainingDay, cleanErrors, editTrainingDay, overwriteTrainingDayExercises, setError, setTrainingDayIndex } from "../../../store/reducer";
 import { AddButton } from "../../../components/AddButton/AddButton";
@@ -22,7 +22,7 @@ import { PageContent } from "../../../components/PageContent/PageContent";
 import { ThemedView } from "../../../components/Themed/ThemedView/View";
 import { useBottomSheetRef } from "../../../components/BottomSheetModal/ThemedButtomSheetModal";
 import { AddExerciseModal } from "../../../components/AddExerciseModal/AddExerciseModal";
-import { EditedExercise, emptyExercise } from "../../../components/App/create/context";
+import { emptyExercise } from "../../../components/App/create/context";
 
 function getAreValuesEmpty(exercise: ExerciseMetaData) {
   const values = Object.values(exercise);
@@ -49,17 +49,17 @@ export function Create() {
   const [alertConfig, setAlertConfig] = useState<AlertConfig | undefined>(undefined);
   const editedDay = useAppSelector(getSelectedTrainingDay);
   const title = useMemo(() => (editedDay ? t("edit_workout") : t("create_workout")), [editedDay, t]);
-  const [editedExercise, setEditedExercise] = useState<EditedExercise>(emptyExercise);
+  const [editedExercise, setEditedExercise] = useState<ExerciseMetaData>(emptyExercise);
   const [editedExerciseIndex, setEditedExerciseIndex] = useState<number | undefined>(undefined);
   const [workoutName, setWorkoutName] = useState(editedDay?.name);
-  const [createdExercises, setCreatedExercises] = useState<DoneWorkouts>(editedDay?.doneWorkouts.map((exercise) => exercise) ?? []);
+  const [createdExercises, setCreatedExercises] = useState<ExerciseMetaData[]>(editedDay?.exercises.map((exercise) => exercise) ?? []);
   const dispatch = useAppDispatch();
   const [alertRef] = useBottomSheetRef();
   const [addRef] = useBottomSheetRef();
 
   useEffect(() => {
     setWorkoutName(editedDay?.name);
-    setCreatedExercises(editedDay?.doneWorkouts ?? []);
+    setCreatedExercises(editedDay?.exercises ?? []);
   }, [editedDay]);
 
   const handleSetWorkoutName = useCallback((value?: string) => {
@@ -128,7 +128,7 @@ export function Create() {
       const handleOnConfirmEdit = (exercise: ExerciseMetaData) => {
         if (exercise.sets && exercise.name && exercise.weight && exercise.reps) {
           const newExercises = [...createdExercises];
-          newExercises.splice(index, 1, { doneExerciseEntries: createdExercises[index].doneExerciseEntries, ...exercise });
+          newExercises.splice(index, 1, exercise);
           setCreatedExercises(newExercises);
           setEditedExerciseIndex(undefined);
           addRef.current?.close();
@@ -178,9 +178,9 @@ export function Create() {
       return;
     }
     if (editedDay) {
-      dispatch(editTrainingDay({ trainingDay: { name: workoutName ?? editedDay.name, doneWorkouts: createdExercises } }));
+      dispatch(editTrainingDay({ name: workoutName ?? editedDay.name, exercises: createdExercises }));
     } else {
-      dispatch(addTrainingDay({ name: workoutName ?? "", doneWorkouts: createdExercises }));
+      dispatch(addTrainingDay({ name: workoutName ?? "", exercises: createdExercises }));
     }
     handleNavigateHome();
   }, [workoutName, createdExercises, editedDay, handleNavigateHome, dispatch]);
@@ -204,11 +204,11 @@ export function Create() {
 
   const handleOnDragEnd = useCallback(
     ({ data }: { data: MappedExercises[] }) => {
-      const newExercises = data.map((dataPoint, index) => ({ ...dataPoint.exercise, doneExerciseEntries: createdExercises[index].doneExerciseEntries }));
+      const newExercises = data.map((dataPoint) => dataPoint.exercise);
       setCreatedExercises(newExercises);
       dispatch(overwriteTrainingDayExercises(newExercises));
     },
-    [createdExercises, dispatch],
+    [dispatch],
   );
 
   const handleEditExercise = useCallback(

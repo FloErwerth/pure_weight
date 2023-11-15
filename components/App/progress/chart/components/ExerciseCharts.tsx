@@ -1,5 +1,5 @@
 import { View } from "react-native";
-import { DoneExerciseData, ExerciseSets, PlainExerciseData } from "../../../../../store/types";
+import { ExerciseSets, PlainExerciseData } from "../../../../../store/types";
 import { useCallback, useMemo, useState } from "react";
 import { borderRadius } from "../../../../../theme/border";
 import { LineChartData } from "react-native-chart-kit/dist/line-chart/LineChart";
@@ -21,7 +21,7 @@ import { ThemedPressable } from "../../../../Themed/Pressable/Pressable";
 
 interface ExerciseChartProps {
   exerciseName: string;
-  data: DoneExerciseData[];
+  data: { date: IsoDate; sets: ExerciseSets }[];
 }
 
 const chartTypeMap: Record<string, { title: string; hint: string }> = {
@@ -53,7 +53,7 @@ const getAveragePerDay = (data: ExerciseSets[], dataType: keyof PlainExerciseDat
   }, [] as number[]);
 };
 
-const useExerciseData = (exerciseData: DoneExerciseData[], chartType: ChartType) => {
+const useExerciseData = (exerciseData: { date: IsoDate; sets: ExerciseSets }[], chartType: ChartType) => {
   const { mainColor } = useTheme();
   const labels = useMemo(() => {
     return exerciseData.map(({ date }) => date);
@@ -178,8 +178,8 @@ export default function Charts() {
 
   return (
     <ThemedScrollView>
-      {trainingDayData.map(({ exerciseName, data }) => (
-        <ExerciseChart key={Math.random() * 100} exerciseName={exerciseName} data={data} />
+      {trainingDayData.map(({ exerciseName, exerciseData }) => (
+        <ExerciseChart key={Math.random() * 100} exerciseName={exerciseName} data={exerciseData} />
       ))}
     </ThemedScrollView>
   );

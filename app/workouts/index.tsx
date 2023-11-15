@@ -93,30 +93,43 @@ export function Workouts() {
     setShowToast(false);
   }, [dispatch]);
 
+  const renderItem = useCallback(
+    ({
+      item: { handleNavigateToProgress, workoutName, key, onEdit, onDelete, onClick, overallTrainingData },
+    }: {
+      item: {
+        handleNavigateToProgress: () => void;
+        workoutName: string;
+        key: string;
+        onEdit: () => void;
+        onDelete: () => void;
+        onClick: () => void;
+        overallTrainingData: { name: string; percent: number } | undefined;
+      };
+    }) => {
+      return (
+        <Swipeable onEdit={onEdit} onDelete={onDelete} onClick={onClick} key={key}>
+          <HStack style={styles.trainWrapper}>
+            <Text style={styles.title}>{workoutName}</Text>
+            <ThemedMaterialCommunityIcons ghost name="chevron-right" size={30} />
+          </HStack>
+          {overallTrainingData && (
+            <View style={styles.progressWrapper}>
+              <ProgressDisplay type="Workout" onPress={handleNavigateToProgress} name={overallTrainingData.name} percent={overallTrainingData.percent} />
+            </View>
+          )}
+        </Swipeable>
+      );
+    },
+    [],
+  );
+
   return (
     <ThemedView background style={styles.view}>
       <View style={styles.vStack}>
         <SiteNavigationButtons title={t("workouts")} handleConfirmIcon={confirmIcon} handleConfirm={handlePress} />
         <PageContent>
-          <FlatList
-            decelerationRate="normal"
-            keyExtractor={(item) => item.key}
-            style={styles.savedTrainings}
-            data={mappedTrainings}
-            renderItem={({ item: { handleNavigateToProgress, workoutName, key, onEdit, onDelete, onClick, overallTrainingData } }) => (
-              <Swipeable onEdit={onEdit} onDelete={onDelete} onClick={onClick} key={key}>
-                <HStack style={styles.trainWrapper}>
-                  <Text style={styles.title}>{workoutName}</Text>
-                  <ThemedMaterialCommunityIcons ghost name="chevron-right" size={30} />
-                </HStack>
-                {overallTrainingData && (
-                  <View style={styles.progressWrapper}>
-                    <ProgressDisplay type="Workout" onPress={handleNavigateToProgress} name={overallTrainingData.name} percent={overallTrainingData.percent} />
-                  </View>
-                )}
-              </Swipeable>
-            )}
-          ></FlatList>
+          <FlatList decelerationRate="normal" keyExtractor={(item) => item.key} style={styles.savedTrainings} data={mappedTrainings} renderItem={renderItem}></FlatList>
         </PageContent>
       </View>
       <BottomToast onRequestClose={() => setShowToast(false)} open={showToast} messageKey={"workout_deleted_message"} titleKey={"workout_deleted_title"} onRedo={handleRecoverWorkout} />

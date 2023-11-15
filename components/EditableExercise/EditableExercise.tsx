@@ -13,12 +13,12 @@ import { EditableExerciseInputRow } from "./EditableExerciseInputRow";
 import { Text } from "../Themed/ThemedText/Text";
 import { useTheme } from "../../theme/context";
 import { ThemedView } from "../Themed/ThemedView/View";
-import { EditedExercise, emptyExercise } from "../App/create/context";
+import { emptyExercise } from "../App/create/context";
 
 export interface EditableExerciseProps {
   onConfirmEdit: (exercise: ExerciseMetaData) => void;
   theme?: EditableExerciseTheme;
-  editedExercise?: EditedExercise;
+  editedExercise?: ExerciseMetaData;
   handleEditExercise?: (field: keyof ExerciseMetaData, value: string) => void;
 }
 
