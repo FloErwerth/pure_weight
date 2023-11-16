@@ -3,7 +3,7 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "../../hooks/navigate";
 import { useAppDispatch, useAppSelector } from "../../store";
 import { getLanguage, getOverallTrainingTrend, getSavedTrainings } from "../../store/selectors";
-import { cleanErrors, recoverWorkout, removeTrainingDay, setExerciseIndex, setSetIndex, setTrainingDayIndex } from "../../store/reducer";
+import { cleanErrors, recoverWorkout, removeTrainingDay, setExerciseIndex, setSetIndex, setTrainingDayIndex, startTraining } from "../../store/reducer";
 import { styles } from "../../components/App/index/styles";
 import { SiteNavigationButtons } from "../../components/SiteNavigationButtons/SiteNavigationButtons";
 import { useTranslation } from "react-i18next";
@@ -43,7 +43,7 @@ export function Workouts() {
 
   const handleNavigateToTrain = useCallback(
     (index: number) => {
-      dispatch(setTrainingDayIndex(index));
+      dispatch(startTraining(index));
       navigate("train");
     },
     [dispatch, navigate],

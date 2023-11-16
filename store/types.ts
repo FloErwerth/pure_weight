@@ -4,7 +4,6 @@ import { Measurement } from "../components/App/measurements/types";
 
 export type Workout = {
   name: string;
-  dates?: IsoDate[];
   exercises: ExerciseMetaData[];
   doneWorkouts: DoneWorkouts;
 };
@@ -14,7 +13,7 @@ export type PlainExerciseData = {
   reps: string;
 };
 
-export type DoneWorkouts = { date: IsoDate; duration: string; doneExercises: DoneExerciseData[] }[];
+export type DoneWorkouts = { date: IsoDate; duration?: string; doneExercises: DoneExerciseData[] }[];
 
 export type DoneExerciseData = {
   name: string;
@@ -35,8 +34,9 @@ export type ExerciseMetaData = {
 export type ErrorFields = "create_name" | "create_weight" | "create_sets" | "create_reps" | "workout_name" | "create_exercises_empty" | "measurement_name" | "measurement_unit" | "measurement_value";
 
 export type AppState = {
-  trainingDays: Workout[];
-  trainingDayIndex: number | undefined;
+  workouts: Workout[];
+  workoutIndex: number | undefined;
+  workoutStartingTimestamp?: number;
   setIndex: number;
   exerciseIndex: number;
   isFirstTimeRendered: boolean;

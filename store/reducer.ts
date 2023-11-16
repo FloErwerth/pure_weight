@@ -5,6 +5,7 @@ import { ThemeKey } from "../theme/types";
 import { Measurement } from "../components/App/measurements/types";
 import { IsoDate } from "../types/date";
 import { convertMeasurements } from "../components/App/measurements/utils";
+import { Temporal } from "@js-temporal/polyfill";
 
 export const mockState: AppState = {
   appInstallDate: "2023-09-01",
@@ -24,25 +25,144 @@ export const mockState: AppState = {
   theme: "dark",
   setIndex: 0,
   settings: { language: "en" },
-  trainingDayIndex: undefined,
+  workoutIndex: undefined,
   isFirstTimeRendered: true,
   exerciseIndex: 0,
   errors: [],
-  trainingDays: [
-    {
-      name: "Brust 1",
-      dates: ["2023-01-01"],
-      exercises: [{ name: "Bankdrücken", weight: "50", sets: "5", pause: "2", reps: "5" }],
-      doneWorkouts: [{ date: "2023-01-01", duration: "120", doneExercises: [{ name: "Bankdrücken", sets: [{ reps: "5", weight: "50" }], note: "" }] }],
-    },
+  workouts: [
     {
       name: "Brust 2",
-      dates: ["2023-01-01"],
       exercises: [
         { name: "Bankdrücken", weight: "50", sets: "5", pause: "2", reps: "5" },
         { name: "Butterfly", weight: "42.5", sets: "4", pause: "2", reps: "8" },
       ],
-      doneWorkouts: [{ date: "2023-01-01", duration: "120", doneExercises: [{ name: "Bankdrücken", sets: [{ reps: "5", weight: "50" }], note: "" }] }],
+      doneWorkouts: [
+        {
+          date: "2023-11-12",
+          duration: "13120",
+          doneExercises: [
+            {
+              name: "Bankdrücken",
+              sets: [
+                { reps: "5", weight: "50" },
+                { reps: "5", weight: "50" },
+                { reps: "5", weight: "50" },
+                { reps: "5", weight: "50" },
+                { reps: "5", weight: "50" },
+              ],
+              note: "",
+            },
+            {
+              name: "Butterfly",
+              sets: [
+                { reps: "5", weight: "50" },
+                { reps: "5", weight: "50" },
+                { reps: "5", weight: "50" },
+                { reps: "5", weight: "50" },
+                { reps: "5", weight: "50" },
+              ],
+              note: "",
+            },
+          ],
+        },
+        {
+          date: "2023-11-14",
+          duration: "15301",
+          doneExercises: [
+            {
+              name: "Bankdrücken",
+              sets: [
+                { reps: "5", weight: "6" },
+                { reps: "5", weight: "6" },
+                { reps: "5", weight: "6" },
+                { reps: "5", weight: "6" },
+                { reps: "5", weight: "6" },
+              ],
+              note: "",
+            },
+            {
+              name: "Butterfly",
+              sets: [
+                { reps: "5", weight: "50" },
+                { reps: "5", weight: "50" },
+                { reps: "5", weight: "50" },
+                { reps: "5", weight: "50" },
+                { reps: "5", weight: "50" },
+              ],
+              note: "",
+            },
+          ],
+        },
+        {
+          date: "2023-11-15",
+          duration: "15301",
+          doneExercises: [
+            {
+              name: "Bankdrücken",
+              sets: [{ reps: "1", weight: "100" }],
+              note: "",
+            },
+          ],
+        },
+        {
+          date: "2023-11-16",
+          duration: "15301",
+          doneExercises: [
+            {
+              name: "Bankdrücken",
+              sets: [{ reps: "1", weight: "120" }],
+              note: "",
+            },
+          ],
+        },
+      ],
+    },
+    {
+      name: "Brust 1",
+      exercises: [
+        { name: "Bankdrücken", weight: "50", sets: "5", pause: "2", reps: "5" },
+        { name: "Butterfly", weight: "42.5", sets: "4", pause: "2", reps: "8" },
+      ],
+      doneWorkouts: [
+        {
+          date: "2023-11-12",
+          duration: "13120",
+          doneExercises: [
+            {
+              name: "Bankdrücken",
+              sets: [
+                { reps: "5", weight: "50" },
+                { reps: "5", weight: "50" },
+                { reps: "5", weight: "50" },
+                { reps: "5", weight: "50" },
+                { reps: "5", weight: "50" },
+              ],
+              note: "",
+            },
+            {
+              name: "Butterfly",
+              sets: [{ reps: "1", weight: "100" }],
+              note: "",
+            },
+          ],
+        },
+        {
+          date: "2023-11-14",
+          duration: "15301",
+          doneExercises: [
+            {
+              name: "Bankdrücken",
+              sets: [{ reps: "5", weight: "6" }],
+              note: "",
+            },
+            {
+              name: "Butterfly",
+              sets: [{ reps: "1", weight: "150" }],
+              note: "",
+            },
+          ],
+        },
+      ],
     },
   ],
   latestDeletions: {},
@@ -53,8 +173,8 @@ export const emptyState: AppState = {
   exerciseIndex: 0,
   errors: [],
   settings: { language: "en" },
-  trainingDayIndex: undefined,
-  trainingDays: [],
+  workoutIndex: undefined,
+  workouts: [],
   setIndex: 0,
   isFirstTimeRendered: false,
   theme: "light",
@@ -73,7 +193,8 @@ export const addTrainingDay = createAction<{ name: string; exercises: ExerciseMe
 export const editTrainingDay = createAction<{ name: string; exercises: ExerciseMetaData[] }>("edit_training_day");
 export const overwriteTrainingDayExercises = createAction<ExerciseMetaData[]>("adjust_exercises");
 export const removeTrainingDay = createAction<number>("remove_training_day");
-export const setTrainingDayIndex = createAction<number | undefined>("edit_day");
+export const setTrainingDayIndex = createAction<number | undefined>("set_training_index");
+export const startTraining = createAction<number>("start_training");
 export const addSetDataToTrainingDay = createAction<Array<{ note?: string; sets: Array<PlainExerciseData> }>>("set_training_data");
 export const setSetIndex = createAction<number>("set_set_index");
 export const setExerciseIndex = createAction<number>("set_exercise_index");
@@ -129,7 +250,7 @@ export const storeReducer = createReducer<AppState>(emptyState, (builder) =>
     })
     .addCase(recoverWorkout, (state) => {
       if (state.latestDeletions.trainingDay?.index !== undefined && state.latestDeletions.trainingDay?.data) {
-        state.trainingDays.splice(state.latestDeletions.trainingDay.index, 0, state.latestDeletions.trainingDay.data);
+        state.workouts.splice(state.latestDeletions.trainingDay.index, 0, state.latestDeletions.trainingDay.data);
       }
     })
     .addCase(setTheme, (state, action) => {
@@ -147,50 +268,56 @@ export const storeReducer = createReducer<AppState>(emptyState, (builder) =>
       state.errors = [];
     })
     .addCase(overwriteTrainingDayExercises, (state, action) => {
-      if (state.trainingDayIndex) {
-        state.trainingDays[state.trainingDayIndex].exercises = action.payload;
+      if (state.workoutIndex) {
+        state.workouts[state.workoutIndex].exercises = action.payload;
       }
     })
     .addCase(addTrainingDay, (state, action) => {
-      state.trainingDays.push({ name: action.payload.name, exercises: action.payload.exercises, doneWorkouts: [] });
+      state.workouts.push({ name: action.payload.name, exercises: action.payload.exercises, doneWorkouts: [] });
     })
     .addCase(setFirstTimeRendered, (state, action) => {
       state.isFirstTimeRendered = action.payload;
     })
     .addCase(editTrainingDay, (state, { payload: { name, exercises } }) => {
-      if (state.trainingDayIndex) {
-        const editedDay = state.trainingDays[state.trainingDayIndex];
-        state.trainingDays.splice(state.trainingDayIndex, 1, { ...editedDay, exercises, name });
+      if (state.workoutIndex) {
+        const editedDay = state.workouts[state.workoutIndex];
+        state.workouts.splice(state.workoutIndex, 1, { ...editedDay, exercises, name });
       }
     })
     .addCase(removeTrainingDay, (state, action) => {
-      const newTrainingDays = [...state.trainingDays];
+      const newTrainingDays = [...state.workouts];
       const deletedTrainingDay = newTrainingDays.splice(action.payload, 1);
-      state.trainingDays = newTrainingDays;
+      state.workouts = newTrainingDays;
       state.latestDeletions = { ...state.latestDeletions, trainingDay: { index: action.payload, data: deletedTrainingDay[0] } };
     })
     .addCase(setTrainingDayIndex, (state, action) => {
-      state.trainingDayIndex = action.payload;
+      state.workoutIndex = action.payload;
+    })
+    .addCase(startTraining, (state, action) => {
+      state.workoutIndex = action.payload;
+      state.workoutStartingTimestamp = Temporal.Now.instant().epochMilliseconds;
     })
     .addCase(addSetDataToTrainingDay, (state, action) => {
-      if (state.trainingDays && state.trainingDayIndex !== undefined && state.exerciseIndex !== undefined) {
+      if (state.workouts && state.workoutIndex !== undefined && state.exerciseIndex !== undefined) {
         const dateToday = getDateTodayIso();
-        for (let exerciseIndex = 0; exerciseIndex < state.trainingDays[state.trainingDayIndex].doneWorkouts?.length; exerciseIndex++) {
+        for (let exerciseIndex = 0; exerciseIndex < state.workouts[state.workoutIndex].doneWorkouts?.length; exerciseIndex++) {
           if (action.payload[exerciseIndex] === undefined) {
             return;
           }
-
-          const existingData = state.trainingDays[state.trainingDayIndex]?.doneWorkouts[exerciseIndex]?.doneExercises;
+          const existingData = state.workouts[state.workoutIndex]?.doneWorkouts[exerciseIndex]?.doneExercises;
           (existingData ?? []).push({
-            name: state.trainingDays[state.trainingDayIndex]?.exercises[exerciseIndex].name,
+            name: state.workouts[state.workoutIndex]?.exercises[exerciseIndex].name,
             sets: action.payload[exerciseIndex].sets,
             note: action.payload[exerciseIndex].note,
           });
-          if (!state.trainingDays[state.trainingDayIndex].dates) {
-            state.trainingDays[state.trainingDayIndex].dates = [];
-          }
-          state.trainingDays[state.trainingDayIndex].dates?.push(dateToday);
         }
+        if (state.workoutStartingTimestamp) {
+          const endTimestamp = Temporal.Now.instant().epochMilliseconds;
+          const seconds = (endTimestamp - state.workoutStartingTimestamp) / 1000;
+          state.workouts[state.workoutIndex].doneWorkouts[state.exerciseIndex].duration = seconds.toString();
+        }
+
+        state.workouts[state.workoutIndex].doneWorkouts[state.exerciseIndex].date = dateToday;
       }
     })
     .addCase(setSetIndex, (state, action) => {

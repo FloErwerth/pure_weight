@@ -1,5 +1,5 @@
 import { createSelector } from "@reduxjs/toolkit";
-import { AppState, DoneExerciseData, ErrorFields, ExerciseMetaData, ExerciseSets } from "./types";
+import { AppState, ErrorFields, ExerciseMetaData, ExerciseSets } from "./types";
 import { getDate } from "../utils/date";
 import { IsoDate } from "../types/date";
 import { Temporal } from "@js-temporal/polyfill";
@@ -8,7 +8,7 @@ export const getSetIndex = (state: AppState) => state.setIndex ?? 0;
 export const getExerciseIndex = (state: AppState) => state.exerciseIndex;
 export const getSettings = (state: AppState) => state.settings;
 export const getThemeKey = (state: AppState) => state.theme;
-export const getTrainingIndex = (state: AppState) => state.trainingDayIndex;
+export const getTrainingIndex = (state: AppState) => state.workoutIndex;
 export const getErrors = (state: AppState) => state.errors;
 export const getIsFirstTimeRendered = (state: AppState) => state.isFirstTimeRendered;
 export const getMeasurements = (state: AppState) => state.measurements;
@@ -61,11 +61,11 @@ export const getMeasurmentProgress = createSelector([getMeasurements, (byIndex, 
   return undefined;
 });
 
-export const getSavedTrainings = (state: AppState) => state.trainingDays;
+export const getSavedTrainings = (state: AppState) => state.workouts;
 export const getWorkoutDates = createSelector([getSavedTrainings], (workouts) => {
   const dates: IsoDate[] = [];
   workouts.forEach((workout) => {
-    workout.dates?.forEach((date) => {
+    workout.doneWorkouts?.forEach(({ date }) => {
       if (!dates.includes(date)) {
         dates.push(date);
       }
@@ -73,15 +73,24 @@ export const getWorkoutDates = createSelector([getSavedTrainings], (workouts) =>
   });
   return dates;
 });
+
 export const getLatestWorkoutDate = createSelector([getWorkoutDates], (dates) => {
   return dates.sort(
     (dateA, dateB) => Temporal.Instant.from(dateA.concat("T00:00+00:00") as string).epochMilliseconds - Temporal.Instant.from(dateB.concat("T00:00+00:00") as string).epochMilliseconds,
   )[dates.length - 1];
 });
+
 export const getHistoryByMonth = createSelector([getSavedTrainings, (trainings, month: string) => month], (trainings, date) => {
-  return [{ name: "Workout Name" }];
+  const foundTrainings: { name: string; duration?: string; date: IsoDate }[] = [];
+  trainings.forEach((workout) => {
+    workout.doneWorkouts
+      .filter((workout) => workout.date.split("-")[1] === date.split("-")[1])
+      .forEach((doneWorkout) => foundTrainings.push({ name: workout.name, date: doneWorkout.date, duration: doneWorkout.duration }));
+  });
+
+  return foundTrainings;
 });
-export const getSelectedTrainingDayIndex = (state: AppState) => state.trainingDayIndex;
+export const getSelectedTrainingDayIndex = (state: AppState) => state.workoutIndex;
 export const getSelectedTrainingDay = createSelector([getSavedTrainings, getSelectedTrainingDayIndex], (trainings, index) => {
   if (index !== undefined) {
     return trainings[index];
@@ -179,44 +188,49 @@ export const getPreviousTraining = createSelector([getSelectedTrainingDay, getLa
   };
 });
 
+const calcOverallWeightFromSets = (sets: ExerciseSets) => {
+  return sets.reduce((overall, currentSet) => {
+    return (overall += parseFloat(currentSet.weight) * parseFloat(currentSet.reps));
+  }, 0);
+};
+
 export const getOverallTrainingTrend = createSelector([getSelectedTrainingDayByIndex], (trainingDayByIndex) => {
   return (workoutIndex: number) => {
     const workout = trainingDayByIndex(workoutIndex);
-    const doneWorkouts = workout.doneWorkouts;
-    if (!doneWorkouts || doneWorkouts.length === 0) {
-      return undefined;
-    }
-    const filteredDoneExercises = workout.doneWorkouts.filter(({ doneExercises }) => doneExercises.length >= 2).map((doneWorkout) => doneWorkout.doneExercises);
-    if (filteredDoneExercises.length === 0) {
+
+    if (workout.doneWorkouts.length < 2) {
       return undefined;
     }
 
-    const getPercent = (data: DoneExerciseData[]) => {
-      const first = data[data.length - 2];
-      const second = data[data.length - 1];
+    const latestExercisePairs: Map<string, number> = new Map();
+    for (let i = 1; i < workout.doneWorkouts.length; i += 2) {
+      const workoutBefore = workout.doneWorkouts[i - 1];
+      const currentWorkout = workout.doneWorkouts[i];
 
-      const sumFirst = first.sets.reduce((set, current) => {
-        return set + parseFloat(current.reps) * parseFloat(current.weight);
-      }, 0);
-      const sumSecond = second.sets.reduce((set, current) => {
-        return set + parseFloat(current.reps) * parseFloat(current.weight);
-      }, 0);
+      for (let j = 0; j < workoutBefore.doneExercises.length; j++) {
+        const beforeExercise = workoutBefore.doneExercises[j];
+        const currentExercise = currentWorkout.doneExercises[j];
 
-      return (100 * sumSecond) / sumFirst;
-    };
-
-    return filteredDoneExercises.reduce(
-      (bestEntry, currentEntry, index) => {
-        if (bestEntry === undefined) {
-          return { name: currentEntry[index].name, percent: getPercent(currentEntry) };
+        if (currentExercise !== undefined && currentExercise.name === beforeExercise.name) {
+          const beforeOverall = beforeExercise.sets.reduce((sum, set) => sum + parseFloat(set.reps) * parseFloat(set.weight), 0);
+          const currentOverall = currentExercise.sets.reduce((sum, set) => sum + parseFloat(set.reps) * parseFloat(set.weight), 0);
+          console.log(beforeOverall, currentOverall);
+          latestExercisePairs.set(currentExercise.name, (100 * currentOverall) / beforeOverall);
         }
-        const nextPercent = getPercent(currentEntry);
-        if (bestEntry.percent < nextPercent) {
-          return { name: currentEntry[index].name, percent: nextPercent };
+      }
+    }
+    console.log(latestExercisePairs);
+    return Array.from(latestExercisePairs).reduce(
+      (bestImprovement, [name, percentNumber]) => {
+        if (bestImprovement.percent === undefined) {
+          return { name, percent: percentNumber.toString() };
         }
-        return { name: bestEntry.name, percent: bestEntry.percent };
+        if (parseFloat(bestImprovement.percent) < percentNumber && percentNumber !== 100) {
+          return { name, percent: percentNumber.toString() };
+        }
+        return bestImprovement;
       },
-      undefined as { name: string; percent: number } | undefined,
+      {} as { name: string; percent: string | undefined },
     );
   };
 });

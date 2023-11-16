@@ -18,6 +18,7 @@ import { HStack } from "../../../components/Stack/HStack/HStack";
 import { ThemedPressable } from "../../../components/Themed/Pressable/Pressable";
 import { Temporal } from "@js-temporal/polyfill";
 import { ScrollView } from "react-native";
+import { getDuration } from "../../../utils/getDuration";
 
 const useMarkedDates = () => {
   const { mainColor } = useTheme();
@@ -34,7 +35,7 @@ export function WorkoutHistory() {
   const [date, setDate] = useState<IsoDate>(latestWorkoutDate);
   const lang = useAppSelector(getLanguage);
   const month = useMemo(() => Temporal.PlainDate.from(date).toLocaleString(lang, { day: undefined, month: "long", year: "numeric" }), [date, lang]);
-  const dateData = useAppSelector((state: AppState) => getHistoryByMonth(state, month));
+  const dateData = useAppSelector((state: AppState) => getHistoryByMonth(state, date));
   const pastScrollRange = useMemo(() => Math.floor(getDateToday().since(installDate ?? getDateTodayIso()).days / 30), [installDate]);
 
   const calendarTheme = useMemo(
@@ -67,6 +68,7 @@ export function WorkoutHistory() {
     },
     [close],
   );
+  console.log(dateData);
 
   return (
     <ThemedView stretch>
@@ -77,9 +79,10 @@ export function WorkoutHistory() {
         </Text>
         <ScrollView>
           {dateData.map((workout) => (
-            <HStack key={workout.name} style={styles.displayedWorkoutWrapper}>
+            <HStack key={workout.name.concat(workout.date)} style={styles.displayedWorkoutWrapper}>
               <Text>{workout.name}</Text>
-              <Text>{getDate(date)}</Text>
+              <Text>{getDate(workout.date)}</Text>
+              <Text>{getDuration(workout.duration)}</Text>
             </HStack>
           ))}
         </ScrollView>
