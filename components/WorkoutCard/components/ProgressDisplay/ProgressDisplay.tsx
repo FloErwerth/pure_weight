@@ -15,18 +15,19 @@ import { ThemedView } from "../../../Themed/ThemedView/View";
 export interface ProgressDisplayProps {
   onPress: () => void;
   higherIsBetter?: boolean;
+  wasPositive?: boolean;
   percent: number;
   name: string;
   type: "Workout" | "Measurement";
 }
 
-const useText = (type: "Workout" | "Measurement", even: boolean, higherPercentage: boolean, processedPercent: number, name: string) => {
+const useText = (type: "Workout" | "Measurement", even: boolean, higherPercentage: boolean = true, processedPercent: number, name: string) => {
   const language = useAppSelector(getLanguage);
   const { t } = useTranslation();
 
   const workoutText = useMemo(() => {
     if (even) {
-      return <>{t("progress_text_1").concat(t("progress_stayed"))}</>;
+      return <>{t("progress_text_even")}</>;
     }
     if (language === "en") {
       return (
@@ -83,13 +84,12 @@ const useText = (type: "Workout" | "Measurement", even: boolean, higherPercentag
   return workoutText;
 };
 
-export const ProgressDisplay = ({ percent, onPress, higherIsBetter = true, name, type }: ProgressDisplayProps) => {
-  const higherPercentage = percent > 100;
-  const isPositive = higherPercentage && higherIsBetter;
+export const ProgressDisplay = ({ percent, onPress, higherIsBetter = true, wasPositive, name, type }: ProgressDisplayProps) => {
+  const isPositive = wasPositive && higherIsBetter;
 
-  const processedPercent = truncateToNthSignificantDigit(higherPercentage ? percent - 100 : 100 - percent);
+  const processedPercent = truncateToNthSignificantDigit(percent);
   const even = processedPercent === 0;
-  const text = useText(type, even, higherPercentage, processedPercent, name);
+  const text = useText(type, even, wasPositive, processedPercent, name);
 
   const active = useContext(swipableContext);
   const { t } = useTranslation();
@@ -99,11 +99,11 @@ export const ProgressDisplay = ({ percent, onPress, higherIsBetter = true, name,
     if (even) {
       return "arrow-right";
     }
-    if (higherPercentage) {
+    if (wasPositive) {
       return "arrow-up";
     }
     return "arrow-down";
-  }, [even, higherPercentage]);
+  }, [even, wasPositive]);
 
   const chartStyle = useMemo(() => {
     if (isPositive) {

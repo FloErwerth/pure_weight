@@ -188,12 +188,6 @@ export const getPreviousTraining = createSelector([getSelectedTrainingDay, getLa
   };
 });
 
-const calcOverallWeightFromSets = (sets: ExerciseSets) => {
-  return sets.reduce((overall, currentSet) => {
-    return (overall += parseFloat(currentSet.weight) * parseFloat(currentSet.reps));
-  }, 0);
-};
-
 export const getOverallTrainingTrend = createSelector([getSelectedTrainingDayByIndex], (trainingDayByIndex) => {
   return (workoutIndex: number) => {
     const workout = trainingDayByIndex(workoutIndex);
@@ -202,7 +196,7 @@ export const getOverallTrainingTrend = createSelector([getSelectedTrainingDayByI
       return undefined;
     }
 
-    const latestExercisePairs: Map<string, number> = new Map();
+    const latestExercisePairs: Map<string, { cleanedPercent: number; isPositive?: boolean }> = new Map();
     for (let i = 1; i < workout.doneWorkouts.length; i += 2) {
       const workoutBefore = workout.doneWorkouts[i - 1];
       const currentWorkout = workout.doneWorkouts[i];
@@ -214,23 +208,50 @@ export const getOverallTrainingTrend = createSelector([getSelectedTrainingDayByI
         if (currentExercise !== undefined && currentExercise.name === beforeExercise.name) {
           const beforeOverall = beforeExercise.sets.reduce((sum, set) => sum + parseFloat(set.reps) * parseFloat(set.weight), 0);
           const currentOverall = currentExercise.sets.reduce((sum, set) => sum + parseFloat(set.reps) * parseFloat(set.weight), 0);
-          console.log(beforeOverall, currentOverall);
-          latestExercisePairs.set(currentExercise.name, (100 * currentOverall) / beforeOverall);
+          const result: { cleanedPercent: number; isPositive?: boolean } = { cleanedPercent: 0 };
+          const fraction = currentOverall / beforeOverall;
+          if (fraction === 1) {
+            result.cleanedPercent = 0;
+          } else if (fraction > 1) {
+            result.cleanedPercent = fraction * 100 - 100;
+            result.isPositive = true;
+          } else {
+            result.cleanedPercent = 100 - fraction * 100;
+            result.isPositive = false;
+          }
+          latestExercisePairs.set(currentExercise.name, result);
         }
       }
     }
-    console.log(latestExercisePairs);
+
     return Array.from(latestExercisePairs).reduce(
-      (bestImprovement, [name, percentNumber]) => {
-        if (bestImprovement.percent === undefined) {
-          return { name, percent: percentNumber.toString() };
+      (bestImprovement, [name, { isPositive, cleanedPercent }], index) => {
+        if (index === 0) {
+          return { name, isPositive, percent: cleanedPercent };
         }
-        if (parseFloat(bestImprovement.percent) < percentNumber && percentNumber !== 100) {
-          return { name, percent: percentNumber.toString() };
+        if (isPositive === bestImprovement.isPositive) {
+          if (!isPositive) {
+            if (bestImprovement.percent > cleanedPercent) {
+              return { name, percent: cleanedPercent, isPositive: false };
+            }
+            return bestImprovement;
+          } else {
+            if (bestImprovement.percent > cleanedPercent) {
+              return bestImprovement;
+            }
+            return { name, percent: cleanedPercent, isPositive: true };
+          }
+        }
+        if (isPositive !== bestImprovement.isPositive) {
+          if (isPositive) {
+            return { name, percent: cleanedPercent, isPositive };
+          } else {
+            return bestImprovement;
+          }
         }
         return bestImprovement;
       },
-      {} as { name: string; percent: string | undefined },
+      {} as { name: string; percent: number; isPositive?: boolean },
     );
   };
 });

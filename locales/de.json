@@ -64,8 +64,8 @@
 
   "progress_increased": "gestiegen",
   "progress_decreased": "gefallen",
-  "progress_stayed": "nicht geändert",
-  "progress_text_1": "Deine Leistung ist um",
+  "progress_text_1": "Deine Leistung ist um ",
+  "progress_text_even": "Deine Leistung hat sich nicht geändert",
   "progress_text_hint": "Tippe, um Details zu jeder Einheit zu sehen",
   "workout_new": "Neues Workout starten",
 
