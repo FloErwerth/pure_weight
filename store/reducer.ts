@@ -9,7 +9,7 @@ import { Temporal } from "@js-temporal/polyfill";
 
 const constructedDoneWorkouts: DoneWorkouts = [];
 for (let i = 0; i < 100; i++) {
-  const currentDate = new Date(getDateTodayIso());
+  const currentDate = new Date("2023-09-01");
   currentDate.setDate(currentDate.getDate() + i);
   const dateStr = currentDate.toISOString().split("T")[0];
   constructedDoneWorkouts.push({

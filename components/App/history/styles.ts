@@ -5,6 +5,20 @@ export const styles = StyleSheet.create({
   pageWrapper: {
     gap: 10,
   },
+  hstack: {
+    alignItems: "center",
+    gap: 5,
+  },
+  scrollView: { gap: 10 },
+  workout: {
+    padding: 10,
+    gap: 10,
+    flex: 1,
+    borderRadius,
+  },
+  workoutTitle: {
+    fontSize: 20,
+  },
   title: {
     fontSize: 26,
   },
@@ -18,7 +32,7 @@ export const styles = StyleSheet.create({
   },
   displayedWorkoutWrapper: {
     justifyContent: "space-evenly",
-    padding: 10,
+    gap: 5,
     borderRadius,
   },
 });

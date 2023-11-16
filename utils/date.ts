@@ -11,9 +11,15 @@ export const getDateTodayIso = (): IsoDate => {
   return isoDateDecoder.parse(now);
 };
 
-export const getDate = (date?: IsoDate, language?: "en" | "de", dateStyle?: "short" | "medium") => {
+export const getDate = (
+  date?: IsoDate,
+  language?: "en" | "de",
+  dateStyle?: "short" | "medium" | "long",
+) => {
   if (!date) {
     return "";
   }
-  return Temporal.PlainDate.from(date).toLocaleString(language ?? Locale.locale, { dateStyle: dateStyle ?? "short" });
+  return Temporal.PlainDate.from(date).toLocaleString(language ?? Locale.locale, {
+    dateStyle: dateStyle ?? "short",
+  });
 };
