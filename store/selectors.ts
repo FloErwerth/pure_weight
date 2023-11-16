@@ -150,25 +150,35 @@ export const getSpecificNumberOfSets = createSelector([getSelectedTrainingDay], 
 });
 
 export const getTrainingDayData = createSelector([getSavedTrainings], (trainingDays) => {
-  return trainingDays
-    .filter((day) => day.doneWorkouts.length > 0)
-    .reduce(
-      (exerciseNameEntryPairs, workout) => {
-        const newData = Array(workout.doneWorkouts.length)
-          .fill(undefined)
-          .map((_, index) => crampToNEntries(20, workout.doneWorkouts[index].doneExercises))
-          .map((doneWorkout, index) => ({
-            exerciseName: doneWorkout[index].name,
-            exerciseData: doneWorkout.map((exercises) => ({ name: workout.name, sets: exercises.sets, date: workout.doneWorkouts[index].date })),
-          }));
-        const newEntries = [...exerciseNameEntryPairs];
-        newEntries.push(newData);
-        return newEntries;
-      },
-      [] as { exerciseName: string; exerciseData: { date: IsoDate; sets: ExerciseSets }[] }[][],
-    );
-});
+  const trainingDayDataMap: Map<string, Map<string, { sets: ExerciseSets; date: IsoDate }[]>> = new Map();
+  trainingDays
+    .filter((workout) => workout.doneWorkouts.length > 0)
+    .forEach((workout) => {
+      if (!trainingDayDataMap.get(workout.name)) {
+        trainingDayDataMap.set(workout.name, new Map());
+      }
 
+      const lastCompleted20Exercises = workout.doneWorkouts.slice(workout.doneWorkouts.length - 20).map((doneWorkout, index) => {
+        return {
+          exerciseData: doneWorkout.doneExercises.reduce(
+            (data, current) => {
+              return [...data, { name: current.name, date: doneWorkout.date, sets: current.sets }];
+            },
+            [] as { sets: ExerciseSets; date: IsoDate; name: string }[],
+          ),
+        };
+      });
+      const dayToDataMap: Map<string, { sets: ExerciseSets; date: IsoDate }[]> = new Map();
+      lastCompleted20Exercises.forEach((doneExericse) => {
+        doneExericse.exerciseData.forEach((data) => {
+          const arr = dayToDataMap.get(data.name) ?? [];
+          dayToDataMap.set(data.name, [...arr, { sets: data.sets, date: data.date }]);
+        });
+      });
+      trainingDayDataMap.set(workout.name, dayToDataMap);
+    });
+  return Array.from(trainingDayDataMap.values()).map((exerciseMap) => Array.from(exerciseMap).filter(([_, exercise]) => exercise.length >= 2));
+});
 export const getSelectedTrainingDayData = createSelector([getTrainingDayData, getTrainingIndex], (data, index) => {
   if (index === undefined) {
     return undefined;
@@ -223,7 +233,6 @@ export const getOverallTrainingTrend = createSelector([getSelectedTrainingDayByI
         }
       }
     }
-
     return Array.from(latestExercisePairs).reduce(
       (bestImprovement, [name, { isPositive, cleanedPercent }], index) => {
         if (index === 0) {

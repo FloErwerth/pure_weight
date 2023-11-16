@@ -1,11 +1,34 @@
 import { createAction, createReducer } from "@reduxjs/toolkit/src";
-import type { AppState, ErrorFields, ExerciseMetaData, PlainExerciseData } from "./types";
+import type { AppState, DoneWorkouts, ErrorFields, ExerciseMetaData, PlainExerciseData } from "./types";
 import { getDateTodayIso } from "../utils/date";
 import { ThemeKey } from "../theme/types";
 import { Measurement } from "../components/App/measurements/types";
 import { IsoDate } from "../types/date";
 import { convertMeasurements } from "../components/App/measurements/utils";
 import { Temporal } from "@js-temporal/polyfill";
+
+const constructedDoneWorkouts: DoneWorkouts = [];
+for (let i = 0; i < 100; i++) {
+  const currentDate = new Date(getDateTodayIso());
+  currentDate.setDate(currentDate.getDate() + i);
+  const dateStr = currentDate.toISOString().split("T")[0];
+  constructedDoneWorkouts.push({
+    date: dateStr as IsoDate,
+    duration: (i * 100).toString(),
+    doneExercises: [
+      {
+        name: "Bankdrücken",
+        sets: [
+          { weight: (i * 5).toString(), reps: "5" },
+          { weight: (i * 5).toString(), reps: "5" },
+          { weight: (i * 5).toString(), reps: "5" },
+          { weight: (i * 5).toString(), reps: "5" },
+          { weight: (i * 5).toString(), reps: "5" },
+        ],
+      },
+    ],
+  });
+}
 
 export const mockState: AppState = {
   appInstallDate: "2023-09-01",
@@ -36,40 +59,7 @@ export const mockState: AppState = {
         { name: "Bankdrücken", weight: "50", sets: "5", pause: "2", reps: "5" },
         { name: "Butterfly", weight: "42.5", sets: "4", pause: "2", reps: "8" },
       ],
-      doneWorkouts: [
-        {
-          date: "2023-11-12",
-          duration: "13120",
-          doneExercises: [
-            {
-              name: "Bankdrücken",
-              sets: [{ reps: "1", weight: "100" }],
-              note: "",
-            },
-            {
-              name: "Butterfly",
-              sets: [{ reps: "1", weight: "100" }],
-              note: "",
-            },
-          ],
-        },
-        {
-          date: "2023-11-14",
-          duration: "15301",
-          doneExercises: [
-            {
-              name: "Bankdrücken",
-              sets: [{ reps: "1", weight: "100" }],
-              note: "",
-            },
-            {
-              name: "Butterfly",
-              sets: [{ reps: "1", weight: "100" }],
-              note: "",
-            },
-          ],
-        },
-      ],
+      doneWorkouts: constructedDoneWorkouts,
     },
   ],
   latestDeletions: {},

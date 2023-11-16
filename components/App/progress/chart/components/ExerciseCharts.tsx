@@ -97,7 +97,6 @@ export const ExerciseChart = ({ exerciseName, data }: ExerciseChartProps) => {
   const { t } = useTranslation();
   const { mainColor, componentBackgroundColor } = useTheme();
   const [ref, open, close] = useBottomSheetRef();
-
   const getDotContent = useCallback(
     ({ x, y, indexData }: { x: number; y: number; index: number; indexData: number }) => {
       return (
@@ -130,7 +129,6 @@ export const ExerciseChart = ({ exerciseName, data }: ExerciseChartProps) => {
           setChartType(type as ChartType);
           closeSelectionModal();
         };
-
         return { onPress, title: text, chartType: type };
       }),
     [closeSelectionModal],
@@ -177,7 +175,7 @@ export default function Charts() {
 
   return (
     <ThemedScrollView>
-      {trainingDayData.map(({ exerciseName, exerciseData }) => (
+      {trainingDayData.map(([exerciseName, exerciseData]) => (
         <ExerciseChart key={Math.random() * 100} exerciseName={exerciseName} data={exerciseData} />
       ))}
     </ThemedScrollView>
