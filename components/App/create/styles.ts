@@ -2,6 +2,9 @@ import { StyleSheet } from "react-native";
 import { borderRadius } from "../../../theme/border";
 
 export const styles = StyleSheet.create({
+  nameColorStack: {
+    justifyContent: "space-between",
+  },
   vStack: {
     padding: 15,
     gap: 10,
@@ -9,6 +12,12 @@ export const styles = StyleSheet.create({
     alignItems: "center",
     flex: 1,
     alignSelf: "stretch",
+  },
+  colorButton: {
+    width: 30,
+    height: 30,
+    borderRadius: 30,
+    backgroundColor: "black",
   },
   text: {
     paddingLeft: 10,

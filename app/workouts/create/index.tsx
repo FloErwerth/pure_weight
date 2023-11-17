@@ -23,6 +23,8 @@ import { ThemedView } from "../../../components/Themed/ThemedView/View";
 import { useBottomSheetRef } from "../../../components/BottomSheetModal/ThemedButtomSheetModal";
 import { AddExerciseModal } from "../../../components/AddExerciseModal/AddExerciseModal";
 import { emptyExercise } from "../../../components/App/create/context";
+import { HStack } from "../../../components/Stack/HStack/HStack";
+import { useColor, useColorPickerComponents } from "../../../components/ColorPickerWithModal/ColorPickerWithModal";
 
 function getAreValuesEmpty(exercise: ExerciseMetaData) {
   const values = Object.values(exercise);
@@ -43,6 +45,7 @@ type MappedExercises = {
   index: number;
   handleOnConfirmEdit: (exercise: ExerciseMetaData) => void;
 };
+
 export function Create() {
   const navigate = useNavigate();
   const { t } = useTranslation();
@@ -56,6 +59,8 @@ export function Create() {
   const dispatch = useAppDispatch();
   const [alertRef] = useBottomSheetRef();
   const [addRef] = useBottomSheetRef();
+  const initialColor = useColor(editedDay?.calendarColor);
+  const [PickerModal, PickerButton, color] = useColorPickerComponents(initialColor);
 
   useEffect(() => {
     setWorkoutName(editedDay?.name);
@@ -146,7 +151,12 @@ export function Create() {
       };
 
       const onDelete = () => {
-        setAlertConfig({ title: t("alert_delete_title"), content: t("alert_delete_message"), onConfirm: handleConfirmDelete, onCancel: handleConfirmDiscardChanges });
+        setAlertConfig({
+          title: t("alert_delete_title"),
+          content: t("alert_delete_message"),
+          onConfirm: handleConfirmDelete,
+          onCancel: handleConfirmDiscardChanges,
+        });
         alertRef.current?.present();
       };
       const edited = index === editedExerciseIndex;
@@ -178,12 +188,12 @@ export function Create() {
       return;
     }
     if (editedDay) {
-      dispatch(editTrainingDay({ name: workoutName ?? editedDay.name, exercises: createdExercises }));
+      dispatch(editTrainingDay({ name: workoutName ?? editedDay.name, exercises: createdExercises, color }));
     } else {
-      dispatch(addTrainingDay({ name: workoutName ?? "", exercises: createdExercises }));
+      dispatch(addTrainingDay({ name: workoutName ?? "", exercises: createdExercises, color }));
     }
     handleNavigateHome();
-  }, [workoutName, createdExercises, editedDay, handleNavigateHome, dispatch]);
+  }, [createdExercises, workoutName, editedDay, handleNavigateHome, dispatch, color]);
 
   const handleBackButton = useCallback(() => {
     if (createdExercises.length === 0 && !workoutName) {
@@ -224,7 +234,10 @@ export function Create() {
       <ThemedView background style={styles.innerWrapper}>
         <SiteNavigationButtons handleBack={handleBackButton} handleConfirm={handleConfirm} titleFontSize={30} title={title} />
         <PageContent style={styles.contentWrapper}>
-          <PlainInput showClear value={workoutName} setValue={handleSetWorkoutName} fontSize={30} placeholder={t("workout_name")} />
+          <HStack style={styles.nameColorStack} ghost>
+            <PlainInput showClear value={workoutName} setValue={handleSetWorkoutName} fontSize={30} placeholder={t("workout_name")} />
+            <PickerButton />
+          </HStack>
           <View style={styles.listContainer}>
             {mappedExercises.length > 0 ? (
               <DraggableFlatList
@@ -258,7 +271,13 @@ export function Create() {
           <AddButton onPress={handleAddExercise} />
         </PageContent>
       </ThemedView>
-      <AlertModal reference={alertRef} title={alertConfig?.title} content={alertConfig?.content} onConfirm={handleNavigateHome} onCancel={() => setAlertConfig(undefined)} />
+      <AlertModal
+        reference={alertRef}
+        title={alertConfig?.title}
+        content={alertConfig?.content}
+        onConfirm={handleNavigateHome}
+        onCancel={() => setAlertConfig(undefined)}
+      />
       <AddExerciseModal
         isEditingExercise={editedExerciseIndex !== undefined}
         handleEditExercise={handleEditExercise}
@@ -266,6 +285,7 @@ export function Create() {
         reference={addRef}
         onConfirmEdit={handleConfirmExerciseModal}
       />
+      <PickerModal />
     </>
   );
 }

@@ -43,12 +43,36 @@ const ThemedApp = () => {
             <BottomSheetModalProvider>
               <SafeAreaView>
                 <Stack.Navigator screenOptions={{ headerShown: false }}>
-                  <Stack.Screen component={TabsWrapper} options={{ headerShown: false }} name="tabs" />
-                  <Stack.Screen component={Train} options={{ gestureEnabled: false, headerShown: false }} name="workouts/train/index" />
-                  <Stack.Screen component={Create} options={{ gestureEnabled: false, headerShown: false }} name="workouts/create/index" />
-                  <Stack.Screen component={Progress} options={{ headerShown: false }} name="workouts/progress/index" />
-                  <Stack.Screen component={Settings} options={{ headerShown: false }} name="profile/settings/index" />
-                  <Stack.Screen component={WorkoutHistory} options={{ headerShown: false }} name="profile/workoutHistory/index" />
+                  <Stack.Screen
+                    component={TabsWrapper}
+                    options={{ headerShown: false }}
+                    name="tabs"
+                  />
+                  <Stack.Screen
+                    component={Train}
+                    options={{ gestureEnabled: false, headerShown: false }}
+                    name="workouts/train/index"
+                  />
+                  <Stack.Screen
+                    component={Create}
+                    options={{ gestureEnabled: false, headerShown: false }}
+                    name="workouts/create/index"
+                  />
+                  <Stack.Screen
+                    component={Progress}
+                    options={{ headerShown: false }}
+                    name="workouts/progress/index"
+                  />
+                  <Stack.Screen
+                    component={Settings}
+                    options={{ headerShown: false }}
+                    name="profile/settings/index"
+                  />
+                  <Stack.Screen
+                    component={WorkoutHistory}
+                    options={{ headerShown: false }}
+                    name="profile/workoutHistory/index"
+                  />
                 </Stack.Navigator>
               </SafeAreaView>
             </BottomSheetModalProvider>

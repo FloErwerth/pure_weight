@@ -3,7 +3,15 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "../../hooks/navigate";
 import { useAppDispatch, useAppSelector } from "../../store";
 import { getLanguage, getOverallTrainingTrend, getSavedTrainings } from "../../store/selectors";
-import { cleanErrors, recoverWorkout, removeTrainingDay, setExerciseIndex, setSetIndex, setTrainingDayIndex, startTraining } from "../../store/reducer";
+import {
+  cleanErrors,
+  recoverWorkout,
+  removeTrainingDay,
+  setExerciseIndex,
+  setSetIndex,
+  setTrainingDayIndex,
+  startTraining,
+} from "../../store/reducer";
 import { styles } from "../../components/App/index/styles";
 import { SiteNavigationButtons } from "../../components/SiteNavigationButtons/SiteNavigationButtons";
 import { useTranslation } from "react-i18next";
@@ -16,6 +24,18 @@ import { ProgressDisplay } from "../../components/WorkoutCard/components/Progres
 import { BottomToast } from "../../components/BottomToast/BottomToast";
 import { HStack } from "../../components/Stack/HStack/HStack";
 import { ThemedMaterialCommunityIcons } from "../../components/Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
+import { ColorIndicator } from "../../components/ColorIndicator/ColorIndicator";
+
+type RenderedItem = {
+  handleNavigateToProgress: () => void;
+  workoutName: string;
+  key: string;
+  onEdit: () => void;
+  onDelete: () => void;
+  onClick: () => void;
+  color: string;
+  overallTrainingData: { name: string; percent: number; isPositive?: boolean } | undefined;
+};
 
 export function Workouts() {
   const language = useAppSelector(getLanguage);
@@ -82,8 +102,8 @@ export function Workouts() {
         dispatch(setTrainingDayIndex(index));
         navigate("progress");
       };
-
-      return { handleNavigateToProgress, onEdit, onDelete, key, onClick, workoutName: trainingDay.name, overallTrainingData };
+      const color = trainingDay.calendarColor;
+      return { handleNavigateToProgress, onEdit, onDelete, key, onClick, workoutName: trainingDay.name, overallTrainingData, color };
     });
   }, [dispatch, handleDelete, handleEdit, handleNavigateToTrain, navigate, previousTrainingByIndex, savedTrainings]);
 
@@ -93,28 +113,25 @@ export function Workouts() {
   }, [dispatch]);
 
   const renderItem = useCallback(
-    ({
-      item: { handleNavigateToProgress, workoutName, key, onEdit, onDelete, onClick, overallTrainingData },
-    }: {
-      item: {
-        handleNavigateToProgress: () => void;
-        workoutName: string;
-        key: string;
-        onEdit: () => void;
-        onDelete: () => void;
-        onClick: () => void;
-        overallTrainingData: { name: string; percent: number } | undefined;
-      };
-    }) => {
+    ({ item: { handleNavigateToProgress, workoutName, key, onEdit, onDelete, onClick, overallTrainingData, color } }: { item: RenderedItem }) => {
       return (
         <Swipeable onEdit={onEdit} onDelete={onDelete} onClick={onClick} key={key}>
-          <HStack style={styles.trainWrapper}>
-            <Text style={styles.title}>{workoutName}</Text>
-            <ThemedMaterialCommunityIcons ghost name="chevron-right" size={30} />
+          <HStack style={styles.outerTrainWrapper}>
+            <ColorIndicator color={color} height={20} width={3} />
+            <HStack style={styles.trainWrapper}>
+              <Text style={styles.title}>{workoutName}</Text>
+              <ThemedMaterialCommunityIcons ghost name="chevron-right" size={30} />
+            </HStack>
           </HStack>
           {overallTrainingData && (
             <View style={styles.progressWrapper}>
-              <ProgressDisplay type="Workout" onPress={handleNavigateToProgress} wasPositive={overallTrainingData.isPositive} name={overallTrainingData.name} percent={overallTrainingData.percent} />
+              <ProgressDisplay
+                type="Workout"
+                wasPositive={overallTrainingData.isPositive}
+                onPress={handleNavigateToProgress}
+                name={overallTrainingData.name}
+                percent={overallTrainingData.percent}
+              />
             </View>
           )}
         </Swipeable>
@@ -128,10 +145,22 @@ export function Workouts() {
       <View style={styles.vStack}>
         <SiteNavigationButtons title={t("workouts")} handleConfirmIcon={confirmIcon} handleConfirm={handlePress} />
         <PageContent>
-          <FlatList decelerationRate="normal" keyExtractor={(item) => item.key} style={styles.savedTrainings} data={mappedTrainings} renderItem={renderItem}></FlatList>
+          <FlatList
+            decelerationRate="normal"
+            keyExtractor={(item) => item.key}
+            style={styles.savedTrainings}
+            data={mappedTrainings}
+            renderItem={renderItem}
+          ></FlatList>
         </PageContent>
       </View>
-      <BottomToast onRequestClose={() => setShowToast(false)} open={showToast} messageKey={"workout_deleted_message"} titleKey={"workout_deleted_title"} onRedo={handleRecoverWorkout} />
+      <BottomToast
+        onRequestClose={() => setShowToast(false)}
+        open={showToast}
+        messageKey={"workout_deleted_message"}
+        titleKey={"workout_deleted_title"}
+        onRedo={handleRecoverWorkout}
+      />
     </ThemedView>
   );
 }

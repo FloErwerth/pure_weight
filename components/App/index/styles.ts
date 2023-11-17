@@ -11,11 +11,16 @@ export const styles = StyleSheet.create({
   trainingDayName: {
     fontSize: 24,
   },
+  outerTrainWrapper: {
+    gap: 5,
+    alignItems: "center",
+  },
   view: {
     flex: 1,
   },
   trainWrapper: {
     justifyContent: "space-between",
+    flex: 1,
   },
   progressWrapper: {
     paddingRight: 35,

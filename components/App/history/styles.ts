@@ -5,6 +5,10 @@ export const styles = StyleSheet.create({
   pageWrapper: {
     gap: 10,
   },
+  titleWrapper: {
+    gap: 3,
+    alignItems: "center",
+  },
   hstack: {
     alignItems: "center",
     gap: 5,

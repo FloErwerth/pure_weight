@@ -4,6 +4,7 @@ import { Measurement } from "../components/App/measurements/types";
 
 export type Workout = {
   name: string;
+  calendarColor: string;
   exercises: ExerciseMetaData[];
   doneWorkouts: DoneWorkouts;
 };
@@ -13,7 +14,11 @@ export type PlainExerciseData = {
   reps: string;
 };
 
-export type DoneWorkouts = { date: IsoDate; duration?: string; doneExercises: DoneExerciseData[] }[];
+export type DoneWorkouts = {
+  date: IsoDate;
+  duration: string;
+  doneExercises: DoneExerciseData[];
+}[];
 
 export type DoneExerciseData = {
   name: string;
@@ -31,7 +36,16 @@ export type ExerciseMetaData = {
   pause?: string;
 };
 
-export type ErrorFields = "create_name" | "create_weight" | "create_sets" | "create_reps" | "workout_name" | "create_exercises_empty" | "measurement_name" | "measurement_unit" | "measurement_value";
+export type ErrorFields =
+  | "create_name"
+  | "create_weight"
+  | "create_sets"
+  | "create_reps"
+  | "workout_name"
+  | "create_exercises_empty"
+  | "measurement_name"
+  | "measurement_unit"
+  | "measurement_value";
 
 export type AppState = {
   workouts: Workout[];
@@ -45,7 +59,11 @@ export type AppState = {
   };
   latestDeletions: {
     measurement?: { index: number; data: Measurement };
-    trainingDay?: { index: number; data: Workout; exercise?: { index: number; data: DoneWorkouts } };
+    trainingDay?: {
+      index: number;
+      data: Workout;
+      exercise?: { index: number; data: DoneWorkouts };
+    };
   };
   measurements: Measurement[];
   errors: ErrorFields[];

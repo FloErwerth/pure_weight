@@ -36,13 +36,29 @@ export const mockState: AppState = {
     {
       name: "Körpergewicht",
       unit: "kg",
-      data: { ["2023-10-11"]: "15", ["2023-10-12"]: "16", ["2023-10-13"]: "17", ["2023-10-14"]: "18", ["2023-10-15"]: "20", ["2023-10-16"]: "19", ["2023-10-17"]: "23" },
+      data: {
+        ["2023-10-11"]: "15",
+        ["2023-10-12"]: "16",
+        ["2023-10-13"]: "17",
+        ["2023-10-14"]: "18",
+        ["2023-10-15"]: "20",
+        ["2023-10-16"]: "19",
+        ["2023-10-17"]: "23",
+      },
       higherIsBetter: true,
     },
     {
       name: "Körperfettanteil",
       unit: "%",
-      data: { ["2023-10-11"]: "15", ["2023-10-12"]: "16", ["2023-10-13"]: "17", ["2023-10-14"]: "18", ["2023-10-15"]: "20", ["2023-10-16"]: "19", ["2023-10-17"]: "23" },
+      data: {
+        ["2023-10-11"]: "15",
+        ["2023-10-12"]: "16",
+        ["2023-10-13"]: "17",
+        ["2023-10-14"]: "18",
+        ["2023-10-15"]: "20",
+        ["2023-10-16"]: "19",
+        ["2023-10-17"]: "23",
+      },
     },
   ],
   theme: "dark",
@@ -55,11 +71,45 @@ export const mockState: AppState = {
   workouts: [
     {
       name: "Brust 1",
-      exercises: [
-        { name: "Bankdrücken", weight: "50", sets: "5", pause: "2", reps: "5" },
-        { name: "Butterfly", weight: "42.5", sets: "4", pause: "2", reps: "8" },
-      ],
-      doneWorkouts: constructedDoneWorkouts,
+      calendarColor: "#ffff00",
+      exercises: [{ name: "Bankdrücken", weight: "50", sets: "5", pause: "2", reps: "5" }],
+      doneWorkouts: [{ duration: "12000", date: "2023-11-16", doneExercises: [{ name: "Bankdrücken", sets: [{ reps: "5", weight: "55" }] }] }],
+    },
+    {
+      name: "Brust 4",
+      calendarColor: "#000fff",
+      exercises: [{ name: "Bankdrücken", weight: "50", sets: "5", pause: "2", reps: "5" }],
+      doneWorkouts: [{ duration: "12000", date: "2023-11-16", doneExercises: [{ name: "Bankdrücken", sets: [{ reps: "5", weight: "55" }] }] }],
+    },
+    {
+      name: "Brust 6",
+      calendarColor: "#ff0a01",
+      exercises: [{ name: "Bankdrücken", weight: "50", sets: "5", pause: "2", reps: "5" }],
+      doneWorkouts: [{ duration: "12000", date: "2023-11-16", doneExercises: [{ name: "Bankdrücken", sets: [{ reps: "5", weight: "55" }] }] }],
+    },
+    {
+      name: "Brust 4",
+      calendarColor: "#000fff",
+      exercises: [{ name: "Bankdrücken", weight: "50", sets: "5", pause: "2", reps: "5" }],
+      doneWorkouts: [{ duration: "12000", date: "2023-11-16", doneExercises: [{ name: "Bankdrücken", sets: [{ reps: "5", weight: "55" }] }] }],
+    },
+    {
+      name: "Brust 6",
+      calendarColor: "#ff0a01",
+      exercises: [{ name: "Bankdrücken", weight: "50", sets: "5", pause: "2", reps: "5" }],
+      doneWorkouts: [{ duration: "12000", date: "2023-11-16", doneExercises: [{ name: "Bankdrücken", sets: [{ reps: "5", weight: "55" }] }] }],
+    },
+    {
+      name: "Brust 2",
+      calendarColor: "#ff00ff",
+      exercises: [{ name: "Bankdrücken", weight: "50", sets: "5", pause: "2", reps: "5" }],
+      doneWorkouts: [{ duration: "12000", date: "2023-11-16", doneExercises: [{ name: "Bankdrücken", sets: [{ reps: "5", weight: "55" }] }] }],
+    },
+    {
+      name: "Brust 3",
+      calendarColor: "#aabbcc",
+      exercises: [{ name: "Bankdrücken", weight: "50", sets: "5", pause: "2", reps: "5" }],
+      doneWorkouts: [{ duration: "12000", date: "2023-11-17", doneExercises: [{ name: "Bankdrücken", sets: [{ reps: "5", weight: "55" }] }] }],
     },
   ],
   latestDeletions: {},
@@ -86,8 +136,8 @@ export const setTheme = createAction<ThemeKey>("theme_set");
 export const setMockState = createAction("set_mock_state");
 export const setFirstTimeRendered = createAction<boolean>("set_greeting");
 export const setState = createAction<AppState>("set_state");
-export const addTrainingDay = createAction<{ name: string; exercises: ExerciseMetaData[] }>("add_training_day");
-export const editTrainingDay = createAction<{ name: string; exercises: ExerciseMetaData[] }>("edit_training_day");
+export const addTrainingDay = createAction<{ name: string; exercises: ExerciseMetaData[]; color: string }>("add_training_day");
+export const editTrainingDay = createAction<{ name: string; exercises: ExerciseMetaData[]; color: string }>("edit_training_day");
 export const overwriteTrainingDayExercises = createAction<ExerciseMetaData[]>("adjust_exercises");
 export const removeTrainingDay = createAction<number>("remove_training_day");
 export const setTrainingDayIndex = createAction<number | undefined>("set_training_index");
@@ -165,20 +215,20 @@ export const storeReducer = createReducer<AppState>(emptyState, (builder) =>
       state.errors = [];
     })
     .addCase(overwriteTrainingDayExercises, (state, action) => {
-      if (state.workoutIndex) {
+      if (state.workoutIndex !== undefined) {
         state.workouts[state.workoutIndex].exercises = action.payload;
       }
     })
     .addCase(addTrainingDay, (state, action) => {
-      state.workouts.push({ name: action.payload.name, exercises: action.payload.exercises, doneWorkouts: [] });
+      state.workouts.push({ name: action.payload.name, exercises: action.payload.exercises, calendarColor: action.payload.color, doneWorkouts: [] });
     })
     .addCase(setFirstTimeRendered, (state, action) => {
       state.isFirstTimeRendered = action.payload;
     })
-    .addCase(editTrainingDay, (state, { payload: { name, exercises } }) => {
-      if (state.workoutIndex) {
+    .addCase(editTrainingDay, (state, { payload: { name, exercises, color } }) => {
+      if (state.workoutIndex !== undefined) {
         const editedDay = state.workouts[state.workoutIndex];
-        state.workouts.splice(state.workoutIndex, 1, { ...editedDay, exercises, name });
+        state.workouts.splice(state.workoutIndex, 1, { ...editedDay, exercises, name, calendarColor: color });
       }
     })
     .addCase(removeTrainingDay, (state, action) => {
@@ -208,7 +258,8 @@ export const storeReducer = createReducer<AppState>(emptyState, (builder) =>
             note: action.payload[exerciseIndex].note,
           });
         }
-        if (state.workoutStartingTimestamp) {
+        console.log("done");
+        if (state.workoutStartingTimestamp !== undefined) {
           const endTimestamp = Temporal.Now.instant().epochMilliseconds;
           const seconds = (endTimestamp - state.workoutStartingTimestamp) / 1000;
           state.workouts[state.workoutIndex].doneWorkouts[state.exerciseIndex].duration = seconds.toString();
