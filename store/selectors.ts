@@ -237,34 +237,14 @@ export const getTrainingDayData = createSelector([getTrainingDayMap], (trainingD
   return Array.from(trainingDays.values()).map((exerciseMap) => Array.from(exerciseMap).filter(([_, exercise]) => exercise.length >= 2));
 });
 
-/*
-*
-* [{
-    title: "Completed Tasks",
-    data: [
-
-      {
-        id: "19",
-        task: "Read next Article 10"
-      },
-    ]
-  }]
-* */
-
 export const getHistoryByMonth = createSelector([getSavedTrainings, (trainings, month: string) => month], (trainings, date) => {
-  const foundTrainings: { title: string; data: { color: string; name: string; duration?: string; date: IsoDate; weight: number }[] }[] = [];
+  const foundTrainings: Map<string, { color: string; name: string; duration?: string; date: IsoDate; weight: number; numExercisesDone: number }[]> =
+    new Map();
   trainings.forEach((workout) => {
-    workout.doneWorkouts
-      .filter((workout) => {
-        const workoutMonth = workout.date.split("-")[1];
-        const isCorrectMonth = workoutMonth === date.split("-")[1];
-        if (isCorrectMonth && !foundTrainings.find((data) => data.title === workoutMonth)) {
-          foundTrainings.push({ title: workoutMonth, data: [] });
-        }
-      })
-      .forEach((doneWorkout, index) => {
-        const newData = [...foundTrainings[index].data];
-        newData.push({
+    workout.doneWorkouts.forEach((doneWorkout) => {
+      foundTrainings.set(doneWorkout.date, [
+        ...(foundTrainings.get(doneWorkout.date) ?? []),
+        {
           color: workout.calendarColor,
           name: workout.name,
           date: doneWorkout.date,
@@ -274,11 +254,13 @@ export const getHistoryByMonth = createSelector([getSavedTrainings, (trainings, 
               sum + current.sets.reduce((sumSet, currentSet) => sumSet + parseFloat(currentSet.weight) * parseFloat(currentSet.reps), 0),
             0,
           ),
-        });
-        foundTrainings[index].data = newData;
-      });
+          numExercisesDone: doneWorkout.doneExercises.length,
+        },
+      ]);
+    });
   });
-  return [];
+
+  return Array.from(foundTrainings).map(([month, data]) => ({ title: month, data }));
 });
 
 export const getSelectedTrainingDayData = createSelector([getTrainingDayData, getTrainingIndex], (data, index) => {

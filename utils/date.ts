@@ -10,12 +10,17 @@ export const getDateTodayIso = (): IsoDate => {
   const now = Temporal.Now.plainDateISO().toString();
   return isoDateDecoder.parse(now);
 };
-
-export const getDate = (
-  date?: IsoDate,
-  language?: "en" | "de",
-  dateStyle?: "short" | "medium" | "long",
-) => {
+export const getTitle = (date?: IsoDate, language?: "en" | "de") => {
+  if (!date) {
+    return "";
+  }
+  return Temporal.PlainDate.from(date).toLocaleString(language ?? Locale.locale, {
+    day: "2-digit",
+    month: "long",
+    year: undefined,
+  });
+};
+export const getDate = (date?: IsoDate, language?: "en" | "de", dateStyle?: "short" | "medium" | "long") => {
   if (!date) {
     return "";
   }

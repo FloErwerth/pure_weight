@@ -13,17 +13,17 @@ import { Text } from "../../../components/Themed/ThemedText/Text";
 import { styles } from "../../../components/App/history/styles";
 import { AppState } from "../../../store/types";
 import { IsoDate } from "../../../types/date";
-import { getDate, getDateToday, getDateTodayIso } from "../../../utils/date";
+import { getDateToday, getDateTodayIso, getTitle } from "../../../utils/date";
 import { HStack } from "../../../components/Stack/HStack/HStack";
 import { ThemedPressable } from "../../../components/Themed/Pressable/Pressable";
 import { Temporal } from "@js-temporal/polyfill";
-import { SectionList, SectionListRenderItemInfo } from "react-native";
+import { SectionList } from "react-native";
 import { getDuration } from "../../../utils/getDuration";
 import { ThemedMaterialCommunityIcons } from "../../../components/Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
-import { VStack } from "../../../components/Stack/VStack/VStack";
 import { ColorIndicator } from "../../../components/ColorIndicator/ColorIndicator";
 import { RenderedDay } from "../../../components/App/history/RenderedDay/RenderedDay";
 import { DayProps } from "react-native-calendars/src/calendar/day";
+import { borderRadius } from "../../../theme/border";
 
 export type MarkedDay = {
   marked: boolean;
@@ -100,24 +100,20 @@ export function WorkoutHistory() {
   );
 
   const renderItem = useCallback(
-    ({ section }: SectionListRenderItemInfo<(typeof dateData)[number]>) => {
-      if (section === undefined) {
+    ({ item }: { item: { color: string; weight: number; date: IsoDate; name: string; duration?: string; numExercisesDone: number } }) => {
+      if (item === undefined) {
         return <ThemedView ghost stretch style={styles.workout} />;
       }
-      const data = section;
-      console.log(data);
-      const { color, weight, date, name, duration } = data[0].data[0];
+      const { color, weight, date, name, duration, numExercisesDone } = item;
       return (
         <ThemedView style={styles.workout} key={name.concat(date)}>
-          <HStack style={styles.titleWrapper}>
-            <ColorIndicator color={color} width={3} height={16} />
-            <Text style={styles.workoutTitle}>{name}</Text>
-          </HStack>
-          <VStack style={styles.displayedWorkoutWrapper}>
-            <HStack style={styles.hstack}>
-              <ThemedMaterialCommunityIcons name="calendar" size={20} />
-              <Text>{getDate(date, lang, "long")}</Text>
+          <HStack>
+            <HStack style={styles.titleWrapper}>
+              <ColorIndicator color={color} width={3} height={20} />
+              <Text style={styles.workoutTitle}>{name}</Text>
             </HStack>
+          </HStack>
+          <HStack style={styles.displayedWorkoutWrapper}>
             <HStack style={styles.hstack}>
               <ThemedMaterialCommunityIcons name="weight" size={20} />
               <Text>{weight} kg</Text>
@@ -126,11 +122,15 @@ export function WorkoutHistory() {
               <ThemedMaterialCommunityIcons name="clock" size={20} />
               <Text>{getDuration(duration)}</Text>
             </HStack>
-          </VStack>
+            <HStack style={styles.hstack}>
+              <ThemedMaterialCommunityIcons name="weight-lifter" size={20} />
+              <Text>{numExercisesDone}</Text>
+            </HStack>
+          </HStack>
         </ThemedView>
       );
     },
-    [lang],
+    [],
   );
 
   const dayComponent = useCallback(
@@ -151,15 +151,17 @@ export function WorkoutHistory() {
     <ThemedView stretch>
       <SiteNavigationButtons titleFontSize={30} handleBack={handleNavigateBack} title={t("history")} />
       <PageContent style={styles.pageWrapper}>
-        <Text style={styles.title} ghost>
-          {month}
-        </Text>
         <SectionList
           horizontal={false}
-          sections={[{ data: dateData }]}
+          sections={dateData}
           showsVerticalScrollIndicator={false}
           contentContainerStyle={styles.scrollView}
           renderItem={renderItem}
+          renderSectionHeader={({ section }) => (
+            <Text background style={{ fontSize: 26, padding: 1, flex: 1, borderRadius, marginTop: 20 }}>
+              {getTitle(section.title as IsoDate)}
+            </Text>
+          )}
         />
         <ThemedPressable style={styles.browseButtonWrapper} onPress={open}>
           <Text style={styles.browseButton}>Browse History</Text>

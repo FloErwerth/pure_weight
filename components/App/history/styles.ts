@@ -6,22 +6,23 @@ export const styles = StyleSheet.create({
     gap: 10,
   },
   titleWrapper: {
-    gap: 3,
+    gap: 5,
+    flex: 0.6,
     alignItems: "center",
   },
   hstack: {
     alignItems: "center",
     gap: 5,
   },
-  scrollView: { gap: 10 },
+  scrollView: { gap: 5, top: -20 },
   workout: {
     padding: 10,
-    gap: 10,
+    gap: 20,
     flex: 1,
     borderRadius,
   },
   workoutTitle: {
-    fontSize: 20,
+    fontSize: 26,
   },
   title: {
     fontSize: 26,
@@ -35,7 +36,7 @@ export const styles = StyleSheet.create({
     padding: 10,
   },
   displayedWorkoutWrapper: {
-    justifyContent: "space-evenly",
+    justifyContent: "space-between",
     gap: 5,
     borderRadius,
   },
