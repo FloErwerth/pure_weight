@@ -70,8 +70,31 @@ export const mockState: AppState = {
   errors: [],
   workouts: [
     {
-      name: "Brust 1",
+      name: "Real Back",
       calendarColor: "#ffff00",
+      exercises: [
+        { name: "Klimmzüge unterstützt", weight: "25", sets: "5", pause: "3", reps: "5" },
+        { name: "Rudern Seilzug", weight: "50", sets: "4", pause: "2", reps: "8" },
+        { name: "Hintere Schulter Seil", weight: "50", sets: "4", pause: "2", reps: "8" },
+        { name: "Bizeps Sz", weight: "10", sets: "4", pause: "2", reps: "8" },
+      ],
+      doneWorkouts: [],
+    },
+    {
+      name: "Real Chest",
+      calendarColor: "#ff0000",
+      exercises: [
+        { name: "Bankdrücken", weight: "50", sets: "5", pause: "2", reps: "5" },
+        { name: "Butterfly", weight: "50", sets: "4", pause: "2", reps: "8" },
+        { name: "Military", weight: "10", sets: "5", pause: "2", reps: "5" },
+        { name: "Seitheben", weight: "10", sets: "4", pause: "2", reps: "8" },
+        { name: "Trizeps", weight: "27.5", sets: "4", pause: "2", reps: "8" },
+      ],
+      doneWorkouts: [],
+    },
+    {
+      name: "TEST Brust 1",
+      calendarColor: "#ffffff",
       exercises: [{ name: "Bankdrücken", weight: "50", sets: "5", pause: "2", reps: "5" }],
       doneWorkouts: [
         { duration: "12000", date: "2023-10-16", doneExercises: [{ name: "Bankdrücken", sets: [{ reps: "5", weight: "55" }] }] },
@@ -85,8 +108,8 @@ export const mockState: AppState = {
       ],
     },
     {
-      name: "Brust2",
-      calendarColor: "#ff0000",
+      name: "TEST Brust2",
+      calendarColor: "#000000",
       exercises: [{ name: "Bankdrücken", weight: "50", sets: "5", pause: "2", reps: "5" }],
       doneWorkouts: [
         { duration: "12000", date: "2023-10-16", doneExercises: [{ name: "Bankdrücken", sets: [{ reps: "5", weight: "55" }] }] },
@@ -228,24 +251,25 @@ export const storeReducer = createReducer<AppState>(emptyState, (builder) =>
       state.workoutStartingTimestamp = Temporal.Now.instant().epochMilliseconds;
     })
     .addCase(addSetDataToTrainingDay, (state, action) => {
-      if (state.workouts && state.workoutIndex !== undefined && state.exerciseIndex !== undefined) {
+      if (state.workoutIndex !== undefined && state.exerciseIndex !== undefined) {
         const dateToday = getDateTodayIso();
-        for (let exerciseIndex = 0; exerciseIndex < state.workouts[state.workoutIndex].doneWorkouts?.length; exerciseIndex++) {
+        for (let exerciseIndex = 0; exerciseIndex < state.workouts[state.workoutIndex].doneWorkouts.length; exerciseIndex++) {
           if (action.payload[exerciseIndex] === undefined) {
-            return;
+            continue;
           }
-          const existingData = state.workouts[state.workoutIndex]?.doneWorkouts[exerciseIndex]?.doneExercises;
+          const existingData = state.workouts[state.workoutIndex].doneWorkouts[exerciseIndex]?.doneExercises;
           (existingData ?? []).push({
             name: state.workouts[state.workoutIndex]?.exercises[exerciseIndex].name,
             sets: action.payload[exerciseIndex].sets,
             note: action.payload[exerciseIndex].note,
           });
         }
-        console.log("done");
+
         if (state.workoutStartingTimestamp !== undefined) {
           const endTimestamp = Temporal.Now.instant().epochMilliseconds;
           const seconds = (endTimestamp - state.workoutStartingTimestamp) / 1000;
-          state.workouts[state.workoutIndex].doneWorkouts[state.exerciseIndex].duration = seconds.toString();
+          const doneWorkouts = state.workouts[state.workoutIndex].doneWorkouts[state.exerciseIndex];
+          state.workouts[state.workoutIndex].doneWorkouts[state.exerciseIndex] = { ...doneWorkouts, duration: seconds.toString() };
         }
 
         state.workouts[state.workoutIndex].doneWorkouts[state.exerciseIndex].date = dateToday;

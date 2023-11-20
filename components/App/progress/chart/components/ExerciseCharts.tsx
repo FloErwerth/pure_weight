@@ -6,7 +6,6 @@ import { LineChartData } from "react-native-chart-kit/dist/line-chart/LineChart"
 import { VStack } from "../../../../Stack/VStack/VStack";
 import { ThemedButtomSheetModal, useBottomSheetRef } from "../../../../BottomSheetModal/ThemedButtomSheetModal";
 import { useAppSelector } from "../../../../../store";
-import { getSelectedTrainingDayData } from "../../../../../store/selectors";
 import { HStack } from "../../../../Stack/HStack/HStack";
 import { styles } from "./styles";
 import { useTranslation } from "react-i18next";
@@ -18,6 +17,8 @@ import { Chart } from "../../../../Chart/Chart";
 import { getDate } from "../../../../../utils/date";
 import { IsoDate } from "../../../../../types/date";
 import { ThemedPressable } from "../../../../Themed/Pressable/Pressable";
+import { getTrainingDayData } from "../../../../../store/selectors";
+import { useNavigate } from "../../../../../hooks/navigate";
 
 interface ExerciseChartProps {
   exerciseName: string;
@@ -42,14 +43,24 @@ export type ChartType = keyof typeof chartTypeMap;
 
 const getCumulativeExerciseData = (data: ExerciseSets[]) => {
   return data.reduce((vals, sets) => {
-    return [...vals, sets.map((set) => parseFloat(set?.weight ?? "0") * parseFloat(set?.reps ?? "0")).reduce((cumulative, entry) => cumulative + entry, 0)];
+    return [
+      ...vals,
+      sets.map((set) => parseFloat(set?.weight ?? "0") * parseFloat(set?.reps ?? "0")).reduce((cumulative, entry) => cumulative + entry, 0),
+    ];
   }, [] as number[]);
 };
 
 const getAveragePerDay = (data: ExerciseSets[], dataType: keyof PlainExerciseData) => {
   return data.reduce((values, sets) => {
     const setValues = sets;
-    return [...values, parseFloat((setValues.map((set) => parseFloat(set?.[dataType] ?? "0")).reduce((cumulative, entry) => cumulative + entry, 0) / setValues.length).toFixed(3))];
+    return [
+      ...values,
+      parseFloat(
+        (setValues.map((set) => parseFloat(set?.[dataType] ?? "0")).reduce((cumulative, entry) => cumulative + entry, 0) / setValues.length).toFixed(
+          3,
+        ),
+      ),
+    ];
   }, [] as number[]);
 };
 
@@ -168,15 +179,18 @@ export const ExerciseChart = ({ exerciseName, data }: ExerciseChartProps) => {
 };
 
 export default function Charts() {
-  const trainingDayData = useAppSelector(getSelectedTrainingDayData);
+  const trainingDayData = useAppSelector(getTrainingDayData);
+  const navigate = useNavigate();
+
   if (trainingDayData === undefined) {
+    navigate("workouts");
     return null;
   }
 
   return (
     <ThemedScrollView>
-      {trainingDayData.map(([exerciseName, exerciseData]) => (
-        <ExerciseChart key={Math.random() * 100} exerciseName={exerciseName} data={exerciseData} />
+      {trainingDayData.map(({ exerciseName, data }) => (
+        <ExerciseChart key={Math.random() * 100} exerciseName={exerciseName} data={data} />
       ))}
     </ThemedScrollView>
   );

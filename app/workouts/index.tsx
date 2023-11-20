@@ -43,6 +43,7 @@ export function Workouts() {
   const { t, i18n } = useTranslation();
   const previousTrainingByIndex = useAppSelector(getOverallTrainingTrend);
   const [showToast, setShowToast] = useState(false);
+
   useEffect(() => {
     i18n.changeLanguage(language ?? Locale.getLocales()[0].languageCode ?? "en");
     dispatch(setExerciseIndex(0));

@@ -170,74 +170,37 @@ export const getSpecificNumberOfSets = createSelector([getSelectedTrainingDay], 
     }
   };
 });
-const getTrainingDayMap = createSelector([getSavedTrainings], (trainingDays) => {
-  const trainingDayDataMap: Map<
-    string,
-    Map<
-      string,
-      {
-        sets: ExerciseSets;
-        date: IsoDate;
-      }[]
-    >
-  > = new Map();
-  trainingDays
-    .filter((workout) => workout.doneWorkouts.length > 0)
-    .forEach((workout) => {
-      if (!trainingDayDataMap.get(workout.name)) {
-        trainingDayDataMap.set(workout.name, new Map());
-      }
 
-      const lastCompleted20Exercises = workout.doneWorkouts.slice(workout.doneWorkouts.length - 20).map((doneWorkout) => {
-        return {
-          exerciseData: doneWorkout.doneExercises.reduce(
-            (data, current) => {
-              return [
-                ...data,
-                {
-                  name: current.name,
-                  date: doneWorkout.date,
-                  sets: current.sets,
-                },
-              ];
-            },
-            [] as {
-              sets: ExerciseSets;
-              date: IsoDate;
-              name: string;
-            }[],
-          ),
-        };
-      });
+export const getWorkoutExercises = createSelector([getSelectedTrainingDay], (workout) => workout?.exercises);
 
-      const dayToDataMap: Map<
-        string,
-        {
-          sets: ExerciseSets;
-          date: IsoDate;
-        }[]
-      > = new Map();
-      lastCompleted20Exercises.forEach((doneExericse) => {
-        doneExericse.exerciseData.forEach((data) => {
-          const arr = dayToDataMap.get(data.name) ?? [];
-          dayToDataMap.set(data.name, [
-            ...arr,
-            {
-              sets: data.sets,
-              date: data.date,
-            },
-          ]);
-        });
+export const getTrainingDayData = createSelector([getSavedTrainings, getSelectedTrainingDayIndex], (trainingDays, index) => {
+  if (index === undefined) {
+    return undefined;
+  }
+
+  const workout = trainingDays[index];
+  if (workout?.doneWorkouts === undefined || workout.doneWorkouts.length === 0) {
+    return undefined;
+  }
+
+  const sortedData: { exerciseName: string; data: { sets: ExerciseSets; date: IsoDate }[] }[] = [];
+  const slicedDoneWorkouts = workout.doneWorkouts.length > 20 ? workout.doneWorkouts.slice(workout.doneWorkouts.length - 20) : workout.doneWorkouts;
+  slicedDoneWorkouts
+    .filter(({ doneExercises }) => doneExercises !== undefined)
+    .forEach(({ date, doneExercises }) => {
+      doneExercises!.forEach(({ name, sets }) => {
+        const foundEntry = sortedData.find(({ exerciseName }) => exerciseName === name);
+        if (foundEntry) {
+          foundEntry.data.push({ sets, date });
+          return;
+        }
+        sortedData.push({ exerciseName: name, data: [{ sets, date }] });
       });
-      trainingDayDataMap.set(workout.name, dayToDataMap);
     });
-  return Array.from(trainingDayDataMap.values()).map((exerciseMap) => Array.from(exerciseMap).filter(([_, exercise]) => exercise.length >= 2));
-});
-export const getTrainingDayData = createSelector([getTrainingDayMap], (trainingDays) => {
-  return Array.from(trainingDays.values()).map((exerciseMap) => Array.from(exerciseMap).filter(([_, exercise]) => exercise.length >= 2));
+  return sortedData;
 });
 
-export const getHistoryByMonth = createSelector([getSavedTrainings, (trainings, month: string) => month], (trainings, date) => {
+export const getHistoryByMonth = createSelector([getSavedTrainings, (trainings, month: string) => month], (trainings) => {
   const foundTrainings: Map<string, { color: string; name: string; duration?: string; date: IsoDate; weight: number; numExercisesDone: number }[]> =
     new Map();
   trainings.forEach((workout) => {
@@ -249,26 +212,19 @@ export const getHistoryByMonth = createSelector([getSavedTrainings, (trainings, 
           name: workout.name,
           date: doneWorkout.date,
           duration: doneWorkout.duration,
-          weight: doneWorkout.doneExercises.reduce(
-            (sum, current) =>
-              sum + current.sets.reduce((sumSet, currentSet) => sumSet + parseFloat(currentSet.weight) * parseFloat(currentSet.reps), 0),
-            0,
-          ),
-          numExercisesDone: doneWorkout.doneExercises.length,
+          weight:
+            doneWorkout.doneExercises?.reduce(
+              (sum, current) =>
+                sum + current.sets.reduce((sumSet, currentSet) => sumSet + parseFloat(currentSet.weight) * parseFloat(currentSet.reps), 0),
+              0,
+            ) ?? 0,
+          numExercisesDone: doneWorkout.doneExercises?.length ?? 0,
         },
       ]);
     });
   });
 
   return Array.from(foundTrainings).map(([month, data]) => ({ title: month, data }));
-});
-
-export const getSelectedTrainingDayData = createSelector([getTrainingDayData, getTrainingIndex], (data, index) => {
-  if (index === undefined) {
-    return undefined;
-  }
-
-  return data[index];
 });
 
 export const getPreviousTraining = createSelector([getSelectedTrainingDay, getLanguage], (traininigDay, language) => {
@@ -290,7 +246,7 @@ export const getOverallTrainingTrend = createSelector([getSelectedTrainingDayByI
   return (workoutIndex: number) => {
     const workout = trainingDayByIndex(workoutIndex);
 
-    if (workout.doneWorkouts.length < 2) {
+    if (!workout.doneWorkouts || workout.doneWorkouts?.length < 2 || workout.doneWorkouts.some(({ doneExercises }) => !doneExercises)) {
       return undefined;
     }
 
@@ -305,9 +261,9 @@ export const getOverallTrainingTrend = createSelector([getSelectedTrainingDayByI
       const workoutBefore = workout.doneWorkouts[i - 1];
       const currentWorkout = workout.doneWorkouts[i];
 
-      for (let j = 0; j < workoutBefore.doneExercises.length; j++) {
-        const beforeExercise = workoutBefore.doneExercises[j];
-        const currentExercise = currentWorkout.doneExercises[j];
+      for (let j = 0; j < workoutBefore.doneExercises!.length; j++) {
+        const beforeExercise = workoutBefore.doneExercises![j];
+        const currentExercise = currentWorkout.doneExercises![j];
 
         if (currentExercise !== undefined && currentExercise.name === beforeExercise.name) {
           const beforeOverall = beforeExercise.sets.reduce((sum, set) => sum + parseFloat(set.reps) * parseFloat(set.weight), 0);

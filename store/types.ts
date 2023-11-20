@@ -17,7 +17,7 @@ export type PlainExerciseData = {
 export type DoneWorkouts = {
   date: IsoDate;
   duration: string;
-  doneExercises: DoneExerciseData[];
+  doneExercises?: DoneExerciseData[];
 }[];
 
 export type DoneExerciseData = {

@@ -2,7 +2,7 @@ import { lazy, Suspense, useCallback, useMemo } from "react";
 import { useNavigate } from "../../../hooks/navigate";
 import { SiteNavigationButtons } from "../../../components/SiteNavigationButtons/SiteNavigationButtons";
 import { useAppSelector } from "../../../store";
-import { getExerciseNames, getSelectedTrainingName } from "../../../store/selectors";
+import { getSelectedTrainingName, getWorkoutExercises } from "../../../store/selectors";
 import { Dimensions, ScrollView } from "react-native";
 import { Skeleton } from "../../../components/Skeleton/Skeleton";
 import { borderRadius } from "../../../theme/border";
@@ -21,14 +21,14 @@ const PromiseTrigger = () => {
 
 export function Progress() {
   const navigate = useNavigate();
-  const exerciseNames = useAppSelector(getExerciseNames);
+  const exercises = useAppSelector(getWorkoutExercises);
   const trainingDayName = useAppSelector(getSelectedTrainingName);
 
   const handleNavigateToWorkouts = useCallback(() => {
     navigate("workouts");
   }, [navigate]);
 
-  if (exerciseNames === undefined) {
+  if (exercises === undefined) {
     handleNavigateToWorkouts();
   }
 
@@ -45,7 +45,7 @@ export function Progress() {
           </HStack>
           <Skeleton borderRadius={borderRadius} width={Dimensions.get("screen").width - 40} height={300} />
         </VStack>
-        {exerciseNames?.map(() => (
+        {exercises?.map(() => (
           <VStack key={Math.random() * 10000} style={containerStyles}>
             <HStack style={styles.hStack}>
               <Skeleton borderRadius={borderRadius} width={140} height={40} />

@@ -5,27 +5,20 @@
   "build": {
     "development": {
       "developmentClient": true,
-      "distribution": "internal"
-    },
-    "preview": {
-      "ios": {
-        "simulator": true
-      },
-      "android": {
-        "buildType": "apk"
+      "distribution": "internal",
+      "env": {
+        "EXPO_PUBLIC_IS_PRODUCTION":"false"
       }
     },
     "production": {
       "env": {
-        "EAS_BUILD_DISABLE_NPM_CACHE": "0"
+        "EAS_BUILD_DISABLE_NPM_CACHE": "0",
+        "EXPO_PUBLIC_IS_PRODUCTION": "true"
       }
     }
   },
   "submit": {
     "production": {
-      "android": {
-
-      },
       "ios": {
         "appleId": "erwerthflorian@outlook.de",
         "ascAppId": "6469710434",
