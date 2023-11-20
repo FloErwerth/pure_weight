@@ -1,4 +1,4 @@
-import { View } from "react-native";
+import { Pressable, View } from "react-native";
 import { Text } from "../../../Themed/ThemedText/Text";
 import { useMemo } from "react";
 import { styles } from "./styles";
@@ -9,6 +9,7 @@ import { HStack } from "../../../Stack/HStack/HStack";
 interface RenderedDayProps {
   day: string;
   markedDate: MarkedDay;
+  handleSelectDate: () => void;
 }
 
 const useMarkedDayStyles = (markedDate: MarkedDay) => {
@@ -42,15 +43,15 @@ const MultiDot = ({ markedDate }: { markedDate: MarkedDay }) => {
   return null;
 };
 
-export const RenderedDay = ({ day, markedDate }: RenderedDayProps) => {
+export const RenderedDay = ({ day, markedDate, handleSelectDate }: RenderedDayProps) => {
   const [dateStyle] = useMarkedDayStyles(markedDate);
 
   return (
-    <View>
+    <Pressable onPress={handleSelectDate}>
       <View style={dateStyle}>
         <Text ghost>{day}</Text>
         <MultiDot markedDate={markedDate} />
       </View>
-    </View>
+    </Pressable>
   );
 };

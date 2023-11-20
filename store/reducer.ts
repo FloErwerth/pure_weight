@@ -109,7 +109,11 @@ export const mockState: AppState = {
         { name: "Bankdrücken", weight: "50", sets: "5", pause: "2", reps: "5" },
         { name: "Butterfly", weight: "50", sets: "5", pause: "2", reps: "2" },
       ],
-      doneWorkouts: constructedDoneWorkouts,
+      doneWorkouts: [
+        { duration: "12000", date: "2023-10-16", doneExercises: [{ name: "Bankdrücken", sets: [{ reps: "5", weight: "55" }] }] },
+        { duration: "12000", date: "2023-11-18", doneExercises: [{ name: "Bankdrücken", sets: [{ reps: "5", weight: "55" }] }] },
+        { duration: "12000", date: "2023-11-20", doneExercises: [{ name: "Bankdrücken", sets: [{ reps: "5", weight: "55" }] }] },
+      ],
     },
     {
       name: "TEST Brust2",

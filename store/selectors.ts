@@ -200,7 +200,7 @@ export const getTrainingDayData = createSelector([getSavedTrainings, getSelected
   return sortedData;
 });
 
-export const getHistoryByMonth = createSelector([getSavedTrainings, (trainings, month: string) => month], (trainings) => {
+export const getHistoryByMonth = createSelector([getSavedTrainings, (trainings, month: string) => month], (trainings, searchedMonth) => {
   const foundTrainings: Map<string, { color: string; name: string; duration?: string; date: IsoDate; weight: number; numExercisesDone: number }[]> =
     new Map();
   trainings.forEach((workout) => {
@@ -224,7 +224,9 @@ export const getHistoryByMonth = createSelector([getSavedTrainings, (trainings, 
     });
   });
 
-  return Array.from(foundTrainings).map(([month, data]) => ({ title: month, data }));
+  return Array.from(foundTrainings)
+    .filter(([date]) => date.split("-")[1] === searchedMonth.split("-")[1])
+    .map(([month, data]) => ({ title: month, data }));
 });
 
 export const getPreviousTraining = createSelector([getSelectedTrainingDay, getLanguage], (traininigDay, language) => {

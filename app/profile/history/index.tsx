@@ -5,7 +5,7 @@ import { useNavigate } from "../../../hooks/navigate";
 import { useAppSelector } from "../../../store";
 import { PageContent } from "../../../components/PageContent/PageContent";
 import { ThemedView } from "../../../components/Themed/ThemedView/View";
-import { getAppInstallDate, getHistoryByMonth, getLanguage, getLatestWorkoutDate, getWorkoutDateColor } from "../../../store/selectors";
+import { getAppInstallDate, getHistoryByMonth, getLatestWorkoutDate, getWorkoutDateColor } from "../../../store/selectors";
 import { useTheme } from "../../../theme/context";
 import { CalendarList, DateData } from "react-native-calendars";
 import { ThemedButtomSheetModal, useBottomSheetRef } from "../../../components/BottomSheetModal/ThemedButtomSheetModal";
@@ -16,8 +16,7 @@ import { IsoDate } from "../../../types/date";
 import { getDateToday, getDateTodayIso, getTitle } from "../../../utils/date";
 import { HStack } from "../../../components/Stack/HStack/HStack";
 import { ThemedPressable } from "../../../components/Themed/Pressable/Pressable";
-import { Temporal } from "@js-temporal/polyfill";
-import { SectionList } from "react-native";
+import { SectionList, SectionListData } from "react-native";
 import { getDuration } from "../../../utils/getDuration";
 import { ThemedMaterialCommunityIcons } from "../../../components/Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
 import { ColorIndicator } from "../../../components/ColorIndicator/ColorIndicator";
@@ -25,6 +24,7 @@ import { RenderedDay } from "../../../components/App/history/RenderedDay/Rendere
 import { DayProps } from "react-native-calendars/src/calendar/day";
 import { borderRadius } from "../../../theme/border";
 
+export type SectionListItemInfo = { color: string; name: string; duration?: string; date: IsoDate; weight: number; numExercisesDone: number };
 export type MarkedDay = {
   marked: boolean;
   selectedColor: string;
@@ -55,16 +55,6 @@ export function WorkoutHistory() {
   const installDate = useAppSelector(getAppInstallDate);
   const latestWorkoutDate = useAppSelector(getLatestWorkoutDate);
   const [date, setDate] = useState<IsoDate>(latestWorkoutDate);
-  const lang = useAppSelector(getLanguage);
-  const month = useMemo(
-    () =>
-      Temporal.PlainDate.from(date).toLocaleString(lang, {
-        day: undefined,
-        month: "long",
-        year: "numeric",
-      }),
-    [date, lang],
-  );
   const dateData = useAppSelector((state: AppState) => getHistoryByMonth(state, date));
   const pastScrollRange = useMemo(() => Math.floor(getDateToday().since(installDate ?? getDateTodayIso()).days / 30), [installDate]);
 
@@ -92,46 +82,50 @@ export function WorkoutHistory() {
   const [ref, open, close] = useBottomSheetRef();
 
   const handleSelectDate = useCallback(
-    ({ dateString }: DateData) => {
-      setDate(dateString as IsoDate);
+    (date: IsoDate) => {
+      setDate(date);
       close();
     },
     [close],
   );
 
-  const renderItem = useCallback(
-    ({ item }: { item: { color: string; weight: number; date: IsoDate; name: string; duration?: string; numExercisesDone: number } }) => {
-      if (item === undefined) {
-        return <ThemedView ghost stretch style={styles.workout} />;
-      }
-      const { color, weight, date, name, duration, numExercisesDone } = item;
-      return (
-        <ThemedView style={styles.workout} key={name.concat(date)}>
-          <HStack>
-            <HStack style={styles.titleWrapper}>
-              <ColorIndicator color={color} width={3} height={20} />
-              <Text style={styles.workoutTitle}>{name}</Text>
-            </HStack>
+  const renderItem = useCallback(({ item }: { item: SectionListItemInfo }) => {
+    if (item === undefined) {
+      return <ThemedView key="GHOST" ghost stretch style={styles.workout} />;
+    }
+    const { color, weight, date, name, duration, numExercisesDone } = item;
+    return (
+      <ThemedView
+        style={styles.workout}
+        key={name
+          .concat(date)
+          .concat(weight.toString())
+          .concat(numExercisesDone.toString())
+          .concat(duration ?? "DURATION")}
+      >
+        <HStack>
+          <HStack style={styles.titleWrapper}>
+            <ColorIndicator color={color} width={3} height={20} />
+            <Text style={styles.workoutTitle}>{name}</Text>
           </HStack>
-          <HStack style={styles.displayedWorkoutWrapper}>
-            <HStack style={styles.hstack}>
-              <ThemedMaterialCommunityIcons name="weight" size={20} />
-              <Text>{weight} kg</Text>
-            </HStack>
-            <HStack style={styles.hstack}>
-              <ThemedMaterialCommunityIcons name="clock" size={20} />
-              <Text>{getDuration(duration)}</Text>
-            </HStack>
-            <HStack style={styles.hstack}>
-              <ThemedMaterialCommunityIcons name="weight-lifter" size={20} />
-              <Text>{numExercisesDone}</Text>
-            </HStack>
+        </HStack>
+        <HStack style={styles.displayedWorkoutWrapper}>
+          <HStack style={styles.hstack}>
+            <ThemedMaterialCommunityIcons name="weight" size={20} />
+            <Text>{weight} kg</Text>
           </HStack>
-        </ThemedView>
-      );
-    },
-    [],
-  );
+          <HStack style={styles.hstack}>
+            <ThemedMaterialCommunityIcons name="clock" size={20} />
+            <Text>{getDuration(duration)}</Text>
+          </HStack>
+          <HStack style={styles.hstack}>
+            <ThemedMaterialCommunityIcons name="weight-lifter" size={20} />
+            <Text>{numExercisesDone}</Text>
+          </HStack>
+        </HStack>
+      </ThemedView>
+    );
+  }, []);
 
   const dayComponent = useCallback(
     (date: DayProps & { date?: DateData | undefined }) => {
@@ -141,10 +135,24 @@ export function WorkoutHistory() {
       if (!day || !isoDate) {
         return null;
       }
+
+      const handleDayPress = () => {
+        handleSelectDate(isoDate as IsoDate);
+      };
+
       const markedDay = markedDates[isoDate];
-      return <RenderedDay day={day} markedDate={markedDay} />;
+      return <RenderedDay handleSelectDate={handleDayPress} day={day} markedDate={markedDay} />;
     },
     [markedDates],
+  );
+
+  const renderSectionHeader = useCallback(
+    ({ section }: { section: SectionListData<SectionListItemInfo> }) => (
+      <Text background style={{ fontSize: 26, padding: 1, flex: 1, borderRadius, marginTop: 20 }}>
+        {getTitle(section.title as IsoDate)}
+      </Text>
+    ),
+    [],
   );
 
   return (
@@ -157,11 +165,7 @@ export function WorkoutHistory() {
           showsVerticalScrollIndicator={false}
           contentContainerStyle={styles.scrollView}
           renderItem={renderItem}
-          renderSectionHeader={({ section }) => (
-            <Text background style={{ fontSize: 26, padding: 1, flex: 1, borderRadius, marginTop: 20 }}>
-              {getTitle(section.title as IsoDate)}
-            </Text>
-          )}
+          renderSectionHeader={renderSectionHeader}
         />
         <ThemedPressable style={styles.browseButtonWrapper} onPress={open}>
           <Text style={styles.browseButton}>Browse History</Text>
@@ -173,7 +177,6 @@ export function WorkoutHistory() {
           futureScrollRange={0}
           pastScrollRange={pastScrollRange}
           showScrollIndicator
-          onDayPress={handleSelectDate}
           theme={calendarTheme}
           disabledByDefault
           horizontal
