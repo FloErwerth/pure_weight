@@ -1,6 +1,6 @@
 import { SiteNavigationButtons } from "../../../components/SiteNavigationButtons/SiteNavigationButtons";
 import { useTranslation } from "react-i18next";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import { useNavigate } from "../../../hooks/navigate";
 import { useAppSelector } from "../../../store";
 import { PageContent } from "../../../components/PageContent/PageContent";
@@ -16,7 +16,7 @@ import { IsoDate } from "../../../types/date";
 import { getDateToday, getDateTodayIso, getTitle } from "../../../utils/date";
 import { HStack } from "../../../components/Stack/HStack/HStack";
 import { ThemedPressable } from "../../../components/Themed/Pressable/Pressable";
-import { SectionList, SectionListData } from "react-native";
+import { Dimensions, SectionList, SectionListData } from "react-native";
 import { getDuration } from "../../../utils/getDuration";
 import { ThemedMaterialCommunityIcons } from "../../../components/Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
 import { ColorIndicator } from "../../../components/ColorIndicator/ColorIndicator";
@@ -80,6 +80,7 @@ export function WorkoutHistory() {
     navigate("profile");
   }, [navigate]);
   const [ref, open, close] = useBottomSheetRef();
+  const sectionListRef = useRef<SectionList>(null);
 
   const handleSelectDate = useCallback(
     (date: IsoDate) => {
@@ -138,12 +139,22 @@ export function WorkoutHistory() {
 
       const handleDayPress = () => {
         handleSelectDate(isoDate as IsoDate);
+        setTimeout(
+          () =>
+            sectionListRef.current?.scrollToLocation({
+              sectionIndex: sectionListRef.current?.props.sections.findIndex((data) => data.data[0].date === isoDate),
+              itemIndex: 1,
+              viewOffset: Dimensions.get("window").height * 0.28,
+              animated: true,
+            }),
+          50,
+        );
       };
 
       const markedDay = markedDates[isoDate];
       return <RenderedDay handleSelectDate={handleDayPress} day={day} markedDate={markedDay} />;
     },
-    [markedDates],
+    [handleSelectDate, markedDates],
   );
 
   const renderSectionHeader = useCallback(
@@ -160,6 +171,7 @@ export function WorkoutHistory() {
       <SiteNavigationButtons titleFontSize={30} handleBack={handleNavigateBack} title={t("history")} />
       <PageContent style={styles.pageWrapper}>
         <SectionList
+          ref={sectionListRef}
           horizontal={false}
           sections={dateData}
           showsVerticalScrollIndicator={false}
