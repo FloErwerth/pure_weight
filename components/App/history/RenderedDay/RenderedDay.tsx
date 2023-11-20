@@ -10,17 +10,18 @@ interface RenderedDayProps {
   day: string;
   markedDate: MarkedDay;
   handleSelectDate: () => void;
+  selected: boolean;
 }
 
-const useMarkedDayStyles = (markedDate: MarkedDay) => {
-  const { secondaryBackgroundColor } = useTheme();
+const useMarkedDayStyles = (markedDate: MarkedDay, selected: boolean) => {
+  const { secondaryBackgroundColor, mainColor } = useTheme();
   return [
     useMemo(() => {
       if (markedDate === undefined) {
         return [styles.dateWrapper];
       }
-      return [styles.dateWrapper, { backgroundColor: secondaryBackgroundColor }];
-    }, [markedDate, secondaryBackgroundColor]),
+      return [styles.dateWrapper, { backgroundColor: secondaryBackgroundColor, borderWidth: 0.5, borderColor: selected ? mainColor : "transparent" }];
+    }, [mainColor, markedDate, secondaryBackgroundColor, selected]),
   ] as const;
 };
 
@@ -43,8 +44,8 @@ const MultiDot = ({ markedDate }: { markedDate: MarkedDay }) => {
   return null;
 };
 
-export const RenderedDay = ({ day, markedDate, handleSelectDate }: RenderedDayProps) => {
-  const [dateStyle] = useMarkedDayStyles(markedDate);
+export const RenderedDay = ({ day, markedDate, handleSelectDate, selected }: RenderedDayProps) => {
+  const [dateStyle] = useMarkedDayStyles(markedDate, selected);
 
   return (
     <Pressable onPress={handleSelectDate}>

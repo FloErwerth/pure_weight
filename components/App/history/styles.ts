@@ -20,6 +20,7 @@ export const styles = StyleSheet.create({
     gap: 20,
     flex: 1,
     borderRadius,
+    borderWidth: 0.5,
   },
   workoutTitle: {
     fontSize: 26,

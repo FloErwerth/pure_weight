@@ -104,7 +104,7 @@ export const mockState: AppState = {
     },
     {
       name: "TEST Brust 1",
-      calendarColor: "#ffffff",
+      calendarColor: "#ff11aa",
       exercises: [
         { name: "Bankdrücken", weight: "50", sets: "5", pause: "2", reps: "5" },
         { name: "Butterfly", weight: "50", sets: "5", pause: "2", reps: "2" },
