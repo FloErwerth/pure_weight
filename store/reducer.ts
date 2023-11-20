@@ -26,6 +26,16 @@ for (let i = 0; i < 100; i++) {
           { weight: (i * 5).toString(), reps: "5" },
         ],
       },
+      {
+        name: "Butterfly",
+        sets: [
+          { weight: (Math.random() * 5 + i).toString(), reps: (Math.random() * 5 + i).toString() },
+          { weight: (Math.random() * 5 + i).toString(), reps: (Math.random() * 5 + i).toString() },
+          { weight: (Math.random() * 5 + i).toString(), reps: (Math.random() * 5 + i).toString() },
+          { weight: (Math.random() * 5 + i).toString(), reps: (Math.random() * 5 + i).toString() },
+          { weight: (Math.random() * 5 + i).toString(), reps: (Math.random() * 5 + i).toString() },
+        ],
+      },
     ],
   });
 }
@@ -95,17 +105,11 @@ export const mockState: AppState = {
     {
       name: "TEST Brust 1",
       calendarColor: "#ffffff",
-      exercises: [{ name: "Bankdrücken", weight: "50", sets: "5", pause: "2", reps: "5" }],
-      doneWorkouts: [
-        { duration: "12000", date: "2023-10-16", doneExercises: [{ name: "Bankdrücken", sets: [{ reps: "5", weight: "55" }] }] },
-        { duration: "12000", date: "2023-11-18", doneExercises: [{ name: "Bankdrücken", sets: [{ reps: "5", weight: "55" }] }] },
-        { duration: "12000", date: "2023-11-20", doneExercises: [{ name: "Bankdrücken", sets: [{ reps: "5", weight: "55" }] }] },
-        { duration: "12000", date: "2023-11-21", doneExercises: [{ name: "Bankdrücken", sets: [{ reps: "5", weight: "55" }] }] },
-        { duration: "12000", date: "2023-11-22", doneExercises: [{ name: "Bankdrücken", sets: [{ reps: "5", weight: "55" }] }] },
-        { duration: "12000", date: "2023-11-23", doneExercises: [{ name: "Bankdrücken", sets: [{ reps: "5", weight: "55" }] }] },
-        { duration: "12000", date: "2023-11-24", doneExercises: [{ name: "Bankdrücken", sets: [{ reps: "5", weight: "55" }] }] },
-        { duration: "12000", date: "2023-11-25", doneExercises: [{ name: "Bankdrücken", sets: [{ reps: "5", weight: "55" }] }] },
+      exercises: [
+        { name: "Bankdrücken", weight: "50", sets: "5", pause: "2", reps: "5" },
+        { name: "Butterfly", weight: "50", sets: "5", pause: "2", reps: "2" },
       ],
+      doneWorkouts: constructedDoneWorkouts,
     },
     {
       name: "TEST Brust2",

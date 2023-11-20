@@ -38,20 +38,13 @@ export function Progress() {
 
     return (
       <ScrollView contentContainerStyle={styles.scrollView}>
-        <VStack key={Math.random() * 10000} style={containerStyles}>
-          <HStack style={styles.hStack}>
-            <Skeleton borderRadius={borderRadius} width={140} height={40} />
-            <Skeleton borderRadius={borderRadius} width={140} height={40} />
-          </HStack>
-          <Skeleton borderRadius={borderRadius} width={Dimensions.get("screen").width - 40} height={300} />
-        </VStack>
         {exercises?.map(() => (
           <VStack key={Math.random() * 10000} style={containerStyles}>
             <HStack style={styles.hStack}>
               <Skeleton borderRadius={borderRadius} width={140} height={40} />
               <Skeleton borderRadius={borderRadius} width={140} height={40} />
             </HStack>
-            <Skeleton borderRadius={borderRadius} width={Dimensions.get("screen").width - 40} height={300} />
+            <Skeleton borderRadius={borderRadius} width={Dimensions.get("screen").width - 40} height={283} />
           </VStack>
         ))}
       </ScrollView>
