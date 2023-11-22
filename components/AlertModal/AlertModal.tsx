@@ -1,5 +1,5 @@
 import { styles } from "./styles";
-import { PropsWithChildren, RefObject, useCallback, useEffect, useMemo } from "react";
+import { PropsWithChildren, RefObject, useCallback, useMemo } from "react";
 import { ThemedButtomSheetModal } from "../BottomSheetModal/ThemedButtomSheetModal";
 import { HStack } from "../Stack/HStack/HStack";
 import * as Haptics from "expo-haptics";
@@ -25,14 +25,8 @@ interface TrainingNotDoneModalProps extends PropsWithChildren {
   isVisible?: boolean;
   reference: RefObject<BottomSheetModal>;
 }
-export const AlertModal = ({ reference, onConfirm, onCancel, isVisible, content, title, children }: TrainingNotDoneModalProps) => {
+export const AlertModal = ({ reference, onConfirm, onCancel, content, title, children }: TrainingNotDoneModalProps) => {
   const { t } = useTranslation();
-
-  useEffect(() => {
-    if (isVisible) {
-      void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-    }
-  }, [isVisible]);
 
   const handleConfirmButton = useCallback(() => {
     void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);

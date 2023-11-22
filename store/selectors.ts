@@ -237,10 +237,9 @@ export const getPreviousTraining = createSelector(
       return undefined;
     }
 
-    //Map<exerciseName, data>
     const foundEntries = new Map<string, { date: string; sets: ExerciseSets; note?: string }>();
 
-    for (let workoutIndex = doneWorkouts.length - 1; workoutIndex > 0; workoutIndex--) {
+    for (let workoutIndex = doneWorkouts.length - 1; workoutIndex >= 0; workoutIndex--) {
       doneWorkouts[workoutIndex].doneExercises?.forEach((exercise) => {
         if (!foundEntries.get(exercise.name)) {
           foundEntries.set(exercise.name, { date: getDate(doneWorkouts[workoutIndex].date, language), sets: exercise.sets, note: exercise.note });

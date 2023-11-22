@@ -31,13 +31,12 @@ export function Train() {
   const { bottom } = useSafeAreaInsets();
   const { t } = useTranslation();
   const trainingDay = useAppSelector(getSelectedTrainingDay);
-  const [showModal, setShowAlert] = useState(false);
   const [doneExercises, setDoneExercises] = useState<DoneExercises>(new Map());
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const getNumberOfSetsWithIndex = useAppSelector(getSpecificNumberOfSets);
   const confirmButtonOpacity = useRef(new Animated.Value(0)).current;
-  const [ref] = useBottomSheetRef();
+  const [ref, open, close] = useBottomSheetRef();
 
   const isDone = useMemo(() => {
     const hasEntryForEveryExercise = doneExercises.size === (trainingDay?.exercises.length ?? -1);
@@ -80,7 +79,7 @@ export function Train() {
     handleReset();
   }, [handleReset, handleSaveTrainingData]);
 
-  const handleCloseAlert = useCallback(() => setShowAlert(false), []);
+  const handleCloseAlert = useCallback(() => close(), [close]);
 
   const handleNotDoneConfirm = useCallback(() => {
     ref.current?.close();
@@ -178,7 +177,6 @@ export function Train() {
         reference={ref}
         title={alertModalConfig.title}
         content={alertModalConfig.content}
-        isVisible={showModal}
         onConfirm={handleNotDoneConfirm}
         onCancel={handleCloseAlert}
       />
