@@ -9,7 +9,7 @@ import { borderRadius } from "../../../../theme/border";
 import { Text } from "../../../Themed/ThemedText/Text";
 import { useTheme } from "../../../../theme/context";
 import { Chart } from "../../../Chart/Chart";
-import { truncateToNthSignificantDigit } from "../../../../utils/number";
+import { trunicateToNthSignificantDigit } from "../../../../utils/number";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 
 interface MeasurementChartModalProps extends ThemedBottomSheetModalProps {
@@ -27,7 +27,7 @@ export const MeasurementChartModal = ({ index, unit, name, reference }: Measurem
       return (
         <ThemedView key={x + y} style={{ position: "absolute", top: y - 25, left: x - 20, flex: 1, padding: 3, borderRadius, alignItems: "center" }}>
           <Text style={{ fontSize: 12, color: mainColor }}>
-            {truncateToNthSignificantDigit(indexData + 0.0012121221, false, 1)} {unit}
+            {trunicateToNthSignificantDigit(indexData + 0.0012121221, false, 1)} {unit}
           </Text>
         </ThemedView>
       );

@@ -8,7 +8,7 @@ import { Text } from "../../../Themed/ThemedText/Text";
 import { swipableContext } from "../../Swipeable";
 import { useAppSelector } from "../../../../store";
 import { getLanguage } from "../../../../store/selectors";
-import { truncateToNthSignificantDigit } from "../../../../utils/number";
+import { trunicateToNthSignificantDigit } from "../../../../utils/number";
 import { ThemedPressable } from "../../../Themed/Pressable/Pressable";
 import { ThemedView } from "../../../Themed/ThemedView/View";
 
@@ -86,7 +86,7 @@ const useText = (type: "Workout" | "Measurement", even: boolean, higherPercentag
 
 export const ProgressDisplay = ({ percent, onPress, higherIsBetter = true, wasPositive, name, type }: ProgressDisplayProps) => {
   const isPositive = wasPositive && higherIsBetter;
-  const processedPercent = truncateToNthSignificantDigit(percent ?? 0);
+  const processedPercent = trunicateToNthSignificantDigit(percent ?? 0);
   const even = processedPercent === 0;
   const text = useText(type, even, wasPositive, processedPercent, name);
 
