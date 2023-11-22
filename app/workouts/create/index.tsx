@@ -58,7 +58,7 @@ export function Create() {
   const [createdExercises, setCreatedExercises] = useState<ExerciseMetaData[]>(editedDay?.exercises.map((exercise) => exercise) ?? []);
   const dispatch = useAppDispatch();
   const [alertRef, openAlert, closeAlert] = useBottomSheetRef();
-  const [addRef, openAdd, closeAdd] = useBottomSheetRef();
+  const [addRef, _, closeAdd] = useBottomSheetRef();
   const initialColor = useColor(editedDay?.calendarColor);
   const [PickerModal, PickerButton, color] = useColorPickerComponents(initialColor);
 

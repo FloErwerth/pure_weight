@@ -2,7 +2,7 @@ import { FlatList, View } from "react-native";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "../../hooks/navigate";
 import { useAppDispatch, useAppSelector } from "../../store";
-import { getLanguage, getOverallTrainingTrend, getSavedTrainings } from "../../store/selectors";
+import { getLanguage, getOverallTrainingTrend, getSortedWorkouts } from "../../store/selectors";
 import {
   cleanErrors,
   recoverWorkout,
@@ -25,6 +25,7 @@ import { BottomToast } from "../../components/BottomToast/BottomToast";
 import { HStack } from "../../components/Stack/HStack/HStack";
 import { ThemedMaterialCommunityIcons } from "../../components/Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
 import { ColorIndicator } from "../../components/ColorIndicator/ColorIndicator";
+import { WorkoutSorting } from "../../components/App/train/WorkoutSorting/WorkoutSorting";
 
 type RenderedItem = {
   handleNavigateToProgress: () => void;
@@ -55,7 +56,7 @@ export function Workouts() {
 
   const navigate = useNavigate();
 
-  const savedTrainings = useAppSelector(getSavedTrainings);
+  const savedWorkouts = useAppSelector(getSortedWorkouts);
 
   const handleNavigateToCreateTraining = useCallback(() => {
     navigate("create");
@@ -93,7 +94,7 @@ export function Workouts() {
   const confirmIcon = useMemo((): { name: "plus"; size: number } => ({ name: "plus", size: 40 }), []);
 
   const mappedTrainings = useMemo(() => {
-    return savedTrainings.map((trainingDay, index) => {
+    return savedWorkouts.map((trainingDay, index) => {
       const onEdit = () => handleEdit(index);
       const onDelete = () => handleDelete(index);
       const key = trainingDay.name.concat("-key").concat((index * Math.random() * 2).toString());
@@ -106,7 +107,7 @@ export function Workouts() {
       const color = trainingDay.calendarColor;
       return { handleNavigateToProgress, onEdit, onDelete, key, onClick, workoutName: trainingDay.name, bestPreviousTraining, color };
     });
-  }, [dispatch, handleDelete, handleEdit, handleNavigateToTrain, navigate, previousTrainingByIndex, savedTrainings]);
+  }, [dispatch, handleDelete, handleEdit, handleNavigateToTrain, navigate, previousTrainingByIndex, savedWorkouts]);
 
   const handleRecoverWorkout = useCallback(() => {
     dispatch(recoverWorkout());
@@ -146,6 +147,7 @@ export function Workouts() {
       <View style={styles.vStack}>
         <SiteNavigationButtons title={t("workouts")} handleConfirmIcon={confirmIcon} handleConfirm={handlePress} />
         <PageContent>
+          <WorkoutSorting />
           <FlatList
             decelerationRate="normal"
             keyExtractor={(item) => item.key}

@@ -84,5 +84,12 @@
   "measurement_deleted_message": "Measurement successfully deleted",
   "measurement_deleted_undo": "Undo the deletion",
   "measurement_higher_is_better": "Higher is better",
-  "measurement_higher_is_better_help": "In order to calculate the differences in progress we need to have to know if a higher value is better or not"
+  "measurement_higher_is_better_help": "In order to calculate the differences in progress we need to have to know if a higher value is better or not",
+
+  "workout_sorting_modal_title": "Pick a sorting method",
+  "workout_sorting_label": "Sorting: ",
+  "workout_sorting_A_Z": "Alphabetical",
+  "workout_sorting_Z_A": "Reverse Alphabetical",
+  "workout_sorting_LONGEST_AGO": "Longest ago",
+  "workout_sorting_MOST_RECENT": "Most recent"
 }

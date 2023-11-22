@@ -2,6 +2,9 @@ import { IsoDate } from "../types/date";
 import { ThemeKey } from "../theme/types";
 import { Measurement } from "../components/App/measurements/types";
 
+export const WorkoutSortingType = ["A_Z", "Z_A", "LONGEST_AGO", "MOST_RECENT"] as const;
+export type WorkoutSortingType = (typeof WorkoutSortingType)[number];
+
 export type Workout = {
   name: string;
   calendarColor: string;
@@ -54,6 +57,7 @@ export type AppState = {
   setIndex: number;
   exerciseIndex: number;
   isFirstTimeRendered: boolean;
+  workoutSorting: WorkoutSortingType;
   settings: {
     language?: "en" | "de";
   };

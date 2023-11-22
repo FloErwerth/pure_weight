@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useCallback } from "react";
 import { useNavigate } from "../../../hooks/navigate";
 import { ProfileContent } from "../../../components/App/settings/components/SettingsSection/ProfileSection";
-import { emptyState, setMockState, setState } from "../../../store/reducer";
+import { setMockState, setState } from "../../../store/reducer";
 import { useAppDispatch } from "../../../store";
 import { PageContent } from "../../../components/PageContent/PageContent";
 import { ThemedView } from "../../../components/Themed/ThemedView/View";
@@ -12,6 +12,7 @@ import { ThemeSelection } from "../../../components/App/settings/components/Them
 import { ThemedPressable } from "../../../components/Themed/Pressable/Pressable";
 import { Text } from "../../../components/Themed/ThemedText/Text";
 import { borderRadius } from "../../../theme/border";
+import { emptyState } from "../../../store/mock";
 
 const isProduction = process.env["EXPO_PUBLIC_IS_PRODUCTION"] === "true";
 
