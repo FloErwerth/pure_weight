@@ -57,8 +57,8 @@ export function Create() {
   const [workoutName, setWorkoutName] = useState(editedDay?.name);
   const [createdExercises, setCreatedExercises] = useState<ExerciseMetaData[]>(editedDay?.exercises.map((exercise) => exercise) ?? []);
   const dispatch = useAppDispatch();
-  const [alertRef] = useBottomSheetRef();
-  const [addRef] = useBottomSheetRef();
+  const [alertRef, openAlert, closeAlert] = useBottomSheetRef();
+  const [addRef, openAdd, closeAdd] = useBottomSheetRef();
   const initialColor = useColor(editedDay?.calendarColor);
   const [PickerModal, PickerButton, color] = useColorPickerComponents(initialColor);
 
@@ -105,10 +105,6 @@ export function Create() {
     dispatch(cleanErrors());
   }, [dispatch]);
 
-  const closeAlert = useCallback(() => {
-    alertRef.current?.close();
-  }, [alertRef]);
-
   const handleConfirmDiscardChanges = useCallback(() => {
     closeAlert();
     handleCleanErrors();
@@ -136,7 +132,7 @@ export function Create() {
           newExercises.splice(index, 1, exercise);
           setCreatedExercises(newExercises);
           setEditedExerciseIndex(undefined);
-          addRef.current?.close();
+          closeAdd();
         }
       };
 
@@ -147,7 +143,7 @@ export function Create() {
           setCreatedExercises(newExercises);
         }
         setEditedExerciseIndex(undefined);
-        addRef.current?.close();
+        closeAlert();
       };
 
       const onDelete = () => {
@@ -155,15 +151,14 @@ export function Create() {
           title: t("alert_delete_title"),
           content: t("alert_delete_message"),
           onConfirm: handleConfirmDelete,
-          onCancel: handleConfirmDiscardChanges,
         });
-        alertRef.current?.present();
+        openAlert();
       };
       const edited = index === editedExerciseIndex;
 
       return { onDelete, edited, handleCancel, onEdit, exercise, index, handleOnConfirmEdit };
     });
-  }, [addRef, alertRef, closeAlert, createdExercises, editedExerciseIndex, handleConfirmDiscardChanges, handleDeleteExercise, t]);
+  }, [addRef, closeAdd, closeAlert, createdExercises, editedExerciseIndex, handleDeleteExercise, openAlert, t]);
 
   const handleNavigateHome = useCallback(() => {
     handleCleanErrors();
@@ -204,13 +199,13 @@ export function Create() {
       setAlertConfig({
         title,
         content,
-        onConfirm: handleNavigateHome,
+        onConfirm: handleConfirmDiscardChanges,
       });
       alertRef.current?.present();
     } else {
       handleNavigateHome();
     }
-  }, [alertRef, createdExercises.length, editedDay, handleNavigateHome, t, workoutName]);
+  }, [alertRef, createdExercises.length, editedDay, handleConfirmDiscardChanges, handleNavigateHome, t, workoutName]);
 
   const handleOnDragEnd = useCallback(
     ({ data }: { data: MappedExercises[] }) => {
@@ -273,10 +268,10 @@ export function Create() {
       </ThemedView>
       <AlertModal
         reference={alertRef}
+        onConfirm={alertConfig?.onConfirm}
         title={alertConfig?.title}
         content={alertConfig?.content}
-        onConfirm={handleNavigateHome}
-        onCancel={() => setAlertConfig(undefined)}
+        onCancel={closeAlert}
       />
       <AddExerciseModal
         isEditingExercise={editedExerciseIndex !== undefined}
