@@ -34,7 +34,7 @@ type RenderedItem = {
   onDelete: () => void;
   onClick: () => void;
   color: string;
-  overallTrainingData: { name: string; percent: number; isPositive?: boolean } | undefined;
+  bestPreviousTraining: { name: string; percent: number; isPositive?: boolean } | undefined;
 };
 
 export function Workouts() {
@@ -98,13 +98,13 @@ export function Workouts() {
       const onDelete = () => handleDelete(index);
       const key = trainingDay.name.concat("-key").concat((index * Math.random() * 2).toString());
       const onClick = () => handleNavigateToTrain(index);
-      const overallTrainingData = previousTrainingByIndex(index);
+      const bestPreviousTraining = previousTrainingByIndex(index);
       const handleNavigateToProgress = () => {
         dispatch(setTrainingDayIndex(index));
         navigate("progress");
       };
       const color = trainingDay.calendarColor;
-      return { handleNavigateToProgress, onEdit, onDelete, key, onClick, workoutName: trainingDay.name, overallTrainingData, color };
+      return { handleNavigateToProgress, onEdit, onDelete, key, onClick, workoutName: trainingDay.name, bestPreviousTraining, color };
     });
   }, [dispatch, handleDelete, handleEdit, handleNavigateToTrain, navigate, previousTrainingByIndex, savedTrainings]);
 
@@ -114,7 +114,7 @@ export function Workouts() {
   }, [dispatch]);
 
   const renderItem = useCallback(
-    ({ item: { handleNavigateToProgress, workoutName, key, onEdit, onDelete, onClick, overallTrainingData, color } }: { item: RenderedItem }) => {
+    ({ item: { handleNavigateToProgress, workoutName, key, onEdit, onDelete, onClick, bestPreviousTraining, color } }: { item: RenderedItem }) => {
       return (
         <Swipeable onEdit={onEdit} onDelete={onDelete} onClick={onClick} key={key}>
           <HStack style={styles.outerTrainWrapper}>
@@ -124,14 +124,14 @@ export function Workouts() {
               <ThemedMaterialCommunityIcons ghost name="chevron-right" size={30} />
             </HStack>
           </HStack>
-          {overallTrainingData && (
+          {bestPreviousTraining && (
             <View style={styles.progressWrapper}>
               <ProgressDisplay
                 type="Workout"
-                wasPositive={overallTrainingData.isPositive}
+                wasPositive={bestPreviousTraining.isPositive}
                 onPress={handleNavigateToProgress}
-                name={overallTrainingData.name}
-                percent={overallTrainingData.percent}
+                name={bestPreviousTraining.name}
+                percent={bestPreviousTraining.percent}
               />
             </View>
           )}

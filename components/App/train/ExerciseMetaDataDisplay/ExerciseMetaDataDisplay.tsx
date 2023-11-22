@@ -74,7 +74,7 @@ export const ExerciseMetaDataDisplay = ({ exerciseIndex, exerciseMetaData }: Exe
       }
       const newExercises = [...(selectedTraining?.exercises ?? [])];
       newExercises.splice(exerciseIndex, 1, exercise);
-      dispatch(editTrainingDay({ name: selectedTraining?.name ?? "", exercises: newExercises }));
+      dispatch(editTrainingDay({ name: selectedTraining?.name ?? "", exercises: newExercises, color: selectedTraining.calendarColor }));
       handleClose();
     },
     [selectedTraining, exerciseIndex, dispatch, handleClose],

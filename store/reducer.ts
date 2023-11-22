@@ -1,5 +1,5 @@
 import { createAction, createReducer } from "@reduxjs/toolkit/src";
-import type { AppState, DoneWorkouts, ErrorFields, ExerciseMetaData, PlainExerciseData } from "./types";
+import type { AppState, DoneExerciseData, DoneWorkouts, ErrorFields, ExerciseMetaData, PlainExerciseData } from "./types";
 import { getDateTodayIso } from "../utils/date";
 import { ThemeKey } from "../theme/types";
 import { Measurement } from "../components/App/measurements/types";
@@ -111,7 +111,7 @@ export const mockState: AppState = {
       ],
       doneWorkouts: [
         { duration: "12000", date: "2023-10-16", doneExercises: [{ name: "Bankdrücken", sets: [{ reps: "5", weight: "55" }] }] },
-        { duration: "12000", date: "2023-10-20", doneExercises: [{ name: "Bankdrücken", sets: [{ reps: "5", weight: "55" }] }] },
+        { duration: "12000", date: "2023-10-20", doneExercises: [{ name: "Butterfly", sets: [{ reps: "5", weight: "55" }] }] },
         { duration: "12000", date: "2023-10-21", doneExercises: [{ name: "Bankdrücken", sets: [{ reps: "5", weight: "55" }] }] },
         { duration: "12000", date: "2023-10-22", doneExercises: [{ name: "Bankdrücken", sets: [{ reps: "5", weight: "55" }] }] },
         { duration: "12000", date: "2023-10-23", doneExercises: [{ name: "Bankdrücken", sets: [{ reps: "5", weight: "55" }] }] },
@@ -177,7 +177,7 @@ export const overwriteTrainingDayExercises = createAction<ExerciseMetaData[]>("a
 export const removeTrainingDay = createAction<number>("remove_training_day");
 export const setTrainingDayIndex = createAction<number | undefined>("set_training_index");
 export const startTraining = createAction<number>("start_training");
-export const addSetDataToTrainingDay = createAction<Array<{ note?: string; sets: Array<PlainExerciseData> }>>("set_training_data");
+export const addDoneWorkout = createAction<Array<{ exerciseIndex: number; note?: string; sets: Array<PlainExerciseData> }>>("set_training_data");
 export const setSetIndex = createAction<number>("set_set_index");
 export const setExerciseIndex = createAction<number>("set_exercise_index");
 export const setLanguage = createAction<"de" | "en" | undefined>("settings_langauge");
@@ -279,29 +279,25 @@ export const storeReducer = createReducer<AppState>(emptyState, (builder) =>
       state.workoutIndex = action.payload;
       state.workoutStartingTimestamp = Temporal.Now.instant().epochMilliseconds;
     })
-    .addCase(addSetDataToTrainingDay, (state, action) => {
-      if (state.workoutIndex !== undefined && state.exerciseIndex !== undefined) {
+    .addCase(addDoneWorkout, (state, action) => {
+      const workoutIndex = state.workoutIndex;
+      if (workoutIndex !== undefined) {
+        const endTimestamp = Temporal.Now.instant().epochMilliseconds;
+        const duration = (endTimestamp - (state?.workoutStartingTimestamp ?? endTimestamp)) / 1000;
         const dateToday = getDateTodayIso();
-        for (let exerciseIndex = 0; exerciseIndex < state.workouts[state.workoutIndex].doneWorkouts.length; exerciseIndex++) {
-          if (action.payload[exerciseIndex] === undefined) {
-            continue;
-          }
-          const existingData = state.workouts[state.workoutIndex].doneWorkouts[exerciseIndex]?.doneExercises;
-          (existingData ?? []).push({
-            name: state.workouts[state.workoutIndex]?.exercises[exerciseIndex].name,
-            sets: action.payload[exerciseIndex].sets,
-            note: action.payload[exerciseIndex].note,
+        const doneExercises: DoneExerciseData[] = [];
+        action.payload.forEach(({ exerciseIndex, sets, note }) => {
+          doneExercises.push({
+            name: state.workouts[workoutIndex].exercises[exerciseIndex].name,
+            sets,
+            note,
           });
-        }
-
-        if (state.workoutStartingTimestamp !== undefined) {
-          const endTimestamp = Temporal.Now.instant().epochMilliseconds;
-          const seconds = (endTimestamp - state.workoutStartingTimestamp) / 1000;
-          const doneWorkouts = state.workouts[state.workoutIndex].doneWorkouts[state.exerciseIndex];
-          state.workouts[state.workoutIndex].doneWorkouts[state.exerciseIndex] = { ...doneWorkouts, duration: seconds.toString() };
-        }
-
-        state.workouts[state.workoutIndex].doneWorkouts[state.exerciseIndex].date = dateToday;
+        });
+        state.workouts[workoutIndex].doneWorkouts.push({
+          date: dateToday,
+          duration: duration.toString(),
+          doneExercises,
+        });
       }
     })
     .addCase(setSetIndex, (state, action) => {

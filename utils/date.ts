@@ -25,6 +25,6 @@ export const getDate = (date?: IsoDate, language?: "en" | "de", dateStyle?: "sho
     return "";
   }
   return Temporal.PlainDate.from(date).toLocaleString(language ?? Locale.locale, {
-    dateStyle: dateStyle ?? "short",
+    dateStyle: dateStyle ?? "medium",
   });
 };

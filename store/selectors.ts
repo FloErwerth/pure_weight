@@ -229,20 +229,27 @@ export const getHistoryByMonth = createSelector([getSavedTrainings, (trainings, 
     .map(([month, data]) => ({ title: month, data }));
 });
 
-export const getPreviousTraining = createSelector([getSelectedTrainingDay, getLanguage], (traininigDay, language) => {
-  return (exerciseIndex: number) => {
-    const entries = traininigDay?.doneWorkouts[exerciseIndex]?.doneExercises;
-    if (entries) {
-      const latestEntry = entries[entries.length - 1];
-      const latestDate = traininigDay?.doneWorkouts[traininigDay?.doneWorkouts.length - 1].date;
-      return {
-        date: latestDate ? getDate(latestDate, language) : "",
-        vals: latestEntry?.sets ?? [],
-        note: latestEntry?.note,
-      };
+export const getPreviousTraining = createSelector(
+  [getSelectedTrainingDay, getLanguage, (workout, language, exerciseIndex: number) => exerciseIndex],
+  (traininigDay, language, exerciseIndex) => {
+    const doneWorkouts = traininigDay?.doneWorkouts;
+    if (!doneWorkouts || doneWorkouts.length === 0) {
+      return undefined;
     }
-  };
-});
+
+    //Map<exerciseName, data>
+    const foundEntries = new Map<string, { date: string; sets: ExerciseSets; note?: string }>();
+
+    for (let workoutIndex = doneWorkouts.length - 1; workoutIndex > 0; workoutIndex--) {
+      doneWorkouts[workoutIndex].doneExercises?.forEach((exercise) => {
+        if (!foundEntries.get(exercise.name)) {
+          foundEntries.set(exercise.name, { date: getDate(doneWorkouts[workoutIndex].date, language), sets: exercise.sets, note: exercise.note });
+        }
+      });
+    }
+    return foundEntries.get(traininigDay?.exercises[exerciseIndex].name);
+  },
+);
 
 export const getOverallTrainingTrend = createSelector([getSelectedTrainingDayByIndex], (trainingDayByIndex) => {
   return (workoutIndex: number) => {
@@ -290,7 +297,7 @@ export const getOverallTrainingTrend = createSelector([getSelectedTrainingDayByI
         }
       }
     }
-    return Array.from(latestExercisePairs).reduce(
+    const foundBestExercise = Array.from(latestExercisePairs).reduce(
       (bestImprovement, [name, { isPositive, cleanedPercent }], index) => {
         if (index === 0) {
           return {
@@ -339,6 +346,10 @@ export const getOverallTrainingTrend = createSelector([getSelectedTrainingDayByI
         isPositive?: boolean;
       },
     );
+    if (foundBestExercise.name) {
+      return foundBestExercise;
+    }
+    return undefined;
   };
 });
 

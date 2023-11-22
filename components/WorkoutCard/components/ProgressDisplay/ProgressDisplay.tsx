@@ -86,8 +86,7 @@ const useText = (type: "Workout" | "Measurement", even: boolean, higherPercentag
 
 export const ProgressDisplay = ({ percent, onPress, higherIsBetter = true, wasPositive, name, type }: ProgressDisplayProps) => {
   const isPositive = wasPositive && higherIsBetter;
-
-  const processedPercent = truncateToNthSignificantDigit(percent);
+  const processedPercent = truncateToNthSignificantDigit(percent ?? 0);
   const even = processedPercent === 0;
   const text = useText(type, even, wasPositive, processedPercent, name);
 

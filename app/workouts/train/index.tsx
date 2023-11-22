@@ -2,7 +2,7 @@ import { useAppDispatch, useAppSelector } from "../../../store";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { trainStyles } from "../../../components/App/train/trainStyles";
 import { PlainExerciseData } from "../../../store/types";
-import { addSetDataToTrainingDay, setExerciseIndex, setSetIndex, setTrainingDayIndex } from "../../../store/reducer";
+import { addDoneWorkout, setExerciseIndex, setSetIndex, setTrainingDayIndex } from "../../../store/reducer";
 import { AlertModal } from "../../../components/AlertModal/AlertModal";
 import { useNavigate } from "../../../hooks/navigate";
 import { SiteNavigationButtons } from "../../../components/SiteNavigationButtons/SiteNavigationButtons";
@@ -20,9 +20,9 @@ import { workoutContext } from "../../../components/App/train/workoutContext";
 
 export type DoneExercises = Map<number, { note?: string; sets: Map<number, PlainExerciseData> }>;
 function mapOfMapsTo2DArray(map: DoneExercises) {
-  const result: Array<{ note?: string; sets: Array<PlainExerciseData> }> = [];
+  const result: Array<{ exerciseIndex: number; note?: string; sets: Array<PlainExerciseData> }> = [];
   map.forEach((innerMap, key) => {
-    result[key] = { note: innerMap.note, sets: [...innerMap.sets.values()] };
+    result[key] = { exerciseIndex: key, note: innerMap.note, sets: [...innerMap.sets.values()] };
   });
   return result;
 }
@@ -64,8 +64,7 @@ export function Train() {
   }, [isDone]);
 
   const handleSaveTrainingData = useCallback(() => {
-    const doneSetsArray = mapOfMapsTo2DArray(doneExercises);
-    dispatch(addSetDataToTrainingDay(doneSetsArray));
+    dispatch(addDoneWorkout(mapOfMapsTo2DArray(doneExercises)));
   }, [dispatch, doneExercises]);
 
   const handleReset = useCallback(() => {
@@ -151,17 +150,38 @@ export function Train() {
   return (
     <ThemedView background style={trainStyles.wrapper} stretch>
       <ThemedView background style={trainStyles.navigationWrapper}>
-        <SiteNavigationButtons handleConfirmOpacity={confirmButtonOpacity} handleBack={handleCloseButton} handleConfirm={handleDone} titleFontSize={30} title={trainingDay?.name} />
+        <SiteNavigationButtons
+          handleConfirmOpacity={confirmButtonOpacity}
+          handleBack={handleCloseButton}
+          handleConfirm={handleDone}
+          titleFontSize={30}
+          title={trainingDay?.name}
+        />
       </ThemedView>
       <ThemedView background stretch>
         <workoutContext.Provider value={contextValue}>
-          <Carousel scrollAnimationDuration={200} onSnapToItem={handleScrollEnd} width={Dimensions.get("screen").width} loop={false} vertical={false} renderItem={renderItem} data={mappedExercises} />
+          <Carousel
+            scrollAnimationDuration={200}
+            onSnapToItem={handleScrollEnd}
+            width={Dimensions.get("screen").width}
+            loop={false}
+            vertical={false}
+            renderItem={renderItem}
+            data={mappedExercises}
+          />
         </workoutContext.Provider>
       </ThemedView>
       <HStack background style={buttonsStyle}>
         <StopwatchPopover />
       </HStack>
-      <AlertModal reference={ref} title={alertModalConfig.title} content={alertModalConfig.content} isVisible={showModal} onConfirm={handleNotDoneConfirm} onCancel={handleCloseAlert} />
+      <AlertModal
+        reference={ref}
+        title={alertModalConfig.title}
+        content={alertModalConfig.content}
+        isVisible={showModal}
+        onConfirm={handleNotDoneConfirm}
+        onCancel={handleCloseAlert}
+      />
     </ThemedView>
   );
 }

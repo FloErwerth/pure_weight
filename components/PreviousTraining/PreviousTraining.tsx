@@ -12,20 +12,20 @@ import { styles } from "./styles";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { ThemedView } from "../Themed/ThemedView/View";
 import { ThemedButtomSheetModal, useBottomSheetRef } from "../BottomSheetModal/ThemedButtomSheetModal";
+import { AppState } from "../../store/types";
 
 interface PreviousTrainingProps {
   exerciseIndex: number;
   activeSetIndex: number;
 }
 export const PreviousTraining = ({ exerciseIndex, activeSetIndex }: PreviousTrainingProps) => {
-  const getPreviousTrainingFn = useAppSelector(getPreviousTraining);
-  const receivedPreviousTraining = useMemo(() => getPreviousTrainingFn(exerciseIndex), [exerciseIndex, getPreviousTrainingFn]);
+  const previousWorkout = useAppSelector((state: AppState) => getPreviousTraining(state, state.settings.language, exerciseIndex));
   const { t } = useTranslation();
   const { textDisabled, componentBackgroundColor, mainColor, secondaryColor, inputFieldBackgroundColor } = useTheme();
   const [ref] = useBottomSheetRef();
   const mappedData = useMemo(
     () =>
-      receivedPreviousTraining?.vals.map(({ weight, reps }, index) => {
+      previousWorkout?.sets.map(({ weight, reps }, index) => {
         const highlight = activeSetIndex === index;
         const filled = activeSetIndex > index;
         const highlightWrapperStyles = { backgroundColor: highlight ? inputFieldBackgroundColor : "transparent" };
@@ -44,7 +44,7 @@ export const PreviousTraining = ({ exerciseIndex, activeSetIndex }: PreviousTrai
           </HStack>
         );
       }),
-    [activeSetIndex, inputFieldBackgroundColor, mainColor, receivedPreviousTraining?.vals, secondaryColor],
+    [activeSetIndex, inputFieldBackgroundColor, mainColor, previousWorkout?.sets, secondaryColor],
   );
 
   const handleShowEditNoteModal = useCallback(() => {
@@ -55,12 +55,12 @@ export const PreviousTraining = ({ exerciseIndex, activeSetIndex }: PreviousTrai
     ref.current?.dismiss();
   }, [ref]);
 
-  if (!receivedPreviousTraining) {
+  if (!previousWorkout) {
     return null;
   }
 
-  const { date, vals, note } = receivedPreviousTraining;
-  if (!vals || vals?.length === 0 || vals?.some((val) => val === undefined)) {
+  const { date, sets, note } = previousWorkout;
+  if (!sets || sets?.length === 0 || sets?.some((val) => val === undefined)) {
     return null;
   }
 
@@ -83,7 +83,7 @@ export const PreviousTraining = ({ exerciseIndex, activeSetIndex }: PreviousTrai
         )}
       </HStack>
       <ThemedView style={{ padding: 10, borderRadius }}>
-        {vals?.length > 0 && (
+        {sets?.length > 0 && (
           <VStack style={{ backgroundColor: componentBackgroundColor }}>
             <HStack ghost style={styles.innerWrapper}>
               <Text style={[styles.setDisplayStyle, { color: secondaryColor }]}>{"#"}</Text>
