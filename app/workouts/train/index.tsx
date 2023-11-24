@@ -2,7 +2,7 @@ import { useAppDispatch, useAppSelector } from "../../../store";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { trainStyles } from "../../../components/App/train/trainStyles";
 import { PlainExerciseData } from "../../../store/types";
-import { addDoneWorkout, setExerciseIndex, setSetIndex, setTrainingDayIndex } from "../../../store/reducer";
+import { addDoneWorkout, setExerciseIndex } from "../../../store/reducer";
 import { AlertModal } from "../../../components/AlertModal/AlertModal";
 import { useNavigate } from "../../../hooks/navigate";
 import { SiteNavigationButtons } from "../../../components/SiteNavigationButtons/SiteNavigationButtons";
@@ -67,9 +67,6 @@ export function Train() {
   }, [dispatch, doneExercises]);
 
   const handleReset = useCallback(() => {
-    dispatch(setExerciseIndex(0));
-    dispatch(setTrainingDayIndex(undefined));
-    dispatch(setSetIndex(0));
     setDoneExercises(new Map());
     navigate("workouts");
   }, [dispatch, navigate, setDoneExercises]);

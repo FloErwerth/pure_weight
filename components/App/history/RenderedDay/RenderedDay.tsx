@@ -3,55 +3,52 @@ import { Text } from "../../../Themed/ThemedText/Text";
 import { useMemo } from "react";
 import { styles } from "./styles";
 import { useTheme } from "../../../../theme/context";
-import { MarkedDay } from "../../../../app/profile/history";
-import { HStack } from "../../../Stack/HStack/HStack";
+import { getInvertedColor } from "../../../ColorPickerWithModal/ColorPickerWithModal";
 
 interface RenderedDayProps {
   day: string;
-  markedDate: MarkedDay;
+  color: string;
   handleSelectDate: () => void;
   selected: boolean;
 }
 
-const useMarkedDayStyles = (markedDate: MarkedDay, selected: boolean) => {
-  const { secondaryBackgroundColor, mainColor } = useTheme();
-  return [
-    useMemo(() => {
-      if (markedDate === undefined) {
-        return [styles.dateWrapper];
-      }
-      return [styles.dateWrapper, { backgroundColor: secondaryBackgroundColor, borderWidth: 0.5, borderColor: selected ? mainColor : "transparent" }];
-    }, [mainColor, markedDate, secondaryBackgroundColor, selected]),
-  ] as const;
+const useMarkedDayStyles = (color: string, selected: boolean) => {
+  const { mainColor, textDisabled } = useTheme();
+
+  const viewStyle = useMemo(() => {
+    if (color === undefined) {
+      return [styles.dateWrapper];
+    }
+    return [styles.dateWrapper, { backgroundColor: selected ? color : textDisabled }];
+  }, [color, selected, textDisabled]);
+
+  const dotStyle = useMemo(
+    () => ({
+      marginTop: 1,
+      width: 16,
+      height: !color || selected ? 0 : 4,
+      borderRadius: 4,
+      backgroundColor: selected ? getInvertedColor(color) : color,
+    }),
+    [color, selected],
+  );
+
+  const textStyle = useMemo(() => {
+    return { color: selected ? getInvertedColor(color) : mainColor, fontSize: selected ? 18 : 16, fontWeight: selected ? "bold" : "normal" } as const;
+  }, [selected, color, mainColor]);
+  return useMemo(() => ({ viewStyle, textStyle, dotStyle }), [dotStyle, textStyle, viewStyle]);
 };
 
-const MultiDot = ({ markedDate }: { markedDate: MarkedDay }) => {
-  const mappedDots = useMemo(() => {
-    const colors = markedDate?.dotColors.length > 3 ? markedDate?.dotColors.slice(markedDate.dotColors.length - 3) : markedDate?.dotColors;
-
-    return colors?.map((color) => ({ width: 4, height: 4, borderRadius: 4, backgroundColor: color }));
-  }, [markedDate?.dotColors]);
-
-  if (markedDate) {
-    return (
-      <HStack style={{ gap: 2 }}>
-        {mappedDots.map((style) => (
-          <View style={style}></View>
-        ))}
-      </HStack>
-    );
-  }
-  return null;
-};
-
-export const RenderedDay = ({ day, markedDate, handleSelectDate, selected }: RenderedDayProps) => {
-  const [dateStyle] = useMarkedDayStyles(markedDate, selected);
+export const RenderedDay = ({ day, color, handleSelectDate, selected }: RenderedDayProps) => {
+  const { viewStyle, textStyle, dotStyle } = useMarkedDayStyles(color, selected);
 
   return (
     <Pressable onPress={handleSelectDate}>
-      <View style={dateStyle}>
-        <Text ghost>{day}</Text>
-        <MultiDot markedDate={markedDate} />
+      <View style={viewStyle}>
+        <Text style={textStyle} ghost>
+          {day}
+        </Text>
+        <View style={dotStyle}></View>
       </View>
     </Pressable>
   );

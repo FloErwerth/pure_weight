@@ -2,16 +2,8 @@ import { FlatList, View } from "react-native";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "../../hooks/navigate";
 import { useAppDispatch, useAppSelector } from "../../store";
-import { getLanguage, getOverallTrainingTrend, getSortedWorkouts } from "../../store/selectors";
-import {
-  cleanErrors,
-  recoverWorkout,
-  removeTrainingDay,
-  setExerciseIndex,
-  setSetIndex,
-  setTrainingDayIndex,
-  startTraining,
-} from "../../store/reducer";
+import { getHasHistory, getLanguage, getOverallTrainingTrend, getSortedWorkouts } from "../../store/selectors";
+import { cleanErrors, recoverWorkout, removeTrainingDay, setTrainingDayIndex, startTraining } from "../../store/reducer";
 import { styles } from "../../components/App/index/styles";
 import { SiteNavigationButtons } from "../../components/SiteNavigationButtons/SiteNavigationButtons";
 import { useTranslation } from "react-i18next";
@@ -26,6 +18,7 @@ import { HStack } from "../../components/Stack/HStack/HStack";
 import { ThemedMaterialCommunityIcons } from "../../components/Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
 import { ColorIndicator } from "../../components/ColorIndicator/ColorIndicator";
 import { WorkoutSorting } from "../../components/App/train/WorkoutSorting/WorkoutSorting";
+import { ThemedPressable } from "../../components/Themed/Pressable/Pressable";
 
 type RenderedItem = {
   handleNavigateToProgress: () => void;
@@ -36,6 +29,8 @@ type RenderedItem = {
   onClick: () => void;
   color: string;
   bestPreviousTraining: { name: string; percent: number; isPositive?: boolean } | undefined;
+  hasHistory: boolean;
+  handleNavigateToHistory: () => void;
 };
 
 export function Workouts() {
@@ -43,14 +38,11 @@ export function Workouts() {
   const dispatch = useAppDispatch();
   const { t, i18n } = useTranslation();
   const previousTrainingByIndex = useAppSelector(getOverallTrainingTrend);
+  const hasHistoryByIndex = useAppSelector(getHasHistory);
   const [showToast, setShowToast] = useState(false);
 
   useEffect(() => {
     i18n.changeLanguage(language ?? Locale.getLocales()[0].languageCode ?? "en");
-    dispatch(setExerciseIndex(0));
-    dispatch(setTrainingDayIndex(undefined));
-    dispatch(setExerciseIndex(0));
-    dispatch(setSetIndex(0));
     dispatch(cleanErrors());
   }, []);
 
@@ -71,9 +63,8 @@ export function Workouts() {
   );
 
   const handlePress = useCallback(() => {
-    dispatch(setTrainingDayIndex(undefined));
     handleNavigateToCreateTraining();
-  }, [dispatch, handleNavigateToCreateTraining]);
+  }, [handleNavigateToCreateTraining]);
 
   const handleDelete = useCallback(
     (index: number) => {
@@ -100,14 +91,32 @@ export function Workouts() {
       const key = trainingDay.name.concat("-key").concat((index * Math.random() * 2).toString());
       const onClick = () => handleNavigateToTrain(index);
       const bestPreviousTraining = previousTrainingByIndex(index);
+      const hasHistory = hasHistoryByIndex(index);
       const handleNavigateToProgress = () => {
         dispatch(setTrainingDayIndex(index));
         navigate("progress");
       };
+
+      const handleNavigateToHistory = () => {
+        dispatch(setTrainingDayIndex(index));
+        navigate("history");
+      };
+
       const color = trainingDay.calendarColor;
-      return { handleNavigateToProgress, onEdit, onDelete, key, onClick, workoutName: trainingDay.name, bestPreviousTraining, color };
+      return {
+        handleNavigateToProgress,
+        onEdit,
+        onDelete,
+        key,
+        onClick,
+        workoutName: trainingDay.name,
+        bestPreviousTraining,
+        color,
+        hasHistory,
+        handleNavigateToHistory,
+      };
     });
-  }, [dispatch, handleDelete, handleEdit, handleNavigateToTrain, navigate, previousTrainingByIndex, savedWorkouts]);
+  }, [dispatch, handleDelete, handleEdit, handleNavigateToTrain, hasHistoryByIndex, navigate, previousTrainingByIndex, savedWorkouts]);
 
   const handleRecoverWorkout = useCallback(() => {
     dispatch(recoverWorkout());
@@ -115,7 +124,22 @@ export function Workouts() {
   }, [dispatch]);
 
   const renderItem = useCallback(
-    ({ item: { handleNavigateToProgress, workoutName, key, onEdit, onDelete, onClick, bestPreviousTraining, color } }: { item: RenderedItem }) => {
+    ({
+      item: {
+        handleNavigateToProgress,
+        workoutName,
+        key,
+        onEdit,
+        onDelete,
+        onClick,
+        bestPreviousTraining,
+        color,
+        hasHistory,
+        handleNavigateToHistory,
+      },
+    }: {
+      item: RenderedItem;
+    }) => {
       return (
         <Swipeable onEdit={onEdit} onDelete={onDelete} onClick={onClick} key={key}>
           <HStack style={styles.outerTrainWrapper}>
@@ -126,7 +150,7 @@ export function Workouts() {
             </HStack>
           </HStack>
           {bestPreviousTraining && (
-            <View style={styles.progressWrapper}>
+            <View>
               <ProgressDisplay
                 type="Workout"
                 wasPositive={bestPreviousTraining.isPositive}
@@ -135,6 +159,11 @@ export function Workouts() {
                 percent={bestPreviousTraining.percent}
               />
             </View>
+          )}
+          {hasHistory && (
+            <ThemedPressable onPress={handleNavigateToHistory}>
+              <Text>Show history</Text>
+            </ThemedPressable>
           )}
         </Swipeable>
       );

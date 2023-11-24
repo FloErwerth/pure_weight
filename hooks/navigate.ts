@@ -20,7 +20,7 @@ export const Routes = {
     screen: "profile/settings/index",
   },
   history: {
-    screen: "profile/workoutHistory/index",
+    screen: "workouts/workoutHistory/index",
   },
   profile: {
     screen: "tabs",

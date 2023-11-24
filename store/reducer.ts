@@ -54,7 +54,7 @@ export const addTrainingDay = createAction<{ name: string; exercises: ExerciseMe
 export const editTrainingDay = createAction<{ name: string; exercises: ExerciseMetaData[]; color: string }>("edit_training_day");
 export const overwriteTrainingDayExercises = createAction<ExerciseMetaData[]>("adjust_exercises");
 export const removeTrainingDay = createAction<number>("remove_training_day");
-export const setTrainingDayIndex = createAction<number | undefined>("set_training_index");
+export const setTrainingDayIndex = createAction<number>("set_training_index");
 export const startTraining = createAction<number>("start_training");
 export const addDoneWorkout = createAction<Array<{ exerciseIndex: number; note?: string; sets: Array<PlainExerciseData> }>>("set_training_data");
 export const setSetIndex = createAction<number>("set_set_index");
@@ -65,6 +65,7 @@ export const cleanError = createAction<ErrorFields[]>("error_clean");
 export const cleanErrors = createAction("error_clean_all");
 export const setAppInstallDate = createAction<IsoDate>("set_app_install_date");
 export const setWorkoutSorting = createAction<WorkoutSortingType>("workout_sort");
+export const setHistorySorting = createAction<WorkoutSortingType>("history_sort");
 export const storeReducer = createReducer<AppState>(emptyState, (builder) =>
   builder
     .addCase(setState, (state, action) => {

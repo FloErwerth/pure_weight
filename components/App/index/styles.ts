@@ -22,9 +22,6 @@ export const styles = StyleSheet.create({
     justifyContent: "space-between",
     flex: 1,
   },
-  progressWrapper: {
-    paddingRight: 35,
-  },
   title: {
     fontSize: 30,
   },

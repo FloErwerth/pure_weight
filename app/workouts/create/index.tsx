@@ -3,7 +3,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "../../../hooks/navigate";
 import { ExerciseMetaData } from "../../../store/types";
 import { useAppDispatch, useAppSelector } from "../../../store";
-import { addTrainingDay, cleanErrors, editTrainingDay, overwriteTrainingDayExercises, setError, setTrainingDayIndex } from "../../../store/reducer";
+import { addTrainingDay, cleanErrors, editTrainingDay, overwriteTrainingDayExercises, setError } from "../../../store/reducer";
 import { AddButton } from "../../../components/AddButton/AddButton";
 import { styles } from "../../../components/App/create/styles";
 import { PlainInput } from "../../../components/PlainInput/PlainInput";
@@ -162,7 +162,6 @@ export function Create() {
 
   const handleNavigateHome = useCallback(() => {
     handleCleanErrors();
-    dispatch(setTrainingDayIndex(undefined));
     setAlertConfig(undefined);
     setEditedExerciseIndex(undefined);
     navigate("workouts");

@@ -3,6 +3,17 @@ import { ThemeKey } from "../theme/types";
 import { Measurement } from "../components/App/measurements/types";
 
 export const WorkoutSortingType = ["A_Z", "Z_A", "LONGEST_AGO", "MOST_RECENT"] as const;
+export const HistorySortingType = [
+  "DAY_DESCENDING",
+  "DAY_ASCENDING",
+  "MOST_WEIGHT_LIFTED",
+  "LEAST_WEIGHT_LIFTED",
+  "MOST_EXERCISES_DONE",
+  "LEAST_EXERCISES_DONE",
+  "LONGEST_DURATION",
+  "SHORTEST_DURATION",
+] as const;
+
 export type WorkoutSortingType = (typeof WorkoutSortingType)[number];
 
 export type Workout = {
@@ -52,7 +63,7 @@ export type ErrorFields =
 
 export type AppState = {
   workouts: Workout[];
-  workoutIndex: number | undefined;
+  workoutIndex: number;
   workoutStartingTimestamp?: number;
   setIndex: number;
   exerciseIndex: number;

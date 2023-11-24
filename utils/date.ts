@@ -28,3 +28,11 @@ export const getDate = (date?: IsoDate, language?: "en" | "de", dateStyle?: "sho
     dateStyle: dateStyle ?? "medium",
   });
 };
+
+export const getMonth = (date?: IsoDate) => {
+  if (!date) {
+    return -1;
+  } else {
+    return Temporal.PlainDate.from(date).month;
+  }
+};

@@ -1,6 +1,6 @@
 import { createSelector } from "@reduxjs/toolkit";
 import { AppState, ErrorFields, ExerciseMetaData, ExerciseSets } from "./types";
-import { getDate } from "../utils/date";
+import { getDate, getDateTodayIso, getMonth } from "../utils/date";
 import { IsoDate } from "../types/date";
 import { Temporal } from "@js-temporal/polyfill";
 
@@ -105,36 +105,30 @@ export const getSortedWorkouts = createSelector([getWorkouts, getWorkoutSorting]
   }
   return sortedWorkouts;
 });
-export const getWorkoutDateColor = createSelector([getWorkouts], (workouts) => {
-  const data: { date: IsoDate; colors?: string[] }[] = [];
-  workouts.forEach((workout) => {
-    workout.doneWorkouts?.forEach(({ date }, index) => {
-      if (!data.find((dataPoint) => dataPoint.date === date)) {
-        data.push({ date, colors: [workout.calendarColor] });
-      } else {
-        data[index] = { ...data[index], colors: [...(data[index].colors ?? []), workout.calendarColor] };
-      }
-    });
-  });
-  return data;
-});
-
-export const getLatestWorkoutDate = createSelector([getWorkoutDateColor], (dates) => {
-  return dates
-    .map(({ date }) => date)
-    .sort(
-      (dateA, dateB) =>
-        Temporal.Instant.from(dateA.concat("T00:00+00:00") as string).epochMilliseconds -
-        Temporal.Instant.from(dateB.concat("T00:00+00:00") as string).epochMilliseconds,
-    )[dates.length - 1];
-});
 
 export const getSelectedTrainingDayIndex = (state: AppState) => state.workoutIndex;
+
 export const getSelectedTrainingDay = createSelector([getWorkouts, getSelectedTrainingDayIndex], (trainings, index) => {
   if (index !== undefined) {
     return trainings[index];
   }
   return undefined;
+});
+
+export const getWorkoutDates = createSelector([getSelectedTrainingDay], (workout) => {
+  if (!workout) {
+    return [];
+  }
+
+  return workout.doneWorkouts?.map(({ date }) => date);
+});
+export const getWorkoutColor = createSelector([getSelectedTrainingDay], (workout) => workout?.calendarColor);
+export const getLatestWorkoutDate = createSelector([getWorkoutDates], (dates) => {
+  return dates.sort(
+    (dateA, dateB) =>
+      Temporal.Instant.from(dateA.concat("T00:00+00:00") as string).epochMilliseconds -
+      Temporal.Instant.from(dateB.concat("T00:00+00:00") as string).epochMilliseconds,
+  )[dates.length - 1];
 });
 
 export const getSelectedTrainingDayByIndex = createSelector([getWorkouts], (trainings) => {
@@ -155,9 +149,6 @@ export const getDatesFromCurrentMeasurement = createSelector([getMeasurements], 
   };
 });
 
-export const getExerciseNames = createSelector([getSelectedTrainingDay], (day) => {
-  return day?.exercises.map((exercise) => exercise.name);
-});
 export const getSelectedTrainingName = createSelector([getSelectedTrainingDay], (day) => day?.name);
 
 export const getErrorByKey = createSelector(
@@ -190,13 +181,6 @@ export const getExerciseMetaDataByIndex = createSelector(
     } as ExerciseMetaData;
   },
 );
-
-export const getNumberOfSets = createSelector([getExerciseMetaData], (exerciseMetaDataRaw) => {
-  if (exerciseMetaDataRaw?.sets) {
-    return parseFloat(exerciseMetaDataRaw.sets);
-  }
-  return undefined;
-});
 
 export const getSpecificNumberOfSets = createSelector([getSelectedTrainingDay], (day) => {
   return (exerciseIndex: number) => {
@@ -235,10 +219,13 @@ export const getTrainingDayData = createSelector([getWorkouts, getSelectedTraini
   return sortedData;
 });
 
-export const getHistoryByMonth = createSelector([getWorkouts, (trainings, month: string) => month], (trainings, searchedMonth) => {
-  const foundTrainings: Map<string, { color: string; name: string; duration?: string; date: IsoDate; weight: number; numExercisesDone: number }[]> =
-    new Map();
-  trainings.forEach((workout) => {
+export const getHistoryByMonth = createSelector(
+  [getWorkouts, (trainings, month?: string) => month, getTrainingIndex],
+  (trainings, searchedMonth, workoutIndex) => {
+    const foundTrainings: Map<string, { color: string; name: string; duration?: string; date: IsoDate; weight: number; numExercisesDone: number }[]> =
+      new Map();
+    const workout = trainings[workoutIndex];
+
     workout.doneWorkouts.forEach((doneWorkout) => {
       foundTrainings.set(doneWorkout.date, [
         ...(foundTrainings.get(doneWorkout.date) ?? []),
@@ -257,12 +244,13 @@ export const getHistoryByMonth = createSelector([getWorkouts, (trainings, month:
         },
       ]);
     });
-  });
+    return Array.from(foundTrainings)
+      .filter((value) => getMonth(value[0] as IsoDate) === getMonth((searchedMonth ?? getDateTodayIso()) as IsoDate))
+      .map(([month, data]) => ({ title: month, data }));
+  },
+);
 
-  return Array.from(foundTrainings)
-    .filter(([date]) => date.split("-")[1] === searchedMonth.split("-")[1])
-    .map(([month, data]) => ({ title: month, data }));
-});
+export const getHasHistory = createSelector([getWorkouts], (workouts) => (index: number) => workouts[index].doneWorkouts.length > 0);
 
 export const getPreviousTraining = createSelector(
   [getSelectedTrainingDay, getLanguage, (workout, language, exerciseIndex: number) => exerciseIndex],
