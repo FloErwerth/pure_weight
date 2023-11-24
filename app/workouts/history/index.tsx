@@ -191,6 +191,7 @@ export function WorkoutHistory() {
       </PageContent>
       <ThemedButtomSheetModal snapPoints={["50%"]} ref={ref}>
         <CalendarList
+          current={selectedDate}
           dayComponent={dayComponent}
           futureScrollRange={0}
           pastScrollRange={pastScrollRange}
