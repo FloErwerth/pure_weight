@@ -15,7 +15,6 @@ import { Text } from "../../components/Themed/ThemedText/Text";
 import { ProgressDisplay } from "../../components/WorkoutCard/components/ProgressDisplay/ProgressDisplay";
 import { BottomToast } from "../../components/BottomToast/BottomToast";
 import { HStack } from "../../components/Stack/HStack/HStack";
-import { ThemedMaterialCommunityIcons } from "../../components/Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
 import { ColorIndicator } from "../../components/ColorIndicator/ColorIndicator";
 import { WorkoutSorting } from "../../components/App/train/WorkoutSorting/WorkoutSorting";
 import { ThemedPressable } from "../../components/Themed/Pressable/Pressable";
@@ -143,11 +142,8 @@ export function Workouts() {
       return (
         <Swipeable onEdit={onEdit} onDelete={onDelete} onClick={onClick} key={key}>
           <HStack style={styles.outerTrainWrapper}>
-            <ColorIndicator color={color} height={20} width={3} />
-            <HStack style={styles.trainWrapper}>
-              <Text style={styles.title}>{workoutName}</Text>
-              <ThemedMaterialCommunityIcons ghost name="chevron-right" size={30} />
-            </HStack>
+            <Text style={styles.title}>{workoutName}</Text>
+            <ColorIndicator color={color} height={6} width={6} />
           </HStack>
           {bestPreviousTraining && (
             <View>

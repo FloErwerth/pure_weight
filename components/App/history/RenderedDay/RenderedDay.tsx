@@ -4,6 +4,7 @@ import { useMemo } from "react";
 import { styles } from "./styles";
 import { useTheme } from "../../../../theme/context";
 import { getInvertedColor } from "../../../ColorPickerWithModal/ColorPickerWithModal";
+import { ColorIndicator } from "../../../ColorIndicator/ColorIndicator";
 
 interface RenderedDayProps {
   day: string;
@@ -22,33 +23,22 @@ const useMarkedDayStyles = (color: string, selected: boolean) => {
     return [styles.dateWrapper, { backgroundColor: selected ? color : textDisabled }];
   }, [color, selected, textDisabled]);
 
-  const dotStyle = useMemo(
-    () => ({
-      marginTop: 1,
-      width: 16,
-      height: !color || selected ? 0 : 4,
-      borderRadius: 4,
-      backgroundColor: selected ? getInvertedColor(color) : color,
-    }),
-    [color, selected],
-  );
-
   const textStyle = useMemo(() => {
     return { color: selected ? getInvertedColor(color) : mainColor, fontSize: selected ? 18 : 16, fontWeight: selected ? "bold" : "normal" } as const;
   }, [selected, color, mainColor]);
-  return useMemo(() => ({ viewStyle, textStyle, dotStyle }), [dotStyle, textStyle, viewStyle]);
+  return useMemo(() => ({ viewStyle, textStyle }), [textStyle, viewStyle]);
 };
 
 export const RenderedDay = ({ day, color, handleSelectDate, selected }: RenderedDayProps) => {
-  const { viewStyle, textStyle, dotStyle } = useMarkedDayStyles(color, selected);
-
+  const { viewStyle, textStyle } = useMarkedDayStyles(color, selected);
+  const showDot = Boolean(color && !selected);
   return (
     <Pressable onPress={handleSelectDate}>
       <View style={viewStyle}>
         <Text style={textStyle} ghost>
           {day}
         </Text>
-        <View style={dotStyle}></View>
+        {showDot && <ColorIndicator color={color} width={4} height={4} />}
       </View>
     </Pressable>
   );

@@ -106,8 +106,8 @@ export function WorkoutHistory() {
         >
           <HStack>
             <HStack style={styles.titleWrapper}>
-              <ColorIndicator color={color} width={3} height={20} />
               <Text style={styles.workoutTitle}>{name}</Text>
+              <ColorIndicator color={color} width={6} height={6} />
             </HStack>
           </HStack>
           <HStack style={styles.displayedWorkoutWrapper}>
