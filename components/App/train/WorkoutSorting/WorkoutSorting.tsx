@@ -56,10 +56,10 @@ export const WorkoutSorting = () => {
 
   return (
     <>
-      <ThemedPressable style={styles.wrapper} onPress={open}>
-        <HStack style={styles.optionStack}>
-          <ThemedMaterialCommunityIcons name={SortIconMap[currentSorting]} size={20} />
-          <Text style={styles.title}>
+      <ThemedPressable ghost style={styles.wrapper} onPress={open}>
+        <HStack ghost style={styles.optionStack}>
+          <ThemedMaterialCommunityIcons ghost name={SortIconMap[currentSorting]} size={20} />
+          <Text ghost style={styles.title}>
             {t("workout_sorting_label")}
             {sortingLabel}
           </Text>
