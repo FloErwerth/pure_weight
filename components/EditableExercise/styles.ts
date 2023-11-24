@@ -1,73 +1,61 @@
 import { StyleSheet } from "react-native";
 import { borderRadius } from "../../theme/border";
 
-export type EditableExerciseTheme = "Inline" | "Default";
-const Themes = {
-  Inline: {
-    innerWrapper: {
-      padding: 0,
-    },
-  },
-  Default: {
-    innerWrapper: {
-      padding: 10,
-    },
-  },
-};
-
-export const styles = (theme: EditableExerciseTheme = "Default") =>
-  StyleSheet.create({
+export const styles = StyleSheet.create({
     wrapper: {
-      flex: 1,
+        flex: 1,
+    },
+    center: {
+        alignItems: "center",
+    },
+    time: {
+        gap: 10,
     },
     headerWrapper: {
-      alignSelf: "stretch",
-      alignItems: "center",
+        margin: 10,
+        gap: 20,
     },
     buttonText: {
-      fontSize: 16,
+        fontSize: 16,
     },
     input: {
-      alignSelf: "stretch",
-      paddingVertical: 10,
-      paddingHorizontal: 5,
-      borderRadius,
-      borderWidth: 1,
+        alignSelf: "stretch",
+        paddingVertical: 10,
+        paddingHorizontal: 5,
+        borderRadius,
+        borderWidth: 1,
     },
     inputWrapper: {
-      paddingVertical: 10,
-      alignSelf: "stretch",
+        padding: 10,
+        zIndex: -1,
+        gap: 10,
     },
     button: {
-      alignSelf: "stretch",
-      marginHorizontal: 10,
-      justifyContent: "center",
-      gap: 10,
-      padding: 10,
-      paddingRight: 8,
-      borderRadius,
+        alignSelf: "stretch",
+        marginHorizontal: 10,
+        justifyContent: "center",
+        gap: 10,
+        padding: 10,
+        paddingRight: 8,
+        borderRadius,
     },
     buttons: {
-      alignSelf: "stretch",
-      justifyContent: "space-around",
+        alignSelf: "stretch",
+        justifyContent: "space-around",
     },
     innerWrapper: {
-      ...Themes[theme].innerWrapper,
-      gap: 10,
-      borderRadius,
-      alignSelf: "stretch",
+        gap: 10,
+        borderRadius,
+        flex: 1,
     },
     saveText: {
-      fontSize: 16,
+        fontSize: 16,
     },
     title: {
-      flex: 1,
-      fontSize: 20,
-      lineHeight: 23,
-      borderWidth: 1,
-      borderColor: "transparent",
-      alignSelf: "stretch",
-      padding: 10,
-      borderRadius,
+        fontSize: 20,
+        borderWidth: 1,
+        borderColor: "transparent",
+        padding: 10,
+        borderRadius,
     },
-  });
+});

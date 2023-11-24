@@ -15,58 +15,58 @@ export const getMeasurements = (state: AppState) => state.measurements;
 export const getAppInstallDate = (state: AppState) => state.appInstallDate;
 
 export const getLatestMeasurements = createSelector([getMeasurements], (measurements) =>
-  measurements.map(({ data }) => {
-    const dates = Object.keys(data ?? []);
-    return dates[dates.length - 1] as IsoDate;
-  }),
+    measurements.map(({ data }) => {
+        const dates = Object.keys(data ?? []);
+        return dates[dates.length - 1] as IsoDate;
+    }),
 );
 
 function crampToNEntries<T extends Array<unknown>>(n: number, entries: T): T {
-  if (entries.length > n) {
-    return entries.slice(entries.length - n, entries.length) as T;
-  }
-  return entries;
+    if (entries.length > n) {
+        return entries.slice(entries.length - n, entries.length) as T;
+    }
+    return entries;
 }
 
 export const getMeasurementDataFromIndex = createSelector([getMeasurements, (byIndex, index?: number) => index], (measurements, index) => {
-  if (index === undefined) {
-    return undefined;
-  }
+    if (index === undefined) {
+        return undefined;
+    }
 
-  const measurement = measurements[index];
-  if (measurement?.data) {
-    const labels: string[] = [];
-    const data: number[] = [];
-    const entries = Object.entries(measurement?.data);
-    const vals = crampToNEntries(100, entries);
-    vals.forEach(([date, value]) => {
-      labels.push(getDate(date as IsoDate));
-      data.push(parseFloat(value));
-    });
-    return {
-      labels,
-      datasets: [
-        {
-          data,
-        },
-      ],
-    };
-  }
-  return undefined;
+    const measurement = measurements[index];
+    if (measurement?.data) {
+        const labels: string[] = [];
+        const data: number[] = [];
+        const entries = Object.entries(measurement?.data);
+        const vals = crampToNEntries(100, entries);
+        vals.forEach(([date, value]) => {
+            labels.push(getDate(date as IsoDate));
+            data.push(parseFloat(value));
+        });
+        return {
+            labels,
+            datasets: [
+                {
+                    data,
+                },
+            ],
+        };
+    }
+    return undefined;
 });
 
 export const getMeasurmentProgress = createSelector([getMeasurements, (byIndex, index: number) => index], (measurements, index) => {
-  const measurement = measurements[index];
-  const data = Object.values(measurement?.data ?? []);
+    const measurement = measurements[index];
+    const data = Object.values(measurement?.data ?? []);
 
-  if (data && data?.length >= 2) {
-    const latest = parseFloat(data[data?.length - 1]);
-    const secondLatest = parseFloat(data[data?.length - 2]);
+    if (data && data?.length >= 2) {
+        const latest = parseFloat(data[data?.length - 1]);
+        const secondLatest = parseFloat(data[data?.length - 2]);
 
-    return (latest / secondLatest) * 100;
-  }
+        return (latest / secondLatest) * 100;
+    }
 
-  return undefined;
+    return undefined;
 });
 
 export const getWorkouts = (state: AppState) => state.workouts;
@@ -74,305 +74,313 @@ export const getNumberSavedWorkouts = createSelector([getWorkouts], (workouts) =
 export const getWorkoutSorting = (state: AppState) => state.workoutSorting;
 
 export const getSortedWorkouts = createSelector([getWorkouts, getWorkoutSorting], (workouts, sorting) => {
-  const sortedWorkouts = [...workouts];
-  switch (sorting) {
-    case "A_Z":
-      return sortedWorkouts.sort((a, b) => a.name.localeCompare(b.name));
-    case "Z_A":
-      return sortedWorkouts.sort((a, b) => b.name.localeCompare(a.name));
-    case "MOST_RECENT":
-      return sortedWorkouts.sort((a, b) => {
-        if (a.doneWorkouts.length > 0 && b.doneWorkouts.length > 0) {
-          const latestDateA = a.doneWorkouts[a.doneWorkouts.length - 1].date;
-          const latestDateB = b.doneWorkouts[b.doneWorkouts.length - 1].date;
-          const latestA = Temporal.Instant.from(`${latestDateA}T00:00+00:00`).epochMilliseconds;
-          const latestB = Temporal.Instant.from(`${latestDateB}T00:00+00:00`).epochMilliseconds;
-          return latestA - latestB;
-        }
-        return -1;
-      });
-    case "LONGEST_AGO":
-      return sortedWorkouts.sort((a, b) => {
-        if (a.doneWorkouts.length > 0 && b.doneWorkouts.length > 0) {
-          const latestDateA = a.doneWorkouts[a.doneWorkouts.length - 1].date;
-          const latestDateB = b.doneWorkouts[b.doneWorkouts.length - 1].date;
-          const latestA = Temporal.Instant.from(latestDateA.concat("T00:00+00:00")).epochMilliseconds;
-          const latestB = Temporal.Instant.from(latestDateB.concat("T00:00+00:00")).epochMilliseconds;
-          return latestB - latestA;
-        }
-        return -1;
-      });
-  }
-  return sortedWorkouts;
+    const sortedWorkouts = [...workouts];
+    switch (sorting) {
+        case "A_Z":
+            return sortedWorkouts.sort((a, b) => a.name.localeCompare(b.name));
+        case "Z_A":
+            return sortedWorkouts.sort((a, b) => b.name.localeCompare(a.name));
+        case "MOST_RECENT":
+            return sortedWorkouts.sort((a, b) => {
+                if (a.doneWorkouts.length > 0 && b.doneWorkouts.length > 0) {
+                    const latestDateA = a.doneWorkouts[a.doneWorkouts.length - 1].date;
+                    const latestDateB = b.doneWorkouts[b.doneWorkouts.length - 1].date;
+                    const latestA = Temporal.Instant.from(`${latestDateA}T00:00+00:00`).epochMilliseconds;
+                    const latestB = Temporal.Instant.from(`${latestDateB}T00:00+00:00`).epochMilliseconds;
+                    return latestA - latestB;
+                }
+                return -1;
+            });
+        case "LONGEST_AGO":
+            return sortedWorkouts.sort((a, b) => {
+                if (a.doneWorkouts.length > 0 && b.doneWorkouts.length > 0) {
+                    const latestDateA = a.doneWorkouts[a.doneWorkouts.length - 1].date;
+                    const latestDateB = b.doneWorkouts[b.doneWorkouts.length - 1].date;
+                    const latestA = Temporal.Instant.from(latestDateA.concat("T00:00+00:00")).epochMilliseconds;
+                    const latestB = Temporal.Instant.from(latestDateB.concat("T00:00+00:00")).epochMilliseconds;
+                    return latestB - latestA;
+                }
+                return -1;
+            });
+    }
+    return sortedWorkouts;
 });
 
 export const getSelectedTrainingDayIndex = (state: AppState) => state.workoutIndex;
 
 export const getSelectedTrainingDay = createSelector([getWorkouts, getSelectedTrainingDayIndex], (trainings, index) => {
-  if (index !== undefined) {
-    return trainings[index];
-  }
-  return undefined;
+    if (index >= 0) {
+        return trainings[index];
+    }
+    return undefined;
 });
 
 export const getWorkoutDates = createSelector([getSelectedTrainingDay], (workout) => {
-  if (!workout) {
-    return [];
-  }
+    if (!workout) {
+        return [];
+    }
 
-  return workout.doneWorkouts?.map(({ date }) => date);
+    return workout.doneWorkouts?.map(({ date }) => date);
 });
 export const getWorkoutColor = createSelector([getSelectedTrainingDay], (workout) => workout?.calendarColor);
 export const getLatestWorkoutDate = createSelector([getWorkoutDates], (dates) => {
-  return dates.sort(
-    (dateA, dateB) =>
-      Temporal.Instant.from(dateA.concat("T00:00+00:00") as string).epochMilliseconds -
-      Temporal.Instant.from(dateB.concat("T00:00+00:00") as string).epochMilliseconds,
-  )[dates.length - 1];
+    return dates.sort(
+        (dateA, dateB) =>
+            Temporal.Instant.from(dateA.concat("T00:00+00:00") as string).epochMilliseconds -
+            Temporal.Instant.from(dateB.concat("T00:00+00:00") as string).epochMilliseconds,
+    )[dates.length - 1];
 });
 
 export const getSelectedTrainingDayByIndex = createSelector([getWorkouts], (trainings) => {
-  return (index: number) => {
-    return trainings[index];
-  };
+    return (index: number) => {
+        return trainings[index];
+    };
 });
 
 export const getDatesFromCurrentMeasurement = createSelector([getMeasurements], (measurements) => {
-  return (measurementKey?: string) => {
-    if (!measurementKey) {
-      return undefined;
-    }
-    const measurementIndex = measurements.findIndex((measurement) => measurement.name === measurementKey);
-    if (measurementIndex !== -1) {
-      return Object.keys(measurements[measurementIndex].data ?? []);
-    } else return undefined;
-  };
+    return (measurementKey?: string) => {
+        if (!measurementKey) {
+            return undefined;
+        }
+        const measurementIndex = measurements.findIndex((measurement) => measurement.name === measurementKey);
+        if (measurementIndex !== -1) {
+            return Object.keys(measurements[measurementIndex].data ?? []);
+        } else return undefined;
+    };
 });
 
 export const getSelectedTrainingName = createSelector([getSelectedTrainingDay], (day) => day?.name);
 
 export const getErrorByKey = createSelector(
-  [getErrors],
-  (state) => (errorField?: ErrorFields | undefined) => Boolean(errorField && state.includes(errorField)),
+    [getErrors],
+    (state) => (errorField?: ErrorFields | undefined) => Boolean(errorField && state.includes(errorField)),
 );
 export const getLanguage = createSelector([getSettings], (settings) => settings.language);
 
 export const getExerciseMetaData = createSelector([getSelectedTrainingDay, getExerciseIndex], (traininigDay, exerciseIndex) => {
-  const exercise = traininigDay?.exercises[exerciseIndex];
-  return {
-    weight: exercise?.weight,
-    reps: exercise?.reps,
-    name: exercise?.name,
-    sets: exercise?.sets,
-    pause: exercise?.pause,
-  } as ExerciseMetaData;
+    const exercise = traininigDay?.exercises[exerciseIndex];
+    return {
+        weight: exercise?.weight,
+        reps: exercise?.reps,
+        name: exercise?.name,
+        sets: exercise?.sets,
+        pause: exercise?.pause,
+    } as ExerciseMetaData;
 });
 
 export const getExerciseMetaDataByIndex = createSelector(
-  [getSelectedTrainingDay, (workout, index: number) => index],
-  (traininigDay, exerciseIndex) => {
-    const exercise = traininigDay?.exercises[exerciseIndex];
-    return {
-      weight: exercise?.weight,
-      reps: exercise?.reps,
-      name: exercise?.name,
-      sets: exercise?.sets,
-      pause: exercise?.pause,
-    } as ExerciseMetaData;
-  },
+    [getSelectedTrainingDay, (workout, index: number) => index],
+    (traininigDay, exerciseIndex) => {
+        const exercise = traininigDay?.exercises[exerciseIndex];
+        return {
+            weight: exercise?.weight,
+            reps: exercise?.reps,
+            name: exercise?.name,
+            sets: exercise?.sets,
+            pause: exercise?.pause,
+        } as ExerciseMetaData;
+    },
 );
 
 export const getSpecificNumberOfSets = createSelector([getSelectedTrainingDay], (day) => {
-  return (exerciseIndex: number) => {
-    if (day && day.exercises) {
-      return parseFloat(day.exercises[exerciseIndex].sets);
-    }
-  };
+    return (exerciseIndex: number) => {
+        if (day && day.exercises) {
+            return parseFloat(day.exercises[exerciseIndex].sets);
+        }
+    };
 });
 
 export const getWorkoutExercises = createSelector([getSelectedTrainingDay], (workout) => workout?.exercises);
 
 export const getTrainingDayData = createSelector([getWorkouts, getSelectedTrainingDayIndex], (trainingDays, index) => {
-  if (index === undefined) {
-    return undefined;
-  }
+    if (index === undefined) {
+        return undefined;
+    }
 
-  const workout = trainingDays[index];
-  if (workout?.doneWorkouts === undefined || workout.doneWorkouts.length === 0) {
-    return undefined;
-  }
+    const workout = trainingDays[index];
+    if (workout?.doneWorkouts === undefined || workout.doneWorkouts.length === 0) {
+        return undefined;
+    }
 
-  const sortedData: { exerciseName: string; data: { sets: ExerciseSets; date: IsoDate }[] }[] = [];
-  const slicedDoneWorkouts = workout.doneWorkouts.length > 20 ? workout.doneWorkouts.slice(workout.doneWorkouts.length - 20) : workout.doneWorkouts;
-  slicedDoneWorkouts
-    .filter(({ doneExercises }) => doneExercises !== undefined)
-    .forEach(({ date, doneExercises }) => {
-      doneExercises!.forEach(({ name, sets }) => {
-        const foundEntry = sortedData.find(({ exerciseName }) => exerciseName === name);
-        if (foundEntry) {
-          foundEntry.data.push({ sets, date });
-          return;
-        }
-        sortedData.push({ exerciseName: name, data: [{ sets, date }] });
-      });
-    });
-  return sortedData;
+    const sortedData: { exerciseName: string; data: { sets: ExerciseSets; date: IsoDate }[] }[] = [];
+    const slicedDoneWorkouts = workout.doneWorkouts.length > 20 ? workout.doneWorkouts.slice(workout.doneWorkouts.length - 20) : workout.doneWorkouts;
+    slicedDoneWorkouts
+        .filter(({ doneExercises }) => doneExercises !== undefined)
+        .forEach(({ date, doneExercises }) => {
+            doneExercises!.forEach(({ name, sets }) => {
+                const foundEntry = sortedData.find(({ exerciseName }) => exerciseName === name);
+                if (foundEntry) {
+                    foundEntry.data.push({ sets, date });
+                    return;
+                }
+                sortedData.push({ exerciseName: name, data: [{ sets, date }] });
+            });
+        });
+    return sortedData;
 });
 
 export const getHistoryByMonth = createSelector(
-  [getWorkouts, (trainings, month?: string) => month, getTrainingIndex],
-  (trainings, searchedMonth, workoutIndex) => {
-    const foundTrainings: Map<string, { color: string; name: string; duration?: string; date: IsoDate; weight: number; numExercisesDone: number }[]> =
-      new Map();
-    const workout = trainings[workoutIndex];
+    [getWorkouts, (trainings, month?: string) => month, getTrainingIndex],
+    (trainings, searchedMonth, workoutIndex) => {
+        const foundTrainings: Map<
+            string,
+            { color: string; name: string; duration?: string; date: IsoDate; weight: number; numExercisesDone: number }[]
+        > = new Map();
+        const workout = trainings[workoutIndex];
 
-    workout.doneWorkouts.forEach((doneWorkout) => {
-      foundTrainings.set(doneWorkout.date, [
-        ...(foundTrainings.get(doneWorkout.date) ?? []),
-        {
-          color: workout.calendarColor,
-          name: workout.name,
-          date: doneWorkout.date,
-          duration: doneWorkout.duration,
-          weight:
-            doneWorkout.doneExercises?.reduce(
-              (sum, current) =>
-                sum + current.sets.reduce((sumSet, currentSet) => sumSet + parseFloat(currentSet.weight) * parseFloat(currentSet.reps), 0),
-              0,
-            ) ?? 0,
-          numExercisesDone: doneWorkout.doneExercises?.length ?? 0,
-        },
-      ]);
-    });
-    return Array.from(foundTrainings)
-      .filter((value) => getMonth(value[0] as IsoDate) === getMonth((searchedMonth ?? getDateTodayIso()) as IsoDate))
-      .map(([month, data]) => ({ title: month, data }));
-  },
+        workout.doneWorkouts.forEach((doneWorkout) => {
+            foundTrainings.set(doneWorkout.date, [
+                ...(foundTrainings.get(doneWorkout.date) ?? []),
+                {
+                    color: workout.calendarColor,
+                    name: workout.name,
+                    date: doneWorkout.date,
+                    duration: doneWorkout.duration,
+                    weight:
+                        doneWorkout.doneExercises?.reduce(
+                            (sum, current) =>
+                                sum +
+                                current.sets.reduce((sumSet, currentSet) => sumSet + parseFloat(currentSet.weight) * parseFloat(currentSet.reps), 0),
+                            0,
+                        ) ?? 0,
+                    numExercisesDone: doneWorkout.doneExercises?.length ?? 0,
+                },
+            ]);
+        });
+        return Array.from(foundTrainings)
+            .filter((value) => getMonth(value[0] as IsoDate) === getMonth((searchedMonth ?? getDateTodayIso()) as IsoDate))
+            .map(([month, data]) => ({ title: month, data }));
+    },
 );
 
 export const getHasHistory = createSelector([getWorkouts], (workouts) => (index: number) => workouts[index].doneWorkouts.length > 0);
+export const getNumberHistories = createSelector([getWorkouts], (workouts) => (index: number) => workouts[index].doneWorkouts.length);
 
 export const getPreviousTraining = createSelector(
-  [getSelectedTrainingDay, getLanguage, (workout, language, exerciseIndex: number) => exerciseIndex],
-  (traininigDay, language, exerciseIndex) => {
-    const doneWorkouts = traininigDay?.doneWorkouts;
-    if (!doneWorkouts || doneWorkouts.length === 0) {
-      return undefined;
-    }
-
-    const foundEntries = new Map<string, { date: string; sets: ExerciseSets; note?: string }>();
-
-    for (let workoutIndex = doneWorkouts.length - 1; workoutIndex >= 0; workoutIndex--) {
-      doneWorkouts[workoutIndex].doneExercises?.forEach((exercise) => {
-        if (!foundEntries.get(exercise.name)) {
-          foundEntries.set(exercise.name, { date: getDate(doneWorkouts[workoutIndex].date, language), sets: exercise.sets, note: exercise.note });
+    [getSelectedTrainingDay, getLanguage, (workout, language, exerciseIndex: number) => exerciseIndex],
+    (traininigDay, language, exerciseIndex) => {
+        const doneWorkouts = traininigDay?.doneWorkouts;
+        if (!doneWorkouts || doneWorkouts.length === 0) {
+            return undefined;
         }
-      });
-    }
-    return foundEntries.get(traininigDay?.exercises[exerciseIndex].name);
-  },
+
+        const foundEntries = new Map<string, { date: string; sets: ExerciseSets; note?: string }>();
+
+        for (let workoutIndex = doneWorkouts.length - 1; workoutIndex >= 0; workoutIndex--) {
+            doneWorkouts[workoutIndex].doneExercises?.forEach((exercise) => {
+                if (!foundEntries.get(exercise.name)) {
+                    foundEntries.set(exercise.name, {
+                        date: getDate(doneWorkouts[workoutIndex].date, language),
+                        sets: exercise.sets,
+                        note: exercise.note,
+                    });
+                }
+            });
+        }
+        return foundEntries.get(traininigDay?.exercises[exerciseIndex].name);
+    },
 );
 
 export const getOverallTrainingTrend = createSelector([getSelectedTrainingDayByIndex], (trainingDayByIndex) => {
-  return (workoutIndex: number) => {
-    const workout = trainingDayByIndex(workoutIndex);
+    return (workoutIndex: number) => {
+        const workout = trainingDayByIndex(workoutIndex);
 
-    if (!workout.doneWorkouts || workout.doneWorkouts?.length < 2 || workout.doneWorkouts.some(({ doneExercises }) => !doneExercises)) {
-      return undefined;
-    }
-
-    const latestExercisePairs: Map<
-      string,
-      {
-        cleanedPercent: number;
-        isPositive?: boolean;
-      }
-    > = new Map();
-    for (let i = 1; i < workout.doneWorkouts.length; i += 2) {
-      const workoutBefore = workout.doneWorkouts[i - 1];
-      const currentWorkout = workout.doneWorkouts[i];
-
-      for (let j = 0; j < workoutBefore.doneExercises!.length; j++) {
-        const beforeExercise = workoutBefore.doneExercises![j];
-        const currentExercise = currentWorkout.doneExercises![j];
-
-        if (currentExercise !== undefined && currentExercise.name === beforeExercise.name) {
-          const beforeOverall = beforeExercise.sets.reduce((sum, set) => sum + parseFloat(set.reps) * parseFloat(set.weight), 0);
-          const currentOverall = currentExercise.sets.reduce((sum, set) => sum + parseFloat(set.reps) * parseFloat(set.weight), 0);
-          const result: {
-            cleanedPercent: number;
-            isPositive?: boolean;
-          } = {
-            cleanedPercent: 0,
-          };
-          const fraction = currentOverall / beforeOverall;
-          if (fraction === 1) {
-            result.cleanedPercent = 0;
-          } else if (fraction > 1) {
-            result.cleanedPercent = fraction * 100 - 100;
-            result.isPositive = true;
-          } else {
-            result.cleanedPercent = 100 - fraction * 100;
-            result.isPositive = false;
-          }
-          latestExercisePairs.set(currentExercise.name, result);
+        if (!workout.doneWorkouts || workout.doneWorkouts?.length < 2 || workout.doneWorkouts.some(({ doneExercises }) => !doneExercises)) {
+            return undefined;
         }
-      }
-    }
-    const foundBestExercise = Array.from(latestExercisePairs).reduce(
-      (bestImprovement, [name, { isPositive, cleanedPercent }], index) => {
-        if (index === 0) {
-          return {
-            name,
-            isPositive,
-            percent: cleanedPercent,
-          };
-        }
-        if (isPositive === bestImprovement.isPositive) {
-          if (!isPositive) {
-            if (bestImprovement.percent > cleanedPercent) {
-              return {
-                name,
-                percent: cleanedPercent,
-                isPositive: false,
-              };
+
+        const latestExercisePairs: Map<
+            string,
+            {
+                cleanedPercent: number;
+                isPositive?: boolean;
             }
-            return bestImprovement;
-          } else {
-            if (bestImprovement.percent > cleanedPercent) {
-              return bestImprovement;
+        > = new Map();
+        for (let i = 1; i < workout.doneWorkouts.length; i += 2) {
+            const workoutBefore = workout.doneWorkouts[i - 1];
+            const currentWorkout = workout.doneWorkouts[i];
+
+            for (let j = 0; j < workoutBefore.doneExercises!.length; j++) {
+                const beforeExercise = workoutBefore.doneExercises![j];
+                const currentExercise = currentWorkout.doneExercises![j];
+
+                if (currentExercise !== undefined && currentExercise.name === beforeExercise.name) {
+                    const beforeOverall = beforeExercise.sets.reduce((sum, set) => sum + parseFloat(set.reps) * parseFloat(set.weight), 0);
+                    const currentOverall = currentExercise.sets.reduce((sum, set) => sum + parseFloat(set.reps) * parseFloat(set.weight), 0);
+                    const result: {
+                        cleanedPercent: number;
+                        isPositive?: boolean;
+                    } = {
+                        cleanedPercent: 0,
+                    };
+                    const fraction = currentOverall / beforeOverall;
+                    if (fraction === 1) {
+                        result.cleanedPercent = 0;
+                    } else if (fraction > 1) {
+                        result.cleanedPercent = fraction * 100 - 100;
+                        result.isPositive = true;
+                    } else {
+                        result.cleanedPercent = 100 - fraction * 100;
+                        result.isPositive = false;
+                    }
+                    latestExercisePairs.set(currentExercise.name, result);
+                }
             }
-            return {
-              name,
-              percent: cleanedPercent,
-              isPositive: true,
-            };
-          }
         }
-        if (isPositive !== bestImprovement.isPositive) {
-          if (isPositive) {
-            return {
-              name,
-              percent: cleanedPercent,
-              isPositive,
-            };
-          } else {
-            return bestImprovement;
-          }
+        const foundBestExercise = Array.from(latestExercisePairs).reduce(
+            (bestImprovement, [name, { isPositive, cleanedPercent }], index) => {
+                if (index === 0) {
+                    return {
+                        name,
+                        isPositive,
+                        percent: cleanedPercent,
+                    };
+                }
+                if (isPositive === bestImprovement.isPositive) {
+                    if (!isPositive) {
+                        if (bestImprovement.percent > cleanedPercent) {
+                            return {
+                                name,
+                                percent: cleanedPercent,
+                                isPositive: false,
+                            };
+                        }
+                        return bestImprovement;
+                    } else {
+                        if (bestImprovement.percent > cleanedPercent) {
+                            return bestImprovement;
+                        }
+                        return {
+                            name,
+                            percent: cleanedPercent,
+                            isPositive: true,
+                        };
+                    }
+                }
+                if (isPositive !== bestImprovement.isPositive) {
+                    if (isPositive) {
+                        return {
+                            name,
+                            percent: cleanedPercent,
+                            isPositive,
+                        };
+                    } else {
+                        return bestImprovement;
+                    }
+                }
+                return bestImprovement;
+            },
+            {} as {
+                name: string;
+                percent: number;
+                isPositive?: boolean;
+            },
+        );
+        if (foundBestExercise.name) {
+            return foundBestExercise;
         }
-        return bestImprovement;
-      },
-      {} as {
-        name: string;
-        percent: number;
-        isPositive?: boolean;
-      },
-    );
-    if (foundBestExercise.name) {
-      return foundBestExercise;
-    }
-    return undefined;
-  };
+        return undefined;
+    };
 });
 
 export const getPauseTime = createSelector([getExerciseMetaData], (metaData) => metaData.pause);

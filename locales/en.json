@@ -5,7 +5,12 @@
   "profile": "Profile",
 
   "workout_front": "Workout:",
+
+  "history_cta": "Show history",
   "history_front": "History:",
+
+  "create_select_type": "Select exercise type",
+
 
   "create_exercise": "Create exercise",
   "edit_exercise_long": "Confirm changes",
@@ -21,10 +26,15 @@
   "create_workout": "Create workout",
   "workout_name": "Workout name",
 
+  "minutes": "min.",
+  "seconds": "sec.",
+
   "weight": "Weight",
   "sets": "Sets",
   "reps": "Reps",
   "pause": "Pause",
+  "timePerSet": "Time per set",
+
   "alert_delete_message": "This action can't be undone",
   "alert_quit_title": "Quit training early?",
   "alert_quit_message": "The progress so far will be saved",

@@ -27,259 +27,259 @@ import { HStack } from "../../../components/Stack/HStack/HStack";
 import { useColor, useColorPickerComponents } from "../../../components/ColorPickerWithModal/ColorPickerWithModal";
 
 function getAreValuesEmpty(exercise: ExerciseMetaData) {
-  const values = Object.values(exercise);
-  return values.every((value) => {
-    if (typeof value === "object") {
-      return true;
-    }
-    return !value;
-  });
+    const values = Object.values(exercise);
+    return values.every((value) => {
+        if (typeof value === "object") {
+            return true;
+        }
+        return !value;
+    });
 }
 
 type MappedExercises = {
-  onDelete: () => void;
-  edited: boolean;
-  handleCancel: () => void;
-  onEdit: () => void;
-  exercise: ExerciseMetaData;
-  index: number;
-  handleOnConfirmEdit: (exercise: ExerciseMetaData) => void;
+    onDelete: () => void;
+    edited: boolean;
+    handleCancel: () => void;
+    onEdit: () => void;
+    exercise: ExerciseMetaData;
+    index: number;
+    handleOnConfirmEdit: (exercise: ExerciseMetaData) => void;
 };
 
 export function Create() {
-  const navigate = useNavigate();
-  const { t } = useTranslation();
-  const [alertConfig, setAlertConfig] = useState<AlertConfig | undefined>(undefined);
-  const editedDay = useAppSelector(getSelectedTrainingDay);
-  const title = useMemo(() => (editedDay ? t("edit_workout") : t("create_workout")), [editedDay, t]);
-  const [editedExercise, setEditedExercise] = useState<ExerciseMetaData>(emptyExercise);
-  const [editedExerciseIndex, setEditedExerciseIndex] = useState<number | undefined>(undefined);
-  const [workoutName, setWorkoutName] = useState(editedDay?.name);
-  const [createdExercises, setCreatedExercises] = useState<ExerciseMetaData[]>(editedDay?.exercises.map((exercise) => exercise) ?? []);
-  const dispatch = useAppDispatch();
-  const [alertRef, openAlert, closeAlert] = useBottomSheetRef();
-  const [addRef, _, closeAdd] = useBottomSheetRef();
-  const initialColor = useColor(editedDay?.calendarColor);
-  const [PickerModal, PickerButton, color] = useColorPickerComponents(initialColor);
+    const navigate = useNavigate();
+    const { t } = useTranslation();
+    const [alertConfig, setAlertConfig] = useState<AlertConfig | undefined>(undefined);
+    const editedDay = useAppSelector(getSelectedTrainingDay);
+    const title = useMemo(() => (editedDay ? t("edit_workout") : t("create_workout")), [editedDay, t]);
+    const [editedExercise, setEditedExercise] = useState<ExerciseMetaData>(emptyExercise);
+    const [editedExerciseIndex, setEditedExerciseIndex] = useState<number | undefined>(undefined);
+    const [workoutName, setWorkoutName] = useState(editedDay?.name);
+    const [createdExercises, setCreatedExercises] = useState<ExerciseMetaData[]>(editedDay?.exercises.map((exercise) => exercise) ?? []);
+    const dispatch = useAppDispatch();
+    const [alertRef, openAlert, closeAlert] = useBottomSheetRef();
+    const [addRef, _, closeAdd] = useBottomSheetRef();
+    const initialColor = useColor(editedDay?.calendarColor);
+    const [PickerModal, PickerButton, color] = useColorPickerComponents(initialColor);
 
-  useEffect(() => {
-    setWorkoutName(editedDay?.name);
-    setCreatedExercises(editedDay?.exercises ?? []);
-  }, [editedDay]);
+    useEffect(() => {
+        setWorkoutName(editedDay?.name);
+        setCreatedExercises(editedDay?.exercises ?? []);
+    }, [editedDay]);
 
-  const handleSetWorkoutName = useCallback((value?: string) => {
-    setWorkoutName(value);
-  }, []);
+    const handleSetWorkoutName = useCallback((value?: string) => {
+        setWorkoutName(value);
+    }, []);
 
-  const handleAddExercise = useCallback(() => {
-    setEditedExercise(emptyExercise);
-    setEditedExerciseIndex(undefined);
-    addRef.current?.present();
-  }, [addRef]);
-
-  const handleDeleteExercise = useCallback(
-    (index: number) => {
-      const newExercises = [...createdExercises];
-      newExercises.splice(index, 1);
-      setCreatedExercises(newExercises);
-    },
-    [createdExercises],
-  );
-
-  const handleConfirmExerciseModal = useCallback(() => {
-    if (editedExercise) {
-      if (editedExerciseIndex !== undefined) {
-        const newExercises = [...createdExercises];
-        newExercises.splice(editedExerciseIndex, 1, editedExercise);
-        setCreatedExercises(newExercises);
-      } else {
-        setCreatedExercises([...createdExercises, editedExercise]);
-        setEditedExerciseIndex(createdExercises.length);
-      }
-    }
-    setEditedExerciseIndex(undefined);
-    addRef.current?.close();
-  }, [addRef, createdExercises, editedExercise, editedExerciseIndex]);
-
-  const handleCleanErrors = useCallback(() => {
-    dispatch(cleanErrors());
-  }, [dispatch]);
-
-  const handleConfirmDiscardChanges = useCallback(() => {
-    closeAlert();
-    handleCleanErrors();
-    navigate("workouts");
-  }, [closeAlert, handleCleanErrors, navigate]);
-
-  const mappedExercises = useMemo(() => {
-    return createdExercises.map((exercise, index) => {
-      const onEdit = () => {
-        void Haptics.selectionAsync();
-        setEditedExerciseIndex(index);
-        setEditedExercise(createdExercises[index]);
+    const handleAddExercise = useCallback(() => {
+        setEditedExercise(emptyExercise);
+        setEditedExerciseIndex(undefined);
         addRef.current?.present();
-      };
+    }, [addRef]);
 
-      const handleConfirmDelete = () => {
-        void Haptics.notificationAsync(NotificationFeedbackType.Success);
-        handleDeleteExercise(index);
-        closeAlert();
-      };
+    const handleDeleteExercise = useCallback(
+        (index: number) => {
+            const newExercises = [...createdExercises];
+            newExercises.splice(index, 1);
+            setCreatedExercises(newExercises);
+        },
+        [createdExercises],
+    );
 
-      const handleOnConfirmEdit = (exercise: ExerciseMetaData) => {
-        if (exercise.sets && exercise.name && exercise.weight && exercise.reps) {
-          const newExercises = [...createdExercises];
-          newExercises.splice(index, 1, exercise);
-          setCreatedExercises(newExercises);
-          setEditedExerciseIndex(undefined);
-          closeAdd();
-        }
-      };
-
-      const handleCancel = () => {
-        if (getAreValuesEmpty(createdExercises[index])) {
-          const newExercises = [...createdExercises];
-          newExercises.splice(index, 1);
-          setCreatedExercises(newExercises);
+    const handleConfirmExerciseModal = useCallback(() => {
+        if (editedExercise) {
+            if (editedExerciseIndex !== undefined) {
+                const newExercises = [...createdExercises];
+                newExercises.splice(editedExerciseIndex, 1, editedExercise);
+                setCreatedExercises(newExercises);
+            } else {
+                setCreatedExercises([...createdExercises, editedExercise]);
+                setEditedExerciseIndex(createdExercises.length);
+            }
         }
         setEditedExerciseIndex(undefined);
+        addRef.current?.close();
+    }, [addRef, createdExercises, editedExercise, editedExerciseIndex]);
+
+    const handleCleanErrors = useCallback(() => {
+        dispatch(cleanErrors());
+    }, [dispatch]);
+
+    const handleConfirmDiscardChanges = useCallback(() => {
         closeAlert();
-      };
+        handleCleanErrors();
+        navigate("workouts");
+    }, [closeAlert, handleCleanErrors, navigate]);
 
-      const onDelete = () => {
-        setAlertConfig({
-          title: t("alert_delete_title"),
-          content: t("alert_delete_message"),
-          onConfirm: handleConfirmDelete,
+    const mappedExercises = useMemo(() => {
+        return createdExercises.map((exercise, index) => {
+            const onEdit = () => {
+                void Haptics.selectionAsync();
+                setEditedExerciseIndex(index);
+                setEditedExercise(createdExercises[index]);
+                addRef.current?.present();
+            };
+
+            const handleConfirmDelete = () => {
+                void Haptics.notificationAsync(NotificationFeedbackType.Success);
+                handleDeleteExercise(index);
+                closeAlert();
+            };
+
+            const handleOnConfirmEdit = (exercise: ExerciseMetaData) => {
+                if (exercise.sets && exercise.name && exercise.weight && exercise.reps) {
+                    const newExercises = [...createdExercises];
+                    newExercises.splice(index, 1, exercise);
+                    setCreatedExercises(newExercises);
+                    setEditedExerciseIndex(undefined);
+                    closeAdd();
+                }
+            };
+
+            const handleCancel = () => {
+                if (getAreValuesEmpty(createdExercises[index])) {
+                    const newExercises = [...createdExercises];
+                    newExercises.splice(index, 1);
+                    setCreatedExercises(newExercises);
+                }
+                setEditedExerciseIndex(undefined);
+                closeAlert();
+            };
+
+            const onDelete = () => {
+                setAlertConfig({
+                    title: t("alert_delete_title"),
+                    content: t("alert_delete_message"),
+                    onConfirm: handleConfirmDelete,
+                });
+                openAlert();
+            };
+            const edited = index === editedExerciseIndex;
+
+            return { onDelete, edited, handleCancel, onEdit, exercise, index, handleOnConfirmEdit };
         });
-        openAlert();
-      };
-      const edited = index === editedExerciseIndex;
+    }, [addRef, closeAdd, closeAlert, createdExercises, editedExerciseIndex, handleDeleteExercise, openAlert, t]);
 
-      return { onDelete, edited, handleCancel, onEdit, exercise, index, handleOnConfirmEdit };
-    });
-  }, [addRef, closeAdd, closeAlert, createdExercises, editedExerciseIndex, handleDeleteExercise, openAlert, t]);
+    const handleNavigateHome = useCallback(() => {
+        handleCleanErrors();
+        setAlertConfig(undefined);
+        setEditedExerciseIndex(undefined);
+        navigate("workouts");
+    }, [handleCleanErrors, navigate]);
 
-  const handleNavigateHome = useCallback(() => {
-    handleCleanErrors();
-    setAlertConfig(undefined);
-    setEditedExerciseIndex(undefined);
-    navigate("workouts");
-  }, [dispatch, handleCleanErrors, navigate]);
+    const handleConfirm = useCallback(() => {
+        if (createdExercises.length === 0 && !workoutName) {
+            handleNavigateHome();
+            return;
+        }
+        if (workoutName?.length === 0 || createdExercises.length === 0) {
+            if (workoutName?.length === 0) {
+                dispatch(setError(["workout_name"]));
+            }
+            if (createdExercises.length === 0) {
+                dispatch(setError(["create_exercises_empty"]));
+            }
+            return;
+        }
+        if (editedDay) {
+            dispatch(editTrainingDay({ name: workoutName ?? editedDay.name, exercises: createdExercises, color }));
+        } else {
+            dispatch(addTrainingDay({ name: workoutName ?? "", exercises: createdExercises, color }));
+        }
+        handleNavigateHome();
+    }, [createdExercises, workoutName, editedDay, handleNavigateHome, dispatch, color]);
 
-  const handleConfirm = useCallback(() => {
-    if (createdExercises.length === 0 && !workoutName) {
-      handleNavigateHome();
-      return;
-    }
-    if (workoutName?.length === 0 || createdExercises.length === 0) {
-      if (workoutName?.length === 0) {
-        dispatch(setError(["workout_name"]));
-      }
-      if (createdExercises.length === 0) {
-        dispatch(setError(["create_exercises_empty"]));
-      }
-      return;
-    }
-    if (editedDay) {
-      dispatch(editTrainingDay({ name: workoutName ?? editedDay.name, exercises: createdExercises, color }));
-    } else {
-      dispatch(addTrainingDay({ name: workoutName ?? "", exercises: createdExercises, color }));
-    }
-    handleNavigateHome();
-  }, [createdExercises, workoutName, editedDay, handleNavigateHome, dispatch, color]);
+    const handleBackButton = useCallback(() => {
+        if (createdExercises.length === 0 && !workoutName) {
+            handleNavigateHome();
+        } else if (createdExercises.length !== 0 || workoutName?.length !== 0) {
+            const title = t(editedDay ? "alert_edit_workout_discard_title" : "alert_create_workout_discard_title");
+            const content = t(editedDay ? "alert_edit_workout_discard_content" : "alert_create_workout_discard_content");
+            setAlertConfig({
+                title,
+                content,
+                onConfirm: handleConfirmDiscardChanges,
+            });
+            alertRef.current?.present();
+        } else {
+            handleNavigateHome();
+        }
+    }, [alertRef, createdExercises.length, editedDay, handleConfirmDiscardChanges, handleNavigateHome, t, workoutName]);
 
-  const handleBackButton = useCallback(() => {
-    if (createdExercises.length === 0 && !workoutName) {
-      handleNavigateHome();
-    } else if (createdExercises.length !== 0 || workoutName?.length !== 0) {
-      const title = t(editedDay ? "alert_edit_workout_discard_title" : "alert_create_workout_discard_title");
-      const content = t(editedDay ? "alert_edit_workout_discard_content" : "alert_create_workout_discard_content");
-      setAlertConfig({
-        title,
-        content,
-        onConfirm: handleConfirmDiscardChanges,
-      });
-      alertRef.current?.present();
-    } else {
-      handleNavigateHome();
-    }
-  }, [alertRef, createdExercises.length, editedDay, handleConfirmDiscardChanges, handleNavigateHome, t, workoutName]);
+    const handleOnDragEnd = useCallback(
+        ({ data }: { data: MappedExercises[] }) => {
+            const newExercises = data.map((dataPoint) => dataPoint.exercise);
+            setCreatedExercises(newExercises);
+            dispatch(overwriteTrainingDayExercises(newExercises));
+        },
+        [dispatch],
+    );
 
-  const handleOnDragEnd = useCallback(
-    ({ data }: { data: MappedExercises[] }) => {
-      const newExercises = data.map((dataPoint) => dataPoint.exercise);
-      setCreatedExercises(newExercises);
-      dispatch(overwriteTrainingDayExercises(newExercises));
-    },
-    [dispatch],
-  );
+    const handleEditExercise = useCallback(
+        (field: keyof ExerciseMetaData, value: string) => {
+            const exercise = { ...editedExercise, [field]: value };
+            setEditedExercise(exercise);
+        },
+        [editedExercise],
+    );
 
-  const handleEditExercise = useCallback(
-    (field: keyof ExerciseMetaData, value: string) => {
-      const exercise = { ...editedExercise, [field]: value };
-      setEditedExercise(exercise);
-    },
-    [editedExercise],
-  );
-
-  return (
-    <>
-      <ThemedView background style={styles.innerWrapper}>
-        <SiteNavigationButtons handleBack={handleBackButton} handleConfirm={handleConfirm} titleFontSize={30} title={title} />
-        <PageContent style={styles.contentWrapper}>
-          <HStack style={styles.nameColorStack} ghost>
-            <PlainInput showClear value={workoutName} setValue={handleSetWorkoutName} fontSize={30} placeholder={t("workout_name")} />
-            <PickerButton />
-          </HStack>
-          <View style={styles.listContainer}>
-            {mappedExercises.length > 0 ? (
-              <DraggableFlatList
-                scrollsToTop
-                removeClippedSubviews
-                keyboardShouldPersistTaps="handled"
-                keyExtractor={(item) => `${item.index}${item.exercise.name}${item.exercise.pause}`}
-                data={mappedExercises}
-                onDragEnd={handleOnDragEnd}
-                renderItem={({ drag, item: { index, exercise, onEdit, onDelete } }) => (
-                  <ScaleDecorator activeScale={0.95}>
-                    <View style={{ marginBottom: 10 }}>
-                      <PressableRowWithIconSlots
-                        onClick={onEdit}
-                        key={exercise.name.concat(index.toString())}
-                        Icon1={{ icon: "delete", onPress: onDelete }}
-                        Icon2={mappedExercises.length > 1 ? { icon: "drag", onLongPress: drag } : undefined}
-                      >
-                        <Text style={styles.text}>{exercise.name}</Text>
-                      </PressableRowWithIconSlots>
+    return (
+        <>
+            <ThemedView background style={styles.innerWrapper}>
+                <SiteNavigationButtons handleBack={handleBackButton} handleConfirm={handleConfirm} titleFontSize={30} title={title} />
+                <PageContent style={styles.contentWrapper}>
+                    <HStack style={styles.nameColorStack} ghost>
+                        <PlainInput showClear value={workoutName} setValue={handleSetWorkoutName} fontSize={30} placeholder={t("workout_name")} />
+                        <PickerButton />
+                    </HStack>
+                    <View style={styles.listContainer}>
+                        {mappedExercises.length > 0 ? (
+                            <DraggableFlatList
+                                scrollsToTop
+                                removeClippedSubviews
+                                keyboardShouldPersistTaps="handled"
+                                keyExtractor={(item) => `${item.index}${item.exercise.name}${item.exercise.pause}`}
+                                data={mappedExercises}
+                                onDragEnd={handleOnDragEnd}
+                                renderItem={({ drag, item: { index, exercise, onEdit, onDelete } }) => (
+                                    <ScaleDecorator activeScale={0.95}>
+                                        <View style={{ marginBottom: 10 }}>
+                                            <PressableRowWithIconSlots
+                                                onClick={onEdit}
+                                                key={exercise.name.concat(index.toString())}
+                                                Icon1={{ icon: "delete", onPress: onDelete }}
+                                                Icon2={mappedExercises.length > 1 ? { icon: "drag", onLongPress: drag } : undefined}
+                                            >
+                                                <Text style={styles.text}>{exercise.name}</Text>
+                                            </PressableRowWithIconSlots>
+                                        </View>
+                                    </ScaleDecorator>
+                                )}
+                            />
+                        ) : (
+                            <View style={{ flex: 1, justifyContent: "center" }}>
+                                <MaterialCommunityIcons style={{ alignSelf: "center" }} name="clipboard-search-outline" size={256} color="#444" />
+                            </View>
+                        )}
                     </View>
-                  </ScaleDecorator>
-                )}
-              />
-            ) : (
-              <View style={{ flex: 1, justifyContent: "center" }}>
-                <MaterialCommunityIcons style={{ alignSelf: "center" }} name="clipboard-search-outline" size={256} color="#444" />
-              </View>
-            )}
-          </View>
-          <AddButton onPress={handleAddExercise} />
-        </PageContent>
-      </ThemedView>
-      <AlertModal
-        reference={alertRef}
-        onConfirm={alertConfig?.onConfirm}
-        title={alertConfig?.title}
-        content={alertConfig?.content}
-        onCancel={closeAlert}
-      />
-      <AddExerciseModal
-        isEditingExercise={editedExerciseIndex !== undefined}
-        handleEditExercise={handleEditExercise}
-        editedExercise={editedExercise}
-        reference={addRef}
-        onConfirmEdit={handleConfirmExerciseModal}
-      />
-      <PickerModal />
-    </>
-  );
+                    <AddButton onPress={handleAddExercise} />
+                </PageContent>
+            </ThemedView>
+            <AlertModal
+                reference={alertRef}
+                onConfirm={alertConfig?.onConfirm}
+                title={alertConfig?.title}
+                content={alertConfig?.content}
+                onCancel={closeAlert}
+            />
+            <AddExerciseModal
+                isEditingExercise={editedExerciseIndex !== undefined}
+                handleEditExercise={handleEditExercise}
+                editedExercise={editedExercise}
+                reference={addRef}
+                onConfirmEdit={handleConfirmExerciseModal}
+            />
+            <PickerModal />
+        </>
+    );
 }
