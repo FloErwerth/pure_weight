@@ -100,11 +100,20 @@ export function Measurements() {
 
   return (
     <ThemedView style={{ flex: 1 }}>
-      <SiteNavigationButtons title={t("measurements")} handleConfirm={handleAddNewMeasurement} handleConfirmIcon={{ name: "plus", size: 40 }} />
+      <SiteNavigationButtons
+        titleFontSize={40}
+        title={t("measurements")}
+        handleConfirm={handleAddNewMeasurement}
+        handleConfirmIcon={{ name: "plus", size: 40 }}
+      />
       <PageContent style={styles.contentWrapper}>
         <ScrollView style={styles.measurementsWrapper}>
           {measurements?.map((measurement, index) => (
-            <Swipeable onDelete={() => handleDeleteMeasurement(index)} key={`${measurement.name}-pressable`} onClick={() => handleAddExistingMeasurement(measurement, index)}>
+            <Swipeable
+              onDelete={() => handleDeleteMeasurement(index)}
+              key={`${measurement.name}-pressable`}
+              onClick={() => handleAddExistingMeasurement(measurement, index)}
+            >
               <RenderedMeasurement index={index} measurement={measurement} />
             </Swipeable>
           ))}
@@ -118,7 +127,13 @@ export function Measurements() {
         currentMeasurement={currentMeasurement}
         onRequestClose={handleCloseModal}
       />
-      <BottomToast onRequestClose={() => setShowToast(false)} open={showToast} messageKey={"measurement_deleted_undo"} titleKey={"measurement_deleted_message"} onRedo={handleRecoverMeasurement} />
+      <BottomToast
+        onRequestClose={() => setShowToast(false)}
+        open={showToast}
+        messageKey={"measurement_deleted_undo"}
+        titleKey={"measurement_deleted_message"}
+        onRedo={handleRecoverMeasurement}
+      />
     </ThemedView>
   );
 }

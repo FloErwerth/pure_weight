@@ -3,8 +3,9 @@
   "progress": "Progress",
   "settings": "Settings",
   "profile": "Profile",
-  "history": "Workout History",
 
+  "workout_front": "Workout:",
+  "history_front": "History:",
 
   "create_exercise": "Create exercise",
   "edit_exercise_long": "Confirm changes",

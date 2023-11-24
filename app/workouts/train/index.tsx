@@ -150,8 +150,7 @@ export function Train() {
           handleConfirmOpacity={confirmButtonOpacity}
           handleBack={handleCloseButton}
           handleConfirm={handleDone}
-          titleFontSize={30}
-          title={trainingDay?.name}
+          title={t("workout_front").concat(" ", trainingDay?.name ?? "")}
         />
       </ThemedView>
       <ThemedView background stretch>

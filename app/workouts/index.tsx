@@ -170,7 +170,7 @@ export function Workouts() {
   return (
     <ThemedView background style={styles.view}>
       <View style={styles.vStack}>
-        <SiteNavigationButtons title={t("workouts")} handleConfirmIcon={confirmIcon} handleConfirm={handlePress} />
+        <SiteNavigationButtons titleFontSize={40} title={t("workouts")} handleConfirmIcon={confirmIcon} handleConfirm={handlePress} />
         <PageContent>
           <WorkoutSorting />
           <FlatList

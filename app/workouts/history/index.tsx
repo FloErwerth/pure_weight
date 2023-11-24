@@ -5,7 +5,14 @@ import { useNavigate } from "../../../hooks/navigate";
 import { useAppSelector } from "../../../store";
 import { PageContent } from "../../../components/PageContent/PageContent";
 import { ThemedView } from "../../../components/Themed/ThemedView/View";
-import { getAppInstallDate, getHistoryByMonth, getLatestWorkoutDate, getWorkoutColor, getWorkoutDates } from "../../../store/selectors";
+import {
+  getAppInstallDate,
+  getHistoryByMonth,
+  getLatestWorkoutDate,
+  getSelectedTrainingDay,
+  getWorkoutColor,
+  getWorkoutDates,
+} from "../../../store/selectors";
 import { useTheme } from "../../../theme/context";
 import { CalendarList, DateData } from "react-native-calendars";
 import { ThemedButtomSheetModal, useBottomSheetRef } from "../../../components/BottomSheetModal/ThemedButtomSheetModal";
@@ -19,7 +26,6 @@ import { ThemedPressable } from "../../../components/Themed/Pressable/Pressable"
 import { Dimensions, SectionList, SectionListData, ViewStyle } from "react-native";
 import { getDuration } from "../../../utils/getDuration";
 import { ThemedMaterialCommunityIcons } from "../../../components/Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
-import { ColorIndicator } from "../../../components/ColorIndicator/ColorIndicator";
 import { RenderedDay } from "../../../components/App/history/RenderedDay/RenderedDay";
 import { DayProps } from "react-native-calendars/src/calendar/day";
 import { borderRadius } from "../../../theme/border";
@@ -50,10 +56,10 @@ export function WorkoutHistory() {
   const { inputFieldBackgroundColor, mainColor, textDisabled } = useTheme();
   const installDate = useAppSelector(getAppInstallDate);
   const latestWorkoutDate = useAppSelector(getLatestWorkoutDate);
-  const [selectedDate, setSelectedDate] = useState<IsoDate>(latestWorkoutDate);
+  const [selectedDate, setSelectedDate] = useState<IsoDate | undefined>();
   const pastScrollRange = useMemo(() => Math.floor(getDateToday().since(installDate ?? getDateTodayIso()).days / 30), [installDate]);
   const markedDates = useMarkedDates();
-
+  const workout = useAppSelector(getSelectedTrainingDay);
   const [ref, open, close] = useBottomSheetRef();
   const sectionListRef = useRef<SectionList>(null);
   const dateData = useAppSelector((state: AppState) => getHistoryByMonth(state, selectedDate));
@@ -94,9 +100,10 @@ export function WorkoutHistory() {
       }
       const { color, weight, date, name, duration, numExercisesDone } = item;
       const selected = date === selectedDate;
-      const workoutWrapperStyles: ViewStyle = { ...styles.workout, borderColor: selected ? mainColor : "transparent" };
+      const workoutWrapperStyles: ViewStyle = { ...styles.workout, borderColor: selected ? color : "transparent" };
       return (
         <ThemedView
+          input
           style={workoutWrapperStyles}
           key={name
             .concat(date)
@@ -104,24 +111,18 @@ export function WorkoutHistory() {
             .concat(numExercisesDone.toString())
             .concat(duration ?? "DURATION")}
         >
-          <HStack>
-            <HStack style={styles.titleWrapper}>
-              <Text style={styles.workoutTitle}>{name}</Text>
-              <ColorIndicator color={color} width={6} height={6} />
+          <HStack ghost style={styles.displayedWorkoutWrapper}>
+            <HStack ghost style={styles.hstack}>
+              <ThemedMaterialCommunityIcons ghost name="weight" size={20} />
+              <Text ghost>{weight} kg</Text>
             </HStack>
-          </HStack>
-          <HStack style={styles.displayedWorkoutWrapper}>
-            <HStack style={styles.hstack}>
-              <ThemedMaterialCommunityIcons name="weight" size={20} />
-              <Text>{weight} kg</Text>
+            <HStack ghost style={styles.hstack}>
+              <ThemedMaterialCommunityIcons ghost name="clock" size={20} />
+              <Text ghost>{getDuration(duration)}</Text>
             </HStack>
-            <HStack style={styles.hstack}>
-              <ThemedMaterialCommunityIcons name="clock" size={20} />
-              <Text>{getDuration(duration)}</Text>
-            </HStack>
-            <HStack style={styles.hstack}>
-              <ThemedMaterialCommunityIcons name="weight-lifter" size={20} />
-              <Text>{numExercisesDone}</Text>
+            <HStack ghost style={styles.hstack}>
+              <ThemedMaterialCommunityIcons ghost name="weight-lifter" size={20} />
+              <Text ghost>{numExercisesDone}</Text>
             </HStack>
           </HStack>
         </ThemedView>
@@ -174,7 +175,7 @@ export function WorkoutHistory() {
 
   return (
     <ThemedView stretch>
-      <SiteNavigationButtons titleFontSize={30} handleBack={handleNavigateBack} title={t("history")} />
+      <SiteNavigationButtons handleBack={handleNavigateBack} title={t("history_front").concat(" ", workout?.name ?? "")} />
       <PageContent style={styles.pageWrapper}>
         <SectionList
           ref={sectionListRef}
@@ -191,7 +192,7 @@ export function WorkoutHistory() {
       </PageContent>
       <ThemedButtomSheetModal snapPoints={["50%"]} ref={ref}>
         <CalendarList
-          current={selectedDate}
+          current={selectedDate ?? latestWorkoutDate}
           dayComponent={dayComponent}
           futureScrollRange={0}
           pastScrollRange={pastScrollRange}

@@ -3,7 +3,10 @@
   "progress": "Fortschritt",
   "settings": "Einstellungen",
   "profile": "Profil",
-  "history": "Workout Verlauf",
+
+  "workout_front": "Workout:",
+  "history_front": "Verlauf:",
+
 
   "exercise_name": "Name der Übung",
   "add_exercise": "Übung hinzufügen",

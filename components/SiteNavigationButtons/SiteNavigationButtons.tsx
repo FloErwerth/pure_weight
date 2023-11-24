@@ -21,14 +21,20 @@ interface SiteNavigationButtonsProps {
 export const SiteNavigationButtons = ({
   handleBack,
   title,
-  titleFontSize = 40,
+  titleFontSize = 30,
   handleConfirm,
   disabled = false,
   handleConfirmIcon = { name: "check", size: 30 },
   confirmButtonRef,
   handleConfirmOpacity,
 }: SiteNavigationButtonsProps) => {
-  const titleStyles = useMemo(() => ({ ...styles.title, fontSize: titleFontSize, paddingVertical: titleFontSize <= 40 ? (40 - titleFontSize) / 2 : 0 }), [titleFontSize]);
+  const titleStyles = useMemo(
+    () => ({ ...styles.title, fontSize: titleFontSize, paddingVertical: titleFontSize <= 40 ? (40 - titleFontSize) / 2 : 0 }),
+    [titleFontSize],
+  );
+
+  const titleWrapperStyles = useMemo(() => [{ paddingLeft: !handleBack ? 20 : 0 }, styles.titleWrapper], [handleBack]);
+
   const { mainColor } = useTheme();
 
   const handleBackButton = useCallback(() => {
@@ -50,10 +56,10 @@ export const SiteNavigationButtons = ({
 
   return (
     <HStack background style={styles.headerWrapper}>
-      <HStack background style={styles.titleWrapper}>
+      <HStack background style={titleWrapperStyles}>
         {handleBack && (
           <Pressable disabled={disabled} onPress={handleBackButton}>
-            <MaterialCommunityIcons color={mainColor} size={28} name="arrow-left" />
+            <MaterialCommunityIcons color={mainColor} size={Math.min(28, titleFontSize)} name="arrow-left" />
           </Pressable>
         )}
         <Text background numberOfLines={1} style={titleStyles}>

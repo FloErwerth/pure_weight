@@ -19,7 +19,7 @@ export function Profile() {
 
   return (
     <ThemedView style={{ flex: 1 }}>
-      <SiteNavigationButtons title={t("profile")} />
+      <SiteNavigationButtons titleFontSize={40} title={t("profile")} />
       <PageContent style={{ gap: 10 }}>
         <ProfileSection onPress={() => handleNavigation("settings")} title={t("settings")} />
       </PageContent>

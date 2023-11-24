@@ -10,7 +10,6 @@ export const styles = StyleSheet.create({
     alignSelf: "stretch",
     alignItems: "center",
     gap: 10,
-    paddingLeft: 10,
     paddingRight: 20,
   },
   headerWrapper: {
