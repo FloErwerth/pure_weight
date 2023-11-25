@@ -9,34 +9,34 @@ export const styles = StyleSheet.create({
         alignItems: "center",
     },
     time: {
-        gap: 10,
+        gap: 5,
+    },
+    label: {
+        padding: 5,
     },
     headerWrapper: {
         margin: 10,
-        gap: 20,
+        gap: 10,
     },
     buttonText: {
-        fontSize: 16,
+        fontSize: 20,
     },
     input: {
-        alignSelf: "stretch",
         paddingVertical: 10,
         paddingHorizontal: 5,
         borderRadius,
         borderWidth: 1,
     },
     inputWrapper: {
-        padding: 10,
         zIndex: -1,
         gap: 10,
     },
     button: {
         alignSelf: "stretch",
-        marginHorizontal: 10,
         justifyContent: "center",
         gap: 10,
-        padding: 10,
-        paddingRight: 8,
+        marginTop: 10,
+        padding: 12,
         borderRadius,
     },
     buttons: {
@@ -44,15 +44,17 @@ export const styles = StyleSheet.create({
         justifyContent: "space-around",
     },
     innerWrapper: {
-        gap: 10,
+        margin: 10,
+        gap: 20,
+        alignItems: "stretch",
+        alignSelf: "stretch",
         borderRadius,
-        flex: 1,
     },
     saveText: {
         fontSize: 16,
     },
     title: {
-        fontSize: 20,
+        fontSize: 30,
         borderWidth: 1,
         borderColor: "transparent",
         padding: 10,

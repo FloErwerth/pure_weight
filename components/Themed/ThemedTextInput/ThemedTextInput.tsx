@@ -1,6 +1,6 @@
-import { TextInput, TextInputProps } from "react-native";
+import { Animated, TextInput, TextInputProps, View } from "react-native";
 import * as React from "react";
-import { RefObject, useCallback, useMemo } from "react";
+import { RefObject, useCallback, useMemo, useRef, useState } from "react";
 import { AppState, ErrorFields } from "../../../store/types";
 import { useAppDispatch, useAppSelector } from "../../../store";
 import { getErrorByKey } from "../../../store/selectors";
@@ -8,6 +8,7 @@ import { cleanError } from "../../../store/reducer";
 import { useTheme } from "../../../theme/context";
 import { BottomSheetTextInput } from "@gorhom/bottom-sheet";
 import { ComputedBackgroundColorProps, useComputedBackgroundColor } from "../../../hooks/useComputedBackgroundColor";
+import { borderRadius } from "../../../theme/border";
 
 interface ThemedTextInputProps extends TextInputProps, ComputedBackgroundColorProps {
     reference?: RefObject<TextInput>;
@@ -16,6 +17,8 @@ interface ThemedTextInputProps extends TextInputProps, ComputedBackgroundColorPr
     stretch?: boolean;
     bottomSheet?: boolean;
     suffix?: string;
+    showClear?: boolean;
+    height?: number;
 }
 export const ThemedTextInput = (props: ThemedTextInputProps) => {
     const backgroundColor = useComputedBackgroundColor(props);
@@ -23,6 +26,9 @@ export const ThemedTextInput = (props: ThemedTextInputProps) => {
     const getHasError = useAppSelector((state: AppState) => getErrorByKey(state)(props.errorKey));
     const { mainColor, textDisabled, errorColor, secondaryColor } = useTheme();
     const dispatch = useAppDispatch();
+    const opacity = useRef(new Animated.Value(0)).current;
+    const viewRef = useRef<View>(null);
+    const [containerMeasures, setContainerMeasures] = useState<{ width: number; height: number } | undefined>();
 
     const handleTextInput = useCallback(
         (value: string) => {
@@ -33,6 +39,34 @@ export const ThemedTextInput = (props: ThemedTextInputProps) => {
         },
         [dispatch, getHasError, props],
     );
+
+    const measureContainer = useCallback(() => {
+        if (viewRef.current) {
+            viewRef.current.measure((x, y, width, height) => {
+                setContainerMeasures({ width, height });
+            });
+        }
+    }, []);
+
+    const handleFocus = useCallback(() => {
+        if (props.suffix) {
+            Animated.timing(opacity, {
+                duration: 200,
+                useNativeDriver: false,
+                toValue: 0,
+            }).start();
+        }
+    }, [opacity, props.suffix]);
+
+    const handleBlur = useCallback(() => {
+        if (props.suffix) {
+            Animated.timing(opacity, {
+                duration: 200,
+                useNativeDriver: false,
+                toValue: 0,
+            }).start();
+        }
+    }, [opacity, props.suffix]);
 
     const placeholderColor = useMemo(() => {
         if (getHasError) {
@@ -45,19 +79,34 @@ export const ThemedTextInput = (props: ThemedTextInputProps) => {
     }, [editable, errorColor, getHasError, secondaryColor, textDisabled]);
 
     const textInputStyle = useMemo(() => {
-        const baseStyle = [{ flex: props.stretch ? 1 : 0, backgroundColor, color: editable ? mainColor : textDisabled }, props.style];
+        const baseStyle = [
+            {
+                alignSelf: "stretch",
+                position: "relative",
+                backgroundColor,
+                color: editable ? mainColor : textDisabled,
+                fontSize: 20,
+                padding: 10,
+                borderRadius,
+            } as const,
+            props.style,
+        ];
         if (!getHasError) {
             return baseStyle;
         }
         const errorStyle = { color: errorColor, borderWidth: props.hideErrorBorder ? 0 : 1, borderColor: errorColor };
         return [errorStyle, baseStyle];
-    }, [backgroundColor, editable, errorColor, getHasError, mainColor, props.hideErrorBorder, props.stretch, props.style, textDisabled]);
+    }, [backgroundColor, editable, errorColor, getHasError, mainColor, props.hideErrorBorder, props.style, textDisabled]);
 
     if (props.bottomSheet) {
         return (
             <BottomSheetTextInput
                 {...props}
+                onBlur={handleBlur}
+                onFocus={handleFocus}
+                clearButtonMode={props.showClear ? "while-editing" : "never"}
                 onChangeText={handleTextInput}
+                returnKeyType="done"
                 style={textInputStyle}
                 placeholderTextColor={placeholderColor}
             ></BottomSheetTextInput>
@@ -65,6 +114,16 @@ export const ThemedTextInput = (props: ThemedTextInputProps) => {
     }
 
     return (
-        <TextInput {...props} ref={props.reference} onChangeText={handleTextInput} style={textInputStyle} placeholderTextColor={placeholderColor} />
+        <TextInput
+            {...props}
+            onBlur={handleBlur}
+            onFocus={handleFocus}
+            returnKeyType="done"
+            clearButtonMode={props.showClear ? "while-editing" : "never"}
+            ref={props.reference}
+            onChangeText={handleTextInput}
+            style={textInputStyle}
+            placeholderTextColor={placeholderColor}
+        />
     );
 };

@@ -6,7 +6,6 @@ import { useAppDispatch, useAppSelector } from "../../../store";
 import { addTrainingDay, cleanErrors, editTrainingDay, overwriteTrainingDayExercises, setError } from "../../../store/reducer";
 import { AddButton } from "../../../components/AddButton/AddButton";
 import { styles } from "../../../components/App/create/styles";
-import { PlainInput } from "../../../components/PlainInput/PlainInput";
 import { SiteNavigationButtons } from "../../../components/SiteNavigationButtons/SiteNavigationButtons";
 import { PressableRowWithIconSlots } from "../../../components/PressableRowWithIconSlots/PressableRowWithIconSlots";
 import { AlertConfig, AlertModal } from "../../../components/AlertModal/AlertModal";
@@ -25,6 +24,7 @@ import { AddExerciseModal } from "../../../components/AddExerciseModal/AddExerci
 import { emptyExercise } from "../../../components/App/create/context";
 import { HStack } from "../../../components/Stack/HStack/HStack";
 import { useColor, useColorPickerComponents } from "../../../components/ColorPickerWithModal/ColorPickerWithModal";
+import { ThemedTextInput } from "../../../components/Themed/ThemedTextInput/ThemedTextInput";
 
 function getAreValuesEmpty(exercise: ExerciseMetaData) {
     const values = Object.values(exercise);
@@ -229,7 +229,7 @@ export function Create() {
                 <SiteNavigationButtons handleBack={handleBackButton} handleConfirm={handleConfirm} titleFontSize={30} title={title} />
                 <PageContent style={styles.contentWrapper}>
                     <HStack style={styles.nameColorStack} ghost>
-                        <PlainInput showClear value={workoutName} setValue={handleSetWorkoutName} fontSize={30} placeholder={t("workout_name")} />
+                        <ThemedTextInput showClear value={workoutName} onChangeText={handleSetWorkoutName} placeholder={t("workout_name")} />
                         <PickerButton />
                     </HStack>
                     <View style={styles.listContainer}>

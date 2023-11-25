@@ -5,11 +5,10 @@ import { useTranslation } from "react-i18next";
 import { AppState, ErrorFields } from "../../store/types";
 import { useAppSelector } from "../../store";
 import { getErrorByKey } from "../../store/selectors";
-import { Center } from "../Center/Center";
 import { Text } from "../Themed/ThemedText/Text";
 import { useTheme } from "../../theme/context";
-import { HStack } from "../Stack/HStack/HStack";
 import { ThemedView } from "../Themed/ThemedView/View";
+import { HStack } from "../Stack/HStack/HStack";
 
 type ExerciseInputType = "NORMAL" | "TIME";
 interface EditableExerciseInputRowProps {
@@ -18,8 +17,9 @@ interface EditableExerciseInputRowProps {
     setValue: (value: string) => void;
     errorKey?: ErrorFields;
     i18key?: string;
+    stretch?: boolean;
 }
-export const EditableExerciseInputRow = ({ value, setValue, errorKey, i18key, type = "NORMAL" }: EditableExerciseInputRowProps) => {
+export const EditableExerciseInputRow = ({ value, setValue, errorKey, i18key, type = "NORMAL", stretch }: EditableExerciseInputRowProps) => {
     const { t } = useTranslation();
     const { errorColor } = useTheme();
     const hasError = useAppSelector((state: AppState) => getErrorByKey(state)(errorKey));
@@ -44,38 +44,45 @@ export const EditableExerciseInputRow = ({ value, setValue, errorKey, i18key, ty
 
     if (type === "TIME") {
         return (
-            <ThemedView stretch ghost style={styles.center}>
-                <HStack ghost style={styles.time}>
+            <ThemedView ghost>
+                <Text style={styles.label} ghost>
+                    {t(i18key ?? "")}
+                </Text>
+                <HStack ghost style={{ gap: 10 }}>
                     <ThemedTextInput
+                        background
                         bottomSheet
-                        stretch
+                        style={{ flex: 1 }}
                         errorKey={errorKey}
                         inputMode="decimal"
                         textAlign="center"
-                        style={inputStyles}
                         placeholder={t("minutes")}
                         onChangeText={(val) => handleSetValue(val, "min")}
                         value={minutes}
+                        suffix={t("minutes")}
                     ></ThemedTextInput>
                     <ThemedTextInput
+                        background
                         bottomSheet
-                        stretch
+                        style={{ flex: 1 }}
                         errorKey={errorKey}
                         inputMode="decimal"
                         textAlign="center"
                         placeholder={t("seconds")}
-                        style={inputStyles}
+                        suffix={t("seconds")}
                         onChangeText={(val) => handleSetValue(val, "sec")}
                         value={seconds}
                     ></ThemedTextInput>
                 </HStack>
-                <Text ghost>{t(i18key ?? "")}</Text>
             </ThemedView>
         );
     }
 
     return (
-        <Center style={styles.wrapper}>
+        <ThemedView ghost stretch={stretch}>
+            <Text style={styles.label} ghost>
+                {t(i18key ?? "")}
+            </Text>
             <ThemedTextInput
                 bottomSheet
                 errorKey={errorKey}
@@ -85,7 +92,6 @@ export const EditableExerciseInputRow = ({ value, setValue, errorKey, i18key, ty
                 onChangeText={handleSetValue}
                 value={value}
             ></ThemedTextInput>
-            <Text ghost>{t(i18key ?? "")}</Text>
-        </Center>
+        </ThemedView>
     );
 };

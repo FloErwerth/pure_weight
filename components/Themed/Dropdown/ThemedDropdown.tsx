@@ -110,9 +110,9 @@ export function ThemedDropdown<T extends readonly string[]>({
                 {open && (
                     <Animated.View style={dropdownStyles} layout={Layout} entering={FadeIn.duration(200)} exiting={FadeOut.duration(200)}>
                         <ThemedView input style={{ borderColor: componentBackgroundColor, borderWidth: 1, borderRadius }}>
-                            {options.map((value, index) => (
+                            {options.map((displayValue, index) => (
                                 <>
-                                    <Item key={value} onSelectItem={handleSelectItem} value={value} />
+                                    <Item key={displayValue} onSelectItem={handleSelectItem} value={displayValue} />
                                     <Separator show={index < options.length - 1} />
                                 </>
                             ))}

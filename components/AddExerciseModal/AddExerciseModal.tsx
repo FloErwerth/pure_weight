@@ -10,7 +10,7 @@ export const AddExerciseModal = (props: AddExerciseModalProps) => {
     const { t } = useTranslation();
     const title = useMemo(() => t(props.isEditingExercise ? "exercise_edit_title" : "create_exercise"), [props.isEditingExercise, t]);
     return (
-        <ThemedButtomSheetModal snapPoints={["50%", "100%"]} title={title} ref={props.reference} {...props}>
+        <ThemedButtomSheetModal snapPoints={["65%", "100%"]} title={title} ref={props.reference} {...props}>
             <EditableExercise
                 handleEditExercise={props.handleEditExercise}
                 editedExercise={props.editedExercise}

@@ -44,10 +44,10 @@ export const mockState: AppState = {
             name: "Real Back",
             calendarColor: "#ffff00",
             exercises: [
-                { type: "Classical", name: "Klimmzüge unterstützt", weight: "25", sets: "5", pause: "3", reps: "5" },
-                { type: "Classical", name: "Rudern Seilzug", weight: "50", sets: "4", pause: "2", reps: "8" },
-                { type: "Classical", name: "Hintere Schulter Seil", weight: "50", sets: "4", pause: "2", reps: "8" },
-                { type: "Classical", name: "Bizeps Sz", weight: "10", sets: "4", pause: "2", reps: "8" },
+                { type: "Classical", timePerSet: "", name: "Klimmzüge unterstützt", weight: "25", sets: "5", pause: "3", reps: "5" },
+                { type: "Classical", timePerSet: "", name: "Rudern Seilzug", weight: "50", sets: "4", pause: "2", reps: "8" },
+                { type: "Classical", timePerSet: "", name: "Hintere Schulter Seil", weight: "50", sets: "4", pause: "2", reps: "8" },
+                { type: "Classical", timePerSet: "", name: "Bizeps Sz", weight: "10", sets: "4", pause: "2", reps: "8" },
             ],
             doneWorkouts: [],
         },
@@ -55,11 +55,11 @@ export const mockState: AppState = {
             name: "Real Chest",
             calendarColor: "#ff0000",
             exercises: [
-                { type: "Classical", name: "Bankdrücken", weight: "50", sets: "5", pause: "2", reps: "5" },
-                { type: "Classical", name: "Butterfly", weight: "50", sets: "4", pause: "2", reps: "8" },
-                { type: "Classical", name: "Military", weight: "10", sets: "5", pause: "2", reps: "5" },
-                { type: "Classical", name: "Seitheben", weight: "10", sets: "4", pause: "2", reps: "8" },
-                { type: "Classical", name: "Trizeps", weight: "27.5", sets: "4", pause: "2", reps: "8" },
+                { type: "Classical", timePerSet: "", name: "Bankdrücken", weight: "50", sets: "5", pause: "2", reps: "5" },
+                { type: "Classical", timePerSet: "", name: "Butterfly", weight: "50", sets: "4", pause: "2", reps: "8" },
+                { type: "Classical", timePerSet: "", name: "Military", weight: "10", sets: "5", pause: "2", reps: "5" },
+                { type: "Classical", timePerSet: "", name: "Seitheben", weight: "10", sets: "4", pause: "2", reps: "8" },
+                { type: "Classical", timePerSet: "", name: "Trizeps", weight: "27.5", sets: "4", pause: "2", reps: "8" },
             ],
             doneWorkouts: [],
         },
@@ -67,8 +67,8 @@ export const mockState: AppState = {
             name: "TEST Brust 1",
             calendarColor: "#cc1111",
             exercises: [
-                { type: "Classical", name: "Bankdrücken", weight: "50", sets: "5", pause: "2", reps: "5" },
-                { type: "Classical", name: "Butterfly", weight: "50", sets: "5", pause: "2", reps: "2" },
+                { type: "Classical", timePerSet: "", name: "Bankdrücken", weight: "50", sets: "5", pause: "2", reps: "5" },
+                { type: "Classical", timePerSet: "", name: "Butterfly", weight: "50", sets: "5", pause: "2", reps: "2" },
             ],
             doneWorkouts: [
                 { duration: "12000", date: "2023-10-16", doneExercises: [{ name: "Bankdrücken", sets: [{ reps: "5", weight: "55" }] }] },
@@ -100,7 +100,7 @@ export const mockState: AppState = {
         {
             name: "TEST Brust2",
             calendarColor: "#ffaa11",
-            exercises: [{ type: "Classical", name: "Bankdrücken", weight: "50", sets: "5", pause: "2", reps: "5" }],
+            exercises: [{ type: "Classical", timePerSet: "", name: "Bankdrücken", weight: "50", sets: "5", pause: "2", reps: "5" }],
             doneWorkouts: [
                 { duration: "12000", date: "2023-10-16", doneExercises: [{ name: "Bankdrücken", sets: [{ reps: "5", weight: "55" }] }] },
                 { duration: "12000", date: "2023-11-18", doneExercises: [{ name: "Bankdrücken", sets: [{ reps: "5", weight: "55" }] }] },

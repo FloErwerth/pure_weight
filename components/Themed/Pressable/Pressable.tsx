@@ -27,14 +27,15 @@ export const ThemedPressable = (props: ThemedPressableProps) => {
         () => [
             {
                 flex: props.stretch ? 1 : 0,
+                alignSelf: "stretch",
                 zIndex: props.behind ? -1 : 0,
                 backgroundColor: computedBackgroundColor,
                 borderColor: props.error ? errorColor : "transparent",
                 borderWidth: 1,
-            },
+            } as const,
             props.style,
         ],
-        [computedBackgroundColor, errorColor, props.error, props.stretch, props.style],
+        [computedBackgroundColor, errorColor, props.behind, props.error, props.stretch, props.style],
     );
 
     return <Pressable ref={props.reference} {...props} onPress={handlePress} style={style}></Pressable>;

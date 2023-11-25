@@ -16,7 +16,14 @@ export const ThemedView = (props: ThemedViewProps) => {
     const backgroundColor = useComputedBackgroundColor(props);
 
     const wrapperStyle = useMemo(
-        () => [{ zIndex: props.behind ? -1 : 0, backgroundColor, flex: props.stretch ? 1 : 0 }, props.style],
+        () => [
+            {
+                zIndex: props.behind ? -1 : 0,
+                backgroundColor,
+                flex: props.stretch ? 1 : 0,
+            } as const,
+            props.style,
+        ],
         [backgroundColor, props.behind, props.stretch, props.style],
     );
     return <View {...props} ref={props.reference} style={wrapperStyle} />;

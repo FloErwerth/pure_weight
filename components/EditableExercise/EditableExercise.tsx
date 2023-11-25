@@ -52,31 +52,43 @@ const validateData = (data: Partial<ExerciseMetaData>) => {
 export const EditableExerciseContent = ({ editedExercise, handleEditExercise }: Omit<EditableExerciseProps, "onConfirmEdit">) => {
     if (editedExercise?.type !== "Time based") {
         return (
-            <HStack ghost style={styles.inputWrapper}>
-                <EditableExerciseInputRow
-                    i18key="weight"
-                    setValue={(weight) => handleEditExercise?.("weight", weight)}
-                    errorKey={"create_weight"}
-                    value={editedExercise?.weight}
-                />
-                <EditableExerciseInputRow
-                    i18key="sets"
-                    setValue={(sets) => handleEditExercise?.("sets", sets)}
-                    errorKey={"create_sets"}
-                    value={editedExercise?.sets}
-                />
-                <EditableExerciseInputRow
-                    i18key="reps"
-                    setValue={(reps) => handleEditExercise?.("reps", reps)}
-                    errorKey={"create_reps"}
-                    value={editedExercise?.reps}
-                />
-                <EditableExerciseInputRow i18key="pause" setValue={(pause) => handleEditExercise?.("pause", pause)} value={editedExercise?.pause} />
-            </HStack>
+            <ThemedView ghost style={styles.inputWrapper}>
+                <HStack style={styles.inputWrapper} ghost>
+                    <EditableExerciseInputRow
+                        stretch
+                        i18key="weight"
+                        setValue={(weight) => handleEditExercise?.("weight", weight)}
+                        errorKey={"create_weight"}
+                        value={editedExercise?.weight}
+                    />
+                    <EditableExerciseInputRow
+                        stretch
+                        i18key="sets"
+                        setValue={(sets) => handleEditExercise?.("sets", sets)}
+                        errorKey={"create_sets"}
+                        value={editedExercise?.sets}
+                    />
+                </HStack>
+                <HStack ghost style={styles.inputWrapper}>
+                    <EditableExerciseInputRow
+                        stretch
+                        i18key="reps"
+                        setValue={(reps) => handleEditExercise?.("reps", reps)}
+                        errorKey={"create_reps"}
+                        value={editedExercise?.reps}
+                    />
+                    <EditableExerciseInputRow
+                        stretch
+                        i18key="pause"
+                        setValue={(pause) => handleEditExercise?.("pause", pause)}
+                        value={editedExercise?.pause}
+                    />
+                </HStack>
+            </ThemedView>
         );
     }
     return (
-        <HStack ghost style={styles.inputWrapper}>
+        <ThemedView ghost style={styles.inputWrapper}>
             <EditableExerciseInputRow
                 type="TIME"
                 i18key="timePerSet"
@@ -90,7 +102,7 @@ export const EditableExerciseContent = ({ editedExercise, handleEditExercise }: 
                 errorKey={"create_sets"}
                 value={editedExercise?.sets}
             />
-        </HStack>
+        </ThemedView>
     );
 };
 
@@ -124,31 +136,31 @@ export const EditableExercise = ({ onConfirmEdit, editedExercise = emptyExercise
 
     return (
         <ThemedView ghost style={styles.innerWrapper}>
-            <HStack ghost style={styles.headerWrapper}>
-                <ThemedTextInput
-                    stretch
+            <ThemedTextInput
+                ghost
+                bottomSheet
+                showClear
+                autoFocus
+                errorKey="create_name"
+                placeholder={t("exercise_name")}
+                reference={inputRef}
+                value={editedExercise?.name}
+                onChangeText={(name) => handleEditExercise?.("name", name)}
+                style={styles.title}
+            />
+            <ThemedView ghost>
+                <Text ghost style={styles.label}>
+                    Exercise Type
+                </Text>
+                <ThemedDropdown
                     secondary
-                    bottomSheet
-                    clearButtonMode="while-editing"
-                    autoFocus
-                    errorKey="create_name"
-                    placeholder={t("exercise_name")}
-                    reference={inputRef}
-                    value={editedExercise?.name}
-                    onChangeText={(name) => handleEditExercise?.("name", name)}
-                    style={styles.title}
+                    placeholderTranslationKey="create_select_type"
+                    isSelectable
+                    value={editedExercise?.type}
+                    onSelectItem={(type) => handleEditExercise?.("type", type)}
+                    options={ExerciseTypeOptions}
                 />
-                <ThemedView ghost stretch>
-                    <ThemedDropdown
-                        secondary
-                        placeholderTranslationKey="create_select_type"
-                        isSelectable
-                        value={editedExercise?.type}
-                        onSelectItem={(type) => handleEditExercise?.("type", type)}
-                        options={ExerciseTypeOptions}
-                    />
-                </ThemedView>
-            </HStack>
+            </ThemedView>
             <EditableExerciseContent editedExercise={editedExercise} handleEditExercise={handleEditExercise} />
             <ThemedPressable ghost behind onPress={handleConfirm}>
                 <HStack secondary style={styles.button}>
