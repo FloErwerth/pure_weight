@@ -10,7 +10,7 @@
   "history_front": "History:",
 
   "create_select_type": "Select exercise type",
-
+  "create_exercise_type_label": "Exercise type",
 
   "create_exercise": "Create exercise",
   "edit_exercise_long": "Confirm changes",

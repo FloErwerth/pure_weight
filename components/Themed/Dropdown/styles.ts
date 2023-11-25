@@ -16,9 +16,10 @@ export const styles = StyleSheet.create({
         height: Dimensions.get("screen").height * 2,
     },
     wrapper: {
-        zIndex: 1,
+        zIndex: 20,
     },
     dropdown: {
+        zIndex: 20,
         position: "absolute",
     },
     selectedItem: {

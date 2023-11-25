@@ -15,6 +15,7 @@
   "exercise_edit_title": "Einheit bearbeiten",
   "alert_delete_title": "Übung löschen?",
   "create_missing_data_text": "Es sind keine Übungen zum Anzeigen vorhanden",
+  "create_exercise_type_label": "Übungstyp",
 
   "edit_workout": "Workout bearbeiten",
   "create_workout": "Workout erstellen",

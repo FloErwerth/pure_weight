@@ -229,7 +229,13 @@ export function Create() {
                 <SiteNavigationButtons handleBack={handleBackButton} handleConfirm={handleConfirm} titleFontSize={30} title={title} />
                 <PageContent style={styles.contentWrapper}>
                     <HStack style={styles.nameColorStack} ghost>
-                        <ThemedTextInput showClear value={workoutName} onChangeText={handleSetWorkoutName} placeholder={t("workout_name")} />
+                        <ThemedTextInput
+                            style={styles.workoutNameInput}
+                            showClear
+                            value={workoutName}
+                            onChangeText={handleSetWorkoutName}
+                            placeholder={t("workout_name")}
+                        />
                         <PickerButton />
                     </HStack>
                     <View style={styles.listContainer}>

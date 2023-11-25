@@ -4,26 +4,36 @@ import { useComputedBackgroundColor } from "../../../hooks/useComputedBackground
 import { useComputedColor } from "../../../hooks/useComputedColor";
 
 interface ThemedTextProps extends TextProps {
-  stretch?: boolean;
-  warning?: boolean;
-  secondary?: boolean;
-  component?: boolean;
-  ghost?: boolean;
-  background?: boolean;
-  input?: boolean;
-  error?: boolean;
-  placeholder?: boolean;
-  center?: boolean;
+    stretch?: boolean;
+    warning?: boolean;
+    secondary?: boolean;
+    component?: boolean;
+    ghost?: boolean;
+    background?: boolean;
+    input?: boolean;
+    error?: boolean;
+    placeholder?: boolean;
+    center?: boolean;
+    behind?: boolean;
 }
 
 export const Text = (props: ThemedTextProps) => {
-  const computedBackgroundColor = useComputedBackgroundColor(props);
-  const computedColor = useComputedColor(props);
+    const computedBackgroundColor = useComputedBackgroundColor(props);
+    const computedColor = useComputedColor(props);
 
-  const styles = useMemo(
-    () => [{ flex: props.stretch ? 1 : 0, textAlign: props.center ? "center" : "left", color: computedColor, backgroundColor: computedBackgroundColor } as const, props.style],
-    [computedBackgroundColor, computedColor, props.center, props.stretch, props.style],
-  );
+    const styles = useMemo(
+        () => [
+            {
+                zIndex: props.behind ? -1 : 0,
+                flex: props.stretch ? 1 : 0,
+                textAlign: props.center ? "center" : "left",
+                color: computedColor,
+                backgroundColor: computedBackgroundColor,
+            } as const,
+            props.style,
+        ],
+        [computedBackgroundColor, computedColor, props.behind, props.center, props.stretch, props.style],
+    );
 
-  return <_Text {...props} style={styles} />;
+    return <_Text {...props} style={styles} />;
 };

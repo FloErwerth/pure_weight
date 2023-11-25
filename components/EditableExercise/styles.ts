@@ -29,7 +29,7 @@ export const styles = StyleSheet.create({
     },
     inputWrapper: {
         zIndex: -1,
-        gap: 10,
+        gap: 5,
     },
     button: {
         alignSelf: "stretch",
@@ -49,6 +49,10 @@ export const styles = StyleSheet.create({
         alignItems: "stretch",
         alignSelf: "stretch",
         borderRadius,
+    },
+    outerWrapper: {
+        padding: 10,
+        gap: 5,
     },
     saveText: {
         fontSize: 16,
