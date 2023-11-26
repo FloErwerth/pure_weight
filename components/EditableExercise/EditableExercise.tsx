@@ -19,7 +19,6 @@ export interface EditableExerciseProps {
 }
 
 const getContent = ({ editedExercise, handleEditExercise }: Omit<EditableExerciseProps, "onConfirmEdit">): Record<ExerciseType, ReactElement> => {
-    const isClassic = editedExercise.type === "CLASSIC";
     return {
         ["CLASSIC"]: (
             <ThemedView ghost stretch style={styles.inputWrapper}>
@@ -36,7 +35,7 @@ const getContent = ({ editedExercise, handleEditExercise }: Omit<EditableExercis
                         i18key="sets"
                         setValue={(sets) => handleEditExercise?.("sets", sets)}
                         errorKey={"create_sets"}
-                        value={isClassic ? editedExercise.sets : ""}
+                        value={editedExercise.sets}
                     />
                     <EditableExerciseInputRow
                         stretch
@@ -68,7 +67,7 @@ const getContent = ({ editedExercise, handleEditExercise }: Omit<EditableExercis
                     i18key="sets"
                     setValue={(sets) => handleEditExercise?.("sets", sets)}
                     errorKey={"create_sets"}
-                    value={!isClassic ? editedExercise?.sets : ""}
+                    value={editedExercise?.sets}
                 />
                 <EditableExerciseInputRow
                     stretch
@@ -82,7 +81,7 @@ const getContent = ({ editedExercise, handleEditExercise }: Omit<EditableExercis
     };
 };
 
-export const EditableExercise = ({ editedExercise = emptyExercise, handleEditExercise, isEditingExercise }: EditableExerciseProps) => {
+export const EditableExercise = ({ editedExercise = emptyExercise, handleEditExercise }: EditableExerciseProps) => {
     const { t } = useTranslation();
     const inputRef = useRef<TextInput>(null);
 
@@ -112,7 +111,6 @@ export const EditableExercise = ({ editedExercise = emptyExercise, handleEditExe
                 {t("create_exercise_type_label")}
             </Text>
             <SlidingSwitch
-                animated={!isEditingExercise}
                 value={editedExercise.type}
                 hasComponents={true}
                 options={mappedExerciseOptions}
