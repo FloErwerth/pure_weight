@@ -1,6 +1,6 @@
 import { TextInput } from "react-native";
-import { useMemo, useRef } from "react";
-import { ExerciseMetaData, exerciseTypeOptions } from "../../store/types";
+import { ReactElement, useMemo, useRef } from "react";
+import { ExerciseMetaData, ExerciseType, exerciseTypeOptions } from "../../store/types";
 import { styles } from "./styles";
 import { HStack } from "../Stack/HStack/HStack";
 import { ThemedTextInput } from "../Themed/ThemedTextInput/ThemedTextInput";
@@ -17,7 +17,7 @@ export interface EditableExerciseProps {
     handleEditExercise?: (field: keyof ExerciseMetaData, value: string) => void;
 }
 
-const getContent = ({ editedExercise, handleEditExercise }: Omit<EditableExerciseProps, "onConfirmEdit">) => ({
+const getContent = ({ editedExercise, handleEditExercise }: Omit<EditableExerciseProps, "onConfirmEdit">): Record<ExerciseType, ReactElement> => ({
     ["CLASSIC"]: (
         <ThemedView ghost stretch style={styles.inputWrapper}>
             <HStack style={styles.inputWrapper} ghost>
