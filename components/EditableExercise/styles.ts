@@ -11,6 +11,9 @@ export const styles = StyleSheet.create({
     time: {
         gap: 5,
     },
+    gap: {
+        gap: 10,
+    },
     label: {
         padding: 5,
     },

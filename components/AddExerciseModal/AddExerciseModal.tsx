@@ -50,6 +50,7 @@ export const AddExerciseModal = (props: AddExerciseModalProps) => {
     const title = useMemo(() => t(props.isEditingExercise ? "exercise_edit_title" : "create_exercise"), [props.isEditingExercise, t]);
     const dispatch = useAppDispatch();
     const { editedExercise, onConfirmEdit, isEditingExercise } = props;
+
     const handleConfirm = useCallback(() => {
         if (editedExercise) {
             const { name, sets, reps, weight, pause, timePerSet, type } = editedExercise;
@@ -57,19 +58,33 @@ export const AddExerciseModal = (props: AddExerciseModalProps) => {
             if (possibleErrors.length > 0) {
                 dispatch(setError(possibleErrors));
             } else {
+                if (type === "CLASSIC") {
+                    onConfirmEdit({
+                        name: name ?? "",
+                        reps: reps ?? "",
+                        sets: sets ?? "",
+                        weight: weight ?? "",
+                        pause: pause ?? "",
+                        type,
+                        timePerSet: "",
+                    });
+                }
+                if (type === "TIME_BASED") {
+                    onConfirmEdit({
+                        name: name ?? "",
+                        reps: "",
+                        sets: sets ?? "",
+                        weight: "",
+                        pause: pause ?? "",
+                        type,
+                        timePerSet: timePerSet ?? "",
+                    });
+                }
                 void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-                onConfirmEdit({
-                    name: name ?? "",
-                    reps: reps ?? "",
-                    sets: sets ?? "",
-                    weight: weight ?? "",
-                    pause: pause ?? "",
-                    type: type ?? "Classical",
-                    timePerSet: timePerSet ?? "",
-                });
             }
         }
     }, [dispatch, editedExercise, onConfirmEdit]);
+
     const buttonStyles = useMemo(() => ({ marginBottom: bottom }), [bottom]);
     return (
         <ThemedButtomSheetModal snapPoints={["100%"]} ref={props.reference} {...props} title={title}>

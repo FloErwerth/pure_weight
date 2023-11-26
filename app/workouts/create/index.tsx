@@ -58,7 +58,7 @@ export function Create() {
     const [createdExercises, setCreatedExercises] = useState<ExerciseMetaData[]>(editedDay?.exercises.map((exercise) => exercise) ?? []);
     const dispatch = useAppDispatch();
     const [alertRef, openAlert, closeAlert] = useBottomSheetRef();
-    const [addRef, _, closeAdd] = useBottomSheetRef();
+    const [addRef, openAdd, closeAdd] = useBottomSheetRef();
     const initialColor = useColor(editedDay?.calendarColor);
     const [PickerModal, PickerButton, color] = useColorPickerComponents(initialColor);
 
@@ -117,7 +117,8 @@ export function Create() {
                 void Haptics.selectionAsync();
                 setEditedExerciseIndex(index);
                 setEditedExercise(createdExercises[index]);
-                addRef.current?.present();
+                console.log(createdExercises[index]);
+                openAdd();
             };
 
             const handleConfirmDelete = () => {
@@ -158,7 +159,7 @@ export function Create() {
 
             return { onDelete, edited, handleCancel, onEdit, exercise, index, handleOnConfirmEdit };
         });
-    }, [addRef, closeAdd, closeAlert, createdExercises, editedExerciseIndex, handleDeleteExercise, openAlert, t]);
+    }, [closeAdd, closeAlert, createdExercises, editedExerciseIndex, handleDeleteExercise, openAdd, openAlert, t]);
 
     const handleNavigateHome = useCallback(() => {
         handleCleanErrors();

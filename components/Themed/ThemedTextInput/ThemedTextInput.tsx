@@ -8,7 +8,7 @@ import { cleanError } from "../../../store/reducer";
 import { useTheme } from "../../../theme/context";
 import { BottomSheetTextInput } from "@gorhom/bottom-sheet";
 import { ComputedBackgroundColorProps, useComputedBackgroundColor } from "../../../hooks/useComputedBackgroundColor";
-import { borderRadius } from "../../../theme/border";
+import { styles } from "./styles";
 
 interface ThemedTextInputProps extends TextInputProps, ComputedBackgroundColorProps {
     reference?: RefObject<TextInput>;
@@ -71,15 +71,11 @@ export const ThemedTextInput = (props: ThemedTextInputProps) => {
     const textInputStyle = useMemo(() => {
         const baseStyle = [
             {
-                alignSelf: "stretch",
-                position: "relative",
+                flex: props.stretch ? 1 : 0,
                 backgroundColor,
                 color: editable ? mainColor : textDisabled,
-                fontSize: 20,
-                padding: 10,
-                zIndex: 1,
-                borderRadius,
             } as const,
+            styles.base,
             props.style,
         ];
         if (!getHasError) {
@@ -87,7 +83,7 @@ export const ThemedTextInput = (props: ThemedTextInputProps) => {
         }
         const errorStyle = { color: errorColor, borderWidth: props.hideErrorBorder ? 0 : 1, borderColor: errorColor };
         return [errorStyle, baseStyle];
-    }, [backgroundColor, editable, errorColor, getHasError, mainColor, props.hideErrorBorder, props.style, textDisabled]);
+    }, [backgroundColor, editable, errorColor, getHasError, mainColor, props.hideErrorBorder, props.stretch, props.style, textDisabled]);
 
     return (
         <>

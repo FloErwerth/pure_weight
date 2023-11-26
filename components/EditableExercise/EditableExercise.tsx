@@ -13,72 +13,76 @@ import { Text } from "../Themed/ThemedText/Text";
 
 export interface EditableExerciseProps {
     onConfirmEdit: (exercise: ExerciseMetaData) => void;
-    editedExercise?: ExerciseMetaData;
+    editedExercise: ExerciseMetaData;
     handleEditExercise?: (field: keyof ExerciseMetaData, value: string) => void;
+    isEditingExercise?: boolean;
 }
 
-const getContent = ({ editedExercise, handleEditExercise }: Omit<EditableExerciseProps, "onConfirmEdit">): Record<ExerciseType, ReactElement> => ({
-    ["CLASSIC"]: (
-        <ThemedView ghost stretch style={styles.inputWrapper}>
-            <HStack style={styles.inputWrapper} ghost>
+const getContent = ({ editedExercise, handleEditExercise }: Omit<EditableExerciseProps, "onConfirmEdit">): Record<ExerciseType, ReactElement> => {
+    const isClassic = editedExercise.type === "CLASSIC";
+    return {
+        ["CLASSIC"]: (
+            <ThemedView ghost stretch style={styles.inputWrapper}>
+                <HStack style={styles.inputWrapper} ghost>
+                    <EditableExerciseInputRow
+                        stretch
+                        i18key="weight"
+                        setValue={(weight) => handleEditExercise?.("weight", weight)}
+                        errorKey={"create_weight"}
+                        value={editedExercise.weight}
+                    />
+                    <EditableExerciseInputRow
+                        stretch
+                        i18key="sets"
+                        setValue={(sets) => handleEditExercise?.("sets", sets)}
+                        errorKey={"create_sets"}
+                        value={isClassic ? editedExercise.sets : ""}
+                    />
+                    <EditableExerciseInputRow
+                        stretch
+                        i18key="reps"
+                        setValue={(reps) => handleEditExercise?.("reps", reps)}
+                        errorKey={"create_reps"}
+                        value={editedExercise.reps}
+                    />
+                </HStack>
+                <EditableExerciseInputRow
+                    type="MINUTES_SECONDS"
+                    i18key="pause"
+                    setValue={(pause) => handleEditExercise?.("pause", pause)}
+                    value={editedExercise?.pause}
+                />
+            </ThemedView>
+        ),
+        ["TIME_BASED"]: (
+            <ThemedView ghost stretch style={styles.inputWrapper}>
                 <EditableExerciseInputRow
                     stretch
-                    i18key="weight"
-                    setValue={(weight) => handleEditExercise?.("weight", weight)}
-                    errorKey={"create_weight"}
-                    value={editedExercise?.weight}
+                    type="MINUTES_SECONDS"
+                    i18key="timePerSet"
+                    setValue={(timePerSet) => handleEditExercise?.("timePerSet", timePerSet)}
+                    errorKey={"create_timePerSet"}
+                    value={editedExercise?.timePerSet}
                 />
                 <EditableExerciseInputRow
-                    stretch
                     i18key="sets"
                     setValue={(sets) => handleEditExercise?.("sets", sets)}
                     errorKey={"create_sets"}
-                    value={editedExercise?.sets}
+                    value={!isClassic ? editedExercise?.sets : ""}
                 />
                 <EditableExerciseInputRow
                     stretch
-                    i18key="reps"
-                    setValue={(reps) => handleEditExercise?.("reps", reps)}
-                    errorKey={"create_reps"}
-                    value={editedExercise?.reps}
+                    type="MINUTES_SECONDS"
+                    i18key="pause"
+                    setValue={(pause) => handleEditExercise?.("pause", pause)}
+                    value={editedExercise?.pause}
                 />
-            </HStack>
-            <EditableExerciseInputRow
-                stretch
-                type="MINUTES_SECONDS"
-                i18key="pause"
-                setValue={(pause) => handleEditExercise?.("pause", pause)}
-                value={editedExercise?.pause}
-            />
-        </ThemedView>
-    ),
-    ["TIME_BASED"]: (
-        <ThemedView ghost stretch style={styles.inputWrapper}>
-            <EditableExerciseInputRow
-                type="MINUTES_SECONDS"
-                i18key="timePerSet"
-                setValue={(timePerSet) => handleEditExercise?.("timePerSet", timePerSet)}
-                errorKey={"create_timePerSet"}
-                value={editedExercise?.weight}
-            />
-            <EditableExerciseInputRow
-                i18key="sets"
-                setValue={(sets) => handleEditExercise?.("sets", sets)}
-                errorKey={"create_sets"}
-                value={editedExercise?.sets}
-            />
-            <EditableExerciseInputRow
-                stretch
-                type="MINUTES_SECONDS"
-                i18key="pause"
-                setValue={(pause) => handleEditExercise?.("pause", pause)}
-                value={editedExercise?.pause}
-            />
-        </ThemedView>
-    ),
-});
+            </ThemedView>
+        ),
+    };
+};
 
-export const EditableExercise = ({ editedExercise = emptyExercise, handleEditExercise }: EditableExerciseProps) => {
+export const EditableExercise = ({ editedExercise = emptyExercise, handleEditExercise, isEditingExercise }: EditableExerciseProps) => {
     const { t } = useTranslation();
     const inputRef = useRef<TextInput>(null);
 
@@ -96,7 +100,6 @@ export const EditableExercise = ({ editedExercise = emptyExercise, handleEditExe
         <ThemedView stretch ghost>
             <ThemedTextInput
                 ghost
-                stretch
                 showClear
                 errorKey="create_name"
                 placeholder={t("exercise_name")}
@@ -108,7 +111,13 @@ export const EditableExercise = ({ editedExercise = emptyExercise, handleEditExe
             <Text ghost style={styles.label}>
                 {t("create_exercise_type_label")}
             </Text>
-            <SlidingSwitch options={mappedExerciseOptions} onSelectValue={(value) => handleEditExercise?.("type", value)} />
+            <SlidingSwitch
+                animated={!isEditingExercise}
+                value={editedExercise.type}
+                hasComponents={true}
+                options={mappedExerciseOptions}
+                onSelectValue={(value) => handleEditExercise?.("type", value)}
+            />
         </ThemedView>
     );
 };

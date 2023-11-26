@@ -14,4 +14,11 @@ export const styles = StyleSheet.create({
         zIndex: -1,
         backgroundColor: "rgba(0,0,0,0.1)",
     },
+    base: {
+        position: "relative",
+        fontSize: 20,
+        padding: 10,
+        zIndex: 1,
+        borderRadius,
+    },
 });
