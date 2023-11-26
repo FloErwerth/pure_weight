@@ -16,6 +16,8 @@
   "alert_delete_title": "Übung löschen?",
   "create_missing_data_text": "Es sind keine Übungen zum Anzeigen vorhanden",
   "create_exercise_type_label": "Übungstyp",
+  "create_exercise_CLASSIC": "Klassisch",
+  "create_exercise_TIME_BASED": "Zeitbasiert",
 
   "edit_workout": "Workout bearbeiten",
   "create_workout": "Workout erstellen",

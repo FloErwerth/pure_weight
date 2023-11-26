@@ -15,7 +15,7 @@ interface AddExerciseProps {
     disabled?: boolean;
 }
 export const AddButton = ({ onPress, title, disabled = false }: AddExerciseProps) => {
-    const { textDisabled, mainColor, errorColor, componentBackgroundColor } = useTheme();
+    const { textDisabled, mainColor } = useTheme();
     const { t } = useTranslation();
     const text = useMemo(() => title ?? t("add_exercise"), [title, t]);
     const textStyles = useMemo(() => ({ ...styles.text, color: disabled ? textDisabled : mainColor }), [disabled, mainColor, textDisabled]);

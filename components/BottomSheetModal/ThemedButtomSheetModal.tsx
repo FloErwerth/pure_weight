@@ -74,7 +74,7 @@ export const ThemedButtomSheetModal = forwardRef<BottomSheetModal, ThemedBottomS
             >
                 <HStack ghost style={styles.wrapper}>
                     {title && (
-                        <Text ghost style={styles.title}>
+                        <Text input placeholder style={styles.title}>
                             {title}
                         </Text>
                     )}

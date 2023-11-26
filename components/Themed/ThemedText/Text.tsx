@@ -15,6 +15,7 @@ interface ThemedTextProps extends TextProps {
     placeholder?: boolean;
     center?: boolean;
     behind?: boolean;
+    textBackground?: boolean;
 }
 
 export const Text = (props: ThemedTextProps) => {

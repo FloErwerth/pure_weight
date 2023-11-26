@@ -52,8 +52,8 @@ export type ExerciseMetaData = {
     pause?: string;
 };
 
-export const ExerciseTypeOptions = ["Classical", "Time based"] as const;
-export type ExerciseType = (typeof ExerciseTypeOptions)[number];
+export const exerciseTypeOptions = ["TIME_BASED", "CLASSIC"] as const;
+export type ExerciseType = (typeof exerciseTypeOptions)[number];
 
 export type ErrorFields =
     | "create_name"

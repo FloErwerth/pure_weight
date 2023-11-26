@@ -1,6 +1,6 @@
-import { Animated, TextInput, TextInputProps, View } from "react-native";
+import { Animated, TextInput, TextInputProps } from "react-native";
 import * as React from "react";
-import { RefObject, useCallback, useMemo, useRef, useState } from "react";
+import { RefObject, useCallback, useMemo, useRef } from "react";
 import { AppState, ErrorFields } from "../../../store/types";
 import { useAppDispatch, useAppSelector } from "../../../store";
 import { getErrorByKey } from "../../../store/selectors";
@@ -27,8 +27,6 @@ export const ThemedTextInput = (props: ThemedTextInputProps) => {
     const { mainColor, textDisabled, errorColor, secondaryColor } = useTheme();
     const dispatch = useAppDispatch();
     const opacity = useRef(new Animated.Value(0)).current;
-    const viewRef = useRef<View>(null);
-    const [containerMeasures, setContainerMeasures] = useState<{ width: number; height: number } | undefined>();
 
     const handleTextInput = useCallback(
         (value: string) => {
@@ -39,14 +37,6 @@ export const ThemedTextInput = (props: ThemedTextInputProps) => {
         },
         [dispatch, getHasError, props],
     );
-
-    const measureContainer = useCallback(() => {
-        if (viewRef.current) {
-            viewRef.current.measure((x, y, width, height) => {
-                setContainerMeasures({ width, height });
-            });
-        }
-    }, []);
 
     const handleFocus = useCallback(() => {
         if (props.suffix) {
@@ -87,6 +77,7 @@ export const ThemedTextInput = (props: ThemedTextInputProps) => {
                 color: editable ? mainColor : textDisabled,
                 fontSize: 20,
                 padding: 10,
+                zIndex: 1,
                 borderRadius,
             } as const,
             props.style,
@@ -98,32 +89,32 @@ export const ThemedTextInput = (props: ThemedTextInputProps) => {
         return [errorStyle, baseStyle];
     }, [backgroundColor, editable, errorColor, getHasError, mainColor, props.hideErrorBorder, props.style, textDisabled]);
 
-    if (props.bottomSheet) {
-        return (
-            <BottomSheetTextInput
-                {...props}
-                onBlur={handleBlur}
-                onFocus={handleFocus}
-                clearButtonMode={props.showClear ? "while-editing" : "never"}
-                onChangeText={handleTextInput}
-                returnKeyType="done"
-                style={textInputStyle}
-                placeholderTextColor={placeholderColor}
-            ></BottomSheetTextInput>
-        );
-    }
-
     return (
-        <TextInput
-            {...props}
-            onBlur={handleBlur}
-            onFocus={handleFocus}
-            returnKeyType="done"
-            clearButtonMode={props.showClear ? "while-editing" : "never"}
-            ref={props.reference}
-            onChangeText={handleTextInput}
-            style={textInputStyle}
-            placeholderTextColor={placeholderColor}
-        />
+        <>
+            {props.bottomSheet ? (
+                <BottomSheetTextInput
+                    {...props}
+                    onBlur={handleBlur}
+                    onFocus={handleFocus}
+                    clearButtonMode={props.showClear ? "while-editing" : "never"}
+                    onChangeText={handleTextInput}
+                    returnKeyType="done"
+                    style={textInputStyle}
+                    placeholderTextColor={placeholderColor}
+                ></BottomSheetTextInput>
+            ) : (
+                <TextInput
+                    {...props}
+                    onBlur={handleBlur}
+                    onFocus={handleFocus}
+                    returnKeyType="done"
+                    clearButtonMode={props.showClear ? "while-editing" : "never"}
+                    ref={props.reference}
+                    onChangeText={handleTextInput}
+                    style={textInputStyle}
+                    placeholderTextColor={placeholderColor}
+                />
+            )}
+        </>
     );
 };

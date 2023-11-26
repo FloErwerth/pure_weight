@@ -11,6 +11,8 @@
 
   "create_select_type": "Select exercise type",
   "create_exercise_type_label": "Exercise type",
+  "create_exercise_CLASSIC": "Classic",
+  "create_exercise_TIME_BASED": "Time based",
 
   "create_exercise": "Create exercise",
   "edit_exercise_long": "Confirm changes",

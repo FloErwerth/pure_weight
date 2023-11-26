@@ -1,4 +1,4 @@
-import { StyleSheet } from "react-native";
+import { Dimensions, StyleSheet } from "react-native";
 import { borderRadius } from "../../theme/border";
 
 export const styles = StyleSheet.create({
@@ -28,11 +28,13 @@ export const styles = StyleSheet.create({
         borderWidth: 1,
     },
     inputWrapper: {
+        marginTop: 10,
         zIndex: -1,
+        alignSelf: "stretch",
         gap: 5,
+        width: Dimensions.get("screen").width - 20,
     },
     button: {
-        alignSelf: "stretch",
         justifyContent: "center",
         gap: 10,
         marginTop: 10,
@@ -58,6 +60,7 @@ export const styles = StyleSheet.create({
         fontSize: 16,
     },
     title: {
+        left: -10,
         fontSize: 30,
         borderWidth: 1,
         borderColor: "transparent",

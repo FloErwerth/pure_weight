@@ -56,14 +56,13 @@ export const EditableExerciseInputRow = ({ value, setValue, errorKey, i18key, ty
     if (type === "MINUTES_SECONDS") {
         return (
             <ThemedView ghost>
-                <Text behind style={styles.label} ghost>
+                <Text style={styles.label} ghost>
                     {t(i18key ?? "")}
                 </Text>
-                <HStack behind ghost style={{ gap: 10 }}>
+                <HStack ghost style={{ gap: 10 }}>
                     <ThemedTextInput
                         background
-                        bottomSheet
-                        style={{ flex: 1 }}
+                        stretch
                         errorKey={errorKey}
                         inputMode="decimal"
                         textAlign="center"
@@ -74,8 +73,7 @@ export const EditableExerciseInputRow = ({ value, setValue, errorKey, i18key, ty
                     ></ThemedTextInput>
                     <ThemedTextInput
                         background
-                        bottomSheet
-                        style={{ flex: 1 }}
+                        stretch
                         errorKey={errorKey}
                         inputMode="decimal"
                         textAlign="center"
@@ -95,7 +93,6 @@ export const EditableExerciseInputRow = ({ value, setValue, errorKey, i18key, ty
                 {t(i18key ?? "")}
             </Text>
             <ThemedTextInput
-                bottomSheet
                 errorKey={errorKey}
                 inputMode="decimal"
                 textAlign="center"

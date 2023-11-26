@@ -17,7 +17,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const validateData = (data: Partial<ExerciseMetaData>) => {
     const errors: ErrorFields[] = [];
-    if (data.type === "Classical") {
+    if (data.type === "CLASSIC") {
         if (!data.sets) {
             errors.push("create_sets");
         }
@@ -31,7 +31,7 @@ const validateData = (data: Partial<ExerciseMetaData>) => {
             errors.push("create_weight");
         }
     }
-    if (data.type === "Time based") {
+    if (data.type === "TIME_BASED") {
         if (!data.timePerSet) {
             errors.push("create_timePerSet");
         }
@@ -72,14 +72,14 @@ export const AddExerciseModal = (props: AddExerciseModalProps) => {
     }, [dispatch, editedExercise, onConfirmEdit]);
     const buttonStyles = useMemo(() => ({ marginBottom: bottom }), [bottom]);
     return (
-        <ThemedButtomSheetModal snapPoints={["65%", "100%"]} title={title} ref={props.reference} {...props}>
+        <ThemedButtomSheetModal snapPoints={["100%"]} ref={props.reference} {...props} title={title}>
             <ThemedView stretch ghost style={styles.innerWrapper}>
                 <EditableExercise
                     handleEditExercise={props.handleEditExercise}
                     editedExercise={props.editedExercise}
                     onConfirmEdit={props.onConfirmEdit}
                 />
-                <ThemedPressable style={buttonStyles} stretch ghost behind onPress={handleConfirm}>
+                <ThemedPressable style={buttonStyles} ghost behind onPress={handleConfirm}>
                     <HStack secondary style={styles.button}>
                         <Text secondary style={styles.buttonText}>
                             {t(isEditingExercise ? "edit_exercise" : "create_exercise")}
