@@ -18,7 +18,7 @@ export interface EditableExerciseProps {
 }
 
 const getContent = ({ editedExercise, handleEditExercise }: Omit<EditableExerciseProps, "onConfirmEdit">) => ({
-    ["TIME_BASED"]: (
+    ["CLASSIC"]: (
         <ThemedView ghost stretch style={styles.inputWrapper}>
             <HStack style={styles.inputWrapper} ghost>
                 <EditableExerciseInputRow
@@ -52,7 +52,7 @@ const getContent = ({ editedExercise, handleEditExercise }: Omit<EditableExercis
             />
         </ThemedView>
     ),
-    ["CLASSIC"]: (
+    ["TIME_BASED"]: (
         <ThemedView ghost stretch style={styles.inputWrapper}>
             <EditableExerciseInputRow
                 type="MINUTES_SECONDS"

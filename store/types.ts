@@ -52,7 +52,7 @@ export type ExerciseMetaData = {
     pause?: string;
 };
 
-export const exerciseTypeOptions = ["TIME_BASED", "CLASSIC"] as const;
+export const exerciseTypeOptions = ["CLASSIC", "TIME_BASED"] as const;
 export type ExerciseType = (typeof exerciseTypeOptions)[number];
 
 export type ErrorFields =
