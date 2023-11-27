@@ -2,8 +2,7 @@ import { FlatList, View } from "react-native";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "../../hooks/navigate";
 import { useAppDispatch, useAppSelector } from "../../store";
-import { getHasHistory, getLanguage, getNumberHistories, getOverallTrainingTrend, getSortedWorkouts } from "../../store/selectors";
-import { cleanErrors, recoverWorkout, removeTrainingDay, setTrainingDayIndex, startTraining } from "../../store/reducer";
+import { getHasHistory, getLanguage, getNumberHistories, getOverallTrainingTrend } from "../../store/selectors";
 import { styles } from "../../components/App/index/styles";
 import { SiteNavigationButtons } from "../../components/SiteNavigationButtons/SiteNavigationButtons";
 import { useTranslation } from "react-i18next";
@@ -18,6 +17,9 @@ import { HStack } from "../../components/Stack/HStack/HStack";
 import { ColorIndicator } from "../../components/ColorIndicator/ColorIndicator";
 import { WorkoutSorting } from "../../components/App/train/WorkoutSorting/WorkoutSorting";
 import { HistoryDisplay } from "../../components/App/history/HistoryDisplay/HistoryDisplay";
+import { cleanErrors } from "../../store/reducers/errors";
+import { getSortedWorkouts } from "../../store/reducers/workout/selectors";
+import { recoverWorkout, removeWorkout, setWorkoutIndex, startWorkout } from "../../store/reducers/workout";
 
 type RenderedItem = {
     handleNavigateToProgress: () => void;
@@ -52,13 +54,13 @@ export function Workouts() {
     const savedWorkouts = useAppSelector(getSortedWorkouts);
 
     const handleNavigateToCreateTraining = useCallback(() => {
-        dispatch(setTrainingDayIndex(-1));
+        dispatch(setWorkoutIndex(-1));
         navigate("create");
     }, [dispatch, navigate]);
 
     const handleNavigateToTrain = useCallback(
         (index: number) => {
-            dispatch(startTraining(index));
+            dispatch(startWorkout(index));
             navigate("train");
         },
         [dispatch, navigate],
@@ -66,7 +68,7 @@ export function Workouts() {
 
     const handleDelete = useCallback(
         (index: number) => {
-            dispatch(removeTrainingDay(index));
+            dispatch(removeWorkout(index));
             setShowToast(true);
         },
         [dispatch],
@@ -75,7 +77,7 @@ export function Workouts() {
     const handleEdit = useCallback(
         (index: number) => {
             handleNavigateToCreateTraining();
-            dispatch(setTrainingDayIndex(index));
+            dispatch(setWorkoutIndex(index));
         },
         [dispatch, handleNavigateToCreateTraining],
     );
@@ -91,12 +93,12 @@ export function Workouts() {
             const bestPreviousTraining = previousTrainingByIndex(index);
             const hasHistory = hasHistoryByIndex(index);
             const handleNavigateToProgress = () => {
-                dispatch(setTrainingDayIndex(index));
+                dispatch(setWorkoutIndex(index));
                 navigate("progress");
             };
 
             const handleNavigateToHistory = () => {
-                dispatch(setTrainingDayIndex(index));
+                dispatch(setWorkoutIndex(index));
                 navigate("history");
             };
 

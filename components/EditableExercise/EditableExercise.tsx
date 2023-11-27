@@ -2,14 +2,14 @@ import { TextInput } from "react-native";
 import { ReactElement, useMemo, useRef } from "react";
 import { ExerciseMetaData, ExerciseType, exerciseTypeOptions } from "../../store/types";
 import { styles } from "./styles";
-import { HStack } from "../Stack/HStack/HStack";
 import { ThemedTextInput } from "../Themed/ThemedTextInput/ThemedTextInput";
 import { useTranslation } from "react-i18next";
-import { EditableExerciseInputRow } from "./EditableExerciseInputRow";
 import { ThemedView } from "../Themed/ThemedView/View";
-import { emptyExercise } from "../App/create/context";
+import { emptyWeightbasedExercise } from "../App/create/context";
 import { SlidingSwitch, SlidingSwitchOption } from "../SlidingSwitch/SlidingSwitch";
 import { Text } from "../Themed/ThemedText/Text";
+import { WeightBasedExercise } from "./Content/WeightBasedExercise";
+import { TimeBasedExercise } from "./Content/TimeBasedExercise";
 
 export interface EditableExerciseProps {
     onConfirmEdit: (exercise: ExerciseMetaData) => void;
@@ -20,68 +20,12 @@ export interface EditableExerciseProps {
 
 const getContent = ({ editedExercise, handleEditExercise }: Omit<EditableExerciseProps, "onConfirmEdit">): Record<ExerciseType, ReactElement> => {
     return {
-        ["CLASSIC"]: (
-            <ThemedView ghost stretch style={styles.inputWrapper}>
-                <HStack style={styles.inputWrapper} ghost>
-                    <EditableExerciseInputRow
-                        stretch
-                        i18key="weight"
-                        setValue={(weight) => handleEditExercise?.("weight", weight)}
-                        errorKey={"create_weight"}
-                        value={editedExercise.weight}
-                    />
-                    <EditableExerciseInputRow
-                        stretch
-                        i18key="sets"
-                        setValue={(sets) => handleEditExercise?.("sets", sets)}
-                        errorKey={"create_sets"}
-                        value={editedExercise.sets}
-                    />
-                    <EditableExerciseInputRow
-                        stretch
-                        i18key="reps"
-                        setValue={(reps) => handleEditExercise?.("reps", reps)}
-                        errorKey={"create_reps"}
-                        value={editedExercise.reps}
-                    />
-                </HStack>
-                <EditableExerciseInputRow
-                    type="MINUTES_SECONDS"
-                    i18key="pause"
-                    setValue={(pause) => handleEditExercise?.("pause", pause)}
-                    value={editedExercise?.pause}
-                />
-            </ThemedView>
-        ),
-        ["TIME_BASED"]: (
-            <ThemedView ghost stretch style={styles.inputWrapper}>
-                <EditableExerciseInputRow
-                    stretch
-                    type="MINUTES_SECONDS"
-                    i18key="timePerSet"
-                    setValue={(timePerSet) => handleEditExercise?.("timePerSet", timePerSet)}
-                    errorKey={"create_timePerSet"}
-                    value={editedExercise?.timePerSet}
-                />
-                <EditableExerciseInputRow
-                    i18key="sets"
-                    setValue={(sets) => handleEditExercise?.("sets", sets)}
-                    errorKey={"create_sets"}
-                    value={editedExercise?.sets}
-                />
-                <EditableExerciseInputRow
-                    stretch
-                    type="MINUTES_SECONDS"
-                    i18key="pause"
-                    setValue={(pause) => handleEditExercise?.("pause", pause)}
-                    value={editedExercise?.pause}
-                />
-            </ThemedView>
-        ),
+        ["WEIGHT_BASED"]: <WeightBasedExercise />,
+        ["TIME_BASED"]: <TimeBasedExercise />,
     };
 };
 
-export const EditableExercise = ({ editedExercise = emptyExercise, handleEditExercise }: EditableExerciseProps) => {
+export const EditableExercise = ({ editedExercise = emptyWeightbasedExercise, handleEditExercise }: EditableExerciseProps) => {
     const { t } = useTranslation();
     const inputRef = useRef<TextInput>(null);
 

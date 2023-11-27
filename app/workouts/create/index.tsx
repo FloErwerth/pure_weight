@@ -3,7 +3,6 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "../../../hooks/navigate";
 import { ExerciseMetaData } from "../../../store/types";
 import { useAppDispatch, useAppSelector } from "../../../store";
-import { addTrainingDay, cleanErrors, editTrainingDay, overwriteTrainingDayExercises, setError } from "../../../store/reducer";
 import { AddButton } from "../../../components/AddButton/AddButton";
 import { styles } from "../../../components/App/create/styles";
 import { SiteNavigationButtons } from "../../../components/SiteNavigationButtons/SiteNavigationButtons";
@@ -21,10 +20,12 @@ import { PageContent } from "../../../components/PageContent/PageContent";
 import { ThemedView } from "../../../components/Themed/ThemedView/View";
 import { useBottomSheetRef } from "../../../components/BottomSheetModal/ThemedButtomSheetModal";
 import { AddExerciseModal } from "../../../components/AddExerciseModal/AddExerciseModal";
-import { emptyExercise } from "../../../components/App/create/context";
+import { emptyWeightbasedExercise } from "../../../components/App/create/context";
 import { HStack } from "../../../components/Stack/HStack/HStack";
 import { useColor, useColorPickerComponents } from "../../../components/ColorPickerWithModal/ColorPickerWithModal";
 import { ThemedTextInput } from "../../../components/Themed/ThemedTextInput/ThemedTextInput";
+import { cleanErrors, setError } from "../../../store/reducers/errors";
+import { addWorkout, editWorkout, overwriteExercise } from "../../../store/reducers/workout";
 
 function getAreValuesEmpty(exercise: ExerciseMetaData) {
     const values = Object.values(exercise);
@@ -52,7 +53,7 @@ export function Create() {
     const [alertConfig, setAlertConfig] = useState<AlertConfig | undefined>(undefined);
     const editedDay = useAppSelector(getSelectedTrainingDay);
     const title = useMemo(() => (editedDay ? t("edit_workout") : t("create_workout")), [editedDay, t]);
-    const [editedExercise, setEditedExercise] = useState<ExerciseMetaData>(emptyExercise);
+    const [editedExercise, setEditedExercise] = useState<ExerciseMetaData>(emptyWeightbasedExercise);
     const [editedExerciseIndex, setEditedExerciseIndex] = useState<number | undefined>(undefined);
     const [workoutName, setWorkoutName] = useState(editedDay?.name);
     const [createdExercises, setCreatedExercises] = useState<ExerciseMetaData[]>(editedDay?.exercises.map((exercise) => exercise) ?? []);
@@ -72,7 +73,7 @@ export function Create() {
     }, []);
 
     const handleAddExercise = useCallback(() => {
-        setEditedExercise(emptyExercise);
+        setEditedExercise(emptyWeightbasedExercise);
         setEditedExerciseIndex(undefined);
         addRef.current?.present();
     }, [addRef]);
@@ -183,9 +184,9 @@ export function Create() {
             return;
         }
         if (editedDay) {
-            dispatch(editTrainingDay({ name: workoutName ?? editedDay.name, exercises: createdExercises, color }));
+            dispatch(editWorkout({ name: workoutName ?? editedDay.name, exercises: createdExercises, color }));
         } else {
-            dispatch(addTrainingDay({ name: workoutName ?? "", exercises: createdExercises, color }));
+            dispatch(addWorkout({ name: workoutName ?? "", exercises: createdExercises, color }));
         }
         handleNavigateHome();
     }, [createdExercises, workoutName, editedDay, handleNavigateHome, dispatch, color]);
@@ -211,7 +212,7 @@ export function Create() {
         ({ data }: { data: MappedExercises[] }) => {
             const newExercises = data.map((dataPoint) => dataPoint.exercise);
             setCreatedExercises(newExercises);
-            dispatch(overwriteTrainingDayExercises(newExercises));
+            dispatch(overwriteExercise(newExercises));
         },
         [dispatch],
     );

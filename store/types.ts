@@ -1,6 +1,9 @@
 import { IsoDate } from "../types/date";
-import { ThemeKey } from "../theme/types";
-import { Measurement } from "../components/App/measurements/types";
+import { MetadataState } from "./reducers/metadata";
+import { ErrorState } from "./reducers/errors";
+import { MeasurementState } from "./reducers/measurements";
+import { SettingsState } from "./reducers/settings";
+import { WorkoutState } from "./reducers/workout";
 
 export const WorkoutSortingType = ["A_Z", "Z_A", "LONGEST_AGO", "MOST_RECENT"] as const;
 export const HistorySortingType = [
@@ -40,11 +43,12 @@ export type DoneExerciseData = {
     note?: string;
 };
 
+export const exerciseTypeOptions = ["WEIGHT_BASED", "TIME_BASED"] as const;
+export type ExerciseType = (typeof exerciseTypeOptions)[number];
 export type ExerciseSets = PlainExerciseData[];
 
-export type ExerciseMetaData = {
-    type: ExerciseType;
-    timePerSet: string;
+export type WeightBasedExerciseMetaData = {
+    type: "WEIGHT_BASED";
     name: string;
     weight: string;
     sets: string;
@@ -52,42 +56,14 @@ export type ExerciseMetaData = {
     pause?: string;
 };
 
-export const exerciseTypeOptions = ["CLASSIC", "TIME_BASED"] as const;
-export type ExerciseType = (typeof exerciseTypeOptions)[number];
-
-export type ErrorFields =
-    | "create_name"
-    | "create_weight"
-    | "create_sets"
-    | "create_reps"
-    | "workout_name"
-    | "create_exercises_empty"
-    | "measurement_name"
-    | "measurement_unit"
-    | "measurement_value"
-    | "create_timePerSet";
-
-export type AppState = {
-    workouts: Workout[];
-    workoutIndex: number;
-    workoutStartingTimestamp?: number;
-    setIndex: number;
-    exerciseIndex: number;
-    isFirstTimeRendered: boolean;
-    workoutSorting: WorkoutSortingType;
-    settings: {
-        language?: "en" | "de";
-    };
-    latestDeletions: {
-        measurement?: { index: number; data: Measurement };
-        trainingDay?: {
-            index: number;
-            data: Workout;
-            exercise?: { index: number; data: DoneWorkouts };
-        };
-    };
-    measurements: Measurement[];
-    errors: ErrorFields[];
-    theme: ThemeKey;
-    appInstallDate?: IsoDate;
+export type TimeBasedExerciseMetaData = {
+    type: "TIME_BASED";
+    timePerSet: string;
+    name: string;
+    sets: string;
+    pause?: string;
 };
+
+export type ExerciseMetaData = WeightBasedExerciseMetaData | TimeBasedExerciseMetaData;
+
+export type AppState = MetadataState & WorkoutState & SettingsState & ErrorState & MeasurementState;

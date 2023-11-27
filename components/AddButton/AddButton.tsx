@@ -5,9 +5,9 @@ import { useTranslation } from "react-i18next";
 import { useAppDispatch, useAppSelector } from "../../store";
 import { AppState } from "../../store/types";
 import { getErrorByKey } from "../../store/selectors";
-import { cleanError } from "../../store/reducer";
 import { useTheme } from "../../theme/context";
 import { ThemedPressable } from "../Themed/Pressable/Pressable";
+import { cleanError } from "../../store/reducers/errors";
 
 interface AddExerciseProps {
     onPress?: () => void;

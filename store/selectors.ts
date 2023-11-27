@@ -1,12 +1,11 @@
 import { createSelector } from "@reduxjs/toolkit";
-import { AppState, ErrorFields, ExerciseMetaData, ExerciseSets } from "./types";
+import { AppState, ExerciseMetaData, ExerciseSets } from "./types";
 import { getDate, getDateTodayIso, getMonth } from "../utils/date";
 import { IsoDate } from "../types/date";
 import { Temporal } from "@js-temporal/polyfill";
+import { ErrorFields } from "./reducers/errors";
 
-export const getSetIndex = (state: AppState) => state.setIndex ?? 0;
 export const getExerciseIndex = (state: AppState) => state.exerciseIndex;
-export const getSettings = (state: AppState) => state.settings;
 export const getThemeKey = (state: AppState) => state.theme;
 export const getTrainingIndex = (state: AppState) => state.workoutIndex;
 export const getErrors = (state: AppState) => state.errors;
@@ -71,40 +70,7 @@ export const getMeasurmentProgress = createSelector([getMeasurements, (byIndex, 
 
 export const getWorkouts = (state: AppState) => state.workouts;
 export const getNumberSavedWorkouts = createSelector([getWorkouts], (workouts) => workouts.length);
-export const getWorkoutSorting = (state: AppState) => state.workoutSorting;
-
-export const getSortedWorkouts = createSelector([getWorkouts, getWorkoutSorting], (workouts, sorting) => {
-    const sortedWorkouts = [...workouts];
-    switch (sorting) {
-        case "A_Z":
-            return sortedWorkouts.sort((a, b) => a.name.localeCompare(b.name));
-        case "Z_A":
-            return sortedWorkouts.sort((a, b) => b.name.localeCompare(a.name));
-        case "MOST_RECENT":
-            return sortedWorkouts.sort((a, b) => {
-                if (a.doneWorkouts.length > 0 && b.doneWorkouts.length > 0) {
-                    const latestDateA = a.doneWorkouts[a.doneWorkouts.length - 1].date;
-                    const latestDateB = b.doneWorkouts[b.doneWorkouts.length - 1].date;
-                    const latestA = Temporal.Instant.from(`${latestDateA}T00:00+00:00`).epochMilliseconds;
-                    const latestB = Temporal.Instant.from(`${latestDateB}T00:00+00:00`).epochMilliseconds;
-                    return latestA - latestB;
-                }
-                return -1;
-            });
-        case "LONGEST_AGO":
-            return sortedWorkouts.sort((a, b) => {
-                if (a.doneWorkouts.length > 0 && b.doneWorkouts.length > 0) {
-                    const latestDateA = a.doneWorkouts[a.doneWorkouts.length - 1].date;
-                    const latestDateB = b.doneWorkouts[b.doneWorkouts.length - 1].date;
-                    const latestA = Temporal.Instant.from(latestDateA.concat("T00:00+00:00")).epochMilliseconds;
-                    const latestB = Temporal.Instant.from(latestDateB.concat("T00:00+00:00")).epochMilliseconds;
-                    return latestB - latestA;
-                }
-                return -1;
-            });
-    }
-    return sortedWorkouts;
-});
+export const getWorkoutSorting = (state: AppState) => state.sorting;
 
 export const getSelectedTrainingDayIndex = (state: AppState) => state.workoutIndex;
 
@@ -155,7 +121,7 @@ export const getErrorByKey = createSelector(
     [getErrors],
     (state) => (errorField?: ErrorFields | undefined) => Boolean(errorField && state.includes(errorField)),
 );
-export const getLanguage = createSelector([getSettings], (settings) => settings.language);
+export const getLanguage = (state: AppState) => state.language;
 
 export const getExerciseMetaData = createSelector([getSelectedTrainingDay, getExerciseIndex], (traininigDay, exerciseIndex) => {
     const exercise = traininigDay?.exercises[exerciseIndex];

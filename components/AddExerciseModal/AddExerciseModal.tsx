@@ -7,17 +7,17 @@ import { HStack } from "../Stack/HStack/HStack";
 import { styles } from "../EditableExercise/styles";
 import { Text } from "../Themed/ThemedText/Text";
 import { ThemedPressable } from "../Themed/Pressable/Pressable";
-import { setError } from "../../store/reducer";
 import * as Haptics from "expo-haptics";
-import { ErrorFields, ExerciseMetaData } from "../../store/types";
+import { ExerciseMetaData } from "../../store/types";
 import { useAppDispatch } from "../../store";
 import { ThemedMaterialCommunityIcons } from "../Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
 import { ThemedView } from "../Themed/ThemedView/View";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { ErrorFields, setError } from "../../store/reducers/errors";
 
 const validateData = (data: Partial<ExerciseMetaData>) => {
     const errors: ErrorFields[] = [];
-    if (data.type === "CLASSIC") {
+    if (data.type === "WEIGHT_BASED") {
         if (!data.sets) {
             errors.push("create_sets");
         }
@@ -58,7 +58,7 @@ export const AddExerciseModal = (props: AddExerciseModalProps) => {
             if (possibleErrors.length > 0) {
                 dispatch(setError(possibleErrors));
             } else {
-                if (type === "CLASSIC") {
+                if (type === "WEIGHT_BASED") {
                     onConfirmEdit({
                         name: name ?? "",
                         reps: reps ?? "",
@@ -66,15 +66,12 @@ export const AddExerciseModal = (props: AddExerciseModalProps) => {
                         weight: weight ?? "",
                         pause: pause ?? "",
                         type,
-                        timePerSet: "",
                     });
                 }
                 if (type === "TIME_BASED") {
                     onConfirmEdit({
                         name: name ?? "",
-                        reps: "",
                         sets: sets ?? "",
-                        weight: "",
                         pause: pause ?? "",
                         type,
                         timePerSet: timePerSet ?? "",

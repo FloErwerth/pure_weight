@@ -19,56 +19,64 @@ import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { WorkoutHistory } from "./workouts/history";
 import { getAppInstallDate } from "../store/selectors";
 import DeviceInfo from "react-native-device-info";
-import { setAppInstallDate } from "../store/reducer";
 import { IsoDate } from "../types/date";
+import { setAppInstallDate } from "../store/reducers/metadata";
 
 const Stack = createNativeStackNavigator();
 
 const ThemedApp = () => {
-  const dispatch = useAppDispatch();
-  const installDate = useAppSelector(getAppInstallDate);
+    const dispatch = useAppDispatch();
+    const installDate = useAppSelector(getAppInstallDate);
 
-  if (!installDate) {
-    DeviceInfo.getFirstInstallTime().then((installTime) => {
-      const date = new Date(installTime ?? 0).toISOString().split("T")[0];
-      dispatch(setAppInstallDate(date as IsoDate));
-    });
-  }
+    if (!installDate) {
+        DeviceInfo.getFirstInstallTime().then((installTime) => {
+            const date = new Date(installTime ?? 0).toISOString().split("T")[0];
+            dispatch(setAppInstallDate(date as IsoDate));
+        });
+    }
 
-  return (
-    <NavigationContainer ref={navigationRef} independent={true}>
-      <GestureHandlerRootView style={{ flex: 1 }}>
-        <ThemeProvider>
-          <RootSiblingParent>
-            <BottomSheetModalProvider>
-              <SafeAreaView>
-                <Stack.Navigator screenOptions={{ headerShown: false }}>
-                  <Stack.Screen component={TabsWrapper} options={{ headerShown: false }} name="tabs" />
-                  <Stack.Screen component={Train} options={{ gestureEnabled: false, headerShown: false }} name="workouts/train/index" />
-                  <Stack.Screen component={Create} options={{ gestureEnabled: false, headerShown: false }} name="workouts/create/index" />
-                  <Stack.Screen component={Progress} options={{ headerShown: false }} name="workouts/progress/index" />
-                  <Stack.Screen component={Settings} options={{ headerShown: false }} name="profile/settings/index" />
-                  <Stack.Screen component={WorkoutHistory} options={{ headerShown: false }} name="workouts/workoutHistory/index" />
-                </Stack.Navigator>
-              </SafeAreaView>
-            </BottomSheetModalProvider>
-          </RootSiblingParent>
-        </ThemeProvider>
-      </GestureHandlerRootView>
-    </NavigationContainer>
-  );
+    return (
+        <NavigationContainer ref={navigationRef} independent={true}>
+            <GestureHandlerRootView style={{ flex: 1 }}>
+                <ThemeProvider>
+                    <RootSiblingParent>
+                        <BottomSheetModalProvider>
+                            <SafeAreaView>
+                                <Stack.Navigator screenOptions={{ headerShown: false }}>
+                                    <Stack.Screen component={TabsWrapper} options={{ headerShown: false }} name="tabs" />
+                                    <Stack.Screen
+                                        component={Train}
+                                        options={{ gestureEnabled: false, headerShown: false }}
+                                        name="workouts/train/index"
+                                    />
+                                    <Stack.Screen
+                                        component={Create}
+                                        options={{ gestureEnabled: false, headerShown: false }}
+                                        name="workouts/create/index"
+                                    />
+                                    <Stack.Screen component={Progress} options={{ headerShown: false }} name="workouts/progress/index" />
+                                    <Stack.Screen component={Settings} options={{ headerShown: false }} name="profile/settings/index" />
+                                    <Stack.Screen component={WorkoutHistory} options={{ headerShown: false }} name="workouts/workoutHistory/index" />
+                                </Stack.Navigator>
+                            </SafeAreaView>
+                        </BottomSheetModalProvider>
+                    </RootSiblingParent>
+                </ThemeProvider>
+            </GestureHandlerRootView>
+        </NavigationContainer>
+    );
 };
 
 export default function index() {
-  const App = () => {
-    return (
-      <Provider store={store}>
-        <PersistGate persistor={persistor}>
-          <ThemedApp />
-        </PersistGate>
-      </Provider>
-    );
-  };
+    const App = () => {
+        return (
+            <Provider store={store}>
+                <PersistGate persistor={persistor}>
+                    <ThemedApp />
+                </PersistGate>
+            </Provider>
+        );
+    };
 
-  return App();
+    return App();
 }
