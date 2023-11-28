@@ -22,7 +22,7 @@ import { HStack } from "../../../components/Stack/HStack/HStack";
 import { useColor, useColorPickerComponents } from "../../../components/ColorPickerWithModal/ColorPickerWithModal";
 import { ThemedTextInput } from "../../../components/Themed/ThemedTextInput/ThemedTextInput";
 import { cleanErrors, setError } from "../../../store/reducers/errors";
-import { addWorkout, deleteExerciseFromEditedWorkout, editWorkout, overwriteExercise, setEditedExercise, storeEditedExerciseInEditedWorkout } from "../../../store/reducers/workout";
+import { addWorkout, createNewExercise, deleteExerciseFromEditedWorkout, editWorkout, overwriteExercise, setEditedExercise, storeEditedExerciseInEditedWorkout } from "../../../store/reducers/workout";
 
 import { getEditedExercise, getEditedWorkout } from "../../../store/reducers/workout/workoutSelectors";
 import { EditableExerciseModal } from "../../../components/EditableExerciseModal/EditableExerciseModal";
@@ -62,7 +62,7 @@ export function Create() {
     }, []);
 
     const handleAddExercise = useCallback(() => {
-        dispatch(setEditedExercise(undefined));
+        dispatch(createNewExercise());
         addRef.current?.present();
     }, [addRef, dispatch]);
 

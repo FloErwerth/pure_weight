@@ -1,13 +1,5 @@
 import { createAction, createReducer } from "@reduxjs/toolkit/src";
-import {
-    DoneExerciseData,
-    ExerciseMetaData,
-    PlainExerciseData,
-    TimeBasedExerciseMetaData,
-    WeightBasedExerciseMetaData,
-    Workout,
-    WorkoutSortingType,
-} from "../../types";
+import { DoneExerciseData, ExerciseMetaData, PlainExerciseData, TimeBasedExerciseMetaData, WeightBasedExerciseMetaData, Workout, WorkoutSortingType } from "../../types";
 import { Temporal } from "@js-temporal/polyfill";
 import { getDateTodayIso } from "../../../utils/date";
 
@@ -41,9 +33,7 @@ export const mutateEditedExercise = createAction<
 
 export const setEditedWorkout = createAction<WorkoutState["editedWorkout"], "workout_set_edited_workout">("workout_set_edited_workout");
 export const setEditedExercise = createAction<WorkoutState["editedExercise"], "workout_set_edited_exercise">("workout_set_edited_exercise");
-export const deleteExerciseFromEditedWorkout = createAction<number, "workout_delete_exercise_from_edited_workout">(
-    "workout_delete_exercise_from_edited_workout",
-);
+export const deleteExerciseFromEditedWorkout = createAction<number, "workout_delete_exercise_from_edited_workout">("workout_delete_exercise_from_edited_workout");
 export const storeEditedExerciseInEditedWorkout = createAction("storeEditedExerciseInEditedWorkout");
 export const startWorkout = createAction<number, "start_training">("start_training");
 export const overwriteExercise = createAction<ExerciseMetaData[], "exercise_overwrite">("exercise_overwrite");
@@ -52,9 +42,8 @@ export const setWorkoutSorting = createAction<WorkoutSortingType, "workout_sort"
 export const removeWorkout = createAction<number, "workout_remove">("workout_remove");
 export const setWorkoutIndex = createAction<number, "workout_index">("workout_index");
 export const addWorkout = createAction<{ name: string; exercises: ExerciseMetaData[]; color: string }, "workout_add">("workout_add");
-export const addDoneWorkout = createAction<Array<{ exerciseIndex: number; note?: string; sets: Array<PlainExerciseData> }>, "set_training_data">(
-    "set_training_data",
-);
+export const addDoneWorkout = createAction<Array<{ exerciseIndex: number; note?: string; sets: Array<PlainExerciseData> }>, "set_training_data">("set_training_data");
+export const createNewExercise = createAction("workout_create_new_exercise");
 
 export type WorkoutAction =
     | typeof setEditedWorkout.type
@@ -69,12 +58,24 @@ export type WorkoutAction =
     | typeof addWorkout.type
     | typeof addDoneWorkout.type;
 
+export const emptyExercise: ExerciseMetaData = {
+    name: "",
+    type: "WEIGHT_BASED",
+    sets: "",
+    pause: "",
+    reps: "",
+    weight: "",
+};
+
 export const editWorkout = createAction<{ name: string; exercises: ExerciseMetaData[]; color: string }, "workout_edit">("workout_edit");
 export const workoutReducer = createReducer<WorkoutState>({ workoutIndex: 0, workouts: [], sorting: "LONGEST_AGO", exerciseIndex: 0 }, (builder) => {
     builder
         .addCase(setWorkoutState, (_, { payload }) => payload)
         .addCase(setEditedExercise, (state, action) => {
             state.editedExercise = action.payload;
+        })
+        .addCase(createNewExercise, (state) => {
+            state.editedExercise = { exercise: emptyExercise };
         })
         .addCase(storeEditedExerciseInEditedWorkout, (state) => {
             if (state.editedWorkout && state.editedExercise) {
@@ -116,10 +117,7 @@ export const workoutReducer = createReducer<WorkoutState>({ workoutIndex: 0, wor
             state.workouts[state.workoutIndex].exercises = action.payload;
         })
         .addCase(addWorkout, (state, action) => {
-            state.workouts = [
-                ...state.workouts,
-                { name: action.payload.name, exercises: action.payload.exercises, calendarColor: action.payload.color, doneWorkouts: [] },
-            ];
+            state.workouts = [...state.workouts, { name: action.payload.name, exercises: action.payload.exercises, calendarColor: action.payload.color, doneWorkouts: [] }];
         })
         .addCase(removeWorkout, (state, action) => {
             const newTrainingDays = [...state.workouts];

@@ -16,7 +16,7 @@
   "alert_delete_title": "Übung löschen?",
   "create_missing_data_text": "Es sind keine Übungen zum Anzeigen vorhanden",
   "create_exercise_type_label": "Übungstyp",
-  "create_exercise_CLASSIC": "Klassisch",
+  "create_exercise_WEIGHT_BASED": "Gewichtbasiert",
   "create_exercise_TIME_BASED": "Zeitbasiert",
 
   "edit_workout": "Workout bearbeiten",
@@ -30,6 +30,7 @@
   "reps": "Wdh.",
   "pause": "Pause",
   "timePerSet": "Zeit pro Satz",
+  "timeBeforeSet": "Zeit vor dem Satz",
 
 
   "alert_delete_message": "Dies kann nicht rückgängig gemacht werden",
