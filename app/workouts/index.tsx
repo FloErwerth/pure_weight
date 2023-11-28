@@ -2,7 +2,6 @@ import { FlatList, View } from "react-native";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "../../hooks/navigate";
 import { useAppDispatch, useAppSelector } from "../../store";
-import { getHasHistory, getLanguage, getNumberHistories, getOverallTrainingTrend } from "../../store/selectors";
 import { styles } from "../../components/App/index/styles";
 import { SiteNavigationButtons } from "../../components/SiteNavigationButtons/SiteNavigationButtons";
 import { useTranslation } from "react-i18next";
@@ -18,8 +17,11 @@ import { ColorIndicator } from "../../components/ColorIndicator/ColorIndicator";
 import { WorkoutSorting } from "../../components/App/train/WorkoutSorting/WorkoutSorting";
 import { HistoryDisplay } from "../../components/App/history/HistoryDisplay/HistoryDisplay";
 import { cleanErrors } from "../../store/reducers/errors";
-import { getSortedWorkouts } from "../../store/reducers/workout/selectors";
-import { recoverWorkout, removeWorkout, setWorkoutIndex, startWorkout } from "../../store/reducers/workout";
+import { getHasHistory, getNumberHistories, getOverallTrainingTrend, getSortedWorkouts } from "../../store/reducers/workout/workoutSelectors";
+import { recoverWorkout, removeWorkout, setEditedWorkout, setWorkoutIndex, startWorkout } from "../../store/reducers/workout";
+import { Workout } from "../../store/types";
+
+import { getLanguage } from "../../store/reducers/settings/settingsSelectors";
 
 type RenderedItem = {
     handleNavigateToProgress: () => void;
@@ -75,23 +77,24 @@ export function Workouts() {
     );
 
     const handleEdit = useCallback(
-        (index: number) => {
+        (workout: Workout, index: number) => {
+            dispatch(setEditedWorkout({ workout, index }));
             handleNavigateToCreateTraining();
-            dispatch(setWorkoutIndex(index));
         },
         [dispatch, handleNavigateToCreateTraining],
     );
 
     const confirmIcon = useMemo((): { name: "plus"; size: number } => ({ name: "plus", size: 40 }), []);
 
-    const mappedTrainings = useMemo(() => {
-        return savedWorkouts.map((trainingDay, index) => {
-            const onEdit = () => handleEdit(index);
+    const mappedWorkouts = useMemo(() => {
+        return savedWorkouts.map((workout, index) => {
+            const onEdit = () => handleEdit(workout, index);
             const onDelete = () => handleDelete(index);
-            const key = trainingDay.name.concat("-key").concat((index * Math.random() * 2).toString());
+            const key = workout.name.concat("-key").concat((index * Math.random() * 2).toString());
             const onClick = () => handleNavigateToTrain(index);
             const bestPreviousTraining = previousTrainingByIndex(index);
             const hasHistory = hasHistoryByIndex(index);
+
             const handleNavigateToProgress = () => {
                 dispatch(setWorkoutIndex(index));
                 navigate("progress");
@@ -104,14 +107,14 @@ export function Workouts() {
 
             const numberHistoryEntries = numberHistoryGetter(index);
 
-            const color = trainingDay.calendarColor;
+            const color = workout.calendarColor;
             return {
                 handleNavigateToProgress,
                 onEdit,
                 onDelete,
                 key,
                 onClick,
-                workoutName: trainingDay.name,
+                workoutName: workout.name,
                 bestPreviousTraining,
                 color,
                 hasHistory,
@@ -191,7 +194,7 @@ export function Workouts() {
                         decelerationRate="normal"
                         keyExtractor={(item) => item.key}
                         style={styles.savedTrainings}
-                        data={mappedTrainings}
+                        data={mappedWorkouts}
                         renderItem={renderItem}
                     ></FlatList>
                 </PageContent>

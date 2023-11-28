@@ -4,13 +4,13 @@ import { Text } from "../../../Themed/ThemedText/Text";
 import { styles } from "./styles";
 import { WorkoutSortingType } from "../../../../store/types";
 import { useAppDispatch, useAppSelector } from "../../../../store";
-import { getNumberSavedWorkouts, getWorkoutSorting } from "../../../../store/selectors";
 import { useTranslation } from "react-i18next";
 import { useMemo } from "react";
 import { ThemedView } from "../../../Themed/ThemedView/View";
 import { HStack } from "../../../Stack/HStack/HStack";
 import { ThemedMaterialCommunityIcons } from "../../../Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
 import { setWorkoutSorting } from "../../../../store/reducers/workout";
+import { getNumberSavedWorkouts, getWorkoutSorting } from "../../../../store/reducers/workout/workoutSelectors";
 
 const SortIconMap = {
     ["A_Z"]: "sort-alphabetical-ascending",

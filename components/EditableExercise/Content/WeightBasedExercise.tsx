@@ -5,12 +5,24 @@ import { ThemedView } from "../../Themed/ThemedView/View";
 import { useAppDispatch, useAppSelector } from "../../../store";
 import { useCallback } from "react";
 import { WeightBasedExerciseMetaData } from "../../../store/types";
+import { mutateEditedExercise } from "../../../store/reducers/workout";
+
+import { getEditedExercise } from "../../../store/reducers/workout/workoutSelectors";
 
 export const WeightBasedExercise = () => {
     const editedExercise = useAppSelector(getEditedExercise);
     const dispatch = useAppDispatch();
 
-    const handleEditExercise = useCallback((key: keyof WeightBasedExerciseMetaData, value: string) => {}, []);
+    const handleEditExercise = useCallback(
+        (key: keyof WeightBasedExerciseMetaData, value: string | undefined) => {
+            dispatch(mutateEditedExercise({ key, value }));
+        },
+        [dispatch],
+    );
+
+    if (editedExercise?.exercise.type === "TIME_BASED") {
+        return null;
+    }
 
     return (
         <ThemedView ghost stretch style={styles.inputWrapper}>
@@ -20,28 +32,28 @@ export const WeightBasedExercise = () => {
                     i18key="weight"
                     setValue={(weight) => handleEditExercise?.("weight", weight)}
                     errorKey={"create_weight"}
-                    value={editedExercise.weight}
+                    value={editedExercise?.exercise.weight}
                 />
                 <EditableExerciseInputRow
                     stretch
                     i18key="sets"
                     setValue={(sets) => handleEditExercise?.("sets", sets)}
                     errorKey={"create_sets"}
-                    value={editedExercise.sets}
+                    value={editedExercise?.exercise.sets}
                 />
                 <EditableExerciseInputRow
                     stretch
                     i18key="reps"
                     setValue={(reps) => handleEditExercise?.("reps", reps)}
                     errorKey={"create_reps"}
-                    value={editedExercise.reps}
+                    value={editedExercise?.exercise.reps}
                 />
             </HStack>
             <EditableExerciseInputRow
                 type="MINUTES_SECONDS"
                 i18key="pause"
                 setValue={(pause) => handleEditExercise?.("pause", pause)}
-                value={editedExercise?.pause}
+                value={editedExercise?.exercise?.pause}
             />
         </ThemedView>
     );

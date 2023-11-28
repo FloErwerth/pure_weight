@@ -2,14 +2,13 @@ import { ThemedTextInput } from "../Themed/ThemedTextInput/ThemedTextInput";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { styles } from "./styles";
 import { useTranslation } from "react-i18next";
-import { AppState } from "../../store/types";
-import { useAppSelector } from "../../store";
-import { getErrorByKey } from "../../store/selectors";
+import { AppState, useAppSelector } from "../../store";
 import { Text } from "../Themed/ThemedText/Text";
 import { useTheme } from "../../theme/context";
 import { ThemedView } from "../Themed/ThemedView/View";
 import { HStack } from "../Stack/HStack/HStack";
 import { ErrorFields } from "../../store/reducers/errors";
+import { getErrorByKey } from "../../store/reducers/errors/errorSelectors";
 
 type ExerciseInputType = "NORMAL" | "MINUTES_SECONDS";
 interface EditableExerciseInputRowProps {

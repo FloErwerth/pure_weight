@@ -3,9 +3,10 @@ import { Language } from "./types";
 import { ThemeKey } from "../../../theme/types";
 
 export type SettingsState = { language: Language; theme: ThemeKey };
+
+export const setSettingsState = createAction<SettingsState>("settings_set_state");
 export const setLanguage = createAction<Language>("settings_set_language");
 export const setTheme = createAction<ThemeKey>("theme_set");
-
 export const settingsRecuder = createReducer<SettingsState>(
     {
         theme: "dark",
@@ -13,6 +14,9 @@ export const settingsRecuder = createReducer<SettingsState>(
     },
     (builder) => {
         builder
+            .addCase(setSettingsState, (_, action) => {
+                return action.payload;
+            })
             .addCase(setLanguage, (state, action) => {
                 state.language = action.payload;
             })

@@ -3,10 +3,12 @@ import { workoutReducer } from "./workout";
 import { settingsRecuder } from "./settings";
 import { metadataReducer } from "./metadata";
 import { combineReducers } from "@reduxjs/toolkit";
+import { errorsReducer } from "./errors";
 
 export const reducers = combineReducers({
-    metadata: metadataReducer,
-    measurement: measurementReducer,
-    workout: workoutReducer,
-    settings: settingsRecuder,
-} as const);
+    metadataState: metadataReducer,
+    measurmentState: measurementReducer,
+    workoutState: workoutReducer,
+    settingsState: settingsRecuder,
+    errorState: errorsReducer,
+});

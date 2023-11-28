@@ -7,16 +7,17 @@ import { useNavigate } from "../../../hooks/navigate";
 import { SiteNavigationButtons } from "../../../components/SiteNavigationButtons/SiteNavigationButtons";
 import { Animated, Dimensions } from "react-native";
 import { HStack } from "../../../components/Stack/HStack/HStack";
-import { getSelectedTrainingDay, getSpecificNumberOfSets } from "../../../store/selectors";
 import { useTranslation } from "react-i18next";
 import { ThemedView } from "../../../components/Themed/ThemedView/View";
 import { StopwatchPopover } from "../../../components/StopwatchPopover/StopwatchPopover";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Carousel from "react-native-reanimated-carousel/src/Carousel";
-import { Exercise } from "../../../components/App/train/Exercise/Exercise";
+import { Exercise } from "../../../components/App/train/Exercise/WeightBased/WeightBasedExercise";
 import { useBottomSheetRef } from "../../../components/BottomSheetModal/ThemedButtomSheetModal";
 import { workoutContext } from "../../../components/App/train/workoutContext";
 import { addDoneWorkout } from "../../../store/reducers/workout";
+
+import { getSelectedTrainingDay, getSpecificNumberOfSets } from "../../../store/reducers/workout/workoutSelectors";
 
 export type DoneExercises = Map<number, { note?: string; sets: Map<number, PlainExerciseData> }>;
 function mapOfMapsTo2DArray(map: DoneExercises) {
@@ -134,13 +135,6 @@ export function Train() {
         [handleSaveNote, handleSetDone],
     );
 
-    const handleScrollEnd = useCallback(
-        (index: number) => {
-            dispatch(setExerciseIndex(index));
-        },
-        [dispatch],
-    );
-
     const contextValue = useMemo(() => ({ doneSetsThisExercise: doneExercises, handleSaveNote }), [doneExercises, handleSaveNote]);
 
     return (
@@ -157,7 +151,6 @@ export function Train() {
                 <workoutContext.Provider value={contextValue}>
                     <Carousel
                         scrollAnimationDuration={200}
-                        onSnapToItem={handleScrollEnd}
                         width={Dimensions.get("screen").width}
                         loop={false}
                         vertical={false}

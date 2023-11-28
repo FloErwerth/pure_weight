@@ -2,12 +2,11 @@ import { styles } from "./styles";
 import { Text } from "react-native";
 import { useCallback, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { useAppDispatch, useAppSelector } from "../../store";
-import { AppState } from "../../store/types";
-import { getErrorByKey } from "../../store/selectors";
+import { AppState, useAppDispatch, useAppSelector } from "../../store";
 import { useTheme } from "../../theme/context";
 import { ThemedPressable } from "../Themed/Pressable/Pressable";
 import { cleanError } from "../../store/reducers/errors";
+import { getErrorByKey } from "../../store/reducers/errors/errorSelectors";
 
 interface AddExerciseProps {
     onPress?: () => void;

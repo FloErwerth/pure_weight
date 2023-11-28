@@ -17,17 +17,16 @@ import { ThemeProvider } from "../theme/context";
 import { RootSiblingParent } from "react-native-root-siblings";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { WorkoutHistory } from "./workouts/history";
-import { getAppInstallDate } from "../store/selectors";
 import DeviceInfo from "react-native-device-info";
 import { IsoDate } from "../types/date";
 import { setAppInstallDate } from "../store/reducers/metadata";
+import { getAppInstallDate } from "../store/reducers/metadata/metadataSelectors";
 
 const Stack = createNativeStackNavigator();
 
 const ThemedApp = () => {
     const dispatch = useAppDispatch();
     const installDate = useAppSelector(getAppInstallDate);
-
     if (!installDate) {
         DeviceInfo.getFirstInstallTime().then((installTime) => {
             const date = new Date(installTime ?? 0).toISOString().split("T")[0];

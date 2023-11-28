@@ -53,12 +53,12 @@ export const AddExerciseModal = (props: AddExerciseModalProps) => {
 
     const handleConfirm = useCallback(() => {
         if (editedExercise) {
-            const { name, sets, reps, weight, pause, timePerSet, type } = editedExercise;
-            const possibleErrors = validateData({ reps, sets, weight, name });
+            const possibleErrors = validateData(editedExercise);
             if (possibleErrors.length > 0) {
                 dispatch(setError(possibleErrors));
             } else {
-                if (type === "WEIGHT_BASED") {
+                if (editedExercise.type === "WEIGHT_BASED") {
+                    const { name, sets, reps, weight, pause, type } = editedExercise;
                     onConfirmEdit({
                         name: name ?? "",
                         reps: reps ?? "",
@@ -68,13 +68,15 @@ export const AddExerciseModal = (props: AddExerciseModalProps) => {
                         type,
                     });
                 }
-                if (type === "TIME_BASED") {
+                if (editedExercise.type === "TIME_BASED") {
+                    const { name, sets, pause, timePerSet, type, timeBeforeSet } = editedExercise;
                     onConfirmEdit({
                         name: name ?? "",
                         sets: sets ?? "",
                         pause: pause ?? "",
                         type,
                         timePerSet: timePerSet ?? "",
+                        timeBeforeSet,
                     });
                 }
                 void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);

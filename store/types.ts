@@ -1,9 +1,4 @@
 import { IsoDate } from "../types/date";
-import { MetadataState } from "./reducers/metadata";
-import { ErrorState } from "./reducers/errors";
-import { MeasurementState } from "./reducers/measurements";
-import { SettingsState } from "./reducers/settings";
-import { WorkoutState } from "./reducers/workout";
 
 export const WorkoutSortingType = ["A_Z", "Z_A", "LONGEST_AGO", "MOST_RECENT"] as const;
 export const HistorySortingType = [
@@ -59,11 +54,10 @@ export type WeightBasedExerciseMetaData = {
 export type TimeBasedExerciseMetaData = {
     type: "TIME_BASED";
     timePerSet: string;
+    timeBeforeSet?: string;
     name: string;
     sets: string;
     pause?: string;
 };
 
 export type ExerciseMetaData = WeightBasedExerciseMetaData | TimeBasedExerciseMetaData;
-
-export type AppState = MetadataState & WorkoutState & SettingsState & ErrorState & MeasurementState;

@@ -5,6 +5,7 @@ import { FLUSH, PAUSE, PERSIST, PURGE, REGISTER, REHYDRATE } from "redux-persist
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { workoutSortingMiddleWare } from "./middleware/workoutSorting";
 import { reducers } from "./reducers";
+import { stateMiddleware } from "./middleware/stateMiddleware";
 
 const persistConfig = {
     key: "root",
@@ -19,8 +20,13 @@ export const store = configureStore({
             serializableCheck: {
                 ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
             },
-        }).concat(workoutSortingMiddleWare),
+        })
+            .concat(workoutSortingMiddleWare)
+            .concat(stateMiddleware),
 });
+
 export const persistor = persistStore(store);
 export const useAppDispatch = () => store.dispatch;
 export const useAppSelector = useSelector;
+
+export type AppState = ReturnType<typeof reducers>;

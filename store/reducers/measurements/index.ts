@@ -4,6 +4,7 @@ import { convertMeasurements } from "../../../components/App/measurements/utils"
 
 export type MeasurementState = { measurements: Measurement[]; deletedMeasurement?: { measurement: Measurement; index: number } };
 
+export const setMeasurementState = createAction<MeasurementState>("measurement_set_state");
 export const addMeasurement = createAction<{ measurement: Measurement; index?: number }>("measurement_add");
 export const editMeasurement = createAction<{ measurement: Measurement; index: number }>("measurement_edit");
 export const deleteMeasurement = createAction<number>("measurement_delete");
@@ -11,6 +12,9 @@ export const recoverMeasurement = createAction("measurement_recover");
 
 export const measurementReducer = createReducer<MeasurementState>({ measurements: [] }, (builder) => {
     builder
+        .addCase(setMeasurementState, (_, action) => {
+            return action.payload;
+        })
         .addCase(editMeasurement, (state, action) => {
             const measurements = [...state.measurements];
             const previouisMeasurement = measurements[action.payload.index];

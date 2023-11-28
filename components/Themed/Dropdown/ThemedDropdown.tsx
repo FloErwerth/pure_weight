@@ -1,7 +1,6 @@
 import { useTranslation } from "react-i18next";
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { styles } from "./styles";
-import { AppState } from "../../../store/types";
 import { Keyboard, View } from "react-native";
 import { ThemedPressable } from "../Pressable/Pressable";
 import { ThemedView } from "../ThemedView/View";
@@ -9,9 +8,9 @@ import { Text } from "../ThemedText/Text";
 import Animated, { FadeIn, FadeOut, Layout } from "react-native-reanimated";
 import { borderRadius } from "../../../theme/border";
 import { useTheme } from "../../../theme/context";
-import { useAppSelector } from "../../../store";
-import { getErrorByKey } from "../../../store/selectors";
+import { AppState, useAppSelector } from "../../../store";
 import { ErrorFields } from "../../../store/reducers/errors";
+import { getErrorByKey } from "../../../store/reducers/errors/errorSelectors";
 
 interface ThemedDropdownProps<T extends readonly string[]> {
     isSelectable?: boolean;

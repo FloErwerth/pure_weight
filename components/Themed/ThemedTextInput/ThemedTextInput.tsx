@@ -1,14 +1,13 @@
 import { Animated, TextInput, TextInputProps } from "react-native";
 import * as React from "react";
 import { RefObject, useCallback, useMemo, useRef } from "react";
-import { AppState } from "../../../store/types";
-import { useAppDispatch, useAppSelector } from "../../../store";
-import { getErrorByKey } from "../../../store/selectors";
+import { AppState, useAppDispatch, useAppSelector } from "../../../store";
 import { useTheme } from "../../../theme/context";
 import { BottomSheetTextInput } from "@gorhom/bottom-sheet";
 import { ComputedBackgroundColorProps, useComputedBackgroundColor } from "../../../hooks/useComputedBackgroundColor";
 import { styles } from "./styles";
 import { cleanError, ErrorFields } from "../../../store/reducers/errors";
+import { getErrorByKey } from "../../../store/reducers/errors/errorSelectors";
 
 interface ThemedTextInputProps extends TextInputProps, ComputedBackgroundColorProps {
     reference?: RefObject<TextInput>;

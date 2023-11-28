@@ -9,12 +9,13 @@ import { useTranslation } from "react-i18next";
 import { useCallback, useMemo } from "react";
 import { styles } from "./styles";
 import { useAppDispatch, useAppSelector } from "../../../../../store";
-import { getLanguage } from "../../../../../store/selectors";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import * as Haptics from "expo-haptics";
 import { ImpactFeedbackStyle } from "expo-haptics";
 import { useTheme } from "../../../../../theme/context";
 import { setLanguage } from "../../../../../store/reducers/settings";
+
+import { getLanguage } from "../../../../../store/reducers/settings/settingsSelectors";
 
 export const LanguageSelection = () => {
     const { t, i18n } = useTranslation();

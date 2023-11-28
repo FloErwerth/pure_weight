@@ -5,11 +5,11 @@ import { borderRadius } from "../../../theme/border";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Button } from "../../Themed/Button/Button";
 import { useAppDispatch, useAppSelector } from "../../../store";
-import { getIsFirstTimeRendered } from "../../../store/selectors";
 import { useCallback, useEffect } from "react";
 import { useTheme } from "../../../theme/context";
 import { ThemedButtomSheetModal, useBottomSheetRef } from "../../BottomSheetModal/ThemedButtomSheetModal";
 import { setFirstTimeRendered } from "../../../store/reducers/metadata";
+import { getIsFirstTimeRendered } from "../../../store/reducers/metadata/metadataSelectors";
 
 export const Welcome = () => {
     const { mainColor, componentBackgroundColor } = useTheme();

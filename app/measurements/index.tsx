@@ -3,7 +3,6 @@ import { useTranslation } from "react-i18next";
 import { useCallback, useState } from "react";
 import { ScrollView } from "react-native";
 import { useAppDispatch, useAppSelector } from "../../store";
-import { getMeasurements } from "../../store/selectors";
 import { MeasurementModal } from "../../components/MeasurementModal/MeasurementModal";
 import { z } from "zod/lib/index";
 import { getDateTodayIso } from "../../utils/date";
@@ -17,6 +16,7 @@ import { Measurement } from "../../components/App/measurements/types";
 import { useBottomSheetRef } from "../../components/BottomSheetModal/ThemedButtomSheetModal";
 import { addMeasurement, deleteMeasurement, recoverMeasurement } from "../../store/reducers/measurements";
 import { cleanError } from "../../store/reducers/errors";
+import { getMeasurements } from "../../store/reducers/measurements/measurementSelectors";
 
 const emptyMeasurement = { measurement: { name: "", value: "", date: new Date(), higherIsBetter: false } };
 

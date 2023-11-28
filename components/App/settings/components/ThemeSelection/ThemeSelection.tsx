@@ -8,11 +8,12 @@ import { ProfileContent } from "../SettingsSection/ProfileSection";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "../../../../../theme/context";
 import { useAppDispatch, useAppSelector } from "../../../../../store";
-import { getThemeKey } from "../../../../../store/selectors";
 import { useCallback, useMemo, useState } from "react";
 import { ThemeKey } from "../../../../../theme/types";
 import { ThemedPressable } from "../../../../Themed/Pressable/Pressable";
 import { setTheme } from "../../../../../store/reducers/settings";
+
+import { getThemeKey } from "../../../../../store/reducers/settings/settingsSelectors";
 
 export const ThemeSelection = () => {
     const { t } = useTranslation();

@@ -11,7 +11,6 @@ import { AlertConfig, AlertModal } from "../../../components/AlertModal/AlertMod
 import { View } from "react-native";
 import * as Haptics from "expo-haptics";
 import { NotificationFeedbackType } from "expo-haptics";
-import { getSelectedTrainingDay } from "../../../store/selectors";
 import DraggableFlatList from "react-native-draggable-flatlist/src/components/DraggableFlatList";
 import { ScaleDecorator } from "react-native-draggable-flatlist";
 import { useTranslation } from "react-i18next";
@@ -26,6 +25,8 @@ import { useColor, useColorPickerComponents } from "../../../components/ColorPic
 import { ThemedTextInput } from "../../../components/Themed/ThemedTextInput/ThemedTextInput";
 import { cleanErrors, setError } from "../../../store/reducers/errors";
 import { addWorkout, editWorkout, overwriteExercise } from "../../../store/reducers/workout";
+
+import { getEditedWorkout } from "../../../store/reducers/workout/workoutSelectors";
 
 function getAreValuesEmpty(exercise: ExerciseMetaData) {
     const values = Object.values(exercise);
@@ -51,22 +52,22 @@ export function Create() {
     const navigate = useNavigate();
     const { t } = useTranslation();
     const [alertConfig, setAlertConfig] = useState<AlertConfig | undefined>(undefined);
-    const editedDay = useAppSelector(getSelectedTrainingDay);
-    const title = useMemo(() => (editedDay ? t("edit_workout") : t("create_workout")), [editedDay, t]);
+    const editedWorkout = useAppSelector(getEditedWorkout);
+    const title = useMemo(() => (editedWorkout ? t("edit_workout") : t("create_workout")), [editedWorkout, t]);
     const [editedExercise, setEditedExercise] = useState<ExerciseMetaData>(emptyWeightbasedExercise);
     const [editedExerciseIndex, setEditedExerciseIndex] = useState<number | undefined>(undefined);
-    const [workoutName, setWorkoutName] = useState(editedDay?.name);
-    const [createdExercises, setCreatedExercises] = useState<ExerciseMetaData[]>(editedDay?.exercises.map((exercise) => exercise) ?? []);
+    const [workoutName, setWorkoutName] = useState(editedWorkout?.workout.name);
+    const [createdExercises, setCreatedExercises] = useState<ExerciseMetaData[]>(editedWorkout?.workout.exercises.map((exercise) => exercise) ?? []);
     const dispatch = useAppDispatch();
     const [alertRef, openAlert, closeAlert] = useBottomSheetRef();
     const [addRef, openAdd, closeAdd] = useBottomSheetRef();
-    const initialColor = useColor(editedDay?.calendarColor);
+    const initialColor = useColor(editedWorkout?.workout.calendarColor);
     const [PickerModal, PickerButton, color] = useColorPickerComponents(initialColor);
 
     useEffect(() => {
-        setWorkoutName(editedDay?.name);
-        setCreatedExercises(editedDay?.exercises ?? []);
-    }, [editedDay]);
+        setWorkoutName(editedWorkout?.workout.name);
+        setCreatedExercises(editedWorkout?.workout.exercises ?? []);
+    }, [editedWorkout]);
 
     const handleSetWorkoutName = useCallback((value?: string) => {
         setWorkoutName(value);
@@ -129,12 +130,14 @@ export function Create() {
             };
 
             const handleOnConfirmEdit = (exercise: ExerciseMetaData) => {
-                if (exercise.sets && exercise.name && exercise.weight && exercise.reps) {
-                    const newExercises = [...createdExercises];
-                    newExercises.splice(index, 1, exercise);
-                    setCreatedExercises(newExercises);
-                    setEditedExerciseIndex(undefined);
-                    closeAdd();
+                if (exercise.type === "WEIGHT_BASED") {
+                    if (exercise.sets && exercise.name && exercise.weight && exercise.reps) {
+                        const newExercises = [...createdExercises];
+                        newExercises.splice(index, 1, exercise);
+                        setCreatedExercises(newExercises);
+                        setEditedExerciseIndex(undefined);
+                        closeAdd();
+                    }
                 }
             };
 
@@ -183,20 +186,20 @@ export function Create() {
             }
             return;
         }
-        if (editedDay) {
-            dispatch(editWorkout({ name: workoutName ?? editedDay.name, exercises: createdExercises, color }));
+        if (editedWorkout) {
+            dispatch(editWorkout({ name: workoutName ?? editedWorkout.workout.name, exercises: createdExercises, color }));
         } else {
             dispatch(addWorkout({ name: workoutName ?? "", exercises: createdExercises, color }));
         }
         handleNavigateHome();
-    }, [createdExercises, workoutName, editedDay, handleNavigateHome, dispatch, color]);
+    }, [createdExercises, workoutName, editedWorkout, handleNavigateHome, dispatch, color]);
 
     const handleBackButton = useCallback(() => {
         if (createdExercises.length === 0 && !workoutName) {
             handleNavigateHome();
         } else if (createdExercises.length !== 0 || workoutName?.length !== 0) {
-            const title = t(editedDay ? "alert_edit_workout_discard_title" : "alert_create_workout_discard_title");
-            const content = t(editedDay ? "alert_edit_workout_discard_content" : "alert_create_workout_discard_content");
+            const title = t(editedWorkout ? "alert_edit_workout_discard_title" : "alert_create_workout_discard_title");
+            const content = t(editedWorkout ? "alert_edit_workout_discard_content" : "alert_create_workout_discard_content");
             setAlertConfig({
                 title,
                 content,
@@ -206,7 +209,7 @@ export function Create() {
         } else {
             handleNavigateHome();
         }
-    }, [alertRef, createdExercises.length, editedDay, handleConfirmDiscardChanges, handleNavigateHome, t, workoutName]);
+    }, [alertRef, createdExercises.length, editedWorkout, handleConfirmDiscardChanges, handleNavigateHome, t, workoutName]);
 
     const handleOnDragEnd = useCallback(
         ({ data }: { data: MappedExercises[] }) => {

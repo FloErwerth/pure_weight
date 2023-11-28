@@ -6,10 +6,8 @@ import { Dispatch, RefObject, SetStateAction, useCallback, useMemo, useState } f
 import { useTranslation } from "react-i18next";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { getDateTodayIso } from "../../utils/date";
-import { useAppDispatch, useAppSelector } from "../../store";
-import { getDatesFromCurrentMeasurement, getLanguage, getThemeKey } from "../../store/selectors";
+import { AppState, useAppDispatch, useAppSelector } from "../../store";
 import { Text } from "../Themed/ThemedText/Text";
-import { AppState } from "../../store/types";
 import { useTheme } from "../../theme/context";
 import { ThemedMaterialCommunityIcons } from "../Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
 import { styles } from "./styles";
@@ -21,6 +19,9 @@ import { getMeasurementUnits, Measurement } from "../App/measurements/types";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { AnimatedView } from "../Themed/AnimatedView/AnimatedView";
 import { cleanError, ErrorFields, setError } from "../../store/reducers/errors";
+
+import { getLanguage, getThemeKey } from "../../store/reducers/settings/settingsSelectors";
+import { getDatesFromCurrentMeasurement } from "../../store/reducers/measurements/measurementSelectors";
 
 interface MeasurementModalProps extends ThemedBottomSheetModalProps {
     setCurrentMeasurement: Dispatch<SetStateAction<{ measurement: Measurement; index?: number }>>;

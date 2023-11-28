@@ -1,5 +1,4 @@
-import { useAppSelector } from "../../store";
-import { getPreviousTraining } from "../../store/selectors";
+import { AppState, useAppSelector } from "../../store";
 import { Text } from "../Themed/ThemedText/Text";
 import { Pressable, View } from "react-native";
 import { borderRadius } from "../../theme/border";
@@ -12,7 +11,8 @@ import { styles } from "./styles";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { ThemedView } from "../Themed/ThemedView/View";
 import { ThemedButtomSheetModal, useBottomSheetRef } from "../BottomSheetModal/ThemedButtomSheetModal";
-import { AppState } from "../../store/types";
+
+import { getPreviousTraining } from "../../store/reducers/workout/workoutSelectors";
 
 interface PreviousTrainingProps {
     exerciseIndex: number;
