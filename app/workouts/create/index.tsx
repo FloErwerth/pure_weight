@@ -24,12 +24,11 @@ import { ThemedTextInput } from "../../../components/Themed/ThemedTextInput/Them
 import { cleanErrors, setError } from "../../../store/reducers/errors";
 import { addWorkout, createNewExercise, deleteExerciseFromEditedWorkout, editWorkout, overwriteExercise, setEditedExercise, storeEditedExerciseInEditedWorkout } from "../../../store/reducers/workout";
 
-import { getEditedExercise, getEditedWorkout } from "../../../store/reducers/workout/workoutSelectors";
+import { getEditedWorkout } from "../../../store/reducers/workout/workoutSelectors";
 import { EditableExerciseModal } from "../../../components/EditableExerciseModal/EditableExerciseModal";
 
 type MappedExercises = {
     onDelete: () => void;
-    edited: boolean;
     handleCancel: () => void;
     onEdit: () => void;
     exercise: ExerciseMetaData;
@@ -39,13 +38,12 @@ type MappedExercises = {
 type RenderedItem = { index: number; exercise: ExerciseMetaData; onEdit: () => void; onDelete: () => void };
 export function Create() {
     const navigate = useNavigate();
-    const editedExercise = useAppSelector(getEditedExercise);
     const { t } = useTranslation();
     const [alertConfig, setAlertConfig] = useState<AlertConfig | undefined>(undefined);
     const editedWorkout = useAppSelector(getEditedWorkout);
+    const createdExercises = useMemo(() => editedWorkout?.workout.exercises, [editedWorkout?.workout.exercises]);
     const title = useMemo(() => (editedWorkout ? t("edit_workout") : t("create_workout")), [editedWorkout, t]);
     const [workoutName, setWorkoutName] = useState(editedWorkout?.workout.name);
-    const [createdExercises, setCreatedExercises] = useState<ExerciseMetaData[]>(editedWorkout?.workout.exercises.map((exercise) => exercise) ?? []);
     const dispatch = useAppDispatch();
     const [alertRef, openAlert, closeAlert] = useBottomSheetRef();
     const [addRef, openAdd, closeAdd] = useBottomSheetRef();
@@ -54,7 +52,6 @@ export function Create() {
 
     useEffect(() => {
         setWorkoutName(editedWorkout?.workout.name);
-        setCreatedExercises(editedWorkout?.workout.exercises ?? []);
     }, [editedWorkout]);
 
     const handleSetWorkoutName = useCallback((value?: string) => {
@@ -65,10 +62,6 @@ export function Create() {
         dispatch(createNewExercise());
         addRef.current?.present();
     }, [addRef, dispatch]);
-
-    const handleCloseAddModal = useCallback(() => {
-        addRef.current?.close();
-    }, [addRef]);
 
     const handleCleanErrors = useCallback(() => {
         dispatch(cleanErrors());
@@ -81,48 +74,49 @@ export function Create() {
     }, [closeAlert, handleCleanErrors, navigate]);
 
     const mappedExercises = useMemo(() => {
-        return createdExercises.map((exercise, index) => {
-            const onEdit = () => {
-                void Haptics.selectionAsync();
-                dispatch(
-                    setEditedExercise({
-                        exercise,
-                        index,
-                    }),
-                );
-                openAdd();
-            };
+        return (
+            createdExercises?.map((exercise, index) => {
+                const onEdit = () => {
+                    void Haptics.selectionAsync();
+                    dispatch(
+                        setEditedExercise({
+                            exercise,
+                            index,
+                        }),
+                    );
+                    openAdd();
+                };
 
-            const handleConfirmDelete = () => {
-                closeAlert();
-                void Haptics.notificationAsync(NotificationFeedbackType.Success);
-                dispatch(deleteExerciseFromEditedWorkout(index));
-            };
+                const handleConfirmDelete = () => {
+                    closeAlert();
+                    void Haptics.notificationAsync(NotificationFeedbackType.Success);
+                    dispatch(deleteExerciseFromEditedWorkout(index));
+                };
 
-            const handleOnConfirmEdit = () => {
-                dispatch(storeEditedExerciseInEditedWorkout());
-                dispatch(setEditedExercise(undefined));
-                closeAdd();
-            };
+                const handleOnConfirmEdit = () => {
+                    dispatch(storeEditedExerciseInEditedWorkout());
+                    dispatch(setEditedExercise(undefined));
+                    closeAdd();
+                };
 
-            const handleCancel = () => {
-                closeAlert();
-                dispatch(setEditedExercise(undefined));
-            };
+                const handleCancel = () => {
+                    closeAlert();
+                    dispatch(setEditedExercise(undefined));
+                };
 
-            const onDelete = () => {
-                setAlertConfig({
-                    title: t("alert_delete_title"),
-                    content: t("alert_delete_message"),
-                    onConfirm: handleConfirmDelete,
-                });
-                closeAdd();
-                openAlert();
-            };
-            const edited = index === editedExercise?.index;
-            return { onDelete, handleCancel, onEdit, exercise, index, edited, handleOnConfirmEdit };
-        });
-    }, [closeAdd, closeAlert, createdExercises, dispatch, editedExercise?.index, openAdd, openAlert, t]);
+                const onDelete = () => {
+                    setAlertConfig({
+                        title: t("alert_delete_title"),
+                        content: t("alert_delete_message"),
+                        onConfirm: handleConfirmDelete,
+                    });
+                    closeAdd();
+                    openAlert();
+                };
+                return { onDelete, handleCancel, onEdit, exercise, index, handleOnConfirmEdit };
+            }) ?? []
+        );
+    }, [closeAdd, closeAlert, createdExercises, dispatch, openAdd, openAlert, t]);
 
     const handleNavigateHome = useCallback(() => {
         handleCleanErrors();
@@ -132,15 +126,15 @@ export function Create() {
     }, [dispatch, handleCleanErrors, navigate]);
 
     const handleConfirm = useCallback(() => {
-        if (createdExercises.length === 0 && !workoutName) {
+        if (!createdExercises || (createdExercises.length === 0 && !workoutName)) {
             handleNavigateHome();
             return;
         }
-        if (workoutName?.length === 0 || createdExercises.length === 0) {
+        if (workoutName?.length === 0 || createdExercises?.length === 0) {
             if (workoutName?.length === 0) {
                 dispatch(setError(["workout_name"]));
             }
-            if (createdExercises.length === 0) {
+            if (createdExercises?.length === 0) {
                 dispatch(setError(["create_exercises_empty"]));
             }
             return;
@@ -154,9 +148,9 @@ export function Create() {
     }, [createdExercises, workoutName, editedWorkout, handleNavigateHome, dispatch, color]);
 
     const handleBackButton = useCallback(() => {
-        if (createdExercises.length === 0 && !workoutName) {
+        if (createdExercises?.length === 0 && !workoutName) {
             handleNavigateHome();
-        } else if (createdExercises.length !== 0 || workoutName?.length !== 0) {
+        } else if (createdExercises?.length !== 0 || workoutName?.length !== 0) {
             const title = t(editedWorkout ? "alert_edit_workout_discard_title" : "alert_create_workout_discard_title");
             const content = t(editedWorkout ? "alert_edit_workout_discard_content" : "alert_create_workout_discard_content");
             setAlertConfig({
@@ -168,12 +162,11 @@ export function Create() {
         } else {
             handleNavigateHome();
         }
-    }, [alertRef, createdExercises.length, editedWorkout, handleConfirmDiscardChanges, handleNavigateHome, t, workoutName]);
+    }, [alertRef, createdExercises?.length, editedWorkout, handleConfirmDiscardChanges, handleNavigateHome, t, workoutName]);
 
     const handleOnDragEnd = useCallback(
         ({ data }: { data: MappedExercises[] }) => {
             const newExercises = data.map((dataPoint) => dataPoint.exercise);
-            setCreatedExercises(newExercises);
             dispatch(overwriteExercise(newExercises));
         },
         [dispatch],
@@ -187,14 +180,14 @@ export function Create() {
                         onClick={onEdit}
                         key={exercise.name.concat(index.toString())}
                         Icon1={{ icon: "delete", onPress: onDelete }}
-                        Icon2={mappedExercises.length > 1 ? { icon: "drag", onLongPress: drag } : undefined}
+                        Icon2={(createdExercises?.length ?? 0) > 1 ? { icon: "drag", onLongPress: drag } : undefined}
                     >
                         <Text style={styles.text}>{exercise.name}</Text>
                     </PressableRowWithIconSlots>
                 </View>
             </ScaleDecorator>
         ),
-        [mappedExercises.length],
+        [createdExercises?.length],
     );
 
     return (
@@ -207,7 +200,7 @@ export function Create() {
                         <PickerButton />
                     </HStack>
                     <View style={styles.listContainer}>
-                        {mappedExercises.length > 0 ? (
+                        {mappedExercises?.length > 0 ? (
                             <DraggableFlatList
                                 scrollsToTop
                                 removeClippedSubviews

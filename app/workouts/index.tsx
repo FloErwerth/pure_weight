@@ -19,7 +19,6 @@ import { HistoryDisplay } from "../../components/App/history/HistoryDisplay/Hist
 import { cleanErrors } from "../../store/reducers/errors";
 import { getHasHistory, getNumberHistories, getOverallTrainingTrend, getSortedWorkouts } from "../../store/reducers/workout/workoutSelectors";
 import { recoverWorkout, removeWorkout, setEditedWorkout, setWorkoutIndex, startWorkout } from "../../store/reducers/workout";
-import { Workout } from "../../store/types";
 
 import { getLanguage } from "../../store/reducers/settings/settingsSelectors";
 
@@ -45,53 +44,37 @@ export function Workouts() {
     const numberHistoryGetter = useAppSelector(getNumberHistories);
     const hasHistoryByIndex = useAppSelector(getHasHistory);
     const [showToast, setShowToast] = useState(false);
+    const savedWorkouts = useAppSelector(getSortedWorkouts);
+    const navigate = useNavigate();
 
     useEffect(() => {
         i18n.changeLanguage(language ?? Locale.getLocales()[0].languageCode ?? "en");
         dispatch(cleanErrors());
     }, []);
 
-    const navigate = useNavigate();
-
-    const savedWorkouts = useAppSelector(getSortedWorkouts);
-
     const handleCreateWorkout = useCallback(() => {
         dispatch(setEditedWorkout(undefined));
         navigate("create");
     }, [dispatch, navigate]);
 
-    const handleNavigateToTrain = useCallback(
-        (index: number) => {
-            dispatch(startWorkout(index));
-            navigate("train");
-        },
-        [dispatch, navigate],
-    );
-
-    const handleDelete = useCallback(
-        (index: number) => {
-            dispatch(removeWorkout(index));
-            setShowToast(true);
-        },
-        [dispatch],
-    );
-
-    const handleEditWorkout = useCallback(
-        (workout: Workout, index: number) => {
-            dispatch(setEditedWorkout({ workout, index }));
-            navigate("create");
-        },
-        [dispatch, navigate],
-    );
-
     const confirmIcon = useMemo((): { name: "plus"; size: number } => ({ name: "plus", size: 40 }), []);
 
     const mappedWorkouts = useMemo(() => {
         return savedWorkouts.map((workout, index) => {
-            const onEdit = () => handleEditWorkout(workout, index);
-            const onDelete = () => handleDelete(index);
+            const onEdit = () => {
+                dispatch(setEditedWorkout({ workout, index }));
+                navigate("create");
+            };
+
+            const onDelete = () => {
+                dispatch(removeWorkout(index));
+                setShowToast(true);
+            };
             const key = workout.name.concat("-key").concat((index * Math.random() * 2).toString());
-            const onClick = () => handleNavigateToTrain(index);
+            const onClick = () => {
+                dispatch(startWorkout(index));
+                navigate("train");
+            };
             const bestPreviousTraining = previousTrainingByIndex(index);
             const hasHistory = hasHistoryByIndex(index);
 
@@ -122,17 +105,7 @@ export function Workouts() {
                 numberHistoryEntries,
             };
         });
-    }, [
-        dispatch,
-        handleDelete,
-        handleEditWorkout,
-        handleNavigateToTrain,
-        hasHistoryByIndex,
-        navigate,
-        numberHistoryGetter,
-        previousTrainingByIndex,
-        savedWorkouts,
-    ]);
+    }, [dispatch, hasHistoryByIndex, navigate, numberHistoryGetter, previousTrainingByIndex, savedWorkouts]);
 
     const handleRecoverWorkout = useCallback(() => {
         dispatch(recoverWorkout());
@@ -141,19 +114,7 @@ export function Workouts() {
 
     const renderItem = useCallback(
         ({
-            item: {
-                handleNavigateToProgress,
-                workoutName,
-                key,
-                onEdit,
-                onDelete,
-                onClick,
-                bestPreviousTraining,
-                color,
-                hasHistory,
-                handleNavigateToHistory,
-                numberHistoryEntries,
-            },
+            item: { handleNavigateToProgress, workoutName, key, onEdit, onDelete, onClick, bestPreviousTraining, color, hasHistory, handleNavigateToHistory, numberHistoryEntries },
         }: {
             item: RenderedItem;
         }) => {
@@ -185,22 +146,10 @@ export function Workouts() {
                 <SiteNavigationButtons titleFontSize={40} title={t("workouts")} handleConfirmIcon={confirmIcon} handleConfirm={handleCreateWorkout} />
                 <PageContent>
                     <WorkoutSorting />
-                    <FlatList
-                        decelerationRate="normal"
-                        keyExtractor={(item) => item.key}
-                        style={styles.savedTrainings}
-                        data={mappedWorkouts}
-                        renderItem={renderItem}
-                    ></FlatList>
+                    <FlatList decelerationRate="normal" keyExtractor={(item) => item.key} style={styles.savedTrainings} data={mappedWorkouts} renderItem={renderItem}></FlatList>
                 </PageContent>
             </View>
-            <BottomToast
-                onRequestClose={() => setShowToast(false)}
-                open={showToast}
-                messageKey={"workout_deleted_message"}
-                titleKey={"workout_deleted_title"}
-                onRedo={handleRecoverWorkout}
-            />
+            <BottomToast onRequestClose={() => setShowToast(false)} open={showToast} messageKey={"workout_deleted_message"} titleKey={"workout_deleted_title"} onRedo={handleRecoverWorkout} />
         </ThemedView>
     );
 }

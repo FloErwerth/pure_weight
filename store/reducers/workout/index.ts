@@ -77,6 +77,9 @@ export const workoutReducer = createReducer<WorkoutState>({ workoutIndex: 0, wor
         .addCase(createNewExercise, (state) => {
             state.editedExercise = { exercise: emptyExercise };
         })
+        .addCase(setEditedWorkout, (state, action) => {
+            state.editedWorkout = action.payload;
+        })
         .addCase(storeEditedExerciseInEditedWorkout, (state) => {
             if (state.editedWorkout && state.editedExercise) {
                 const exercises = state.editedWorkout.workout.exercises;
