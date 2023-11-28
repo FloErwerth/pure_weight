@@ -19,7 +19,7 @@ interface PreviousTrainingProps {
     activeSetIndex: number;
 }
 export const PreviousTraining = ({ exerciseIndex, activeSetIndex }: PreviousTrainingProps) => {
-    const previousWorkout = useAppSelector((state: AppState) => getPreviousTraining(state, state.language, exerciseIndex));
+    const previousWorkout = useAppSelector((state: AppState) => getPreviousTraining(state, state.settingsState.language, exerciseIndex));
     const { t } = useTranslation();
     const { textDisabled, componentBackgroundColor, mainColor, secondaryColor, inputFieldBackgroundColor } = useTheme();
     const [ref] = useBottomSheetRef();

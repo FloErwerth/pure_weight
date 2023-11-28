@@ -1,42 +1,61 @@
 import { TextInput } from "react-native";
-import { ReactElement, useMemo, useRef } from "react";
+import { ReactElement, useCallback, useMemo, useRef } from "react";
 import { ExerciseMetaData, ExerciseType, exerciseTypeOptions } from "../../store/types";
 import { styles } from "./styles";
 import { ThemedTextInput } from "../Themed/ThemedTextInput/ThemedTextInput";
 import { useTranslation } from "react-i18next";
 import { ThemedView } from "../Themed/ThemedView/View";
-import { emptyWeightbasedExercise } from "../App/create/context";
 import { SlidingSwitch, SlidingSwitchOption } from "../SlidingSwitch/SlidingSwitch";
 import { Text } from "../Themed/ThemedText/Text";
 import { WeightBasedExercise } from "./Content/WeightBasedExercise";
 import { TimeBasedExercise } from "./Content/TimeBasedExercise";
+import { useAppDispatch, useAppSelector } from "../../store";
+import { getEditedExercise } from "../../store/reducers/workout/workoutSelectors";
+import { mutateEditedExercise } from "../../store/reducers/workout";
 
-export interface EditableExerciseProps {
-    onConfirmEdit: (exercise: ExerciseMetaData) => void;
-    editedExercise: ExerciseMetaData;
-    handleEditExercise?: (field: keyof ExerciseMetaData, value: string) => void;
-    isEditingExercise?: boolean;
-}
-
-const getContent = ({ editedExercise, handleEditExercise }: Omit<EditableExerciseProps, "onConfirmEdit">): Record<ExerciseType, ReactElement> => {
+const getContent = (): Record<ExerciseType, ReactElement> => {
     return {
         ["WEIGHT_BASED"]: <WeightBasedExercise />,
         ["TIME_BASED"]: <TimeBasedExercise />,
     };
 };
 
-export const EditableExercise = ({ editedExercise = emptyWeightbasedExercise, handleEditExercise }: EditableExerciseProps) => {
+export const EditableExercise = () => {
     const { t } = useTranslation();
     const inputRef = useRef<TextInput>(null);
+    const editedExercise = useAppSelector(getEditedExercise);
+    const dispatch = useAppDispatch();
 
     const mappedExerciseOptions: SlidingSwitchOption[] = useMemo(
         () =>
             exerciseTypeOptions.map((option) => ({
                 value: option,
                 label: t(`create_exercise_${option}`),
-                Component: getContent({ editedExercise, handleEditExercise })[option],
+                Component: getContent()[option],
             })),
-        [editedExercise, handleEditExercise, t],
+
+        [t],
+    );
+
+    const handleChange = useCallback(
+        (key: keyof ExerciseMetaData, value: string) => {
+            dispatch(mutateEditedExercise({ key, value }));
+        },
+        [dispatch],
+    );
+
+    const handleChangeSlidingSwitch = useCallback(
+        (value: string) => {
+            handleChange("type", value);
+        },
+        [handleChange],
+    );
+
+    const handleChangeName = useCallback(
+        (value: string) => {
+            handleChange("name", value);
+        },
+        [handleChange],
     );
 
     return (
@@ -47,19 +66,14 @@ export const EditableExercise = ({ editedExercise = emptyWeightbasedExercise, ha
                 errorKey="create_name"
                 placeholder={t("exercise_name")}
                 reference={inputRef}
-                value={editedExercise?.name}
-                onChangeText={(name) => handleEditExercise?.("name", name)}
+                value={editedExercise?.exercise.name}
+                onChangeText={handleChangeName}
                 style={styles.title}
             />
             <Text ghost style={styles.label}>
                 {t("create_exercise_type_label")}
             </Text>
-            <SlidingSwitch
-                value={editedExercise.type}
-                hasComponents={true}
-                options={mappedExerciseOptions}
-                onSelectValue={(value) => handleEditExercise?.("type", value)}
-            />
+            <SlidingSwitch value={editedExercise?.exercise.type} hasComponents={true} options={mappedExerciseOptions} onSelectValue={handleChangeSlidingSwitch} />
         </ThemedView>
     );
 };

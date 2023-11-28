@@ -2,10 +2,12 @@
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
     "strict": true,
-    "module": "esnext"
+    "module": "esnext",
+    "alwaysStrict": true,
   },
   "include": [
     "**/*.ts",
-    "**/*.tsx",
-  ]
+    "**/*.tsx"
+  ],
+  "exclude": ["dist","node_modules", ".expo"]
 }

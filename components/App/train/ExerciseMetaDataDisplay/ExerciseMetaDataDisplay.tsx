@@ -8,7 +8,7 @@ import { VStack } from "../../../Stack/VStack/VStack";
 import { Text } from "../../../Themed/ThemedText/Text";
 import * as Haptics from "expo-haptics";
 import { useTranslation } from "react-i18next";
-import { AddExerciseModal } from "../../../AddExerciseModal/AddExerciseModal";
+import { EditableExerciseModal } from "../../../EditableExerciseModal/EditableExerciseModal";
 import { useBottomSheetRef } from "../../../BottomSheetModal/ThemedButtomSheetModal";
 import { styles } from "./styles";
 import { ThemedMaterialCommunityIcons } from "../../../Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
@@ -101,13 +101,7 @@ export const ExerciseMetaDataDisplay = ({ exerciseIndex, exerciseMetaData }: Exe
                     <ThemedMaterialCommunityIcons name="pencil" size={30} />
                 </Pressable>
             </HStack>
-            <AddExerciseModal
-                editedExercise={exerciseMetaData}
-                isEditingExercise={true}
-                reference={addExerciseRef}
-                onConfirmEdit={handleUpdateMetaData}
-                onRequestClose={handleClose}
-            />
+            <EditableExerciseModal reference={addExerciseRef} onRequestClose={handleClose} />
         </>
     );
 };

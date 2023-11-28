@@ -18,14 +18,15 @@ export type WorkoutState = {
     exerciseIndex: number;
     sorting: WorkoutSortingType;
     deletedWorkout?: { workout: Workout; index: number };
+    deletedExercise?: { exercise: ExerciseMetaData; index: number };
     workoutStartingTimestamp?: number;
     editedWorkout?: {
-        index: number;
         workout: Workout;
+        index?: number;
     };
     editedExercise?: {
-        index: number;
         exercise: ExerciseMetaData;
+        index?: number;
     };
 };
 
@@ -38,7 +39,12 @@ export const mutateEditedExercise = createAction<
     "exercise_edit_mutate"
 >("exercise_edit_mutate");
 
-export const setEditedWorkout = createAction<WorkoutState["editedWorkout"], "workout_edit_set">("workout_edit_set");
+export const setEditedWorkout = createAction<WorkoutState["editedWorkout"], "workout_set_edited_workout">("workout_set_edited_workout");
+export const setEditedExercise = createAction<WorkoutState["editedExercise"], "workout_set_edited_exercise">("workout_set_edited_exercise");
+export const deleteExerciseFromEditedWorkout = createAction<number, "workout_delete_exercise_from_edited_workout">(
+    "workout_delete_exercise_from_edited_workout",
+);
+export const storeEditedExerciseInEditedWorkout = createAction("storeEditedExerciseInEditedWorkout");
 export const startWorkout = createAction<number, "start_training">("start_training");
 export const overwriteExercise = createAction<ExerciseMetaData[], "exercise_overwrite">("exercise_overwrite");
 export const recoverWorkout = createAction("workout_recover");
@@ -67,6 +73,29 @@ export const editWorkout = createAction<{ name: string; exercises: ExerciseMetaD
 export const workoutReducer = createReducer<WorkoutState>({ workoutIndex: 0, workouts: [], sorting: "LONGEST_AGO", exerciseIndex: 0 }, (builder) => {
     builder
         .addCase(setWorkoutState, (_, { payload }) => payload)
+        .addCase(setEditedExercise, (state, action) => {
+            state.editedExercise = action.payload;
+        })
+        .addCase(storeEditedExerciseInEditedWorkout, (state) => {
+            if (state.editedWorkout && state.editedExercise) {
+                const exercises = state.editedWorkout.workout.exercises;
+                if (state.editedExercise.index) {
+                    exercises.splice(state.editedExercise.index, 0, state.editedExercise.exercise);
+                } else {
+                    if (state.editedExercise.exercise) {
+                        exercises.push(state.editedExercise.exercise);
+                    }
+                    state.editedWorkout.workout.exercises = exercises;
+                }
+            }
+        })
+        .addCase(deleteExerciseFromEditedWorkout, (state, action) => {
+            if (state.editedWorkout && state.editedWorkout.workout.exercises) {
+                const exercises = [...state.editedWorkout.workout.exercises];
+                state.deletedExercise = { exercise: exercises.splice(action.payload, 1)[0], index: action.payload };
+                state.editedWorkout.workout.exercises = exercises;
+            }
+        })
         .addCase(setWorkoutSorting, (state, { payload }) => {
             state.sorting = payload;
         })

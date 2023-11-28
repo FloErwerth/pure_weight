@@ -1,4 +1,4 @@
-import { EditableExercise, EditableExerciseProps } from "../EditableExercise/EditableExercise";
+import { EditableExercise } from "../EditableExercise/EditableExercise";
 import { ThemedBottomSheetModalProps, ThemedButtomSheetModal } from "../BottomSheetModal/ThemedButtomSheetModal";
 import { RefObject, useCallback, useMemo } from "react";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
@@ -9,11 +9,13 @@ import { Text } from "../Themed/ThemedText/Text";
 import { ThemedPressable } from "../Themed/Pressable/Pressable";
 import * as Haptics from "expo-haptics";
 import { ExerciseMetaData } from "../../store/types";
-import { useAppDispatch } from "../../store";
+import { useAppDispatch, useAppSelector } from "../../store";
 import { ThemedMaterialCommunityIcons } from "../Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
 import { ThemedView } from "../Themed/ThemedView/View";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ErrorFields, setError } from "../../store/reducers/errors";
+import { getEditedExercise, getIsExistingEditedExercise } from "../../store/reducers/workout/workoutSelectors";
+import { storeEditedExerciseInEditedWorkout } from "../../store/reducers/workout";
 
 const validateData = (data: Partial<ExerciseMetaData>) => {
     const errors: ErrorFields[] = [];
@@ -42,57 +44,36 @@ const validateData = (data: Partial<ExerciseMetaData>) => {
     return errors;
 };
 
-type AddExerciseModalProps = ThemedBottomSheetModalProps &
-    Omit<EditableExerciseProps, "onCancel"> & { isEditingExercise: boolean; reference: RefObject<BottomSheetModal> };
-export const AddExerciseModal = (props: AddExerciseModalProps) => {
+type AddExerciseModalProps = ThemedBottomSheetModalProps & {
+    reference: RefObject<BottomSheetModal>;
+};
+
+export const EditableExerciseModal = (props: AddExerciseModalProps) => {
     const { bottom } = useSafeAreaInsets();
     const { t } = useTranslation();
-    const title = useMemo(() => t(props.isEditingExercise ? "exercise_edit_title" : "create_exercise"), [props.isEditingExercise, t]);
+    const isEditingExercise = useAppSelector(getIsExistingEditedExercise);
+    const title = useMemo(() => t(isEditingExercise ? "exercise_edit_title" : "create_exercise"), [isEditingExercise, t]);
     const dispatch = useAppDispatch();
-    const { editedExercise, onConfirmEdit, isEditingExercise } = props;
+    const editedExercise = useAppSelector(getEditedExercise);
 
     const handleConfirm = useCallback(() => {
         if (editedExercise) {
-            const possibleErrors = validateData(editedExercise);
+            const possibleErrors = validateData(editedExercise.exercise);
             if (possibleErrors.length > 0) {
                 dispatch(setError(possibleErrors));
             } else {
-                if (editedExercise.type === "WEIGHT_BASED") {
-                    const { name, sets, reps, weight, pause, type } = editedExercise;
-                    onConfirmEdit({
-                        name: name ?? "",
-                        reps: reps ?? "",
-                        sets: sets ?? "",
-                        weight: weight ?? "",
-                        pause: pause ?? "",
-                        type,
-                    });
-                }
-                if (editedExercise.type === "TIME_BASED") {
-                    const { name, sets, pause, timePerSet, type, timeBeforeSet } = editedExercise;
-                    onConfirmEdit({
-                        name: name ?? "",
-                        sets: sets ?? "",
-                        pause: pause ?? "",
-                        type,
-                        timePerSet: timePerSet ?? "",
-                        timeBeforeSet,
-                    });
-                }
+                dispatch(storeEditedExerciseInEditedWorkout());
                 void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+                props.reference.current?.close();
             }
         }
-    }, [dispatch, editedExercise, onConfirmEdit]);
+    }, [dispatch, editedExercise, props]);
 
     const buttonStyles = useMemo(() => ({ marginBottom: bottom }), [bottom]);
     return (
         <ThemedButtomSheetModal snapPoints={["100%"]} ref={props.reference} {...props} title={title}>
             <ThemedView stretch ghost style={styles.innerWrapper}>
-                <EditableExercise
-                    handleEditExercise={props.handleEditExercise}
-                    editedExercise={props.editedExercise}
-                    onConfirmEdit={props.onConfirmEdit}
-                />
+                <EditableExercise />
                 <ThemedPressable style={buttonStyles} ghost behind onPress={handleConfirm}>
                     <HStack secondary style={styles.button}>
                         <Text secondary style={styles.buttonText}>

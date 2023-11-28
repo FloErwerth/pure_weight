@@ -55,8 +55,8 @@ export function Workouts() {
 
     const savedWorkouts = useAppSelector(getSortedWorkouts);
 
-    const handleNavigateToCreateTraining = useCallback(() => {
-        dispatch(setWorkoutIndex(-1));
+    const handleCreateWorkout = useCallback(() => {
+        dispatch(setEditedWorkout(undefined));
         navigate("create");
     }, [dispatch, navigate]);
 
@@ -76,19 +76,19 @@ export function Workouts() {
         [dispatch],
     );
 
-    const handleEdit = useCallback(
+    const handleEditWorkout = useCallback(
         (workout: Workout, index: number) => {
             dispatch(setEditedWorkout({ workout, index }));
-            handleNavigateToCreateTraining();
+            navigate("create");
         },
-        [dispatch, handleNavigateToCreateTraining],
+        [dispatch, navigate],
     );
 
     const confirmIcon = useMemo((): { name: "plus"; size: number } => ({ name: "plus", size: 40 }), []);
 
     const mappedWorkouts = useMemo(() => {
         return savedWorkouts.map((workout, index) => {
-            const onEdit = () => handleEdit(workout, index);
+            const onEdit = () => handleEditWorkout(workout, index);
             const onDelete = () => handleDelete(index);
             const key = workout.name.concat("-key").concat((index * Math.random() * 2).toString());
             const onClick = () => handleNavigateToTrain(index);
@@ -125,7 +125,7 @@ export function Workouts() {
     }, [
         dispatch,
         handleDelete,
-        handleEdit,
+        handleEditWorkout,
         handleNavigateToTrain,
         hasHistoryByIndex,
         navigate,
@@ -182,12 +182,7 @@ export function Workouts() {
     return (
         <ThemedView background style={styles.view}>
             <View style={styles.vStack}>
-                <SiteNavigationButtons
-                    titleFontSize={40}
-                    title={t("workouts")}
-                    handleConfirmIcon={confirmIcon}
-                    handleConfirm={handleNavigateToCreateTraining}
-                />
+                <SiteNavigationButtons titleFontSize={40} title={t("workouts")} handleConfirmIcon={confirmIcon} handleConfirm={handleCreateWorkout} />
                 <PageContent>
                     <WorkoutSorting />
                     <FlatList

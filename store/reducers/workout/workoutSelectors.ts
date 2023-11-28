@@ -14,6 +14,7 @@ export const getSelectedTrainingDayIndex = createSelector([getWorkoutState], (st
 export const getTrainingIndex = createSelector([getWorkoutState], (state) => state.workoutIndex);
 export const getEditedWorkout = createSelector([getWorkoutState], (state) => state.editedWorkout);
 export const getEditedExercise = createSelector([getWorkoutState], (state) => state.editedExercise);
+export const getIsExistingEditedExercise = createSelector([getEditedExercise], (editedExercise) => editedExercise?.index !== undefined);
 export const getNumberSavedWorkouts = createSelector([getWorkouts], (workouts) => workouts.length);
 export const getSelectedTrainingDay = createSelector([getWorkouts, getSelectedTrainingDayIndex], (trainings, index) => {
     if (index >= 0) {
