@@ -70,6 +70,7 @@ export function Workouts() {
                 dispatch(removeWorkout(index));
                 setShowToast(true);
             };
+
             const key = workout.name.concat("-key").concat((index * Math.random() * 2).toString());
             const onClick = () => {
                 dispatch(startWorkout(index));

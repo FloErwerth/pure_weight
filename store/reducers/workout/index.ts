@@ -23,6 +23,7 @@ export type WorkoutState = {
 };
 
 export const setWorkoutState = createAction<WorkoutState, "workout_set_state">("workout_set_state");
+export const setWorkouts = createAction<Workout[], "workout_set_workouts">("workout_set_workouts");
 export const mutateEditedExercise = createAction<
     {
         key: keyof WeightBasedExerciseMetaData | keyof TimeBasedExerciseMetaData;
@@ -56,7 +57,8 @@ export type WorkoutAction =
     | typeof removeWorkout.type
     | typeof setWorkoutIndex.type
     | typeof addWorkout.type
-    | typeof addDoneWorkout.type;
+    | typeof addDoneWorkout.type
+    | typeof setWorkouts.type;
 
 export const emptyExercise: ExerciseMetaData = {
     name: "",
@@ -73,6 +75,9 @@ export const workoutReducer = createReducer<WorkoutState>({ workoutIndex: 0, wor
         .addCase(setWorkoutState, (_, { payload }) => payload)
         .addCase(setEditedExercise, (state, action) => {
             state.editedExercise = action.payload;
+        })
+        .addCase(setWorkouts, (state, action) => {
+            state.workouts = action.payload;
         })
         .addCase(createNewExercise, (state) => {
             state.editedExercise = { exercise: emptyExercise };
@@ -123,9 +128,9 @@ export const workoutReducer = createReducer<WorkoutState>({ workoutIndex: 0, wor
             state.workouts = [...state.workouts, { name: action.payload.name, exercises: action.payload.exercises, calendarColor: action.payload.color, doneWorkouts: [] }];
         })
         .addCase(removeWorkout, (state, action) => {
-            const newTrainingDays = [...state.workouts];
-            const deletedTrainingDay = newTrainingDays.splice(action.payload, 1);
-            state.workouts = newTrainingDays;
+            const newWorkouts = [...state.workouts];
+            const deletedTrainingDay = newWorkouts.splice(action.payload, 1);
+            state.workouts = [...newWorkouts];
             state.deletedWorkout = { index: action.payload, workout: deletedTrainingDay[0] };
         })
         .addCase(setWorkoutIndex, (state, action) => {
