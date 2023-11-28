@@ -4,9 +4,12 @@ import { ThemeKey } from "../../../theme/types";
 
 export type SettingsState = { language: Language; theme: ThemeKey };
 
-export const setSettingsState = createAction<SettingsState>("settings_set_state");
-export const setLanguage = createAction<Language>("settings_set_language");
-export const setTheme = createAction<ThemeKey>("theme_set");
+export const setSettingsState = createAction<SettingsState, "settings_set_state">("settings_set_state");
+export const setLanguage = createAction<Language, "settings_set_language">("settings_set_language");
+export const setTheme = createAction<ThemeKey, "theme_set">("theme_set");
+
+export type SettingsAction = typeof setSettingsState.type | typeof setLanguage.type | typeof setTheme.type;
+
 export const settingsRecuder = createReducer<SettingsState>(
     {
         theme: "dark",

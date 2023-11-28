@@ -13,9 +13,13 @@ export type ErrorFields =
     | "measurement_unit"
     | "measurement_value"
     | "create_timePerSet";
-export const setError = createAction<ErrorFields[]>("error_set");
-export const cleanError = createAction<ErrorFields[]>("error_clean");
+
+export const setError = createAction<ErrorFields[], "error_set">("error_set");
+export const cleanError = createAction<ErrorFields[], "error_clean">("error_clean");
 export const cleanErrors = createAction("error_clean_all");
+
+export type ErrorActions = typeof setError.type | typeof cleanError.type | typeof cleanErrors.type;
+
 export const errorsReducer = createReducer<ErrorState>({ errors: [] }, (builder) => {
     builder
         .addCase(setError, (state, action) => {

@@ -29,22 +29,41 @@ export type WorkoutState = {
     };
 };
 
-export const setWorkoutState = createAction<WorkoutState>("workout_set_state");
-export const mutateEditedExercise = createAction<{
-    key: keyof WeightBasedExerciseMetaData | keyof TimeBasedExerciseMetaData;
-    value: string | undefined;
-}>("exercise_edit_mutate");
+export const setWorkoutState = createAction<WorkoutState, "workout_set_state">("workout_set_state");
+export const mutateEditedExercise = createAction<
+    {
+        key: keyof WeightBasedExerciseMetaData | keyof TimeBasedExerciseMetaData;
+        value: string | undefined;
+    },
+    "exercise_edit_mutate"
+>("exercise_edit_mutate");
 
-export const setEditedWorkout = createAction<WorkoutState["editedWorkout"]>("workout_edit_set");
-export const startWorkout = createAction<number>("start_training");
-export const overwriteExercise = createAction<ExerciseMetaData[]>("exercise_overwrite");
+export const setEditedWorkout = createAction<WorkoutState["editedWorkout"], "workout_edit_set">("workout_edit_set");
+export const startWorkout = createAction<number, "start_training">("start_training");
+export const overwriteExercise = createAction<ExerciseMetaData[], "exercise_overwrite">("exercise_overwrite");
 export const recoverWorkout = createAction("workout_recover");
-export const setWorkoutSorting = createAction<WorkoutSortingType>("workout_sort");
-export const removeWorkout = createAction<number>("workout_remove");
-export const setWorkoutIndex = createAction<number>("workout_index");
-export const addWorkout = createAction<{ name: string; exercises: ExerciseMetaData[]; color: string }>("workout_add");
-export const addDoneWorkout = createAction<Array<{ exerciseIndex: number; note?: string; sets: Array<PlainExerciseData> }>>("set_training_data");
-export const editWorkout = createAction<{ name: string; exercises: ExerciseMetaData[]; color: string }>("workout_edit");
+export const setWorkoutSorting = createAction<WorkoutSortingType, "workout_sort">("workout_sort");
+export const removeWorkout = createAction<number, "workout_remove">("workout_remove");
+export const setWorkoutIndex = createAction<number, "workout_index">("workout_index");
+export const addWorkout = createAction<{ name: string; exercises: ExerciseMetaData[]; color: string }, "workout_add">("workout_add");
+export const addDoneWorkout = createAction<Array<{ exerciseIndex: number; note?: string; sets: Array<PlainExerciseData> }>, "set_training_data">(
+    "set_training_data",
+);
+
+export type WorkoutAction =
+    | typeof setEditedWorkout.type
+    | typeof setWorkoutState.type
+    | typeof mutateEditedExercise.type
+    | typeof startWorkout.type
+    | typeof overwriteExercise.type
+    | typeof recoverWorkout.type
+    | typeof setWorkoutSorting.type
+    | typeof removeWorkout.type
+    | typeof setWorkoutIndex.type
+    | typeof addWorkout.type
+    | typeof addDoneWorkout.type;
+
+export const editWorkout = createAction<{ name: string; exercises: ExerciseMetaData[]; color: string }, "workout_edit">("workout_edit");
 export const workoutReducer = createReducer<WorkoutState>({ workoutIndex: 0, workouts: [], sorting: "LONGEST_AGO", exerciseIndex: 0 }, (builder) => {
     builder
         .addCase(setWorkoutState, (_, { payload }) => payload)

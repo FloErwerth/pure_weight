@@ -4,11 +4,18 @@ import { convertMeasurements } from "../../../components/App/measurements/utils"
 
 export type MeasurementState = { measurements: Measurement[]; deletedMeasurement?: { measurement: Measurement; index: number } };
 
-export const setMeasurementState = createAction<MeasurementState>("measurement_set_state");
-export const addMeasurement = createAction<{ measurement: Measurement; index?: number }>("measurement_add");
-export const editMeasurement = createAction<{ measurement: Measurement; index: number }>("measurement_edit");
-export const deleteMeasurement = createAction<number>("measurement_delete");
+export const setMeasurementState = createAction<MeasurementState, "measurement_set_state">("measurement_set_state");
+export const addMeasurement = createAction<{ measurement: Measurement; index?: number }, "measurement_add">("measurement_add");
+export const editMeasurement = createAction<{ measurement: Measurement; index: number }, "measurement_edit">("measurement_edit");
+export const deleteMeasurement = createAction<number, "measurement_delete">("measurement_delete");
 export const recoverMeasurement = createAction("measurement_recover");
+
+export type MeasurementActions =
+    | typeof setMeasurementState.type
+    | typeof addMeasurement.type
+    | typeof editMeasurement.type
+    | typeof deleteMeasurement.type
+    | typeof recoverMeasurement.type;
 
 export const measurementReducer = createReducer<MeasurementState>({ measurements: [] }, (builder) => {
     builder
