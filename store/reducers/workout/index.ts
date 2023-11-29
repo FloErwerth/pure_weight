@@ -2,6 +2,7 @@ import { createAction, createReducer } from "@reduxjs/toolkit/src";
 import { DoneExerciseData, ExerciseMetaData, PlainExerciseData, TimeBasedExerciseMetaData, WeightBasedExerciseMetaData, Workout, WorkoutSortingType } from "../../types";
 import { Temporal } from "@js-temporal/polyfill";
 import { getDateTodayIso } from "../../../utils/date";
+import { sortWorkouts } from "./utils";
 
 export type WorkoutState = {
     workouts: Workout[];
@@ -97,7 +98,7 @@ export const workoutReducer = createReducer<WorkoutState>({ workoutIndex: 0, wor
             };
         })
         .addCase(setWorkouts, (state, action) => {
-            state.workouts = action.payload;
+            state.workouts = sortWorkouts(action.payload, state.sorting);
         })
         .addCase(createNewExercise, (state) => {
             state.editedExercise = { exercise: emptyExercise };
@@ -106,7 +107,6 @@ export const workoutReducer = createReducer<WorkoutState>({ workoutIndex: 0, wor
             state.editedWorkout = action.payload;
         })
         .addCase(storeEditedExerciseInEditedWorkout, (state) => {
-            console.log(state.editedWorkout, state.editedExercise);
             if (state.editedWorkout && state.editedExercise) {
                 const exercises = state.editedWorkout.workout.exercises;
                 if (state.editedExercise.index !== undefined) {
@@ -126,6 +126,7 @@ export const workoutReducer = createReducer<WorkoutState>({ workoutIndex: 0, wor
         })
         .addCase(setWorkoutSorting, (state, { payload }) => {
             state.sorting = payload;
+            state.workouts = sortWorkouts(state.workouts, state.sorting);
         })
         .addCase(mutateEditedExercise, (state, action) => {
             if (state.editedExercise) {
@@ -147,12 +148,15 @@ export const workoutReducer = createReducer<WorkoutState>({ workoutIndex: 0, wor
             }
         })
         .addCase(addWorkout, (state, action) => {
-            state.workouts = [...state.workouts, { name: action.payload.name, exercises: action.payload.exercises, calendarColor: action.payload.color, doneWorkouts: [] }];
+            state.workouts = sortWorkouts(
+                [...state.workouts, { name: action.payload.name, exercises: action.payload.exercises, calendarColor: action.payload.color, doneWorkouts: [] }],
+                state.sorting,
+            );
         })
         .addCase(removeWorkout, (state, action) => {
             const newWorkouts = [...state.workouts];
             const deletedTrainingDay = newWorkouts.splice(action.payload, 1);
-            state.workouts = [...newWorkouts];
+            state.workouts = sortWorkouts(newWorkouts, state.sorting);
             state.deletedWorkout = { index: action.payload, workout: deletedTrainingDay[0] };
         })
         .addCase(setWorkoutIndex, (state, action) => {
@@ -181,11 +185,13 @@ export const workoutReducer = createReducer<WorkoutState>({ workoutIndex: 0, wor
         })
         .addCase(saveEditedWorkout, (state) => {
             if (state.editedWorkout !== undefined) {
+                const newWorkouts: Workout[] = [...state.workouts];
                 if (state.editedWorkout.index !== undefined) {
-                    state.workouts.splice(state.editedWorkout.index, 1, state.editedWorkout.workout);
+                    newWorkouts.splice(state.editedWorkout.index, 1, state.editedWorkout.workout);
                 } else {
-                    state.workouts.push(state.editedWorkout.workout);
+                    newWorkouts.push(state.editedWorkout.workout);
                 }
+                state.workouts = sortWorkouts(newWorkouts, state.sorting);
             }
         })
         .addCase(startWorkout, (state, action) => {

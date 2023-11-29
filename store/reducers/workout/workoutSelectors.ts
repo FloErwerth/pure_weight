@@ -33,9 +33,7 @@ export const getWorkoutDates = createSelector([getSelectedTrainingDay], (workout
 export const getWorkoutColor = createSelector([getSelectedTrainingDay], (workout) => workout?.calendarColor);
 export const getLatestWorkoutDate = createSelector([getWorkoutDates], (dates) => {
     return dates.sort(
-        (dateA, dateB) =>
-            Temporal.Instant.from(dateA.concat("T00:00+00:00") as string).epochMilliseconds -
-            Temporal.Instant.from(dateB.concat("T00:00+00:00") as string).epochMilliseconds,
+        (dateA, dateB) => Temporal.Instant.from(dateA.concat("T00:00+00:00") as string).epochMilliseconds - Temporal.Instant.from(dateB.concat("T00:00+00:00") as string).epochMilliseconds,
     )[dates.length - 1];
 });
 export const getSelectedTrainingDayByIndex = createSelector([getWorkouts], (trainings) => {
@@ -44,38 +42,35 @@ export const getSelectedTrainingDayByIndex = createSelector([getWorkouts], (trai
     };
 });
 export const getSelectedTrainingName = createSelector([getSelectedTrainingDay], (day) => day?.name);
-export const getExerciseMetaDataByIndex = createSelector(
-    [getSelectedTrainingDay, (workout, index: number) => index],
-    (traininigDay, exerciseIndex) => {
-        const exercise = traininigDay?.exercises[exerciseIndex];
-        if (!exercise) {
-            return undefined;
-        }
+export const getExerciseMetaDataByIndex = createSelector([getSelectedTrainingDay, (workout, index: number) => index], (traininigDay, exerciseIndex) => {
+    const exercise = traininigDay?.exercises[exerciseIndex];
+    if (!exercise) {
+        return undefined;
+    }
 
-        if (exercise?.type === "WEIGHT_BASED") {
-            const { weight, reps, name, sets, pause, type } = exercise;
-            return {
-                weight,
-                reps,
-                name,
-                sets,
-                pause,
-                type,
-            } satisfies WeightBasedExerciseMetaData;
-        } else {
-            const { timePerSet, name, sets, pause, type, timeBeforeSet } = exercise;
+    if (exercise?.type === "WEIGHT_BASED") {
+        const { weight, reps, name, sets, pause, type } = exercise;
+        return {
+            weight,
+            reps,
+            name,
+            sets,
+            pause,
+            type,
+        } satisfies WeightBasedExerciseMetaData;
+    } else {
+        const { timePerSet, name, sets, pause, type, timeBeforeSet } = exercise;
 
-            return {
-                name,
-                timePerSet,
-                sets,
-                pause,
-                type,
-                timeBeforeSet,
-            } satisfies TimeBasedExerciseMetaData;
-        }
-    },
-);
+        return {
+            name,
+            timePerSet,
+            sets,
+            pause,
+            type,
+            timeBeforeSet,
+        } satisfies TimeBasedExerciseMetaData;
+    }
+});
 export const getTimeBasedMetaData = createSelector([getSelectedTrainingDay, (workout, index: number) => index], (traininigDay, exerciseIndex) => {
     const exercise = traininigDay?.exercises[exerciseIndex];
     if (!exercise || exercise.type === "WEIGHT_BASED") {
@@ -92,31 +87,25 @@ export const getTimeBasedMetaData = createSelector([getSelectedTrainingDay, (wor
         timeBeforeSet,
     } satisfies TimeBasedExerciseMetaData;
 });
-export const getWeightBasedExerciseMetaData = createSelector(
-    [getSelectedTrainingDay, (workout, index: number) => index],
-    (traininigDay, exerciseIndex) => {
-        const exercise = traininigDay?.exercises[exerciseIndex];
-        if (!exercise || exercise.type === "TIME_BASED") {
-            return undefined;
-        }
+export const getWeightBasedExerciseMetaData = createSelector([getSelectedTrainingDay, (workout, index: number) => index], (traininigDay, exerciseIndex) => {
+    const exercise = traininigDay?.exercises[exerciseIndex];
+    if (!exercise || exercise.type === "TIME_BASED") {
+        return undefined;
+    }
 
-        const { weight, reps, name, sets, pause, type } = exercise;
-        return {
-            weight,
-            reps,
-            name,
-            sets,
-            pause,
-            type,
-        } satisfies WeightBasedExerciseMetaData;
-    },
-);
-export const getExerciseMetaData = createSelector(
-    [(state: AppState) => getExerciseMetaDataByIndex(state, state.workoutState.exerciseIndex)],
-    (exercise) => {
-        return exercise;
-    },
-);
+    const { weight, reps, name, sets, pause, type } = exercise;
+    return {
+        weight,
+        reps,
+        name,
+        sets,
+        pause,
+        type,
+    } satisfies WeightBasedExerciseMetaData;
+});
+export const getExerciseMetaData = createSelector([(state: AppState) => getExerciseMetaDataByIndex(state, state.workoutState.exerciseIndex)], (exercise) => {
+    return exercise;
+});
 export const getSpecificNumberOfSets = createSelector([getSelectedTrainingDay], (day) => {
     return (exerciseIndex: number) => {
         if (day && day.exercises) {
@@ -151,72 +140,64 @@ export const getTrainingDayData = createSelector([getWorkouts, getSelectedTraini
         });
     return sortedData;
 });
-export const getHistoryByMonth = createSelector(
-    [getWorkouts, (trainings, month?: string) => month, getTrainingIndex],
-    (trainings, searchedMonth, workoutIndex) => {
-        const foundTrainings: Map<
-            string,
-            {
-                color: string;
-                name: string;
-                duration?: string;
-                date: IsoDate;
-                weight: number;
-                numExercisesDone: number;
-            }[]
-        > = new Map();
-        const workout = trainings[workoutIndex];
+export const getHistoryByMonth = createSelector([getWorkouts, (trainings, month?: string) => month, getTrainingIndex], (trainings, searchedMonth, workoutIndex) => {
+    const foundTrainings: Map<
+        string,
+        {
+            color: string;
+            name: string;
+            duration?: string;
+            date: IsoDate;
+            weight: number;
+            numExercisesDone: number;
+        }[]
+    > = new Map();
+    const workout = trainings[workoutIndex];
 
-        workout.doneWorkouts.forEach((doneWorkout) => {
-            foundTrainings.set(doneWorkout.date, [
-                ...(foundTrainings.get(doneWorkout.date) ?? []),
-                {
-                    color: workout.calendarColor,
-                    name: workout.name,
-                    date: doneWorkout.date,
-                    duration: doneWorkout.duration,
-                    weight:
-                        doneWorkout.doneExercises?.reduce(
-                            (sum, current) =>
-                                sum +
-                                current.sets.reduce((sumSet, currentSet) => sumSet + parseFloat(currentSet.weight) * parseFloat(currentSet.reps), 0),
-                            0,
-                        ) ?? 0,
-                    numExercisesDone: doneWorkout.doneExercises?.length ?? 0,
-                },
-            ]);
-        });
-        return Array.from(foundTrainings)
-            .filter((value) => getMonth(value[0] as IsoDate) === getMonth((searchedMonth ?? getDateTodayIso()) as IsoDate))
-            .map(([month, data]) => ({ title: month, data }));
-    },
-);
+    workout.doneWorkouts.forEach((doneWorkout) => {
+        foundTrainings.set(doneWorkout.date, [
+            ...(foundTrainings.get(doneWorkout.date) ?? []),
+            {
+                color: workout.calendarColor,
+                name: workout.name,
+                date: doneWorkout.date,
+                duration: doneWorkout.duration,
+                weight:
+                    doneWorkout.doneExercises?.reduce(
+                        (sum, current) => sum + current.sets.reduce((sumSet, currentSet) => sumSet + parseFloat(currentSet.weight) * parseFloat(currentSet.reps), 0),
+                        0,
+                    ) ?? 0,
+                numExercisesDone: doneWorkout.doneExercises?.length ?? 0,
+            },
+        ]);
+    });
+    return Array.from(foundTrainings)
+        .filter((value) => getMonth(value[0] as IsoDate) === getMonth((searchedMonth ?? getDateTodayIso()) as IsoDate))
+        .map(([month, data]) => ({ title: month, data }));
+});
 export const getHasHistory = createSelector([getWorkouts], (workouts) => (index: number) => workouts[index].doneWorkouts.length > 0);
 export const getNumberHistories = createSelector([getWorkouts], (workouts) => (index: number) => workouts[index].doneWorkouts.length);
-export const getPreviousTraining = createSelector(
-    [getSelectedTrainingDay, getLanguage, (workout, language, exerciseIndex: number) => exerciseIndex],
-    (traininigDay, language, exerciseIndex) => {
-        const doneWorkouts = traininigDay?.doneWorkouts;
-        if (!doneWorkouts || doneWorkouts.length === 0) {
-            return undefined;
-        }
+export const getPreviousTraining = createSelector([getSelectedTrainingDay, getLanguage, (workout, language, exerciseIndex: number) => exerciseIndex], (traininigDay, language, exerciseIndex) => {
+    const doneWorkouts = traininigDay?.doneWorkouts;
+    if (!doneWorkouts || doneWorkouts.length === 0) {
+        return undefined;
+    }
 
-        const foundEntries = new Map<string, { date: string; sets: ExerciseSets; note?: string }>();
+    const foundEntries = new Map<string, { date: string; sets: ExerciseSets; note?: string }>();
 
-        for (let workoutIndex = doneWorkouts.length - 1; workoutIndex >= 0; workoutIndex--) {
-            doneWorkouts[workoutIndex].doneExercises?.forEach((exercise) => {
-                if (!foundEntries.get(exercise.name)) {
-                    foundEntries.set(exercise.name, {
-                        date: getDate(doneWorkouts[workoutIndex].date, language),
-                        sets: exercise.sets,
-                        note: exercise.note,
-                    });
-                }
-            });
-        }
-        return foundEntries.get(traininigDay?.exercises[exerciseIndex].name);
-    },
-);
+    for (let workoutIndex = doneWorkouts.length - 1; workoutIndex >= 0; workoutIndex--) {
+        doneWorkouts[workoutIndex].doneExercises?.forEach((exercise) => {
+            if (!foundEntries.get(exercise.name)) {
+                foundEntries.set(exercise.name, {
+                    date: getDate(doneWorkouts[workoutIndex].date, language),
+                    sets: exercise.sets,
+                    note: exercise.note,
+                });
+            }
+        });
+    }
+    return foundEntries.get(traininigDay?.exercises[exerciseIndex].name);
+});
 export const getOverallTrainingTrend = createSelector([getSelectedTrainingDayByIndex], (trainingDayByIndex) => {
     return (workoutIndex: number) => {
         const workout = trainingDayByIndex(workoutIndex);
@@ -319,35 +300,3 @@ export const getOverallTrainingTrend = createSelector([getSelectedTrainingDayByI
     };
 });
 export const getPauseTime = createSelector([getExerciseMetaData], (metaData) => metaData?.pause);
-export const getSortedWorkouts = createSelector([getWorkouts, getWorkoutSorting], (workouts, sorting) => {
-    const sortedWorkouts = [...workouts];
-    switch (sorting) {
-        case "A_Z":
-            return sortedWorkouts.sort((a, b) => a.name.localeCompare(b.name));
-        case "Z_A":
-            return sortedWorkouts.sort((a, b) => b.name.localeCompare(a.name));
-        case "MOST_RECENT":
-            return sortedWorkouts.sort((a, b) => {
-                if (a.doneWorkouts.length > 0 && b.doneWorkouts.length > 0) {
-                    const latestDateA = a.doneWorkouts[a.doneWorkouts.length - 1].date;
-                    const latestDateB = b.doneWorkouts[b.doneWorkouts.length - 1].date;
-                    const latestA = Temporal.Instant.from(`${latestDateA}T00:00+00:00`).epochMilliseconds;
-                    const latestB = Temporal.Instant.from(`${latestDateB}T00:00+00:00`).epochMilliseconds;
-                    return latestA - latestB;
-                }
-                return -1;
-            });
-        case "LONGEST_AGO":
-            return sortedWorkouts.sort((a, b) => {
-                if (a.doneWorkouts.length > 0 && b.doneWorkouts.length > 0) {
-                    const latestDateA = a.doneWorkouts[a.doneWorkouts.length - 1].date;
-                    const latestDateB = b.doneWorkouts[b.doneWorkouts.length - 1].date;
-                    const latestA = Temporal.Instant.from(latestDateA.concat("T00:00+00:00")).epochMilliseconds;
-                    const latestB = Temporal.Instant.from(latestDateB.concat("T00:00+00:00")).epochMilliseconds;
-                    return latestB - latestA;
-                }
-                return -1;
-            });
-    }
-    return sortedWorkouts;
-});
