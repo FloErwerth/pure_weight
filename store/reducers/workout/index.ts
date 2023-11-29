@@ -37,7 +37,7 @@ export const setEditedExercise = createAction<WorkoutState["editedExercise"], "w
 export const deleteExerciseFromEditedWorkout = createAction<number, "workout_delete_exercise_from_edited_workout">("workout_delete_exercise_from_edited_workout");
 export const storeEditedExerciseInEditedWorkout = createAction("storeEditedExerciseInEditedWorkout");
 export const startWorkout = createAction<number, "start_training">("start_training");
-export const overwriteExercise = createAction<ExerciseMetaData[], "exercise_overwrite">("exercise_overwrite");
+export const sortExercisesOnDragEnd = createAction<ExerciseMetaData[], "exercise_overwrite">("exercise_overwrite");
 export const recoverWorkout = createAction("workout_recover");
 export const setWorkoutSorting = createAction<WorkoutSortingType, "workout_sort">("workout_sort");
 export const removeWorkout = createAction<number, "workout_remove">("workout_remove");
@@ -45,20 +45,25 @@ export const setWorkoutIndex = createAction<number, "workout_index">("workout_in
 export const addWorkout = createAction<{ name: string; exercises: ExerciseMetaData[]; color: string }, "workout_add">("workout_add");
 export const addDoneWorkout = createAction<Array<{ exerciseIndex: number; note?: string; sets: Array<PlainExerciseData> }>, "set_training_data">("set_training_data");
 export const createNewExercise = createAction("workout_create_new_exercise");
+export const createNewWorkout = createAction("workout_create_new_workout");
+export const saveEditedWorkout = createAction("workout_save_edited_workout");
+export const setEditedWorkoutName = createAction<string | undefined, "workout_set_edited_workout_name">("workout_set_edited_workout_name");
 
 export type WorkoutAction =
     | typeof setEditedWorkout.type
     | typeof setWorkoutState.type
     | typeof mutateEditedExercise.type
     | typeof startWorkout.type
-    | typeof overwriteExercise.type
+    | typeof sortExercisesOnDragEnd.type
     | typeof recoverWorkout.type
     | typeof setWorkoutSorting.type
     | typeof removeWorkout.type
     | typeof setWorkoutIndex.type
     | typeof addWorkout.type
     | typeof addDoneWorkout.type
-    | typeof setWorkouts.type;
+    | typeof setWorkouts.type
+    | typeof saveEditedWorkout.type
+    | typeof setEditedWorkoutName.type;
 
 export const emptyExercise: ExerciseMetaData = {
     name: "",
@@ -69,12 +74,27 @@ export const emptyExercise: ExerciseMetaData = {
     weight: "",
 };
 
-export const editWorkout = createAction<{ name: string; exercises: ExerciseMetaData[]; color: string }, "workout_edit">("workout_edit");
 export const workoutReducer = createReducer<WorkoutState>({ workoutIndex: 0, workouts: [], sorting: "LONGEST_AGO", exerciseIndex: 0 }, (builder) => {
     builder
         .addCase(setWorkoutState, (_, { payload }) => payload)
         .addCase(setEditedExercise, (state, action) => {
             state.editedExercise = action.payload;
+        })
+        .addCase(setEditedWorkoutName, (state, action) => {
+            const workout = state.editedWorkout?.workout;
+            if (workout) {
+                state.editedWorkout = { workout: { ...workout, name: action.payload ?? "" }, index: state.editedWorkout?.index };
+            }
+        })
+        .addCase(createNewWorkout, (state) => {
+            state.editedWorkout = {
+                workout: {
+                    name: "",
+                    exercises: [],
+                    doneWorkouts: [],
+                    calendarColor: "#333",
+                },
+            };
         })
         .addCase(setWorkouts, (state, action) => {
             state.workouts = action.payload;
@@ -86,14 +106,13 @@ export const workoutReducer = createReducer<WorkoutState>({ workoutIndex: 0, wor
             state.editedWorkout = action.payload;
         })
         .addCase(storeEditedExerciseInEditedWorkout, (state) => {
+            console.log(state.editedWorkout, state.editedExercise);
             if (state.editedWorkout && state.editedExercise) {
                 const exercises = state.editedWorkout.workout.exercises;
-                if (state.editedExercise.index) {
-                    exercises.splice(state.editedExercise.index, 0, state.editedExercise.exercise);
+                if (state.editedExercise.index !== undefined) {
+                    exercises.splice(state.editedExercise.index, 1, state.editedExercise.exercise);
                 } else {
-                    if (state.editedExercise.exercise) {
-                        exercises.push(state.editedExercise.exercise);
-                    }
+                    exercises.push(state.editedExercise.exercise);
                     state.editedWorkout.workout.exercises = exercises;
                 }
             }
@@ -121,8 +140,11 @@ export const workoutReducer = createReducer<WorkoutState>({ workoutIndex: 0, wor
                 state.workouts.splice(state.deletedWorkout.index, 0, state.deletedWorkout.workout);
             }
         })
-        .addCase(overwriteExercise, (state, action) => {
-            state.workouts[state.workoutIndex].exercises = action.payload;
+        .addCase(sortExercisesOnDragEnd, (state, action) => {
+            if (state.editedWorkout?.workout) {
+                const editedWorkout = state.editedWorkout;
+                state.editedWorkout = { index: editedWorkout.index, workout: { ...editedWorkout.workout, exercises: action.payload } };
+            }
         })
         .addCase(addWorkout, (state, action) => {
             state.workouts = [...state.workouts, { name: action.payload.name, exercises: action.payload.exercises, calendarColor: action.payload.color, doneWorkouts: [] }];
@@ -157,10 +179,13 @@ export const workoutReducer = createReducer<WorkoutState>({ workoutIndex: 0, wor
                 });
             }
         })
-        .addCase(editWorkout, (state, { payload: { name, exercises, color } }) => {
-            if (state.workoutIndex !== undefined) {
-                const editedDay = state.workouts[state.workoutIndex];
-                state.workouts.splice(state.workoutIndex, 1, { ...editedDay, exercises, name, calendarColor: color });
+        .addCase(saveEditedWorkout, (state) => {
+            if (state.editedWorkout !== undefined) {
+                if (state.editedWorkout.index !== undefined) {
+                    state.workouts.splice(state.editedWorkout.index, 1, state.editedWorkout.workout);
+                } else {
+                    state.workouts.push(state.editedWorkout.workout);
+                }
             }
         })
         .addCase(startWorkout, (state, action) => {

@@ -17,8 +17,8 @@ import { ColorIndicator } from "../../components/ColorIndicator/ColorIndicator";
 import { WorkoutSorting } from "../../components/App/train/WorkoutSorting/WorkoutSorting";
 import { HistoryDisplay } from "../../components/App/history/HistoryDisplay/HistoryDisplay";
 import { cleanErrors } from "../../store/reducers/errors";
-import { getHasHistory, getNumberHistories, getOverallTrainingTrend, getSortedWorkouts } from "../../store/reducers/workout/workoutSelectors";
-import { recoverWorkout, removeWorkout, setEditedWorkout, setWorkoutIndex, startWorkout } from "../../store/reducers/workout";
+import { getHasHistory, getNumberHistories, getOverallTrainingTrend, getWorkouts } from "../../store/reducers/workout/workoutSelectors";
+import { createNewWorkout, recoverWorkout, removeWorkout, setEditedWorkout, setWorkoutIndex, startWorkout } from "../../store/reducers/workout";
 
 import { getLanguage } from "../../store/reducers/settings/settingsSelectors";
 
@@ -44,7 +44,7 @@ export function Workouts() {
     const numberHistoryGetter = useAppSelector(getNumberHistories);
     const hasHistoryByIndex = useAppSelector(getHasHistory);
     const [showToast, setShowToast] = useState(false);
-    const savedWorkouts = useAppSelector(getSortedWorkouts);
+    const savedWorkouts = useAppSelector(getWorkouts);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -53,7 +53,7 @@ export function Workouts() {
     }, []);
 
     const handleCreateWorkout = useCallback(() => {
-        dispatch(setEditedWorkout(undefined));
+        dispatch(createNewWorkout());
         navigate("create");
     }, [dispatch, navigate]);
 
