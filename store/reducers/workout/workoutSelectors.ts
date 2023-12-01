@@ -7,6 +7,7 @@ import { getDate, getDateTodayIso, getMonth } from "../../../utils/date";
 import { IsoDate } from "../../../types/date";
 
 export const getWorkoutState = ({ workoutState }: AppState) => workoutState;
+export const getTrainedWorkout = createSelector([getWorkoutState], (state) => state.trainedWorkout);
 export const getWorkoutSorting = createSelector([getWorkoutState], (state) => state.sorting);
 export const getWorkouts = createSelector([getWorkoutState], (state) => state.workouts);
 export const getEditedWorkout = createSelector([getWorkoutState], (state) => state.editedWorkout);
@@ -32,14 +33,7 @@ export const getSelectedTrainingDayByIndex = createSelector([getWorkouts], (trai
         return trainings[index];
     };
 });
-export const getSelectedTrainingName = createSelector([getEditedWorkout], (editedWorkout) => editedWorkout?.workout?.name);
-export const getExerciseMetaDataByIndex = createSelector([getEditedWorkout, (editedWorkout, index: number) => index], (editedWorkout, exerciseIndex) => {
-    const exercise = editedWorkout?.workout?.exercises[exerciseIndex];
-    if (!exercise) {
-        return undefined;
-    }
-});
-
+export const getEditedWorkoutName = createSelector([getEditedWorkout], (editedWorkout) => editedWorkout?.workout?.name);
 export const getWeightBasedExerciseMetaData = createSelector([getEditedWorkout, (workout, index: number) => index], (editedWorkout, exerciseIndex) => {
     const exercise = editedWorkout?.workout?.exercises[exerciseIndex];
     if (!exercise) {
@@ -49,13 +43,12 @@ export const getWeightBasedExerciseMetaData = createSelector([getEditedWorkout, 
     return exercise;
 });
 
-export const getSpecificNumberOfSets = createSelector([getEditedWorkout], (editedWorkout) => {
-    return (exerciseIndex: number) => {
-        if (editedWorkout) {
-            return parseFloat(editedWorkout.workout.exercises[exerciseIndex].sets);
-        }
-    };
+export const getSpecificNumberOfSets = createSelector([getEditedWorkout, (exerciseIndex: number) => exerciseIndex], (editedWorkout, exerciseIndex) => {
+    if (editedWorkout?.workout.exercises[exerciseIndex]) {
+        return parseFloat(editedWorkout.workout.exercises[exerciseIndex].sets);
+    }
 });
+
 export const getWorkoutExercises = createSelector([getEditedWorkout], (editedWorkout) => editedWorkout?.workout?.exercises);
 export const getTrainingDayData = createSelector([getEditedWorkout], (editedWorkout) => {
     const workout = editedWorkout?.workout;
@@ -243,4 +236,7 @@ export const getOverallTrainingTrend = createSelector([getSelectedTrainingDayByI
 });
 export const getPauseTime = createSelector([getEditedWorkout, (editedWorkout, exerciseIndex: number) => exerciseIndex], (editedWorkout, exerciseIndex) => {
     return editedWorkout?.workout.exercises[exerciseIndex].pause;
+});
+export const getIsDoneWithTraining = createSelector([getTrainedWorkout], (trainedWorkout) => {
+    return Boolean(trainedWorkout?.doneExerciseData.every((doneExercise) => doneExercise.every(({ sets }) => sets.every((set) => set.filled === true))));
 });

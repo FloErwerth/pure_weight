@@ -17,7 +17,7 @@ import { useBottomSheetRef } from "../../../components/BottomSheetModal/ThemedBu
 import { workoutContext } from "../../../components/App/train/workoutContext";
 import { addDoneWorkout } from "../../../store/reducers/workout";
 
-import { getSpecificNumberOfSets } from "../../../store/reducers/workout/workoutSelectors";
+import { getIsDoneWithTraining, getTrainedWorkout } from "../../../store/reducers/workout/workoutSelectors";
 
 export type DoneExercises = Map<number, { note?: string; sets: Map<number, WeightBasedExerciseData> }>;
 function mapOfMapsTo2DArray(map: DoneExercises) {
@@ -31,27 +31,13 @@ function mapOfMapsTo2DArray(map: DoneExercises) {
 export function Train() {
     const { bottom } = useSafeAreaInsets();
     const { t } = useTranslation();
-    const trainingDay = useAppSelector(getSelectedTrainingDay);
+    const trainedWorkout = useAppSelector(getTrainedWorkout);
     const [doneExercises, setDoneExercises] = useState<DoneExercises>(new Map());
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
-    const getNumberOfSetsWithIndex = useAppSelector(getSpecificNumberOfSets);
     const confirmButtonOpacity = useRef(new Animated.Value(0)).current;
     const [ref, _, close] = useBottomSheetRef();
-
-    const isDone = useMemo(() => {
-        const hasEntryForEveryExercise = doneExercises.size === (trainingDay?.exercises.length ?? -1);
-        if (!hasEntryForEveryExercise) {
-            return false;
-        }
-        let hasEnoughSets = true;
-        doneExercises.forEach((exercise, index) => {
-            if (exercise.sets.size !== getNumberOfSetsWithIndex(index)) {
-                hasEnoughSets = false;
-            }
-        });
-        return hasEnoughSets;
-    }, [doneExercises, getNumberOfSetsWithIndex, trainingDay?.exercises.length]);
+    const isDone = useAppSelector(getIsDoneWithTraining);
 
     useEffect(() => {
         if (isDone) {
@@ -119,14 +105,14 @@ export function Train() {
     const alertModalConfig = useMemo(() => ({ title: t("alert_quit_title"), content: t("alert_quit_message") }), [t]);
 
     const mappedExercises: { index: number }[] = useMemo(() => {
-        if (!trainingDay) {
+        if (!trainedWorkout) {
             navigate("workouts");
             return [] as { index: number }[];
         }
-        return trainingDay.exercises.map((_, index) => ({
+        return trainedWorkout.workout.exercises.map((_, index) => ({
             index,
         }));
-    }, [navigate, trainingDay]);
+    }, [navigate, trainedWorkout]);
 
     const renderItem = useCallback(
         ({ index }: { index: number }) => {
@@ -144,7 +130,7 @@ export function Train() {
                     handleConfirmOpacity={confirmButtonOpacity}
                     handleBack={handleCloseButton}
                     handleConfirm={handleDone}
-                    title={t("workout_front").concat(" ", trainingDay?.name ?? "")}
+                    title={t("workout_front").concat(" ", trainedWorkout?.workout?.name ?? "")}
                 />
             </ThemedView>
             <ThemedView background stretch>

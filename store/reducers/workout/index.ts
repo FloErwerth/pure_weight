@@ -14,6 +14,12 @@ export type EditedExercise = {
     index?: number;
 };
 
+export type TrainedWorkout = {
+    workoutIndex: number;
+    workout: Workout;
+    doneExerciseData: DoneExerciseData[][];
+};
+
 export type WorkoutState = {
     workouts: Workout[];
     sorting: WorkoutSortingType;
@@ -21,6 +27,7 @@ export type WorkoutState = {
     deletedExercise?: { exercise: ExerciseMetaData; index: number };
     workoutStartingTimestamp?: number;
     editedWorkout?: EditedWorkout;
+    trainedWorkout?: TrainedWorkout;
     editedExercise?: EditedExercise;
 };
 
@@ -193,9 +200,19 @@ export const workoutReducer = createReducer<WorkoutState>({ workouts: [], sortin
             }
         })
         .addCase(startWorkout, (state, action) => {
-            state.editedWorkout = {
-                workout: state.workouts[action.payload],
-                index: action.payload,
+            const workout = state.workouts[action.payload];
+            const prefilledExerciseData = Array(workout.exercises.length)
+                .fill(undefined)
+                .map((_, index) => {
+                    const metaData = workout.exercises[index];
+                    const numberOfSets = parseFloat(workout.exercises[index].sets ?? "0");
+                    return Array(numberOfSets).fill({ weight: metaData.weight, reps: metaData.reps, filled: false }) as DoneExerciseData[];
+                }) as DoneExerciseData[][];
+
+            state.trainedWorkout = {
+                workout,
+                workoutIndex: action.payload,
+                doneExerciseData: prefilledExerciseData,
             };
             state.workoutStartingTimestamp = Temporal.Now.instant().epochMilliseconds;
         });
