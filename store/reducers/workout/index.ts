@@ -4,20 +4,24 @@ import { Temporal } from "@js-temporal/polyfill";
 import { getDateTodayIso } from "../../../utils/date";
 import { sortWorkouts } from "./utils";
 
+export type EditedWorkout = {
+    workout: Workout;
+    index?: number;
+};
+
+export type EditedExercise = {
+    exercise: ExerciseMetaData;
+    index?: number;
+};
+
 export type WorkoutState = {
     workouts: Workout[];
     sorting: WorkoutSortingType;
     deletedWorkout?: { workout: Workout; index: number };
     deletedExercise?: { exercise: ExerciseMetaData; index: number };
     workoutStartingTimestamp?: number;
-    editedWorkout?: {
-        workout: Workout;
-        index?: number;
-    };
-    editedExercise?: {
-        exercise: ExerciseMetaData;
-        index?: number;
-    };
+    editedWorkout?: EditedWorkout;
+    editedExercise?: EditedExercise;
 };
 
 export const setWorkoutState = createAction<WorkoutState, "workout_set_state">("workout_set_state");

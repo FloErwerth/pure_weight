@@ -17,7 +17,7 @@ import { useBottomSheetRef } from "../../../components/BottomSheetModal/ThemedBu
 import { workoutContext } from "../../../components/App/train/workoutContext";
 import { addDoneWorkout } from "../../../store/reducers/workout";
 
-import { getSelectedTrainingDay, getSpecificNumberOfSets } from "../../../store/reducers/workout/workoutSelectors";
+import { getSpecificNumberOfSets } from "../../../store/reducers/workout/workoutSelectors";
 
 export type DoneExercises = Map<number, { note?: string; sets: Map<number, WeightBasedExerciseData> }>;
 function mapOfMapsTo2DArray(map: DoneExercises) {
