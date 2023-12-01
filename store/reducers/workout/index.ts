@@ -1,14 +1,11 @@
 import { createAction, createReducer } from "@reduxjs/toolkit/src";
-import { DoneExerciseData, ExerciseMetaData, PlainExerciseData, TimeBasedExerciseMetaData, WeightBasedExerciseMetaData, Workout, WorkoutSortingType } from "../../types";
+import { DoneExerciseData, ExerciseMetaData, WeightBasedExerciseData, WeightBasedExerciseMetaData, Workout, WorkoutSortingType } from "../../types";
 import { Temporal } from "@js-temporal/polyfill";
 import { getDateTodayIso } from "../../../utils/date";
 import { sortWorkouts } from "./utils";
 
 export type WorkoutState = {
     workouts: Workout[];
-    workoutIndex: number;
-    setIndex?: number;
-    exerciseIndex: number;
     sorting: WorkoutSortingType;
     deletedWorkout?: { workout: Workout; index: number };
     deletedExercise?: { exercise: ExerciseMetaData; index: number };
@@ -27,7 +24,7 @@ export const setWorkoutState = createAction<WorkoutState, "workout_set_state">("
 export const setWorkouts = createAction<Workout[], "workout_set_workouts">("workout_set_workouts");
 export const mutateEditedExercise = createAction<
     {
-        key: keyof WeightBasedExerciseMetaData | keyof TimeBasedExerciseMetaData;
+        key: keyof WeightBasedExerciseMetaData;
         value: string | undefined;
     },
     "exercise_edit_mutate"
@@ -44,7 +41,7 @@ export const setWorkoutSorting = createAction<WorkoutSortingType, "workout_sort"
 export const removeWorkout = createAction<number, "workout_remove">("workout_remove");
 export const setWorkoutIndex = createAction<number, "workout_index">("workout_index");
 export const addWorkout = createAction<{ name: string; exercises: ExerciseMetaData[]; color: string }, "workout_add">("workout_add");
-export const addDoneWorkout = createAction<Array<{ exerciseIndex: number; note?: string; sets: Array<PlainExerciseData> }>, "set_training_data">("set_training_data");
+export const addDoneWorkout = createAction<Array<{ exerciseIndex: number; note?: string; sets: Array<WeightBasedExerciseData> }>, "set_training_data">("set_training_data");
 export const createNewExercise = createAction("workout_create_new_exercise");
 export const createNewWorkout = createAction("workout_create_new_workout");
 export const saveEditedWorkout = createAction("workout_save_edited_workout");
@@ -75,7 +72,7 @@ export const emptyExercise: ExerciseMetaData = {
     weight: "",
 };
 
-export const workoutReducer = createReducer<WorkoutState>({ workoutIndex: 0, workouts: [], sorting: "LONGEST_AGO", exerciseIndex: 0 }, (builder) => {
+export const workoutReducer = createReducer<WorkoutState>({ workouts: [], sorting: "LONGEST_AGO" }, (builder) => {
     builder
         .addCase(setWorkoutState, (_, { payload }) => payload)
         .addCase(setEditedExercise, (state, action) => {
@@ -159,11 +156,8 @@ export const workoutReducer = createReducer<WorkoutState>({ workoutIndex: 0, wor
             state.workouts = sortWorkouts(newWorkouts, state.sorting);
             state.deletedWorkout = { index: action.payload, workout: deletedTrainingDay[0] };
         })
-        .addCase(setWorkoutIndex, (state, action) => {
-            state.workoutIndex = action.payload;
-        })
         .addCase(addDoneWorkout, (state, action) => {
-            const workoutIndex = state.workoutIndex;
+            const workoutIndex = state.editedWorkout?.index;
             if (workoutIndex !== undefined) {
                 const endTimestamp = Temporal.Now.instant().epochMilliseconds;
                 const duration = (endTimestamp - (state?.workoutStartingTimestamp ?? endTimestamp)) / 1000;
@@ -195,7 +189,10 @@ export const workoutReducer = createReducer<WorkoutState>({ workoutIndex: 0, wor
             }
         })
         .addCase(startWorkout, (state, action) => {
-            state.workoutIndex = action.payload;
+            state.editedWorkout = {
+                workout: state.workouts[action.payload],
+                index: action.payload,
+            };
             state.workoutStartingTimestamp = Temporal.Now.instant().epochMilliseconds;
         });
 });

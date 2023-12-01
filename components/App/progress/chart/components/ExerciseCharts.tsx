@@ -1,5 +1,5 @@
 import { View } from "react-native";
-import { ExerciseSets, PlainExerciseData } from "../../../../../store/types";
+import { ExerciseSets, WeightBasedExerciseData } from "../../../../../store/types";
 import { useCallback, useMemo, useState } from "react";
 import { borderRadius } from "../../../../../theme/border";
 import { LineChartData } from "react-native-chart-kit/dist/line-chart/LineChart";
@@ -44,24 +44,14 @@ export type ChartType = keyof typeof chartTypeMap;
 
 const getCumulativeExerciseData = (data: ExerciseSets[]) => {
     return data.reduce((vals, sets) => {
-        return [
-            ...vals,
-            sets.map((set) => parseFloat(set?.weight ?? "0") * parseFloat(set?.reps ?? "0")).reduce((cumulative, entry) => cumulative + entry, 0),
-        ];
+        return [...vals, sets.map((set) => parseFloat(set?.weight ?? "0") * parseFloat(set?.reps ?? "0")).reduce((cumulative, entry) => cumulative + entry, 0)];
     }, [] as number[]);
 };
 
-const getAveragePerDay = (data: ExerciseSets[], dataType: keyof PlainExerciseData) => {
+const getAveragePerDay = (data: ExerciseSets[], dataType: keyof WeightBasedExerciseData) => {
     return data.reduce((values, sets) => {
         const setValues = sets;
-        return [
-            ...values,
-            parseFloat(
-                (
-                    setValues.map((set) => parseFloat(set?.[dataType] ?? "0")).reduce((cumulative, entry) => cumulative + entry, 0) / setValues.length
-                ).toFixed(3),
-            ),
-        ];
+        return [...values, parseFloat((setValues.map((set) => parseFloat(set?.[dataType] ?? "0")).reduce((cumulative, entry) => cumulative + entry, 0) / setValues.length).toFixed(3))];
     }, [] as number[]);
 };
 
@@ -112,10 +102,7 @@ export const ExerciseChart = ({ exerciseName, data }: ExerciseChartProps) => {
     const getDotContent = useCallback(
         ({ x, y, indexData }: { x: number; y: number; index: number; indexData: number }) => {
             return (
-                <ThemedView
-                    key={x + y}
-                    style={{ position: "absolute", top: y - 25, left: x - 20, flex: 1, padding: 3, borderRadius, alignItems: "center" }}
-                >
+                <ThemedView key={x + y} style={{ position: "absolute", top: y - 25, left: x - 20, flex: 1, padding: 3, borderRadius, alignItems: "center" }}>
                     <Text style={{ fontSize: 12, color: mainColor }}>
                         {indexData} {chartTypeLabel[chartType]}
                     </Text>

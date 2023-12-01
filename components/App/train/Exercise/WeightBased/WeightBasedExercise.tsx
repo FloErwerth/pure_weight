@@ -5,7 +5,7 @@ import { ThemedView } from "../../../../Themed/ThemedView/View";
 import { Pressable, ScrollView, View } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { PreviousTraining } from "../../../../PreviousTraining/PreviousTraining";
-import { PlainExerciseData } from "../../../../../store/types";
+import { WeightBasedExerciseData } from "../../../../../store/types";
 import { useCallback, useId, useMemo, useState } from "react";
 import { AddNoteModal } from "../../../../AddNoteModal/AddNoteModal";
 import { useTheme } from "../../../../../theme/context";
@@ -20,7 +20,7 @@ import { getSpecificNumberOfSets, getWeightBasedExerciseMetaData } from "../../.
 
 interface WeightBasedExerciseProps {
     exerciseIndex: number;
-    onSetDone: (exerciseIndex: number, setIndex: number, data: PlainExerciseData) => void;
+    onSetDone: (exerciseIndex: number, setIndex: number, data: WeightBasedExerciseData) => void;
     onSaveNote: (exerciseIndex: number, note: string | undefined) => void;
     note?: string;
 }
@@ -32,7 +32,7 @@ const useGeneratedSetData = (exerciseIndex: number) => {
         if (!metaData) {
             return new Map();
         }
-        const map = new Map<number, PlainExerciseData & { filled: boolean }>();
+        const map = new Map<number, WeightBasedExerciseData & { filled: boolean }>();
         Array(numberOfSets)
             .fill(undefined)
             .forEach((_, index) => {
@@ -63,7 +63,7 @@ export const Exercise = ({ exerciseIndex, onSetDone }: WeightBasedExerciseProps)
     }, [open]);
 
     const handleSetDone = useCallback(
-        (data: PlainExerciseData, index: number) => {
+        (data: WeightBasedExerciseData, index: number) => {
             void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
             const newIndex = currentSetIndex + 1;
             setCurrentSetIndex(newIndex);
@@ -82,7 +82,7 @@ export const Exercise = ({ exerciseIndex, onSetDone }: WeightBasedExerciseProps)
                 data: exerciseMetadata,
                 editable: doneSets.get(index)?.filled || index === currentSetIndex,
                 hasData: Boolean(doneSets.get(index)?.filled),
-                onSetDone: (plainExerciseData: PlainExerciseData) => handleSetDone(plainExerciseData, index),
+                onSetDone: (plainExerciseData: WeightBasedExerciseData) => handleSetDone(plainExerciseData, index),
                 key: index * Math.random(),
             })),
         [currentSetIndex, doneSets, handleSetDone],
@@ -102,17 +102,7 @@ export const Exercise = ({ exerciseIndex, onSetDone }: WeightBasedExerciseProps)
                 <ThemedView style={{ paddingTop: 15, paddingBottom: 10, borderRadius, backgroundColor: componentBackgroundColor }}>
                     <TrainingHeader />
                     {mappedDoneSets.map(({ data, editable, hasData, onSetDone, key }, index) => {
-                        return (
-                            <SetInputRow
-                                key={key}
-                                isActiveSet={activeSetIndex === index}
-                                data={data}
-                                isEditable={editable}
-                                hasData={hasData}
-                                onSetDone={onSetDone}
-                                setIndex={index + 1}
-                            />
-                        );
+                        return <SetInputRow key={key} isActiveSet={activeSetIndex === index} data={data} isEditable={editable} hasData={hasData} onSetDone={onSetDone} setIndex={index + 1} />;
                     })}
                 </ThemedView>
                 <PreviousTraining activeSetIndex={activeSetIndex} exerciseIndex={exerciseIndex} />

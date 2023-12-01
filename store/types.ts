@@ -17,11 +17,11 @@ export type WorkoutSortingType = (typeof WorkoutSortingType)[number];
 export type Workout = {
     name: string;
     calendarColor: string;
-    exercises: ExerciseMetaData[];
+    exercises: WeightBasedExerciseMetaData[];
     doneWorkouts: DoneWorkouts;
 };
 
-export type PlainExerciseData = {
+export type WeightBasedExerciseData = {
     weight: string;
     reps: string;
 };
@@ -38,9 +38,7 @@ export type DoneExerciseData = {
     note?: string;
 };
 
-export const exerciseTypeOptions = ["WEIGHT_BASED", "TIME_BASED"] as const;
-export type ExerciseType = (typeof exerciseTypeOptions)[number];
-export type ExerciseSets = PlainExerciseData[];
+export type ExerciseSets = WeightBasedExerciseData[];
 
 export type WeightBasedExerciseMetaData = {
     type: "WEIGHT_BASED";
@@ -51,13 +49,4 @@ export type WeightBasedExerciseMetaData = {
     pause?: string;
 };
 
-export type TimeBasedExerciseMetaData = {
-    type: "TIME_BASED";
-    timePerSet: string;
-    timeBeforeSet?: string;
-    name: string;
-    sets: string;
-    pause?: string;
-};
-
-export type ExerciseMetaData = WeightBasedExerciseMetaData | TimeBasedExerciseMetaData;
+export type ExerciseMetaData = WeightBasedExerciseMetaData;

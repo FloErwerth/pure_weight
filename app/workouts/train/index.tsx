@@ -1,7 +1,7 @@
 import { useAppDispatch, useAppSelector } from "../../../store";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { trainStyles } from "../../../components/App/train/trainStyles";
-import { PlainExerciseData } from "../../../store/types";
+import { WeightBasedExerciseData } from "../../../store/types";
 import { AlertModal } from "../../../components/AlertModal/AlertModal";
 import { useNavigate } from "../../../hooks/navigate";
 import { SiteNavigationButtons } from "../../../components/SiteNavigationButtons/SiteNavigationButtons";
@@ -19,9 +19,9 @@ import { addDoneWorkout } from "../../../store/reducers/workout";
 
 import { getSelectedTrainingDay, getSpecificNumberOfSets } from "../../../store/reducers/workout/workoutSelectors";
 
-export type DoneExercises = Map<number, { note?: string; sets: Map<number, PlainExerciseData> }>;
+export type DoneExercises = Map<number, { note?: string; sets: Map<number, WeightBasedExerciseData> }>;
 function mapOfMapsTo2DArray(map: DoneExercises) {
-    const result: Array<{ exerciseIndex: number; note?: string; sets: Array<PlainExerciseData> }> = [];
+    const result: Array<{ exerciseIndex: number; note?: string; sets: Array<WeightBasedExerciseData> }> = [];
     map.forEach((innerMap, key) => {
         result[key] = { exerciseIndex: key, note: innerMap.note, sets: [...innerMap.sets.values()] };
     });
@@ -95,7 +95,7 @@ export function Train() {
     }, [handleReset, handleSaveTrainingData, isDone, ref]);
 
     const handleSetDone = useCallback(
-        (exerciseIndex: number, setIndex: number, data: PlainExerciseData) => {
+        (exerciseIndex: number, setIndex: number, data: WeightBasedExerciseData) => {
             const newDoneSets = new Map(doneExercises.entries());
             const newSetMap = new Map(newDoneSets.get(exerciseIndex)?.sets);
             newSetMap.set(setIndex, data);
@@ -149,26 +149,13 @@ export function Train() {
             </ThemedView>
             <ThemedView background stretch>
                 <workoutContext.Provider value={contextValue}>
-                    <Carousel
-                        scrollAnimationDuration={200}
-                        width={Dimensions.get("screen").width}
-                        loop={false}
-                        vertical={false}
-                        renderItem={renderItem}
-                        data={mappedExercises}
-                    />
+                    <Carousel scrollAnimationDuration={200} width={Dimensions.get("screen").width} loop={false} vertical={false} renderItem={renderItem} data={mappedExercises} />
                 </workoutContext.Provider>
             </ThemedView>
             <HStack background style={buttonsStyle}>
                 <StopwatchPopover />
             </HStack>
-            <AlertModal
-                reference={ref}
-                title={alertModalConfig.title}
-                content={alertModalConfig.content}
-                onConfirm={handleNotDoneConfirm}
-                onCancel={handleCloseAlert}
-            />
+            <AlertModal reference={ref} title={alertModalConfig.title} content={alertModalConfig.content} onConfirm={handleNotDoneConfirm} onCancel={handleCloseAlert} />
         </ThemedView>
     );
 }

@@ -3,7 +3,7 @@ import { styles } from "./styles";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useAppSelector } from "../../store";
-import { PlainExerciseData } from "../../store/types";
+import { WeightBasedExerciseData } from "../../store/types";
 import { HStack } from "../Stack/HStack/HStack";
 import { Button } from "../Themed/Button/Button";
 import { Center } from "../Center/Center";
@@ -16,9 +16,9 @@ import { getExerciseIndex } from "../../store/reducers/workout/workoutSelectors"
 
 interface SetInputRowProps {
     setIndex: number;
-    onSetDone?: (plainExerciseData: PlainExerciseData) => void;
+    onSetDone?: (plainExerciseData: WeightBasedExerciseData) => void;
     hasData: boolean;
-    data: PlainExerciseData | undefined;
+    data: WeightBasedExerciseData | undefined;
     isEditable: boolean;
     isActiveSet: boolean;
 }
@@ -42,10 +42,7 @@ export const SetInputRow = ({ onSetDone, setIndex, hasData, data, isEditable = t
             }
         }
     }, [isActiveSet, weight, reps, onSetDone]);
-    const activeStackStyles = useMemo(
-        () => ({ backgroundColor: isActiveSet ? inputFieldBackgroundColor : "transparent" }),
-        [inputFieldBackgroundColor, isActiveSet],
-    );
+    const activeStackStyles = useMemo(() => ({ backgroundColor: isActiveSet ? inputFieldBackgroundColor : "transparent" }), [inputFieldBackgroundColor, isActiveSet]);
 
     const computedTextfieldBackgroundColor = useMemo(() => {
         if (!isActiveSet) {
@@ -75,18 +72,9 @@ export const SetInputRow = ({ onSetDone, setIndex, hasData, data, isEditable = t
     }, [isEditable, mainColor, textDisabled]);
 
     const textNumberStyles = useMemo(() => [styles.textNumber, { color: computedColor }], [computedColor]);
-    const textInputStyles = useMemo(
-        () => [styles.textInput, { backgroundColor: computedTextfieldBackgroundColor, color: computedColor }],
-        [computedTextfieldBackgroundColor, computedColor],
-    );
-    const buttonStyles = useMemo(
-        () => ({ button: { ...styles.button, ...{ backgroundColor: computedButtonBackgroundColor } } }),
-        [computedButtonBackgroundColor],
-    );
-    const iconStyle = useMemo(
-        () => ({ color: hasData ? "green" : isActiveSet ? primaryColor : textDisabled }),
-        [hasData, isActiveSet, primaryColor, textDisabled],
-    );
+    const textInputStyles = useMemo(() => [styles.textInput, { backgroundColor: computedTextfieldBackgroundColor, color: computedColor }], [computedTextfieldBackgroundColor, computedColor]);
+    const buttonStyles = useMemo(() => ({ button: { ...styles.button, ...{ backgroundColor: computedButtonBackgroundColor } } }), [computedButtonBackgroundColor]);
+    const iconStyle = useMemo(() => ({ color: hasData ? "green" : isActiveSet ? primaryColor : textDisabled }), [hasData, isActiveSet, primaryColor, textDisabled]);
 
     return (
         <HStack style={[styles.vStack, activeStackStyles]}>
@@ -111,15 +99,7 @@ export const SetInputRow = ({ onSetDone, setIndex, hasData, data, isEditable = t
                     />
                 </Center>
                 <Center style={styles.center}>
-                    <ThemedTextInput
-                        editable={isEditable}
-                        returnKeyType="done"
-                        style={textInputStyles}
-                        value={reps}
-                        onChangeText={setReps}
-                        textAlign="center"
-                        inputMode="decimal"
-                    />
+                    <ThemedTextInput editable={isEditable} returnKeyType="done" style={textInputStyles} value={reps} onChangeText={setReps} textAlign="center" inputMode="decimal" />
                 </Center>
                 <Center style={styles.center}>
                     <Button disabled={!isEditable} style={buttonStyles} onPress={handleSetDone}>
