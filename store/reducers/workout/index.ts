@@ -20,6 +20,8 @@ export const setEditedExercise = createAction<{ exercise?: ExerciseMetaData; ind
 export const deleteExerciseFromEditedWorkout = createAction<number, "workout_delete_exercise_from_edited_workout">("workout_delete_exercise_from_edited_workout");
 export const storeEditedExercise = createAction("storeEditedExerciseInEditedWorkout");
 export const startWorkout = createAction<number, "start_training">("start_training");
+export const resetTrainedWorkout = createAction("reset_trained_workout");
+export const saveNote = createAction<string | undefined, "save_note">("save_note");
 export const setActiveExerciseIndex = createAction<number, "set_active_exercise_index">("set_active_exercise_index");
 export const sortExercisesOnDragEnd = createAction<ExerciseMetaData[], "exercise_overwrite">("exercise_overwrite");
 export const recoverWorkout = createAction("workout_recover");
@@ -27,7 +29,7 @@ export const setWorkoutSorting = createAction<WorkoutSortingType, "workout_sort"
 export const removeWorkout = createAction<number, "workout_remove">("workout_remove");
 export const setWorkoutIndex = createAction<number, "workout_index">("workout_index");
 export const addWorkout = createAction<{ name: string; exercises: ExerciseMetaData[]; color: string }, "workout_add">("workout_add");
-export const addDoneWorkout = createAction<Array<{ exerciseIndex: number; note?: string; sets: Array<WeightBasedExerciseData> }>, "set_training_data">("set_training_data");
+export const addDoneWorkout = createAction("set_training_data");
 export const createNewExercise = createAction("workout_create_new_exercise");
 export const createNewWorkout = createAction("workout_create_new_workout");
 export const saveEditedWorkout = createAction("workout_save_edited_workout");
@@ -66,6 +68,12 @@ export const emptyExercise: ExerciseMetaData = {
 export const workoutReducer = createReducer<WorkoutState>({ workouts: [], sorting: "LONGEST_AGO" }, (builder) => {
     builder
         .addCase(setWorkoutState, (_, { payload }) => payload)
+        .addCase(resetTrainedWorkout, (state) => (state.trainedWorkout = undefined))
+        .addCase(saveNote, (state, action) => {
+            if (state.trainedWorkout) {
+                state.trainedWorkout.exerciseData[state.trainedWorkout.workoutIndex].note = action.payload;
+            }
+        })
         .addCase(setEditedExercise, (state, action) => {
             if (action.payload === undefined) {
                 state.editedWorkout = undefined;
@@ -201,26 +209,21 @@ export const workoutReducer = createReducer<WorkoutState>({ workouts: [], sortin
             state.workouts = sortWorkouts(newWorkouts, state.sorting);
             state.deletedWorkout = { index: action.payload, workout: deletedTrainingDay[0] };
         })
-        .addCase(addDoneWorkout, (state, action) => {
-            const workoutIndex = state.editedWorkout?.index;
-            if (workoutIndex !== undefined) {
+        .addCase(addDoneWorkout, (state) => {
+            const workout = state.trainedWorkout;
+            const workoutIndex = state.trainedWorkout?.workoutIndex;
+            if (workout && workoutIndex !== undefined) {
                 const endTimestamp = Temporal.Now.instant().epochMilliseconds;
-                const duration = (endTimestamp - (state?.workoutStartingTimestamp ?? endTimestamp)) / 1000;
+                const duration = (endTimestamp - (workout?.workoutStartingTimestamp ?? endTimestamp)) / 1000;
                 const dateToday = getDateTodayIso();
-                const doneExercises: DoneExerciseData[] = [];
-                action.payload.forEach(({ exerciseIndex, sets, note }) => {
-                    doneExercises.push({
-                        name: state.workouts[workoutIndex].exercises[exerciseIndex].name,
-                        sets,
-                        note,
-                    });
-                });
+                const doneExercises: DoneExerciseData[] = workout.exerciseData.map((data) => ({ name: data.name, sets: data.doneSets, note: data.note }));
                 state.workouts[workoutIndex].doneWorkouts.push({
                     date: dateToday,
                     duration: duration.toString(),
                     doneExercises,
                 });
             }
+            state.trainedWorkout = undefined;
         })
         .addCase(saveEditedWorkout, (state) => {
             if (state.editedWorkout !== undefined) {
@@ -243,6 +246,7 @@ export const workoutReducer = createReducer<WorkoutState>({ workouts: [], sortin
             state.trainedWorkout = {
                 activeExerciseIndex: 0,
                 workout,
+                workoutStartingTimestamp: Temporal.Now.instant().epochMilliseconds,
                 workoutIndex: action.payload,
                 exerciseData: Array(workout.exercises.length)
                     .fill(undefined)
@@ -258,6 +262,5 @@ export const workoutReducer = createReducer<WorkoutState>({ workouts: [], sortin
                         return prefilledMetaData;
                     }),
             };
-            state.workoutStartingTimestamp = Temporal.Now.instant().epochMilliseconds;
         });
 });

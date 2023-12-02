@@ -1,37 +1,43 @@
-import { RefObject, useCallback, useContext, useRef } from "react";
-import { TextInput } from "react-native";
+import { RefObject, useCallback, useRef } from "react";
+import { Keyboard, TextInput } from "react-native";
 import { useTranslation } from "react-i18next";
 import { ThemedButtomSheetModal } from "../BottomSheetModal/ThemedButtomSheetModal";
 import { VStack } from "../Stack/VStack/VStack";
 import { HStack } from "../Stack/HStack/HStack";
 import { ThemedTextInput } from "../Themed/ThemedTextInput/ThemedTextInput";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
-import { workoutContext } from "../App/train/workoutContext";
 import { styles } from "./styles";
 import { ThemedPressable } from "../Themed/Pressable/Pressable";
 import { Text } from "../Themed/ThemedText/Text";
+import { saveNote } from "../../store/reducers/workout";
+import { useAppDispatch, useAppSelector } from "../../store";
+import { getNote } from "../../store/reducers/workout/workoutSelectors";
 
 interface EditNoteModalProps {
     onRequestClose: () => void;
     reference: RefObject<BottomSheetModal>;
-    index: number;
 }
 
-export const AddNoteModal = ({ reference, onRequestClose, index }: EditNoteModalProps) => {
-    const { doneSetsThisExercise, handleSaveNote } = useContext(workoutContext);
+export const AddNoteModal = ({ reference, onRequestClose }: EditNoteModalProps) => {
     const inputRef = useRef<TextInput>(null);
     const { t } = useTranslation();
-    const note = doneSetsThisExercise.get(index)?.note;
+    const dispatch = useAppDispatch();
+    const storedNote = useAppSelector(getNote);
 
     const handleInput = useCallback(
         (note: string | undefined) => {
-            handleSaveNote(index, note);
+            dispatch(saveNote(note));
         },
-        [handleSaveNote, index],
+        [dispatch],
     );
 
+    const handleRequestClose = useCallback(() => {
+        Keyboard.dismiss();
+        onRequestClose();
+    }, [onRequestClose]);
+
     return (
-        <ThemedButtomSheetModal onRequestClose={onRequestClose} ref={reference} title={t("edit_note_title")}>
+        <ThemedButtomSheetModal ref={reference} title={t("edit_note_title")}>
             <VStack style={styles.wrapper}>
                 <ThemedTextInput
                     bottomSheet={true}
@@ -40,11 +46,11 @@ export const AddNoteModal = ({ reference, onRequestClose, index }: EditNoteModal
                     style={styles.input}
                     reference={inputRef}
                     onChangeText={handleInput}
-                    value={note}
+                    value={storedNote}
                     placeholder={t("edit_note_placeholder")}
                 />
                 <HStack style={styles.buttonWrapper}>
-                    <ThemedPressable input style={styles.button} onPress={onRequestClose}>
+                    <ThemedPressable input style={styles.button} onPress={handleRequestClose}>
                         <Text input>{t("edit_note_done")}</Text>
                     </ThemedPressable>
                 </HStack>

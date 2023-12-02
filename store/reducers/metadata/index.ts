@@ -9,12 +9,7 @@ export const setFirstTimeRendered = createAction<boolean, "metadata_set_first_ti
 export const setEmptyState = createAction("metadata_empty_state");
 export const setAppInstallDate = createAction<IsoDate, "set_app_install_date">("set_app_install_date");
 
-export type MetadataAction =
-    | typeof setMetadataState.type
-    | typeof setMockState.type
-    | typeof setFirstTimeRendered.type
-    | typeof setEmptyState.type
-    | typeof setAppInstallDate.type;
+export type MetadataAction = typeof setMetadataState.type | typeof setMockState.type | typeof setFirstTimeRendered.type | typeof setEmptyState.type | typeof setAppInstallDate.type;
 
 export const metadataReducer = createReducer<MetadataState>({ isFirstTimeRendered: false }, (builder) =>
     builder
@@ -28,5 +23,3 @@ export const metadataReducer = createReducer<MetadataState>({ isFirstTimeRendere
             state.isFirstTimeRendered = action.payload;
         }),
 );
-
-console.log(metadataReducer["getInitialState"]());

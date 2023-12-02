@@ -13,6 +13,7 @@ export type TrainedWorkout = {
     workoutIndex: number;
     workout: Workout;
     activeExerciseIndex: number;
+    workoutStartingTimestamp: number;
     exerciseData: {
         setIndex: number;
         activeSetIndex: number;
@@ -26,7 +27,6 @@ export type WorkoutState = {
     sorting: WorkoutSortingType;
     deletedWorkout?: { workout: Workout; index: number };
     deletedExercise?: { exercise: ExerciseMetaData; index: number };
-    workoutStartingTimestamp?: number;
     editedWorkout?: EditedWorkout;
     trainedWorkout?: TrainedWorkout;
     editedExercise?: EditedExercise;
