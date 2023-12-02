@@ -264,9 +264,6 @@ export const getWeightBasedExerciseMetaDataFromTrainedWorkout = createSelector([
 export const getActiveSetIndex = createSelector([getTrainedWorkout, (trainedWorkout, exerciseIndex: number) => exerciseIndex], (trainedWorkout, exerciesIndex) => {
     return trainedWorkout?.exerciseData[exerciesIndex].activeSetIndex;
 });
-export const getActiveExerciseIndex = createSelector([getTrainedWorkout], (trainedWorkout) => {
-    return trainedWorkout?.activeExerciseIndex;
-});
 
 export const getTrainedWorkoutWorkout = createSelector([getTrainedWorkout], (trainedWorkout) => trainedWorkout?.workout);
 export const getExerciseData = createSelector([getTrainedWorkout], (trainedWorkout) => trainedWorkout?.exerciseData);
