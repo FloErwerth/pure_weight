@@ -15,7 +15,7 @@ import { ThemedView } from "../Themed/ThemedView/View";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ErrorFields, setError } from "../../store/reducers/errors";
 import { getEditedExercise, getIsExistingEditedExercise } from "../../store/reducers/workout/workoutSelectors";
-import { storeEditedExerciseInEditedWorkout } from "../../store/reducers/workout";
+import { storeEditedExercise } from "../../store/reducers/workout";
 
 const validateData = (data: Partial<ExerciseMetaData>) => {
     const errors: ErrorFields[] = [];
@@ -54,7 +54,7 @@ export const EditableExerciseModal = (props: AddExerciseModalProps) => {
             if (possibleErrors.length > 0) {
                 dispatch(setError(possibleErrors));
             } else {
-                dispatch(storeEditedExerciseInEditedWorkout());
+                dispatch(storeEditedExercise());
                 void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
                 props.reference.current?.close();
             }

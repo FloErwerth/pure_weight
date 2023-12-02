@@ -10,8 +10,9 @@ import { EditableExerciseModal } from "../../../EditableExerciseModal/EditableEx
 import { useBottomSheetRef } from "../../../BottomSheetModal/ThemedButtomSheetModal";
 import { styles } from "./styles";
 import { ThemedMaterialCommunityIcons } from "../../../Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
-import { AppState, useAppSelector } from "../../../../store";
+import { AppState, useAppDispatch, useAppSelector } from "../../../../store";
 import { getWeightBasedExerciseMetaDataFromTrainedWorkout } from "../../../../store/reducers/workout/workoutSelectors";
+import { setEditedExercise } from "../../../../store/reducers/workout";
 
 interface ExerciseMetaDataDisplayProps {
     exerciseIndex: number;
@@ -57,11 +58,15 @@ export const SmallMetadataDisplay = ({ style, exerciseIndex }: SmallMetadataDisp
 };
 
 export const ExerciseMetaDataDisplay = ({ exerciseIndex }: ExerciseMetaDataDisplayProps) => {
+    const dispatch = useAppDispatch();
     const [addExerciseRef] = useBottomSheetRef();
+
     const handleShowModal = useCallback(() => {
+        dispatch(setEditedExercise({ index: exerciseIndex, isTrained: true }));
         void Haptics.selectionAsync();
         addExerciseRef.current?.present();
-    }, [addExerciseRef]);
+    }, [addExerciseRef, dispatch, exerciseIndex]);
+
     const exerciseMetaData = useAppSelector((state: AppState) => getWeightBasedExerciseMetaDataFromTrainedWorkout(state, exerciseIndex));
 
     const handleClose = useCallback(() => {

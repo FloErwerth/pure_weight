@@ -16,9 +16,9 @@ export const mutateEditedExercise = createAction<
 >("exercise_edit_mutate");
 
 export const setEditedWorkout = createAction<WorkoutState["editedWorkout"], "workout_set_edited_workout">("workout_set_edited_workout");
-export const setEditedExercise = createAction<WorkoutState["editedExercise"], "workout_set_edited_exercise">("workout_set_edited_exercise");
+export const setEditedExercise = createAction<{ exercise?: ExerciseMetaData; index: number; isTrained?: boolean }, "workout_set_edited_exercise">("workout_set_edited_exercise");
 export const deleteExerciseFromEditedWorkout = createAction<number, "workout_delete_exercise_from_edited_workout">("workout_delete_exercise_from_edited_workout");
-export const storeEditedExerciseInEditedWorkout = createAction("storeEditedExerciseInEditedWorkout");
+export const storeEditedExercise = createAction("storeEditedExerciseInEditedWorkout");
 export const startWorkout = createAction<number, "start_training">("start_training");
 export const setActiveExerciseIndex = createAction<number, "set_active_exercise_index">("set_active_exercise_index");
 export const sortExercisesOnDragEnd = createAction<ExerciseMetaData[], "exercise_overwrite">("exercise_overwrite");
@@ -34,6 +34,7 @@ export const saveEditedWorkout = createAction("workout_save_edited_workout");
 export const setEditedWorkoutName = createAction<string | undefined, "workout_set_edited_workout_name">("workout_set_edited_workout_name");
 export const handleMutateSet = createAction<{ setIndex: number; key: keyof WeightBasedExerciseData; value?: string | boolean }, "handle_mutate_set">("handle_mutate_set");
 export const markSetAsDone = createAction<{ setIndex: number }, "mark_set_as_done">("mark_set_as_done");
+export const setActiveSetIndex = createAction<{ setIndex: number }, "set_active_set_index">("set_active_set_index");
 
 export type WorkoutAction =
     | typeof setEditedWorkout.type
@@ -66,7 +67,24 @@ export const workoutReducer = createReducer<WorkoutState>({ workouts: [], sortin
     builder
         .addCase(setWorkoutState, (_, { payload }) => payload)
         .addCase(setEditedExercise, (state, action) => {
-            state.editedExercise = action.payload;
+            if (action.payload.index !== undefined && action.payload.exercise) {
+                state.editedExercise = {
+                    index: action.payload.index,
+                    exercise: action.payload.exercise,
+                    isTrained: action.payload.isTrained,
+                };
+            }
+            if (action.payload.index !== undefined) {
+                const workout = state.trainedWorkout?.workout ?? state.editedWorkout?.workout;
+                if (workout) {
+                    state.editedExercise = { exercise: workout.exercises[action.payload.index], index: action.payload.index, isTrained: action.payload.isTrained };
+                }
+            }
+        })
+        .addCase(setActiveSetIndex, (state, action) => {
+            if (state.trainedWorkout) {
+                state.trainedWorkout.exerciseData[state.trainedWorkout.activeExerciseIndex].activeSetIndex = action.payload.setIndex;
+            }
         })
         .addCase(handleMutateSet, (state, action) => {
             const trainedWorkout = state.trainedWorkout;
@@ -81,7 +99,7 @@ export const workoutReducer = createReducer<WorkoutState>({ workouts: [], sortin
                 const exerciseIndex = trainedWorkout.activeExerciseIndex;
                 const doneSet = trainedWorkout.exerciseData[exerciseIndex].doneSets[action.payload.setIndex];
                 const exercise = trainedWorkout.exerciseData[exerciseIndex];
-                exercise.doneSets[action.payload.setIndex] = { ...doneSet, filled: true };
+                exercise.doneSets[action.payload.setIndex] = { ...doneSet, confirmed: true };
                 exercise.setIndex += 1;
                 exercise.activeSetIndex += 1;
                 trainedWorkout.exerciseData[exerciseIndex] = exercise;
@@ -112,13 +130,26 @@ export const workoutReducer = createReducer<WorkoutState>({ workouts: [], sortin
         .addCase(setEditedWorkout, (state, action) => {
             state.editedWorkout = action.payload;
         })
-        .addCase(storeEditedExerciseInEditedWorkout, (state) => {
-            if (state.editedWorkout && state.editedExercise) {
-                const exercises = state.editedWorkout.workout.exercises;
+        .addCase(storeEditedExercise, (state) => {
+            const isTrained = state.editedExercise?.isTrained;
+            const workout = isTrained ? state.trainedWorkout?.workout : state.editedWorkout?.workout;
+            if (workout && state.editedWorkout && state.editedExercise) {
+                const exercises = workout.exercises;
                 if (state.editedExercise.index !== undefined) {
                     exercises.splice(state.editedExercise.index, 1, state.editedExercise.exercise);
                 } else {
                     exercises.push(state.editedExercise.exercise);
+                }
+                if (isTrained && state.trainedWorkout?.workout) {
+                    state.trainedWorkout.workout.exercises = exercises;
+                    state.trainedWorkout.exerciseData[state.trainedWorkout.activeExerciseIndex].doneSets.map((data) => {
+                        if (!data.confirmed) {
+                            return { filled: false, reps: state.editedExercise?.exercise.reps, weight: state.editedExercise?.exercise.weight };
+                        }
+                        return data;
+                    });
+                }
+                if (!isTrained && state.editedWorkout?.workout) {
                     state.editedWorkout.workout.exercises = exercises;
                 }
             }
@@ -139,6 +170,7 @@ export const workoutReducer = createReducer<WorkoutState>({ workouts: [], sortin
                 state.editedExercise = {
                     index: state.editedExercise.index,
                     exercise: { ...state.editedExercise.exercise, [action.payload.key]: action.payload.value },
+                    isTrained: state.editedExercise.isTrained,
                 };
             }
         })
@@ -204,26 +236,23 @@ export const workoutReducer = createReducer<WorkoutState>({ workouts: [], sortin
         })
         .addCase(startWorkout, (state, action) => {
             const workout = state.workouts[action.payload];
-            const exerciseData: TrainedWorkout["exerciseData"] = Array(workout.exercises.length)
-                .fill(undefined)
-                .map((_, exerciseIndex) => {
-                    const metaData = workout.exercises[exerciseIndex];
-                    const numberOfSets = parseFloat(workout.exercises[exerciseIndex].sets ?? "0");
-                    const prefilledMetaData: TrainedWorkout["exerciseData"][number] = {
-                        name: metaData.name,
-                        activeSetIndex: 0,
-                        setIndex: 0,
-                        doneSets: Array(numberOfSets).fill({ weight: metaData.weight, reps: metaData.reps, filled: false }),
-                        note: "",
-                    };
-                    return prefilledMetaData;
-                });
-
             state.trainedWorkout = {
                 activeExerciseIndex: 0,
                 workout,
                 workoutIndex: action.payload,
-                exerciseData,
+                exerciseData: Array(workout.exercises.length)
+                    .fill(undefined)
+                    .map((_, exerciseIndex) => {
+                        const metaData = workout?.exercises[exerciseIndex];
+                        const prefilledMetaData: TrainedWorkout["exerciseData"][number] = {
+                            name: metaData?.name ?? "",
+                            activeSetIndex: 0,
+                            setIndex: 0,
+                            doneSets: [],
+                            note: "",
+                        };
+                        return prefilledMetaData;
+                    }),
             };
             state.workoutStartingTimestamp = Temporal.Now.instant().epochMilliseconds;
         });

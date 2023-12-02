@@ -1,4 +1,4 @@
-import { Animated, TextInput, TextInputProps } from "react-native";
+import { Animated, NativeSyntheticEvent, TextInput, TextInputFocusEventData, TextInputProps } from "react-native";
 import * as React from "react";
 import { RefObject, useCallback, useMemo, useRef } from "react";
 import { AppState, useAppDispatch, useAppSelector } from "../../../store";
@@ -37,25 +37,33 @@ export const ThemedTextInput = (props: ThemedTextInputProps) => {
         [dispatch, getHasError, props],
     );
 
-    const handleFocus = useCallback(() => {
-        if (props.suffix) {
-            Animated.timing(opacity, {
-                duration: 200,
-                useNativeDriver: false,
-                toValue: 0,
-            }).start();
-        }
-    }, [opacity, props.suffix]);
+    const handleFocus = useCallback(
+        (e: NativeSyntheticEvent<TextInputFocusEventData>) => {
+            props.onFocus?.(e);
+            if (props.suffix) {
+                Animated.timing(opacity, {
+                    duration: 200,
+                    useNativeDriver: false,
+                    toValue: 0,
+                }).start();
+            }
+        },
+        [opacity, props],
+    );
 
-    const handleBlur = useCallback(() => {
-        if (props.suffix) {
-            Animated.timing(opacity, {
-                duration: 200,
-                useNativeDriver: false,
-                toValue: 0,
-            }).start();
-        }
-    }, [opacity, props.suffix]);
+    const handleBlur = useCallback(
+        (e: NativeSyntheticEvent<TextInputFocusEventData>) => {
+            props.onBlur?.(e);
+            if (props.suffix) {
+                Animated.timing(opacity, {
+                    duration: 200,
+                    useNativeDriver: false,
+                    toValue: 0,
+                }).start();
+            }
+        },
+        [opacity, props.suffix],
+    );
 
     const placeholderColor = useMemo(() => {
         if (getHasError) {

@@ -29,7 +29,7 @@ import {
     setEditedExercise,
     setEditedWorkoutName,
     sortExercisesOnDragEnd,
-    storeEditedExerciseInEditedWorkout,
+    storeEditedExercise,
 } from "../../../store/reducers/workout";
 
 import { getEditedWorkout } from "../../../store/reducers/workout/workoutSelectors";
@@ -99,7 +99,7 @@ export function Create() {
                 };
 
                 const handleOnConfirmEdit = () => {
-                    dispatch(storeEditedExerciseInEditedWorkout());
+                    dispatch(storeEditedExercise());
                     dispatch(setEditedExercise(undefined));
                     closeAdd();
                 };

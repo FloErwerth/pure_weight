@@ -11,9 +11,9 @@ import { useTheme } from "../../../../../theme/context";
 import { borderRadius } from "../../../../../theme/border";
 import { TrainingHeader } from "../../TrainingHeader/TrainingHeader";
 import { SetInputRow } from "../../../../SetInputRow/SetInputRow";
-import { AppState, useAppSelector } from "../../../../../store";
+import { useAppSelector } from "../../../../../store";
 import { useBottomSheetRef } from "../../../../BottomSheetModal/ThemedButtomSheetModal";
-import { getExerciseData } from "../../../../../store/reducers/workout/workoutSelectors";
+import { getWorkoutExercises } from "../../../../../store/reducers/workout/workoutSelectors";
 
 interface WeightBasedExerciseProps {
     exerciseIndex: number;
@@ -23,7 +23,7 @@ export const Exercise = ({ exerciseIndex }: WeightBasedExerciseProps) => {
     const [editNoteModalRef, open, close] = useBottomSheetRef();
     const showEditNoteModalTitleStyle = useMemo(() => ({ padding: 10, paddingHorizontal: 15, alignSelf: "center" }) as const, []);
     const { mainColor, componentBackgroundColor } = useTheme();
-    const { data } = useAppSelector((state: AppState) => getExerciseData(state, exerciseIndex));
+    const exercises = useAppSelector(getWorkoutExercises);
     const id = useId();
     const hideNoteModal = useCallback(() => {
         close();
@@ -35,10 +35,10 @@ export const Exercise = ({ exerciseIndex }: WeightBasedExerciseProps) => {
 
     const mappedDoneSets = useMemo(
         () =>
-            data?.doneSets?.map((exerciseMetadata, index) => ({
-                key: index * Math.random(),
-            })),
-        [data?.doneSets],
+            Array(exercises?.length)
+                .fill(undefined)
+                .map((_, index) => Array(parseFloat(exercises?.[index].sets ?? "0")).fill(undefined)),
+        [exercises],
     );
 
     return (
@@ -54,8 +54,8 @@ export const Exercise = ({ exerciseIndex }: WeightBasedExerciseProps) => {
             <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={trainStyles.innerWrapper}>
                 <ThemedView style={{ paddingTop: 15, paddingBottom: 10, borderRadius, backgroundColor: componentBackgroundColor }}>
                     <TrainingHeader />
-                    {mappedDoneSets?.map(({ key }, setIndex) => {
-                        return <SetInputRow key={key} exerciseIndex={exerciseIndex} setIndex={setIndex} />;
+                    {mappedDoneSets?.map((_, setIndex) => {
+                        return <SetInputRow key={Math.random()} exerciseIndex={exerciseIndex} setIndex={setIndex} />;
                     })}
                 </ThemedView>
                 <PreviousTraining exerciseIndex={exerciseIndex} />

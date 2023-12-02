@@ -24,7 +24,7 @@ export type Workout = {
 export type WeightBasedExerciseData = {
     weight: string;
     reps: string;
-    filled?: boolean;
+    confirmed?: boolean;
 };
 
 export type DoneWorkouts = {

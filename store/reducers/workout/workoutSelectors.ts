@@ -244,7 +244,7 @@ export const getPauseTime = createSelector([getTrainedWorkout], (trainedWorkout)
     return trainedWorkout?.workout.exercises[exerciseIndex].pause;
 });
 export const getIsDoneWithTraining = createSelector([getTrainedWorkout], (trainedWorkout) => {
-    return Boolean(trainedWorkout?.exerciseData.every((doneExercise) => doneExercise.doneSets.every(({ filled }) => filled)));
+    return Boolean(trainedWorkout?.exerciseData.every((doneExercise) => doneExercise.doneSets.every(({ weight, reps, confirmed }) => weight && reps && confirmed)));
 });
 export const getWeightBasedExerciseMetaDataFromTrainedWorkout = createSelector([getTrainedWorkout, (trainedWorkout, exerciseIndex?: number) => exerciseIndex], (trainedWorkout, exerciseIndex) => {
     if (exerciseIndex === undefined) {
@@ -258,25 +258,23 @@ export const getActiveSetIndex = createSelector([getTrainedWorkout, (trainedWork
 export const getActiveExerciseIndex = createSelector([getTrainedWorkout], (trainedWorkout) => {
     return trainedWorkout?.activeExerciseIndex;
 });
+
 export const getSetData = createSelector(
     [getTrainedWorkout, (trainedWorkout, setIndex: number) => setIndex, (trainedWorkout, setIndex, exerciseIndex: number) => exerciseIndex],
     (trainedWorkout, setIndex, exerciseIndex) => {
         const exerciseData = trainedWorkout?.exerciseData[exerciseIndex];
-        const hasData = Boolean(exerciseData?.doneSets[setIndex].filled);
+        const hasData = Boolean(exerciseData?.doneSets[setIndex]);
+        const isConfirmed = Boolean(exerciseData?.doneSets[setIndex]?.confirmed);
 
         return {
-            weight: exerciseData?.doneSets[setIndex].weight,
-            reps: exerciseData?.doneSets[setIndex].reps,
-            isEditable: hasData || setIndex === exerciseData?.activeSetIndex,
-            isActiveSet: setIndex === exerciseData?.activeSetIndex,
+            weight: hasData ? exerciseData?.doneSets[setIndex].weight : trainedWorkout?.workout.exercises[exerciseIndex].weight,
+            reps: hasData ? exerciseData?.doneSets[setIndex].reps : trainedWorkout?.workout.exercises[exerciseIndex].reps,
+            isEditable: isConfirmed || hasData || setIndex === exerciseData?.activeSetIndex,
+            isConfirmed,
+            isActiveSet: trainedWorkout?.exerciseData[trainedWorkout?.activeExerciseIndex].activeSetIndex === setIndex,
             hasData,
         };
     },
 );
-export const getExerciseData = createSelector([getTrainedWorkout, (trainedWorkout, exerciseIndex: number) => exerciseIndex], (trainedWorkout, exerciseIndex) => {
-    const exerciseData = trainedWorkout?.exerciseData[exerciseIndex];
-    return {
-        data: exerciseData,
-        isActiveExercise: trainedWorkout?.activeExerciseIndex === exerciseIndex,
-    };
-});
+
+export const getTrainedWorkoutExercises = createSelector([getTrainedWorkout], (trainedWorkout) => trainedWorkout?.workout.exercises);
