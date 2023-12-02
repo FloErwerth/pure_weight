@@ -16,7 +16,7 @@ export const mutateEditedExercise = createAction<
 >("exercise_edit_mutate");
 
 export const setEditedWorkout = createAction<WorkoutState["editedWorkout"], "workout_set_edited_workout">("workout_set_edited_workout");
-export const setEditedExercise = createAction<{ exercise?: ExerciseMetaData; index: number; isTrained?: boolean }, "workout_set_edited_exercise">("workout_set_edited_exercise");
+export const setEditedExercise = createAction<{ exercise?: ExerciseMetaData; index: number; isTrained?: boolean } | undefined, "workout_set_edited_exercise">("workout_set_edited_exercise");
 export const deleteExerciseFromEditedWorkout = createAction<number, "workout_delete_exercise_from_edited_workout">("workout_delete_exercise_from_edited_workout");
 export const storeEditedExercise = createAction("storeEditedExerciseInEditedWorkout");
 export const startWorkout = createAction<number, "start_training">("start_training");
@@ -67,17 +67,21 @@ export const workoutReducer = createReducer<WorkoutState>({ workouts: [], sortin
     builder
         .addCase(setWorkoutState, (_, { payload }) => payload)
         .addCase(setEditedExercise, (state, action) => {
-            if (action.payload.index !== undefined && action.payload.exercise) {
-                state.editedExercise = {
-                    index: action.payload.index,
-                    exercise: action.payload.exercise,
-                    isTrained: action.payload.isTrained,
-                };
-            }
-            if (action.payload.index !== undefined) {
-                const workout = state.trainedWorkout?.workout ?? state.editedWorkout?.workout;
-                if (workout) {
-                    state.editedExercise = { exercise: workout.exercises[action.payload.index], index: action.payload.index, isTrained: action.payload.isTrained };
+            if (action.payload === undefined) {
+                state.editedWorkout = undefined;
+            } else {
+                if (action.payload.index !== undefined && action.payload.exercise) {
+                    state.editedExercise = {
+                        index: action.payload.index,
+                        exercise: action.payload.exercise,
+                        isTrained: action.payload.isTrained,
+                    };
+                }
+                if (action.payload.index !== undefined) {
+                    const workout = state.trainedWorkout?.workout ?? state.editedWorkout?.workout;
+                    if (workout) {
+                        state.editedExercise = { exercise: workout.exercises[action.payload.index], index: action.payload.index, isTrained: action.payload.isTrained };
+                    }
                 }
             }
         })

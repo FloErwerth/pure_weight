@@ -17,7 +17,7 @@ import { useBottomSheetRef } from "../../../components/BottomSheetModal/ThemedBu
 import { workoutContext } from "../../../components/App/train/workoutContext";
 import { addDoneWorkout, setActiveExerciseIndex } from "../../../store/reducers/workout";
 
-import { getActiveExerciseIndex, getIsDoneWithTraining, getTrainedWorkout } from "../../../store/reducers/workout/workoutSelectors";
+import { getIsDoneWithTraining, getTrainedWorkout } from "../../../store/reducers/workout/workoutSelectors";
 
 export type DoneExercises = Map<number, { note?: string; sets: Map<number, WeightBasedExerciseData> }>;
 function mapOfMapsTo2DArray(map: DoneExercises) {
@@ -38,7 +38,6 @@ export function Train() {
     const confirmButtonOpacity = useRef(new Animated.Value(0)).current;
     const [ref, _, close] = useBottomSheetRef();
     const isDone = useAppSelector(getIsDoneWithTraining);
-    const exerciseIndex = useAppSelector(getActiveExerciseIndex);
 
     useEffect(() => {
         if (isDone) {
@@ -121,6 +120,7 @@ export function Train() {
         <ThemedView background style={trainStyles.wrapper} stretch>
             <ThemedView background style={trainStyles.navigationWrapper}>
                 <SiteNavigationButtons
+                    disabled={!isDone}
                     handleConfirmOpacity={confirmButtonOpacity}
                     handleBack={handleCloseButton}
                     handleConfirm={handleDone}
@@ -131,7 +131,7 @@ export function Train() {
                 <workoutContext.Provider value={contextValue}>
                     <Carousel
                         onSnapToItem={handleSetActiveExerciseIndex}
-                        scrollAnimationDuration={200}
+                        scrollAnimationDuration={100}
                         width={Dimensions.get("screen").width}
                         loop={false}
                         vertical={false}

@@ -17,11 +17,13 @@ import { ThemedPressable } from "../Themed/Pressable/Pressable";
 interface SetInputRowProps {
     setIndex: number;
     exerciseIndex: number;
+    isActiveSet: boolean;
 }
 
-export const SetInputRow = ({ setIndex, exerciseIndex }: SetInputRowProps) => {
+export const SetInputRow = ({ setIndex, exerciseIndex, isActiveSet }: SetInputRowProps) => {
     const { primaryColor, mainColor, secondaryBackgroundColor, componentBackgroundColor, inputFieldBackgroundColor, textDisabled } = useTheme();
-    const { isConfirmed, isEditable, weight, isActiveSet, reps } = useAppSelector((state: AppState) => getSetData(state, setIndex, exerciseIndex));
+    const data = useAppSelector((state: AppState) => getSetData(state, setIndex))?.[exerciseIndex];
+    const { weight, reps, isEditable, isConfirmed } = data ?? {};
     const dispatch = useAppDispatch();
 
     const handleSetWeight = useCallback(
