@@ -140,11 +140,9 @@ export function Train() {
                     />
                 </workoutContext.Provider>
             </ThemedView>
-            {exerciseIndex !== undefined && (
-                <HStack background style={buttonsStyle}>
-                    <StopwatchPopover />
-                </HStack>
-            )}
+            <HStack background style={buttonsStyle}>
+                <StopwatchPopover />
+            </HStack>
             <AlertModal reference={ref} title={alertModalConfig.title} content={alertModalConfig.content} onConfirm={handleNotDoneConfirm} onCancel={handleCloseAlert} />
         </ThemedView>
     );

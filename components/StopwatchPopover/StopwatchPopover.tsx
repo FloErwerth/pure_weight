@@ -31,6 +31,7 @@ export const StopwatchPopover = () => {
     const [trackedTime, setTrackedTime] = useState(0);
     const [timerStarted, setTimerStarted] = useState(false);
     const [startingTime, setStartingTime] = useState<number>(0);
+    const [timerPaused, setTimerPaused] = useState(false);
     const [timestamp, setTimestamp] = useState<number>(0);
     const [unmountTime, setUnmountTime] = useState<number>(0);
     const [showPopover, setShowPopover] = useState(false);
@@ -44,14 +45,15 @@ export const StopwatchPopover = () => {
         if ((stopwatchRef.current?.getSnapshot() ?? 0) <= 30) {
             clearInterval(interval);
             setTimerStarted(false);
+            setTimerPaused(false);
         }
     }, []);
 
     useEffect(() => {
-        if (!timerStarted && showPopover) {
+        if (!timerStarted && !timerPaused) {
             setStartingTime(pauseTimeDecoder.parse(currentPauseTime));
         }
-    }, [currentPauseTime]);
+    }, [timerPaused, timerStarted, currentPauseTime]);
 
     useEffect(() => {
         if (timerStarted && !showPopover) {
@@ -122,7 +124,9 @@ export const StopwatchPopover = () => {
             setTimerStarted(false);
             stopwatchRef.current?.pause();
             clearInterval(interval);
+            setTimerPaused(true);
         } else {
+            setTimerPaused(false);
             setTimerStarted(true);
             stopwatchRef.current?.play();
         }
@@ -136,6 +140,7 @@ export const StopwatchPopover = () => {
         stopwatchRef.current?.reset();
         setStartingTime(pauseTimeDecoder.parse(currentPauseTime));
         setTimerStarted(false);
+        setTimerPaused(false);
         clearInterval(interval);
     }, [currentPauseTime]);
 

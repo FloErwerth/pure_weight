@@ -237,7 +237,7 @@ export const getOverallTrainingTrend = createSelector([getWorkoutByIndex], (trai
 export const getPauseTime = createSelector([getTrainedWorkout], (trainedWorkout) => {
     const exerciseIndex = trainedWorkout?.activeExerciseIndex;
 
-    if (!exerciseIndex) {
+    if (exerciseIndex === undefined) {
         return undefined;
     }
 
@@ -276,5 +276,3 @@ export const getSetData = createSelector(
         };
     },
 );
-
-export const getTrainedWorkoutExercises = createSelector([getTrainedWorkout], (trainedWorkout) => trainedWorkout?.workout.exercises);
