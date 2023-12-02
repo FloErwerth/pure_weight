@@ -72,44 +72,41 @@ export const getTrainingDayData = createSelector([getEditedWorkout], (editedWork
         });
     return sortedData;
 });
-export const getHistoryByMonth = createSelector(
-    [getWorkouts, (workouts, month?: string) => month, (workouts, month, workoutIndex: number) => workoutIndex],
-    (workouts, searchedMonth, workoutIndex) => {
-        const foundTrainings: Map<
-            string,
-            {
-                color: string;
-                name: string;
-                duration?: string;
-                date: IsoDate;
-                weight: number;
-                numExercisesDone: number;
-            }[]
-        > = new Map();
-        const workout = workouts[workoutIndex];
+export const getHistoryByMonth = createSelector([getEditedWorkout, (editedWorkout, month?: string) => month], (editedWorkout, searchedMonth) => {
+    const workout = editedWorkout?.workout;
+    const foundTrainings: Map<
+        string,
+        {
+            color: string;
+            name: string;
+            duration?: string;
+            date: IsoDate;
+            weight: number;
+            numExercisesDone: number;
+        }[]
+    > = new Map();
 
-        workout.doneWorkouts.forEach((doneWorkout) => {
-            foundTrainings.set(doneWorkout.date, [
-                ...(foundTrainings.get(doneWorkout.date) ?? []),
-                {
-                    color: workout.calendarColor,
-                    name: workout.name,
-                    date: doneWorkout.date,
-                    duration: doneWorkout.duration,
-                    weight:
-                        doneWorkout.doneExercises?.reduce(
-                            (sum, current) => sum + current.sets.reduce((sumSet, currentSet) => sumSet + parseFloat(currentSet.weight) * parseFloat(currentSet.reps), 0),
-                            0,
-                        ) ?? 0,
-                    numExercisesDone: doneWorkout.doneExercises?.length ?? 0,
-                },
-            ]);
-        });
-        return Array.from(foundTrainings)
-            .filter((value) => getMonth(value[0] as IsoDate) === getMonth((searchedMonth ?? getDateTodayIso()) as IsoDate))
-            .map(([month, data]) => ({ title: month, data }));
-    },
-);
+    workout?.doneWorkouts.forEach((doneWorkout) => {
+        foundTrainings.set(doneWorkout.date, [
+            ...(foundTrainings.get(doneWorkout.date) ?? []),
+            {
+                color: workout.calendarColor,
+                name: workout.name,
+                date: doneWorkout.date,
+                duration: doneWorkout.duration,
+                weight:
+                    doneWorkout.doneExercises?.reduce(
+                        (sum, current) => sum + current.sets.reduce((sumSet, currentSet) => sumSet + parseFloat(currentSet.weight) * parseFloat(currentSet.reps), 0),
+                        0,
+                    ) ?? 0,
+                numExercisesDone: doneWorkout.doneExercises?.length ?? 0,
+            },
+        ]);
+    });
+    return Array.from(foundTrainings)
+        .filter((value) => getMonth(value[0] as IsoDate) === getMonth((searchedMonth ?? getDateTodayIso()) as IsoDate))
+        .map(([month, data]) => ({ title: month, data }));
+});
 export const getHasHistory = createSelector([getWorkouts], (workouts) => (index: number) => workouts[index].doneWorkouts.length > 0);
 export const getNumberHistories = createSelector([getWorkouts], (workouts) => (index: number) => workouts[index].doneWorkouts.length);
 export const getPreviousTraining = createSelector([getEditedWorkout, getLanguage, (editedWorkout, language, exerciseIndex: number) => exerciseIndex], (editedWorkout, language, exerciseIndex) => {

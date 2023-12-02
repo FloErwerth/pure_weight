@@ -21,13 +21,7 @@ import { RenderedDay } from "../../../components/App/history/RenderedDay/Rendere
 import { DayProps } from "react-native-calendars/src/calendar/day";
 import { borderRadius } from "../../../theme/border";
 import { getAppInstallDate } from "../../../store/reducers/metadata/metadataSelectors";
-import {
-    getHistoryByMonth,
-    getLatestWorkoutDate,
-    getSelectedTrainingDay,
-    getWorkoutColor,
-    getWorkoutDates,
-} from "../../../store/reducers/workout/workoutSelectors";
+import { getEditedWorkout, getHistoryByMonth, getLatestWorkoutDate, getWorkoutColor, getWorkoutDates } from "../../../store/reducers/workout/workoutSelectors";
 
 export type SectionListItemInfo = { color: string; name: string; duration?: string; date: IsoDate; weight: number; numExercisesDone: number };
 export type MarkedDay = {
@@ -58,7 +52,7 @@ export function WorkoutHistory() {
     const [selectedDate, setSelectedDate] = useState<IsoDate | undefined>();
     const pastScrollRange = useMemo(() => Math.floor(getDateToday().since(installDate ?? getDateTodayIso()).days / 30), [installDate]);
     const markedDates = useMarkedDates();
-    const workout = useAppSelector(getSelectedTrainingDay);
+    const workout = useAppSelector(getEditedWorkout);
     const [ref, open, close] = useBottomSheetRef();
     const sectionListRef = useRef<SectionList>(null);
     const dateData = useAppSelector((state: AppState) => getHistoryByMonth(state, selectedDate));
@@ -174,7 +168,7 @@ export function WorkoutHistory() {
 
     return (
         <ThemedView stretch>
-            <SiteNavigationButtons handleBack={handleNavigateBack} title={t("history_front").concat(" ", workout?.name ?? "")} />
+            <SiteNavigationButtons handleBack={handleNavigateBack} title={t("history_front").concat(" ", workout?.workout.name ?? "")} />
             <PageContent style={styles.pageWrapper}>
                 <SectionList
                     ref={sectionListRef}

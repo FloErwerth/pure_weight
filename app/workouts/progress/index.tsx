@@ -29,10 +29,6 @@ export function Progress() {
         navigate("workouts");
     }, [navigate]);
 
-    if (exercises === undefined) {
-        handleNavigateToWorkouts();
-    }
-
     const Fallback = () => {
         const { componentBackgroundColor } = useTheme();
         const containerStyles = useMemo(() => [styles.vStack, { backgroundColor: componentBackgroundColor }], [componentBackgroundColor]);

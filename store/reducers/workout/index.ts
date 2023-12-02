@@ -15,7 +15,7 @@ export const mutateEditedExercise = createAction<
     "exercise_edit_mutate"
 >("exercise_edit_mutate");
 
-export const setEditedWorkout = createAction<WorkoutState["editedWorkout"], "workout_set_edited_workout">("workout_set_edited_workout");
+export const setEditedWorkout = createAction<{ index: number }, "workout_set_edited_workout">("workout_set_edited_workout");
 export const setEditedExercise = createAction<{ exercise?: ExerciseMetaData; index: number; isTrained?: boolean } | undefined, "workout_set_edited_exercise">("workout_set_edited_exercise");
 export const deleteExerciseFromEditedWorkout = createAction<number, "workout_delete_exercise_from_edited_workout">("workout_delete_exercise_from_edited_workout");
 export const storeEditedExercise = createAction("storeEditedExerciseInEditedWorkout");
@@ -27,7 +27,6 @@ export const sortExercisesOnDragEnd = createAction<ExerciseMetaData[], "exercise
 export const recoverWorkout = createAction("workout_recover");
 export const setWorkoutSorting = createAction<WorkoutSortingType, "workout_sort">("workout_sort");
 export const removeWorkout = createAction<number, "workout_remove">("workout_remove");
-export const setWorkoutIndex = createAction<number, "workout_index">("workout_index");
 export const addWorkout = createAction<{ name: string; exercises: ExerciseMetaData[]; color: string }, "workout_add">("workout_add");
 export const addDoneWorkout = createAction("set_training_data");
 export const createNewExercise = createAction("workout_create_new_exercise");
@@ -47,7 +46,6 @@ export type WorkoutAction =
     | typeof recoverWorkout.type
     | typeof setWorkoutSorting.type
     | typeof removeWorkout.type
-    | typeof setWorkoutIndex.type
     | typeof addWorkout.type
     | typeof addDoneWorkout.type
     | typeof setWorkouts.type
@@ -140,7 +138,11 @@ export const workoutReducer = createReducer<WorkoutState>({ workouts: [], sortin
             state.editedExercise = { exercise: emptyExercise };
         })
         .addCase(setEditedWorkout, (state, action) => {
-            state.editedWorkout = action.payload;
+            const storedWorkout = state.workouts[action.payload.index];
+            state.editedWorkout = {
+                workout: storedWorkout,
+                index: action.payload.index,
+            };
         })
         .addCase(storeEditedExercise, (state) => {
             const isTrained = state.editedExercise?.isTrained;

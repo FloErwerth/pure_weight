@@ -18,7 +18,7 @@ import { WorkoutSorting } from "../../components/App/train/WorkoutSorting/Workou
 import { HistoryDisplay } from "../../components/App/history/HistoryDisplay/HistoryDisplay";
 import { cleanErrors } from "../../store/reducers/errors";
 import { getHasHistory, getNumberHistories, getOverallTrainingTrend, getWorkouts } from "../../store/reducers/workout/workoutSelectors";
-import { createNewWorkout, recoverWorkout, removeWorkout, setEditedWorkout, setWorkoutIndex, startWorkout } from "../../store/reducers/workout";
+import { createNewWorkout, recoverWorkout, removeWorkout, setEditedWorkout, startWorkout } from "../../store/reducers/workout";
 
 import { getLanguage } from "../../store/reducers/settings/settingsSelectors";
 
@@ -62,7 +62,7 @@ export function Workouts() {
     const mappedWorkouts = useMemo(() => {
         return savedWorkouts.map((workout, index) => {
             const onEdit = () => {
-                dispatch(setEditedWorkout({ workout, index }));
+                dispatch(setEditedWorkout({ index }));
                 navigate("create");
             };
 
@@ -80,12 +80,12 @@ export function Workouts() {
             const hasHistory = hasHistoryByIndex(index);
 
             const handleNavigateToProgress = () => {
-                dispatch(setWorkoutIndex(index));
+                dispatch(setEditedWorkout({ index }));
                 navigate("progress");
             };
 
             const handleNavigateToHistory = () => {
-                dispatch(setWorkoutIndex(index));
+                dispatch(setEditedWorkout({ index }));
                 navigate("history");
             };
 

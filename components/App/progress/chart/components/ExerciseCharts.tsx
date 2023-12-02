@@ -1,4 +1,3 @@
-import { View } from "react-native";
 import { ExerciseSets, WeightBasedExerciseData } from "../../../../../store/types";
 import { useCallback, useMemo, useState } from "react";
 import { borderRadius } from "../../../../../theme/border";
@@ -137,8 +136,8 @@ export const ExerciseChart = ({ exerciseName, data }: ExerciseChartProps) => {
     );
 
     return (
-        <View style={[styles.wrapper, { backgroundColor: componentBackgroundColor }]}>
-            <HStack style={styles.chartHeader}>
+        <ThemedView ghost style={[styles.wrapper, { backgroundColor: componentBackgroundColor }]}>
+            <HStack ghost style={styles.chartHeader}>
                 <Text ghost style={styles.headerTitle}>
                     {exerciseName}
                 </Text>
@@ -165,7 +164,7 @@ export const ExerciseChart = ({ exerciseName, data }: ExerciseChartProps) => {
                     ))}
                 </VStack>
             </ThemedButtomSheetModal>
-        </View>
+        </ThemedView>
     );
 };
 
@@ -179,7 +178,7 @@ export default function Charts() {
     }
 
     return (
-        <ThemedScrollView>
+        <ThemedScrollView ghost>
             {trainingDayData.map(({ exerciseName, data }) => (
                 <ExerciseChart key={Math.random() * 100} exerciseName={exerciseName} data={data} />
             ))}

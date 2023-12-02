@@ -62,7 +62,7 @@ export const Exercise = ({ exerciseIndex }: WeightBasedExerciseProps) => {
                 </ThemedView>
                 <PreviousTraining exerciseIndex={exerciseIndex} />
             </ScrollView>
-            <AddNoteModal index={exerciseIndex} reference={editNoteModalRef} onRequestClose={hideNoteModal} />
+            <AddNoteModal reference={editNoteModalRef} onRequestClose={hideNoteModal} />
         </View>
     );
 };
