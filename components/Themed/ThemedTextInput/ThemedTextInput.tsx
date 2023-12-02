@@ -62,7 +62,7 @@ export const ThemedTextInput = (props: ThemedTextInputProps) => {
                 }).start();
             }
         },
-        [opacity, props.suffix],
+        [opacity, props],
     );
 
     const placeholderColor = useMemo(() => {
