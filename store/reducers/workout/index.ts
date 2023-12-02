@@ -3,33 +3,7 @@ import { DoneExerciseData, ExerciseMetaData, WeightBasedExerciseData, WeightBase
 import { Temporal } from "@js-temporal/polyfill";
 import { getDateTodayIso } from "../../../utils/date";
 import { sortWorkouts } from "./utils";
-
-export type EditedWorkout = {
-    workout: Workout;
-    index?: number;
-};
-
-export type EditedExercise = {
-    exercise: ExerciseMetaData;
-    index?: number;
-};
-
-export type TrainedWorkout = {
-    workoutIndex: number;
-    workout: Workout;
-    doneExerciseData: DoneExerciseData[][];
-};
-
-export type WorkoutState = {
-    workouts: Workout[];
-    sorting: WorkoutSortingType;
-    deletedWorkout?: { workout: Workout; index: number };
-    deletedExercise?: { exercise: ExerciseMetaData; index: number };
-    workoutStartingTimestamp?: number;
-    editedWorkout?: EditedWorkout;
-    trainedWorkout?: TrainedWorkout;
-    editedExercise?: EditedExercise;
-};
+import { TrainedWorkout, WorkoutState } from "./types";
 
 export const setWorkoutState = createAction<WorkoutState, "workout_set_state">("workout_set_state");
 export const setWorkouts = createAction<Workout[], "workout_set_workouts">("workout_set_workouts");
@@ -46,6 +20,7 @@ export const setEditedExercise = createAction<WorkoutState["editedExercise"], "w
 export const deleteExerciseFromEditedWorkout = createAction<number, "workout_delete_exercise_from_edited_workout">("workout_delete_exercise_from_edited_workout");
 export const storeEditedExerciseInEditedWorkout = createAction("storeEditedExerciseInEditedWorkout");
 export const startWorkout = createAction<number, "start_training">("start_training");
+export const setActiveExerciseIndex = createAction<number, "set_active_exercise_index">("set_active_exercise_index");
 export const sortExercisesOnDragEnd = createAction<ExerciseMetaData[], "exercise_overwrite">("exercise_overwrite");
 export const recoverWorkout = createAction("workout_recover");
 export const setWorkoutSorting = createAction<WorkoutSortingType, "workout_sort">("workout_sort");
@@ -57,6 +32,8 @@ export const createNewExercise = createAction("workout_create_new_exercise");
 export const createNewWorkout = createAction("workout_create_new_workout");
 export const saveEditedWorkout = createAction("workout_save_edited_workout");
 export const setEditedWorkoutName = createAction<string | undefined, "workout_set_edited_workout_name">("workout_set_edited_workout_name");
+export const handleMutateSet = createAction<{ setIndex: number; key: keyof WeightBasedExerciseData; value?: string | boolean }, "handle_mutate_set">("handle_mutate_set");
+export const markSetAsDone = createAction<{ setIndex: number }, "mark_set_as_done">("mark_set_as_done");
 
 export type WorkoutAction =
     | typeof setEditedWorkout.type
@@ -72,7 +49,9 @@ export type WorkoutAction =
     | typeof addDoneWorkout.type
     | typeof setWorkouts.type
     | typeof saveEditedWorkout.type
-    | typeof setEditedWorkoutName.type;
+    | typeof setEditedWorkoutName.type
+    | typeof handleMutateSet.type
+    | typeof markSetAsDone.type;
 
 export const emptyExercise: ExerciseMetaData = {
     name: "",
@@ -88,6 +67,25 @@ export const workoutReducer = createReducer<WorkoutState>({ workouts: [], sortin
         .addCase(setWorkoutState, (_, { payload }) => payload)
         .addCase(setEditedExercise, (state, action) => {
             state.editedExercise = action.payload;
+        })
+        .addCase(handleMutateSet, (state, action) => {
+            const trainedWorkout = state.trainedWorkout;
+            if (trainedWorkout) {
+                const doneSet = trainedWorkout.exerciseData[trainedWorkout.activeExerciseIndex].doneSets[action.payload.setIndex];
+                trainedWorkout.exerciseData[trainedWorkout.activeExerciseIndex].doneSets[action.payload.setIndex] = { ...doneSet, [action.payload.key]: action.payload.value };
+            }
+        })
+        .addCase(markSetAsDone, (state, action) => {
+            const trainedWorkout = state.trainedWorkout;
+            if (trainedWorkout) {
+                const exerciseIndex = trainedWorkout.activeExerciseIndex;
+                const doneSet = trainedWorkout.exerciseData[exerciseIndex].doneSets[action.payload.setIndex];
+                const exercise = trainedWorkout.exerciseData[exerciseIndex];
+                exercise.doneSets[action.payload.setIndex] = { ...doneSet, filled: true };
+                exercise.setIndex += 1;
+                exercise.activeSetIndex += 1;
+                trainedWorkout.exerciseData[exerciseIndex] = exercise;
+            }
         })
         .addCase(setEditedWorkoutName, (state, action) => {
             const workout = state.editedWorkout?.workout;
@@ -199,20 +197,33 @@ export const workoutReducer = createReducer<WorkoutState>({ workouts: [], sortin
                 state.workouts = sortWorkouts(newWorkouts, state.sorting);
             }
         })
+        .addCase(setActiveExerciseIndex, (state, action) => {
+            if (state.trainedWorkout?.activeExerciseIndex !== undefined) {
+                state.trainedWorkout.activeExerciseIndex = action.payload;
+            }
+        })
         .addCase(startWorkout, (state, action) => {
             const workout = state.workouts[action.payload];
-            const prefilledExerciseData = Array(workout.exercises.length)
+            const exerciseData: TrainedWorkout["exerciseData"] = Array(workout.exercises.length)
                 .fill(undefined)
-                .map((_, index) => {
-                    const metaData = workout.exercises[index];
-                    const numberOfSets = parseFloat(workout.exercises[index].sets ?? "0");
-                    return Array(numberOfSets).fill({ weight: metaData.weight, reps: metaData.reps, filled: false }) as DoneExerciseData[];
-                }) as DoneExerciseData[][];
+                .map((_, exerciseIndex) => {
+                    const metaData = workout.exercises[exerciseIndex];
+                    const numberOfSets = parseFloat(workout.exercises[exerciseIndex].sets ?? "0");
+                    const prefilledMetaData: TrainedWorkout["exerciseData"][number] = {
+                        name: metaData.name,
+                        activeSetIndex: 0,
+                        setIndex: 0,
+                        doneSets: Array(numberOfSets).fill({ weight: metaData.weight, reps: metaData.reps, filled: false }),
+                        note: "",
+                    };
+                    return prefilledMetaData;
+                });
 
             state.trainedWorkout = {
+                activeExerciseIndex: 0,
                 workout,
                 workoutIndex: action.payload,
-                doneExerciseData: prefilledExerciseData,
+                exerciseData,
             };
             state.workoutStartingTimestamp = Temporal.Now.instant().epochMilliseconds;
         });

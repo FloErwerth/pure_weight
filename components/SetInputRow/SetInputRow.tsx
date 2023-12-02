@@ -1,9 +1,7 @@
 import { Keyboard, View } from "react-native";
 import { styles } from "./styles";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { useAppSelector } from "../../store";
-import { WeightBasedExerciseData } from "../../store/types";
+import { useCallback, useMemo } from "react";
 import { HStack } from "../Stack/HStack/HStack";
 import { Button } from "../Themed/Button/Button";
 import { Center } from "../Center/Center";
@@ -11,37 +9,44 @@ import { Text } from "../Themed/ThemedText/Text";
 import { borderRadius } from "../../theme/border";
 import { ThemedTextInput } from "../Themed/ThemedTextInput/ThemedTextInput";
 import { useTheme } from "../../theme/context";
-
-import { getExerciseIndex } from "../../store/reducers/workout/workoutSelectors";
+import { AppState, useAppDispatch, useAppSelector } from "../../store";
+import * as Haptics from "expo-haptics";
+import { handleMutateSet, markSetAsDone } from "../../store/reducers/workout";
+import { getSetData } from "../../store/reducers/workout/workoutSelectors";
 
 interface SetInputRowProps {
     setIndex: number;
-    onSetDone?: (plainExerciseData: WeightBasedExerciseData) => void;
-    hasData: boolean;
-    data: WeightBasedExerciseData | undefined;
-    isEditable: boolean;
-    isActiveSet: boolean;
+    exerciseIndex: number;
 }
 
-export const SetInputRow = ({ onSetDone, setIndex, hasData, data, isEditable = true, isActiveSet }: SetInputRowProps) => {
+export const SetInputRow = ({ setIndex, exerciseIndex }: SetInputRowProps) => {
     const { primaryColor, mainColor, secondaryBackgroundColor, componentBackgroundColor, inputFieldBackgroundColor, textDisabled } = useTheme();
-    const exerciseIndex = useAppSelector(getExerciseIndex);
-    const [weight, setWeight] = useState(data?.weight);
-    const [reps, setReps] = useState(data?.reps);
+    const { isEditable, isActiveSet, hasData, weight, reps } = useAppSelector((state: AppState) => getSetData(state, setIndex, exerciseIndex));
+    const dispatch = useAppDispatch();
+    const handleSetWeight = useCallback(
+        (weight?: string) => {
+            dispatch(handleMutateSet({ setIndex, key: "weight", value: weight }));
+        },
+        [dispatch, setIndex],
+    );
 
-    useEffect(() => {
-        setWeight(data?.weight);
-        setReps(data?.reps);
-    }, [data, exerciseIndex]);
+    const handleSetReps = useCallback(
+        (reps?: string) => {
+            dispatch(handleMutateSet({ setIndex, key: "reps", value: reps }));
+        },
+        [dispatch, setIndex],
+    );
 
     const handleSetDone = useCallback(() => {
         if (isActiveSet) {
             Keyboard.dismiss();
             if (weight && reps) {
-                onSetDone?.({ weight, reps });
+                void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+                dispatch(markSetAsDone({ setIndex }));
             }
         }
-    }, [isActiveSet, weight, reps, onSetDone]);
+    }, [dispatch, isActiveSet, reps, setIndex, weight]);
+
     const activeStackStyles = useMemo(() => ({ backgroundColor: isActiveSet ? inputFieldBackgroundColor : "transparent" }), [inputFieldBackgroundColor, isActiveSet]);
 
     const computedTextfieldBackgroundColor = useMemo(() => {
@@ -81,7 +86,7 @@ export const SetInputRow = ({ onSetDone, setIndex, hasData, data, isEditable = t
             <Center style={styles.numberCenter}>
                 <View style={{ borderRadius }}>
                     <Text ghost style={textNumberStyles}>
-                        {setIndex}
+                        {setIndex + 1}
                     </Text>
                 </View>
             </Center>
@@ -93,13 +98,13 @@ export const SetInputRow = ({ onSetDone, setIndex, hasData, data, isEditable = t
                         returnKeyType="done"
                         style={textInputStyles}
                         value={weight}
-                        onChangeText={setWeight}
+                        onChangeText={handleSetWeight}
                         textAlign="center"
                         inputMode="decimal"
                     />
                 </Center>
                 <Center style={styles.center}>
-                    <ThemedTextInput editable={isEditable} returnKeyType="done" style={textInputStyles} value={reps} onChangeText={setReps} textAlign="center" inputMode="decimal" />
+                    <ThemedTextInput editable={isEditable} returnKeyType="done" style={textInputStyles} value={reps} onChangeText={handleSetReps} textAlign="center" inputMode="decimal" />
                 </Center>
                 <Center style={styles.center}>
                     <Button disabled={!isEditable} style={buttonStyles} onPress={handleSetDone}>

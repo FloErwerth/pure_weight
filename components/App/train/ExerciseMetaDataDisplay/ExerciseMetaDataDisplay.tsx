@@ -1,7 +1,6 @@
 import { trainStyles } from "../trainStyles";
 import { Pressable, TextStyle } from "react-native";
 import { useCallback, useMemo } from "react";
-import { ExerciseMetaData, WeightBasedExerciseMetaData } from "../../../../store/types";
 import { HStack } from "../../../Stack/HStack/HStack";
 import { VStack } from "../../../Stack/VStack/VStack";
 import { Text } from "../../../Themed/ThemedText/Text";
@@ -11,22 +10,28 @@ import { EditableExerciseModal } from "../../../EditableExerciseModal/EditableEx
 import { useBottomSheetRef } from "../../../BottomSheetModal/ThemedButtomSheetModal";
 import { styles } from "./styles";
 import { ThemedMaterialCommunityIcons } from "../../../Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
+import { AppState, useAppSelector } from "../../../../store";
+import { getWeightBasedExerciseMetaDataFromTrainedWorkout } from "../../../../store/reducers/workout/workoutSelectors";
 
 interface ExerciseMetaDataDisplayProps {
     exerciseIndex: number;
-    exerciseMetaData?: WeightBasedExerciseMetaData;
 }
 
 interface SmallMetadataDisplayProps {
-    exerciseMetaData: ExerciseMetaData;
     style?: TextStyle;
+    exerciseIndex: number;
 }
 
-export const SmallMetadataDisplay = ({ style, exerciseMetaData }: SmallMetadataDisplayProps) => {
+export const SmallMetadataDisplay = ({ style, exerciseIndex }: SmallMetadataDisplayProps) => {
     const { t } = useTranslation();
     const textStyle = useMemo(() => [trainStyles.exerciseMetaText, style], [style]);
+    const exerciseMetaData = useAppSelector((state: AppState) => getWeightBasedExerciseMetaDataFromTrainedWorkout(state, exerciseIndex));
 
-    const isSingle = useMemo(() => parseFloat(exerciseMetaData.sets) === 1, [exerciseMetaData.sets]);
+    const isSingle = useMemo(() => parseFloat(exerciseMetaData?.sets ?? "0") === 1, [exerciseMetaData?.sets]);
+
+    if (!exerciseMetaData) {
+        return null;
+    }
 
     return (
         <HStack>
@@ -51,12 +56,13 @@ export const SmallMetadataDisplay = ({ style, exerciseMetaData }: SmallMetadataD
     );
 };
 
-export const ExerciseMetaDataDisplay = ({ exerciseMetaData }: ExerciseMetaDataDisplayProps) => {
+export const ExerciseMetaDataDisplay = ({ exerciseIndex }: ExerciseMetaDataDisplayProps) => {
     const [addExerciseRef] = useBottomSheetRef();
     const handleShowModal = useCallback(() => {
         void Haptics.selectionAsync();
         addExerciseRef.current?.present();
     }, [addExerciseRef]);
+    const exerciseMetaData = useAppSelector((state: AppState) => getWeightBasedExerciseMetaDataFromTrainedWorkout(state, exerciseIndex));
 
     const handleClose = useCallback(() => {
         addExerciseRef.current?.close();
@@ -71,7 +77,7 @@ export const ExerciseMetaDataDisplay = ({ exerciseMetaData }: ExerciseMetaDataDi
             <HStack style={styles.wrapper}>
                 <VStack>
                     <Text style={trainStyles.exerciseName}>{exerciseMetaData?.name}</Text>
-                    <SmallMetadataDisplay exerciseMetaData={exerciseMetaData} />
+                    <SmallMetadataDisplay exerciseIndex={exerciseIndex} />
                 </VStack>
                 <Pressable onPress={handleShowModal} style={styles.pressable}>
                     <ThemedMaterialCommunityIcons name="pencil" size={30} />

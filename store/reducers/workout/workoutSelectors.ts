@@ -28,7 +28,7 @@ export const getLatestWorkoutDate = createSelector([getWorkoutDates], (dates) =>
         (dateA, dateB) => Temporal.Instant.from(dateA.concat("T00:00+00:00") as string).epochMilliseconds - Temporal.Instant.from(dateB.concat("T00:00+00:00") as string).epochMilliseconds,
     )[dates.length - 1];
 });
-export const getSelectedTrainingDayByIndex = createSelector([getWorkouts], (trainings) => {
+export const getWorkoutByIndex = createSelector([getWorkouts], (trainings) => {
     return (index: number) => {
         return trainings[index];
     };
@@ -133,7 +133,7 @@ export const getPreviousTraining = createSelector([getEditedWorkout, getLanguage
     }
     return foundEntries.get(editedWorkout?.workout.exercises[exerciseIndex].name);
 });
-export const getOverallTrainingTrend = createSelector([getSelectedTrainingDayByIndex], (trainingDayByIndex) => {
+export const getOverallTrainingTrend = createSelector([getWorkoutByIndex], (trainingDayByIndex) => {
     return (workoutIndex: number) => {
         const workout = trainingDayByIndex(workoutIndex);
 
@@ -234,9 +234,49 @@ export const getOverallTrainingTrend = createSelector([getSelectedTrainingDayByI
         return undefined;
     };
 });
-export const getPauseTime = createSelector([getEditedWorkout, (editedWorkout, exerciseIndex: number) => exerciseIndex], (editedWorkout, exerciseIndex) => {
-    return editedWorkout?.workout.exercises[exerciseIndex].pause;
+export const getPauseTime = createSelector([getTrainedWorkout], (trainedWorkout) => {
+    const exerciseIndex = trainedWorkout?.activeExerciseIndex;
+
+    if (!exerciseIndex) {
+        return undefined;
+    }
+
+    return trainedWorkout?.workout.exercises[exerciseIndex].pause;
 });
 export const getIsDoneWithTraining = createSelector([getTrainedWorkout], (trainedWorkout) => {
-    return Boolean(trainedWorkout?.doneExerciseData.every((doneExercise) => doneExercise.every(({ sets }) => sets.every((set) => set.filled === true))));
+    return Boolean(trainedWorkout?.exerciseData.every((doneExercise) => doneExercise.doneSets.every(({ filled }) => filled)));
+});
+export const getWeightBasedExerciseMetaDataFromTrainedWorkout = createSelector([getTrainedWorkout, (trainedWorkout, exerciseIndex?: number) => exerciseIndex], (trainedWorkout, exerciseIndex) => {
+    if (exerciseIndex === undefined) {
+        return undefined;
+    }
+    return trainedWorkout?.workout.exercises[exerciseIndex];
+});
+export const getActiveSetIndex = createSelector([getTrainedWorkout, (trainedWorkout, exerciseIndex: number) => exerciseIndex], (trainedWorkout, exerciesIndex) => {
+    return trainedWorkout?.exerciseData[exerciesIndex].activeSetIndex;
+});
+export const getActiveExerciseIndex = createSelector([getTrainedWorkout], (trainedWorkout) => {
+    return trainedWorkout?.activeExerciseIndex;
+});
+export const getSetData = createSelector(
+    [getTrainedWorkout, (trainedWorkout, setIndex: number) => setIndex, (trainedWorkout, setIndex, exerciseIndex: number) => exerciseIndex],
+    (trainedWorkout, setIndex, exerciseIndex) => {
+        const exerciseData = trainedWorkout?.exerciseData[exerciseIndex];
+        const hasData = Boolean(exerciseData?.doneSets[setIndex].filled);
+
+        return {
+            weight: exerciseData?.doneSets[setIndex].weight,
+            reps: exerciseData?.doneSets[setIndex].reps,
+            isEditable: hasData || setIndex === exerciseData?.activeSetIndex,
+            isActiveSet: setIndex === exerciseData?.activeSetIndex,
+            hasData,
+        };
+    },
+);
+export const getExerciseData = createSelector([getTrainedWorkout, (trainedWorkout, exerciseIndex: number) => exerciseIndex], (trainedWorkout, exerciseIndex) => {
+    const exerciseData = trainedWorkout?.exerciseData[exerciseIndex];
+    return {
+        data: exerciseData,
+        isActiveExercise: trainedWorkout?.activeExerciseIndex === exerciseIndex,
+    };
 });

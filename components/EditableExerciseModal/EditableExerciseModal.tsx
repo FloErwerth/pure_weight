@@ -33,14 +33,6 @@ const validateData = (data: Partial<ExerciseMetaData>) => {
             errors.push("create_weight");
         }
     }
-    if (data.type === "TIME_BASED") {
-        if (!data.timePerSet) {
-            errors.push("create_timePerSet");
-        }
-        if (!data.sets) {
-            errors.push("create_sets");
-        }
-    }
     return errors;
 };
 

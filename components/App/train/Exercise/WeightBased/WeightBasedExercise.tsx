@@ -5,54 +5,25 @@ import { ThemedView } from "../../../../Themed/ThemedView/View";
 import { Pressable, ScrollView, View } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { PreviousTraining } from "../../../../PreviousTraining/PreviousTraining";
-import { WeightBasedExerciseData } from "../../../../../store/types";
-import { useCallback, useId, useMemo, useState } from "react";
+import { useCallback, useId, useMemo } from "react";
 import { AddNoteModal } from "../../../../AddNoteModal/AddNoteModal";
 import { useTheme } from "../../../../../theme/context";
 import { borderRadius } from "../../../../../theme/border";
 import { TrainingHeader } from "../../TrainingHeader/TrainingHeader";
 import { SetInputRow } from "../../../../SetInputRow/SetInputRow";
-import * as Haptics from "expo-haptics";
 import { AppState, useAppSelector } from "../../../../../store";
 import { useBottomSheetRef } from "../../../../BottomSheetModal/ThemedButtomSheetModal";
-
-import { getSpecificNumberOfSets, getWeightBasedExerciseMetaData } from "../../../../../store/reducers/workout/workoutSelectors";
+import { getExerciseData } from "../../../../../store/reducers/workout/workoutSelectors";
 
 interface WeightBasedExerciseProps {
     exerciseIndex: number;
-    onSetDone: (exerciseIndex: number, setIndex: number, data: WeightBasedExerciseData) => void;
-    onSaveNote: (exerciseIndex: number, note: string | undefined) => void;
-    note?: string;
 }
-const useGeneratedSetData = (exerciseIndex: number) => {
-    const getNumberOfSets = useAppSelector(getSpecificNumberOfSets);
-    const metaData = useAppSelector((state: AppState) => getWeightBasedExerciseMetaData(state, exerciseIndex));
-    const numberOfSets = useMemo(() => getNumberOfSets(exerciseIndex), [exerciseIndex, getNumberOfSets]);
-    const generatedSets = useMemo(() => {
-        if (!metaData) {
-            return new Map();
-        }
-        const map = new Map<number, WeightBasedExerciseData & { filled: boolean }>();
-        Array(numberOfSets)
-            .fill(undefined)
-            .forEach((_, index) => {
-                map.set(index, { ...metaData, filled: false });
-            });
-        return map;
-    }, [metaData, numberOfSets]);
-    const [doneSets, setDoneSets] = useState(generatedSets);
 
-    return [metaData, doneSets, setDoneSets] as const;
-};
-
-export const Exercise = ({ exerciseIndex, onSetDone }: WeightBasedExerciseProps) => {
-    const [currentSetIndex, setCurrentSetIndex] = useState<number>(0);
+export const Exercise = ({ exerciseIndex }: WeightBasedExerciseProps) => {
     const [editNoteModalRef, open, close] = useBottomSheetRef();
     const showEditNoteModalTitleStyle = useMemo(() => ({ padding: 10, paddingHorizontal: 15, alignSelf: "center" }) as const, []);
     const { mainColor, componentBackgroundColor } = useTheme();
-    const [metaData, doneSets, setDoneSets] = useGeneratedSetData(exerciseIndex);
-
-    const [activeSetIndex, setActiveSetIndex] = useState(0);
+    const { data } = useAppSelector((state: AppState) => getExerciseData(state, exerciseIndex));
     const id = useId();
     const hideNoteModal = useCallback(() => {
         close();
@@ -62,36 +33,18 @@ export const Exercise = ({ exerciseIndex, onSetDone }: WeightBasedExerciseProps)
         open();
     }, [open]);
 
-    const handleSetDone = useCallback(
-        (data: WeightBasedExerciseData, index: number) => {
-            void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-            const newIndex = currentSetIndex + 1;
-            setCurrentSetIndex(newIndex);
-            setActiveSetIndex(newIndex);
-            const newDoneSets = new Map(doneSets.entries());
-            newDoneSets.set(index, { ...data, filled: true });
-            setDoneSets(newDoneSets);
-            onSetDone(exerciseIndex, index, data);
-        },
-        [currentSetIndex, doneSets, exerciseIndex, onSetDone, setDoneSets],
-    );
-
     const mappedDoneSets = useMemo(
         () =>
-            Array.from(doneSets.values()).map((exerciseMetadata, index) => ({
-                data: exerciseMetadata,
-                editable: doneSets.get(index)?.filled || index === currentSetIndex,
-                hasData: Boolean(doneSets.get(index)?.filled),
-                onSetDone: (plainExerciseData: WeightBasedExerciseData) => handleSetDone(plainExerciseData, index),
+            data?.doneSets?.map((exerciseMetadata, index) => ({
                 key: index * Math.random(),
             })),
-        [currentSetIndex, doneSets, handleSetDone],
+        [data?.doneSets],
     );
 
     return (
         <View key={id} style={trainStyles.carouselWrapper}>
             <HStack background style={trainStyles.headerWrapper}>
-                <ExerciseMetaDataDisplay exerciseMetaData={metaData} exerciseIndex={exerciseIndex} />
+                <ExerciseMetaDataDisplay exerciseIndex={exerciseIndex} />
                 <ThemedView style={trainStyles.noteButtonWrapper}>
                     <Pressable style={showEditNoteModalTitleStyle} onPress={showNoteModal}>
                         <MaterialCommunityIcons name="note-edit-outline" color={mainColor} size={30} />
@@ -101,11 +54,11 @@ export const Exercise = ({ exerciseIndex, onSetDone }: WeightBasedExerciseProps)
             <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={trainStyles.innerWrapper}>
                 <ThemedView style={{ paddingTop: 15, paddingBottom: 10, borderRadius, backgroundColor: componentBackgroundColor }}>
                     <TrainingHeader />
-                    {mappedDoneSets.map(({ data, editable, hasData, onSetDone, key }, index) => {
-                        return <SetInputRow key={key} isActiveSet={activeSetIndex === index} data={data} isEditable={editable} hasData={hasData} onSetDone={onSetDone} setIndex={index + 1} />;
+                    {mappedDoneSets?.map(({ key }, setIndex) => {
+                        return <SetInputRow key={key} exerciseIndex={exerciseIndex} setIndex={setIndex} />;
                     })}
                 </ThemedView>
-                <PreviousTraining activeSetIndex={activeSetIndex} exerciseIndex={exerciseIndex} />
+                <PreviousTraining exerciseIndex={exerciseIndex} />
             </ScrollView>
             <AddNoteModal index={exerciseIndex} reference={editNoteModalRef} onRequestClose={hideNoteModal} />
         </View>

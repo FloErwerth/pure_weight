@@ -12,22 +12,22 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { ThemedView } from "../Themed/ThemedView/View";
 import { ThemedButtomSheetModal, useBottomSheetRef } from "../BottomSheetModal/ThemedButtomSheetModal";
 
-import { getPreviousTraining } from "../../store/reducers/workout/workoutSelectors";
+import { getActiveSetIndex, getPreviousTraining } from "../../store/reducers/workout/workoutSelectors";
 
 interface PreviousTrainingProps {
     exerciseIndex: number;
-    activeSetIndex: number;
 }
-export const PreviousTraining = ({ exerciseIndex, activeSetIndex }: PreviousTrainingProps) => {
+export const PreviousTraining = ({ exerciseIndex }: PreviousTrainingProps) => {
     const previousWorkout = useAppSelector((state: AppState) => getPreviousTraining(state, state.settingsState.language, exerciseIndex));
     const { t } = useTranslation();
     const { textDisabled, componentBackgroundColor, mainColor, secondaryColor, inputFieldBackgroundColor } = useTheme();
     const [ref] = useBottomSheetRef();
+    const activeSetIndex = useAppSelector((state: AppState) => getActiveSetIndex(state, exerciseIndex));
     const mappedData = useMemo(
         () =>
             previousWorkout?.sets.map(({ weight, reps }, index) => {
                 const highlight = activeSetIndex === index;
-                const filled = activeSetIndex > index;
+                const filled = activeSetIndex !== undefined && activeSetIndex > index;
                 const highlightWrapperStyles = { backgroundColor: highlight ? inputFieldBackgroundColor : "transparent" };
                 const computedColor = highlight || filled ? mainColor : secondaryColor;
                 return (

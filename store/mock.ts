@@ -76,10 +76,7 @@ export const mockState: AppState = {
         language: "en",
     },
     workoutState: {
-        setIndex: 0,
-        workoutIndex: 0,
         sorting: "A_Z",
-        exerciseIndex: 0,
         workouts: [
             {
                 name: "Real Back",
@@ -110,9 +107,6 @@ export const emptyState = {
     },
     workoutState: {
         sorting: "LONGEST_AGO",
-        exerciseIndex: 0,
-        workoutIndex: 0,
-        setIndex: 0,
         workouts: [],
     },
     metadataState: {

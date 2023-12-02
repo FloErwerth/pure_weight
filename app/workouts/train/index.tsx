@@ -15,9 +15,9 @@ import Carousel from "react-native-reanimated-carousel/src/Carousel";
 import { Exercise } from "../../../components/App/train/Exercise/WeightBased/WeightBasedExercise";
 import { useBottomSheetRef } from "../../../components/BottomSheetModal/ThemedButtomSheetModal";
 import { workoutContext } from "../../../components/App/train/workoutContext";
-import { addDoneWorkout } from "../../../store/reducers/workout";
+import { addDoneWorkout, setActiveExerciseIndex } from "../../../store/reducers/workout";
 
-import { getIsDoneWithTraining, getTrainedWorkout } from "../../../store/reducers/workout/workoutSelectors";
+import { getActiveExerciseIndex, getIsDoneWithTraining, getTrainedWorkout } from "../../../store/reducers/workout/workoutSelectors";
 
 export type DoneExercises = Map<number, { note?: string; sets: Map<number, WeightBasedExerciseData> }>;
 function mapOfMapsTo2DArray(map: DoneExercises) {
@@ -38,6 +38,7 @@ export function Train() {
     const confirmButtonOpacity = useRef(new Animated.Value(0)).current;
     const [ref, _, close] = useBottomSheetRef();
     const isDone = useAppSelector(getIsDoneWithTraining);
+    const exerciseIndex = useAppSelector(getActiveExerciseIndex);
 
     useEffect(() => {
         if (isDone) {
@@ -80,17 +81,6 @@ export function Train() {
         }
     }, [handleReset, handleSaveTrainingData, isDone, ref]);
 
-    const handleSetDone = useCallback(
-        (exerciseIndex: number, setIndex: number, data: WeightBasedExerciseData) => {
-            const newDoneSets = new Map(doneExercises.entries());
-            const newSetMap = new Map(newDoneSets.get(exerciseIndex)?.sets);
-            newSetMap.set(setIndex, data);
-            newDoneSets.set(exerciseIndex, { note: newDoneSets.get(exerciseIndex)?.note, sets: newSetMap });
-            setDoneExercises(newDoneSets);
-        },
-        [doneExercises],
-    );
-
     const handleSaveNote = useCallback(
         (exerciseIndex: number, note: string | undefined) => {
             const newDoneExercises = new Map(doneExercises.entries());
@@ -114,14 +104,18 @@ export function Train() {
         }));
     }, [navigate, trainedWorkout]);
 
-    const renderItem = useCallback(
-        ({ index }: { index: number }) => {
-            return <Exercise onSaveNote={handleSaveNote} onSetDone={handleSetDone} exerciseIndex={index} />;
-        },
-        [handleSaveNote, handleSetDone],
-    );
+    const renderItem = useCallback(({ index }: { index: number }) => {
+        return <Exercise exerciseIndex={index} />;
+    }, []);
 
     const contextValue = useMemo(() => ({ doneSetsThisExercise: doneExercises, handleSaveNote }), [doneExercises, handleSaveNote]);
+
+    const handleSetActiveExerciseIndex = useCallback(
+        (exerciseIndex: number) => {
+            dispatch(setActiveExerciseIndex(exerciseIndex));
+        },
+        [dispatch],
+    );
 
     return (
         <ThemedView background style={trainStyles.wrapper} stretch>
@@ -135,12 +129,22 @@ export function Train() {
             </ThemedView>
             <ThemedView background stretch>
                 <workoutContext.Provider value={contextValue}>
-                    <Carousel scrollAnimationDuration={200} width={Dimensions.get("screen").width} loop={false} vertical={false} renderItem={renderItem} data={mappedExercises} />
+                    <Carousel
+                        onSnapToItem={handleSetActiveExerciseIndex}
+                        scrollAnimationDuration={200}
+                        width={Dimensions.get("screen").width}
+                        loop={false}
+                        vertical={false}
+                        renderItem={renderItem}
+                        data={mappedExercises}
+                    />
                 </workoutContext.Provider>
             </ThemedView>
-            <HStack background style={buttonsStyle}>
-                <StopwatchPopover />
-            </HStack>
+            {exerciseIndex !== undefined && (
+                <HStack background style={buttonsStyle}>
+                    <StopwatchPopover />
+                </HStack>
+            )}
             <AlertModal reference={ref} title={alertModalConfig.title} content={alertModalConfig.content} onConfirm={handleNotDoneConfirm} onCancel={handleCloseAlert} />
         </ThemedView>
     );

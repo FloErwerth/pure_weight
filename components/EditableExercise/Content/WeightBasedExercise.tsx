@@ -19,42 +19,14 @@ export const WeightBasedExercise = () => {
         },
         [dispatch],
     );
-
-    if (editedExercise?.exercise.type === "TIME_BASED") {
-        return null;
-    }
-
     return (
         <ThemedView ghost stretch style={styles.inputWrapper}>
             <HStack style={styles.inputWrapper} ghost>
-                <EditableExerciseInputRow
-                    stretch
-                    i18key="weight"
-                    setValue={(weight) => handleEditExercise?.("weight", weight)}
-                    errorKey={"create_weight"}
-                    value={editedExercise?.exercise.weight}
-                />
-                <EditableExerciseInputRow
-                    stretch
-                    i18key="sets"
-                    setValue={(sets) => handleEditExercise?.("sets", sets)}
-                    errorKey={"create_sets"}
-                    value={editedExercise?.exercise.sets}
-                />
-                <EditableExerciseInputRow
-                    stretch
-                    i18key="reps"
-                    setValue={(reps) => handleEditExercise?.("reps", reps)}
-                    errorKey={"create_reps"}
-                    value={editedExercise?.exercise.reps}
-                />
+                <EditableExerciseInputRow stretch i18key="weight" setValue={(weight) => handleEditExercise?.("weight", weight)} errorKey={"create_weight"} value={editedExercise?.exercise.weight} />
+                <EditableExerciseInputRow stretch i18key="sets" setValue={(sets) => handleEditExercise?.("sets", sets)} errorKey={"create_sets"} value={editedExercise?.exercise.sets} />
+                <EditableExerciseInputRow stretch i18key="reps" setValue={(reps) => handleEditExercise?.("reps", reps)} errorKey={"create_reps"} value={editedExercise?.exercise.reps} />
             </HStack>
-            <EditableExerciseInputRow
-                type="MINUTES_SECONDS"
-                i18key="pause"
-                setValue={(pause) => handleEditExercise?.("pause", pause)}
-                value={editedExercise?.exercise?.pause}
-            />
+            <EditableExerciseInputRow type="MINUTES_SECONDS" i18key="pause" setValue={(pause) => handleEditExercise?.("pause", pause)} value={editedExercise?.exercise?.pause} />
         </ThemedView>
     );
 };
