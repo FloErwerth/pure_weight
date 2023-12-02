@@ -1,7 +1,7 @@
 import { Keyboard, View } from "react-native";
 import { styles } from "./styles";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo } from "react";
 import { HStack } from "../Stack/HStack/HStack";
 import { Center } from "../Center/Center";
 import { Text } from "../Themed/ThemedText/Text";
@@ -20,16 +20,9 @@ interface SetInputRowProps {
 }
 
 export const SetInputRow = ({ setIndex, exerciseIndex }: SetInputRowProps) => {
-    const { primaryColor, mainColor, secondaryInputFieldBackgroundColor, secondaryBackgroundColor, componentBackgroundColor, inputFieldBackgroundColor, textDisabled } = useTheme();
+    const { primaryColor, mainColor, secondaryBackgroundColor, componentBackgroundColor, inputFieldBackgroundColor, textDisabled } = useTheme();
     const { isConfirmed, isEditable, weight, isActiveSet, reps } = useAppSelector((state: AppState) => getSetData(state, setIndex, exerciseIndex));
     const dispatch = useAppDispatch();
-    const [isFocused, setIsFocused] = useState(false);
-
-    useEffect(() => {
-        if (setIndex === 0) {
-            setIsFocused(true);
-        }
-    }, []);
 
     const handleSetWeight = useCallback(
         (newWeight?: string) => {
@@ -52,48 +45,32 @@ export const SetInputRow = ({ setIndex, exerciseIndex }: SetInputRowProps) => {
             dispatch(handleMutateSet({ setIndex, key: "weight", value: weight }));
             dispatch(handleMutateSet({ setIndex, key: "reps", value: reps }));
             dispatch(markSetAsDone({ setIndex }));
-            setIsFocused(false);
         }
     }, [dispatch, reps, setIndex, weight]);
 
     const activeStackStyles = useMemo(() => {
-        const getBackgroundColor = () => {
-            if (isFocused && isActiveSet) {
-                return inputFieldBackgroundColor;
-            }
-            if (isFocused && !isActiveSet) {
-                return secondaryInputFieldBackgroundColor;
-            }
-            return "transparent";
-        };
-        const getBorderColor = () => {
-            if (isActiveSet && !isFocused) {
-                return secondaryInputFieldBackgroundColor;
-            }
-            return "transparent";
-        };
-        return { backgroundColor: getBackgroundColor(), borderColor: getBorderColor(), borderWidth: 2 };
-    }, [inputFieldBackgroundColor, isActiveSet, isFocused, secondaryInputFieldBackgroundColor]);
+        return { backgroundColor: isActiveSet ? inputFieldBackgroundColor : "transparent" };
+    }, [inputFieldBackgroundColor, isActiveSet]);
 
     const computedTextfieldBackgroundColor = useMemo(() => {
-        if (!isFocused) {
+        if (!isActiveSet) {
             if (isEditable) {
                 return secondaryBackgroundColor;
             }
             return "transparent";
         }
         return secondaryBackgroundColor;
-    }, [isEditable, isFocused, secondaryBackgroundColor]);
+    }, [isActiveSet, isEditable, secondaryBackgroundColor]);
 
     const computedButtonBackgroundColor = useMemo(() => {
-        if (!isFocused) {
+        if (!isActiveSet) {
             if (isEditable) {
                 return componentBackgroundColor;
             }
             return "transparent";
         }
         return componentBackgroundColor;
-    }, [componentBackgroundColor, isEditable, isFocused]);
+    }, [componentBackgroundColor, isEditable, isActiveSet]);
 
     const computedColor = useMemo(() => {
         if (!isEditable) {
@@ -105,15 +82,7 @@ export const SetInputRow = ({ setIndex, exerciseIndex }: SetInputRowProps) => {
     const textNumberStyles = useMemo(() => [styles.textNumber, { color: computedColor }], [computedColor]);
     const textInputStyles = useMemo(() => [styles.textInput, { backgroundColor: computedTextfieldBackgroundColor, color: computedColor }], [computedTextfieldBackgroundColor, computedColor]);
     const buttonStyles = useMemo(() => ({ ...styles.button, ...{ backgroundColor: computedButtonBackgroundColor } }), [computedButtonBackgroundColor]);
-    const iconStyle = useMemo(() => ({ color: isConfirmed ? "green" : isFocused ? primaryColor : textDisabled }), [isConfirmed, isFocused, primaryColor, textDisabled]);
-
-    const handleBlur = useCallback(() => {
-        setIsFocused(false);
-    }, []);
-
-    const handleFocus = useCallback(() => {
-        setIsFocused(true);
-    }, []);
+    const iconStyle = useMemo(() => ({ color: isConfirmed ? "green" : isActiveSet ? primaryColor : textDisabled }), [isConfirmed, isActiveSet, primaryColor, textDisabled]);
 
     return (
         <HStack style={[styles.vStack, activeStackStyles]}>
@@ -127,8 +96,6 @@ export const SetInputRow = ({ setIndex, exerciseIndex }: SetInputRowProps) => {
             <HStack ghost stretch style={styles.inputStack}>
                 <Center style={styles.center}>
                     <ThemedTextInput
-                        onBlur={handleBlur}
-                        onFocus={handleFocus}
                         onStartShouldSetResponder={() => true}
                         editable={isEditable}
                         returnKeyType="done"
@@ -140,17 +107,7 @@ export const SetInputRow = ({ setIndex, exerciseIndex }: SetInputRowProps) => {
                     />
                 </Center>
                 <Center style={styles.center}>
-                    <ThemedTextInput
-                        onBlur={handleBlur}
-                        onFocus={handleFocus}
-                        editable={isEditable}
-                        returnKeyType="done"
-                        style={textInputStyles}
-                        value={reps}
-                        onChangeText={handleSetReps}
-                        textAlign="center"
-                        inputMode="decimal"
-                    />
+                    <ThemedTextInput editable={isEditable} returnKeyType="done" style={textInputStyles} value={reps} onChangeText={handleSetReps} textAlign="center" inputMode="decimal" />
                 </Center>
                 <Center style={styles.center}>
                     <ThemedPressable disabled={!isEditable} style={buttonStyles} onPress={handleSetDone}>
