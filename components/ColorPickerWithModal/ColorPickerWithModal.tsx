@@ -1,10 +1,12 @@
 import { ThemedPressable } from "../Themed/Pressable/Pressable";
 import { ThemedButtomSheetModal, useBottomSheetRef } from "../BottomSheetModal/ThemedButtomSheetModal";
-import { View } from "react-native";
 import ColorPicker from "react-native-wheel-color-picker";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo } from "react";
 import { styles } from "../App/create/styles";
 import { ThemedView } from "../Themed/ThemedView/View";
+import { useAppDispatch, useAppSelector } from "../../store";
+import { setColor } from "../../store/reducers/workout";
+import { getColor } from "../../store/reducers/workout/workoutSelectors";
 
 export function getInvertedColor(hex?: string) {
     if (!hex) {
@@ -31,34 +33,18 @@ function padZero(str: string, len?: number) {
     return (zeros + str).slice(-internalLen);
 }
 
-const COLORS = ["#000000", "#888888", "#ed1c24", "#d11cd5", "#1633e6", "#00aeef", "#00c85d", "#57ff0a", "#ffde17", "#f26522"];
-
-export const useColor = (initialColor?: string) => {
-    return useMemo(() => initialColor ?? COLORS[Math.floor((COLORS.length - 1) * Math.random())], [initialColor]);
-};
-
-const useColorPicker = (initialColor?: string) => {
-    const randomColor = useColor();
-    const [color, setColor] = useState(initialColor ?? randomColor);
-
+export const useColorPickerComponents = () => {
+    const { color, palette } = useAppSelector(getColor);
+    const dispatch = useAppDispatch();
     const style = useMemo(() => [styles.colorButton, { backgroundColor: color }], [color]);
 
-    return useMemo(() => [style, color, setColor] as const, [color, style]);
-};
-
-export const useColorPickerComponents = (initialColor: string) => {
-    useEffect(() => {
-        setColor(initialColor);
-    }, [initialColor]);
-
-    const [pickerStyle, color, setColor] = useColorPicker(initialColor);
     const [colorPickerRef, openPicker] = useBottomSheetRef();
 
     const handlePickColor = useCallback(
         (color: string) => {
-            setColor(color);
+            dispatch(setColor(color));
         },
-        [setColor],
+        [dispatch],
     );
 
     return useMemo(
@@ -66,18 +52,18 @@ export const useColorPickerComponents = (initialColor: string) => {
             [
                 () => (
                     <ThemedButtomSheetModal key="COLORMODAL" snapPoints={["60%"]} ref={colorPickerRef}>
-                        <View style={{ padding: 10, height: "90%" }}>
-                            <ColorPicker onColorChangeComplete={handlePickColor} color={color} palette={COLORS} />
-                        </View>
+                        <ThemedView style={styles.padding}>
+                            <ColorPicker onColorChange={handlePickColor} color={color} palette={palette} />
+                        </ThemedView>
                     </ThemedButtomSheetModal>
                 ),
                 () => (
                     <ThemedView ghost style={styles.colorButtonWrapper}>
-                        <ThemedPressable key="COLORPICKER" ghost onPress={openPicker} style={pickerStyle} />
+                        <ThemedPressable key="COLORPICKER" ghost onPress={openPicker} style={style} />
                     </ThemedView>
                 ),
                 color,
             ] as const,
-        [color, colorPickerRef, handlePickColor, openPicker, pickerStyle],
+        [color, colorPickerRef, handlePickColor, openPicker, style],
     );
 };

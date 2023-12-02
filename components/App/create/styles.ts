@@ -8,6 +8,9 @@ export const styles = StyleSheet.create({
         alignContent: "center",
     },
     workoutNameInput: { width: Dimensions.get("window").width * 0.75, fontSize: 26 },
+    padding: {
+        padding: 10,
+    },
     vStack: {
         padding: 15,
         gap: 10,

@@ -19,7 +19,7 @@ import { PageContent } from "../../../components/PageContent/PageContent";
 import { ThemedView } from "../../../components/Themed/ThemedView/View";
 import { useBottomSheetRef } from "../../../components/BottomSheetModal/ThemedButtomSheetModal";
 import { HStack } from "../../../components/Stack/HStack/HStack";
-import { useColor, useColorPickerComponents } from "../../../components/ColorPickerWithModal/ColorPickerWithModal";
+import { useColorPickerComponents } from "../../../components/ColorPickerWithModal/ColorPickerWithModal";
 import { ThemedTextInput } from "../../../components/Themed/ThemedTextInput/ThemedTextInput";
 import { cleanErrors, setError } from "../../../store/reducers/errors";
 import {
@@ -53,8 +53,7 @@ export function Create() {
     const dispatch = useAppDispatch();
     const [alertRef, openAlert, closeAlert] = useBottomSheetRef();
     const [addRef, openAdd, closeAdd] = useBottomSheetRef();
-    const initialColor = useColor(editedWorkout?.workout.calendarColor);
-    const [PickerModal, PickerButton] = useColorPickerComponents(initialColor);
+    const [PickerModal, PickerButton] = useColorPickerComponents();
 
     const handleSetWorkoutName = useCallback(
         (value?: string) => {
