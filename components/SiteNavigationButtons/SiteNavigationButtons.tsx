@@ -14,7 +14,8 @@ interface SiteNavigationButtonsProps {
     handleConfirmIcon?: { name: "check" | "plus"; size: number };
     title?: string;
     titleFontSize?: number;
-    disabled?: boolean;
+    confirmButtonDisabled?: boolean;
+    closeButtonDisabled?: boolean;
     confirmButtonRef?: RefObject<View>;
 }
 
@@ -23,15 +24,13 @@ export const SiteNavigationButtons = ({
     title,
     titleFontSize = 30,
     handleConfirm,
-    disabled = false,
+    confirmButtonDisabled = false,
+    closeButtonDisabled = false,
     handleConfirmIcon = { name: "check", size: 30 },
     confirmButtonRef,
     handleConfirmOpacity,
 }: SiteNavigationButtonsProps) => {
-    const titleStyles = useMemo(
-        () => ({ ...styles.title, fontSize: titleFontSize, paddingVertical: titleFontSize <= 40 ? (40 - titleFontSize) / 2 : 0 }),
-        [titleFontSize],
-    );
+    const titleStyles = useMemo(() => ({ ...styles.title, fontSize: titleFontSize, paddingVertical: titleFontSize <= 40 ? (40 - titleFontSize) / 2 : 0 }), [titleFontSize]);
 
     const titleWrapperStyles = useMemo(() => [{ paddingLeft: !handleBack ? 20 : 10 }, styles.titleWrapper], [handleBack]);
 
@@ -58,7 +57,7 @@ export const SiteNavigationButtons = ({
         <HStack background style={styles.headerWrapper}>
             <HStack background style={titleWrapperStyles}>
                 {handleBack && (
-                    <Pressable disabled={disabled} onPress={handleBackButton}>
+                    <Pressable disabled={closeButtonDisabled} onPress={handleBackButton}>
                         <MaterialCommunityIcons color={mainColor} size={Math.min(28, titleFontSize)} name="arrow-left" />
                     </Pressable>
                 )}
@@ -68,7 +67,7 @@ export const SiteNavigationButtons = ({
             </HStack>
             <Animated.View style={{ opacity: handleConfirmOpacity !== undefined ? handleConfirmOpacity : 1 }}>
                 {handleConfirm && (
-                    <Pressable ref={confirmButtonRef} disabled={disabled} onPress={handleConfirmButton}>
+                    <Pressable ref={confirmButtonRef} disabled={confirmButtonDisabled} onPress={handleConfirmButton}>
                         <MaterialCommunityIcons color={mainColor} size={handleConfirmIcon?.size} name={handleConfirmIcon?.name} />
                     </Pressable>
                 )}

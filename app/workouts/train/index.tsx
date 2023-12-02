@@ -62,6 +62,7 @@ export function Train() {
     }, [handleSaveTrainingData, handleReset, closeAlert]);
 
     const handleCloseButton = useCallback(() => {
+        console.log("close");
         if (!hasAnyData) {
             handleReset();
         } else {
@@ -102,7 +103,7 @@ export function Train() {
         <ThemedView background style={trainStyles.wrapper} stretch>
             <ThemedView background style={trainStyles.navigationWrapper}>
                 <SiteNavigationButtons
-                    disabled={!isDone}
+                    confirmButtonDisabled={!isDone}
                     handleConfirmOpacity={confirmButtonOpacity}
                     handleBack={handleCloseButton}
                     handleConfirm={handleDone}
