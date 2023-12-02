@@ -247,10 +247,12 @@ export const getIsDoneWithTraining = createSelector([getTrainedWorkout], (traine
     if (trainedWorkout?.exerciseData.length === 0 || trainedWorkout?.exerciseData.some((data) => data.doneSets.length === 0)) {
         return false;
     }
-    return trainedWorkout?.exerciseData.every((doneExercise) =>
-        doneExercise.doneSets.every(({ confirmed }) => {
-            return Boolean(confirmed);
-        }),
+
+    return trainedWorkout?.exerciseData.every(
+        (doneExercise, exerciseIndex) =>
+            doneExercise.doneSets.every(({ confirmed }) => {
+                return Boolean(confirmed);
+            }) && doneExercise.doneSets.length === parseFloat(trainedWorkout?.workout.exercises[exerciseIndex].sets),
     );
 });
 export const getWeightBasedExerciseMetaDataFromTrainedWorkout = createSelector([getTrainedWorkout, (trainedWorkout, exerciseIndex?: number) => exerciseIndex], (trainedWorkout, exerciseIndex) => {
