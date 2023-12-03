@@ -10,6 +10,7 @@ import { SettingsAction } from "./reducers/settings";
 import { MetadataAction } from "./reducers/metadata";
 import { ErrorActions } from "./reducers/errors";
 import { MeasurementActions } from "./reducers/measurements";
+import { weightMiddleware } from "./middleware/weightUnitMiddleware";
 
 const persistConfig = {
     key: "root",
@@ -24,7 +25,9 @@ export const store = configureStore({
             serializableCheck: {
                 ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
             },
-        }).concat(stateMiddleware),
+        })
+            .concat(stateMiddleware)
+            .concat(weightMiddleware),
 });
 
 export const persistor = persistStore(store);

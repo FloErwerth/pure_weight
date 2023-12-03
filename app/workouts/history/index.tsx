@@ -22,6 +22,7 @@ import { DayProps } from "react-native-calendars/src/calendar/day";
 import { borderRadius } from "../../../theme/border";
 import { getAppInstallDate } from "../../../store/reducers/metadata/metadataSelectors";
 import { getEditedWorkout, getHistoryByMonth, getLatestWorkoutDate, getWorkoutColor, getWorkoutDates } from "../../../store/reducers/workout/workoutSelectors";
+import { getWeightUnit } from "../../../store/reducers/settings/settingsSelectors";
 
 export type SectionListItemInfo = { color: string; name: string; duration?: string; date: IsoDate; weight: number; numExercisesDone: number };
 export type MarkedDay = {
@@ -57,6 +58,7 @@ export function WorkoutHistory() {
     const sectionListRef = useRef<SectionList>(null);
     const dateData = useAppSelector((state: AppState) => getHistoryByMonth(state, selectedDate));
     const navigate = useNavigate();
+    const weightUnit = useAppSelector(getWeightUnit);
 
     const calendarTheme = useMemo(
         () => ({
@@ -107,7 +109,9 @@ export function WorkoutHistory() {
                     <HStack ghost style={styles.displayedWorkoutWrapper}>
                         <HStack ghost style={styles.hstack}>
                             <ThemedMaterialCommunityIcons ghost name="weight" size={20} />
-                            <Text ghost>{weight} kg</Text>
+                            <Text ghost>
+                                {weight} {weightUnit}
+                            </Text>
                         </HStack>
                         <HStack ghost style={styles.hstack}>
                             <ThemedMaterialCommunityIcons ghost name="clock" size={20} />

@@ -74,6 +74,7 @@ export const mockState: AppState = {
     settingsState: {
         theme: "dark",
         language: "en",
+        weightUnit: "kg",
     },
     workoutState: {
         sorting: "A_Z",
@@ -119,5 +120,6 @@ export const emptyState = {
     settingsState: {
         language: "en",
         theme: "light",
+        weightUnit: "kg",
     },
 } satisfies AppState;

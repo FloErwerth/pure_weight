@@ -37,6 +37,17 @@
   "pause": "Pause",
   "timePerSet": "Time per set",
   "timeBeforeSet": "Time before set",
+  "unit_weight_kg": "Kilogram",
+  "unit_weight_kg_short": "kg",
+  "unit_weight_pounds": "Pounds",
+  "unit_weight_pounds_short": "lbs",
+
+
+  "settings_language_german": "Deutsch",
+  "settings_language_english": "English",
+  "settings_language": "Language",
+  "settings_theme": "Theme",
+  "settings_weight_unit_title": "Units",
 
   "alert_delete_message": "This action can't be undone",
   "alert_quit_title": "Quit training early?",
@@ -62,8 +73,7 @@
   "progress_modal_title": "Selection of chart type",
   "progress_text_hint": "Press to see details for each exercise",
   "create_missing_data_text": "There are no exercises to display here",
-  "settings_language": "Language",
-  "settings_theme": "Theme",
+
   "select_key": "Choose",
   "theme_light": "Light",
   "theme_dark": "Dark",

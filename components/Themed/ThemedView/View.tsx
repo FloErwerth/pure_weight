@@ -1,13 +1,9 @@
 import { View, ViewProps } from "react-native";
 import { RefObject, useMemo } from "react";
-import { useComputedBackgroundColor } from "../../../hooks/useComputedBackgroundColor";
+import { ComputedBackgroundColorProps, useComputedBackgroundColor } from "../../../hooks/useComputedBackgroundColor";
 
-export interface ThemedViewProps extends ViewProps {
+export interface ThemedViewProps extends ViewProps, ComputedBackgroundColorProps {
     stretch?: boolean;
-    background?: boolean;
-    secondary?: boolean;
-    ghost?: boolean;
-    input?: boolean;
     reference?: RefObject<View>;
     behind?: boolean;
 }

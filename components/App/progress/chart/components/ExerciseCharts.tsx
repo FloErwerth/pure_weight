@@ -19,6 +19,7 @@ import { ThemedPressable } from "../../../../Themed/Pressable/Pressable";
 import { useNavigate } from "../../../../../hooks/navigate";
 
 import { getTrainingDayData } from "../../../../../store/reducers/workout/workoutSelectors";
+import { getWeightUnit } from "../../../../../store/reducers/settings/settingsSelectors";
 
 interface ExerciseChartProps {
     exerciseName: string;
@@ -86,10 +87,13 @@ const useExerciseData = (exerciseData: { date: IsoDate; sets: ExerciseSets }[], 
     return [chartData] as const;
 };
 
-const chartTypeLabel: Record<ChartType, string> = {
-    CUMULATIVE: "kg",
-    AVG_WEIGHT: "kg",
-    AVG_REPS: "reps",
+const useChartTypeLabel = (chartType: ChartType) => {
+    const weightUnit = useAppSelector(getWeightUnit);
+    return {
+        CUMULATIVE: weightUnit,
+        AVG_WEIGHT: weightUnit,
+        AVG_REPS: "reps",
+    }[chartType];
 };
 
 export const ExerciseChart = ({ exerciseName, data }: ExerciseChartProps) => {
@@ -98,17 +102,18 @@ export const ExerciseChart = ({ exerciseName, data }: ExerciseChartProps) => {
     const { t } = useTranslation();
     const { mainColor, componentBackgroundColor } = useTheme();
     const [ref, open, close] = useBottomSheetRef();
+    const chartTypeLabel = useChartTypeLabel(chartType);
     const getDotContent = useCallback(
         ({ x, y, indexData }: { x: number; y: number; index: number; indexData: number }) => {
             return (
                 <ThemedView key={x + y} style={{ position: "absolute", top: y - 25, left: x - 20, flex: 1, padding: 3, borderRadius, alignItems: "center" }}>
                     <Text style={{ fontSize: 12, color: mainColor }}>
-                        {indexData} {chartTypeLabel[chartType]}
+                        {indexData} {chartTypeLabel}
                     </Text>
                 </ThemedView>
             );
         },
-        [chartType, mainColor],
+        [chartTypeLabel, mainColor],
     );
 
     const openSelectionModal = useCallback(() => {
