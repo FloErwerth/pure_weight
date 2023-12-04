@@ -88,7 +88,7 @@ export const mockState: AppState = {
                     { type: "WEIGHT_BASED", name: "Hintere Schulter Seil", weight: "50", sets: "4", pause: "2", reps: "8" },
                     { type: "WEIGHT_BASED", name: "Bizeps Sz", weight: "10", sets: "4", pause: "2", reps: "8" },
                 ],
-                doneWorkouts: [],
+                doneWorkouts: constructedDoneWorkouts,
             },
             {
                 name: "Real Chest",

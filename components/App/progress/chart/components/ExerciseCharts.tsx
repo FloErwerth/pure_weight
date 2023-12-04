@@ -20,6 +20,7 @@ import { useNavigate } from "../../../../../hooks/navigate";
 
 import { getTrainingDayData } from "../../../../../store/reducers/workout/workoutSelectors";
 import { getWeightUnit } from "../../../../../store/reducers/settings/settingsSelectors";
+import { trunicateToNthSignificantDigit } from "../../../../../utils/number";
 
 interface ExerciseChartProps {
     exerciseName: string;
@@ -108,7 +109,7 @@ export const ExerciseChart = ({ exerciseName, data }: ExerciseChartProps) => {
             return (
                 <ThemedView key={x + y} style={{ position: "absolute", top: y - 25, left: x - 20, flex: 1, padding: 3, borderRadius, alignItems: "center" }}>
                     <Text style={{ fontSize: 12, color: mainColor }}>
-                        {indexData} {chartTypeLabel}
+                        {trunicateToNthSignificantDigit(indexData, false, 1)} {chartTypeLabel}
                     </Text>
                 </ThemedView>
             );
