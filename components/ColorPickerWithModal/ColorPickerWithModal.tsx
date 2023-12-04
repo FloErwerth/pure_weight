@@ -7,6 +7,7 @@ import { ThemedView } from "../Themed/ThemedView/View";
 import { useAppDispatch, useAppSelector } from "../../store";
 import { setColor } from "../../store/reducers/workout";
 import { getColor } from "../../store/reducers/workout/workoutSelectors";
+import { View } from "react-native";
 
 export function getInvertedColor(hex?: string) {
     if (!hex) {
@@ -52,9 +53,9 @@ export const useColorPickerComponents = () => {
             [
                 () => (
                     <ThemedBottomSheetModal key="COLORMODAL" snapPoints={["60%"]} ref={colorPickerRef}>
-                        <ThemedView style={styles.padding}>
+                        <View style={styles.padding}>
                             <ColorPicker onColorChange={handlePickColor} color={color} palette={palette} />
-                        </ThemedView>
+                        </View>
                     </ThemedBottomSheetModal>
                 ),
                 () => (

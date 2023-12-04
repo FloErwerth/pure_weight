@@ -10,6 +10,7 @@ export const styles = StyleSheet.create({
     workoutNameInput: { width: Dimensions.get("window").width * 0.75, fontSize: 26 },
     padding: {
         padding: 10,
+        height: "90%",
     },
     vStack: {
         padding: 15,

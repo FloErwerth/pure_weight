@@ -4,6 +4,7 @@ import { Temporal } from "@js-temporal/polyfill";
 import { getDateTodayIso } from "../../../utils/date";
 import { sortWorkouts } from "./utils";
 import { TrainedWorkout, WorkoutState } from "./types";
+import { getRandomColorFromPalette } from "../../../utils/colorPalette";
 
 export const setWorkoutState = createAction<WorkoutState, "workout_set_state">("workout_set_state");
 export const setWorkouts = createAction<Workout[], "workout_set_workouts">("workout_set_workouts");
@@ -133,7 +134,7 @@ export const workoutReducer = createReducer<WorkoutState>({ workouts: [], sortin
                     name: "",
                     exercises: [],
                     doneWorkouts: [],
-                    calendarColor: "#333",
+                    calendarColor: getRandomColorFromPalette(),
                 },
             };
         })
