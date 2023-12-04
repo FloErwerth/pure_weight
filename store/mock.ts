@@ -44,7 +44,7 @@ export const mockState: AppState = {
         measurements: [
             {
                 name: "Körpergewicht",
-                unit: "kg",
+                type: "weight",
                 data: {
                     ["2023-10-11"]: "15",
                     ["2023-10-12"]: "16",
@@ -58,7 +58,7 @@ export const mockState: AppState = {
             },
             {
                 name: "Körperfettanteil",
-                unit: "%",
+                type: "percent",
                 data: {
                     ["2023-10-11"]: "15",
                     ["2023-10-12"]: "16",

@@ -15,7 +15,7 @@ import { ThemedPressable } from "../Themed/Pressable/Pressable";
 import Animated, { FadeIn, Layout } from "react-native-reanimated";
 import { ThemedDropdown } from "../Themed/Dropdown/ThemedDropdown";
 import { CheckBox } from "../Themed/CheckBox/CheckBox";
-import { getMeasurementUnits, Measurement } from "../App/measurements/types";
+import { Measurement, measurementTypes } from "../App/measurements/types";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { AnimatedView } from "../Themed/AnimatedView/AnimatedView";
 import { cleanError, ErrorFields, setError } from "../../store/reducers/errors";
@@ -33,20 +33,13 @@ interface MeasurementModalProps extends ThemedBottomSheetModalProps {
 }
 
 const fieldToErrorMap: Record<keyof Omit<Measurement, "higherIsBetter" | "data">, ErrorFields> = {
-    unit: "measurement_unit",
+    type: "measurement_type",
     value: "measurement_value",
     name: "measurement_name",
     date: "measurement_value",
 };
 
-export const MeasurementModal = ({
-    onRequestClose,
-    reference,
-    isNewMeasurement = true,
-    currentMeasurement: { measurement, index },
-    setCurrentMeasurement,
-    saveMeasurement,
-}: MeasurementModalProps) => {
+export const MeasurementModal = ({ onRequestClose, reference, isNewMeasurement = true, currentMeasurement: { measurement, index }, setCurrentMeasurement, saveMeasurement }: MeasurementModalProps) => {
     const { t } = useTranslation();
     const { mainColor, warningColor } = useTheme();
     const themeKey = useAppSelector(getThemeKey);
@@ -79,16 +72,16 @@ export const MeasurementModal = ({
 
     const collectErrors = useCallback(() => {
         const errors: ErrorFields[] = [];
-        if (!measurement?.name || !measurement?.unit || !measurement?.value) {
+        if (!measurement?.name || !measurement?.type || !measurement?.value) {
             if (!measurement?.name) {
                 errors.push("measurement_name");
             }
-            if (!measurement?.unit) {
-                errors.push("measurement_unit");
+            if (!measurement?.type) {
+                errors.push("measurement_type");
             }
         }
         return errors;
-    }, [measurement?.name, measurement?.unit, measurement?.value]);
+    }, [measurement?.name, measurement?.type, measurement?.value]);
 
     const handleSaveMeasurement = useCallback(() => {
         const errors = collectErrors();
@@ -104,17 +97,9 @@ export const MeasurementModal = ({
         saveMeasurement();
     }, [collectErrors, dates, dispatch, measurement?.date, saveMeasurement, showWarning]);
 
-    const measurementUnits = useMemo(() => {
-        if (!isNewMeasurement) {
-            return getMeasurementUnits(measurement.unit);
-        }
-        return getMeasurementUnits();
-    }, [isNewMeasurement, measurement.unit]);
-
-    const unitDropdownSelectable = Boolean(isNewMeasurement && measurementUnits.length > 1);
     return (
-        <ThemedButtomSheetModal onRequestClose={onRequestClose} title={measurementButtonText} snapPoints={["100%"]} ref={reference}>
-            <AnimatedView style={styles.outerWrapper}>
+        <ThemedButtomSheetModal onRequestClose={onRequestClose} title={measurementButtonText} snapPoints={["60%"]} ref={reference}>
+            <AnimatedView ghost style={styles.outerWrapper}>
                 <ThemedTextInput
                     maxLength={20}
                     errorKey="measurement_name"
@@ -137,12 +122,12 @@ export const MeasurementModal = ({
                         placeholder={t("measurement")}
                     />
                     <ThemedDropdown
-                        isSelectable={unitDropdownSelectable}
-                        options={measurementUnits}
-                        errorKey="measurement_unit"
-                        value={measurement?.unit}
-                        placeholderTranslationKey="measurement_unit"
-                        onSelectItem={(value) => handleAddMeasurementData("unit", value)}
+                        isSelectable={isNewMeasurement}
+                        options={measurementTypes}
+                        errorKey="measurement_type"
+                        value={measurement?.type}
+                        placeholderTranslationKey="measurement_type"
+                        onSelectItem={(value) => handleAddMeasurementData("type", value)}
                     />
                 </HStack>
                 <CheckBox
@@ -152,7 +137,7 @@ export const MeasurementModal = ({
                     size={26}
                     onChecked={(val) => handleAddMeasurementData("higherIsBetter", val)}
                 />
-                <HStack style={styles.calendarButtonsWrapper}>
+                <HStack ghost style={styles.calendarButtonsWrapper}>
                     <ThemedPressable input stretch style={styles.dateWrapper} onPress={() => setShowDatePicker((open) => !open)}>
                         <Text ghost style={styles.text}>
                             {measurement?.date?.toLocaleDateString(language)}

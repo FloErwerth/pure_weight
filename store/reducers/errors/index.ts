@@ -10,7 +10,7 @@ export type ErrorFields =
     | "workout_name"
     | "create_exercises_empty"
     | "measurement_name"
-    | "measurement_unit"
+    | "measurement_type"
     | "measurement_value"
     | "create_timePerSet";
 

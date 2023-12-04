@@ -1,7 +1,7 @@
 import { ThemedBottomSheetModalProps, ThemedButtomSheetModal } from "../../../BottomSheetModal/ThemedButtomSheetModal";
 import { RefObject, useCallback } from "react";
 import { AppState, useAppSelector } from "../../../../store";
-import { MeasurementUnit } from "../types";
+import { MeasurementType } from "../types";
 import { ThemedView } from "../../../Themed/ThemedView/View";
 import { borderRadius } from "../../../../theme/border";
 import { Text } from "../../../Themed/ThemedText/Text";
@@ -14,7 +14,7 @@ import { getMeasurementDataFromIndex } from "../../../../store/reducers/measurem
 interface MeasurementChartModalProps extends ThemedBottomSheetModalProps {
     reference: RefObject<BottomSheetModal>;
     name?: string;
-    unit?: MeasurementUnit;
+    unit?: MeasurementType;
     index: number;
 }
 
@@ -24,10 +24,7 @@ export const MeasurementChartModal = ({ index, unit, name, reference }: Measurem
     const getDotContent = useCallback(
         ({ x, y, indexData }: { x: number; y: number; index: number; indexData: number }) => {
             return (
-                <ThemedView
-                    key={x + y}
-                    style={{ position: "absolute", top: y - 25, left: x - 20, flex: 1, padding: 3, borderRadius, alignItems: "center" }}
-                >
+                <ThemedView key={x + y} style={{ position: "absolute", top: y - 25, left: x - 20, flex: 1, padding: 3, borderRadius, alignItems: "center" }}>
                     <Text style={{ fontSize: 12, color: mainColor }}>
                         {trunicateToNthSignificantDigit(indexData + 0.0012121221, false, 1)} {unit}
                     </Text>
@@ -42,13 +39,7 @@ export const MeasurementChartModal = ({ index, unit, name, reference }: Measurem
 
     return (
         <ThemedButtomSheetModal ref={reference} title={name}>
-            <Chart
-                transparent
-                lineChartStyles={{ left: -45, top: 20, borderRadius }}
-                getYLabel={() => ""}
-                data={data}
-                getDotContent={getDotContent}
-            />
+            <Chart transparent lineChartStyles={{ left: -45, top: 20, borderRadius }} getYLabel={() => ""} data={data} getDotContent={getDotContent} />
         </ThemedButtomSheetModal>
     );
 };

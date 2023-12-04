@@ -104,7 +104,7 @@
   "measurement_add": "Create measurement",
   "measurement_add_existing": "Add measurement",
   "measurement_placeholder": "Measurement name",
-  "measurement_unit": "Unit",
+  "measurement_type": "Type",
   "measurement_latest": "Latest measurement:",
   "measurement_deleted_message": "Measurement successfully deleted",
   "measurement_deleted_undo": "Undo the deletion",

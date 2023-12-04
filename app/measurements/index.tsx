@@ -42,7 +42,7 @@ export function Measurements() {
     const reset = useCallback(() => {
         setCurrentMeasurement(emptyMeasurement);
         setIsNewMeasurement(true);
-        dispatch(cleanError(["measurement_unit", "measurement_name", "measurement_value"]));
+        dispatch(cleanError(["measurement_type", "measurement_name", "measurement_value"]));
     }, [dispatch]);
 
     const handleCloseModal = useCallback(() => {
@@ -52,14 +52,14 @@ export function Measurements() {
 
     const handleConfirmMeasurementModal = useCallback(() => {
         const { measurement, index } = currentMeasurement;
-        if (measurement.name && measurement.unit) {
+        if (measurement.name && measurement.type) {
             const parsedDate = dateParser.safeParse(measurement.date);
             const data = measurement.value ? { [(parsedDate.success && parsedDate.data) || getDateTodayIso()]: measurement.value } : undefined;
             dispatch(
                 addMeasurement({
                     measurement: {
                         name: measurement.name,
-                        unit: measurement.unit,
+                        type: measurement.type,
                         data,
                     },
                     index,
@@ -74,7 +74,7 @@ export function Measurements() {
             setCurrentMeasurement({
                 measurement: {
                     name: measurement.name,
-                    unit: measurement.unit,
+                    type: measurement.type,
                     value: "",
                     date: new Date(getDateTodayIso()),
                 },
@@ -101,20 +101,11 @@ export function Measurements() {
 
     return (
         <ThemedView style={{ flex: 1 }}>
-            <SiteNavigationButtons
-                titleFontSize={40}
-                title={t("measurements")}
-                handleConfirm={handleAddNewMeasurement}
-                handleConfirmIcon={{ name: "plus", size: 40 }}
-            />
+            <SiteNavigationButtons titleFontSize={40} title={t("measurements")} handleConfirm={handleAddNewMeasurement} handleConfirmIcon={{ name: "plus", size: 40 }} />
             <PageContent style={styles.contentWrapper}>
                 <ScrollView style={styles.measurementsWrapper}>
                     {measurements?.map((measurement, index) => (
-                        <Swipeable
-                            onDelete={() => handleDeleteMeasurement(index)}
-                            key={`${measurement.name}-pressable`}
-                            onClick={() => handleAddExistingMeasurement(measurement, index)}
-                        >
+                        <Swipeable onDelete={() => handleDeleteMeasurement(index)} key={`${measurement.name}-pressable`} onClick={() => handleAddExistingMeasurement(measurement, index)}>
                             <RenderedMeasurement index={index} measurement={measurement} />
                         </Swipeable>
                     ))}

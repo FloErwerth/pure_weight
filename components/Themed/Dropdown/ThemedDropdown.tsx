@@ -46,15 +46,7 @@ function Item<T extends string>({ value, onSelectItem }: ItemProps<T>) {
     );
 }
 
-export function ThemedDropdown<T extends readonly string[]>({
-    secondary,
-    isSelectable,
-    errorKey,
-    options,
-    onSelectItem,
-    placeholderTranslationKey = "select_item",
-    value,
-}: ThemedDropdownProps<T>) {
+export function ThemedDropdown<T extends readonly string[]>({ secondary, isSelectable, errorKey, options, onSelectItem, placeholderTranslationKey = "select_item", value }: ThemedDropdownProps<T>) {
     const { t } = useTranslation();
     const [open, setOpen] = useState(false);
     const containerRef = useRef<View>(null);
@@ -92,7 +84,7 @@ export function ThemedDropdown<T extends readonly string[]>({
 
     return (
         <>
-            <ThemedView style={styles.wrapper} ghost>
+            <ThemedView style={styles.wrapper} stretch ghost>
                 <ThemedPressable
                     secondary={secondary}
                     error={error}
@@ -110,9 +102,9 @@ export function ThemedDropdown<T extends readonly string[]>({
                 {open && (
                     <Animated.View style={dropdownStyles} layout={Layout} entering={FadeIn.duration(200)} exiting={FadeOut.duration(200)}>
                         <ThemedView input style={{ borderColor: componentBackgroundColor, borderWidth: 1, borderRadius }}>
-                            {options.map((displayValue, index) => (
+                            {options.map((value, index) => (
                                 <>
-                                    <Item key={displayValue} onSelectItem={handleSelectItem} value={displayValue} />
+                                    <Item key={value} onSelectItem={handleSelectItem} value={value} />
                                     <Separator show={index < options.length - 1} />
                                 </>
                             ))}

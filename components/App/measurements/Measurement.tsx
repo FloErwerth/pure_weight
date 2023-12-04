@@ -51,17 +51,11 @@ export const RenderedMeasurement = ({ index, measurement }: MeasurementProps) =>
                     </Text>
                 </View>
                 {measurement.name && progress && (
-                    <ProgressDisplay
-                        type="Measurement"
-                        higherIsBetter={measurement?.higherIsBetter}
-                        name={measurement?.name}
-                        percent={progress}
-                        onPress={handleNavigateToChart}
-                    />
+                    <ProgressDisplay type="Measurement" higherIsBetter={measurement?.higherIsBetter} name={measurement?.name} percent={progress} onPress={handleNavigateToChart} />
                 )}
             </VStack>
             <ThemedMaterialCommunityIcons name="table-large-plus" size={26} />
-            <MeasurementChartModal reference={reference} index={index} name={measurement.name} unit={measurement.unit} />
+            <MeasurementChartModal reference={reference} index={index} name={measurement.name} unit={measurement.type} />
         </HStack>
     );
 };

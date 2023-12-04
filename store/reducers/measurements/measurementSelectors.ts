@@ -3,6 +3,10 @@ import { IsoDate } from "../../../types/date";
 import { getDate } from "../../../utils/date";
 import { AppState } from "../../index";
 
+export const getMeasurementTypeDisplayOptions = (state: AppState) => {
+    if (state.settingsState.unitSystem === "metric") {
+    }
+};
 export const getMeasurementsState = (state: AppState) => state.measurmentState;
 export const getMeasurements = createSelector([getMeasurementsState], (state) => state.measurements);
 export const getLatestMeasurements = createSelector([getMeasurements], (measurements) =>
@@ -11,7 +15,6 @@ export const getLatestMeasurements = createSelector([getMeasurements], (measurem
         return dates[dates.length - 1] as IsoDate;
     }),
 );
-
 function crampToNEntries<T extends Array<unknown>>(n: number, entries: T): T {
     if (entries.length > n) {
         return entries.slice(entries.length - n, entries.length) as T;
