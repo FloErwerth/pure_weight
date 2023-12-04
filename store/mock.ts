@@ -3,7 +3,7 @@ import { DoneWorkouts } from "./types";
 import { AppState } from "./index";
 
 const constructedDoneWorkouts: DoneWorkouts = [];
-for (let i = 0; i < 100; i++) {
+for (let i = 1; i <= 10; i++) {
     const currentDate = new Date("2023-09-01");
     currentDate.setDate(currentDate.getDate() + i);
     const dateStr = currentDate.toISOString().split("T")[0];
@@ -73,7 +73,6 @@ export const mockState: AppState = {
     },
     settingsState: {
         theme: "dark",
-        smallestWeight: "1.25",
         language: "en",
         unitSystem: "metric",
     },
@@ -119,7 +118,6 @@ export const emptyState = {
         errors: [],
     },
     settingsState: {
-        smallestWeight: "1.25",
         language: "en",
         theme: "light",
         unitSystem: "metric",

@@ -8,7 +8,6 @@ import { ThemedView } from "../../../components/Themed/ThemedView/View";
 import { ThemeSelection } from "../../../components/App/settings/components/ThemeSelection/ThemeSelection";
 import { UnitSection } from "../../../components/App/settings/components/WeightSection/UnitSection";
 import { DevelopmentSelection } from "../../../components/App/settings/components/DevelopmentSection/DevelopmentSelection";
-import { SmallestWeightSection } from "../../../components/App/settings/components/SmallestWeightSection/SmallestWeightSection";
 
 const isProduction = process.env["EXPO_PUBLIC_IS_PRODUCTION"] === "true";
 
@@ -25,7 +24,6 @@ export function Settings() {
                 <LanguageSelection />
                 <ThemeSelection />
                 <UnitSection />
-                <SmallestWeightSection />
                 {!isProduction && <DevelopmentSelection />}
             </PageContent>
         </ThemedView>

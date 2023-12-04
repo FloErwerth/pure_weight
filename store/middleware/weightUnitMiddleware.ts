@@ -37,7 +37,6 @@ const convertLength = (nextUnit: LengthUnit | WeightUnit, data: MeasurementDataP
 };
 
 export const convertMeasurements = (data: MeasurementDataPoints, nextUnit: WeightUnit | LengthUnit): MeasurementDataPoints => {
-    console.log(nextUnit);
     if (measurementUnitGroupsDefinition.length.includes(nextUnit)) {
         return convertLength(nextUnit, data);
     }
@@ -47,14 +46,17 @@ export const convertMeasurements = (data: MeasurementDataPoints, nextUnit: Weigh
     return data;
 };
 
-const calculateWeight = (weight: string, unit: WeightUnit) => {
-    if (unit === "kg") {
-        return (parseFloat(weight) * KG_TO_POUND).toString();
+const calculateWeight = (weight: string, nextUnit: WeightUnit) => {
+    let convertedWeight = weight;
+
+    if (nextUnit === "kg") {
+        convertedWeight = (parseFloat(weight) * KG_TO_POUND).toString();
     }
-    if (unit === "lbs") {
-        return (parseFloat(weight) / KG_TO_POUND).toString();
+    if (nextUnit === "lbs") {
+        convertedWeight = (parseFloat(weight) / KG_TO_POUND).toString();
     }
-    return weight;
+
+    return convertedWeight;
 };
 
 const getNextUnit = (nextSystem: UnitSystem) => {
@@ -65,7 +67,8 @@ export const weightMiddleware: Middleware<Record<string, unknown>, AppState> = (
     const dispatch = storeApi.dispatch;
     const state = storeApi.getState();
     if (action.type === "set_unit_system") {
-        const nextUnit = getNextUnit(state.settingsState.unitSystem === "metric" ? "imperial" : "metric");
+        const nextUnitSystem = state.settingsState.unitSystem === "metric" ? "imperial" : "metric";
+        const nextUnit = getNextUnit(nextUnitSystem);
         dispatch(
             setWorkouts(
                 state.workoutState.workouts.map((workout) => ({
@@ -81,7 +84,6 @@ export const weightMiddleware: Middleware<Record<string, unknown>, AppState> = (
                 })),
             ),
         );
-
         dispatch(
             setMeasurements(
                 state.measurmentState.measurements.map((measurement) => {
