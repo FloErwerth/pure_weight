@@ -19,6 +19,7 @@ interface ThemedTextInputProps extends TextInputProps, ComputedBackgroundColorPr
     showClear?: boolean;
     height?: number;
 }
+
 export const ThemedTextInput = (props: ThemedTextInputProps) => {
     const backgroundColor = useComputedBackgroundColor(props);
     const { editable = true } = props;

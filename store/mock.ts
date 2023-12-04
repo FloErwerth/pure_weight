@@ -73,6 +73,7 @@ export const mockState: AppState = {
     },
     settingsState: {
         theme: "dark",
+        smallestWeight: "1.25",
         language: "en",
         unitSystem: "metric",
     },
@@ -118,6 +119,7 @@ export const emptyState = {
         errors: [],
     },
     settingsState: {
+        smallestWeight: "1.25",
         language: "en",
         theme: "light",
         unitSystem: "metric",

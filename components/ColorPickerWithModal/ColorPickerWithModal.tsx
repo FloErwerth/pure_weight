@@ -1,5 +1,5 @@
 import { ThemedPressable } from "../Themed/Pressable/Pressable";
-import { ThemedButtomSheetModal, useBottomSheetRef } from "../BottomSheetModal/ThemedButtomSheetModal";
+import { ThemedBottomSheetModal, useBottomSheetRef } from "../BottomSheetModal/ThemedBottomSheetModal";
 import ColorPicker from "react-native-wheel-color-picker";
 import { useCallback, useMemo } from "react";
 import { styles } from "../App/create/styles";
@@ -51,11 +51,11 @@ export const useColorPickerComponents = () => {
         () =>
             [
                 () => (
-                    <ThemedButtomSheetModal key="COLORMODAL" snapPoints={["60%"]} ref={colorPickerRef}>
+                    <ThemedBottomSheetModal key="COLORMODAL" snapPoints={["60%"]} ref={colorPickerRef}>
                         <ThemedView style={styles.padding}>
                             <ColorPicker onColorChange={handlePickColor} color={color} palette={palette} />
                         </ThemedView>
-                    </ThemedButtomSheetModal>
+                    </ThemedBottomSheetModal>
                 ),
                 () => (
                     <ThemedView ghost style={styles.colorButtonWrapper}>

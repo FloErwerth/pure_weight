@@ -19,34 +19,45 @@ export type SvgType = {
     size: number;
 };
 type SelectableSettingProps = {
-    icon?: Icon;
-    svg?: SvgType;
+    prependedExtraContent?: Icon | SvgType;
+    appendedExtraContent?: Icon | SvgType;
     selected: boolean;
     onSelect: () => void;
     titleKey: string;
 };
-export function SelectableSetting({ svg, icon, onSelect, selected, titleKey }: SelectableSettingProps) {
+export function SelectableSetting({ appendedExtraContent, prependedExtraContent, onSelect, selected, titleKey }: SelectableSettingProps) {
     const { secondaryColor } = useTheme();
     const { t } = useTranslation();
 
     const wrapperStyles = useMemo(() => [styles.innerWrapper, selected && { borderColor: secondaryColor }], [secondaryColor, selected]);
-    const RenderedExtraContent = useCallback(() => {
-        if ((icon && svg) || icon) {
-            return <ThemedMaterialCommunityIcons color={icon.color} ghost name={icon.name} size={icon.size} />;
-        } else if (svg) {
-            return <svg.Svg width={svg?.size ?? 24} height={svg?.size ?? 24} />;
+    const PrependedExtraContent = useCallback(() => {
+        if (!prependedExtraContent) {
+            return null;
         }
-    }, [icon, svg]);
+        if (prependedExtraContent && "name" in prependedExtraContent) {
+            return <ThemedMaterialCommunityIcons color={prependedExtraContent.color} ghost name={prependedExtraContent.name} size={prependedExtraContent.size} />;
+        }
+        return <prependedExtraContent.Svg width={prependedExtraContent?.size ?? 24} height={prependedExtraContent?.size ?? 24} />;
+    }, [prependedExtraContent]);
+    const AppendedExtraContent = useCallback(() => {
+        if (!appendedExtraContent) {
+            return <>{selected && <MaterialCommunityIcons name="check" size={24} color={secondaryColor} />}</>;
+        }
+        if (appendedExtraContent && "name" in appendedExtraContent) {
+            return <ThemedMaterialCommunityIcons color={appendedExtraContent.color} ghost name={appendedExtraContent.name} size={appendedExtraContent.size} />;
+        }
+        return <appendedExtraContent.Svg width={appendedExtraContent?.size ?? 24} height={appendedExtraContent?.size ?? 24} />;
+    }, [appendedExtraContent, secondaryColor, selected]);
 
     return (
         <ThemedPressable input onPress={onSelect} style={wrapperStyles}>
             <HStack input style={styles.outerStack}>
-                <RenderedExtraContent />
+                <PrependedExtraContent />
                 <HStack stretch ghost style={styles.innerStack}>
                     <Text ghost style={styles.text}>
                         {t(titleKey)}
                     </Text>
-                    {selected && <MaterialCommunityIcons name="check" size={24} color={secondaryColor} />}
+                    <AppendedExtraContent />
                 </HStack>
             </HStack>
         </ThemedPressable>

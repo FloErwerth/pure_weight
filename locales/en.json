@@ -49,6 +49,7 @@
   "settings_language": "Language",
   "settings_theme": "Theme",
   "settings_unit_system_title": "Unit System",
+  "settings_smallest_weight_title": "Smallest Weight",
 
   "alert_delete_message": "This action can't be undone",
   "alert_quit_title": "Quit training early?",

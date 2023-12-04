@@ -35,14 +35,11 @@ const defaultSnapshots = ["50%", "50%", "100%"];
 const renderBackdrop = (props: BottomSheetBackdropProps) => <BottomSheetBackdrop appearsOnIndex={0} disappearsOnIndex={-1} {...props} />;
 
 // eslint-disable-next-line react/display-name
-export const ThemedButtomSheetModal = forwardRef<BottomSheetModal, ThemedBottomSheetModalProps>(
+export const ThemedBottomSheetModal = forwardRef<BottomSheetModal, ThemedBottomSheetModalProps>(
     ({ snapPoints, customContentStyle, children, title, onRequestClose, allowSwipeDownToClose = true }, ref) => {
         const { mainColor, inputFieldBackgroundColor } = useTheme();
         const { top } = useSafeAreaInsets();
-        const defaultStyle = useMemo(
-            () => [customContentStyle, styles.defaultContentStyle, { backgroundColor: inputFieldBackgroundColor }],
-            [customContentStyle, inputFieldBackgroundColor],
-        );
+        const defaultStyle = useMemo(() => [customContentStyle, styles.defaultContentStyle, { backgroundColor: inputFieldBackgroundColor }], [customContentStyle, inputFieldBackgroundColor]);
 
         const combinedSnapshots = useMemo(() => {
             if (!snapPoints) {
@@ -51,10 +48,7 @@ export const ThemedButtomSheetModal = forwardRef<BottomSheetModal, ThemedBottomS
             return [snapPoints[0], ...snapPoints];
         }, [snapPoints]);
 
-        const indicatorStyle = useMemo(
-            () => ({ backgroundColor: allowSwipeDownToClose ? mainColor : "transparent" }),
-            [allowSwipeDownToClose, mainColor],
-        );
+        const indicatorStyle = useMemo(() => ({ backgroundColor: allowSwipeDownToClose ? mainColor : "transparent" }), [allowSwipeDownToClose, mainColor]);
 
         return (
             <BottomSheetModal

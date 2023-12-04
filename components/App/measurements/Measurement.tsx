@@ -13,7 +13,7 @@ import { swipableContext } from "../../WorkoutCard/Swipeable";
 import { ProgressDisplay } from "../../WorkoutCard/components/ProgressDisplay/ProgressDisplay";
 import { MeasurementChartModal } from "./Chart/MeasurementChartModal";
 import { Measurement, MeasurementType } from "./types";
-import { useBottomSheetRef } from "../../BottomSheetModal/ThemedButtomSheetModal";
+import { useBottomSheetRef } from "../../BottomSheetModal/ThemedBottomSheetModal";
 
 import { getLanguage, getUnitSystem } from "../../../store/reducers/settings/settingsSelectors";
 import { getLatestMeasurements, getMeasurmentProgress } from "../../../store/reducers/measurements/measurementSelectors";

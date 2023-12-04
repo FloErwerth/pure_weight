@@ -13,7 +13,7 @@ import { Swipeable } from "../../components/WorkoutCard/Swipeable";
 import { RenderedMeasurement } from "../../components/App/measurements/Measurement";
 import { BottomToast } from "../../components/BottomToast/BottomToast";
 import { Measurement } from "../../components/App/measurements/types";
-import { useBottomSheetRef } from "../../components/BottomSheetModal/ThemedButtomSheetModal";
+import { useBottomSheetRef } from "../../components/BottomSheetModal/ThemedBottomSheetModal";
 import { addMeasurement, deleteMeasurement, recoverMeasurement } from "../../store/reducers/measurements";
 import { cleanError } from "../../store/reducers/errors";
 import { getMeasurements } from "../../store/reducers/measurements/measurementSelectors";

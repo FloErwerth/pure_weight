@@ -1,5 +1,5 @@
 import { EditableExercise } from "../EditableExercise/EditableExercise";
-import { ThemedBottomSheetModalProps, ThemedButtomSheetModal } from "../BottomSheetModal/ThemedButtomSheetModal";
+import { ThemedBottomSheetModal, ThemedBottomSheetModalProps } from "../BottomSheetModal/ThemedBottomSheetModal";
 import { RefObject, useCallback, useMemo } from "react";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { useTranslation } from "react-i18next";
@@ -63,7 +63,7 @@ export const EditableExerciseModal = (props: AddExerciseModalProps) => {
 
     const buttonStyles = useMemo(() => ({ marginBottom: bottom }), [bottom]);
     return (
-        <ThemedButtomSheetModal snapPoints={["100%"]} ref={props.reference} {...props} title={title}>
+        <ThemedBottomSheetModal snapPoints={["100%"]} ref={props.reference} {...props} title={title}>
             <ThemedView stretch ghost style={styles.innerWrapper}>
                 <EditableExercise />
                 <ThemedPressable style={buttonStyles} ghost behind onPress={handleConfirm}>
@@ -75,6 +75,6 @@ export const EditableExerciseModal = (props: AddExerciseModalProps) => {
                     </HStack>
                 </ThemedPressable>
             </ThemedView>
-        </ThemedButtomSheetModal>
+        </ThemedBottomSheetModal>
     );
 };

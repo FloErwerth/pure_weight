@@ -17,7 +17,7 @@ import { useTranslation } from "react-i18next";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { PageContent } from "../../../components/PageContent/PageContent";
 import { ThemedView } from "../../../components/Themed/ThemedView/View";
-import { useBottomSheetRef } from "../../../components/BottomSheetModal/ThemedButtomSheetModal";
+import { useBottomSheetRef } from "../../../components/BottomSheetModal/ThemedBottomSheetModal";
 import { HStack } from "../../../components/Stack/HStack/HStack";
 import { useColorPickerComponents } from "../../../components/ColorPickerWithModal/ColorPickerWithModal";
 import { ThemedTextInput } from "../../../components/Themed/ThemedTextInput/ThemedTextInput";

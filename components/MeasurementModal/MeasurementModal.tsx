@@ -1,7 +1,7 @@
 import { Pressable } from "react-native";
 import { ThemedTextInput } from "../Themed/ThemedTextInput/ThemedTextInput";
 import { HStack } from "../Stack/HStack/HStack";
-import { ThemedBottomSheetModalProps, ThemedButtomSheetModal } from "../BottomSheetModal/ThemedButtomSheetModal";
+import { ThemedBottomSheetModal, ThemedBottomSheetModalProps } from "../BottomSheetModal/ThemedBottomSheetModal";
 import { Dispatch, RefObject, SetStateAction, useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import DateTimePicker from "@react-native-community/datetimepicker";
@@ -111,7 +111,7 @@ export const MeasurementModal = ({ onRequestClose, reference, isNewMeasurement =
     }, [collectErrors, dates, dispatch, measurement?.date, saveMeasurement, showWarning]);
 
     return (
-        <ThemedButtomSheetModal onRequestClose={onRequestClose} title={measurementButtonText} snapPoints={["100%"]} ref={reference}>
+        <ThemedBottomSheetModal onRequestClose={onRequestClose} title={measurementButtonText} snapPoints={["100%"]} ref={reference}>
             <AnimatedView ghost style={styles.outerWrapper}>
                 <ThemedTextInput
                     maxLength={20}
@@ -194,6 +194,6 @@ export const MeasurementModal = ({ onRequestClose, reference, isNewMeasurement =
                     </HStack>
                 </Pressable>
             </AnimatedView>
-        </ThemedButtomSheetModal>
+        </ThemedBottomSheetModal>
     );
 };

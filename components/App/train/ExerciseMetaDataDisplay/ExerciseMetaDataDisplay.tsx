@@ -7,7 +7,7 @@ import { Text } from "../../../Themed/ThemedText/Text";
 import * as Haptics from "expo-haptics";
 import { useTranslation } from "react-i18next";
 import { EditableExerciseModal } from "../../../EditableExerciseModal/EditableExerciseModal";
-import { useBottomSheetRef } from "../../../BottomSheetModal/ThemedButtomSheetModal";
+import { useBottomSheetRef } from "../../../BottomSheetModal/ThemedBottomSheetModal";
 import { styles } from "./styles";
 import { ThemedMaterialCommunityIcons } from "../../../Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
 import { AppState, useAppDispatch, useAppSelector } from "../../../../store";

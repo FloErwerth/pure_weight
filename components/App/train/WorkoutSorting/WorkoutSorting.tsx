@@ -1,4 +1,4 @@
-import { ThemedButtomSheetModal, useBottomSheetRef } from "../../../BottomSheetModal/ThemedButtomSheetModal";
+import { ThemedBottomSheetModal, useBottomSheetRef } from "../../../BottomSheetModal/ThemedBottomSheetModal";
 import { ThemedPressable } from "../../../Themed/Pressable/Pressable";
 import { Text } from "../../../Themed/ThemedText/Text";
 import { styles } from "./styles";
@@ -39,10 +39,7 @@ const useMappedSortingLabels = () => {
         {} as Record<WorkoutSortingType, string>,
     );
 
-    return useMemo(
-        () => ({ currentSorting, sortingLabel: t(`workout_sorting_${currentSorting}`), mappedSorting, ref, open }) as const,
-        [currentSorting, mappedSorting, open, ref, t],
-    );
+    return useMemo(() => ({ currentSorting, sortingLabel: t(`workout_sorting_${currentSorting}`), mappedSorting, ref, open }) as const, [currentSorting, mappedSorting, open, ref, t]);
 };
 
 export const WorkoutSorting = () => {
@@ -65,7 +62,7 @@ export const WorkoutSorting = () => {
                     </Text>
                 </HStack>
             </ThemedPressable>
-            <ThemedButtomSheetModal title={t("workout_sorting_modal_title")} ref={ref} snapPoints={["50%"]}>
+            <ThemedBottomSheetModal title={t("workout_sorting_modal_title")} ref={ref} snapPoints={["50%"]}>
                 <ThemedView ghost style={styles.optionWrapper}>
                     {mappedSorting.map(({ value, label, handleSelect }) => (
                         <ThemedPressable key={value} onPress={handleSelect} style={styles.option}>
@@ -78,7 +75,7 @@ export const WorkoutSorting = () => {
                         </ThemedPressable>
                     ))}
                 </ThemedView>
-            </ThemedButtomSheetModal>
+            </ThemedBottomSheetModal>
         </>
     );
 };

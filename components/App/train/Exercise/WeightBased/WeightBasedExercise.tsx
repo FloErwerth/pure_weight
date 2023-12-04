@@ -12,7 +12,7 @@ import { borderRadius } from "../../../../../theme/border";
 import { TrainingHeader } from "../../TrainingHeader/TrainingHeader";
 import { SetInputRow } from "../../../../SetInputRow/SetInputRow";
 import { AppState, useAppSelector } from "../../../../../store";
-import { useBottomSheetRef } from "../../../../BottomSheetModal/ThemedButtomSheetModal";
+import { useBottomSheetRef } from "../../../../BottomSheetModal/ThemedBottomSheetModal";
 import { getActiveSetIndex, getWorkoutExercises } from "../../../../../store/reducers/workout/workoutSelectors";
 
 interface WeightBasedExerciseProps {

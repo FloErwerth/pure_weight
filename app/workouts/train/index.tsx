@@ -13,7 +13,7 @@ import { StopwatchPopover } from "../../../components/StopwatchPopover/Stopwatch
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Carousel from "react-native-reanimated-carousel/src/Carousel";
 import { Exercise } from "../../../components/App/train/Exercise/WeightBased/WeightBasedExercise";
-import { useBottomSheetRef } from "../../../components/BottomSheetModal/ThemedButtomSheetModal";
+import { useBottomSheetRef } from "../../../components/BottomSheetModal/ThemedBottomSheetModal";
 import { addDoneWorkout, resetTrainedWorkout, setActiveExerciseIndex } from "../../../store/reducers/workout";
 
 import { getHasAnyTrainedWorkoutData, getIsDoneWithTraining, getTrainedWorkout } from "../../../store/reducers/workout/workoutSelectors";

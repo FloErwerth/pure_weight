@@ -47,9 +47,9 @@ export const ThemeSelection = () => {
     return (
         <ProfileContent title={t("settings_theme")}>
             <ThemedView style={styles.vStack}>
-                <SelectableSetting icon={light} selected={theme === "light"} onSelect={() => handleSelectLanguage("light")} titleKey="theme_light" />
-                <SelectableSetting icon={dark} selected={theme === "dark"} onSelect={() => handleSelectLanguage("dark")} titleKey="theme_dark" />
-                <SelectableSetting icon={device} selected={usesDeviceTheme} onSelect={() => handleSelectLanguage("device")} titleKey="theme_device" />
+                <SelectableSetting prependedExtraContent={light} selected={theme === "light"} onSelect={() => handleSelectLanguage("light")} titleKey="theme_light" />
+                <SelectableSetting prependedExtraContent={dark} selected={theme === "dark"} onSelect={() => handleSelectLanguage("dark")} titleKey="theme_dark" />
+                <SelectableSetting prependedExtraContent={device} selected={usesDeviceTheme} onSelect={() => handleSelectLanguage("device")} titleKey="theme_device" />
             </ThemedView>
         </ProfileContent>
     );

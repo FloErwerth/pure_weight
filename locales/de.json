@@ -43,6 +43,7 @@
   "settings_language": "Sprache",
   "settings_theme": "Theme",
   "settings_unit_system_title": "Einheiten-System",
+  "settings_smallest_weight_title": "Kleinstes Gewicht",
 
   "alert_delete_message": "Dies kann nicht rückgängig gemacht werden",
   "alert_quit_title": "Das Workout frühzeitig beenden?",

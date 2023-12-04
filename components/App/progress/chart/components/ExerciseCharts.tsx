@@ -3,7 +3,7 @@ import { useCallback, useMemo, useState } from "react";
 import { borderRadius } from "../../../../../theme/border";
 import { LineChartData } from "react-native-chart-kit/dist/line-chart/LineChart";
 import { VStack } from "../../../../Stack/VStack/VStack";
-import { ThemedButtomSheetModal, useBottomSheetRef } from "../../../../BottomSheetModal/ThemedButtomSheetModal";
+import { ThemedBottomSheetModal, useBottomSheetRef } from "../../../../BottomSheetModal/ThemedBottomSheetModal";
 import { useAppSelector } from "../../../../../store";
 import { HStack } from "../../../../Stack/HStack/HStack";
 import { styles } from "./styles";
@@ -154,7 +154,7 @@ export const ExerciseChart = ({ exerciseName, data }: ExerciseChartProps) => {
                 </ThemedPressable>
             </HStack>
             <Chart lineChartStyles={styles.lineChart} getYLabel={() => ""} getXLabel={getXLabel} getDotContent={getDotContent} data={lineChartData} />
-            <ThemedButtomSheetModal title={t("progress_modal_title")} ref={ref}>
+            <ThemedBottomSheetModal title={t("progress_modal_title")} ref={ref}>
                 <VStack ghost style={styles.selectionModal}>
                     {mappedChartProps.map(({ onPress, title, chartType }) => (
                         <ThemedPressable style={{ borderRadius, padding: 10 }} input key={`${chartType}${title}`} onPress={onPress}>
@@ -169,7 +169,7 @@ export const ExerciseChart = ({ exerciseName, data }: ExerciseChartProps) => {
                         </ThemedPressable>
                     ))}
                 </VStack>
-            </ThemedButtomSheetModal>
+            </ThemedBottomSheetModal>
         </ThemedView>
     );
 };

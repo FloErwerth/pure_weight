@@ -1,4 +1,4 @@
-import { ThemedBottomSheetModalProps, ThemedButtomSheetModal } from "../../../BottomSheetModal/ThemedButtomSheetModal";
+import { ThemedBottomSheetModal, ThemedBottomSheetModalProps } from "../../../BottomSheetModal/ThemedBottomSheetModal";
 import { RefObject, useCallback } from "react";
 import { AppState, useAppSelector } from "../../../../store";
 import { ThemedView } from "../../../Themed/ThemedView/View";
@@ -37,8 +37,8 @@ export const MeasurementChartModal = ({ index, unit, name, reference }: Measurem
     }
 
     return (
-        <ThemedButtomSheetModal ref={reference} title={name}>
+        <ThemedBottomSheetModal ref={reference} title={name}>
             <Chart transparent lineChartStyles={{ left: -45, top: 20, borderRadius }} getYLabel={() => ""} data={data} getDotContent={getDotContent} />
-        </ThemedButtomSheetModal>
+        </ThemedBottomSheetModal>
     );
 };

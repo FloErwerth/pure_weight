@@ -10,7 +10,7 @@ import { HStack } from "../Stack/HStack/HStack";
 import { styles } from "./styles";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { ThemedView } from "../Themed/ThemedView/View";
-import { ThemedButtomSheetModal, useBottomSheetRef } from "../BottomSheetModal/ThemedButtomSheetModal";
+import { ThemedBottomSheetModal, useBottomSheetRef } from "../BottomSheetModal/ThemedBottomSheetModal";
 
 import { getActiveSetIndex, getPreviousTraining } from "../../store/reducers/workout/workoutSelectors";
 
@@ -94,9 +94,9 @@ export const PreviousTraining = ({ exerciseIndex }: PreviousTrainingProps) => {
                     </VStack>
                 )}
             </ThemedView>
-            <ThemedButtomSheetModal title={`Your note from ${date}`} onRequestClose={handleCloseNote} ref={ref}>
+            <ThemedBottomSheetModal title={`Your note from ${date}`} onRequestClose={handleCloseNote} ref={ref}>
                 <Text style={{ fontSize: 20 }}>{note}</Text>
-            </ThemedButtomSheetModal>
+            </ThemedBottomSheetModal>
         </View>
     );
 };

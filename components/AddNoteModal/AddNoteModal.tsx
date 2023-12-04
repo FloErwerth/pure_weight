@@ -1,7 +1,7 @@
 import { RefObject, useCallback, useRef } from "react";
 import { Keyboard, TextInput } from "react-native";
 import { useTranslation } from "react-i18next";
-import { ThemedButtomSheetModal } from "../BottomSheetModal/ThemedButtomSheetModal";
+import { ThemedBottomSheetModal } from "../BottomSheetModal/ThemedBottomSheetModal";
 import { VStack } from "../Stack/VStack/VStack";
 import { HStack } from "../Stack/HStack/HStack";
 import { ThemedTextInput } from "../Themed/ThemedTextInput/ThemedTextInput";
@@ -37,7 +37,7 @@ export const AddNoteModal = ({ reference, onRequestClose }: EditNoteModalProps) 
     }, [onRequestClose]);
 
     return (
-        <ThemedButtomSheetModal ref={reference} title={t("edit_note_title")}>
+        <ThemedBottomSheetModal ref={reference} title={t("edit_note_title")}>
             <VStack style={styles.wrapper}>
                 <ThemedTextInput
                     bottomSheet={true}
@@ -55,6 +55,6 @@ export const AddNoteModal = ({ reference, onRequestClose }: EditNoteModalProps) 
                     </ThemedPressable>
                 </HStack>
             </VStack>
-        </ThemedButtomSheetModal>
+        </ThemedBottomSheetModal>
     );
 };

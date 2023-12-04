@@ -7,7 +7,7 @@ import { PageContent } from "../../../components/PageContent/PageContent";
 import { ThemedView } from "../../../components/Themed/ThemedView/View";
 import { useTheme } from "../../../theme/context";
 import { CalendarList, DateData } from "react-native-calendars";
-import { ThemedButtomSheetModal, useBottomSheetRef } from "../../../components/BottomSheetModal/ThemedButtomSheetModal";
+import { ThemedBottomSheetModal, useBottomSheetRef } from "../../../components/BottomSheetModal/ThemedBottomSheetModal";
 import { Text } from "../../../components/Themed/ThemedText/Text";
 import { styles } from "../../../components/App/history/styles";
 import { IsoDate } from "../../../types/date";
@@ -187,7 +187,7 @@ export function WorkoutHistory() {
                     <Text style={styles.browseButton}>Browse History</Text>
                 </ThemedPressable>
             </PageContent>
-            <ThemedButtomSheetModal snapPoints={["50%"]} ref={ref}>
+            <ThemedBottomSheetModal snapPoints={["50%"]} ref={ref}>
                 <CalendarList
                     current={selectedDate ?? latestWorkoutDate}
                     dayComponent={dayComponent}
@@ -198,7 +198,7 @@ export function WorkoutHistory() {
                     disabledByDefault
                     horizontal
                 />
-            </ThemedButtomSheetModal>
+            </ThemedBottomSheetModal>
         </ThemedView>
     );
 }

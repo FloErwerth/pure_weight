@@ -49,10 +49,10 @@ export const convertMeasurements = (data: MeasurementDataPoints, nextUnit: Weigh
 
 const calculateWeight = (weight: string, unit: WeightUnit) => {
     if (unit === "kg") {
-        return (parseFloat(weight) * 2.205).toString();
+        return (parseFloat(weight) * KG_TO_POUND).toString();
     }
     if (unit === "lbs") {
-        return (parseFloat(weight) / 2.205).toString();
+        return (parseFloat(weight) / KG_TO_POUND).toString();
     }
     return weight;
 };

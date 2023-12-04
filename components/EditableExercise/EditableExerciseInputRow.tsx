@@ -24,14 +24,14 @@ const getMinutesFromValue = (value?: string) => {
     if (!value) {
         return "";
     }
-    return Math.floor(parseFloat(value) / 60).toString();
+    return Math.floor((parseFloat(value) * 60) / 60).toString();
 };
 
 const getSecondsFromValue = (value?: string) => {
     if (!value) {
         return "";
     }
-    return Math.floor(parseFloat(value) % 60).toString();
+    return Math.floor((parseFloat(value) * 60) % 60).toString();
 };
 
 export const EditableExerciseInputRow = ({ value, setValue, errorKey, i18key, type = "NORMAL", stretch }: EditableExerciseInputRowProps) => {
@@ -122,14 +122,7 @@ export const EditableExerciseInputRow = ({ value, setValue, errorKey, i18key, ty
             <Text behind style={styles.label} ghost>
                 {t(i18key ?? "")}
             </Text>
-            <ThemedTextInput
-                errorKey={errorKey}
-                inputMode="decimal"
-                textAlign="center"
-                style={inputStyles}
-                onChangeText={handleSetValue}
-                value={value}
-            ></ThemedTextInput>
+            <ThemedTextInput errorKey={errorKey} inputMode="decimal" textAlign="center" style={inputStyles} onChangeText={handleSetValue} value={value}></ThemedTextInput>
         </ThemedView>
     );
 };
