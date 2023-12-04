@@ -12,16 +12,27 @@ import { useTranslation } from "react-i18next";
 import { swipableContext } from "../../WorkoutCard/Swipeable";
 import { ProgressDisplay } from "../../WorkoutCard/components/ProgressDisplay/ProgressDisplay";
 import { MeasurementChartModal } from "./Chart/MeasurementChartModal";
-import { Measurement } from "./types";
+import { Measurement, MeasurementType } from "./types";
 import { useBottomSheetRef } from "../../BottomSheetModal/ThemedButtomSheetModal";
 
-import { getLanguage } from "../../../store/reducers/settings/settingsSelectors";
+import { getLanguage, getUnitSystem } from "../../../store/reducers/settings/settingsSelectors";
 import { getLatestMeasurements, getMeasurmentProgress } from "../../../store/reducers/measurements/measurementSelectors";
+import { measurementUnitMap } from "../../../utils/unitMap";
 
 interface MeasurementProps {
     index: number;
     measurement: Measurement;
 }
+
+const useUnitByType = (type?: MeasurementType) => {
+    const unitSystem = useAppSelector(getUnitSystem);
+
+    if (!type) {
+        return "";
+    }
+
+    return measurementUnitMap[unitSystem][type];
+};
 
 export const RenderedMeasurement = ({ index, measurement }: MeasurementProps) => {
     const latestMeasurements = useAppSelector(getLatestMeasurements);
@@ -33,7 +44,7 @@ export const RenderedMeasurement = ({ index, measurement }: MeasurementProps) =>
     const language = useAppSelector(getLanguage);
     const progress = useAppSelector((state: AppState) => getMeasurmentProgress(state, index));
     const [reference] = useBottomSheetRef();
-
+    const unit = useUnitByType(measurement.type);
     const handleNavigateToChart = useCallback(() => {
         if (active) {
             return;
@@ -55,7 +66,7 @@ export const RenderedMeasurement = ({ index, measurement }: MeasurementProps) =>
                 )}
             </VStack>
             <ThemedMaterialCommunityIcons name="table-large-plus" size={26} />
-            <MeasurementChartModal reference={reference} index={index} name={measurement.name} unit={measurement.type} />
+            <MeasurementChartModal reference={reference} index={index} name={measurement.name} unit={unit} />
         </HStack>
     );
 };

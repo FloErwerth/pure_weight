@@ -3,10 +3,6 @@ import { IsoDate } from "../../../types/date";
 import { getDate } from "../../../utils/date";
 import { AppState } from "../../index";
 
-export const getMeasurementTypeDisplayOptions = (state: AppState) => {
-    if (state.settingsState.unitSystem === "metric") {
-    }
-};
 export const getMeasurementsState = (state: AppState) => state.measurmentState;
 export const getMeasurements = createSelector([getMeasurementsState], (state) => state.measurements);
 export const getLatestMeasurements = createSelector([getMeasurements], (measurements) =>

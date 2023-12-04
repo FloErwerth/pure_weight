@@ -4,6 +4,7 @@ import { setWorkouts } from "../reducers/workout";
 import { LengthUnit, UnitSystem, WeightUnit } from "../reducers/settings/types";
 import { MeasurementDataPoints, measurementUnitGroupsDefinition } from "../../components/App/measurements/types";
 import { setMeasurements } from "../reducers/measurements";
+import { unitMap } from "../../utils/unitMap";
 
 const KG_TO_POUND = 2.205;
 const CM_TO_INCH = 2.54;
@@ -59,17 +60,6 @@ const calculateWeight = (weight: string, unit: WeightUnit) => {
 const getNextUnit = (nextSystem: UnitSystem) => {
     return unitMap[nextSystem].weight;
 };
-
-const unitMap = {
-    metric: {
-        weight: "kg",
-        length: "cm",
-    },
-    imperial: {
-        weight: "lbs",
-        length: "inch",
-    },
-} as const;
 
 export const weightMiddleware: Middleware<Record<string, unknown>, AppState> = (storeApi) => (next) => (action) => {
     const dispatch = storeApi.dispatch;

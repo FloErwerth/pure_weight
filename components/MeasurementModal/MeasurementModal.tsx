@@ -15,7 +15,7 @@ import { ThemedPressable } from "../Themed/Pressable/Pressable";
 import Animated, { FadeIn, Layout } from "react-native-reanimated";
 import { ThemedDropdown } from "../Themed/Dropdown/ThemedDropdown";
 import { CheckBox } from "../Themed/CheckBox/CheckBox";
-import { Measurement, measurementTypes } from "../App/measurements/types";
+import { Measurement, MeasurementType, measurementTypes } from "../App/measurements/types";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { AnimatedView } from "../Themed/AnimatedView/AnimatedView";
 import { cleanError, ErrorFields, setError } from "../../store/reducers/errors";
@@ -39,6 +39,16 @@ const fieldToErrorMap: Record<keyof Omit<Measurement, "higherIsBetter" | "data">
     date: "measurement_value",
 };
 
+const MEASUREMENT_KEY_PREFIX = "measurement_type_";
+
+const useMeasurementOptions = () => {
+    const { t } = useTranslation();
+    return measurementTypes.map((type) => t(MEASUREMENT_KEY_PREFIX + type));
+};
+const useDropdownValue = (type?: MeasurementType) => {
+    const { t } = useTranslation();
+    return type && t(MEASUREMENT_KEY_PREFIX + type.toLowerCase());
+};
 export const MeasurementModal = ({ onRequestClose, reference, isNewMeasurement = true, currentMeasurement: { measurement, index }, setCurrentMeasurement, saveMeasurement }: MeasurementModalProps) => {
     const { t } = useTranslation();
     const { mainColor, warningColor } = useTheme();
@@ -48,10 +58,13 @@ export const MeasurementModal = ({ onRequestClose, reference, isNewMeasurement =
     const [showDatePicker, setShowDatePicker] = useState(false);
     const [showWarning, setShowWarnining] = useState(false);
     const dispatch = useAppDispatch();
+    const measurementOptions = useMeasurementOptions();
+    const dropdownValue = useDropdownValue(measurement.type);
 
     const handleAddMeasurementData = useCallback(
         (field: keyof Measurement, value: Measurement[keyof Measurement]) => {
-            const newMeasurement: Measurement = { ...measurement, [field]: value };
+            const newValue = field === "type" ? (value as string).replace(MEASUREMENT_KEY_PREFIX, "") : value;
+            const newMeasurement: Measurement = { ...measurement, [field]: newValue };
             if (field !== "higherIsBetter" && field !== "data") {
                 dispatch(cleanError([fieldToErrorMap[field]]));
             }
@@ -98,10 +111,11 @@ export const MeasurementModal = ({ onRequestClose, reference, isNewMeasurement =
     }, [collectErrors, dates, dispatch, measurement?.date, saveMeasurement, showWarning]);
 
     return (
-        <ThemedButtomSheetModal onRequestClose={onRequestClose} title={measurementButtonText} snapPoints={["60%"]} ref={reference}>
+        <ThemedButtomSheetModal onRequestClose={onRequestClose} title={measurementButtonText} snapPoints={["100%"]} ref={reference}>
             <AnimatedView ghost style={styles.outerWrapper}>
                 <ThemedTextInput
                     maxLength={20}
+                    bottomSheet
                     errorKey="measurement_name"
                     style={styles.textInput}
                     onChangeText={(value) => handleAddMeasurementData("name", value)}
@@ -112,6 +126,7 @@ export const MeasurementModal = ({ onRequestClose, reference, isNewMeasurement =
                 <HStack ghost style={{ alignSelf: "stretch", gap: 10 }}>
                     <ThemedTextInput
                         stretch
+                        bottomSheet
                         errorKey="measurement_value"
                         returnKeyType="done"
                         keyboardType="decimal-pad"
@@ -123,9 +138,9 @@ export const MeasurementModal = ({ onRequestClose, reference, isNewMeasurement =
                     />
                     <ThemedDropdown
                         isSelectable={isNewMeasurement}
-                        options={measurementTypes}
+                        options={measurementOptions}
                         errorKey="measurement_type"
-                        value={measurement?.type}
+                        value={dropdownValue}
                         placeholderTranslationKey="measurement_type"
                         onSelectItem={(value) => handleAddMeasurementData("type", value)}
                     />
