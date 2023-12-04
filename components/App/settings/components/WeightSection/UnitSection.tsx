@@ -3,7 +3,7 @@ import { ProfileContent } from "../SettingsSection/ProfileSection";
 import { useTranslation } from "react-i18next";
 import { useAppDispatch, useAppSelector } from "../../../../../store";
 import { useCallback } from "react";
-import { setWeightUnit } from "../../../../../store/reducers/settings";
+import { setUnitSystem } from "../../../../../store/reducers/settings";
 
 import { getUnitSystem } from "../../../../../store/reducers/settings/settingsSelectors";
 import { Icon, SelectableSetting } from "../../SelectableSetting/SelectableSetting";
@@ -26,7 +26,7 @@ export const UnitSection = () => {
 
     const handleSelectWeightUnit = useCallback(
         (unit: UnitSystem) => {
-            dispatch(setWeightUnit(unit));
+            dispatch(setUnitSystem(unit));
         },
         [dispatch],
     );

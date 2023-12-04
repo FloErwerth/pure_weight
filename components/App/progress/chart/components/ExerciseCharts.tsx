@@ -19,7 +19,7 @@ import { ThemedPressable } from "../../../../Themed/Pressable/Pressable";
 import { useNavigate } from "../../../../../hooks/navigate";
 
 import { getTrainingDayData } from "../../../../../store/reducers/workout/workoutSelectors";
-import { getUnitSystem } from "../../../../../store/reducers/settings/settingsSelectors";
+import { getWeightUnit } from "../../../../../store/reducers/settings/settingsSelectors";
 
 interface ExerciseChartProps {
     exerciseName: string;
@@ -88,7 +88,7 @@ const useExerciseData = (exerciseData: { date: IsoDate; sets: ExerciseSets }[], 
 };
 
 const useChartTypeLabel = (chartType: ChartType) => {
-    const weightUnit = useAppSelector(getUnitSystem);
+    const weightUnit = useAppSelector(getWeightUnit);
     return {
         CUMULATIVE: weightUnit,
         AVG_WEIGHT: weightUnit,
