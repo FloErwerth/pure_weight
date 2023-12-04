@@ -39,7 +39,7 @@ export const SmallestWeightSection = () => {
     const dispatch = useAppDispatch();
     const smallestWeight = useAppSelector(getSmallestWeight);
     const unit = useAppSelector(getWeightUnit);
-    const [ref, open, close] = useBottomSheetRef();
+    const [ref, open] = useBottomSheetRef();
 
     const handleSelectWeightUnit = useCallback(
         (weight: string) => {
