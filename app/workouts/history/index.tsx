@@ -22,7 +22,7 @@ import { DayProps } from "react-native-calendars/src/calendar/day";
 import { borderRadius } from "../../../theme/border";
 import { getAppInstallDate } from "../../../store/reducers/metadata/metadataSelectors";
 import { getEditedWorkout, getHistoryByMonth, getLatestWorkoutDate, getWorkoutColor, getWorkoutDates } from "../../../store/reducers/workout/workoutSelectors";
-import { getWeightUnit } from "../../../store/reducers/settings/settingsSelectors";
+import { getUnitSystem } from "../../../store/reducers/settings/settingsSelectors";
 
 export type SectionListItemInfo = { color: string; name: string; duration?: string; date: IsoDate; weight: number; numExercisesDone: number };
 export type MarkedDay = {
@@ -58,7 +58,7 @@ export function WorkoutHistory() {
     const sectionListRef = useRef<SectionList>(null);
     const dateData = useAppSelector((state: AppState) => getHistoryByMonth(state, selectedDate));
     const navigate = useNavigate();
-    const weightUnit = useAppSelector(getWeightUnit);
+    const weightUnit = useAppSelector(getUnitSystem);
 
     const calendarTheme = useMemo(
         () => ({

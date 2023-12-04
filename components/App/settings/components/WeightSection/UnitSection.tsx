@@ -5,9 +5,9 @@ import { useAppDispatch, useAppSelector } from "../../../../../store";
 import { useCallback } from "react";
 import { setWeightUnit } from "../../../../../store/reducers/settings";
 
-import { getWeightUnit } from "../../../../../store/reducers/settings/settingsSelectors";
+import { getUnitSystem } from "../../../../../store/reducers/settings/settingsSelectors";
 import { Icon, SelectableSetting } from "../../SelectableSetting/SelectableSetting";
-import { WeightUnit } from "../../../../../store/reducers/settings/types";
+import { UnitSystem } from "../../../../../store/reducers/settings/types";
 import { ThemedView } from "../../../../Themed/ThemedView/View";
 
 const kgIcon: Icon = {
@@ -19,23 +19,23 @@ const poundIcon: Icon = {
     size: 24,
 };
 
-export const WeightSection = () => {
+export const UnitSection = () => {
     const { t } = useTranslation();
     const dispatch = useAppDispatch();
-    const weightUnit = useAppSelector(getWeightUnit);
+    const unitSystem = useAppSelector(getUnitSystem);
 
     const handleSelectWeightUnit = useCallback(
-        (unit: WeightUnit) => {
+        (unit: UnitSystem) => {
             dispatch(setWeightUnit(unit));
         },
         [dispatch],
     );
 
     return (
-        <ProfileContent title={t("settings_weight_unit_title")}>
+        <ProfileContent title={t("settings_unit_system_title")}>
             <ThemedView style={styles.vStack}>
-                <SelectableSetting icon={kgIcon} selected={weightUnit === "kg"} onSelect={() => handleSelectWeightUnit("kg")} titleKey="unit_weight_kg" />
-                <SelectableSetting icon={poundIcon} selected={weightUnit === "lbs"} onSelect={() => handleSelectWeightUnit("lbs")} titleKey="unit_weight_pounds" />
+                <SelectableSetting icon={kgIcon} selected={unitSystem === "metric"} onSelect={() => handleSelectWeightUnit("metric")} titleKey="unit_system_metric" />
+                <SelectableSetting icon={poundIcon} selected={unitSystem === "imperial"} onSelect={() => handleSelectWeightUnit("imperial")} titleKey="unit_system_imperial" />
             </ThemedView>
         </ProfileContent>
     );

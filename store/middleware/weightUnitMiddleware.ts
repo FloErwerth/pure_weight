@@ -1,9 +1,9 @@
 import { Middleware } from "redux";
 import { AppState } from "../index";
-import { WeightUnit } from "../reducers/settings/types";
+import { UnitSystem } from "../reducers/settings/types";
 import { setWorkouts } from "../reducers/workout";
 
-const calculateWeight = (weight: string, unit: WeightUnit) => {
+const calculateWeight = (weight: string, unit: UnitSystem) => {
     if (unit === "kg") {
         return (parseFloat(weight) * 2.205).toFixed(3);
     }

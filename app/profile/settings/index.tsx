@@ -6,7 +6,7 @@ import { useNavigate } from "../../../hooks/navigate";
 import { PageContent } from "../../../components/PageContent/PageContent";
 import { ThemedView } from "../../../components/Themed/ThemedView/View";
 import { ThemeSelection } from "../../../components/App/settings/components/ThemeSelection/ThemeSelection";
-import { WeightSection } from "../../../components/App/settings/components/WeightSection/WeightSection";
+import { UnitSection } from "../../../components/App/settings/components/WeightSection/UnitSection";
 import { DevelopmentSelection } from "../../../components/App/settings/components/DevelopmentSection/DevelopmentSelection";
 
 const isProduction = process.env["EXPO_PUBLIC_IS_PRODUCTION"] === "true";
@@ -23,7 +23,7 @@ export function Settings() {
             <PageContent scrollable style={{ gap: 10 }}>
                 <LanguageSelection />
                 <ThemeSelection />
-                <WeightSection />
+                <UnitSection />
                 {!isProduction && <DevelopmentSelection />}
             </PageContent>
         </ThemedView>

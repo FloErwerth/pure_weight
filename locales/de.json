@@ -31,6 +31,8 @@
   "pause": "Pause",
   "timePerSet": "Zeit pro Satz",
   "timeBeforeSet": "Zeit vor dem Satz",
+  "unit_system_metric": "Metrisch",
+  "unit_system_imperial": "Imperialistisch",
   "unit_weight_kg": "Kilogramm",
   "unit_weight_kg_short": "kg",
   "unit_weight_pounds": "Pfund",
@@ -40,7 +42,7 @@
   "settings_language_english": "English",
   "settings_language": "Sprache",
   "settings_theme": "Theme",
-  "settings_weight_unit_title": "Einheiten",
+  "settings_unit_system_title": "Einheiten-System",
 
   "alert_delete_message": "Dies kann nicht rückgängig gemacht werden",
   "alert_quit_title": "Das Workout frühzeitig beenden?",

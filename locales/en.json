@@ -41,13 +41,14 @@
   "unit_weight_kg_short": "kg",
   "unit_weight_pounds": "Pounds",
   "unit_weight_pounds_short": "lbs",
-
+  "unit_system_metric": "Metric",
+  "unit_system_imperial": "Imperialistic",
 
   "settings_language_german": "Deutsch",
   "settings_language_english": "English",
   "settings_language": "Language",
   "settings_theme": "Theme",
-  "settings_weight_unit_title": "Units",
+  "settings_unit_system_title": "Unit System",
 
   "alert_delete_message": "This action can't be undone",
   "alert_quit_title": "Quit training early?",
