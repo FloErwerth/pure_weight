@@ -54,7 +54,7 @@ export const useColorPickerComponents = () => {
                 () => (
                     <ThemedBottomSheetModal key="COLORMODAL" snapPoints={["60%"]} ref={colorPickerRef}>
                         <View style={styles.padding}>
-                            <ColorPicker onColorChange={handlePickColor} color={color} palette={palette} />
+                            <ColorPicker onColorChangeComplete={handlePickColor} color={color} palette={palette} />
                         </View>
                     </ThemedBottomSheetModal>
                 ),
