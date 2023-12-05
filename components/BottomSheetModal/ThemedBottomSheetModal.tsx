@@ -11,6 +11,7 @@ export type SnapPoint = `${number}%`;
 export interface ThemedBottomSheetModalProps extends PropsWithChildren {
     title?: string;
     customContentStyle?: ViewStyle;
+    hideIndicator?: boolean;
     style?: ViewStyle;
     onRequestClose?: () => void;
     snapPoints?: SnapPoint[];
@@ -36,7 +37,7 @@ const renderBackdrop = (props: BottomSheetBackdropProps) => <BottomSheetBackdrop
 
 // eslint-disable-next-line react/display-name
 export const ThemedBottomSheetModal = forwardRef<BottomSheetModal, ThemedBottomSheetModalProps>(
-    ({ snapPoints, customContentStyle, children, title, onRequestClose, allowSwipeDownToClose = true }, ref) => {
+    ({ hideIndicator, snapPoints, customContentStyle, children, title, onRequestClose, allowSwipeDownToClose = true }, ref) => {
         const { mainColor, inputFieldBackgroundColor } = useTheme();
         const { top } = useSafeAreaInsets();
         const defaultStyle = useMemo(() => [customContentStyle, styles.defaultContentStyle, { backgroundColor: inputFieldBackgroundColor }], [customContentStyle, inputFieldBackgroundColor]);
@@ -48,13 +49,13 @@ export const ThemedBottomSheetModal = forwardRef<BottomSheetModal, ThemedBottomS
             return [snapPoints[0], ...snapPoints];
         }, [snapPoints]);
 
-        const indicatorStyle = useMemo(() => ({ backgroundColor: allowSwipeDownToClose ? mainColor : "transparent" }), [allowSwipeDownToClose, mainColor]);
+        const customIndicator = useMemo(() => ({ backgroundColor: allowSwipeDownToClose && !hideIndicator ? mainColor : "transparent" }), [allowSwipeDownToClose, hideIndicator, mainColor]);
 
         return (
             <BottomSheetModal
                 enablePanDownToClose={allowSwipeDownToClose}
                 index={1}
-                handleIndicatorStyle={indicatorStyle}
+                handleIndicatorStyle={customIndicator}
                 enableDynamicSizing={false}
                 backdropComponent={renderBackdrop}
                 backgroundStyle={defaultStyle}

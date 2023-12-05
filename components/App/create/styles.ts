@@ -8,9 +8,15 @@ export const styles = StyleSheet.create({
         alignContent: "center",
     },
     workoutNameInput: { width: Dimensions.get("window").width * 0.75, fontSize: 26 },
+    swatches: { marginTop: 10 },
     padding: {
         padding: 10,
         height: "90%",
+    },
+    indicator: { width: 50, height: 10, alignSelf: "center", marginBottom: 10 },
+    picker: {
+        width: "90%",
+        alignSelf: "center",
     },
     vStack: {
         padding: 15,
@@ -21,13 +27,10 @@ export const styles = StyleSheet.create({
         alignSelf: "stretch",
     },
     colorButton: {
-        width: 30,
-        height: 30,
+        width: 45,
+        height: 45,
         borderRadius: 30,
-        backgroundColor: "black",
-    },
-    colorButtonWrapper: {
-        justifyContent: "center",
+        alignSelf: "center",
     },
     text: {
         paddingLeft: 10,

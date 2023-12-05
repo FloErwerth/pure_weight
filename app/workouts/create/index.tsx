@@ -19,7 +19,7 @@ import { PageContent } from "../../../components/PageContent/PageContent";
 import { ThemedView } from "../../../components/Themed/ThemedView/View";
 import { useBottomSheetRef } from "../../../components/BottomSheetModal/ThemedBottomSheetModal";
 import { HStack } from "../../../components/Stack/HStack/HStack";
-import { useColorPickerComponents } from "../../../components/ColorPickerWithModal/ColorPickerWithModal";
+import { ColorPickerButton, ColorPickerModal } from "../../../components/ColorPickerWithModal/ColorPickerWithModal";
 import { ThemedTextInput } from "../../../components/Themed/ThemedTextInput/ThemedTextInput";
 import { cleanErrors, setError } from "../../../store/reducers/errors";
 import {
@@ -53,7 +53,7 @@ export function Create() {
     const dispatch = useAppDispatch();
     const [alertRef, openAlert, closeAlert] = useBottomSheetRef();
     const [addRef, openAdd, closeAdd] = useBottomSheetRef();
-    const [PickerModal, PickerButton] = useColorPickerComponents();
+    const [colorPickerRef, openPicker] = useBottomSheetRef();
 
     const handleSetWorkoutName = useCallback(
         (value?: string) => {
@@ -195,7 +195,7 @@ export function Create() {
                 <PageContent style={styles.contentWrapper}>
                     <HStack style={styles.nameColorStack} ghost>
                         <ThemedTextInput style={styles.workoutNameInput} showClear value={editedWorkout?.workout.name} onChangeText={handleSetWorkoutName} placeholder={t("workout_name")} />
-                        <PickerButton />
+                        <ColorPickerButton openPicker={openPicker} />
                     </HStack>
                     <View style={styles.listContainer}>
                         {mappedExercises?.length > 0 ? (
@@ -219,7 +219,7 @@ export function Create() {
             </ThemedView>
             <AlertModal reference={alertRef} onConfirm={alertConfig?.onConfirm} title={alertConfig?.title} content={alertConfig?.content} onCancel={closeAlert} />
             <EditableExerciseModal reference={addRef} />
-            <PickerModal />
+            <ColorPickerModal reference={colorPickerRef} />
         </>
     );
 }
