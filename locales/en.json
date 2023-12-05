@@ -8,6 +8,8 @@
 
   "history_cta": "Show history",
   "history_front": "History:",
+  "history_latest_workout": "Latest Workout",
+  "history_latest_workout_short": "latest",
 
   "create_select_type": "Select exercise type",
   "create_exercise_type_label": "Exercise type",

@@ -11,18 +11,18 @@ import { ThemedBottomSheetModal, useBottomSheetRef } from "../../../components/B
 import { Text } from "../../../components/Themed/ThemedText/Text";
 import { styles } from "../../../components/App/history/styles";
 import { IsoDate } from "../../../types/date";
-import { getTitle } from "../../../utils/date";
 import { HStack } from "../../../components/Stack/HStack/HStack";
 import { ThemedPressable } from "../../../components/Themed/Pressable/Pressable";
-import { Dimensions, SectionList, SectionListData, ViewStyle } from "react-native";
+import { Dimensions, SectionList, SectionListData, View, ViewStyle } from "react-native";
 import { getDuration } from "../../../utils/getDuration";
 import { ThemedMaterialCommunityIcons } from "../../../components/Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
 import { RenderedDay } from "../../../components/App/history/RenderedDay/RenderedDay";
 import { DayProps } from "react-native-calendars/src/calendar/day";
-import { borderRadius } from "../../../theme/border";
 import { getEditedWorkout, getFirstWorkoutDate, getHistoryByMonth, getLatestWorkoutDate, getWorkoutColor, getWorkoutDates } from "../../../store/reducers/workout/workoutSelectors";
 import { getWeightUnit } from "../../../store/reducers/settings/settingsSelectors";
 import { Temporal } from "@js-temporal/polyfill";
+import { getTitle } from "../../../utils/date";
+import { Chip } from "../../../components/Chip/Chip";
 
 export type SectionListItemInfo = { color: string; name: string; duration?: string; date: IsoDate; weight: string; numExercisesDone: number };
 export type MarkedDay = {
@@ -154,19 +154,31 @@ export function WorkoutHistory() {
             };
 
             const color = markedDates[isoDate];
-            return <RenderedDay selected={selectedDate === isoDate} handleSelectDate={handleDayPress} day={day} color={color} />;
+            const isLatest = isoDate === latestWorkoutDate;
+            return <RenderedDay latestDay={isLatest} selected={selectedDate === isoDate} handleSelectDate={handleDayPress} day={day} color={color} />;
         },
-        [handleSelectDate, markedDates, selectedDate],
+        [handleSelectDate, latestWorkoutDate, markedDates, selectedDate],
     );
 
-    const renderSectionHeader = useCallback(({ section }: { section: SectionListData<SectionListItemInfo> }) => {
-        const date = section.title as IsoDate;
-        return (
-            <Text background style={{ fontSize: 26, padding: 1, flex: 1, borderRadius, marginTop: 20 }}>
-                {getTitle(date)}
-            </Text>
-        );
-    }, []);
+    const renderSectionHeader = useCallback(
+        ({ section }: { section: SectionListData<SectionListItemInfo> }) => {
+            const date = section.title as IsoDate;
+            const isLatestDate = date === latestWorkoutDate;
+            return (
+                <HStack background>
+                    <Text background style={styles.title}>
+                        {getTitle(date)}
+                    </Text>
+                    {isLatestDate && (
+                        <View style={styles.latestWorkoutChip}>
+                            <Chip type="Info" title={t("history_latest_workout")} />
+                        </View>
+                    )}
+                </HStack>
+            );
+        },
+        [latestWorkoutDate, t],
+    );
 
     return (
         <ThemedView stretch>

@@ -11,5 +11,6 @@ export type ThemeColors = {
     secondaryErrorColor: string;
     primaryColor: string;
     warningColor: string;
+    successColor: string;
 };
 export type ThemeKey = "dark" | "light";
