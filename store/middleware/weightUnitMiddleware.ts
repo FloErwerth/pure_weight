@@ -2,7 +2,7 @@ import { Middleware } from "redux";
 import { AppState } from "../index";
 import { setWorkouts } from "../reducers/workout";
 import { LengthUnit, UnitSystem, WeightUnit } from "../reducers/settings/types";
-import { MeasurementDataPoints, measurementUnitGroupsDefinition } from "../../components/App/measurements/types";
+import { MeasurementDataPoints, MeasurementType } from "../../components/App/measurements/types";
 import { setMeasurements } from "../reducers/measurements";
 import { unitMap } from "../../utils/unitMap";
 import { convert } from "convert";
@@ -52,18 +52,19 @@ const convertLength = (nextUnit: LengthUnit | WeightUnit, data: MeasurementDataP
     }
 };
 
-export const convertMeasurements = (data: MeasurementDataPoints, nextUnit: WeightUnit | LengthUnit): MeasurementDataPoints => {
-    if (measurementUnitGroupsDefinition.length.includes(nextUnit)) {
-        return convertLength(nextUnit, data);
+export const convertMeasurements = (type: MeasurementType | undefined, data: MeasurementDataPoints, nextUnitSystem: UnitSystem): MeasurementDataPoints => {
+    if (type === "weight") {
+        return convertWeight(getNextUnit(nextUnitSystem).weight, data);
     }
-    if (measurementUnitGroupsDefinition.weight.includes(nextUnit)) {
-        return convertWeight(nextUnit, data);
+    if (type === "growth") {
+        return convertLength(getNextUnit(nextUnitSystem).length, data);
     }
+
     return data;
 };
 
 const getNextUnit = (nextSystem: UnitSystem) => {
-    return unitMap[nextSystem].weight;
+    return unitMap[nextSystem];
 };
 
 export const weightMiddleware: Middleware<Record<string, unknown>, AppState> = (storeApi) => (next) => (action) => {
@@ -80,10 +81,10 @@ export const weightMiddleware: Middleware<Record<string, unknown>, AppState> = (
                         ...doneWorkout,
                         doneExercises: doneWorkout.doneExercises?.map((doneExercise) => ({
                             ...doneExercise,
-                            sets: doneExercise.sets.map((set) => ({ ...set, weight: calculateWeight(set.weight, nextUnit) })),
+                            sets: doneExercise.sets.map((set) => ({ ...set, weight: calculateWeight(set.weight, nextUnit.weight) })),
                         })),
                     })),
-                    exercises: workout.exercises.map((exercise) => ({ ...exercise, weight: calculateWeight(exercise.weight, nextUnit) })),
+                    exercises: workout.exercises.map((exercise) => ({ ...exercise, weight: calculateWeight(exercise.weight, nextUnit.weight) })),
                 })),
             ),
         );
@@ -92,7 +93,7 @@ export const weightMiddleware: Middleware<Record<string, unknown>, AppState> = (
                 state.measurmentState.measurements.map((measurement) => {
                     return {
                         ...measurement,
-                        data: measurement.data ? convertMeasurements(measurement.data, nextUnit) : measurement.data,
+                        data: measurement.data ? convertMeasurements(measurement.type, measurement.data, nextUnitSystem) : measurement.data,
                     };
                 }),
             ),
