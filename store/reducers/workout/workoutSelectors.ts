@@ -78,7 +78,7 @@ export const getColor = createSelector([getEditedWorkout], (editedWorkout) => ({
     color: editedWorkout?.workout?.calendarColor ?? PALETTE[Math.floor(PALETTE.length * Math.random())],
     palette: PALETTE,
 }));
-export const getHistoryByMonth = createSelector([getEditedWorkout, (editedWorkout, month?: string) => month], (editedWorkout, searchedMonth) => {
+export const getHistoryByMonth = createSelector([getEditedWorkout, (editedWorkout, month?: string) => month ?? getDateTodayIso()], (editedWorkout, searchedMonth) => {
     const workout = editedWorkout?.workout;
     const foundTrainings: Map<
         string,
@@ -87,7 +87,7 @@ export const getHistoryByMonth = createSelector([getEditedWorkout, (editedWorkou
             name: string;
             duration?: string;
             date: IsoDate;
-            weight: number;
+            weight: string;
             numExercisesDone: number;
         }[]
     > = new Map();
@@ -96,15 +96,16 @@ export const getHistoryByMonth = createSelector([getEditedWorkout, (editedWorkou
         foundTrainings.set(doneWorkout.date, [
             ...(foundTrainings.get(doneWorkout.date) ?? []),
             {
-                color: workout.calendarColor,
-                name: workout.name,
+                color: workout?.calendarColor,
+                name: workout?.name,
                 date: doneWorkout.date,
                 duration: doneWorkout.duration,
-                weight:
+                weight: (
                     doneWorkout.doneExercises?.reduce(
                         (sum, current) => sum + current.sets.reduce((sumSet, currentSet) => sumSet + parseFloat(currentSet.weight) * parseFloat(currentSet.reps), 0),
                         0,
-                    ) ?? 0,
+                    ) ?? 0
+                ).toFixed(2),
                 numExercisesDone: doneWorkout.doneExercises?.length ?? 0,
             },
         ]);

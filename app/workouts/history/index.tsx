@@ -11,7 +11,7 @@ import { ThemedBottomSheetModal, useBottomSheetRef } from "../../../components/B
 import { Text } from "../../../components/Themed/ThemedText/Text";
 import { styles } from "../../../components/App/history/styles";
 import { IsoDate } from "../../../types/date";
-import { getDateToday, getDateTodayIso, getMonth, getTitle } from "../../../utils/date";
+import { getDateToday, getDateTodayIso, getTitle } from "../../../utils/date";
 import { HStack } from "../../../components/Stack/HStack/HStack";
 import { ThemedPressable } from "../../../components/Themed/Pressable/Pressable";
 import { Dimensions, SectionList, SectionListData, ViewStyle } from "react-native";
@@ -22,9 +22,9 @@ import { DayProps } from "react-native-calendars/src/calendar/day";
 import { borderRadius } from "../../../theme/border";
 import { getAppInstallDate } from "../../../store/reducers/metadata/metadataSelectors";
 import { getEditedWorkout, getHistoryByMonth, getLatestWorkoutDate, getWorkoutColor, getWorkoutDates } from "../../../store/reducers/workout/workoutSelectors";
-import { getUnitSystem } from "../../../store/reducers/settings/settingsSelectors";
+import { getWeightUnit } from "../../../store/reducers/settings/settingsSelectors";
 
-export type SectionListItemInfo = { color: string; name: string; duration?: string; date: IsoDate; weight: number; numExercisesDone: number };
+export type SectionListItemInfo = { color: string; name: string; duration?: string; date: IsoDate; weight: string; numExercisesDone: number };
 export type MarkedDay = {
     selectedColor: string;
 };
@@ -50,7 +50,7 @@ export function WorkoutHistory() {
     const { inputFieldBackgroundColor, mainColor, textDisabled } = useTheme();
     const installDate = useAppSelector(getAppInstallDate);
     const latestWorkoutDate = useAppSelector(getLatestWorkoutDate);
-    const [selectedDate, setSelectedDate] = useState<IsoDate | undefined>();
+    const [selectedDate, setSelectedDate] = useState<IsoDate | undefined>(latestWorkoutDate);
     const pastScrollRange = useMemo(() => Math.floor(getDateToday().since(installDate ?? getDateTodayIso()).days / 30), [installDate]);
     const markedDates = useMarkedDates();
     const workout = useAppSelector(getEditedWorkout);
@@ -58,7 +58,7 @@ export function WorkoutHistory() {
     const sectionListRef = useRef<SectionList>(null);
     const dateData = useAppSelector((state: AppState) => getHistoryByMonth(state, selectedDate));
     const navigate = useNavigate();
-    const weightUnit = useAppSelector(getUnitSystem);
+    const weightUnit = useAppSelector(getWeightUnit);
 
     const calendarTheme = useMemo(
         () => ({
@@ -125,34 +125,31 @@ export function WorkoutHistory() {
                 </ThemedView>
             );
         },
-        [mainColor, selectedDate],
+        [selectedDate, weightUnit],
     );
 
     const dayComponent = useCallback(
         (date: DayProps & { date?: DateData | undefined }) => {
-            const day = date.date?.day.toString();
-            const isoDate = date?.date?.dateString as IsoDate;
-
-            if (!day || !isoDate) {
+            if (!date.date?.dateString || !date.date?.day) {
                 return null;
             }
 
+            const day = date.date?.day.toString();
+            const isoDate = date?.date?.dateString as IsoDate;
             const scrollCallback = () => {
+                const possibleIndexToScrollTo = sectionListRef.current?.props.sections.findIndex((data) => data.data[0].date === isoDate);
+                const indexToScrollTo = possibleIndexToScrollTo !== undefined && possibleIndexToScrollTo !== -1 ? possibleIndexToScrollTo : 0;
+
                 sectionListRef.current?.scrollToLocation({
-                    sectionIndex: sectionListRef.current?.props.sections.findIndex((data) => data.data[0].date === isoDate),
+                    sectionIndex: indexToScrollTo,
                     itemIndex: 1,
                     viewOffset: Dimensions.get("window").height * 0.28,
                     animated: true,
                 });
             };
-            const differentMonth = getMonth(isoDate) !== getMonth(selectedDate);
             const handleDayPress = () => {
                 handleSelectDate(isoDate);
-                if (differentMonth) {
-                    setTimeout(scrollCallback, 50);
-                    return;
-                }
-                scrollCallback();
+                setTimeout(scrollCallback, 200);
             };
 
             const color = markedDates[isoDate];
