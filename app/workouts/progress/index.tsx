@@ -32,7 +32,6 @@ export function Progress() {
     const Fallback = () => {
         const { componentBackgroundColor } = useTheme();
         const containerStyles = useMemo(() => [styles.vStack, { backgroundColor: componentBackgroundColor }], [componentBackgroundColor]);
-
         return (
             <ScrollView contentContainerStyle={styles.scrollView}>
                 {exercises?.map(() => (

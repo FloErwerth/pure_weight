@@ -55,7 +55,7 @@ export const getSpecificNumberOfSets = createSelector([getEditedWorkout, (exerci
     }
 });
 
-export const getWorkoutExercises = createSelector([getTrainedWorkout], (editedWorkout) => editedWorkout?.workout?.exercises);
+export const getWorkoutExercises = createSelector([getEditedWorkout], (editedWorkout) => editedWorkout?.workout?.exercises);
 export const getTrainingDayData = createSelector([getEditedWorkout], (editedWorkout) => {
     const workout = editedWorkout?.workout;
     if (workout?.doneWorkouts === undefined || workout.doneWorkouts.length === 0) {
