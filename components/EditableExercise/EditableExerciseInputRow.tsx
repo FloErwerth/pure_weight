@@ -1,5 +1,5 @@
 import { ThemedTextInput } from "../Themed/ThemedTextInput/ThemedTextInput";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { styles } from "./styles";
 import { useTranslation } from "react-i18next";
 import { AppState, useAppSelector } from "../../store";
@@ -9,6 +9,9 @@ import { ThemedView } from "../Themed/ThemedView/View";
 import { HStack } from "../Stack/HStack/HStack";
 import { ErrorFields } from "../../store/reducers/errors";
 import { getErrorByKey } from "../../store/reducers/errors/errorSelectors";
+import { borderRadius } from "../../theme/border";
+import { ThemedPressable } from "../Themed/Pressable/Pressable";
+import { TextInput } from "react-native";
 
 type ExerciseInputType = "NORMAL" | "MINUTES_SECONDS";
 interface EditableExerciseInputRowProps {
@@ -18,6 +21,7 @@ interface EditableExerciseInputRowProps {
     errorKey?: ErrorFields;
     i18key?: string;
     stretch?: boolean;
+    suffix?: string;
 }
 
 const getMinutesFromValue = (value?: string) => {
@@ -34,13 +38,16 @@ const getSecondsFromValue = (value?: string) => {
     return Math.floor((parseFloat(value) * 60) % 60).toString();
 };
 
-export const EditableExerciseInputRow = ({ value, setValue, errorKey, i18key, type = "NORMAL", stretch }: EditableExerciseInputRowProps) => {
+export const EditableExerciseInputRow = ({ value, setValue, errorKey, i18key, type = "NORMAL", stretch, suffix }: EditableExerciseInputRowProps) => {
     const { t } = useTranslation();
     const { errorColor } = useTheme();
     const hasError = useAppSelector((state: AppState) => getErrorByKey(state)(errorKey));
     const inputStyles = useMemo(() => [{ borderColor: hasError ? errorColor : "transparent" }, styles.input], [errorColor, hasError]);
     const [seconds, setSeconds] = useState<string>(getSecondsFromValue(value));
     const [minutes, setMinutes] = useState<string>(getMinutesFromValue(value));
+    const textInputRef = useRef<TextInput>(null);
+    const secondsRef = useRef<TextInput>(null);
+    const minutesRef = useRef<TextInput>(null);
 
     const handleSetValue = useCallback(
         (val: string, inputType?: "min" | "sec") => {
@@ -90,39 +97,69 @@ export const EditableExerciseInputRow = ({ value, setValue, errorKey, i18key, ty
                     {t(i18key ?? "")}
                 </Text>
                 <HStack ghost style={styles.gap}>
-                    <ThemedTextInput
-                        background
-                        stretch
-                        errorKey={errorKey}
-                        inputMode="decimal"
-                        textAlign="center"
-                        placeholder={minutesSuffix}
-                        onChangeText={handleChangeMinutes}
-                        value={minutes}
-                        suffix={minutesSuffix}
-                    ></ThemedTextInput>
-                    <ThemedTextInput
-                        background
-                        errorKey={errorKey}
-                        stretch
-                        inputMode="decimal"
-                        textAlign="center"
-                        placeholder={secondsSuffix}
-                        suffix={secondsSuffix}
-                        onChangeText={handleChangeSeconds}
-                        value={seconds}
-                    ></ThemedTextInput>
+                    <ThemedPressable ghost stretch onPress={() => minutesRef.current?.focus()}>
+                        <HStack ghost background style={{ borderRadius, alignItems: "center", justifyContent: "center" }}>
+                            <ThemedTextInput
+                                reference={minutesRef}
+                                ghost
+                                errorKey={errorKey}
+                                inputMode="decimal"
+                                textAlign="center"
+                                onChangeText={handleChangeMinutes}
+                                value={minutes}
+                            ></ThemedTextInput>
+                            {minutes && (
+                                <ThemedView ghost>
+                                    <Text ghost>{minutesSuffix}</Text>
+                                </ThemedView>
+                            )}
+                        </HStack>
+                    </ThemedPressable>
+                    <ThemedPressable stretch ghost onPress={() => secondsRef.current?.focus()}>
+                        <HStack ghost background style={{ borderRadius, alignItems: "center", justifyContent: "center" }}>
+                            <ThemedTextInput
+                                reference={secondsRef}
+                                background
+                                errorKey={errorKey}
+                                inputMode="decimal"
+                                textAlign="center"
+                                onChangeText={handleChangeSeconds}
+                                value={seconds}
+                            ></ThemedTextInput>
+                            {seconds && (
+                                <ThemedView ghost>
+                                    <Text ghost>{secondsSuffix}</Text>
+                                </ThemedView>
+                            )}
+                        </HStack>
+                    </ThemedPressable>
                 </HStack>
             </ThemedView>
         );
     }
 
     return (
-        <ThemedView behind ghost stretch={stretch}>
+        <ThemedPressable onPress={() => textInputRef.current?.focus()} behind ghost stretch={stretch}>
             <Text behind style={styles.label} ghost>
                 {t(i18key ?? "")}
             </Text>
-            <ThemedTextInput errorKey={errorKey} inputMode="decimal" textAlign="center" style={inputStyles} onChangeText={handleSetValue} value={value}></ThemedTextInput>
-        </ThemedView>
+            <HStack background style={{ borderRadius, alignItems: "center", justifyContent: "center" }}>
+                <ThemedTextInput
+                    reference={textInputRef}
+                    ghost
+                    errorKey={errorKey}
+                    inputMode="decimal"
+                    textAlign="center"
+                    style={inputStyles}
+                    onChangeText={handleSetValue}
+                    value={value}
+                ></ThemedTextInput>
+                {value && suffix && (
+                    <ThemedView ghost>
+                        <Text ghost>{suffix}</Text>
+                    </ThemedView>
+                )}
+            </HStack>
+        </ThemedPressable>
     );
 };

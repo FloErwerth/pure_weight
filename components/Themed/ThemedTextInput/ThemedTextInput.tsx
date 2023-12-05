@@ -105,7 +105,7 @@ export const ThemedTextInput = (props: ThemedTextInputProps) => {
                     returnKeyType="done"
                     style={textInputStyle}
                     placeholderTextColor={placeholderColor}
-                ></BottomSheetTextInput>
+                />
             ) : (
                 <TextInput
                     {...props}
