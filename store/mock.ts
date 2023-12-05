@@ -5,7 +5,7 @@ import { AppState } from "./index";
 const constructedDoneWorkouts: DoneWorkouts = [];
 for (let i = 1; i <= 10; i++) {
     const currentDate = new Date("2023-09-01");
-    currentDate.setDate(currentDate.getDate() + i);
+    currentDate.setDate(currentDate.getDate() + i * Math.random() * 10 - 5);
     const dateStr = currentDate.toISOString().split("T")[0];
     constructedDoneWorkouts.push({
         date: dateStr as IsoDate,

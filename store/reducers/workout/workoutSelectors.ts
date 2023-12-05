@@ -25,9 +25,14 @@ export const getWorkoutDates = createSelector([getEditedWorkout], (editedWorkout
 
 export const getWorkoutColor = createSelector([getEditedWorkout], (editedWorkout) => editedWorkout?.workout.calendarColor);
 export const getLatestWorkoutDate = createSelector([getWorkoutDates], (dates) => {
-    return dates.sort(
+    return dates?.sort(
         (dateA, dateB) => Temporal.Instant.from(dateA.concat("T00:00+00:00") as string).epochMilliseconds - Temporal.Instant.from(dateB.concat("T00:00+00:00") as string).epochMilliseconds,
-    )[dates.length - 1];
+    )[dates?.length - 1];
+});
+export const getFirstWorkoutDate = createSelector([getWorkoutDates], (dates) => {
+    return dates?.sort(
+        (dateA, dateB) => Temporal.Instant.from(dateA.concat("T00:00+00:00") as string).epochMilliseconds - Temporal.Instant.from(dateB.concat("T00:00+00:00") as string).epochMilliseconds,
+    )[0];
 });
 export const getWorkoutByIndex = createSelector([getWorkouts], (trainings) => {
     return (index: number) => {
