@@ -4,11 +4,12 @@ import { EditableExerciseInputRow } from "../EditableExerciseInputRow";
 import { ThemedView } from "../../Themed/ThemedView/View";
 import { useAppDispatch, useAppSelector } from "../../../store";
 import { useCallback } from "react";
-import { WeightBasedExerciseMetaData } from "../../../store/types";
-import { mutateEditedExercise } from "../../../store/reducers/workout";
+import { TimeInput, WeightBasedExerciseMetaData } from "../../../store/types";
+import { mutateEditedExercise, mutateEditedExercisePause } from "../../../store/reducers/workout";
 
 import { getEditedExercise } from "../../../store/reducers/workout/workoutSelectors";
 import { getWeightUnit } from "../../../store/reducers/settings/settingsSelectors";
+import { TimeInputRow } from "../TimeInputRow";
 
 export const WeightBasedExercise = () => {
     const editedExercise = useAppSelector(getEditedExercise);
@@ -21,6 +22,14 @@ export const WeightBasedExercise = () => {
         },
         [dispatch],
     );
+
+    const handleSetPause = useCallback(
+        (key: keyof TimeInput, value: string | undefined) => {
+            dispatch(mutateEditedExercisePause({ key, value }));
+        },
+        [dispatch],
+    );
+
     return (
         <ThemedView ghost stretch style={styles.inputWrapper}>
             <HStack style={styles.inputWrapper} ghost>
@@ -35,7 +44,7 @@ export const WeightBasedExercise = () => {
                 <EditableExerciseInputRow stretch i18key="sets" setValue={(sets) => handleEditExercise?.("sets", sets)} errorKey={"create_sets"} value={editedExercise?.exercise.sets} />
                 <EditableExerciseInputRow stretch i18key="reps" setValue={(reps) => handleEditExercise?.("reps", reps)} errorKey={"create_reps"} value={editedExercise?.exercise.reps} />
             </HStack>
-            <EditableExerciseInputRow type="MINUTES_SECONDS" i18key="pause" setValue={(pause) => handleEditExercise?.("pause", pause)} value={editedExercise?.exercise?.pause} />
+            <TimeInputRow i18key="pause" setValue={handleSetPause} value={editedExercise?.exercise?.pause} />
         </ThemedView>
     );
 };

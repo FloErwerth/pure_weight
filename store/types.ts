@@ -39,6 +39,10 @@ export type DoneExerciseData = {
     note?: string;
 };
 
+export type TimeInput = {
+    seconds?: string;
+    minutes?: string;
+};
 export type ExerciseSets = WeightBasedExerciseData[];
 
 export type WeightBasedExerciseMetaData = {
@@ -47,7 +51,7 @@ export type WeightBasedExerciseMetaData = {
     weight: string;
     sets: string;
     reps: string;
-    pause?: string;
+    pause?: TimeInput;
 };
 
 export type ExerciseMetaData = WeightBasedExerciseMetaData;

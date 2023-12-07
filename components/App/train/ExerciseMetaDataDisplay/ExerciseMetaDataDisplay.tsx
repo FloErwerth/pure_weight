@@ -13,6 +13,7 @@ import { ThemedMaterialCommunityIcons } from "../../../Themed/ThemedMaterialComm
 import { AppState, useAppDispatch, useAppSelector } from "../../../../store";
 import { getWeightBasedExerciseMetaDataFromTrainedWorkout } from "../../../../store/reducers/workout/workoutSelectors";
 import { setEditedExercise } from "../../../../store/reducers/workout";
+import { ThemedView } from "../../../Themed/ThemedView/View";
 
 interface ExerciseMetaDataDisplayProps {
     exerciseIndex: number;
@@ -27,9 +28,10 @@ export const SmallMetadataDisplay = ({ style, exerciseIndex }: SmallMetadataDisp
     const { t } = useTranslation();
     const textStyle = useMemo(() => [trainStyles.exerciseMetaText, style], [style]);
     const exerciseMetaData = useAppSelector((state: AppState) => getWeightBasedExerciseMetaDataFromTrainedWorkout(state, exerciseIndex));
-
     const isSingle = useMemo(() => parseFloat(exerciseMetaData?.sets ?? "0") === 1, [exerciseMetaData?.sets]);
-
+    const showMinutes = parseFloat(exerciseMetaData?.pause?.minutes ?? "0") !== 0;
+    const showSeconds = parseFloat(exerciseMetaData?.pause?.seconds ?? "0") !== 0;
+    const showPause = showMinutes || showSeconds;
     if (!exerciseMetaData) {
         return null;
     }
@@ -47,11 +49,28 @@ export const SmallMetadataDisplay = ({ style, exerciseIndex }: SmallMetadataDisp
             <Text style={textStyle}>
                 {exerciseMetaData?.reps} {t("training_header_reps")}
             </Text>
-            {exerciseMetaData?.pause && (
-                <>
+            {showPause && (
+                <HStack>
                     <Text style={textStyle}>&#x30FB;</Text>
-                    <Text style={textStyle}>{exerciseMetaData.pause} min</Text>
-                </>
+                    <HStack style={styles.timeStack}>
+                        {showMinutes && (
+                            <ThemedView>
+                                <HStack style={styles.smallGap}>
+                                    <Text style={textStyle}>{exerciseMetaData.pause?.minutes}</Text>
+                                    <Text style={textStyle}>min</Text>
+                                </HStack>
+                            </ThemedView>
+                        )}
+                        {showSeconds && (
+                            <ThemedView>
+                                <HStack style={styles.smallGap}>
+                                    <Text style={textStyle}>{exerciseMetaData.pause?.seconds}</Text>
+                                    <Text style={textStyle}>seconds</Text>
+                                </HStack>
+                            </ThemedView>
+                        )}
+                    </HStack>
+                </HStack>
             )}
         </HStack>
     );

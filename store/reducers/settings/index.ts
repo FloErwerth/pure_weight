@@ -16,7 +16,6 @@ export const settingsRecuder = createReducer<SettingsState>(
         theme: "dark",
         language: "en",
         unitSystem: "metric",
-        smallestWeight: "1.25",
     },
     (builder) => {
         builder

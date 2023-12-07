@@ -41,8 +41,6 @@ export const Exercise = ({ exerciseIndex }: WeightBasedExerciseProps) => {
         [activeSetIndex, exerciseIndex, exercises],
     );
 
-    console.log(mappedDoneSets);
-
     return (
         <View key={id} style={trainStyles.carouselWrapper}>
             <HStack background style={trainStyles.headerWrapper}>

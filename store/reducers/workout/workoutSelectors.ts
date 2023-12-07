@@ -245,12 +245,14 @@ export const getOverallTrainingTrend = createSelector([getWorkoutByIndex], (trai
 });
 export const getPauseTime = createSelector([getTrainedWorkout], (trainedWorkout) => {
     const exerciseIndex = trainedWorkout?.activeExerciseIndex;
-
     if (exerciseIndex === undefined) {
-        return undefined;
+        return -404;
     }
-
-    return trainedWorkout?.workout.exercises[exerciseIndex].pause;
+    const pause = trainedWorkout?.workout.exercises[exerciseIndex].pause;
+    if (pause === undefined) {
+        return -404;
+    }
+    return (parseFloat(pause.minutes ?? "0") * 60 + parseFloat(pause.seconds ?? "0")) * 1000;
 });
 export const getIsDoneWithTraining = createSelector([getTrainedWorkout], (trainedWorkout) => {
     if (trainedWorkout?.exerciseData.length === 0 || trainedWorkout?.exerciseData.some((data) => data.doneSets.length === 0)) {

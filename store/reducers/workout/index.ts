@@ -1,5 +1,5 @@
 import { createAction, createReducer } from "@reduxjs/toolkit/src";
-import { DoneExerciseData, ExerciseMetaData, WeightBasedExerciseData, WeightBasedExerciseMetaData, Workout, WorkoutSortingType } from "../../types";
+import { DoneExerciseData, ExerciseMetaData, TimeInput, WeightBasedExerciseData, WeightBasedExerciseMetaData, Workout, WorkoutSortingType } from "../../types";
 import { Temporal } from "@js-temporal/polyfill";
 import { getDateTodayIso } from "../../../utils/date";
 import { sortWorkouts } from "./utils";
@@ -15,6 +15,13 @@ export const mutateEditedExercise = createAction<
     },
     "exercise_edit_mutate"
 >("exercise_edit_mutate");
+export const mutateEditedExercisePause = createAction<
+    {
+        key: keyof TimeInput;
+        value: string | undefined;
+    },
+    "exercise_edit_mutate_pause"
+>("exercise_edit_mutate_pause");
 
 export const setEditedWorkout = createAction<{ index: number }, "workout_set_edited_workout">("workout_set_edited_workout");
 export const setEditedExercise = createAction<{ exercise?: ExerciseMetaData; index: number; isTrained?: boolean } | undefined, "workout_set_edited_exercise">("workout_set_edited_exercise");
@@ -54,13 +61,13 @@ export type WorkoutAction =
     | typeof saveEditedWorkout.type
     | typeof setEditedWorkoutName.type
     | typeof handleMutateSet.type
-    | typeof markSetAsDone.type;
+    | typeof markSetAsDone.type
+    | typeof mutateEditedExercisePause.type;
 
 export const emptyExercise: ExerciseMetaData = {
     name: "",
     type: "WEIGHT_BASED",
     sets: "",
-    pause: "",
     reps: "",
     weight: "",
 };
@@ -191,6 +198,15 @@ export const workoutReducer = createReducer<WorkoutState>({ workouts: [], sortin
                 state.editedExercise = {
                     index: state.editedExercise.index,
                     exercise: { ...state.editedExercise.exercise, [action.payload.key]: action.payload.value },
+                    isTrained: state.editedExercise.isTrained,
+                };
+            }
+        })
+        .addCase(mutateEditedExercisePause, (state, action) => {
+            if (state.editedExercise) {
+                state.editedExercise = {
+                    index: state.editedExercise.index,
+                    exercise: { ...state.editedExercise.exercise, pause: { ...state.editedExercise.exercise.pause, [action.payload.key]: action.payload.value } },
                     isTrained: state.editedExercise.isTrained,
                 };
             }

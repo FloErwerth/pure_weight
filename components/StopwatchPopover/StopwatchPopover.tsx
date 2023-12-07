@@ -1,6 +1,5 @@
 import { useAppSelector } from "../../store";
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
-import { z } from "zod/lib/index";
 import { Animated, AppState, Dimensions, Easing, Pressable, View } from "react-native";
 import StopWatch, { StopwatchTimerMethods } from "react-native-animated-stopwatch-timer";
 import { useTheme } from "../../theme/context";
@@ -14,13 +13,6 @@ import { ThemedMaterialCommunityIcons } from "../Themed/ThemedMaterialCommunityI
 import { AnimatedView } from "../Themed/AnimatedView/AnimatedView";
 
 import { getPauseTime } from "../../store/reducers/workout/workoutSelectors";
-
-const pauseTimeDecoder = z
-    .string()
-    .transform((pauseTime) => {
-        return parseFloat(pauseTime.replace(",", ".")) * 60 * 1000;
-    })
-    .catch(() => -404);
 
 let interval = setInterval(noop);
 
@@ -51,7 +43,7 @@ export const StopwatchPopover = () => {
 
     useEffect(() => {
         if (!timerStarted && !timerPaused) {
-            setStartingTime(pauseTimeDecoder.parse(currentPauseTime));
+            setStartingTime(currentPauseTime);
         }
     }, [timerPaused, timerStarted, currentPauseTime]);
 
@@ -95,7 +87,7 @@ export const StopwatchPopover = () => {
 
     useEffect(() => {
         if (!timerStarted && showPopover && (stopwatchRef.current?.getSnapshot() ?? 0) <= 5) {
-            setStartingTime(pauseTimeDecoder.parse(currentPauseTime));
+            setStartingTime(currentPauseTime);
             stopwatchRef.current?.reset();
         }
     }, [currentPauseTime, showPopover, timerStarted]);
@@ -113,7 +105,7 @@ export const StopwatchPopover = () => {
     useEffect(() => {
         if (showPopover) {
             if (!timerStarted && timestamp && timestamp <= 0) {
-                setStartingTime(pauseTimeDecoder.parse(currentPauseTime));
+                setStartingTime(currentPauseTime);
             }
         }
     }, [currentPauseTime, timestamp, showPopover, startingTime, timerStarted]);
@@ -138,7 +130,7 @@ export const StopwatchPopover = () => {
 
     const resetTimer = useCallback(() => {
         stopwatchRef.current?.reset();
-        setStartingTime(pauseTimeDecoder.parse(currentPauseTime));
+        setStartingTime(currentPauseTime);
         setTimerStarted(false);
         setTimerPaused(false);
         clearInterval(interval);
@@ -234,7 +226,7 @@ export const StopwatchPopover = () => {
     const fastForwardDisabled = (startingTime ?? 0) <= 15000;
     const fastForwardColor = fastForwardDisabled ? textDisabled : mainColor;
 
-    if (startingTime === -404) {
+    if (currentPauseTime === -404 || startingTime === -404) {
         return null;
     }
 
