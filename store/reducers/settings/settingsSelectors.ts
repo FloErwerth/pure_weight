@@ -34,3 +34,19 @@ export const getWeightUnit = createSelector([getLanguage, getUnitSystem], (langu
 export const getTimeUnit = createSelector([getLanguage], (language) => {
     return languageUnitSystemTimeUnitsMap[language];
 });
+
+export const getNumberWorkoutEntries = createSelector([getSettingsState], (settings) => settings.numberWorkoutEntries);
+export const getNumberWorkoutEntriesNumber = createSelector([getNumberWorkoutEntries], (number) => {
+    if (number === "ALL") {
+        return undefined;
+    }
+    return parseFloat(number);
+});
+
+export const getNumberMeasurementEntries = createSelector([getSettingsState], (settings) => settings.numberMeasurementEntries);
+export const getNumberMeasurementEntriesNumber = createSelector([getNumberMeasurementEntries], (number) => {
+    if (number === "ALL") {
+        return undefined;
+    }
+    return parseFloat(number);
+});

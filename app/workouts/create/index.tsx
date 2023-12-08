@@ -34,6 +34,7 @@ import {
 
 import { getEditedWorkout } from "../../../store/reducers/workout/workoutSelectors";
 import { EditableExerciseModal } from "../../../components/EditableExerciseModal/EditableExerciseModal";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 type MappedExercises = {
     onDelete: () => void;
@@ -54,7 +55,7 @@ export function Create() {
     const [alertRef, openAlert, closeAlert] = useBottomSheetRef();
     const [addRef, openAdd, closeAdd] = useBottomSheetRef();
     const [colorPickerRef, openPicker] = useBottomSheetRef();
-
+    const { bottom } = useSafeAreaInsets();
     const handleSetWorkoutName = useCallback(
         (value?: string) => {
             dispatch(setEditedWorkoutName(value));
@@ -192,7 +193,7 @@ export function Create() {
         <>
             <ThemedView background style={styles.innerWrapper}>
                 <SiteNavigationButtons handleBack={handleBackButton} handleConfirm={handleConfirm} titleFontSize={30} title={title} />
-                <PageContent style={styles.contentWrapper}>
+                <PageContent safeBottom stretch style={styles.contentWrapper}>
                     <HStack style={styles.nameColorStack} ghost>
                         <ThemedTextInput style={styles.workoutNameInput} showClear value={editedWorkout?.workout.name} onChangeText={handleSetWorkoutName} placeholder={t("workout_name")} />
                         <ColorPickerButton openPicker={openPicker} />

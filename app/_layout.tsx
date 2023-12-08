@@ -11,7 +11,6 @@ import { Progress } from "./workouts/progress";
 import { Create } from "./workouts/create";
 import { NavigationContainer } from "@react-navigation/native";
 import { navigationRef } from "../hooks/navigate";
-import { Settings } from "./profile/settings";
 import { SafeAreaView } from "../components/Themed/ThemedSaveAreaView/SafeAreaView";
 import { ThemeProvider } from "../theme/context";
 import { RootSiblingParent } from "react-native-root-siblings";
@@ -21,6 +20,10 @@ import DeviceInfo from "react-native-device-info";
 import { IsoDate } from "../types/date";
 import { setAppInstallDate } from "../store/reducers/metadata";
 import { getAppInstallDate } from "../store/reducers/metadata/metadataSelectors";
+import { Display } from "./settings/display";
+import { GeneralSettings } from "./settings/workout";
+import { Statistics } from "./settings/statistics";
+import { Entries } from "./settings/statistics/entries";
 
 const Stack = createNativeStackNavigator();
 
@@ -43,19 +46,14 @@ const ThemedApp = () => {
                             <SafeAreaView>
                                 <Stack.Navigator screenOptions={{ headerShown: false }}>
                                     <Stack.Screen component={TabsWrapper} options={{ headerShown: false }} name="tabs" />
-                                    <Stack.Screen
-                                        component={Train}
-                                        options={{ gestureEnabled: false, headerShown: false }}
-                                        name="workouts/train/index"
-                                    />
-                                    <Stack.Screen
-                                        component={Create}
-                                        options={{ gestureEnabled: false, headerShown: false }}
-                                        name="workouts/create/index"
-                                    />
+                                    <Stack.Screen component={Train} options={{ gestureEnabled: false, headerShown: false }} name="workouts/train/index" />
+                                    <Stack.Screen component={Create} options={{ gestureEnabled: false, headerShown: false }} name="workouts/create/index" />
                                     <Stack.Screen component={Progress} options={{ headerShown: false }} name="workouts/progress/index" />
-                                    <Stack.Screen component={Settings} options={{ headerShown: false }} name="profile/settings/index" />
                                     <Stack.Screen component={WorkoutHistory} options={{ headerShown: false }} name="workouts/workoutHistory/index" />
+                                    <Stack.Screen component={Display} options={{ headerShown: false }} name="settings/display/index" />
+                                    <Stack.Screen component={GeneralSettings} options={{ headerShown: false }} name="settings/workout/index" />
+                                    <Stack.Screen component={Statistics} options={{ headerShown: false }} name="settings/statistics/index" />
+                                    <Stack.Screen component={Entries} options={{ headerShown: false }} name="settings/statistics/entries/index" />
                                 </Stack.Navigator>
                             </SafeAreaView>
                         </BottomSheetModalProvider>

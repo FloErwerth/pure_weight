@@ -1,7 +1,7 @@
 import { StyleSheet } from "react-native";
-import { borderRadius } from "../../../../../theme/border";
+import { borderRadius } from "../../../../theme/border";
 
-export const styles = StyleSheet.create({
+export const selectionStyles = StyleSheet.create({
     innerWrapper: {
         padding: 15,
         borderColor: "transparent",
@@ -11,6 +11,9 @@ export const styles = StyleSheet.create({
     vStack: {
         alignSelf: "stretch",
         justifyContent: "flex-start",
+        gap: 10,
+    },
+    hStack: {
         gap: 10,
     },
     outerStack: {

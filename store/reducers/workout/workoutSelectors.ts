@@ -2,7 +2,7 @@ import { createSelector } from "@reduxjs/toolkit";
 import { Temporal } from "@js-temporal/polyfill";
 import { AppState } from "../../index";
 import { ExerciseSets } from "../../types";
-import { getLanguage } from "../settings/settingsSelectors";
+import { getLanguage, getNumberWorkoutEntriesNumber } from "../settings/settingsSelectors";
 import { getDate, getDateTodayIso, getMonth } from "../../../utils/date";
 import { IsoDate } from "../../../types/date";
 import { PALETTE } from "../../../utils/colorPalette";
@@ -40,30 +40,21 @@ export const getWorkoutByIndex = createSelector([getWorkouts], (trainings) => {
     };
 });
 export const getEditedWorkoutName = createSelector([getEditedWorkout], (editedWorkout) => editedWorkout?.workout?.name);
-export const getWeightBasedExerciseMetaData = createSelector([getEditedWorkout, (workout, index: number) => index], (editedWorkout, exerciseIndex) => {
-    const exercise = editedWorkout?.workout?.exercises[exerciseIndex];
-    if (!exercise) {
-        return undefined;
-    }
 
-    return exercise;
-});
+export const getWorkoutExercises = createSelector([getTrainedWorkout], (editedWorkout) => editedWorkout?.workout?.exercises);
 
-export const getSpecificNumberOfSets = createSelector([getEditedWorkout, (exerciseIndex: number) => exerciseIndex], (editedWorkout, exerciseIndex) => {
-    if (editedWorkout?.workout.exercises[exerciseIndex]) {
-        return parseFloat(editedWorkout.workout.exercises[exerciseIndex].sets);
-    }
-});
-
-export const getWorkoutExercises = createSelector([getEditedWorkout], (editedWorkout) => editedWorkout?.workout?.exercises);
-export const getTrainingDayData = createSelector([getEditedWorkout], (editedWorkout) => {
+export const getTrainingDayData = createSelector([getNumberWorkoutEntriesNumber, getEditedWorkout], (numberOfShownWorkouts, editedWorkout) => {
     const workout = editedWorkout?.workout;
+
     if (workout?.doneWorkouts === undefined || workout.doneWorkouts.length === 0) {
         return undefined;
     }
+    const numberDoneWorkouts = workout.doneWorkouts.length;
+    const shownNumberOfWorkouts = numberOfShownWorkouts === undefined || numberDoneWorkouts < numberOfShownWorkouts ? numberDoneWorkouts : numberOfShownWorkouts;
 
     const sortedData: { exerciseName: string; data: { sets: ExerciseSets; date: IsoDate }[] }[] = [];
-    const slicedDoneWorkouts = workout.doneWorkouts.length > 20 ? workout.doneWorkouts.slice(workout.doneWorkouts.length - 20) : workout.doneWorkouts;
+    const slicedDoneWorkouts = workout.doneWorkouts.slice(-shownNumberOfWorkouts);
+
     slicedDoneWorkouts
         .filter(({ doneExercises }) => doneExercises !== undefined)
         .forEach(({ date, doneExercises }) => {

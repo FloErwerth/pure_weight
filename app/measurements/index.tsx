@@ -100,9 +100,9 @@ export function Measurements() {
     }, [dispatch]);
 
     return (
-        <ThemedView style={{ flex: 1 }}>
+        <ThemedView stretch background>
             <SiteNavigationButtons titleFontSize={40} title={t("measurements")} handleConfirm={handleAddNewMeasurement} handleConfirmIcon={{ name: "plus", size: 40 }} />
-            <PageContent style={styles.contentWrapper}>
+            <PageContent scrollable style={styles.contentWrapper}>
                 <ScrollView style={styles.measurementsWrapper}>
                     {measurements?.map((measurement, index) => (
                         <Swipeable onDelete={() => handleDeleteMeasurement(index)} key={`${measurement.name}-pressable`} onClick={() => handleAddExistingMeasurement(measurement, index)}>

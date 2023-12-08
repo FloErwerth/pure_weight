@@ -1,16 +1,16 @@
-import { ProfileContent } from "../SettingsSection/ProfileSection";
-import { VStack } from "../../../../Stack/VStack/VStack";
+import { ProfileContent } from "../../SettingsSection/SettingsNavigator";
+import { VStack } from "../../../../../Stack/VStack/VStack";
 import { useTranslation } from "react-i18next";
 import { useCallback, useMemo } from "react";
-import { styles } from "./styles";
-import { useAppDispatch, useAppSelector } from "../../../../../store";
+import { useAppDispatch, useAppSelector } from "../../../../../../store";
 import * as Haptics from "expo-haptics";
 import { ImpactFeedbackStyle } from "expo-haptics";
-import { setLanguage } from "../../../../../store/reducers/settings";
-import GermanFlag from "../../../../../media/icons/GermanFlag.svg";
-import AmericanFlag from "../../../../../media/icons/UsaFlag.svg";
-import { getLanguage } from "../../../../../store/reducers/settings/settingsSelectors";
-import { SelectableSetting, SvgType } from "../../SelectableSetting/SelectableSetting";
+import { setLanguage } from "../../../../../../store/reducers/settings";
+import GermanFlag from "../../../../../../media/icons/GermanFlag.svg";
+import AmericanFlag from "../../../../../../media/icons/UsaFlag.svg";
+import { getLanguage } from "../../../../../../store/reducers/settings/settingsSelectors";
+import { SelectableSetting, SvgType } from "../../../SelectableSetting/SelectableSetting";
+import { selectionStyles } from "../../selectionStyles";
 
 const germanSvg: SvgType = {
     Svg: GermanFlag,
@@ -40,7 +40,7 @@ export const LanguageSelection = () => {
 
     return (
         <ProfileContent title={t("settings_language")}>
-            <VStack style={styles.vStack}>
+            <VStack style={selectionStyles.vStack}>
                 <SelectableSetting prependedExtraContent={germanSvg} selected={isGerman} onSelect={() => handleSelectLanguage("de")} titleKey="settings_language_german" />
                 <SelectableSetting prependedExtraContent={americanSvg} selected={!isGerman} onSelect={() => handleSelectLanguage("en")} titleKey="settings_language_english" />
             </VStack>

@@ -78,7 +78,7 @@ export function WorkoutHistory() {
     );
 
     const handleNavigateBack = useCallback(() => {
-        navigate("profile");
+        navigate("workouts");
     }, [navigate]);
 
     const handleSelectDate = useCallback(
@@ -183,7 +183,7 @@ export function WorkoutHistory() {
     return (
         <ThemedView stretch>
             <SiteNavigationButtons handleBack={handleNavigateBack} title={t("history_front").concat(" ", workout?.workout.name ?? "")} />
-            <PageContent style={styles.pageWrapper}>
+            <PageContent stretch safeBottom style={styles.pageWrapper}>
                 <SectionList
                     ref={sectionListRef}
                     horizontal={false}

@@ -1,8 +1,13 @@
 {
   "workouts": "Workouts",
+  "workout": "Workout",
   "progress": "Progress",
   "settings": "Settings",
   "profile": "Profile",
+  "display": "Display",
+  "general": "General",
+  "statistics": "Statistics",
+  "number_entries": "Number of entries",
 
   "workout_front": "Workout:",
 
@@ -52,6 +57,11 @@
   "settings_theme": "Theme",
   "settings_unit_system_title": "Unit System",
   "settings_smallest_weight_title": "Smallest Weight",
+  "settings_entries_title": "Latest entries",
+  "settings_workout_history_all": "Show all of my workouts",
+  "settings_measurement_history_all": "Show all of my measurements",
+
+  "settings_measurement_history_entry_title": "Number of entries from measurements",
 
   "alert_delete_message": "This action can't be undone",
   "alert_quit_title": "Quit training early?",
@@ -63,7 +73,6 @@
   "training_header_sets_single": "set",
   "training_header_sets_multi": "sets",
   "training_header_note": "notes",
-  "training_header_weight": "kg",
   "training_input_add_note": "add",
   "training_input_show_note": "show",
   "edit_note_placeholder": "Once upon a time in...",

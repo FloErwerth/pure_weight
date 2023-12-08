@@ -14,7 +14,7 @@ import { AppState, useAppDispatch, useAppSelector } from "../../../../store";
 import { getWeightBasedExerciseMetaDataFromTrainedWorkout } from "../../../../store/reducers/workout/workoutSelectors";
 import { setEditedExercise } from "../../../../store/reducers/workout";
 import { ThemedView } from "../../../Themed/ThemedView/View";
-import { getTimeUnit } from "../../../../store/reducers/settings/settingsSelectors";
+import { getTimeUnit, getWeightUnit } from "../../../../store/reducers/settings/settingsSelectors";
 
 interface ExerciseMetaDataDisplayProps {
     exerciseIndex: number;
@@ -33,6 +33,7 @@ export const SmallMetadataDisplay = ({ style, exerciseIndex }: SmallMetadataDisp
     const showMinutes = parseFloat(exerciseMetaData?.pause?.minutes ?? "0") !== 0;
     const showSeconds = parseFloat(exerciseMetaData?.pause?.seconds ?? "0") !== 0;
     const { secondsUnit, minutesUnit } = useAppSelector(getTimeUnit);
+    const weightUnit = useAppSelector(getWeightUnit);
     const showPause = showMinutes || showSeconds;
     if (!exerciseMetaData) {
         return null;
@@ -41,7 +42,7 @@ export const SmallMetadataDisplay = ({ style, exerciseIndex }: SmallMetadataDisp
     return (
         <HStack>
             <Text style={textStyle}>
-                {exerciseMetaData?.weight} {t("training_header_weight")}
+                {exerciseMetaData?.weight} {weightUnit}
             </Text>
             <Text style={textStyle}>&#x30FB;</Text>
             <Text style={textStyle}>

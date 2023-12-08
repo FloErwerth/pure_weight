@@ -33,7 +33,8 @@ export const Exercise = ({ exerciseIndex }: WeightBasedExerciseProps) => {
     const showNoteModal = useCallback(() => {
         open();
     }, [open]);
-    const mappedDoneSets = useMemo(
+
+    const mappedSets = useMemo(
         () =>
             Array(parseFloat(exercises?.[exerciseIndex].sets ?? "0"))
                 .fill(undefined)
@@ -54,7 +55,7 @@ export const Exercise = ({ exerciseIndex }: WeightBasedExerciseProps) => {
             <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={trainStyles.innerWrapper}>
                 <ThemedView style={{ paddingTop: 15, paddingBottom: 10, borderRadius, backgroundColor: componentBackgroundColor }}>
                     <TrainingHeader />
-                    {mappedDoneSets?.map(({ isActiveSet }, setIndex) => {
+                    {mappedSets?.map(({ isActiveSet }, setIndex) => {
                         return <SetInputRow isActiveSet={isActiveSet} key={Math.random()} exerciseIndex={exerciseIndex} setIndex={setIndex} />;
                     })}
                 </ThemedView>

@@ -1,14 +1,14 @@
-import { styles } from "./styles";
-import { ProfileContent } from "../SettingsSection/ProfileSection";
+import { ProfileContent } from "../../SettingsSection/SettingsNavigator";
 import { useTranslation } from "react-i18next";
-import { useAppDispatch, useAppSelector } from "../../../../../store";
+import { useAppDispatch, useAppSelector } from "../../../../../../store";
 import { useCallback } from "react";
-import { setUnitSystem } from "../../../../../store/reducers/settings";
+import { setUnitSystem } from "../../../../../../store/reducers/settings";
 
-import { getUnitSystem } from "../../../../../store/reducers/settings/settingsSelectors";
-import { Icon, SelectableSetting } from "../../SelectableSetting/SelectableSetting";
-import { UnitSystem } from "../../../../../store/reducers/settings/types";
-import { ThemedView } from "../../../../Themed/ThemedView/View";
+import { getUnitSystem } from "../../../../../../store/reducers/settings/settingsSelectors";
+import { Icon, SelectableSetting } from "../../../SelectableSetting/SelectableSetting";
+import { UnitSystem } from "../../../../../../store/reducers/settings/types";
+import { ThemedView } from "../../../../../Themed/ThemedView/View";
+import { selectionStyles } from "../../selectionStyles";
 
 const kgIcon: Icon = {
     name: "weight-kilogram",
@@ -19,7 +19,7 @@ const poundIcon: Icon = {
     size: 24,
 };
 
-export const UnitSection = () => {
+export const UnitSystemSection = () => {
     const { t } = useTranslation();
     const dispatch = useAppDispatch();
     const unitSystem = useAppSelector(getUnitSystem);
@@ -33,7 +33,7 @@ export const UnitSection = () => {
 
     return (
         <ProfileContent title={t("settings_unit_system_title")}>
-            <ThemedView style={styles.vStack}>
+            <ThemedView style={selectionStyles.vStack}>
                 <SelectableSetting prependedExtraContent={kgIcon} selected={unitSystem === "metric"} onSelect={() => handleSelectWeightUnit("metric")} titleKey="unit_system_metric" />
                 <SelectableSetting prependedExtraContent={poundIcon} selected={unitSystem === "imperial"} onSelect={() => handleSelectWeightUnit("imperial")} titleKey="unit_system_imperial" />
             </ThemedView>

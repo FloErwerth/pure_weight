@@ -1,10 +1,17 @@
 {
-  "workouts": "Workout",
+  "workouts": "Workouts",
+  "workout": "Workout",
   "progress": "Fortschritt",
   "settings": "Einstellungen",
+  "display": "Anzeige",
   "profile": "Profil",
-  "workout_front": "Workout:",
+  "general": "Allgemein",
+  "statistics": "Statistiken",
+  "number_entries": "Anzahl der Einträge",
 
+
+
+  "workout_front": "Workout:",
   "history_cta": "Verlauf anzeigen",
   "history_front": "Verlauf:",
   "history_latest_workout": "Aktuellstes Workout",
@@ -46,6 +53,11 @@
   "settings_theme": "Theme",
   "settings_unit_system_title": "Einheiten-System",
   "settings_smallest_weight_title": "Kleinstes Gewicht",
+  "settings_entries_title": "Letzte Einträge",
+  "settings_workout_history_all": "Zeige alle meine Workouts",
+  "settings_measurement_history_all": "Zeige alle meine Messungen",
+
+
 
   "alert_delete_message": "Dies kann nicht rückgängig gemacht werden",
   "alert_quit_title": "Das Workout frühzeitig beenden?",
@@ -59,7 +71,6 @@
   "training_header_sets_single": "Satz",
   "training_header_sets_multi": "Sätze",
   "training_header_note": "Notizen",
-  "training_header_weight": "Kg",
   "training_input_add_note": "neue Notiz",
   "training_input_show_note": "Notiz anz.",
   "edit_note_placeholder": "Es war einmal in...",

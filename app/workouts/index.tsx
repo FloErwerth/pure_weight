@@ -1,4 +1,4 @@
-import { FlatList, View } from "react-native";
+import { FlatList } from "react-native";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "../../hooks/navigate";
 import { useAppDispatch, useAppSelector } from "../../store";
@@ -142,14 +142,12 @@ export function Workouts() {
     );
 
     return (
-        <ThemedView background style={styles.view}>
-            <View style={styles.vStack}>
-                <SiteNavigationButtons titleFontSize={40} title={t("workouts")} handleConfirmIcon={confirmIcon} handleConfirm={handleCreateWorkout} />
-                <PageContent>
-                    <WorkoutSorting />
-                    <FlatList decelerationRate="normal" keyExtractor={(item) => item.key} style={styles.savedTrainings} data={mappedWorkouts} renderItem={renderItem}></FlatList>
-                </PageContent>
-            </View>
+        <ThemedView stretch background style={styles.view}>
+            <SiteNavigationButtons titleFontSize={40} title={t("workouts")} handleConfirmIcon={confirmIcon} handleConfirm={handleCreateWorkout} />
+            <WorkoutSorting />
+            <PageContent paddingTop={20} scrollable stretch>
+                <FlatList decelerationRate="normal" keyExtractor={(item) => item.key} style={styles.savedTrainings} data={mappedWorkouts} renderItem={renderItem}></FlatList>
+            </PageContent>
             <BottomToast onRequestClose={() => setShowToast(false)} open={showToast} messageKey={"workout_deleted_message"} titleKey={"workout_deleted_title"} onRedo={handleRecoverWorkout} />
         </ThemedView>
     );

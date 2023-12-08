@@ -24,12 +24,15 @@ type SelectableSettingProps = {
     selected: boolean;
     onSelect: () => void;
     titleKey: string;
+    stretch?: boolean;
+    center?: boolean;
 };
-export function SelectableSetting({ appendedExtraContent, prependedExtraContent, onSelect, selected, titleKey }: SelectableSettingProps) {
+export function SelectableSetting({ appendedExtraContent, prependedExtraContent, onSelect, selected, titleKey, stretch, center }: SelectableSettingProps) {
     const { secondaryColor } = useTheme();
     const { t } = useTranslation();
 
-    const wrapperStyles = useMemo(() => [styles.innerWrapper, selected && { borderColor: secondaryColor }], [secondaryColor, selected]);
+    const wrapperStyles = useMemo(() => [styles.innerWrapper, selected && { borderColor: secondaryColor }, stretch && { flex: 1 }], [secondaryColor, selected, stretch]);
+    const textStyles = useMemo(() => [styles.text, center && ({ textAlign: "center" } as const)], [center]);
     const PrependedExtraContent = useCallback(() => {
         if (!prependedExtraContent) {
             return null;
@@ -54,7 +57,7 @@ export function SelectableSetting({ appendedExtraContent, prependedExtraContent,
             <HStack input style={styles.outerStack}>
                 <PrependedExtraContent />
                 <HStack stretch ghost style={styles.innerStack}>
-                    <Text ghost style={styles.text}>
+                    <Text ghost stretch style={textStyles}>
                         {t(titleKey)}
                     </Text>
                     <AppendedExtraContent />

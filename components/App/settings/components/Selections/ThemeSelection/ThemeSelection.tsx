@@ -1,15 +1,15 @@
 import { Appearance } from "react-native";
-import { styles } from "./styles";
-import { ProfileContent } from "../SettingsSection/ProfileSection";
+import { ProfileContent } from "../../SettingsSection/SettingsNavigator";
 import { useTranslation } from "react-i18next";
-import { useAppDispatch, useAppSelector } from "../../../../../store";
+import { useAppDispatch, useAppSelector } from "../../../../../../store";
 import { useCallback, useState } from "react";
-import { ThemeKey } from "../../../../../theme/types";
-import { setTheme } from "../../../../../store/reducers/settings";
+import { ThemeKey } from "../../../../../../theme/types";
+import { setTheme } from "../../../../../../store/reducers/settings";
 
-import { getThemeKey } from "../../../../../store/reducers/settings/settingsSelectors";
-import { Icon, SelectableSetting } from "../../SelectableSetting/SelectableSetting";
-import { ThemedView } from "../../../../Themed/ThemedView/View";
+import { getThemeKey } from "../../../../../../store/reducers/settings/settingsSelectors";
+import { Icon, SelectableSetting } from "../../../SelectableSetting/SelectableSetting";
+import { ThemedView } from "../../../../../Themed/ThemedView/View";
+import { selectionStyles } from "../../selectionStyles";
 
 const dark: Icon = {
     name: "weather-night",
@@ -46,7 +46,7 @@ export const ThemeSelection = () => {
 
     return (
         <ProfileContent title={t("settings_theme")}>
-            <ThemedView style={styles.vStack}>
+            <ThemedView style={selectionStyles.vStack}>
                 <SelectableSetting prependedExtraContent={light} selected={theme === "light"} onSelect={() => handleSelectLanguage("light")} titleKey="theme_light" />
                 <SelectableSetting prependedExtraContent={dark} selected={theme === "dark"} onSelect={() => handleSelectLanguage("dark")} titleKey="theme_dark" />
                 <SelectableSetting prependedExtraContent={device} selected={usesDeviceTheme} onSelect={() => handleSelectLanguage("device")} titleKey="theme_device" />
