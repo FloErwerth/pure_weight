@@ -2,6 +2,8 @@ import { createSelector } from "@reduxjs/toolkit";
 import { IsoDate } from "../../../types/date";
 import { getDate } from "../../../utils/date";
 import { AppState } from "../../index";
+import { getNumberMeasurementEntriesNumber } from "../settings/settingsSelectors";
+import { crampToNEntries } from "../../../utils/crampToNEntries";
 
 export const getMeasurementsState = (state: AppState) => state.measurmentState;
 export const getMeasurements = createSelector([getMeasurementsState], (state) => state.measurements);
@@ -11,24 +13,17 @@ export const getLatestMeasurements = createSelector([getMeasurements], (measurem
         return dates[dates.length - 1] as IsoDate;
     }),
 );
-function crampToNEntries<T extends Array<unknown>>(n: number, entries: T): T {
-    if (entries.length > n) {
-        return entries.slice(entries.length - n, entries.length) as T;
-    }
-    return entries;
-}
 
-export const getMeasurementDataFromIndex = createSelector([getMeasurements, (byIndex, index?: number) => index], (measurements, index) => {
+export const getMeasurementDataFromIndex = createSelector([getNumberMeasurementEntriesNumber, getMeasurements, (byIndex, index?: number) => index], (numberOfMeasurements, measurements, index) => {
     if (index === undefined) {
         return undefined;
     }
-
     const measurement = measurements[index];
     if (measurement?.data) {
         const labels: string[] = [];
         const data: number[] = [];
         const entries = Object.entries(measurement?.data);
-        const vals = crampToNEntries(100, entries);
+        const vals = crampToNEntries(numberOfMeasurements ?? 100, entries);
         vals.forEach(([date, value]) => {
             labels.push(getDate(date as IsoDate));
             data.push(parseFloat(value));

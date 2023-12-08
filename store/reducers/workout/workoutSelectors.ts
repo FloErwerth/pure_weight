@@ -6,6 +6,7 @@ import { getLanguage, getNumberWorkoutEntriesNumber } from "../settings/settings
 import { getDate, getDateTodayIso, getMonth } from "../../../utils/date";
 import { IsoDate } from "../../../types/date";
 import { PALETTE } from "../../../utils/colorPalette";
+import { crampToNEntries } from "../../../utils/crampToNEntries";
 
 export const getWorkoutState = ({ workoutState }: AppState) => workoutState;
 export const getTrainedWorkout = createSelector([getWorkoutState], (state) => state.trainedWorkout);
@@ -41,7 +42,7 @@ export const getWorkoutByIndex = createSelector([getWorkouts], (trainings) => {
 });
 export const getEditedWorkoutName = createSelector([getEditedWorkout], (editedWorkout) => editedWorkout?.workout?.name);
 
-export const getWorkoutExercises = createSelector([getTrainedWorkout], (editedWorkout) => editedWorkout?.workout?.exercises);
+export const getWorkoutExercises = createSelector([getEditedWorkout], (editedWorkout) => editedWorkout?.workout?.exercises);
 
 export const getTrainingDayData = createSelector([getNumberWorkoutEntriesNumber, getEditedWorkout], (numberOfShownWorkouts, editedWorkout) => {
     const workout = editedWorkout?.workout;
@@ -49,11 +50,9 @@ export const getTrainingDayData = createSelector([getNumberWorkoutEntriesNumber,
     if (workout?.doneWorkouts === undefined || workout.doneWorkouts.length === 0) {
         return undefined;
     }
-    const numberDoneWorkouts = workout.doneWorkouts.length;
-    const shownNumberOfWorkouts = numberOfShownWorkouts === undefined || numberDoneWorkouts < numberOfShownWorkouts ? numberDoneWorkouts : numberOfShownWorkouts;
 
     const sortedData: { exerciseName: string; data: { sets: ExerciseSets; date: IsoDate }[] }[] = [];
-    const slicedDoneWorkouts = workout.doneWorkouts.slice(-shownNumberOfWorkouts);
+    const slicedDoneWorkouts = crampToNEntries(numberOfShownWorkouts ?? 20, workout.doneWorkouts);
 
     slicedDoneWorkouts
         .filter(({ doneExercises }) => doneExercises !== undefined)

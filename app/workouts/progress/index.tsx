@@ -2,7 +2,7 @@ import { lazy, Suspense, useCallback, useMemo } from "react";
 import { useNavigate } from "../../../hooks/navigate";
 import { SiteNavigationButtons } from "../../../components/SiteNavigationButtons/SiteNavigationButtons";
 import { useAppSelector } from "../../../store";
-import { Dimensions, ScrollView } from "react-native";
+import { Dimensions } from "react-native";
 import { Skeleton } from "../../../components/Skeleton/Skeleton";
 import { borderRadius } from "../../../theme/border";
 import { VStack } from "../../../components/Stack/VStack/VStack";
@@ -13,6 +13,7 @@ import { styles } from "../../../components/App/progress/chart/components/styles
 import { useTheme } from "../../../theme/context";
 
 import { getEditedWorkoutName, getWorkoutExercises } from "../../../store/reducers/workout/workoutSelectors";
+import { ThemedScrollView } from "../../../components/Themed/ThemedScrollView/ThemedScrollView";
 
 const ExerciseCharts = lazy(() => import("../../../components/App/progress/chart/components/ExerciseCharts"));
 
@@ -33,7 +34,7 @@ export function Progress() {
         const { componentBackgroundColor } = useTheme();
         const containerStyles = useMemo(() => [styles.vStack, { backgroundColor: componentBackgroundColor }], [componentBackgroundColor]);
         return (
-            <ScrollView contentContainerStyle={styles.scrollView}>
+            <ThemedScrollView ghost contentContainerStyle={styles.scrollView}>
                 {exercises?.map(() => (
                     <VStack key={Math.random() * 10000} style={containerStyles}>
                         <HStack style={styles.hStack}>
@@ -43,7 +44,7 @@ export function Progress() {
                         <Skeleton borderRadius={borderRadius} width={Dimensions.get("screen").width - 40} height={283} />
                     </VStack>
                 ))}
-            </ScrollView>
+            </ThemedScrollView>
         );
     };
 
