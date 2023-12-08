@@ -47,7 +47,7 @@ export const Exercise = ({ exerciseIndex }: WeightBasedExerciseProps) => {
                 <ExerciseMetaDataDisplay exerciseIndex={exerciseIndex} />
                 <ThemedView style={trainStyles.noteButtonWrapper}>
                     <Pressable style={showEditNoteModalTitleStyle} onPress={showNoteModal}>
-                        <MaterialCommunityIcons name="note-edit-outline" color={mainColor} size={30} />
+                        <MaterialCommunityIcons name="note-edit-outline" color={mainColor} size={24} />
                     </Pressable>
                 </ThemedView>
             </HStack>

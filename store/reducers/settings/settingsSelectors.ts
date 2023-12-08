@@ -1,16 +1,36 @@
 import { AppState } from "../../index";
 import { createSelector } from "@reduxjs/toolkit";
-import { WeightUnit } from "./types";
 
 export const getSettingsState = ({ settingsState }: AppState) => settingsState;
 export const getThemeKey = createSelector([getSettingsState], (settings) => settings.theme);
 export const getLanguage = createSelector([getSettingsState], (settings) => settings.language);
 export const getUnitSystem = createSelector([getSettingsState], (settings) => settings.unitSystem);
-export const getWeightUnit = createSelector([getUnitSystem], (unitSystem): WeightUnit => {
-    switch (unitSystem) {
-        case "metric":
-            return "kg";
-        case "imperial":
-            return "lbs";
-    }
+
+const languageUnitSystemWeightUnitMap = {
+    en: {
+        metric: "kg",
+        imperial: "lbs",
+    },
+    de: {
+        metric: "kg",
+        imperial: "pfd",
+    },
+};
+const languageUnitSystemTimeUnitsMap = {
+    en: {
+        secondsUnit: "sec",
+        minutesUnit: "min",
+    },
+    de: {
+        secondsUnit: "sek",
+        minutesUnit: "min",
+    },
+};
+
+export const getWeightUnit = createSelector([getLanguage, getUnitSystem], (language, unitSystem) => {
+    return languageUnitSystemWeightUnitMap[language][unitSystem];
+});
+
+export const getTimeUnit = createSelector([getLanguage], (language) => {
+    return languageUnitSystemTimeUnitsMap[language];
 });

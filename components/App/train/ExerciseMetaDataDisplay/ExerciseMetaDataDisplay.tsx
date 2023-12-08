@@ -14,6 +14,7 @@ import { AppState, useAppDispatch, useAppSelector } from "../../../../store";
 import { getWeightBasedExerciseMetaDataFromTrainedWorkout } from "../../../../store/reducers/workout/workoutSelectors";
 import { setEditedExercise } from "../../../../store/reducers/workout";
 import { ThemedView } from "../../../Themed/ThemedView/View";
+import { getTimeUnit } from "../../../../store/reducers/settings/settingsSelectors";
 
 interface ExerciseMetaDataDisplayProps {
     exerciseIndex: number;
@@ -31,6 +32,7 @@ export const SmallMetadataDisplay = ({ style, exerciseIndex }: SmallMetadataDisp
     const isSingle = useMemo(() => parseFloat(exerciseMetaData?.sets ?? "0") === 1, [exerciseMetaData?.sets]);
     const showMinutes = parseFloat(exerciseMetaData?.pause?.minutes ?? "0") !== 0;
     const showSeconds = parseFloat(exerciseMetaData?.pause?.seconds ?? "0") !== 0;
+    const { secondsUnit, minutesUnit } = useAppSelector(getTimeUnit);
     const showPause = showMinutes || showSeconds;
     if (!exerciseMetaData) {
         return null;
@@ -57,7 +59,7 @@ export const SmallMetadataDisplay = ({ style, exerciseIndex }: SmallMetadataDisp
                             <ThemedView>
                                 <HStack style={styles.smallGap}>
                                     <Text style={textStyle}>{exerciseMetaData.pause?.minutes}</Text>
-                                    <Text style={textStyle}>min</Text>
+                                    <Text style={textStyle}>{minutesUnit}</Text>
                                 </HStack>
                             </ThemedView>
                         )}
@@ -65,7 +67,7 @@ export const SmallMetadataDisplay = ({ style, exerciseIndex }: SmallMetadataDisp
                             <ThemedView>
                                 <HStack style={styles.smallGap}>
                                     <Text style={textStyle}>{exerciseMetaData.pause?.seconds}</Text>
-                                    <Text style={textStyle}>seconds</Text>
+                                    <Text style={textStyle}>{secondsUnit}</Text>
                                 </HStack>
                             </ThemedView>
                         )}
@@ -104,7 +106,7 @@ export const ExerciseMetaDataDisplay = ({ exerciseIndex }: ExerciseMetaDataDispl
                     <SmallMetadataDisplay exerciseIndex={exerciseIndex} />
                 </VStack>
                 <Pressable onPress={handleShowModal} style={styles.pressable}>
-                    <ThemedMaterialCommunityIcons name="pencil" size={30} />
+                    <ThemedMaterialCommunityIcons name="pencil" size={24} />
                 </Pressable>
             </HStack>
             <EditableExerciseModal reference={addExerciseRef} onRequestClose={handleClose} />
