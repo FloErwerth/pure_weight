@@ -40,10 +40,10 @@ export const getMeasurementData = createSelector(
         }
 
         const measurement = measurements[index];
+        const entries = getLastNEntries(Object.entries(measurement.data ?? []), numberOfMeasurements);
         if (measurement?.data) {
             const labels: string[] = [];
             const data: number[] = [];
-            const entries = getLastNEntries(numberOfMeasurements ?? 100, Object.entries(measurement?.data));
             entries.forEach(([date, value]) => {
                 labels.push(getDate(date as IsoDate));
                 data.push(parseFloat(value));

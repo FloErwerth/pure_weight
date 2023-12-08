@@ -70,13 +70,6 @@ export const getTrainingDayData = createSelector([getNumberWorkoutEntriesNumber,
         });
     return sortedData;
 });
-export const getPartialWorkoutData = createSelector([getNumberWorkoutEntriesNumber, getTrainingDayData], (numberEntries, trainingDayData) => {
-    if (!trainingDayData) {
-        return undefined;
-    }
-
-    return getLastNEntries(trainingDayData, numberEntries);
-});
 
 export const getColor = createSelector([getEditedWorkout], (editedWorkout) => ({
     color: editedWorkout?.workout?.calendarColor ?? PALETTE[Math.floor(PALETTE.length * Math.random())],
