@@ -12,7 +12,6 @@ import { ThemedView } from "../../../../Themed/ThemedView/View";
 import { Text } from "../../../../Themed/ThemedText/Text";
 import { ThemedScrollView } from "../../../../Themed/ThemedScrollView/ThemedScrollView";
 import { useTheme } from "../../../../../theme/context";
-import { Chart } from "../../../../Chart/Chart";
 import { getDate } from "../../../../../utils/date";
 import { IsoDate } from "../../../../../types/date";
 import { ThemedPressable } from "../../../../Themed/Pressable/Pressable";
@@ -21,6 +20,7 @@ import { useNavigate } from "../../../../../hooks/navigate";
 import { getTrainingDayData } from "../../../../../store/reducers/workout/workoutSelectors";
 import { getWeightUnit } from "../../../../../store/reducers/settings/settingsSelectors";
 import { trunicateToNthSignificantDigit } from "../../../../../utils/number";
+import Chart from "../../../../Chart/Chart";
 
 interface ExerciseChartProps {
     exerciseName: string;
@@ -101,7 +101,7 @@ export const ExerciseChart = ({ exerciseName, data }: ExerciseChartProps) => {
     const [chartType, setChartType] = useState<ChartType>("CUMULATIVE");
     const [lineChartData] = useExerciseData(data, chartType);
     const { t } = useTranslation();
-    const { mainColor, componentBackgroundColor } = useTheme();
+    const { mainColor } = useTheme();
     const [ref, open, close] = useBottomSheetRef();
     const chartTypeLabel = useChartTypeLabel(chartType);
     const getDotContent = useCallback(
@@ -142,7 +142,7 @@ export const ExerciseChart = ({ exerciseName, data }: ExerciseChartProps) => {
     );
 
     return (
-        <ThemedView ghost style={[styles.wrapper, { backgroundColor: componentBackgroundColor }]}>
+        <ThemedView style={styles.wrapper}>
             <HStack ghost style={styles.chartHeader}>
                 <Text ghost style={styles.headerTitle}>
                     {exerciseName}
@@ -174,20 +174,14 @@ export const ExerciseChart = ({ exerciseName, data }: ExerciseChartProps) => {
     );
 };
 
-export default function Charts() {
+export default function ExerciseCharts() {
     const trainingDayData = useAppSelector(getTrainingDayData);
     const navigate = useNavigate();
-
+    console.log(trainingDayData);
     if (trainingDayData === undefined) {
         navigate("workouts");
         return null;
     }
 
-    return (
-        <ThemedScrollView ghost>
-            {trainingDayData.map(({ exerciseName, data }) => (
-                <ExerciseChart key={Math.random() * 100} exerciseName={exerciseName} data={data} />
-            ))}
-        </ThemedScrollView>
-    );
+    return <ThemedScrollView ghost>{trainingDayData?.map(({ exerciseName, data }) => <ExerciseChart key={Math.random() * 100} exerciseName={exerciseName} data={data} />)}</ThemedScrollView>;
 }

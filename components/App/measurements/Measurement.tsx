@@ -4,53 +4,39 @@ import { Text } from "../../Themed/ThemedText/Text";
 import { getDate } from "../../../utils/date";
 import { ThemedMaterialCommunityIcons } from "../../Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
 import { HStack } from "../../Stack/HStack/HStack";
-import { useCallback, useContext, useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import { styles } from "./styles";
-import { AppState, useAppSelector } from "../../../store";
+import { AppState, useAppDispatch, useAppSelector } from "../../../store";
 import { useTheme } from "../../../theme/context";
 import { useTranslation } from "react-i18next";
-import { swipableContext } from "../../WorkoutCard/Swipeable";
 import { ProgressDisplay } from "../../WorkoutCard/components/ProgressDisplay/ProgressDisplay";
-import { MeasurementChartModal } from "./Chart/MeasurementChartModal";
-import { Measurement, MeasurementType } from "./types";
-import { useBottomSheetRef } from "../../BottomSheetModal/ThemedBottomSheetModal";
+import { Measurement } from "./types";
 
-import { getLanguage, getUnitSystem } from "../../../store/reducers/settings/settingsSelectors";
+import { getLanguage } from "../../../store/reducers/settings/settingsSelectors";
 import { getLatestMeasurements, getMeasurmentProgress } from "../../../store/reducers/measurements/measurementSelectors";
-import { measurementUnitMap } from "../../../utils/unitMap";
+import { useNavigate } from "../../../hooks/navigate";
+import { setInspectedMeasurement } from "../../../store/reducers/measurements";
 
 interface MeasurementProps {
     index: number;
     measurement: Measurement;
 }
 
-const useUnitByType = (type?: MeasurementType) => {
-    const unitSystem = useAppSelector(getUnitSystem);
-
-    if (!type) {
-        return "";
-    }
-
-    return measurementUnitMap[unitSystem][type];
-};
-
 export const RenderedMeasurement = ({ index, measurement }: MeasurementProps) => {
     const latestMeasurements = useAppSelector(getLatestMeasurements);
     const { t } = useTranslation();
-    const active = useContext(swipableContext);
+    const navigate = useNavigate();
+    const dispatch = useAppDispatch();
     const { mainColor, componentBackgroundColor } = useTheme();
     const pressableWrapperStyle = useMemo(() => [styles.pressableWrapper, { backgroundColor: componentBackgroundColor }], [componentBackgroundColor]);
     const textStyle = useMemo(() => [styles.text, { color: mainColor }], [mainColor]);
     const language = useAppSelector(getLanguage);
     const progress = useAppSelector((state: AppState) => getMeasurmentProgress(state, index));
-    const [reference] = useBottomSheetRef();
-    const unit = useUnitByType(measurement.type);
+
     const handleNavigateToChart = useCallback(() => {
-        if (active) {
-            return;
-        }
-        reference.current?.present();
-    }, [active, reference]);
+        dispatch(setInspectedMeasurement(index));
+        navigate("measurement/progress");
+    }, [dispatch, index, navigate]);
 
     return (
         <HStack style={pressableWrapperStyle}>
@@ -66,7 +52,6 @@ export const RenderedMeasurement = ({ index, measurement }: MeasurementProps) =>
                 )}
             </VStack>
             <ThemedMaterialCommunityIcons name="table-large-plus" size={26} />
-            <MeasurementChartModal reference={reference} index={index} name={measurement.name} unit={unit} />
         </HStack>
     );
 };

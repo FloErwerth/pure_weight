@@ -6,7 +6,7 @@ import { getLanguage, getNumberWorkoutEntriesNumber } from "../settings/settings
 import { getDate, getDateTodayIso, getMonth } from "../../../utils/date";
 import { IsoDate } from "../../../types/date";
 import { PALETTE } from "../../../utils/colorPalette";
-import { crampToNEntries } from "../../../utils/crampToNEntries";
+import { getLastNEntries } from "../../../utils/getLastNEntries";
 
 export const getWorkoutState = ({ workoutState }: AppState) => workoutState;
 export const getTrainedWorkout = createSelector([getWorkoutState], (state) => state.trainedWorkout);
@@ -44,15 +44,17 @@ export const getEditedWorkoutName = createSelector([getEditedWorkout], (editedWo
 
 export const getWorkoutExercises = createSelector([getEditedWorkout], (editedWorkout) => editedWorkout?.workout?.exercises);
 
-export const getTrainingDayData = createSelector([getNumberWorkoutEntriesNumber, getEditedWorkout], (numberOfShownWorkouts, editedWorkout) => {
+type SortedData = { exerciseName: string; data: { sets: ExerciseSets; date: IsoDate }[] };
+type SortedDataArray = SortedData[];
+export const getTrainingDayData = createSelector([getNumberWorkoutEntriesNumber, getEditedWorkout], (numberOfEntries, editedWorkout) => {
     const workout = editedWorkout?.workout;
 
     if (workout?.doneWorkouts === undefined || workout.doneWorkouts.length === 0) {
         return undefined;
     }
 
-    const sortedData: { exerciseName: string; data: { sets: ExerciseSets; date: IsoDate }[] }[] = [];
-    const slicedDoneWorkouts = crampToNEntries(numberOfShownWorkouts ?? 20, workout.doneWorkouts);
+    const sortedData: SortedDataArray = [];
+    const slicedDoneWorkouts = getLastNEntries(workout.doneWorkouts, numberOfEntries ?? 20);
 
     slicedDoneWorkouts
         .filter(({ doneExercises }) => doneExercises !== undefined)
@@ -67,6 +69,13 @@ export const getTrainingDayData = createSelector([getNumberWorkoutEntriesNumber,
             });
         });
     return sortedData;
+});
+export const getPartialWorkoutData = createSelector([getNumberWorkoutEntriesNumber, getTrainingDayData], (numberEntries, trainingDayData) => {
+    if (!trainingDayData) {
+        return undefined;
+    }
+
+    return getLastNEntries(trainingDayData, numberEntries);
 });
 
 export const getColor = createSelector([getEditedWorkout], (editedWorkout) => ({
@@ -105,6 +114,7 @@ export const getHistoryByMonth = createSelector([getEditedWorkout, (editedWorkou
             },
         ]);
     });
+
     return Array.from(foundTrainings)
         .filter((value) => getMonth(value[0] as IsoDate) === getMonth((searchedMonth ?? getDateTodayIso()) as IsoDate))
         .map(([month, data]) => ({ title: month, data }));

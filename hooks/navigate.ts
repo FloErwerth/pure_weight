@@ -10,7 +10,7 @@ export const Routes = {
     create: {
         screen: "workouts/create/index",
     },
-    progress: {
+    "workout/progress": {
         screen: "workouts/progress/index",
     },
     chart: {
@@ -23,12 +23,12 @@ export const Routes = {
         screen: "workouts/workoutHistory/index",
     },
     measurements: {
-        screen: "measurements/index",
+        screen: "tabs",
     },
     display: {
         screen: "settings/display/index",
     },
-    workoutSettings: {
+    "workout/settings": {
         screen: "settings/workout/index",
     },
     statistics: {
@@ -36,6 +36,9 @@ export const Routes = {
     },
     entries: {
         screen: "settings/statistics/entries/index",
+    },
+    "measurement/progress": {
+        screen: "measurement/progress/index",
     },
 };
 

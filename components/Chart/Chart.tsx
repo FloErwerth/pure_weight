@@ -1,6 +1,6 @@
 import { LineChart } from "react-native-chart-kit";
 import { LineChartData, LineChartProps } from "react-native-chart-kit/dist/line-chart/LineChart";
-import { ReactNode, useCallback, useMemo } from "react";
+import { memo, ReactNode, useCallback, useMemo } from "react";
 import { useTheme } from "../../theme/context";
 import { Dimensions, ScrollView, ViewStyle } from "react-native";
 
@@ -13,7 +13,7 @@ interface ChartProps {
     getDotContent?: ({ x, y, indexData }: { x: number; y: number; index: number; indexData: number }) => ReactNode;
     getDotColor?: (index: number) => string;
 }
-export const Chart = ({ data, getXLabel, getDotContent, getYLabel, lineChartStyles, transparent = false, getDotColor }: ChartProps) => {
+function Chart({ data, getXLabel, getDotContent, getYLabel, lineChartStyles, transparent = false, getDotColor }: ChartProps) {
     const { mainColor, componentBackgroundColor, secondaryColor } = useTheme();
     const numberEntries = data.datasets[0].data.length;
     const scrollEnabled = useMemo(() => numberEntries > 5, [numberEntries]);
@@ -60,4 +60,6 @@ export const Chart = ({ data, getXLabel, getDotContent, getYLabel, lineChartStyl
             />
         </ScrollView>
     );
-};
+}
+
+export default memo(Chart);

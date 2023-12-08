@@ -7,7 +7,6 @@ import { SiteNavigationButtons } from "../../components/SiteNavigationButtons/Si
 import { useTranslation } from "react-i18next";
 import * as Locale from "expo-localization";
 import { ThemedView } from "../../components/Themed/ThemedView/View";
-import { PageContent } from "../../components/PageContent/PageContent";
 import { Swipeable } from "../../components/WorkoutCard/Swipeable";
 import { Text } from "../../components/Themed/ThemedText/Text";
 import { ProgressDisplay } from "../../components/WorkoutCard/components/ProgressDisplay/ProgressDisplay";
@@ -81,7 +80,7 @@ export function Workouts() {
 
             const handleNavigateToProgress = () => {
                 dispatch(setEditedWorkout({ index }));
-                navigate("progress");
+                navigate("workout/progress");
             };
 
             const handleNavigateToHistory = () => {
@@ -145,9 +144,7 @@ export function Workouts() {
         <ThemedView stretch background style={styles.view}>
             <SiteNavigationButtons titleFontSize={40} title={t("workouts")} handleConfirmIcon={confirmIcon} handleConfirm={handleCreateWorkout} />
             <WorkoutSorting />
-            <PageContent paddingTop={20} scrollable stretch>
-                <FlatList decelerationRate="normal" keyExtractor={(item) => item.key} style={styles.savedTrainings} data={mappedWorkouts} renderItem={renderItem}></FlatList>
-            </PageContent>
+            <FlatList decelerationRate="normal" keyExtractor={(item) => item.key} style={styles.savedTrainings} data={mappedWorkouts} renderItem={renderItem}></FlatList>
             <BottomToast onRequestClose={() => setShowToast(false)} open={showToast} messageKey={"workout_deleted_message"} titleKey={"workout_deleted_title"} onRedo={handleRecoverWorkout} />
         </ThemedView>
     );

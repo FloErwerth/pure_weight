@@ -11,7 +11,7 @@ interface SiteNavigationButtonsProps {
     handleBack?: () => void;
     handleConfirm?: () => void;
     handleConfirmOpacity?: Animated.Value;
-    handleConfirmIcon?: { name: "check" | "plus"; size: number };
+    handleConfirmIcon?: { name: "check" | "plus" | "cog"; size: number };
     title?: string;
     titleFontSize?: number;
     confirmButtonDisabled?: boolean;

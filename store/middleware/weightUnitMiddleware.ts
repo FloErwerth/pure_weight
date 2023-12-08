@@ -1,5 +1,5 @@
-import { Middleware } from "redux";
-import { AppState } from "../index";
+import { Action, Middleware } from "redux";
+import { AppActions, AppState } from "../index";
 import { setWorkouts } from "../reducers/workout";
 import { LengthUnit, UnitSystem, WeightUnit } from "../reducers/settings/types";
 import { MeasurementDataPoints, MeasurementType } from "../../components/App/measurements/types";
@@ -66,11 +66,11 @@ export const convertMeasurements = (type: MeasurementType | undefined, data: Mea
 const getNextUnit = (nextSystem: UnitSystem) => {
     return unitMap[nextSystem];
 };
-
-export const weightMiddleware: Middleware<Record<string, unknown>, AppState> = (storeApi) => (next) => (action) => {
+export const weightMiddleware: Middleware<Record<string, string>, AppState> = (storeApi) => (next) => (action) => {
     const dispatch = storeApi.dispatch;
     const state = storeApi.getState();
-    if (action.type === "set_unit_system") {
+    const typedAction: Action<AppActions> = action as Action<AppActions>;
+    if (typedAction.type === "set_unit_system") {
         const nextUnitSystem = state.settingsState.unitSystem === "metric" ? "imperial" : "metric";
         const nextUnit = getNextUnit(nextUnitSystem);
         dispatch(

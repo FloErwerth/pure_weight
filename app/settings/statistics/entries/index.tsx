@@ -3,8 +3,8 @@ import { useNavigate } from "../../../../hooks/navigate";
 import { ThemedView } from "../../../../components/Themed/ThemedView/View";
 import { SiteNavigationButtons } from "../../../../components/SiteNavigationButtons/SiteNavigationButtons";
 import { PageContent } from "../../../../components/PageContent/PageContent";
-import { WorkoutHistoryEntrySelection } from "../../../../components/App/settings/components/Selections/HistoryEntrySelection/WorkoutHistoryEntrySelection";
-import { MeasurementsHistoryEntrySelection } from "../../../../components/App/settings/components/Selections/HistoryEntrySelection/MeasurementsHistoryEntrySelection";
+import { WorkoutHistoryEntrySelection } from "../../../../components/App/settings/components/Selections/HistoryEntrySelection/Workout/WorkoutHistoryEntrySelection";
+import { MeasurementsHistoryEntrySelection } from "../../../../components/App/settings/components/Selections/HistoryEntrySelection/Measurement/MeasurementsHistoryEntrySelection";
 
 export const Entries = () => {
     const { t } = useTranslation();

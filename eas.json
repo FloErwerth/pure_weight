@@ -12,7 +12,6 @@
     },
     "production": {
       "env": {
-        "EAS_BUILD_DISABLE_NPM_CACHE": "0",
         "EXPO_PUBLIC_IS_PRODUCTION": "true"
       }
     }

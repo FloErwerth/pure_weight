@@ -26,8 +26,12 @@ type SelectableSettingProps = {
     titleKey: string;
     stretch?: boolean;
     center?: boolean;
+    hint?: {
+        text: string;
+        size: number;
+    };
 };
-export function SelectableSetting({ appendedExtraContent, prependedExtraContent, onSelect, selected, titleKey, stretch, center }: SelectableSettingProps) {
+export function SelectableSetting({ appendedExtraContent, prependedExtraContent, onSelect, selected, titleKey, stretch, center, hint }: SelectableSettingProps) {
     const { secondaryColor } = useTheme();
     const { t } = useTranslation();
 
@@ -51,7 +55,7 @@ export function SelectableSetting({ appendedExtraContent, prependedExtraContent,
         }
         return <appendedExtraContent.Svg width={appendedExtraContent?.size ?? 24} height={appendedExtraContent?.size ?? 24} />;
     }, [appendedExtraContent, secondaryColor, selected]);
-
+    const hintStyle = useMemo(() => ({ fontSize: hint ? hint.size : 0 }), [hint]);
     return (
         <ThemedPressable input onPress={onSelect} style={wrapperStyles}>
             <HStack input style={styles.outerStack}>
@@ -63,6 +67,11 @@ export function SelectableSetting({ appendedExtraContent, prependedExtraContent,
                     <AppendedExtraContent />
                 </HStack>
             </HStack>
+            {hint && (
+                <Text warning ghost style={hintStyle}>
+                    {hint?.text}
+                </Text>
+            )}
         </ThemedPressable>
     );
 }

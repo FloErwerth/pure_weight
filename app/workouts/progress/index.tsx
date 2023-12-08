@@ -14,17 +14,20 @@ import { useTheme } from "../../../theme/context";
 
 import { getEditedWorkoutName, getWorkoutExercises } from "../../../store/reducers/workout/workoutSelectors";
 import { ThemedScrollView } from "../../../components/Themed/ThemedScrollView/ThemedScrollView";
+import { ThemedBottomSheetModal, useBottomSheetRef } from "../../../components/BottomSheetModal/ThemedBottomSheetModal";
+import { WorkoutSelection } from "../../../components/App/settings/components/Selections/HistoryEntrySelection/Workout/WorkoutSelection";
 
 const ExerciseCharts = lazy(() => import("../../../components/App/progress/chart/components/ExerciseCharts"));
-
 const PromiseTrigger = () => {
     throw new Promise(() => {});
 };
 
-export function Progress() {
+const handleConfirmIcon = { name: "cog", size: 24 } as const;
+export function WorkoutProgress() {
     const navigate = useNavigate();
     const exercises = useAppSelector(getWorkoutExercises);
     const trainingDayName = useAppSelector(getEditedWorkoutName);
+    const [ref, open] = useBottomSheetRef();
 
     const handleNavigateToWorkouts = useCallback(() => {
         navigate("workouts");
@@ -50,12 +53,15 @@ export function Progress() {
 
     return (
         <ThemedView background stretch>
-            <SiteNavigationButtons handleBack={handleNavigateToWorkouts} title={trainingDayName} />
+            <SiteNavigationButtons handleConfirmIcon={handleConfirmIcon} handleConfirm={open} handleBack={handleNavigateToWorkouts} title={trainingDayName} />
             <PageContent>
                 <Suspense fallback={<Fallback />}>
                     <ExerciseCharts />
                 </Suspense>
             </PageContent>
+            <ThemedBottomSheetModal snapPoints={["35%"]} ref={ref} title={"Number of workout entries"}>
+                <WorkoutSelection insideModal />
+            </ThemedBottomSheetModal>
         </ThemedView>
     );
 }

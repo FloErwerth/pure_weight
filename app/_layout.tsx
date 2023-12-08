@@ -7,7 +7,7 @@ import "../locales/i18next";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { TabsWrapper } from "./tabs";
 import { Train } from "./workouts/train";
-import { Progress } from "./workouts/progress";
+import { WorkoutProgress } from "./workouts/progress";
 import { Create } from "./workouts/create";
 import { NavigationContainer } from "@react-navigation/native";
 import { navigationRef } from "../hooks/navigate";
@@ -24,6 +24,7 @@ import { Display } from "./settings/display";
 import { GeneralSettings } from "./settings/workout";
 import { Statistics } from "./settings/statistics";
 import { Entries } from "./settings/statistics/entries";
+import { MeasurementProgress } from "./measurements/progress";
 
 const Stack = createNativeStackNavigator();
 
@@ -48,12 +49,13 @@ const ThemedApp = () => {
                                     <Stack.Screen component={TabsWrapper} options={{ headerShown: false }} name="tabs" />
                                     <Stack.Screen component={Train} options={{ gestureEnabled: false, headerShown: false }} name="workouts/train/index" />
                                     <Stack.Screen component={Create} options={{ gestureEnabled: false, headerShown: false }} name="workouts/create/index" />
-                                    <Stack.Screen component={Progress} options={{ headerShown: false }} name="workouts/progress/index" />
+                                    <Stack.Screen component={WorkoutProgress} options={{ headerShown: false }} name="workouts/progress/index" />
                                     <Stack.Screen component={WorkoutHistory} options={{ headerShown: false }} name="workouts/workoutHistory/index" />
                                     <Stack.Screen component={Display} options={{ headerShown: false }} name="settings/display/index" />
                                     <Stack.Screen component={GeneralSettings} options={{ headerShown: false }} name="settings/workout/index" />
                                     <Stack.Screen component={Statistics} options={{ headerShown: false }} name="settings/statistics/index" />
                                     <Stack.Screen component={Entries} options={{ headerShown: false }} name="settings/statistics/entries/index" />
+                                    <Stack.Screen component={MeasurementProgress} options={{ headerShown: false }} name="measurement/progress/index" />
                                 </Stack.Navigator>
                             </SafeAreaView>
                         </BottomSheetModalProvider>
