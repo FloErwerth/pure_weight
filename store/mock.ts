@@ -15,11 +15,11 @@ for (let i = 1; i <= 100; i++) {
             {
                 name: "Bankdrücken",
                 sets: [
-                    { weight: (i * 5).toString(), reps: "5" },
-                    { weight: (i * 5).toString(), reps: "5" },
-                    { weight: (i * 5).toString(), reps: "5" },
-                    { weight: (i * 5).toString(), reps: "5" },
-                    { weight: (i * 5).toString(), reps: "5" },
+                    { weight: (i * Math.random() * 50).toString(), reps: "5" },
+                    { weight: (i * Math.random() * 50).toString(), reps: "5" },
+                    { weight: (i * Math.random() * 50).toString(), reps: "5" },
+                    { weight: (i * Math.random() * 50).toString(), reps: "5" },
+                    { weight: (i * Math.random() * 50).toString(), reps: "5" },
                 ],
             },
             {
@@ -78,8 +78,6 @@ export const mockState: AppState = {
         theme: "dark",
         language: "en",
         unitSystem: "metric",
-        numberWorkoutEntries: "10",
-        numberMeasurementEntries: "10",
     },
     workoutState: {
         sorting: "A_Z",
@@ -126,7 +124,5 @@ export const emptyState = {
         language: "en",
         theme: "light",
         unitSystem: "metric",
-        numberWorkoutEntries: "10",
-        numberMeasurementEntries: "10",
     },
 } satisfies AppState;

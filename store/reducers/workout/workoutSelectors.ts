@@ -2,7 +2,7 @@ import { createSelector } from "@reduxjs/toolkit";
 import { Temporal } from "@js-temporal/polyfill";
 import { AppState } from "../../index";
 import { ExerciseSets } from "../../types";
-import { getLanguage, getNumberWorkoutEntriesNumber } from "../settings/settingsSelectors";
+import { getLanguage } from "../settings/settingsSelectors";
 import { getDate, getDateTodayIso, getMonth } from "../../../utils/date";
 import { IsoDate } from "../../../types/date";
 import { PALETTE } from "../../../utils/colorPalette";
@@ -46,7 +46,7 @@ export const getWorkoutExercises = createSelector([getEditedWorkout], (editedWor
 
 type SortedData = { exerciseName: string; data: { sets: ExerciseSets; date: IsoDate }[] };
 type SortedDataArray = SortedData[];
-export const getTrainingDayData = createSelector([getNumberWorkoutEntriesNumber, getEditedWorkout], (numberOfEntries, editedWorkout) => {
+export const getTrainingDayData = createSelector([getEditedWorkout], (editedWorkout) => {
     const workout = editedWorkout?.workout;
 
     if (workout?.doneWorkouts === undefined || workout.doneWorkouts.length === 0) {
@@ -54,7 +54,7 @@ export const getTrainingDayData = createSelector([getNumberWorkoutEntriesNumber,
     }
 
     const sortedData: SortedDataArray = [];
-    const slicedDoneWorkouts = getLastNEntries(workout.doneWorkouts, numberOfEntries ?? 20);
+    const slicedDoneWorkouts = getLastNEntries(workout.doneWorkouts, 25);
 
     slicedDoneWorkouts
         .filter(({ doneExercises }) => doneExercises !== undefined)

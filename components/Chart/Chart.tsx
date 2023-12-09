@@ -48,7 +48,6 @@ function Chart({ data, getXLabel, getDotContent, getYLabel, lineChartStyles, tra
             <LineChart
                 data={data}
                 transparent={transparent}
-                bezier
                 formatYLabel={getYLabel}
                 width={width}
                 height={Dimensions.get("screen").height * 0.33}

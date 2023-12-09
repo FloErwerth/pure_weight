@@ -3,7 +3,7 @@ import { Language, UnitSystem } from "./types";
 import { ThemeKey } from "../../../theme/types";
 
 export type NumberEntries = "10" | "25" | "100" | "ALL";
-export type SettingsState = { language: Language; theme: ThemeKey; unitSystem: UnitSystem; numberWorkoutEntries: NumberEntries; numberMeasurementEntries: NumberEntries };
+export type SettingsState = { language: Language; theme: ThemeKey; unitSystem: UnitSystem };
 
 export const setSettingsState = createAction<SettingsState, "settings_set_state">("settings_set_state");
 export const setLanguage = createAction<Language, "settings_set_language">("settings_set_language");
@@ -17,8 +17,6 @@ export const settingsRecuder = createReducer<SettingsState>(
         theme: "dark",
         language: "en",
         unitSystem: "metric",
-        numberMeasurementEntries: "10",
-        numberWorkoutEntries: "10",
     },
     (builder) => {
         builder
