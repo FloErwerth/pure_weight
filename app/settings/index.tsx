@@ -6,7 +6,6 @@ import { ThemedView } from "../../components/Themed/ThemedView/View";
 import { ScrollView } from "react-native";
 import { Display } from "./display";
 import { GeneralSettings } from "./workout";
-import { Statistics } from "./statistics";
 
 const isProduction = process.env["EXPO_PUBLIC_IS_PRODUCTION"] === "true";
 
@@ -22,9 +21,6 @@ export function Settings() {
                 </PageContent>
                 <PageContent paddingTop={30} titleConfig={{ title: t("display"), size: 24 }}>
                     <Display />
-                </PageContent>
-                <PageContent paddingTop={30} titleConfig={{ title: t("statistics"), size: 24 }}>
-                    <Statistics />
                 </PageContent>
                 <PageContent paddingTop={30} titleConfig={{ title: "Hilfe", size: 24 }}>
                     {!isProduction && <DevelopmentSelection />}

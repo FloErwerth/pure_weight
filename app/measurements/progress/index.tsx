@@ -1,6 +1,6 @@
 import { lazy, Suspense, useCallback, useMemo } from "react";
 import { useTheme } from "../../../theme/context";
-import { useAppDispatch, useAppSelector } from "../../../store";
+import { useAppSelector } from "../../../store";
 import { ThemedView } from "../../../components/Themed/ThemedView/View";
 import { borderRadius } from "../../../theme/border";
 import { trunicateToNthSignificantDigit } from "../../../utils/number";
@@ -15,8 +15,6 @@ import { VStack } from "../../../components/Stack/VStack/VStack";
 import { HStack } from "../../../components/Stack/HStack/HStack";
 import { Skeleton } from "../../../components/Skeleton/Skeleton";
 import { Dimensions } from "react-native";
-import { ThemedBottomSheetModal, useBottomSheetRef } from "../../../components/BottomSheetModal/ThemedBottomSheetModal";
-import { MeasurementSelection } from "../../../components/App/settings/components/Selections/HistoryEntrySelection/Measurement/MeasurementSelection";
 
 const Chart = lazy(() => import("../../../components/Chart/Chart"));
 const Fallback = () => {
@@ -37,14 +35,11 @@ const Fallback = () => {
 const PromiseTrigger = () => {
     throw new Promise(() => {});
 };
-const handleConfirmIcon = { name: "cog", size: 24 } as const;
 
 export const MeasurementProgress = () => {
     const { mainColor } = useTheme();
     const data = useAppSelector(getMeasurementData);
     const navigate = useNavigate();
-    const [ref, open] = useBottomSheetRef();
-    const dispatch = useAppDispatch();
     const navigateToMeasurement = useCallback(() => {
         navigate("measurements");
     }, [navigate]);
@@ -69,7 +64,7 @@ export const MeasurementProgress = () => {
 
     return (
         <ThemedView background stretch round>
-            <SiteNavigationButtons handleBack={navigateToMeasurement} title={data.name} handleConfirmIcon={handleConfirmIcon} handleConfirm={open} />
+            <SiteNavigationButtons handleBack={navigateToMeasurement} title={data.name} />
             <PageContent paddingTop={20}>
                 <Suspense fallback={<Fallback />}>
                     <ThemedView style={{ padding: 10 }} round>
@@ -77,9 +72,6 @@ export const MeasurementProgress = () => {
                     </ThemedView>
                 </Suspense>
             </PageContent>
-            <ThemedBottomSheetModal snapPoints={["35%"]} ref={ref} title={"Number of workout entries"}>
-                <MeasurementSelection insideModal />
-            </ThemedBottomSheetModal>
         </ThemedView>
     );
 };

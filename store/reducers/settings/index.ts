@@ -9,16 +9,8 @@ export const setSettingsState = createAction<SettingsState, "settings_set_state"
 export const setLanguage = createAction<Language, "settings_set_language">("settings_set_language");
 export const setTheme = createAction<ThemeKey, "theme_set">("theme_set");
 export const setUnitSystem = createAction<UnitSystem, "set_unit_system">("set_unit_system");
-export const setNumberWorkoutEntries = createAction<NumberEntries, "set_number_workout_entries">("set_number_workout_entries");
-export const setNumberMeasurementEntries = createAction<NumberEntries, "set_number_measurement_entries">("set_number_measurement_entries");
 
-export type SettingsAction =
-    | typeof setSettingsState.type
-    | typeof setLanguage.type
-    | typeof setTheme.type
-    | typeof setUnitSystem.type
-    | typeof setNumberWorkoutEntries.type
-    | typeof setNumberMeasurementEntries.type;
+export type SettingsAction = typeof setSettingsState.type | typeof setLanguage.type | typeof setTheme.type | typeof setUnitSystem.type;
 
 export const settingsRecuder = createReducer<SettingsState>(
     {
@@ -32,12 +24,6 @@ export const settingsRecuder = createReducer<SettingsState>(
         builder
             .addCase(setSettingsState, (_, action) => {
                 return action.payload;
-            })
-            .addCase(setNumberWorkoutEntries, (state, action) => {
-                state.numberWorkoutEntries = action.payload;
-            })
-            .addCase(setNumberMeasurementEntries, (state, action) => {
-                state.numberMeasurementEntries = action.payload;
             })
             .addCase(setLanguage, (state, action) => {
                 state.language = action.payload;

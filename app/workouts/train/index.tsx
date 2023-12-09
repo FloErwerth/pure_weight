@@ -62,7 +62,6 @@ export function Train() {
     }, [handleSaveTrainingData, handleReset, closeAlert]);
 
     const handleCloseButton = useCallback(() => {
-        console.log("close");
         if (!hasAnyData) {
             handleReset();
         } else {

@@ -2,7 +2,7 @@ import { createSelector } from "@reduxjs/toolkit";
 import { IsoDate } from "../../../types/date";
 import { getDate } from "../../../utils/date";
 import { AppState } from "../../index";
-import { getNumberMeasurementEntriesNumber, getUnitSystem } from "../settings/settingsSelectors";
+import { getUnitSystem } from "../settings/settingsSelectors";
 import { getLastNEntries } from "../../../utils/getLastNEntries";
 import { UnitSystem } from "../settings/types";
 import { MeasurementType } from "../../../components/App/measurements/types";
@@ -32,36 +32,33 @@ const getUnitByType = (unitSystem: UnitSystem, type?: MeasurementType) => {
 
     return measurementUnitMap[unitSystem][type];
 };
-export const getMeasurementData = createSelector(
-    [getNumberMeasurementEntriesNumber, getMeasurements, getInspectedMeasurementIndex, getUnitSystem],
-    (numberOfMeasurements, measurements, index, unitSystem) => {
-        if (index === undefined) {
-            return undefined;
-        }
-
-        const measurement = measurements[index];
-        const entries = getLastNEntries(Object.entries(measurement.data ?? []), numberOfMeasurements);
-        if (measurement?.data) {
-            const labels: string[] = [];
-            const data: number[] = [];
-            entries.forEach(([date, value]) => {
-                labels.push(getDate(date as IsoDate));
-                data.push(parseFloat(value));
-            });
-            return {
-                labels,
-                name: measurement.name,
-                unit: getUnitByType(unitSystem, measurement.type),
-                datasets: [
-                    {
-                        data,
-                    },
-                ],
-            };
-        }
+export const getMeasurementData = createSelector([getMeasurements, getInspectedMeasurementIndex, getUnitSystem], (measurements, index, unitSystem) => {
+    if (index === undefined) {
         return undefined;
-    },
-);
+    }
+
+    const measurement = measurements[index];
+    const entries = getLastNEntries(Object.entries(measurement.data ?? []), 25);
+    if (measurement?.data) {
+        const labels: string[] = [];
+        const data: number[] = [];
+        entries.forEach(([date, value]) => {
+            labels.push(getDate(date as IsoDate));
+            data.push(parseFloat(value));
+        });
+        return {
+            labels,
+            name: measurement.name,
+            unit: getUnitByType(unitSystem, measurement.type),
+            datasets: [
+                {
+                    data,
+                },
+            ],
+        };
+    }
+    return undefined;
+});
 
 export const getMeasurmentProgress = createSelector([getMeasurements, (byIndex, index: number) => index], (measurements, index) => {
     const measurement = measurements[index];

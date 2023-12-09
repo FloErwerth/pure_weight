@@ -22,8 +22,6 @@ import { setAppInstallDate } from "../store/reducers/metadata";
 import { getAppInstallDate } from "../store/reducers/metadata/metadataSelectors";
 import { Display } from "./settings/display";
 import { GeneralSettings } from "./settings/workout";
-import { Statistics } from "./settings/statistics";
-import { Entries } from "./settings/statistics/entries";
 import { MeasurementProgress } from "./measurements/progress";
 
 const Stack = createNativeStackNavigator();
@@ -53,8 +51,6 @@ const ThemedApp = () => {
                                     <Stack.Screen component={WorkoutHistory} options={{ headerShown: false }} name="workouts/workoutHistory/index" />
                                     <Stack.Screen component={Display} options={{ headerShown: false }} name="settings/display/index" />
                                     <Stack.Screen component={GeneralSettings} options={{ headerShown: false }} name="settings/workout/index" />
-                                    <Stack.Screen component={Statistics} options={{ headerShown: false }} name="settings/statistics/index" />
-                                    <Stack.Screen component={Entries} options={{ headerShown: false }} name="settings/statistics/entries/index" />
                                     <Stack.Screen component={MeasurementProgress} options={{ headerShown: false }} name="measurement/progress/index" />
                                 </Stack.Navigator>
                             </SafeAreaView>

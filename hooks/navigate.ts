@@ -31,9 +31,6 @@ export const Routes = {
     "workout/settings": {
         screen: "settings/workout/index",
     },
-    statistics: {
-        screen: "settings/statistics/index",
-    },
     entries: {
         screen: "settings/statistics/entries/index",
     },
