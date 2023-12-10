@@ -35,7 +35,7 @@ for (let i = 1; i <= 15; i++) {
         ],
     });
 }
-const getConstructedMeasruement = (): MeasurementDataPoints => {
+const getConstructedMeasurement = (): MeasurementDataPoints => {
     const constructedMeasurement: Record<string, string> = {};
     for (let i = 1; i <= 15; i++) {
         const currentDate = new Date("2023-09-01");
@@ -52,11 +52,12 @@ export const mockState: AppState = {
         isFirstTimeRendered: false,
     },
     measurmentState: {
+        sorting: "A_Z",
         measurements: [
             {
                 name: "Körpergewicht",
                 type: "weight",
-                data: getConstructedMeasruement(),
+                data: getConstructedMeasurement(),
                 higherIsBetter: true,
             },
             {
@@ -91,13 +92,35 @@ export const mockState: AppState = {
                     { type: "WEIGHT_BASED", name: "Hintere Schulter Seil", weight: "50", sets: "4", pause: { seconds: "0", minutes: "2" }, reps: "8" },
                     { type: "WEIGHT_BASED", name: "Bizeps Sz", weight: "10", sets: "4", pause: { seconds: "0", minutes: "2" }, reps: "8" },
                 ],
-                doneWorkouts: constructedDoneWorkouts,
+                doneWorkouts: [
+                    {
+                        date: "2023-12-01",
+                        duration: "120",
+                        doneExercises: [
+                            {
+                                name: "Klimmzüge unterstützt",
+                                sets: [{ weight: "50", reps: "5" }],
+                            },
+                        ],
+                    },
+                ],
             },
             {
                 name: "Real Chest",
                 calendarColor: "#ff0000",
                 exercises: [{ type: "WEIGHT_BASED", name: "Bankdrücken", weight: "50", sets: "5", pause: { seconds: "0", minutes: "2" }, reps: "5" }],
-                doneWorkouts: [],
+                doneWorkouts: [
+                    {
+                        date: "2023-11-15",
+                        duration: "120",
+                        doneExercises: [
+                            {
+                                name: "Bankdrücken",
+                                sets: [{ weight: "50", reps: "5" }],
+                            },
+                        ],
+                    },
+                ],
             },
         ],
     },
@@ -107,6 +130,7 @@ export const mockState: AppState = {
 };
 export const emptyState = {
     measurmentState: {
+        sorting: "A_Z",
         measurements: [],
     },
     workoutState: {

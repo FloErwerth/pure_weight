@@ -1,33 +1,40 @@
-import { ThemedBottomSheetModal } from "../BottomSheetModal/ThemedBottomSheetModal";
+import { ThemedBottomSheetModal, useBottomSheetRef } from "../BottomSheetModal/ThemedBottomSheetModal";
 import { ThemedPressable } from "../Themed/Pressable/Pressable";
 import { Text } from "../Themed/ThemedText/Text";
 import { styles } from "./styles";
-import { useAppSelector } from "../../store";
-import { ComponentProps, RefObject } from "react";
+import { ComponentProps, useCallback } from "react";
 import { ThemedView } from "../Themed/ThemedView/View";
 import { HStack } from "../Stack/HStack/HStack";
 import { ThemedMaterialCommunityIcons } from "../Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
-import { getNumberSavedWorkouts } from "../../store/reducers/workout/workoutSelectors";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { BottomSheetModalMethods } from "@gorhom/bottom-sheet/lib/typescript/types";
+import { useTranslation } from "react-i18next";
 
 type SortingButtonProps = {
     iconName: ComponentProps<typeof MaterialCommunityIcons>["name"];
     title: string;
-    bottomSheetTitle: string;
-    sheetRef: RefObject<BottomSheetModalMethods>;
-    mappedOptions: Array<{ iconName: ComponentProps<typeof MaterialCommunityIcons>["name"]; value: string; label: string; handleSelect: () => void }>;
+    hide?: boolean;
+    mappedOptions: Array<{ iconName: ComponentProps<typeof MaterialCommunityIcons>["name"]; value: string; label: string; selectCallback: () => void }>;
 };
-export const SortingButton = ({ sheetRef, iconName, title, bottomSheetTitle, mappedOptions }: SortingButtonProps) => {
-    const numberSavedWorkouts = useAppSelector(getNumberSavedWorkouts);
 
-    if (numberSavedWorkouts < 2) {
+export const SortingButton = ({ iconName, title, mappedOptions, hide = false }: SortingButtonProps) => {
+    const { t } = useTranslation();
+    const [ref, open, close] = useBottomSheetRef();
+
+    const handleSelectedValue = useCallback(
+        (selectCallback: () => void) => {
+            close();
+            selectCallback();
+        },
+        [close],
+    );
+
+    if (hide) {
         return null;
     }
 
     return (
         <>
-            <ThemedPressable ghost style={styles.wrapper} onPress={sheetRef.current?.present}>
+            <ThemedPressable ghost style={styles.wrapper} onPress={open}>
                 <HStack ghost style={styles.optionStack}>
                     <ThemedMaterialCommunityIcons ghost name={iconName} size={20} />
                     <Text ghost style={styles.title}>
@@ -35,10 +42,10 @@ export const SortingButton = ({ sheetRef, iconName, title, bottomSheetTitle, map
                     </Text>
                 </HStack>
             </ThemedPressable>
-            <ThemedBottomSheetModal title={bottomSheetTitle} ref={sheetRef} snapPoints={["50%"]}>
+            <ThemedBottomSheetModal title={t("sorting_modal_title")} ref={ref} snapPoints={["50%"]}>
                 <ThemedView ghost style={styles.optionWrapper}>
-                    {mappedOptions.map(({ iconName, value, label, handleSelect }) => (
-                        <ThemedPressable key={value} onPress={handleSelect} style={styles.option}>
+                    {mappedOptions.map(({ iconName, value, label, selectCallback }) => (
+                        <ThemedPressable key={value} onPress={() => handleSelectedValue(selectCallback)} style={styles.option}>
                             <HStack style={styles.optionStack}>
                                 <ThemedMaterialCommunityIcons name={iconName} size={20} />
                                 <Text ghost style={styles.optionText}>

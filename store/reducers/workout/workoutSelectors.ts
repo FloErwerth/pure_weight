@@ -35,10 +35,8 @@ export const getLatestWorkoutDate = createSelector([getSortedWorkoutDates], (dat
 export const getFirstWorkoutDate = createSelector([getWorkoutDates], (dates) => {
     return dates[0];
 });
-export const getWorkoutByIndex = createSelector([getWorkouts], (trainings) => {
-    return (index: number) => {
-        return trainings[index];
-    };
+export const getWorkoutByIndex = createSelector([getWorkouts, (workouts, index: number) => index], (trainings, index) => {
+    return trainings[index];
 });
 export const getEditedWorkoutName = createSelector([getEditedWorkout], (editedWorkout) => editedWorkout?.workout?.name);
 
@@ -136,106 +134,104 @@ export const getPreviousTraining = createSelector([getEditedWorkout, getLanguage
     }
     return foundEntries.get(editedWorkout?.workout.exercises[exerciseIndex].name);
 });
-export const getOverallTrainingTrend = createSelector([getWorkoutByIndex], (trainingDayByIndex) => {
-    return (workoutIndex: number) => {
-        const workout = trainingDayByIndex(workoutIndex);
+export const getOverallTrainingTrend = createSelector([getWorkouts, (workouts, index: number) => index], (workouts, index) => {
+    const workout = workouts[index];
 
-        if (!workout.doneWorkouts || workout.doneWorkouts?.length < 2 || workout.doneWorkouts.some(({ doneExercises }) => !doneExercises)) {
-            return undefined;
+    if (!workout.doneWorkouts || workout.doneWorkouts?.length < 2 || workout.doneWorkouts.some(({ doneExercises }) => !doneExercises)) {
+        return undefined;
+    }
+
+    const latestExercisePairs: Map<
+        string,
+        {
+            cleanedPercent: number;
+            isPositive?: boolean;
         }
+    > = new Map();
+    for (let i = 1; i < workout.doneWorkouts.length; i += 2) {
+        const workoutBefore = workout.doneWorkouts[i - 1];
+        const currentWorkout = workout.doneWorkouts[i];
 
-        const latestExercisePairs: Map<
-            string,
-            {
-                cleanedPercent: number;
-                isPositive?: boolean;
-            }
-        > = new Map();
-        for (let i = 1; i < workout.doneWorkouts.length; i += 2) {
-            const workoutBefore = workout.doneWorkouts[i - 1];
-            const currentWorkout = workout.doneWorkouts[i];
+        for (let j = 0; j < workoutBefore.doneExercises!.length; j++) {
+            const beforeExercise = workoutBefore.doneExercises![j];
+            const currentExercise = currentWorkout.doneExercises![j];
 
-            for (let j = 0; j < workoutBefore.doneExercises!.length; j++) {
-                const beforeExercise = workoutBefore.doneExercises![j];
-                const currentExercise = currentWorkout.doneExercises![j];
-
-                if (currentExercise !== undefined && currentExercise.name === beforeExercise.name) {
-                    const beforeOverall = beforeExercise.sets.reduce((sum, set) => sum + parseFloat(set.reps) * parseFloat(set.weight), 0);
-                    const currentOverall = currentExercise.sets.reduce((sum, set) => sum + parseFloat(set.reps) * parseFloat(set.weight), 0);
-                    const result: {
-                        cleanedPercent: number;
-                        isPositive?: boolean;
-                    } = {
-                        cleanedPercent: 0,
-                    };
-                    const fraction = currentOverall / beforeOverall;
-                    if (fraction === 1) {
-                        result.cleanedPercent = 0;
-                    } else if (fraction > 1) {
-                        result.cleanedPercent = fraction * 100 - 100;
-                        result.isPositive = true;
-                    } else {
-                        result.cleanedPercent = 100 - fraction * 100;
-                        result.isPositive = false;
-                    }
-                    latestExercisePairs.set(currentExercise.name, result);
+            if (currentExercise !== undefined && currentExercise.name === beforeExercise.name) {
+                const beforeOverall = beforeExercise.sets.reduce((sum, set) => sum + parseFloat(set.reps) * parseFloat(set.weight), 0);
+                const currentOverall = currentExercise.sets.reduce((sum, set) => sum + parseFloat(set.reps) * parseFloat(set.weight), 0);
+                const result: {
+                    cleanedPercent: number;
+                    isPositive?: boolean;
+                } = {
+                    cleanedPercent: 0,
+                };
+                const fraction = currentOverall / beforeOverall;
+                if (fraction === 1) {
+                    result.cleanedPercent = 0;
+                } else if (fraction > 1) {
+                    result.cleanedPercent = fraction * 100 - 100;
+                    result.isPositive = true;
+                } else {
+                    result.cleanedPercent = 100 - fraction * 100;
+                    result.isPositive = false;
                 }
+                latestExercisePairs.set(currentExercise.name, result);
             }
         }
-        const foundBestExercise = Array.from(latestExercisePairs).reduce(
-            (bestImprovement, [name, { isPositive, cleanedPercent }], index) => {
-                if (index === 0) {
+    }
+    const foundBestExercise = Array.from(latestExercisePairs).reduce(
+        (bestImprovement, [name, { isPositive, cleanedPercent }], index) => {
+            if (index === 0) {
+                return {
+                    name,
+                    isPositive,
+                    percent: cleanedPercent,
+                };
+            }
+            if (isPositive === bestImprovement.isPositive) {
+                if (!isPositive) {
+                    if (bestImprovement.percent > cleanedPercent) {
+                        return {
+                            name,
+                            percent: cleanedPercent,
+                            isPositive: false,
+                        };
+                    }
+                    return bestImprovement;
+                } else {
+                    if (bestImprovement.percent > cleanedPercent) {
+                        return bestImprovement;
+                    }
                     return {
                         name,
-                        isPositive,
                         percent: cleanedPercent,
+                        isPositive: true,
                     };
                 }
-                if (isPositive === bestImprovement.isPositive) {
-                    if (!isPositive) {
-                        if (bestImprovement.percent > cleanedPercent) {
-                            return {
-                                name,
-                                percent: cleanedPercent,
-                                isPositive: false,
-                            };
-                        }
-                        return bestImprovement;
-                    } else {
-                        if (bestImprovement.percent > cleanedPercent) {
-                            return bestImprovement;
-                        }
-                        return {
-                            name,
-                            percent: cleanedPercent,
-                            isPositive: true,
-                        };
-                    }
+            }
+            if (isPositive !== bestImprovement.isPositive) {
+                if (isPositive) {
+                    return {
+                        name,
+                        percent: cleanedPercent,
+                        isPositive,
+                    };
+                } else {
+                    return bestImprovement;
                 }
-                if (isPositive !== bestImprovement.isPositive) {
-                    if (isPositive) {
-                        return {
-                            name,
-                            percent: cleanedPercent,
-                            isPositive,
-                        };
-                    } else {
-                        return bestImprovement;
-                    }
-                }
-                return bestImprovement;
-            },
-            {} as {
-                name: string;
-                percent: number;
-                isPositive?: boolean;
-            },
-        );
-        if (foundBestExercise.name) {
-            return foundBestExercise;
-        }
-        return undefined;
-    };
+            }
+            return bestImprovement;
+        },
+        {} as {
+            name: string;
+            percent: number;
+            isPositive?: boolean;
+        },
+    );
+    if (foundBestExercise.name) {
+        return foundBestExercise;
+    }
+    return undefined;
 });
 export const getPauseTime = createSelector([getTrainedWorkout], (trainedWorkout) => {
     const exerciseIndex = trainedWorkout?.activeExerciseIndex;

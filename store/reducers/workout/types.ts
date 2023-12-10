@@ -1,4 +1,4 @@
-import { ExerciseMetaData, ExerciseSets, Workout, WorkoutSortingType } from "../../types";
+import { ExerciseMetaData, ExerciseSets, SortingType, Workout } from "../../types";
 
 export type EditedWorkout = {
     workout: Workout;
@@ -24,7 +24,7 @@ export type TrainedWorkout = {
 };
 export type WorkoutState = {
     workouts: Workout[];
-    sorting: WorkoutSortingType;
+    sorting: SortingType;
     deletedWorkout?: { workout: Workout; index: number };
     deletedExercise?: { exercise: ExerciseMetaData; index: number };
     editedWorkout?: EditedWorkout;

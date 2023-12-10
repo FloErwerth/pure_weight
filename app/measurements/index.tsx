@@ -17,8 +17,9 @@ import { useBottomSheetRef } from "../../components/BottomSheetModal/ThemedBotto
 import { addMeasurement, deleteMeasurement, recoverMeasurement } from "../../store/reducers/measurements";
 import { cleanError } from "../../store/reducers/errors";
 import { getMeasurements } from "../../store/reducers/measurements/measurementSelectors";
+import { MeasurementSorting } from "../../components/App/measurements/Sorting/MeasurementSorting";
 
-const emptyMeasurement = { measurement: { name: "", value: "", date: new Date(), higherIsBetter: false } };
+const emptyMeasurement = { measurement: { name: "", value: "", higherIsBetter: false, data: {} } };
 
 const dateParser = z.date().transform((date) => {
     return date.toISOString().split("T")[0];
@@ -50,24 +51,27 @@ export function Measurements() {
         reset();
     }, [close, reset]);
 
-    const handleConfirmMeasurementModal = useCallback(() => {
-        const { measurement, index } = currentMeasurement;
-        if (measurement.name && measurement.type) {
-            const parsedDate = dateParser.safeParse(measurement.date);
-            const data = measurement.value ? { [(parsedDate.success && parsedDate.data) || getDateTodayIso()]: measurement.value } : undefined;
-            dispatch(
-                addMeasurement({
-                    measurement: {
-                        name: measurement.name,
-                        type: measurement.type,
-                        data,
-                    },
-                    index,
-                }),
-            );
-        }
-        handleCloseModal();
-    }, [currentMeasurement, dispatch, handleCloseModal]);
+    const handleConfirmMeasurementModal = useCallback(
+        (date: Date) => {
+            const { measurement, index } = currentMeasurement;
+            if (measurement.name && measurement.type) {
+                const parsedDate = dateParser.safeParse(date);
+                const data = measurement.value ? { [(parsedDate.success && parsedDate.data) || getDateTodayIso()]: measurement.value } : {};
+                dispatch(
+                    addMeasurement({
+                        measurement: {
+                            name: measurement.name,
+                            type: measurement.type,
+                            data,
+                        },
+                        index,
+                    }),
+                );
+            }
+            handleCloseModal();
+        },
+        [currentMeasurement, dispatch, handleCloseModal],
+    );
 
     const handleAddExistingMeasurement = useCallback(
         (measurement: Measurement, index: number) => {
@@ -76,7 +80,7 @@ export function Measurements() {
                     name: measurement.name,
                     type: measurement.type,
                     value: "",
-                    date: new Date(getDateTodayIso()),
+                    data: {},
                 },
                 index,
             });
@@ -102,7 +106,8 @@ export function Measurements() {
     return (
         <ThemedView stretch background>
             <SiteNavigationButtons titleFontSize={40} title={t("measurements")} handleConfirm={handleAddNewMeasurement} handleConfirmIcon={{ name: "plus", size: 40 }} />
-            <PageContent scrollable style={styles.contentWrapper}>
+            <MeasurementSorting />
+            <PageContent paddingTop={20} scrollable style={styles.contentWrapper}>
                 <ScrollView style={styles.measurementsWrapper}>
                     {measurements?.map((measurement, index) => (
                         <Swipeable onDelete={() => handleDeleteMeasurement(index)} key={`${measurement.name}-pressable`} onClick={() => handleAddExistingMeasurement(measurement, index)}>

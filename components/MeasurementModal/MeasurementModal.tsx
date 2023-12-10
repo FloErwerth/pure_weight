@@ -26,7 +26,7 @@ import { getDatesFromCurrentMeasurement } from "../../store/reducers/measurement
 interface MeasurementModalProps extends ThemedBottomSheetModalProps {
     setCurrentMeasurement: Dispatch<SetStateAction<{ measurement: Measurement; index?: number }>>;
     currentMeasurement: { measurement: Measurement; index?: number };
-    saveMeasurement: () => void;
+    saveMeasurement: (date: Date) => void;
     isNewMeasurement?: boolean;
     isEditingMeasurement?: boolean;
     reference: RefObject<BottomSheetModal>;
@@ -36,7 +36,6 @@ const fieldToErrorMap: Record<keyof Omit<Measurement, "higherIsBetter" | "data">
     type: "measurement_type",
     value: "measurement_value",
     name: "measurement_name",
-    date: "measurement_value",
 };
 
 const MEASUREMENT_KEY_PREFIX = "measurement_type_";
@@ -60,6 +59,7 @@ export const MeasurementModal = ({ onRequestClose, reference, isNewMeasurement =
     const dispatch = useAppDispatch();
     const measurementOptions = useMeasurementOptions();
     const dropdownValue = useDropdownValue(measurement.type);
+    const [date, setDate] = useState(new Date(getDateTodayIso()));
 
     const handleAddMeasurementData = useCallback(
         (field: keyof Measurement, value: Measurement[keyof Measurement]) => {
@@ -102,13 +102,13 @@ export const MeasurementModal = ({ onRequestClose, reference, isNewMeasurement =
             dispatch(setError(errors));
             return;
         }
-        if (!showWarning && measurement?.date && dates?.includes(measurement?.date?.toISOString().split("T")[0])) {
+        if (!showWarning && date && dates?.includes(date?.toISOString().split("T")[0])) {
             setShowWarnining(true);
             return;
         }
         setShowWarnining(false);
-        saveMeasurement();
-    }, [collectErrors, dates, dispatch, measurement?.date, saveMeasurement, showWarning]);
+        saveMeasurement(date ?? new Date(getDateTodayIso()));
+    }, [collectErrors, dates, dispatch, date, saveMeasurement, showWarning]);
 
     return (
         <ThemedBottomSheetModal onRequestClose={onRequestClose} title={measurementButtonText} snapPoints={["100%"]} ref={reference}>
@@ -155,7 +155,7 @@ export const MeasurementModal = ({ onRequestClose, reference, isNewMeasurement =
                 <HStack ghost style={styles.calendarButtonsWrapper}>
                     <ThemedPressable input stretch style={styles.dateWrapper} onPress={() => setShowDatePicker((open) => !open)}>
                         <Text ghost style={styles.text}>
-                            {measurement?.date?.toLocaleDateString(language)}
+                            {date?.toLocaleDateString(language)}
                         </Text>
                     </ThemedPressable>
                     <ThemedPressable input onPress={() => setShowDatePicker((open) => !open)} style={styles.calendarWrapper}>
@@ -172,8 +172,8 @@ export const MeasurementModal = ({ onRequestClose, reference, isNewMeasurement =
                             accentColor={mainColor}
                             themeVariant={themeKey}
                             style={styles.calendar}
-                            onChange={(_, date) => handleAddMeasurementData("date", date)}
-                            value={measurement?.date ?? new Date(getDateTodayIso())}
+                            onChange={(_, date) => setDate(date ?? new Date(getDateTodayIso()))}
+                            value={date ?? new Date(getDateTodayIso())}
                         />
                     </Animated.View>
                 )}

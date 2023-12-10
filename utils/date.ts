@@ -28,6 +28,11 @@ export const getDate = (date?: IsoDate, language?: "en" | "de", dateStyle?: "sho
         dateStyle: dateStyle ?? "medium",
     });
 };
+export const getIsoDateFromDate = (date: Date, language?: "en" | "de", dateStyle?: "short" | "medium" | "long") => {
+    return Temporal.PlainDate.from(date.toString()).toLocaleString(language ?? Locale.locale, {
+        dateStyle: dateStyle ?? "medium",
+    }) as IsoDate;
+};
 
 export const getMonth = (date?: IsoDate) => {
     if (!date) {
@@ -35,4 +40,8 @@ export const getMonth = (date?: IsoDate) => {
     } else {
         return Temporal.PlainDate.from(date).month;
     }
+};
+
+export const getEpochMilliseconds = (date: IsoDate) => {
+    return Temporal.Instant.from(`${date}T00:00+00:00`).epochMilliseconds;
 };

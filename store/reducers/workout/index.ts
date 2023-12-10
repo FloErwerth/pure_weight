@@ -1,8 +1,8 @@
 import { createAction, createReducer } from "@reduxjs/toolkit/src";
-import { DoneExerciseData, ExerciseMetaData, TimeInput, WeightBasedExerciseData, WeightBasedExerciseMetaData, Workout, WorkoutSortingType } from "../../types";
+import { DoneExerciseData, ExerciseMetaData, SortingType, TimeInput, WeightBasedExerciseData, WeightBasedExerciseMetaData, Workout } from "../../types";
 import { Temporal } from "@js-temporal/polyfill";
 import { getDateTodayIso } from "../../../utils/date";
-import { sortWorkouts } from "./utils";
+import { sortWorkouts } from "./sortWorkouts";
 import { TrainedWorkout, WorkoutState } from "./types";
 import { getRandomColorFromPalette } from "../../../utils/colorPalette";
 
@@ -33,7 +33,7 @@ export const saveNote = createAction<string | undefined, "save_note">("save_note
 export const setActiveExerciseIndex = createAction<number, "set_active_exercise_index">("set_active_exercise_index");
 export const sortExercisesOnDragEnd = createAction<ExerciseMetaData[], "exercise_overwrite">("exercise_overwrite");
 export const recoverWorkout = createAction("workout_recover");
-export const setWorkoutSorting = createAction<WorkoutSortingType, "workout_sort">("workout_sort");
+export const setWorkoutSorting = createAction<SortingType, "workout_sort">("workout_sort");
 export const removeWorkout = createAction<number, "workout_remove">("workout_remove");
 export const addWorkout = createAction<{ name: string; exercises: ExerciseMetaData[]; color: string }, "workout_add">("workout_add");
 export const addDoneWorkout = createAction("set_training_data");

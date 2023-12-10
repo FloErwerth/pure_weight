@@ -1,18 +1,8 @@
 import { IsoDate } from "../types/date";
 
-export const WorkoutSortingType = ["A_Z", "Z_A", "LONGEST_AGO", "MOST_RECENT"] as const;
-export const HistorySortingType = [
-    "DAY_DESCENDING",
-    "DAY_ASCENDING",
-    "MOST_WEIGHT_LIFTED",
-    "LEAST_WEIGHT_LIFTED",
-    "MOST_EXERCISES_DONE",
-    "LEAST_EXERCISES_DONE",
-    "LONGEST_DURATION",
-    "SHORTEST_DURATION",
-] as const;
+export const SortingType = ["A_Z", "Z_A", "LONGEST_AGO", "MOST_RECENT"] as const;
 
-export type WorkoutSortingType = (typeof WorkoutSortingType)[number];
+export type SortingType = (typeof SortingType)[number];
 
 export type Workout = {
     name: string;

@@ -1,7 +1,7 @@
-import { Temporal } from "@js-temporal/polyfill";
-import { Workout, WorkoutSortingType } from "../../types";
+import { SortingType, Workout } from "../../types";
+import { getEpochMilliseconds } from "../../../utils/date";
 
-export const sortWorkouts = (workouts: Workout[], sorting: WorkoutSortingType) => {
+export const sortWorkouts = (workouts: Workout[], sorting: SortingType) => {
     const sortedWorkouts = [...workouts];
     switch (sorting) {
         case "A_Z":
@@ -11,11 +11,9 @@ export const sortWorkouts = (workouts: Workout[], sorting: WorkoutSortingType) =
         case "MOST_RECENT":
             return sortedWorkouts.sort((a, b) => {
                 if (a.doneWorkouts.length > 0 && b.doneWorkouts.length > 0) {
-                    const latestDateA = a.doneWorkouts[a.doneWorkouts.length - 1].date;
-                    const latestDateB = b.doneWorkouts[b.doneWorkouts.length - 1].date;
-                    const latestA = Temporal.Instant.from(`${latestDateA}T00:00+00:00`).epochMilliseconds;
-                    const latestB = Temporal.Instant.from(`${latestDateB}T00:00+00:00`).epochMilliseconds;
-                    return latestA - latestB;
+                    const latestA = a.doneWorkouts[a.doneWorkouts.length - 1].date;
+                    const latestB = b.doneWorkouts[b.doneWorkouts.length - 1].date;
+                    return getEpochMilliseconds(latestB) - getEpochMilliseconds(latestA);
                 }
                 return -1;
             });
@@ -24,9 +22,7 @@ export const sortWorkouts = (workouts: Workout[], sorting: WorkoutSortingType) =
                 if (a.doneWorkouts.length > 0 && b.doneWorkouts.length > 0) {
                     const latestDateA = a.doneWorkouts[a.doneWorkouts.length - 1].date;
                     const latestDateB = b.doneWorkouts[b.doneWorkouts.length - 1].date;
-                    const latestA = Temporal.Instant.from(latestDateA.concat("T00:00+00:00")).epochMilliseconds;
-                    const latestB = Temporal.Instant.from(latestDateB.concat("T00:00+00:00")).epochMilliseconds;
-                    return latestB - latestA;
+                    return getEpochMilliseconds(latestDateA) - getEpochMilliseconds(latestDateB);
                 }
                 return -1;
             });

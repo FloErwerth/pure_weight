@@ -7,10 +7,9 @@ export type MeasurementType = z.infer<typeof MeasurementUnit>;
 
 export type MeasurementDataPoints = { [date: IsoDate]: string };
 export type Measurement = {
-    name?: string;
+    name: string;
     type?: MeasurementType;
-    data?: MeasurementDataPoints;
+    data: MeasurementDataPoints;
     higherIsBetter?: boolean;
-    date?: Date;
     value?: string;
 };

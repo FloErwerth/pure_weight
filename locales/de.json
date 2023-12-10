@@ -124,10 +124,10 @@
   "measurement_higher_is_better": "Höher ist besser",
   "measurement_higher_is_better_help": "Um festzustellen, ob Du dich verbessert hast müssen wir wissen, ob ein höherer Wert ein besserer Wert ist",
 
-  "workout_sorting_modal_title": "Eine Sortierung auswählen",
-  "workout_sorting_label": "Sortierung: ",
-  "workout_sorting_A_Z": "Alphabetisch aufsteigend",
-  "workout_sorting_Z_A": "Alphabetisch absteigend",
-  "workout_sorting_LONGEST_AGO": "Am längsten her",
-  "workout_sorting_MOST_RECENT": "Vor kürzester Zeit"
+  "sorting_modal_title": "Eine Sortierung auswählen",
+  "sorting_label": "Sortierung: ",
+  "sorting_A_Z": "Alphabetisch aufsteigend",
+  "sorting_Z_A": "Alphabetisch absteigend",
+  "sorting_LONGEST_AGO": "Am längsten her",
+  "sorting_MOST_RECENT": "Vor kürzester Zeit"
 }
