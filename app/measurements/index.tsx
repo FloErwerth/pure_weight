@@ -1,6 +1,6 @@
 import { SiteNavigationButtons } from "../../components/SiteNavigationButtons/SiteNavigationButtons";
 import { useTranslation } from "react-i18next";
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../store";
 import { MeasurementModal } from "../../components/MeasurementModal/MeasurementModal";
 import { z } from "zod/lib/index";
@@ -101,16 +101,22 @@ export function Measurements() {
         setShowToast(false);
     }, [dispatch]);
 
+    const mappedMeasurements = useMemo(
+        () =>
+            measurements?.map((measurement, index) => (
+                <Swipeable onDelete={() => handleDeleteMeasurement(index)} key={`${measurement.name}-pressable`} onClick={() => handleAddExistingMeasurement(measurement, index)}>
+                    <RenderedMeasurement index={index} measurement={measurement} />
+                </Swipeable>
+            )),
+        [handleAddExistingMeasurement, handleDeleteMeasurement, measurements],
+    );
+
     return (
         <ThemedView stretch background>
             <SiteNavigationButtons titleFontSize={40} title={t("measurements")} handleConfirm={handleAddNewMeasurement} handleConfirmIcon={{ name: "plus", size: 40 }} />
             <MeasurementSorting />
             <PageContent paddingTop={20} scrollable>
-                {measurements?.map((measurement, index) => (
-                    <Swipeable onDelete={() => handleDeleteMeasurement(index)} key={`${measurement.name}-pressable`} onClick={() => handleAddExistingMeasurement(measurement, index)}>
-                        <RenderedMeasurement index={index} measurement={measurement} />
-                    </Swipeable>
-                ))}
+                {mappedMeasurements}
             </PageContent>
             <MeasurementModal
                 reference={ref}

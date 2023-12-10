@@ -55,17 +55,21 @@ export function Workouts() {
         setShowToast(false);
     }, [dispatch]);
 
+    const mappedWorkouts = useMemo(
+        () =>
+            savedWorkouts.map(({ name }, index) => (
+                <Swipeable key={name.concat(index.toString())} onClick={() => onClick(index)} onDelete={() => onDelete(index)} onEdit={() => onEdit(index)}>
+                    <RenderedWorkout index={index} />
+                </Swipeable>
+            )),
+        [savedWorkouts, onClick, onDelete, onEdit],
+    );
+
     return (
         <ThemedView stretch background>
             <SiteNavigationButtons titleFontSize={40} title={t("workouts")} handleConfirmIcon={confirmIcon} handleConfirm={handleCreateWorkout} />
             <WorkoutSorting />
-            <PageContent paddingTop={20}>
-                {savedWorkouts.map(({ name }, index) => (
-                    <Swipeable key={name.concat(index.toString())} onClick={() => onClick(index)} onDelete={() => onDelete(index)} onEdit={() => onEdit(index)}>
-                        <RenderedWorkout index={index} />
-                    </Swipeable>
-                ))}
-            </PageContent>
+            <PageContent paddingTop={20}>{mappedWorkouts}</PageContent>
             <BottomToast onRequestClose={() => setShowToast(false)} open={showToast} messageKey={"workout_deleted_message"} titleKey={"workout_deleted_title"} onRedo={handleRecoverWorkout} />
         </ThemedView>
     );
