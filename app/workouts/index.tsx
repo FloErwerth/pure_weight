@@ -11,20 +11,6 @@ import { createNewWorkout } from "../../store/reducers/workout";
 import { WorkoutSorting } from "../../components/App/train/WorkoutSorting/WorkoutSorting";
 import { RenderedWorkout } from "../../components/App/workout/RenderedWorkout";
 
-type RenderedItem = {
-    handleNavigateToProgress: () => void;
-    workoutName: string;
-    key: string;
-    onEdit: () => void;
-    onDelete: () => void;
-    onClick: () => void;
-    color: string;
-    bestPreviousTraining: { name: string; percent: number; isPositive?: boolean } | undefined;
-    hasHistory: boolean;
-    handleNavigateToHistory: () => void;
-    numberHistoryEntries: number;
-};
-
 export function Workouts() {
     const dispatch = useAppDispatch();
     const { t } = useTranslation();
