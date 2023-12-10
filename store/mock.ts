@@ -94,7 +94,7 @@ export const mockState: AppState = {
                 ],
                 doneWorkouts: [
                     {
-                        date: "2023-12-01",
+                        date: "2023-12-09",
                         duration: "120",
                         doneExercises: [
                             {
@@ -111,7 +111,7 @@ export const mockState: AppState = {
                 exercises: [{ type: "WEIGHT_BASED", name: "Bankdrücken", weight: "50", sets: "5", pause: { seconds: "0", minutes: "2" }, reps: "5" }],
                 doneWorkouts: [
                     {
-                        date: "2023-11-15",
+                        date: "2023-12-09",
                         duration: "120",
                         doneExercises: [
                             {

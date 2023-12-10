@@ -3,7 +3,7 @@ import { Temporal } from "@js-temporal/polyfill";
 import { AppState } from "../../index";
 import { ExerciseSets } from "../../types";
 import { getLanguage } from "../settings/settingsSelectors";
-import { getDate, getDateTodayIso, getMonth } from "../../../utils/date";
+import { getDate, getDateTodayIso, getMonth, getSinceDate } from "../../../utils/date";
 import { IsoDate } from "../../../types/date";
 import { PALETTE } from "../../../utils/colorPalette";
 import { getLastNEntries } from "../../../utils/getLastNEntries";
@@ -16,23 +16,20 @@ export const getEditedWorkout = createSelector([getWorkoutState], (state) => sta
 export const getEditedExercise = createSelector([getWorkoutState], (state) => state.editedExercise);
 export const getIsExistingEditedExercise = createSelector([getEditedExercise], (editedExercise) => editedExercise?.index !== undefined);
 export const getNumberSavedWorkouts = createSelector([getWorkouts], (workouts) => workouts.length);
-export const getWorkoutDates = createSelector([getEditedWorkout], (editedWorkout) => {
-    if (!editedWorkout) {
-        return [];
-    }
-
-    return editedWorkout.workout.doneWorkouts?.map(({ date }) => date);
+export const getSortedDoneWorkout = createSelector([getWorkouts, (workouts, index: number) => index], (workouts, index) => {
+    return workouts[index].doneWorkouts.map(({ date }) => date).sort(Temporal.PlainDateTime.compare);
 });
 
 export const getWorkoutColor = createSelector([getEditedWorkout], (editedWorkout) => editedWorkout?.workout.calendarColor);
 
-export const getSortedWorkoutDates = createSelector([getWorkoutDates], (dates) => {
-    return dates?.sort(Temporal.PlainDateTime.compare);
-});
-export const getLatestWorkoutDate = createSelector([getSortedWorkoutDates], (dates) => {
+export const getLatestWorkoutDate = createSelector([getSortedDoneWorkout], (dates) => {
     return dates[dates.length - 1];
 });
-export const getFirstWorkoutDate = createSelector([getWorkoutDates], (dates) => {
+export const getLatestWorkoutDateDisplay = createSelector([getSortedDoneWorkout, getLanguage], (dates, language) => {
+    const latest = dates[dates.length - 1] as IsoDate;
+    return getSinceDate(latest, language ?? "de");
+});
+export const getFirstWorkoutDate = createSelector([getSortedDoneWorkout], (dates) => {
     return dates[0];
 });
 export const getWorkoutByIndex = createSelector([getWorkouts, (workouts, index: number) => index], (trainings, index) => {
@@ -112,7 +109,10 @@ export const getHistoryByMonth = createSelector([getEditedWorkout, (editedWorkou
         .map(([month, data]) => ({ title: month, data }));
 });
 export const getHasHistory = createSelector([getWorkouts, (workouts, index: number) => index], (workouts, index) => workouts[index].doneWorkouts.length > 0);
-export const getNumberHistories = createSelector([getWorkouts, (workouts, index: number) => index], (workouts, index) => workouts[index].doneWorkouts.length);
+export const getNumberHistories = createSelector([getWorkouts, (workouts, workoutIndex: number) => workoutIndex], (workouts, workoutIndex) => {
+    const workout = workouts[workoutIndex];
+    return workout?.doneWorkouts.length;
+});
 export const getPreviousTraining = createSelector([getEditedWorkout, getLanguage, (editedWorkout, language, exerciseIndex: number) => exerciseIndex], (editedWorkout, language, exerciseIndex) => {
     const doneWorkouts = editedWorkout?.workout?.doneWorkouts;
     if (!doneWorkouts || doneWorkouts.length === 0) {

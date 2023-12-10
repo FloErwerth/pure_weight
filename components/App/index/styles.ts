@@ -8,10 +8,18 @@ export const styles = StyleSheet.create({
         alignItems: "center",
         alignSelf: "stretch",
     },
+    date: {
+        fontStyle: "italic",
+        fontSize: 12,
+    },
     trainingDayName: {
         fontSize: 24,
     },
     outerTrainWrapper: {
+        gap: 5,
+        justifyContent: "space-between",
+    },
+    innerTrainWrapper: {
         gap: 5,
         alignItems: "center",
     },

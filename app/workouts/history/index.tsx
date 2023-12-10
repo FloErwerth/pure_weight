@@ -18,20 +18,17 @@ import { getDuration } from "../../../utils/getDuration";
 import { ThemedMaterialCommunityIcons } from "../../../components/Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
 import { RenderedDay } from "../../../components/App/history/RenderedDay/RenderedDay";
 import { DayProps } from "react-native-calendars/src/calendar/day";
-import { getEditedWorkout, getFirstWorkoutDate, getHistoryByMonth, getLatestWorkoutDate, getWorkoutColor, getWorkoutDates } from "../../../store/reducers/workout/workoutSelectors";
+import { getEditedWorkout, getFirstWorkoutDate, getHistoryByMonth, getLatestWorkoutDate, getSortedDoneWorkout, getWorkoutColor } from "../../../store/reducers/workout/workoutSelectors";
 import { getWeightUnit } from "../../../store/reducers/settings/settingsSelectors";
 import { Temporal } from "@js-temporal/polyfill";
 import { getTitle } from "../../../utils/date";
 import { Chip } from "../../../components/Chip/Chip";
 
 export type SectionListItemInfo = { color: string; name: string; duration?: string; date: IsoDate; weight: string; numExercisesDone: number };
-export type MarkedDay = {
-    selectedColor: string;
-};
 
-const useMarkedDates = () => {
+const useMarkedDates = (index?: number) => {
     const { mainColor } = useTheme();
-    const dates = useAppSelector(getWorkoutDates);
+    const dates = useAppSelector((state: AppState) => getSortedDoneWorkout(state, index ?? 0));
     const color = useAppSelector(getWorkoutColor);
     return useMemo(
         () =>
@@ -48,12 +45,13 @@ const useMarkedDates = () => {
 export function WorkoutHistory() {
     const { t } = useTranslation();
     const { inputFieldBackgroundColor, mainColor, textDisabled } = useTheme();
-    const latestWorkoutDate = useAppSelector(getLatestWorkoutDate);
-    const firstWorkoutDate = useAppSelector(getFirstWorkoutDate);
+    const editedWorkout = useAppSelector(getEditedWorkout);
+    const latestWorkoutDate = useAppSelector((state: AppState) => getLatestWorkoutDate(state, editedWorkout?.index ?? 0));
+    const firstWorkoutDate = useAppSelector((state: AppState) => getFirstWorkoutDate(state, editedWorkout?.index ?? 0));
     const [selectedDate, setSelectedDate] = useState<IsoDate>(latestWorkoutDate);
     const pastScrollRange = useMemo(() => Temporal.PlainDate.from(selectedDate).month - Temporal.PlainDate.from(firstWorkoutDate).month, [firstWorkoutDate, selectedDate]);
     const futureScrollRange = useMemo(() => Temporal.PlainDate.from(latestWorkoutDate).month - Temporal.PlainDate.from(selectedDate).month, [latestWorkoutDate, selectedDate]);
-    const markedDates = useMarkedDates();
+    const markedDates = useMarkedDates(editedWorkout?.index);
     const workout = useAppSelector(getEditedWorkout);
     const [ref, open, close] = useBottomSheetRef();
     const sectionListRef = useRef<SectionList>(null);

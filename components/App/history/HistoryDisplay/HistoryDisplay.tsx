@@ -6,14 +6,17 @@ import { styles } from "./styles";
 import { HStack } from "../../../Stack/HStack/HStack";
 import { ThemedMaterialCommunityIcons } from "../../../Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
 import { borderRadius } from "../../../../theme/border";
+import { AppState, useAppSelector } from "../../../../store";
+import { getNumberHistories } from "../../../../store/reducers/workout/workoutSelectors";
 
 interface HistoryDisplayProps {
+    workoutIndex: number;
     handleNavigateToHistory: () => void;
-    numberHistoryEntries: number;
 }
 
-export const HistoryDisplay = ({ handleNavigateToHistory, numberHistoryEntries }: HistoryDisplayProps) => {
+export const HistoryDisplay = ({ workoutIndex, handleNavigateToHistory }: HistoryDisplayProps) => {
     const { t } = useTranslation();
+    const numberHistoryEntries = useAppSelector((state: AppState) => getNumberHistories(state, workoutIndex));
     return (
         <ThemedPressable style={styles.wrapper} secondary onPress={handleNavigateToHistory}>
             <HStack style={{ justifyContent: "space-between", alignItems: "center" }} ghost>

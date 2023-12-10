@@ -2,6 +2,9 @@ import { Temporal } from "@js-temporal/polyfill";
 import { isoDateDecoder } from "../decoders/date";
 import { IsoDate } from "../types/date";
 import * as Locale from "expo-localization";
+import TimeAgo from "javascript-time-ago";
+import en from "javascript-time-ago/locale/en";
+import de from "javascript-time-ago/locale/de";
 
 export const getDateToday = () => {
     return Temporal.Now.plainDateISO();
@@ -28,6 +31,21 @@ export const getDate = (date?: IsoDate, language?: "en" | "de", dateStyle?: "sho
         dateStyle: dateStyle ?? "medium",
     });
 };
+
+TimeAgo.addLocale(en);
+TimeAgo.addLocale(de);
+export const getSinceDate = (date?: IsoDate, language?: "en" | "de") => {
+    if (!date) {
+        return "";
+    }
+
+    const timeAgo = new TimeAgo(language ?? Locale.locale);
+    const dateMilli = Temporal.Instant.from(`${date}T00:00+00:00`).epochMilliseconds;
+    const now = Temporal.Now.instant().epochMilliseconds;
+    const duration = now - (now - dateMilli);
+    return timeAgo.format(duration);
+};
+
 export const getIsoDateFromDate = (date: Date, language?: "en" | "de", dateStyle?: "short" | "medium" | "long") => {
     return Temporal.PlainDate.from(date.toString()).toLocaleString(language ?? Locale.locale, {
         dateStyle: dateStyle ?? "medium",
