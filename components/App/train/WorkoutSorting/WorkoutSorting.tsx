@@ -1,16 +1,12 @@
-import { ThemedBottomSheetModal, useBottomSheetRef } from "../../../BottomSheetModal/ThemedBottomSheetModal";
-import { ThemedPressable } from "../../../Themed/Pressable/Pressable";
-import { Text } from "../../../Themed/ThemedText/Text";
-import { styles } from "./styles";
-import { WorkoutSortingType } from "../../../../store/types";
-import { useAppDispatch, useAppSelector } from "../../../../store";
-import { useTranslation } from "react-i18next";
 import { useMemo } from "react";
-import { ThemedView } from "../../../Themed/ThemedView/View";
-import { HStack } from "../../../Stack/HStack/HStack";
-import { ThemedMaterialCommunityIcons } from "../../../Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
+import { WorkoutSortingType } from "../../../../store/types";
 import { setWorkoutSorting } from "../../../../store/reducers/workout";
-import { getNumberSavedWorkouts, getWorkoutSorting } from "../../../../store/reducers/workout/workoutSelectors";
+import { useAppDispatch, useAppSelector } from "../../../../store";
+import { getWorkoutSorting } from "../../../../store/reducers/workout/workoutSelectors";
+import { useTranslation } from "react-i18next";
+import { useBottomSheetRef } from "../../../BottomSheetModal/ThemedBottomSheetModal";
+import { SortingButton } from "../../../SortingButton/SortingButton";
+import { useComposedTranslation } from "../../../../hooks/useComposedTranslation";
 
 const SortIconMap = {
     ["A_Z"]: "sort-alphabetical-ascending",
@@ -19,63 +15,33 @@ const SortIconMap = {
     ["LONGEST_AGO"]: "sort-calendar-descending",
 } as const;
 
-const useMappedSortingLabels = () => {
+const useWorkoutSorting = () => {
     const [ref, open, close] = useBottomSheetRef();
-
     const { t } = useTranslation();
     const currentSorting = useAppSelector(getWorkoutSorting);
     const dispatch = useAppDispatch();
+    const title = useComposedTranslation("workout_sorting_label", `workout_sorting_${currentSorting}`);
     const mappedSorting = WorkoutSortingType.map(
-        (sorting) => ({
-            value: sorting,
-            label: t(`workout_sorting_${sorting}`),
-            handleSelect: () => {
-                if (currentSorting !== sorting) {
-                    close();
-                }
-                dispatch(setWorkoutSorting(sorting));
-            },
-        }),
-        {} as Record<WorkoutSortingType, string>,
+        (sorting) =>
+            ({
+                value: sorting,
+                label: t(`workout_sorting_${sorting}`),
+                iconName: SortIconMap[sorting],
+                handleSelect: () => {
+                    if (currentSorting !== sorting) {
+                        close();
+                    }
+                    dispatch(setWorkoutSorting(sorting));
+                },
+                ref,
+            }) as const,
     );
 
-    return useMemo(() => ({ currentSorting, sortingLabel: t(`workout_sorting_${currentSorting}`), mappedSorting, ref, open }) as const, [currentSorting, mappedSorting, open, ref, t]);
+    return useMemo(() => ({ iconName: SortIconMap[currentSorting], title, mappedSorting, ref, open }) as const, [currentSorting, mappedSorting, open, ref, t]);
 };
-
 export const WorkoutSorting = () => {
-    const { currentSorting, sortingLabel, mappedSorting, ref, open } = useMappedSortingLabels();
-    const numberSavedWorkouts = useAppSelector(getNumberSavedWorkouts);
+    const { title, iconName, ref, mappedSorting } = useWorkoutSorting();
     const { t } = useTranslation();
 
-    if (numberSavedWorkouts < 2) {
-        return null;
-    }
-
-    return (
-        <>
-            <ThemedPressable ghost style={styles.wrapper} onPress={open}>
-                <HStack ghost style={styles.optionStack}>
-                    <ThemedMaterialCommunityIcons ghost name={SortIconMap[currentSorting]} size={20} />
-                    <Text ghost style={styles.title}>
-                        {t("workout_sorting_label")}
-                        {sortingLabel}
-                    </Text>
-                </HStack>
-            </ThemedPressable>
-            <ThemedBottomSheetModal title={t("workout_sorting_modal_title")} ref={ref} snapPoints={["50%"]}>
-                <ThemedView ghost style={styles.optionWrapper}>
-                    {mappedSorting.map(({ value, label, handleSelect }) => (
-                        <ThemedPressable key={value} onPress={handleSelect} style={styles.option}>
-                            <HStack style={styles.optionStack}>
-                                <ThemedMaterialCommunityIcons name={SortIconMap[value]} size={20} />
-                                <Text ghost style={styles.optionText}>
-                                    {label}
-                                </Text>
-                            </HStack>
-                        </ThemedPressable>
-                    ))}
-                </ThemedView>
-            </ThemedBottomSheetModal>
-        </>
-    );
+    return <SortingButton iconName={iconName} sheetRef={ref} title={title} bottomSheetTitle={t("workout_sorting_modal_title")} mappedOptions={mappedSorting} />;
 };

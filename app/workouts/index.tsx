@@ -13,13 +13,13 @@ import { ProgressDisplay } from "../../components/WorkoutCard/components/Progres
 import { BottomToast } from "../../components/BottomToast/BottomToast";
 import { HStack } from "../../components/Stack/HStack/HStack";
 import { ColorIndicator } from "../../components/ColorIndicator/ColorIndicator";
-import { WorkoutSorting } from "../../components/App/train/WorkoutSorting/WorkoutSorting";
 import { HistoryDisplay } from "../../components/App/history/HistoryDisplay/HistoryDisplay";
 import { cleanErrors } from "../../store/reducers/errors";
 import { getHasHistory, getNumberHistories, getOverallTrainingTrend, getWorkouts } from "../../store/reducers/workout/workoutSelectors";
 import { createNewWorkout, recoverWorkout, removeWorkout, setEditedWorkout, startWorkout } from "../../store/reducers/workout";
 
 import { getLanguage } from "../../store/reducers/settings/settingsSelectors";
+import { WorkoutSorting } from "../../components/App/train/WorkoutSorting/WorkoutSorting";
 
 type RenderedItem = {
     handleNavigateToProgress: () => void;
