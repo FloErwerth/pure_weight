@@ -4,7 +4,7 @@ import { AppState } from "./index";
 import { MeasurementDataPoints } from "../components/App/measurements/types";
 
 const constructedDoneWorkouts: DoneWorkouts = [];
-for (let i = 1; i <= 100; i++) {
+for (let i = 1; i <= 15; i++) {
     const currentDate = new Date("2023-09-01");
     currentDate.setDate(currentDate.getDate() + i * Math.random() * 10 - 5);
     const dateStr = currentDate.toISOString().split("T")[0];
@@ -37,7 +37,7 @@ for (let i = 1; i <= 100; i++) {
 }
 const getConstructedMeasruement = (): MeasurementDataPoints => {
     const constructedMeasurement: Record<string, string> = {};
-    for (let i = 1; i <= 100; i++) {
+    for (let i = 1; i <= 15; i++) {
         const currentDate = new Date("2023-09-01");
         currentDate.setDate(currentDate.getDate() + i * Math.random() * 10 - 5);
         const dateStr = currentDate.toISOString().split("T")[0];

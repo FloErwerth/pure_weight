@@ -25,15 +25,15 @@ export const getWorkoutDates = createSelector([getEditedWorkout], (editedWorkout
 });
 
 export const getWorkoutColor = createSelector([getEditedWorkout], (editedWorkout) => editedWorkout?.workout.calendarColor);
-export const getLatestWorkoutDate = createSelector([getWorkoutDates], (dates) => {
-    return dates?.sort(
-        (dateA, dateB) => Temporal.Instant.from(dateA.concat("T00:00+00:00") as string).epochMilliseconds - Temporal.Instant.from(dateB.concat("T00:00+00:00") as string).epochMilliseconds,
-    )[dates?.length - 1];
+
+export const getSortedWorkoutDates = createSelector([getWorkoutDates], (dates) => {
+    return dates?.sort(Temporal.PlainDateTime.compare);
+});
+export const getLatestWorkoutDate = createSelector([getSortedWorkoutDates], (dates) => {
+    return dates[dates.length - 1];
 });
 export const getFirstWorkoutDate = createSelector([getWorkoutDates], (dates) => {
-    return dates?.sort(
-        (dateA, dateB) => Temporal.Instant.from(dateA.concat("T00:00+00:00") as string).epochMilliseconds - Temporal.Instant.from(dateB.concat("T00:00+00:00") as string).epochMilliseconds,
-    )[0];
+    return dates[0];
 });
 export const getWorkoutByIndex = createSelector([getWorkouts], (trainings) => {
     return (index: number) => {
@@ -45,7 +45,7 @@ export const getEditedWorkoutName = createSelector([getEditedWorkout], (editedWo
 export const getWorkoutExercises = createSelector([getEditedWorkout], (editedWorkout) => editedWorkout?.workout?.exercises);
 
 type SortedData = { exerciseName: string; data: { sets: ExerciseSets; date: IsoDate }[] };
-type SortedDataArray = SortedData[];
+
 export const getTrainingDayData = createSelector([getEditedWorkout], (editedWorkout) => {
     const workout = editedWorkout?.workout;
 
@@ -53,22 +53,23 @@ export const getTrainingDayData = createSelector([getEditedWorkout], (editedWork
         return undefined;
     }
 
-    const sortedData: SortedDataArray = [];
+    const sortedData: Map<string, SortedData> = new Map();
     const slicedDoneWorkouts = getLastNEntries(workout.doneWorkouts, 25);
 
     slicedDoneWorkouts
         .filter(({ doneExercises }) => doneExercises !== undefined)
         .forEach(({ date, doneExercises }) => {
             doneExercises!.forEach(({ name, sets }) => {
-                const foundEntry = sortedData.find(({ exerciseName }) => exerciseName === name);
+                const foundEntry = sortedData.get(name);
                 if (foundEntry) {
                     foundEntry.data.push({ sets, date });
                     return;
                 }
-                sortedData.push({ exerciseName: name, data: [{ sets, date }] });
+                sortedData.set(name, { exerciseName: name, data: [{ sets, date }] });
             });
         });
-    return sortedData;
+
+    return Array.from(sortedData.values());
 });
 
 export const getColor = createSelector([getEditedWorkout], (editedWorkout) => ({
