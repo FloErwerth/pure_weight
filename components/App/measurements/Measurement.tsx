@@ -1,7 +1,7 @@
 import { VStack } from "../../Stack/VStack/VStack";
 import { View } from "react-native";
 import { Text } from "../../Themed/ThemedText/Text";
-import { getDate } from "../../../utils/date";
+import { getSinceDate } from "../../../utils/date";
 import { ThemedMaterialCommunityIcons } from "../../Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
 import { HStack } from "../../Stack/HStack/HStack";
 import { useCallback, useMemo } from "react";
@@ -43,9 +43,7 @@ export const RenderedMeasurement = ({ index, measurement }: MeasurementProps) =>
             <VStack style={styles.vStack}>
                 <View>
                     <Text style={textStyle}>{measurement.name}</Text>
-                    <Text>
-                        {t("measurement_latest")} {getDate(latestMeasurements[index], language)}
-                    </Text>
+                    <Text style={styles.date}>{getSinceDate(latestMeasurements[index], language)}</Text>
                 </View>
                 {measurement.name && progress && (
                     <ProgressDisplay type="Measurement" higherIsBetter={measurement?.higherIsBetter} name={measurement?.name} percent={progress} onPress={handleNavigateToChart} />

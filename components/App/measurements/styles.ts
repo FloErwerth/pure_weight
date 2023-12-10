@@ -7,6 +7,9 @@ export const styles = StyleSheet.create({
         justifyContent: "space-between",
         alignItems: "flex-start",
     },
+    date: {
+        fontStyle: "italic",
+    },
     text: { fontSize: 26 },
     vStack: { gap: 15, flex: 1, paddingRight: 10 },
 });
