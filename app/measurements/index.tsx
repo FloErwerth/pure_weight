@@ -115,7 +115,7 @@ export function Measurements() {
         <ThemedView stretch background>
             <SiteNavigationButtons titleFontSize={40} title={t("measurements")} handleConfirm={handleAddNewMeasurement} handleConfirmIcon={{ name: "plus", size: 40 }} />
             <MeasurementSorting />
-            <PageContent paddingTop={20} scrollable>
+            <PageContent ignoreGap paddingTop={20} scrollable>
                 {mappedMeasurements}
             </PageContent>
             <MeasurementModal

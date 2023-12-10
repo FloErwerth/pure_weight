@@ -13,8 +13,9 @@ interface PageContentProps extends PropsWithChildren {
     stretch?: boolean;
     paddingTop?: number;
     safeBottom?: boolean;
+    ignoreGap?: boolean;
 }
-export const PageContent = ({ children, style, scrollable, titleConfig, stretch, paddingTop, safeBottom }: PageContentProps) => {
+export const PageContent = ({ children, style, scrollable, titleConfig, stretch, paddingTop, safeBottom, ignoreGap = false }: PageContentProps) => {
     const { bottom } = useSafeAreaInsets();
     const titleStyles = useMemo(() => {
         if (!titleConfig) {
@@ -22,7 +23,10 @@ export const PageContent = ({ children, style, scrollable, titleConfig, stretch,
         }
         return { fontSize: titleConfig.size };
     }, [titleConfig]);
-    const wrapperStyles = useMemo(() => [styles.wrapper, style, { paddingTop, paddingBottom: safeBottom ? bottom : undefined }], [bottom, paddingTop, safeBottom, style]);
+    const wrapperStyles = useMemo(
+        () => [styles.wrapper, style, { gap: ignoreGap ? 0 : styles.wrapper.gap, paddingTop, paddingBottom: safeBottom ? bottom : undefined }],
+        [bottom, ignoreGap, paddingTop, safeBottom, style],
+    );
 
     if (scrollable) {
         return (

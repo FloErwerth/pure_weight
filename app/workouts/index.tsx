@@ -69,7 +69,9 @@ export function Workouts() {
         <ThemedView stretch background>
             <SiteNavigationButtons titleFontSize={40} title={t("workouts")} handleConfirmIcon={confirmIcon} handleConfirm={handleCreateWorkout} />
             <WorkoutSorting />
-            <PageContent paddingTop={20}>{mappedWorkouts}</PageContent>
+            <PageContent ignoreGap paddingTop={20}>
+                {mappedWorkouts}
+            </PageContent>
             <BottomToast onRequestClose={() => setShowToast(false)} open={showToast} messageKey={"workout_deleted_message"} titleKey={"workout_deleted_title"} onRedo={handleRecoverWorkout} />
         </ThemedView>
     );
