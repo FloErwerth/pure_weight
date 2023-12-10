@@ -111,8 +111,8 @@ export const getHistoryByMonth = createSelector([getEditedWorkout, (editedWorkou
         .filter((value) => getMonth(value[0] as IsoDate) === getMonth((searchedMonth ?? getDateTodayIso()) as IsoDate))
         .map(([month, data]) => ({ title: month, data }));
 });
-export const getHasHistory = createSelector([getWorkouts], (workouts) => (index: number) => workouts[index].doneWorkouts.length > 0);
-export const getNumberHistories = createSelector([getWorkouts], (workouts) => (index: number) => workouts[index].doneWorkouts.length);
+export const getHasHistory = createSelector([getWorkouts, (workouts, index: number) => index], (workouts, index) => workouts[index].doneWorkouts.length > 0);
+export const getNumberHistories = createSelector([getWorkouts, (workouts, index: number) => index], (workouts, index) => workouts[index].doneWorkouts.length);
 export const getPreviousTraining = createSelector([getEditedWorkout, getLanguage, (editedWorkout, language, exerciseIndex: number) => exerciseIndex], (editedWorkout, language, exerciseIndex) => {
     const doneWorkouts = editedWorkout?.workout?.doneWorkouts;
     if (!doneWorkouts || doneWorkouts.length === 0) {

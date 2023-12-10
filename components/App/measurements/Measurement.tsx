@@ -40,7 +40,7 @@ export const RenderedMeasurement = ({ index, measurement }: MeasurementProps) =>
 
     return (
         <HStack style={pressableWrapperStyle}>
-            <VStack style={{ gap: 15, flex: 1, paddingRight: 10 }}>
+            <VStack style={styles.vStack}>
                 <View>
                     <Text style={textStyle}>{measurement.name}</Text>
                     <Text>

@@ -1,14 +1,12 @@
 import { SiteNavigationButtons } from "../../components/SiteNavigationButtons/SiteNavigationButtons";
 import { useTranslation } from "react-i18next";
 import { useCallback, useState } from "react";
-import { ScrollView } from "react-native";
 import { useAppDispatch, useAppSelector } from "../../store";
 import { MeasurementModal } from "../../components/MeasurementModal/MeasurementModal";
 import { z } from "zod/lib/index";
 import { getDateTodayIso } from "../../utils/date";
 import { PageContent } from "../../components/PageContent/PageContent";
 import { ThemedView } from "../../components/Themed/ThemedView/View";
-import { styles } from "../../components/App/measurements/styles";
 import { Swipeable } from "../../components/WorkoutCard/Swipeable";
 import { RenderedMeasurement } from "../../components/App/measurements/Measurement";
 import { BottomToast } from "../../components/BottomToast/BottomToast";
@@ -107,14 +105,12 @@ export function Measurements() {
         <ThemedView stretch background>
             <SiteNavigationButtons titleFontSize={40} title={t("measurements")} handleConfirm={handleAddNewMeasurement} handleConfirmIcon={{ name: "plus", size: 40 }} />
             <MeasurementSorting />
-            <PageContent paddingTop={20} scrollable style={styles.contentWrapper}>
-                <ScrollView style={styles.measurementsWrapper}>
-                    {measurements?.map((measurement, index) => (
-                        <Swipeable onDelete={() => handleDeleteMeasurement(index)} key={`${measurement.name}-pressable`} onClick={() => handleAddExistingMeasurement(measurement, index)}>
-                            <RenderedMeasurement index={index} measurement={measurement} />
-                        </Swipeable>
-                    ))}
-                </ScrollView>
+            <PageContent paddingTop={20} scrollable>
+                {measurements?.map((measurement, index) => (
+                    <Swipeable onDelete={() => handleDeleteMeasurement(index)} key={`${measurement.name}-pressable`} onClick={() => handleAddExistingMeasurement(measurement, index)}>
+                        <RenderedMeasurement index={index} measurement={measurement} />
+                    </Swipeable>
+                ))}
             </PageContent>
             <MeasurementModal
                 reference={ref}

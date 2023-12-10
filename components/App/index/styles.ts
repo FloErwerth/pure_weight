@@ -15,9 +15,6 @@ export const styles = StyleSheet.create({
         gap: 5,
         alignItems: "center",
     },
-    view: {
-        flex: 1,
-    },
     trainWrapper: {
         justifyContent: "space-between",
         flex: 1,
@@ -37,7 +34,6 @@ export const styles = StyleSheet.create({
         flex: 1,
     },
     savedTrainings: {
-        flex: 1,
-        margin: 20,
+        gap: 10,
     },
 });
