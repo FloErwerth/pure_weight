@@ -1,5 +1,6 @@
-import { SortingType, Workout } from "../../types";
+import { SortingType } from "../../types";
 import { getEpochMilliseconds } from "../../../utils/date";
+import { Workout } from "./types";
 
 export const sortWorkouts = (workouts: Workout[], sorting: SortingType) => {
     const sortedWorkouts = [...workouts];

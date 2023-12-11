@@ -1,4 +1,3 @@
-import { ExerciseSets, WeightBasedExerciseData } from "../../../../../store/types";
 import { useCallback, useMemo, useState } from "react";
 import { borderRadius } from "../../../../../theme/border";
 import { LineChartData } from "react-native-chart-kit/dist/line-chart/LineChart";
@@ -21,6 +20,7 @@ import { getTrainingDayData } from "../../../../../store/reducers/workout/workou
 import { getWeightUnit } from "../../../../../store/reducers/settings/settingsSelectors";
 import { trunicateToNthSignificantDigit } from "../../../../../utils/number";
 import Chart from "../../../../Chart/Chart";
+import { ExerciseSets, WeightBasedExerciseData } from "../../../../../store/reducers/workout/types";
 
 interface ExerciseChartProps {
     exerciseName: string;

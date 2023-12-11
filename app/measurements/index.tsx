@@ -77,7 +77,7 @@ export function Measurements() {
                 measurement: {
                     name: measurement.name,
                     type: measurement.type,
-                    value: "",
+                    value: measurement.value,
                     data: {},
                 },
                 index,

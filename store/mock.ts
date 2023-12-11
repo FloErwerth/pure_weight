@@ -1,7 +1,7 @@
 import { IsoDate } from "../types/date";
-import { DoneWorkouts } from "./types";
 import { AppState } from "./index";
 import { MeasurementDataPoints } from "../components/App/measurements/types";
+import { DoneWorkouts } from "./reducers/workout/types";
 
 const constructedDoneWorkouts: DoneWorkouts = [];
 for (let i = 1; i <= 15; i++) {

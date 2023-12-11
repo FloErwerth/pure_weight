@@ -1,6 +1,6 @@
-import { ExerciseMetaData } from "../../../store/types";
 import { createContext, PropsWithChildren } from "react";
 import { noop } from "lodash";
+import { ExerciseMetaData } from "../../../store/reducers/workout/types";
 
 export const emptyWeightbasedExercise: ExerciseMetaData = { reps: "", sets: "", weight: "", name: "", type: "WEIGHT_BASED" } as const;
 

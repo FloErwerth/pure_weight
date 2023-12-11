@@ -1,7 +1,6 @@
 import { Text } from "../../../components/Themed/ThemedText/Text";
 import { useCallback, useMemo, useState } from "react";
 import { useNavigate } from "../../../hooks/navigate";
-import { ExerciseMetaData } from "../../../store/types";
 import { useAppDispatch, useAppSelector } from "../../../store";
 import { AddButton } from "../../../components/AddButton/AddButton";
 import { styles } from "../../../components/App/create/styles";
@@ -35,6 +34,7 @@ import {
 import { getEditedWorkout } from "../../../store/reducers/workout/workoutSelectors";
 import { EditableExerciseModal } from "../../../components/EditableExerciseModal/EditableExerciseModal";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { ExerciseMetaData } from "../../../store/reducers/workout/types";
 
 type MappedExercises = {
     onDelete: () => void;

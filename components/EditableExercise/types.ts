@@ -1,5 +1,6 @@
 import { ErrorFields } from "../../store/reducers/errors";
-import { TimeInput } from "../../store/types";
+
+import { TimeInput } from "../../store/reducers/workout/types";
 
 export interface EditableExerciseInputRowProps {
     value?: string;

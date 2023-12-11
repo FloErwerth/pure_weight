@@ -1,6 +1,5 @@
 import { TextInput } from "react-native";
 import { useCallback, useRef } from "react";
-import { ExerciseMetaData } from "../../store/types";
 import { styles } from "./styles";
 import { ThemedTextInput } from "../Themed/ThemedTextInput/ThemedTextInput";
 import { useTranslation } from "react-i18next";
@@ -9,6 +8,7 @@ import { WeightBasedExercise } from "./Content/WeightBasedExercise";
 import { useAppDispatch, useAppSelector } from "../../store";
 import { getEditedExercise } from "../../store/reducers/workout/workoutSelectors";
 import { mutateEditedExercise } from "../../store/reducers/workout";
+import { ExerciseMetaData } from "../../store/reducers/workout/types";
 
 export const EditableExercise = () => {
     const { t } = useTranslation();

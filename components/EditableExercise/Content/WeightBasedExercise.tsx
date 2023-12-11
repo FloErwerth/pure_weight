@@ -4,12 +4,12 @@ import { EditableExerciseInputRow } from "../EditableExerciseInputRow";
 import { ThemedView } from "../../Themed/ThemedView/View";
 import { useAppDispatch, useAppSelector } from "../../../store";
 import { useCallback } from "react";
-import { TimeInput, WeightBasedExerciseMetaData } from "../../../store/types";
 import { mutateEditedExercise, mutateEditedExercisePause } from "../../../store/reducers/workout";
 
 import { getEditedExercise } from "../../../store/reducers/workout/workoutSelectors";
 import { getWeightUnit } from "../../../store/reducers/settings/settingsSelectors";
 import { TimeInputRow } from "../TimeInputRow";
+import { TimeInput, WeightBasedExerciseMetaData } from "../../../store/reducers/workout/types";
 
 export const WeightBasedExercise = () => {
     const editedExercise = useAppSelector(getEditedExercise);

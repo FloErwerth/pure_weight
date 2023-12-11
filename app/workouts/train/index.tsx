@@ -1,7 +1,6 @@
 import { useAppDispatch, useAppSelector } from "../../../store";
 import { useCallback, useEffect, useMemo, useRef } from "react";
 import { trainStyles } from "../../../components/App/train/trainStyles";
-import { WeightBasedExerciseData } from "../../../store/types";
 import { AlertModal } from "../../../components/AlertModal/AlertModal";
 import { useNavigate } from "../../../hooks/navigate";
 import { SiteNavigationButtons } from "../../../components/SiteNavigationButtons/SiteNavigationButtons";
@@ -17,6 +16,7 @@ import { useBottomSheetRef } from "../../../components/BottomSheetModal/ThemedBo
 import { addDoneWorkout, resetTrainedWorkout, setActiveExerciseIndex } from "../../../store/reducers/workout";
 
 import { getHasAnyTrainedWorkoutData, getIsDoneWithTraining, getTrainedWorkout } from "../../../store/reducers/workout/workoutSelectors";
+import { WeightBasedExerciseData } from "../../../store/reducers/workout/types";
 
 export type DoneExercises = Map<number, { note?: string; sets: Map<number, WeightBasedExerciseData> }>;
 

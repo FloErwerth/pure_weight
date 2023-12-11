@@ -8,7 +8,6 @@ import { styles } from "../EditableExercise/styles";
 import { Text } from "../Themed/ThemedText/Text";
 import { ThemedPressable } from "../Themed/Pressable/Pressable";
 import * as Haptics from "expo-haptics";
-import { ExerciseMetaData } from "../../store/types";
 import { useAppDispatch, useAppSelector } from "../../store";
 import { ThemedMaterialCommunityIcons } from "../Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
 import { ThemedView } from "../Themed/ThemedView/View";
@@ -16,6 +15,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ErrorFields, setError } from "../../store/reducers/errors";
 import { getEditedExercise, getIsExistingEditedExercise } from "../../store/reducers/workout/workoutSelectors";
 import { storeEditedExercise } from "../../store/reducers/workout";
+import { ExerciseMetaData } from "../../store/reducers/workout/types";
 
 const validateData = (data: Partial<ExerciseMetaData>) => {
     const errors: ErrorFields[] = [];

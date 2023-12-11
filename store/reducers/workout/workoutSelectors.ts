@@ -1,12 +1,12 @@
 import { createSelector } from "@reduxjs/toolkit";
 import { Temporal } from "@js-temporal/polyfill";
 import { AppState } from "../../index";
-import { ExerciseSets } from "../../types";
 import { getLanguage } from "../settings/settingsSelectors";
 import { getDate, getDateTodayIso, getMonth, getSinceDate } from "../../../utils/date";
 import { IsoDate } from "../../../types/date";
 import { PALETTE } from "../../../utils/colorPalette";
 import { getLastNEntries } from "../../../utils/getLastNEntries";
+import { ExerciseSets } from "./types";
 
 export const getWorkoutState = ({ workoutState }: AppState) => workoutState;
 export const getTrainedWorkout = createSelector([getWorkoutState], (state) => state.trainedWorkout);

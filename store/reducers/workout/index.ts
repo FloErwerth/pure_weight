@@ -1,9 +1,9 @@
 import { createAction, createReducer } from "@reduxjs/toolkit/src";
-import { DoneExerciseData, ExerciseMetaData, SortingType, TimeInput, WeightBasedExerciseData, WeightBasedExerciseMetaData, Workout } from "../../types";
+import { SortingType } from "../../types";
 import { Temporal } from "@js-temporal/polyfill";
 import { getDateTodayIso } from "../../../utils/date";
 import { sortWorkouts } from "./sortWorkouts";
-import { TrainedWorkout, WorkoutState } from "./types";
+import { DoneExerciseData, ExerciseMetaData, TimeInput, TrainedWorkout, WeightBasedExerciseData, WeightBasedExerciseMetaData, Workout, WorkoutState } from "./types";
 import { getRandomColorFromPalette } from "../../../utils/colorPalette";
 
 export const setWorkoutState = createAction<WorkoutState, "workout_set_state">("workout_set_state");
