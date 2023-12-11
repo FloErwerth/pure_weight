@@ -8,7 +8,8 @@ export type MeasurementDataPoint = { timestamp: number; value: string };
 export type Measurement = {
     name: string;
     type?: MeasurementType;
+    //for modal
+    value?: string;
     data: MeasurementDataPoint[];
     higherIsBetter?: boolean;
-    value?: string;
 };

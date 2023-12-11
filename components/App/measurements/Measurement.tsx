@@ -14,7 +14,7 @@ import { Measurement } from "./types";
 import { getLanguage } from "../../../store/reducers/settings/settingsSelectors";
 import { getLatestMeasurements, getMeasurmentProgress } from "../../../store/reducers/measurements/measurementSelectors";
 import { useNavigate } from "../../../hooks/navigate";
-import { setInspectedMeasurement } from "../../../store/reducers/measurements";
+import { setEditedMeasurement } from "../../../store/reducers/measurements";
 
 interface MeasurementProps {
     index: number;
@@ -32,7 +32,7 @@ export const RenderedMeasurement = ({ index, measurement }: MeasurementProps) =>
     const progress = useAppSelector((state: AppState) => getMeasurmentProgress(state, index));
 
     const handleNavigateToChart = useCallback(() => {
-        dispatch(setInspectedMeasurement(index));
+        dispatch(setEditedMeasurement({ index, isNew: false }));
         navigate("measurement/progress");
     }, [dispatch, index, navigate]);
 

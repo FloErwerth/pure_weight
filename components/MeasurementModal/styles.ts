@@ -25,8 +25,7 @@ export const styles = StyleSheet.create({
     dateWrapper: {
         borderRadius,
         zIndex: -1,
-        paddingHorizontal: 10,
-        justifyContent: "center",
+        alignSelf: "stretch",
     },
     calendarButtonsWrapper: {
         gap: 10,
