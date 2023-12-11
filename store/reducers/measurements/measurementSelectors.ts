@@ -1,5 +1,4 @@
 import { createSelector } from "@reduxjs/toolkit";
-import { IsoDate } from "../../../types/date";
 import { getDate } from "../../../utils/date";
 import { AppState } from "../../index";
 import { getUnitSystem } from "../settings/settingsSelectors";
@@ -20,8 +19,7 @@ export const getInspectedMeasurement = createSelector([getMeasurements, getInspe
 });
 export const getLatestMeasurements = createSelector([getMeasurements], (measurements) =>
     measurements.map(({ data }) => {
-        const dates = Object.keys(data ?? []);
-        return dates[dates.length - 1] as IsoDate;
+        return data[data.length - 1].timestamp;
     }),
 );
 
@@ -38,12 +36,12 @@ export const getMeasurementData = createSelector([getMeasurements, getInspectedM
     }
 
     const measurement = measurements[index];
-    const entries = getLastNEntries(Object.entries(measurement.data ?? []), 25);
+    const entries = getLastNEntries(measurement.data ?? [], 25);
     if (measurement?.data) {
         const labels: string[] = [];
         const data: number[] = [];
-        entries.forEach(([date, value]) => {
-            labels.push(getDate(date as IsoDate));
+        entries.forEach(({ timestamp, value }) => {
+            labels.push(getDate(timestamp));
             data.push(parseFloat(value));
         });
         return {
@@ -62,8 +60,7 @@ export const getMeasurementData = createSelector([getMeasurements, getInspectedM
 
 export const getMeasurmentProgress = createSelector([getMeasurements, (byIndex, index: number) => index], (measurements, index) => {
     const measurement = measurements[index];
-    const data = Object.values(measurement?.data ?? []);
-
+    const data = measurement.data.map(({ value }) => value);
     if (data && data?.length >= 2) {
         const latest = parseFloat(data[data?.length - 1]);
         const secondLatest = parseFloat(data[data?.length - 2]);

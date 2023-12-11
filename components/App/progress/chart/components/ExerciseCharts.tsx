@@ -126,7 +126,7 @@ export const ExerciseChart = ({ exerciseName, data }: ExerciseChartProps) => {
     }, [close]);
 
     const getXLabel = useCallback((xValue: string) => {
-        return getDate(xValue as IsoDate);
+        return getDate(xValue);
     }, []);
 
     const mappedChartProps = useMemo(

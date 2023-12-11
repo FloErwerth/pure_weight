@@ -1,5 +1,4 @@
 import { createSelector } from "@reduxjs/toolkit";
-import { Temporal } from "@js-temporal/polyfill";
 import { AppState } from "../../index";
 import { getLanguage } from "../settings/settingsSelectors";
 import { getDate, getDateTodayIso, getMonth, getSinceDate } from "../../../utils/date";
@@ -17,20 +16,19 @@ export const getEditedExercise = createSelector([getWorkoutState], (state) => st
 export const getIsExistingEditedExercise = createSelector([getEditedExercise], (editedExercise) => editedExercise?.index !== undefined);
 export const getNumberSavedWorkouts = createSelector([getWorkouts], (workouts) => workouts.length);
 export const getSortedDoneWorkout = createSelector([getWorkouts, (workouts, index: number) => index], (workouts, index) => {
-    return workouts[index].doneWorkouts.map(({ date }) => date).sort(Temporal.PlainDateTime.compare);
+    return workouts[index].doneWorkouts.map(({ timestamp }) => timestamp).sort((a, b) => b - a);
 });
 
 export const getWorkoutColor = createSelector([getEditedWorkout], (editedWorkout) => editedWorkout?.workout.calendarColor);
 
-export const getLatestWorkoutDate = createSelector([getSortedDoneWorkout], (dates) => {
-    return dates[dates.length - 1];
+export const getLatestWorkoutDate = createSelector([getSortedDoneWorkout], (timestamps) => {
+    return getDate(timestamps[timestamps.length - 1]) as IsoDate;
 });
 export const getLatestWorkoutDateDisplay = createSelector([getSortedDoneWorkout, getLanguage], (dates, language) => {
-    const latest = dates[dates.length - 1] as IsoDate;
-    return getSinceDate(latest, language ?? "de");
+    return getSinceDate(dates[dates.length - 1], language ?? "de");
 });
 export const getFirstWorkoutDate = createSelector([getSortedDoneWorkout], (dates) => {
-    return dates[0];
+    return getDate(dates[0]);
 });
 export const getWorkoutByIndex = createSelector([getWorkouts, (workouts, index: number) => index], (trainings, index) => {
     return trainings[index];
@@ -125,7 +123,7 @@ export const getPreviousTraining = createSelector([getEditedWorkout, getLanguage
         doneWorkouts[workoutIndex].doneExercises?.forEach((exercise) => {
             if (!foundEntries.get(exercise.name)) {
                 foundEntries.set(exercise.name, {
-                    date: getDate(doneWorkouts[workoutIndex].date, language),
+                    date: getDate(doneWorkouts[workoutIndex].timestamp, language),
                     sets: exercise.sets,
                     note: exercise.note,
                 });

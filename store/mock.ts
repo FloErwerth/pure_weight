@@ -1,15 +1,13 @@
-import { IsoDate } from "../types/date";
 import { AppState } from "./index";
-import { MeasurementDataPoints } from "../components/App/measurements/types";
+import { MeasurementDataPoint } from "../components/App/measurements/types";
 import { DoneWorkouts } from "./reducers/workout/types";
 
 const constructedDoneWorkouts: DoneWorkouts = [];
 for (let i = 1; i <= 15; i++) {
     const currentDate = new Date("2023-09-01");
     currentDate.setDate(currentDate.getDate() + i * Math.random() * 10 - 5);
-    const dateStr = currentDate.toISOString().split("T")[0];
     constructedDoneWorkouts.push({
-        date: dateStr as IsoDate,
+        timestamp: currentDate.getTime(),
         duration: (i * 100).toString(),
         doneExercises: [
             {
@@ -35,15 +33,14 @@ for (let i = 1; i <= 15; i++) {
         ],
     });
 }
-const getConstructedMeasurement = (): MeasurementDataPoints => {
-    const constructedMeasurement: Record<string, string> = {};
+const getConstructedMeasurement = (): MeasurementDataPoint[] => {
+    const datapoints: MeasurementDataPoint[] = [];
     for (let i = 1; i <= 15; i++) {
-        const currentDate = new Date("2023-09-01");
+        const currentDate = new Date("2023-12-01");
         currentDate.setDate(currentDate.getDate() + i * Math.random() * 10 - 5);
-        const dateStr = currentDate.toISOString().split("T")[0];
-        constructedMeasurement[dateStr] = i.toString();
+        datapoints.push({ timestamp: currentDate.getTime(), value: (i * Math.random() * 10).toString() });
     }
-    return constructedMeasurement;
+    return datapoints;
 };
 
 export const mockState: AppState = {
@@ -63,15 +60,15 @@ export const mockState: AppState = {
             {
                 name: "Körperfettanteil",
                 type: "percent",
-                data: {
-                    ["2023-10-11"]: "15",
-                    ["2023-10-12"]: "16",
-                    ["2023-10-13"]: "17",
-                    ["2023-10-14"]: "18",
-                    ["2023-10-15"]: "20",
-                    ["2023-10-16"]: "19",
-                    ["2023-10-17"]: "23",
-                },
+                data: [
+                    { timestamp: 1702271012832, value: "15" },
+                    { timestamp: 1702271012832, value: "16" },
+                    { timestamp: 1702271012832, value: "17" },
+                    { timestamp: 1702271012832, value: "18" },
+                    { timestamp: 1702271012832, value: "20" },
+                    { timestamp: 1702271012832, value: "19" },
+                    { timestamp: 1702271012832, value: "23" },
+                ],
             },
         ],
     },
@@ -94,7 +91,7 @@ export const mockState: AppState = {
                 ],
                 doneWorkouts: [
                     {
-                        date: "2023-12-09",
+                        timestamp: 1701385200000,
                         duration: "120",
                         doneExercises: [
                             {
@@ -111,7 +108,7 @@ export const mockState: AppState = {
                 exercises: [{ type: "WEIGHT_BASED", name: "Bankdrücken", weight: "50", sets: "5", pause: { seconds: "0", minutes: "2" }, reps: "5" }],
                 doneWorkouts: [
                     {
-                        date: "2023-12-09",
+                        timestamp: 1701385200000,
                         duration: "120",
                         doneExercises: [
                             {

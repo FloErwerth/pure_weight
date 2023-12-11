@@ -24,28 +24,22 @@ export const getTitle = (date?: IsoDate, language?: "en" | "de") => {
         year: undefined,
     });
 };
-export const getDate = (date?: IsoDate, language?: "en" | "de", dateStyle?: "short" | "medium" | "long") => {
-    if (!date) {
-        return "";
-    }
-    return Temporal.PlainDate.from(date).toLocaleString(language ?? Locale.locale, {
+export const getDate = (timestamp: number | string, language?: "en" | "de", dateStyle?: "short" | "medium" | "long") => {
+    const convertedTimestamp = typeof timestamp === "string" ? parseInt(timestamp) : timestamp;
+    return Temporal.Instant.fromEpochMilliseconds(convertedTimestamp).toLocaleString(language ?? Locale.locale, {
         dateStyle: dateStyle ?? "medium",
-    });
+    }) as IsoDate;
 };
 
 TimeAgo.addLocale(en);
 TimeAgo.addLocale(de);
 
-export function getSinceDate(date?: IsoDate, language?: Language): string {
-    if (!date) {
+export function getSinceDate(timestamp?: number, language?: Language): string {
+    if (!timestamp) {
         return "";
     }
-
     const timeAgo = new TimeAgo(language ?? Locale.locale);
-    const dateMilli = Temporal.Instant.from(`${date}T00:00+00:00`).epochMilliseconds;
-    const now = Temporal.Now.instant().epochMilliseconds;
-    const duration = now - (now - dateMilli);
-    return timeAgo.format(duration);
+    return timeAgo.format(timestamp);
 }
 
 export const getIsoDateFromDate = (date: Date, language?: "en" | "de", dateStyle?: "short" | "medium" | "long") => {

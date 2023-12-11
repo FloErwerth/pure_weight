@@ -2,7 +2,7 @@ import { Action, Middleware } from "redux";
 import { AppActions, AppState } from "../index";
 import { setWorkouts } from "../reducers/workout";
 import { LengthUnit, UnitSystem, WeightUnit } from "../reducers/settings/types";
-import { MeasurementDataPoints, MeasurementType } from "../../components/App/measurements/types";
+import { MeasurementDataPoint, MeasurementType } from "../../components/App/measurements/types";
 import { setMeasurements } from "../reducers/measurements";
 import { unitMap } from "../../utils/unitMap";
 import { convert } from "convert";
@@ -24,13 +24,12 @@ const calculateWeight = (weight: string, nextUnit: WeightUnit) => {
     return convertedWeight;
 };
 
-const convertKgToPound = (data: MeasurementDataPoints): MeasurementDataPoints =>
-    Object.fromEntries(Object.entries(data).map(([date, data]) => [date, round(convert(parseFloat(data), "kg").to("pound"))]));
-const convertPoundToKg = (data: MeasurementDataPoints) => Object.fromEntries(Object.entries(data).map(([date, data]) => [date, calculateWeight(data, "kg")]));
-const convertCmToInch = (data: MeasurementDataPoints) => Object.fromEntries(Object.entries(data).map(([date, data]) => [date, calculateWeight(data, "lbs")]));
-const convertInchToCm = (data: MeasurementDataPoints) => Object.fromEntries(Object.entries(data).map(([date, data]) => [date, round(convert(parseFloat(data), "inch").to("cm"))]));
+const convertKgToPound = (data: MeasurementDataPoint[]): MeasurementDataPoint[] => data.map(({ timestamp, value }) => ({ timestamp, value: round(convert(parseFloat(value), "kg").to("pound")) }));
+const convertPoundToKg = (data: MeasurementDataPoint[]) => data.map(({ timestamp, value }) => ({ timestamp, value: calculateWeight(value, "kg") }));
+const convertCmToInch = (data: MeasurementDataPoint[]) => data.map(({ timestamp, value }) => ({ timestamp, value: calculateWeight(value, "lbs") }));
+const convertInchToCm = (data: MeasurementDataPoint[]) => data.map(({ timestamp, value }) => ({ timestamp, value: round(convert(parseFloat(value), "inch").to("cm")) }));
 
-const convertWeight = (nextUnit: LengthUnit | WeightUnit, data: MeasurementDataPoints): MeasurementDataPoints => {
+const convertWeight = (nextUnit: LengthUnit | WeightUnit, data: MeasurementDataPoint[]) => {
     switch (nextUnit) {
         case "kg":
             return convertPoundToKg(data);
@@ -41,7 +40,7 @@ const convertWeight = (nextUnit: LengthUnit | WeightUnit, data: MeasurementDataP
     }
 };
 
-const convertLength = (nextUnit: LengthUnit | WeightUnit, data: MeasurementDataPoints): MeasurementDataPoints => {
+const convertLength = (nextUnit: LengthUnit | WeightUnit, data: MeasurementDataPoint[]) => {
     switch (nextUnit) {
         case "cm":
             return convertInchToCm(data);
@@ -52,7 +51,7 @@ const convertLength = (nextUnit: LengthUnit | WeightUnit, data: MeasurementDataP
     }
 };
 
-export const convertMeasurements = (type: MeasurementType | undefined, data: MeasurementDataPoints, nextUnitSystem: UnitSystem): MeasurementDataPoints => {
+export const convertMeasurements = (type: MeasurementType | undefined, data: MeasurementDataPoint[], nextUnitSystem: UnitSystem) => {
     if (type === "weight") {
         return convertWeight(getNextUnit(nextUnitSystem).weight, data);
     }
