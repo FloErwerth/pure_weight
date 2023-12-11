@@ -8,7 +8,6 @@ import { useCallback, useMemo } from "react";
 import { styles } from "./styles";
 import { AppState, useAppDispatch, useAppSelector } from "../../../store";
 import { useTheme } from "../../../theme/context";
-import { useTranslation } from "react-i18next";
 import { ProgressDisplay } from "../../WorkoutCard/components/ProgressDisplay/ProgressDisplay";
 import { Measurement } from "./types";
 
@@ -24,7 +23,6 @@ interface MeasurementProps {
 
 export const RenderedMeasurement = ({ index, measurement }: MeasurementProps) => {
     const latestMeasurements = useAppSelector(getLatestMeasurements);
-    const { t } = useTranslation();
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
     const { mainColor, componentBackgroundColor } = useTheme();

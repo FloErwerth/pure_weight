@@ -33,7 +33,6 @@ import {
 
 import { getEditedWorkout } from "../../../store/reducers/workout/workoutSelectors";
 import { EditableExerciseModal } from "../../../components/EditableExerciseModal/EditableExerciseModal";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ExerciseMetaData } from "../../../store/reducers/workout/types";
 
 type MappedExercises = {
@@ -55,7 +54,6 @@ export function Create() {
     const [alertRef, openAlert, closeAlert] = useBottomSheetRef();
     const [addRef, openAdd, closeAdd] = useBottomSheetRef();
     const [colorPickerRef, openPicker] = useBottomSheetRef();
-    const { bottom } = useSafeAreaInsets();
     const handleSetWorkoutName = useCallback(
         (value?: string) => {
             dispatch(setEditedWorkoutName(value));
