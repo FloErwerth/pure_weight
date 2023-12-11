@@ -1,7 +1,6 @@
 import { createAction, createReducer } from "@reduxjs/toolkit/src";
 import { SortingType } from "../../types";
 import { Temporal } from "@js-temporal/polyfill";
-import { getDateTodayIso } from "../../../utils/date";
 import { sortWorkouts } from "./sortWorkouts";
 import { DoneExerciseData, ExerciseMetaData, TimeInput, TrainedWorkout, WeightBasedExerciseData, WeightBasedExerciseMetaData, Workout, WorkoutState } from "./types";
 import { getRandomColorFromPalette } from "../../../utils/colorPalette";
@@ -238,12 +237,12 @@ export const workoutReducer = createReducer<WorkoutState>({ workouts: [], sortin
             const workout = state.trainedWorkout;
             const workoutIndex = state.trainedWorkout?.workoutIndex;
             if (workout && workoutIndex !== undefined) {
+                const beginTimestamp = workout.timetamp;
                 const endTimestamp = Temporal.Now.instant().epochMilliseconds;
-                const duration = (endTimestamp - (workout?.workoutStartingTimestamp ?? endTimestamp)) / 1000;
-                const dateToday = getDateTodayIso();
+                const duration = (endTimestamp - beginTimestamp) / 1000;
                 const doneExercises: DoneExerciseData[] = workout.exerciseData.map((data) => ({ name: data.name, sets: data.doneSets, note: data.note }));
                 state.workouts[workoutIndex].doneWorkouts.push({
-                    date: dateToday,
+                    timestamp: endTimestamp - beginTimestamp,
                     duration: duration.toString(),
                     doneExercises,
                 });
@@ -271,7 +270,7 @@ export const workoutReducer = createReducer<WorkoutState>({ workouts: [], sortin
             state.trainedWorkout = {
                 activeExerciseIndex: 0,
                 workout,
-                workoutStartingTimestamp: Temporal.Now.instant().epochMilliseconds,
+                timetamp: Temporal.Now.instant().epochMilliseconds,
                 workoutIndex: action.payload,
                 exerciseData: Array(workout.exercises.length)
                     .fill(undefined)

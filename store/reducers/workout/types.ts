@@ -1,5 +1,4 @@
 import { SortingType } from "../../types";
-import { IsoDate } from "../../../types/date";
 
 export type Workout = {
     name: string;
@@ -12,12 +11,13 @@ export type WeightBasedExerciseData = {
     reps: string;
     confirmed?: boolean;
 };
+
 export type DoneWorkouts = {
-    date: IsoDate;
-    timestamp?: number;
+    timestamp: number;
     duration: string;
     doneExercises?: DoneExerciseData[];
 }[];
+
 export type DoneExerciseData = {
     name: string;
     sets: ExerciseSets;
@@ -52,7 +52,7 @@ export type TrainedWorkout = {
     workoutIndex: number;
     workout: Workout;
     activeExerciseIndex: number;
-    workoutStartingTimestamp: number;
+    timetamp: number;
     exerciseData: {
         setIndex: number;
         activeSetIndex: number;
