@@ -1,4 +1,3 @@
-import { Pressable } from "react-native";
 import { ThemedTextInput } from "../Themed/ThemedTextInput/ThemedTextInput";
 import { HStack } from "../Stack/HStack/HStack";
 import { ThemedBottomSheetModal, ThemedBottomSheetModalProps } from "../BottomSheetModal/ThemedBottomSheetModal";
@@ -21,6 +20,8 @@ import { getLanguage, getThemeKey } from "../../store/reducers/settings/settings
 import { getDatesFromCurrentMeasurement, getEditedMeasurementData } from "../../store/reducers/measurements/measurementSelectors";
 import { IsoDate } from "../../types/date";
 import { mutateEditedMeasurement, saveInspectedMeasurement } from "../../store/reducers/measurements";
+import { AddButton } from "../AddButton/AddButton";
+import { View } from "react-native";
 
 interface MeasurementModalProps extends ThemedBottomSheetModalProps {
     reference: RefObject<BottomSheetModal>;
@@ -41,7 +42,6 @@ export const MeasurementModal = ({ onRequestClose, reference }: MeasurementModal
     const themeKey = useAppSelector(getThemeKey);
     const dates = useAppSelector(getDatesFromCurrentMeasurement);
     const language = useAppSelector(getLanguage);
-
     const [showWarning, setShowWarnining] = useState(false);
     const [date, setDate] = useState(new Date(dates ? dates[dates.length - 1] : getDateTodayIso()));
     const dispatch = useAppDispatch();
@@ -97,6 +97,7 @@ export const MeasurementModal = ({ onRequestClose, reference }: MeasurementModal
         setShowWarnining(false);
         dispatch(saveInspectedMeasurement());
     }, [showWarning, date, dates, dispatch]);
+    const buttonIcon = useMemo(() => ({ name: !inspectedMeasurement?.isNew ? "table-check" : "table-large-plus", size: 24 }) as const, [inspectedMeasurement?.isNew]);
 
     if (!inspectedMeasurement) {
         return null;
@@ -106,7 +107,7 @@ export const MeasurementModal = ({ onRequestClose, reference }: MeasurementModal
 
     return (
         <ThemedBottomSheetModal onRequestClose={onRequestClose} title={measurementButtonText} snapPoints={["100%"]} ref={reference}>
-            <AnimatedView ghost style={styles.outerWrapper}>
+            <AnimatedView stretch ghost style={styles.outerWrapper}>
                 <ThemedTextInput
                     maxLength={20}
                     bottomSheet
@@ -164,15 +165,10 @@ export const MeasurementModal = ({ onRequestClose, reference }: MeasurementModal
                         </Text>
                     </HStack>
                 )}
-                <Pressable style={styles.pressable} onPress={handleSaveMeasurement}>
-                    <HStack input style={styles.addWrapper}>
-                        <Text ghost style={styles.addMeasurement}>
-                            {measurementButtonText}
-                        </Text>
-                        <ThemedMaterialCommunityIcons ghost name={!inspectedMeasurement.isNew ? "table-check" : "table-large-plus"} size={20} />
-                    </HStack>
-                </Pressable>
             </AnimatedView>
+            <View style={styles.outerWrapper}>
+                <AddButton onPress={handleSaveMeasurement} title={measurementButtonText} icon={buttonIcon} />
+            </View>
         </ThemedBottomSheetModal>
     );
 };

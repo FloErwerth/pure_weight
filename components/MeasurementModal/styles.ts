@@ -57,6 +57,7 @@ export const styles = StyleSheet.create({
     },
     pressable: {
         zIndex: -1,
+        padding: 10,
     },
     addMeasurement: {
         fontSize: 20,

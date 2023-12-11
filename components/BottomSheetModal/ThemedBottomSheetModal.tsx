@@ -6,6 +6,7 @@ import { styles } from "./styles";
 import { BottomSheetBackdrop, BottomSheetBackdropProps, BottomSheetModal } from "@gorhom/bottom-sheet";
 import { useTheme } from "../../theme/context";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { ThemedView } from "../Themed/ThemedView/View";
 
 export type SnapPoint = `${number}%`;
 export interface ThemedBottomSheetModalProps extends PropsWithChildren {
@@ -39,7 +40,7 @@ const renderBackdrop = (props: BottomSheetBackdropProps) => <BottomSheetBackdrop
 export const ThemedBottomSheetModal = forwardRef<BottomSheetModal, ThemedBottomSheetModalProps>(
     ({ hideIndicator, snapPoints, customContentStyle, children, title, onRequestClose, allowSwipeDownToClose = true }, ref) => {
         const { mainColor, inputFieldBackgroundColor } = useTheme();
-        const { top } = useSafeAreaInsets();
+        const { top, bottom } = useSafeAreaInsets();
         const defaultStyle = useMemo(() => [customContentStyle, styles.defaultContentStyle, { backgroundColor: inputFieldBackgroundColor }], [customContentStyle, inputFieldBackgroundColor]);
 
         const combinedSnapshots = useMemo(() => {
@@ -50,7 +51,7 @@ export const ThemedBottomSheetModal = forwardRef<BottomSheetModal, ThemedBottomS
         }, [snapPoints]);
 
         const customIndicator = useMemo(() => ({ backgroundColor: allowSwipeDownToClose && !hideIndicator ? mainColor : "transparent" }), [allowSwipeDownToClose, hideIndicator, mainColor]);
-
+        const contentStyle = useMemo(() => ({ paddingBottom: bottom }), [bottom]);
         return (
             <BottomSheetModal
                 enablePanDownToClose={allowSwipeDownToClose}
@@ -74,7 +75,9 @@ export const ThemedBottomSheetModal = forwardRef<BottomSheetModal, ThemedBottomS
                         </Text>
                     )}
                 </HStack>
-                {children}
+                <ThemedView ghost stretch style={contentStyle}>
+                    {children}
+                </ThemedView>
             </BottomSheetModal>
         );
     },
