@@ -40,6 +40,7 @@ export const styles = StyleSheet.create({
         borderRadius,
         overflow: "hidden",
         borderColor: "transparent",
+        zIndex: -1,
     },
     warningWrapper: {
         padding: 10,

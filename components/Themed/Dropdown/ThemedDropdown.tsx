@@ -1,4 +1,3 @@
-import { useTranslation } from "react-i18next";
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { styles } from "./styles";
 import { Keyboard, View } from "react-native";
@@ -15,7 +14,7 @@ import { getErrorByKey } from "../../../store/reducers/errors/errorSelectors";
 interface ThemedDropdownProps<T extends readonly string[]> {
     isSelectable?: boolean;
     onSelectItem: (value: T[number]) => void;
-    placeholderTranslationKey?: string;
+    placeholder?: string;
     value?: T[number];
     options: T;
     errorKey?: ErrorFields;
@@ -46,14 +45,12 @@ function Item<T extends string>({ value, onSelectItem }: ItemProps<T>) {
     );
 }
 
-export function ThemedDropdown<T extends readonly string[]>({ secondary, isSelectable, errorKey, options, onSelectItem, placeholderTranslationKey = "select_item", value }: ThemedDropdownProps<T>) {
-    const { t } = useTranslation();
+export function ThemedDropdown<T extends readonly string[]>({ secondary, isSelectable, errorKey, options, onSelectItem, placeholder, value }: ThemedDropdownProps<T>) {
     const [open, setOpen] = useState(false);
     const containerRef = useRef<View>(null);
     const [containerMeasures, setContainerMeasures] = useState<{ width: number; height: number }>({ width: 100, height: 50 });
     const error = useAppSelector((state: AppState) => getErrorByKey(state)(errorKey));
     const { componentBackgroundColor } = useTheme();
-
     const togglePicker = useCallback(() => {
         setOpen((open) => !open);
     }, []);
@@ -96,7 +93,7 @@ export function ThemedDropdown<T extends readonly string[]>({ secondary, isSelec
                     onPress={togglePicker}
                 >
                     <Text ghost disabled={!isSelectable} error={error} style={styles.selectedItem}>
-                        {value ?? t(placeholderTranslationKey)}
+                        {value ?? placeholder}
                     </Text>
                 </ThemedPressable>
                 {open && (

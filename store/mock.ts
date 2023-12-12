@@ -54,7 +54,15 @@ export const mockState: AppState = {
             {
                 name: "Körpergewicht",
                 type: "weight",
-                data: getConstructedMeasurement(),
+                data: [
+                    { timestamp: 1702271012832, value: "70" },
+                    { timestamp: 1702271012832, value: "70" },
+                    { timestamp: 1702271012832, value: "70" },
+                    { timestamp: 1702271012832, value: "72" },
+                    { timestamp: 1702271012832, value: "73" },
+                    { timestamp: 1702271012832, value: "75" },
+                    { timestamp: 1702271012832, value: "74" },
+                ],
                 higherIsBetter: true,
             },
             {

@@ -12,32 +12,33 @@ import { ThemedMaterialCommunityIcons } from "../Themed/ThemedMaterialCommunityI
 import { styles } from "./styles";
 import { ThemedDropdown } from "../Themed/Dropdown/ThemedDropdown";
 import { CheckBox } from "../Themed/CheckBox/CheckBox";
-import { measurementTypes } from "../App/measurements/types";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { AnimatedView } from "../Themed/AnimatedView/AnimatedView";
 
-import { getLanguage, getThemeKey } from "../../store/reducers/settings/settingsSelectors";
-import { getDatesFromCurrentMeasurement, getEditedMeasurementData } from "../../store/reducers/measurements/measurementSelectors";
+import { getLanguage, getThemeKey, getUnitSystem } from "../../store/reducers/settings/settingsSelectors";
+import { getDatesFromCurrentMeasurement, getEditedMeasurementData, getUnitByType } from "../../store/reducers/measurements/measurementSelectors";
 import { IsoDate } from "../../types/date";
 import { mutateEditedMeasurement, saveEditedMeasurement } from "../../store/reducers/measurements";
 import { AddButton } from "../AddButton/AddButton";
 import { View } from "react-native";
 import { getAppInstallDate } from "../../store/reducers/metadata/metadataSelectors";
+import { measurementTypes } from "../App/measurements/types";
 
 interface MeasurementModalProps extends ThemedBottomSheetModalProps {
     reference: RefObject<BottomSheetModal>;
 }
 
-const MEASUREMENT_KEY_PREFIX = "measurement_type_";
-
 const useMeasurementOptions = () => {
-    const { t } = useTranslation();
-    return measurementTypes.map((type) => t(MEASUREMENT_KEY_PREFIX + type));
+    const unitSystem = useAppSelector(getUnitSystem);
+    return measurementTypes.map((type) => getUnitByType(unitSystem, type));
 };
 const useDropdownValue = () => {
-    const { t } = useTranslation();
+    const unitSystem = useAppSelector(getUnitSystem);
     const type = useAppSelector(getEditedMeasurementData)?.measurement.type;
-    return type && t(MEASUREMENT_KEY_PREFIX + type.toLowerCase());
+    return getUnitByType(unitSystem, type);
+};
+const getTypeByUnit = (unit: string) => {
+    return measurementTypes.find((type) => getUnitByType("metric", type) === unit);
 };
 
 const MAX_DATE = new Date(getDateTodayIso());
@@ -55,7 +56,6 @@ export const MeasurementModal = ({ onRequestClose, reference }: MeasurementModal
     const editedMeasurement = useAppSelector(getEditedMeasurementData);
     const installDate = useAppSelector(getAppInstallDate);
     const minimiumDate = useMemo(() => new Date(installDate ?? "2023-01-01"), [installDate]);
-
     const handleSetMeasurementName = useCallback(
         (name: string) => {
             dispatch(mutateEditedMeasurement({ key: "name", value: name }));
@@ -72,7 +72,7 @@ export const MeasurementModal = ({ onRequestClose, reference }: MeasurementModal
 
     const handleSetMeasurementType = useCallback(
         (type: string) => {
-            dispatch(mutateEditedMeasurement({ key: "type", value: type }));
+            dispatch(mutateEditedMeasurement({ key: "type", value: getTypeByUnit(type) }));
         },
         [dispatch],
     );
@@ -148,7 +148,7 @@ export const MeasurementModal = ({ onRequestClose, reference }: MeasurementModal
                             options={measurementOptions}
                             errorKey="measurement_type"
                             value={dropdownValue}
-                            placeholderTranslationKey="measurement_type"
+                            placeholder={t("measurement_unit")}
                             onSelectItem={handleSetMeasurementType}
                         />
                     </HStack>

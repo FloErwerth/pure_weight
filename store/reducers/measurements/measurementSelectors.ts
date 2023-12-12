@@ -18,7 +18,7 @@ export const getLatestMeasurements = createSelector([getMeasurements], (measurem
     }),
 );
 
-const getUnitByType = (unitSystem: UnitSystem, type?: MeasurementType) => {
+export const getUnitByType = (unitSystem: UnitSystem, type?: MeasurementType) => {
     if (!type) {
         return "";
     }
