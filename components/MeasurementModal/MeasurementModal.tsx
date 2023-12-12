@@ -107,67 +107,67 @@ export const MeasurementModal = ({ onRequestClose, reference }: MeasurementModal
 
     return (
         <ThemedBottomSheetModal onRequestClose={onRequestClose} title={measurementButtonText} snapPoints={["100%"]} ref={reference}>
-            <AnimatedView stretch ghost style={styles.outerWrapper}>
-                <ThemedTextInput
-                    maxLength={20}
-                    bottomSheet
-                    errorKey="measurement_name"
-                    style={styles.textInput}
-                    onChangeText={handleSetMeasurementName}
-                    value={name}
-                    clearButtonMode="while-editing"
-                    placeholder={t("measurement_placeholder")}
-                />
-                <HStack ghost style={{ alignSelf: "stretch", gap: 10 }}>
-                    <ThemedTextInput
-                        stretch
-                        bottomSheet
-                        errorKey="measurement_value"
-                        returnKeyType="done"
-                        keyboardType="decimal-pad"
-                        style={styles.textInput}
-                        onChangeText={handleSetMeasurementValue}
-                        value={value}
-                        clearButtonMode="while-editing"
-                        placeholder={t("measurement")}
-                    />
-                    <ThemedDropdown
-                        isSelectable={inspectedMeasurement.isNew}
-                        options={measurementOptions}
-                        errorKey="measurement_type"
-                        value={dropdownValue}
-                        placeholderTranslationKey="measurement_type"
-                        onSelectItem={handleSetMeasurementType}
-                    />
-                </HStack>
-                <CheckBox
-                    label={t("measurement_higher_is_better")}
-                    helpText={t("measurement_higher_is_better_help")}
-                    checked={higherIsBetter ?? false}
-                    size={26}
-                    onChecked={handleSelectHigherIsBetter}
-                />
-                <DateTimePicker
-                    display="inline"
-                    maximumDate={new Date(getDateTodayIso())}
-                    locale={language}
-                    accentColor={mainColor}
-                    themeVariant={themeKey}
-                    style={styles.calendar}
-                    onChange={(_, date) => setDate(date ?? new Date(getDateTodayIso()))}
-                    value={date}
-                />
-                {showWarning && (
-                    <HStack style={styles.warningWrapper}>
-                        <ThemedMaterialCommunityIcons ghost name="alert-circle-outline" size={20} color={warningColor} />
-                        <Text warning style={styles.warningText}>
-                            {t(`measurement_warning_text`)}
-                        </Text>
-                    </HStack>
-                )}
-            </AnimatedView>
             <View style={styles.outerWrapper}>
-                <AddButton onPress={handleSaveMeasurement} title={measurementButtonText} icon={buttonIcon} />
+                <AnimatedView ghost style={styles.innerWrapper}>
+                    <ThemedTextInput
+                        maxLength={20}
+                        errorKey="measurement_name"
+                        style={styles.textInput}
+                        onChangeText={handleSetMeasurementName}
+                        value={name}
+                        clearButtonMode="while-editing"
+                        placeholder={t("measurement_placeholder")}
+                    />
+                    <HStack ghost style={{ alignSelf: "stretch", gap: 10 }}>
+                        <ThemedTextInput
+                            stretch
+                            errorKey="measurement_value"
+                            returnKeyType="done"
+                            keyboardType="decimal-pad"
+                            style={styles.textInput}
+                            onChangeText={handleSetMeasurementValue}
+                            value={value}
+                            clearButtonMode="while-editing"
+                            placeholder={t("measurement")}
+                        />
+                        <ThemedDropdown
+                            isSelectable={inspectedMeasurement.isNew}
+                            options={measurementOptions}
+                            errorKey="measurement_type"
+                            value={dropdownValue}
+                            placeholderTranslationKey="measurement_type"
+                            onSelectItem={handleSetMeasurementType}
+                        />
+                    </HStack>
+                    <CheckBox
+                        label={t("measurement_higher_is_better")}
+                        helpText={t("measurement_higher_is_better_help")}
+                        checked={higherIsBetter ?? false}
+                        size={26}
+                        onChecked={handleSelectHigherIsBetter}
+                    />
+                    <DateTimePicker
+                        display="inline"
+                        maximumDate={new Date(getDateTodayIso())}
+                        locale={language}
+                        accentColor={mainColor}
+                        themeVariant={themeKey}
+                        style={styles.calendar}
+                        onChange={(_, date) => setDate(date ?? new Date(getDateTodayIso()))}
+                        value={date}
+                    />
+                    {showWarning && (
+                        <HStack style={styles.warningWrapper}>
+                            <ThemedMaterialCommunityIcons ghost name="alert-circle-outline" size={20} color={warningColor} />
+                            <Text warning style={styles.warningText}>
+                                {t(`measurement_warning_text`)}
+                            </Text>
+                        </HStack>
+                    )}
+                </AnimatedView>
+                <View style={styles.innerWrapper}>
+                    <AddButton onPress={handleSaveMeasurement} title={measurementButtonText} icon={buttonIcon} />
+                </View>
             </View>
         </ThemedBottomSheetModal>
     );

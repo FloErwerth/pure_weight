@@ -2,11 +2,15 @@ import { StyleSheet } from "react-native";
 import { borderRadius } from "../../theme/border";
 
 export const styles = StyleSheet.create({
-    outerWrapper: {
+    innerWrapper: {
         gap: 10,
         margin: 10,
         borderRadius,
         padding: 10,
+    },
+    outerWrapper: {
+        flex: 1,
+        justifyContent: "space-between",
     },
     textInput: {
         fontSize: 20,
