@@ -30,7 +30,7 @@ export const RenderedMeasurement = ({ index, measurement }: MeasurementProps) =>
     const textStyle = useMemo(() => [styles.text, { color: mainColor }], [mainColor]);
     const language = useAppSelector(getLanguage);
     const progress = useAppSelector((state: AppState) => getMeasurmentProgress(state, index));
-
+    const wasPositive = useMemo(() => progress !== undefined && progress > 0, [progress]);
     const handleNavigateToChart = useCallback(() => {
         dispatch(setEditedMeasurement({ index, isNew: false }));
         navigate("measurement/progress");
@@ -43,9 +43,7 @@ export const RenderedMeasurement = ({ index, measurement }: MeasurementProps) =>
                     <Text style={textStyle}>{measurement.name}</Text>
                     <Text style={styles.date}>{getSinceDate(latestMeasurements[index], language)}</Text>
                 </View>
-                {measurement.name && progress && (
-                    <ProgressDisplay type="Measurement" higherIsBetter={measurement?.higherIsBetter} name={measurement?.name} percent={progress} onPress={handleNavigateToChart} />
-                )}
+                <ProgressDisplay type="Measurement" wasPositive={wasPositive} higherIsBetter={measurement.higherIsBetter} name={measurement?.name} percent={progress} onPress={handleNavigateToChart} />
             </VStack>
             <ThemedMaterialCommunityIcons name="table-large-plus" size={26} />
         </HStack>

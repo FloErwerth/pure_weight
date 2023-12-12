@@ -70,6 +70,7 @@ export const measurementReducer = createReducer<MeasurementState>({ measurements
                 }
                 state.measurements = measurements;
             }
+            state.editedMeasurement = undefined;
         })
         .addCase(mutateEditedMeasurement, (state, action) => {
             if (state.editedMeasurement && state.editedMeasurement.measurement) {

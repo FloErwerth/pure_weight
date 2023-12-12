@@ -17,7 +17,7 @@ export interface ProgressDisplayProps {
     onPress: () => void;
     higherIsBetter?: boolean;
     wasPositive?: boolean;
-    percent: number;
+    percent?: number;
     name: string;
     type: "Workout" | "Measurement";
 }
@@ -28,56 +28,31 @@ const useText = (type: "Workout" | "Measurement", even: boolean, higherPercentag
 
     const workoutText = useMemo(() => {
         if (even) {
-            return <>{t("progress_text_even")}</>;
+            return `${t("progress_text_even")}`;
         }
         if (language === "en") {
-            return (
-                <>
-                    {t("progress_text_1").concat(name, " ", t(higherPercentage ? "progress_increased" : "progress_decreased"))} by {processedPercent}
-                    &thinsp;%
-                </>
-            );
+            return `${t("progress_text_1").concat(name, " ", t(higherPercentage ? "progress_increased" : "progress_decreased"))} by {processedPercent} %`;
         }
-        return (
-            <>
-                {t("progress_text_1")} {processedPercent}&thinsp;% {t(higherPercentage ? "progress_increased" : "progress_decreased")}
-            </>
-        );
+        return `${t("progress_text_1")} ${processedPercent}% ${t(higherPercentage ? "progress_increased" : "progress_decreased")}`;
     }, [even, language, t, processedPercent, higherPercentage, name]);
 
     const measurementText = useMemo(() => {
         if (even) {
             if (language === "en") {
-                return <>No changes on your measurement</>;
+                return "No changes on your measurement";
             }
-            return <>Keine Veränderung für deine Messung</>;
+            return "Keine Veränderung für deine Messung";
         }
         if (higherPercentage) {
             if (language === "en") {
-                return (
-                    <>
-                        Your measurement {name} {t("progress_increased")} by {processedPercent}&thinsp;%
-                    </>
-                );
+                return `Your measurement ${name} ${t("progress_increased")} by ${processedPercent} %`;
             }
-            return (
-                <>
-                    Deine Messung {name} ist um {processedPercent}&thinsp;% {t("progress_increased")}
-                </>
-            );
+            return `Deine Messung ${name} ist um ${processedPercent} % ${t("progress_increased")}`;
         }
         if (language === "en") {
-            return (
-                <>
-                    Your measurement {name} {t("progress_decreased")} by {processedPercent}&thinsp;%
-                </>
-            );
+            return `Your measurement ${name} ${t("progress_decreased")} by ${processedPercent} %`;
         }
-        return (
-            <>
-                Deine Messung {name} ist um {processedPercent}&thinsp;% {t("progress_decreased")}
-            </>
-        );
+        return `Deine Messung ${name} ist um ${processedPercent} % ${t("progress_decreased")}`;
     }, [even, higherPercentage, language, name, processedPercent, t]);
 
     if (type === "Measurement") {
@@ -91,7 +66,6 @@ export const ProgressDisplay = ({ percent, onPress, higherIsBetter = true, wasPo
     const processedPercent = trunicateToNthSignificantDigit(percent ?? 0);
     const even = processedPercent === 0;
     const text = useText(type, even, wasPositive, processedPercent, name);
-
     const active = useContext(swipableContext);
     const { t } = useTranslation();
     const { secondaryColor } = useTheme();
@@ -122,6 +96,10 @@ export const ProgressDisplay = ({ percent, onPress, higherIsBetter = true, wasPo
         }
         onPress();
     }, [active, onPress]);
+
+    if (percent === undefined) {
+        return null;
+    }
 
     return (
         <ThemedPressable secondary style={styles.progressWrapper} onPress={handlePress}>
