@@ -68,7 +68,7 @@ export const MeasurementProgress = () => {
             <PageContent paddingTop={20}>
                 <Suspense fallback={<Fallback />}>
                     <ThemedView style={{ padding: 10 }} round>
-                        <Chart transparent lineChartStyles={{ left: -45, top: 20, borderRadius }} getYLabel={() => ""} data={data} getDotContent={getDotContent} />
+                        <Chart transparent lineChartStyles={{ left: -30, top: 20, borderRadius }} getYLabel={() => ""} data={data} getDotContent={getDotContent} />
                     </ThemedView>
                 </Suspense>
             </PageContent>

@@ -16,8 +16,7 @@ interface ChartProps {
 function Chart({ data, getXLabel, getDotContent, getYLabel, lineChartStyles, transparent = false, getDotColor }: ChartProps) {
     const { mainColor, componentBackgroundColor, secondaryColor } = useTheme();
     const numberEntries = data.datasets[0].data.length;
-    const scrollEnabled = useMemo(() => numberEntries > 5, [numberEntries]);
-    const width = useMemo(() => (numberEntries < 7 ? Dimensions.get("screen").width - 30 : numberEntries * 100), [numberEntries]);
+    const width = useMemo(() => numberEntries * 100, [numberEntries]);
 
     const config: LineChartProps["chartConfig"] = useMemo(
         () => ({
@@ -44,7 +43,7 @@ function Chart({ data, getXLabel, getDotContent, getYLabel, lineChartStyles, tra
     );
 
     return (
-        <ScrollView horizontal scrollEnabled={scrollEnabled}>
+        <ScrollView horizontal>
             <LineChart
                 data={data}
                 transparent={transparent}
