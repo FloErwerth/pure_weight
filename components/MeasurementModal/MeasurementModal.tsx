@@ -3,7 +3,7 @@ import { HStack } from "../Stack/HStack/HStack";
 import { ThemedBottomSheetModal, ThemedBottomSheetModalProps } from "../BottomSheetModal/ThemedBottomSheetModal";
 import { RefObject, useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import DateTimePicker from "@react-native-community/datetimepicker";
+import DateTimePicker, { DateTimePickerEvent } from "@react-native-community/datetimepicker";
 import { getDateTodayIso } from "../../utils/date";
 import { useAppDispatch, useAppSelector } from "../../store";
 import { Text } from "../Themed/ThemedText/Text";
@@ -38,12 +38,14 @@ const useDropdownValue = () => {
     const type = useAppSelector(getEditedMeasurementData)?.measurement.type;
     return type && t(MEASUREMENT_KEY_PREFIX + type.toLowerCase());
 };
+
+const MAX_DATE = new Date(getDateTodayIso());
 export const MeasurementModal = ({ onRequestClose, reference }: MeasurementModalProps) => {
     const themeKey = useAppSelector(getThemeKey);
     const dates = useAppSelector(getDatesFromCurrentMeasurement);
     const language = useAppSelector(getLanguage);
     const [showWarning, setShowWarnining] = useState(false);
-    const [date, setDate] = useState(new Date(dates ? dates[dates.length - 1] : getDateTodayIso()));
+    const [date, setDate] = useState(MAX_DATE);
     const dispatch = useAppDispatch();
     const { mainColor, warningColor } = useTheme();
     const { t } = useTranslation();
@@ -99,6 +101,14 @@ export const MeasurementModal = ({ onRequestClose, reference }: MeasurementModal
     }, [showWarning, date, dates, dispatch]);
     const buttonIcon = useMemo(() => ({ name: !inspectedMeasurement?.isNew ? "table-check" : "table-large-plus", size: 24 }) as const, [inspectedMeasurement?.isNew]);
 
+    const handleDateChange = useCallback(
+        (event: DateTimePickerEvent, selectedDate?: Date) => {
+            const currentDate = selectedDate || date;
+            setDate(currentDate);
+        },
+        [date],
+    );
+
     if (!inspectedMeasurement) {
         return null;
     }
@@ -148,12 +158,12 @@ export const MeasurementModal = ({ onRequestClose, reference }: MeasurementModal
                     />
                     <DateTimePicker
                         display="inline"
-                        maximumDate={new Date(getDateTodayIso())}
+                        maximumDate={MAX_DATE}
                         locale={language}
                         accentColor={mainColor}
                         themeVariant={themeKey}
                         style={styles.calendar}
-                        onChange={(_, date) => setDate(date ?? new Date(getDateTodayIso()))}
+                        onChange={handleDateChange}
                         value={date}
                     />
                     {showWarning && (
