@@ -19,9 +19,10 @@ import { AnimatedView } from "../Themed/AnimatedView/AnimatedView";
 import { getLanguage, getThemeKey } from "../../store/reducers/settings/settingsSelectors";
 import { getDatesFromCurrentMeasurement, getEditedMeasurementData } from "../../store/reducers/measurements/measurementSelectors";
 import { IsoDate } from "../../types/date";
-import { mutateEditedMeasurement, saveInspectedMeasurement } from "../../store/reducers/measurements";
+import { mutateEditedMeasurement, saveEditedMeasurement } from "../../store/reducers/measurements";
 import { AddButton } from "../AddButton/AddButton";
 import { View } from "react-native";
+import { getAppInstallDate } from "../../store/reducers/metadata/metadataSelectors";
 
 interface MeasurementModalProps extends ThemedBottomSheetModalProps {
     reference: RefObject<BottomSheetModal>;
@@ -51,7 +52,9 @@ export const MeasurementModal = ({ onRequestClose, reference }: MeasurementModal
     const { t } = useTranslation();
     const dropdownValue = useDropdownValue();
     const measurementOptions = useMeasurementOptions();
-    const inspectedMeasurement = useAppSelector(getEditedMeasurementData);
+    const editedMeasurement = useAppSelector(getEditedMeasurementData);
+    const installDate = useAppSelector(getAppInstallDate);
+    const minimiumDate = useMemo(() => new Date(installDate ?? "2023-01-01"), [installDate]);
 
     const handleSetMeasurementName = useCallback(
         (name: string) => {
@@ -82,14 +85,14 @@ export const MeasurementModal = ({ onRequestClose, reference }: MeasurementModal
     );
 
     const measurementButtonText = useMemo(() => {
-        if (!inspectedMeasurement?.isNew) {
+        if (!editedMeasurement?.isNew) {
             return t("measurement_add_existing");
         }
         if (showWarning) {
             return t("measurement_warning_confirm");
         }
         return t("measurement_add");
-    }, [inspectedMeasurement?.isNew, showWarning, t]);
+    }, [editedMeasurement?.isNew, showWarning, t]);
 
     const handleSaveMeasurement = useCallback(() => {
         if (!showWarning && date && dates?.includes(date?.toISOString().split("T")[0] as IsoDate)) {
@@ -97,9 +100,10 @@ export const MeasurementModal = ({ onRequestClose, reference }: MeasurementModal
             return;
         }
         setShowWarnining(false);
-        dispatch(saveInspectedMeasurement());
-    }, [showWarning, date, dates, dispatch]);
-    const buttonIcon = useMemo(() => ({ name: !inspectedMeasurement?.isNew ? "table-check" : "table-large-plus", size: 24 }) as const, [inspectedMeasurement?.isNew]);
+        dispatch(saveEditedMeasurement());
+        onRequestClose?.();
+    }, [showWarning, date, dates, dispatch, onRequestClose]);
+    const buttonIcon = useMemo(() => ({ name: !editedMeasurement?.isNew ? "table-check" : "table-large-plus", size: 24 }) as const, [editedMeasurement?.isNew]);
 
     const handleDateChange = useCallback(
         (event: DateTimePickerEvent, selectedDate?: Date) => {
@@ -109,11 +113,10 @@ export const MeasurementModal = ({ onRequestClose, reference }: MeasurementModal
         [date],
     );
 
-    if (!inspectedMeasurement) {
+    if (!editedMeasurement) {
         return null;
     }
-
-    const { value, name, higherIsBetter } = inspectedMeasurement.measurement;
+    const { value, name, higherIsBetter } = editedMeasurement.measurement;
 
     return (
         <ThemedBottomSheetModal onRequestClose={onRequestClose} title={measurementButtonText} snapPoints={["100%"]} ref={reference}>
@@ -141,7 +144,7 @@ export const MeasurementModal = ({ onRequestClose, reference }: MeasurementModal
                             placeholder={t("measurement")}
                         />
                         <ThemedDropdown
-                            isSelectable={inspectedMeasurement.isNew}
+                            isSelectable={editedMeasurement.isNew}
                             options={measurementOptions}
                             errorKey="measurement_type"
                             value={dropdownValue}
@@ -149,16 +152,11 @@ export const MeasurementModal = ({ onRequestClose, reference }: MeasurementModal
                             onSelectItem={handleSetMeasurementType}
                         />
                     </HStack>
-                    <CheckBox
-                        label={t("measurement_higher_is_better")}
-                        helpText={t("measurement_higher_is_better_help")}
-                        checked={higherIsBetter ?? false}
-                        size={26}
-                        onChecked={handleSelectHigherIsBetter}
-                    />
+                    <CheckBox label={t("measurement_higher_is_better")} helpText={t("measurement_higher_is_better_help")} checked={higherIsBetter} size={26} onChecked={handleSelectHigherIsBetter} />
                     <DateTimePicker
                         display="inline"
                         maximumDate={MAX_DATE}
+                        minimumDate={minimiumDate}
                         locale={language}
                         accentColor={mainColor}
                         themeVariant={themeKey}
