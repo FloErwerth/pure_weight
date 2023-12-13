@@ -22,7 +22,7 @@ export const editMeasurement = createAction<{ measurement: Measurement; index: n
 export const deleteMeasurement = createAction<number, "measurement_delete">("measurement_delete");
 export const setMeasurementSorting = createAction<SortingType, "measurement_sort">("measurement_sort");
 export const mutateEditedMeasurement = createAction<{ key: keyof Measurement; value: Measurement[keyof Measurement] }, "mutate_measurement">("mutate_measurement");
-export const saveEditedMeasurement = createAction("save_inspected_measurement");
+export const saveEditedMeasurement = createAction<{ hadWarning: boolean }, "save_inspected_measurement">("save_inspected_measurement");
 export const setupNewMeasurement = createAction("setup_new_measurement");
 
 export const recoverMeasurement = createAction("measurement_recover");
@@ -57,12 +57,16 @@ export const measurementReducer = createReducer<MeasurementState>({ measurements
             const newMeasurement: Measurement = { name: "", data: [] };
             state.editedMeasurement = { isNew: true, measurement: newMeasurement };
         })
-        .addCase(saveEditedMeasurement, (state) => {
+        .addCase(saveEditedMeasurement, (state, action) => {
             const editedMeasurement = state.editedMeasurement;
             if (editedMeasurement) {
                 const measurements = [...state.measurements];
                 const newMeasurement = editedMeasurement.measurement;
-                newMeasurement.data.push({ timestamp: Date.now(), value: newMeasurement.value ?? "" });
+                if (action.payload.hadWarning) {
+                    newMeasurement.data.splice(newMeasurement.data.length - 1, 1, { timestamp: Date.now(), value: newMeasurement.value ?? "" });
+                } else {
+                    newMeasurement.data.push({ timestamp: Date.now(), value: newMeasurement.value ?? "" });
+                }
                 if (editedMeasurement.isNew) {
                     measurements.push(newMeasurement);
                 } else {

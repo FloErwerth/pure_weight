@@ -56,6 +56,7 @@ export const MeasurementModal = ({ onRequestClose, reference }: MeasurementModal
     const editedMeasurement = useAppSelector(getEditedMeasurementData);
     const installDate = useAppSelector(getAppInstallDate);
     const minimiumDate = useMemo(() => new Date(installDate ?? "2023-01-01"), [installDate]);
+
     const handleSetMeasurementName = useCallback(
         (name: string) => {
             dispatch(mutateEditedMeasurement({ key: "name", value: name }));
@@ -99,8 +100,8 @@ export const MeasurementModal = ({ onRequestClose, reference }: MeasurementModal
             setShowWarnining(true);
             return;
         }
+        dispatch(saveEditedMeasurement({ hadWarning: showWarning }));
         setShowWarnining(false);
-        dispatch(saveEditedMeasurement());
         onRequestClose?.();
     }, [showWarning, date, dates, dispatch, onRequestClose]);
     const buttonIcon = useMemo(() => ({ name: !editedMeasurement?.isNew ? "table-check" : "table-large-plus", size: 24 }) as const, [editedMeasurement?.isNew]);
@@ -164,16 +165,16 @@ export const MeasurementModal = ({ onRequestClose, reference }: MeasurementModal
                         onChange={handleDateChange}
                         value={date}
                     />
+                </AnimatedView>
+                <View style={styles.innerWrapper}>
                     {showWarning && (
-                        <HStack style={styles.warningWrapper}>
+                        <HStack ghost style={styles.warningWrapper}>
                             <ThemedMaterialCommunityIcons ghost name="alert-circle-outline" size={20} color={warningColor} />
-                            <Text warning style={styles.warningText}>
+                            <Text ghost warning style={styles.warningText}>
                                 {t(`measurement_warning_text`)}
                             </Text>
                         </HStack>
                     )}
-                </AnimatedView>
-                <View style={styles.innerWrapper}>
                     <AddButton onPress={handleSaveMeasurement} title={measurementButtonText} icon={buttonIcon} />
                 </View>
             </View>

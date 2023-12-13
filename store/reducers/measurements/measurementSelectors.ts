@@ -1,5 +1,5 @@
 import { createSelector } from "@reduxjs/toolkit";
-import { getDate } from "../../../utils/date";
+import { getDate, getIsoDate } from "../../../utils/date";
 import { AppState } from "../../index";
 import { getUnitSystem } from "../settings/settingsSelectors";
 import { getLastNEntries } from "../../../utils/getLastNEntries";
@@ -72,5 +72,5 @@ export const getDatesFromCurrentMeasurement = createSelector([getEditedMeasureme
     if (!measurement || measurement.isNew) {
         return undefined;
     }
-    return measurement.measurement.data.map(({ timestamp }) => getDate(timestamp));
+    return measurement.measurement.data.map(({ timestamp }) => getIsoDate(timestamp));
 });

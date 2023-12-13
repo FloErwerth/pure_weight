@@ -24,6 +24,11 @@ export const getTitle = (date?: IsoDate, language?: "en" | "de") => {
         year: undefined,
     });
 };
+
+export const getIsoDate = (timestamp: number | string) => {
+    const convertedTimestamp = typeof timestamp === "string" ? parseInt(timestamp) : timestamp;
+    return Temporal.Instant.fromEpochMilliseconds(convertedTimestamp).toString().split("T")[0] as IsoDate;
+};
 export const getDate = (timestamp: number | string, language?: "en" | "de", dateStyle?: "short" | "medium" | "long") => {
     const convertedTimestamp = typeof timestamp === "string" ? parseInt(timestamp) : timestamp;
     return Temporal.Instant.fromEpochMilliseconds(convertedTimestamp).toLocaleString(language ?? Locale.locale, {
