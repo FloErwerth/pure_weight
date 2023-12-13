@@ -16,7 +16,7 @@ interface ChartProps {
 function Chart({ data, getXLabel, getDotContent, getYLabel, lineChartStyles, transparent = false, getDotColor }: ChartProps) {
     const { mainColor, componentBackgroundColor, secondaryColor } = useTheme();
     const numberEntries = data.datasets[0].data.length;
-    const width = useMemo(() => numberEntries * 100, [numberEntries]);
+    const width = useMemo(() => Math.max((Dimensions.get("window").width * 3) / numberEntries, numberEntries * 100), [numberEntries]);
 
     const config: LineChartProps["chartConfig"] = useMemo(
         () => ({
