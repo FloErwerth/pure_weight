@@ -84,7 +84,8 @@
   "previous_training_note_title": "Saved note",
   "progress_cumulative": "Cumulative",
   "progress_modal_title": "Selection of chart type",
-  "progress_text_hint": "Press to see details for each exercise",
+  "progress_text_hint_workout": "Press to see details for each exercise",
+  "progress_text_hint_measurement": "Press to see details for each measurement",
   "create_missing_data_text": "There are no exercises to display here",
 
   "select_key": "Choose",

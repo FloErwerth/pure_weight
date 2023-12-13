@@ -61,6 +61,11 @@ const useText = (type: "Workout" | "Measurement", even: boolean, higherPercentag
     return workoutText;
 };
 
+const hintTypeMap = {
+    Workout: "progress_text_hint_workout",
+    Measurement: "progress_text_hint_measurement",
+};
+
 export const ProgressDisplay = ({ percent, onPress, higherIsBetter = true, wasPositive, name, type }: ProgressDisplayProps) => {
     const isPositive = wasPositive && higherIsBetter;
     const processedPercent = trunicateToNthSignificantDigit(percent ?? 0);
@@ -97,6 +102,8 @@ export const ProgressDisplay = ({ percent, onPress, higherIsBetter = true, wasPo
         onPress();
     }, [active, onPress]);
 
+    const hint = useMemo(() => t(hintTypeMap[type]), [t, type]);
+
     if (percent === undefined) {
         return null;
     }
@@ -111,7 +118,7 @@ export const ProgressDisplay = ({ percent, onPress, higherIsBetter = true, wasPo
                             {text}
                         </Text>
                         <Text secondary style={styles.hint}>
-                            {t("progress_text_hint")}
+                            {hint}
                         </Text>
                     </ThemedView>
                 </HStack>
