@@ -119,11 +119,6 @@ export const MeasurementModal = ({ onRequestClose, reference }: MeasurementModal
         onRequestClose?.();
     }, [onRequestClose]);
 
-    if (!editedMeasurement) {
-        return null;
-    }
-    const { value, name, higherIsBetter } = editedMeasurement.measurement;
-
     return (
         <ThemedBottomSheetModal onRequestClose={handleRequestClose} title={measurementButtonText} snapPoints={["100%"]} ref={reference}>
             <View style={styles.outerWrapper}>
@@ -133,7 +128,7 @@ export const MeasurementModal = ({ onRequestClose, reference }: MeasurementModal
                         errorKey="measurement_name"
                         style={styles.textInput}
                         onChangeText={handleSetMeasurementName}
-                        value={name}
+                        value={editedMeasurement?.measurement.name}
                         clearButtonMode="while-editing"
                         placeholder={t("measurement_placeholder")}
                     />
@@ -145,12 +140,12 @@ export const MeasurementModal = ({ onRequestClose, reference }: MeasurementModal
                             keyboardType="decimal-pad"
                             style={styles.textInput}
                             onChangeText={handleSetMeasurementValue}
-                            value={value}
+                            value={editedMeasurement?.measurement.value}
                             clearButtonMode="while-editing"
                             placeholder={t("measurement")}
                         />
                         <ThemedDropdown
-                            isSelectable={editedMeasurement.isNew}
+                            isSelectable={editedMeasurement?.isNew}
                             options={measurementOptions}
                             errorKey="measurement_type"
                             value={dropdownValue}
@@ -158,7 +153,13 @@ export const MeasurementModal = ({ onRequestClose, reference }: MeasurementModal
                             onSelectItem={handleSetMeasurementType}
                         />
                     </HStack>
-                    <CheckBox label={t("measurement_higher_is_better")} helpText={t("measurement_higher_is_better_help")} checked={higherIsBetter} size={26} onChecked={handleSelectHigherIsBetter} />
+                    <CheckBox
+                        label={t("measurement_higher_is_better")}
+                        helpText={t("measurement_higher_is_better_help")}
+                        checked={editedMeasurement?.measurement.higherIsBetter}
+                        size={26}
+                        onChecked={handleSelectHigherIsBetter}
+                    />
                     <DateTimePicker
                         display="inline"
                         maximumDate={MAX_DATE}

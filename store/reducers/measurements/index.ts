@@ -41,7 +41,7 @@ export const measurementReducer = createReducer<MeasurementState>({ measurements
             return action.payload;
         })
         .addCase(setEditedMeasurement, (state, action) => {
-            if (!action.payload) {
+            if (action.payload === undefined) {
                 state.editedMeasurement = undefined;
                 return;
             }

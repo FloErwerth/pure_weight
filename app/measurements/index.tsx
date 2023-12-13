@@ -8,7 +8,6 @@ import { ThemedView } from "../../components/Themed/ThemedView/View";
 import { Swipeable } from "../../components/WorkoutCard/Swipeable";
 import { RenderedMeasurement } from "../../components/App/measurements/Measurement";
 import { BottomToast } from "../../components/BottomToast/BottomToast";
-import { Measurement } from "../../components/App/measurements/types";
 import { useBottomSheetRef } from "../../components/BottomSheetModal/ThemedBottomSheetModal";
 import { deleteMeasurement, recoverMeasurement, setEditedMeasurement, setupNewMeasurement } from "../../store/reducers/measurements";
 import { getMeasurements } from "../../store/reducers/measurements/measurementSelectors";
@@ -26,17 +25,12 @@ export function Measurements() {
         open();
     }, [dispatch, open]);
 
-    const reset = useCallback(() => {
-        dispatch(setEditedMeasurement(undefined));
-    }, [dispatch]);
-
     const handleCloseModal = useCallback(() => {
         close();
-        reset();
-    }, [close, reset]);
+    }, [close]);
 
     const handleAddExistingMeasurement = useCallback(
-        (measurement: Measurement, index: number) => {
+        (index: number) => {
             dispatch(setEditedMeasurement({ index, isNew: false }));
             open();
         },
@@ -59,7 +53,7 @@ export function Measurements() {
     const mappedMeasurements = useMemo(
         () =>
             measurements?.map((measurement, index) => (
-                <Swipeable onDelete={() => handleDeleteMeasurement(index)} key={`${measurement.name}-pressable`} onClick={() => handleAddExistingMeasurement(measurement, index)}>
+                <Swipeable onDelete={() => handleDeleteMeasurement(index)} key={`${measurement.name}-pressable`} onClick={() => handleAddExistingMeasurement(index)}>
                     <RenderedMeasurement index={index} measurement={measurement} />
                 </Swipeable>
             )),
