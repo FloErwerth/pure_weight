@@ -44,8 +44,8 @@ const getTypeByUnit = (unit: string) => {
 const MAX_DATE = new Date(getDateTodayIso());
 export const MeasurementModal = ({ onRequestClose, reference }: MeasurementModalProps) => {
     const themeKey = useAppSelector(getThemeKey);
-    const dates = useAppSelector(getDatesFromCurrentMeasurement);
     const language = useAppSelector(getLanguage);
+    const dates = useAppSelector(getDatesFromCurrentMeasurement);
     const [showWarning, setShowWarnining] = useState(false);
     const [date, setDate] = useState(MAX_DATE);
     const dispatch = useAppDispatch();
@@ -114,13 +114,18 @@ export const MeasurementModal = ({ onRequestClose, reference }: MeasurementModal
         [date],
     );
 
+    const handleRequestClose = useCallback(() => {
+        setShowWarnining(false);
+        onRequestClose?.();
+    }, [onRequestClose]);
+
     if (!editedMeasurement) {
         return null;
     }
     const { value, name, higherIsBetter } = editedMeasurement.measurement;
 
     return (
-        <ThemedBottomSheetModal onRequestClose={onRequestClose} title={measurementButtonText} snapPoints={["100%"]} ref={reference}>
+        <ThemedBottomSheetModal onRequestClose={handleRequestClose} title={measurementButtonText} snapPoints={["100%"]} ref={reference}>
             <View style={styles.outerWrapper}>
                 <AnimatedView ghost style={styles.innerWrapper}>
                     <ThemedTextInput
