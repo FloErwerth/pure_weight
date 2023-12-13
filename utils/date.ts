@@ -36,6 +36,10 @@ export const getDate = (timestamp: number | string, language?: "en" | "de", date
     }) as IsoDate;
 };
 
+export const getLocaleDate = (date: IsoDate, language?: "en" | "de", options?: Intl.DateTimeFormatOptions) => {
+    return Temporal.PlainDate.from(date).toLocaleString(language ?? Locale.locale, options);
+};
+
 TimeAgo.addLocale(en);
 TimeAgo.addLocale(de);
 

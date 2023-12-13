@@ -18,7 +18,7 @@ interface SiteNavigationButtonsProps {
     closeButtonDisabled?: boolean;
     confirmButtonRef?: RefObject<View>;
 }
-
+export const DEFAULT_PLUS = { name: "plus", size: 40 } as const;
 export const SiteNavigationButtons = ({
     handleBack,
     title,

@@ -1,14 +1,7 @@
 import { styles } from "./styles";
 import { createContext, PropsWithChildren, useCallback, useMemo, useRef, useState } from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import {
-    Gesture,
-    GestureDetector,
-    GestureStateChangeEvent,
-    GestureUpdateEvent,
-    PanGestureChangeEventPayload,
-    PanGestureHandlerEventPayload,
-} from "react-native-gesture-handler";
+import { Gesture, GestureDetector, GestureStateChangeEvent, GestureUpdateEvent, PanGestureChangeEventPayload, PanGestureHandlerEventPayload } from "react-native-gesture-handler";
 import { Animated, Dimensions, Pressable, View } from "react-native";
 import { ThemedView } from "../Themed/ThemedView/View";
 import { useTheme } from "../../theme/context";

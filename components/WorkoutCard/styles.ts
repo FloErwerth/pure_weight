@@ -15,7 +15,6 @@ export const styles = StyleSheet.create({
     editIcon: { position: "absolute", left: 15 },
     deleteIcon: { position: "absolute", right: 15 },
     diffWrapper: {
-        flex: 1,
         gap: 7,
         alignItems: "center",
     },

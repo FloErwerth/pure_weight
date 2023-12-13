@@ -16,7 +16,7 @@ export const getEditedExercise = createSelector([getWorkoutState], (state) => st
 export const getIsExistingEditedExercise = createSelector([getEditedExercise], (editedExercise) => editedExercise?.index !== undefined);
 export const getNumberSavedWorkouts = createSelector([getWorkouts], (workouts) => workouts.length);
 export const getSortedDoneWorkout = createSelector([getWorkouts, (workouts, index: number) => index], (workouts, index) => {
-    return workouts[index].doneWorkouts.map(({ timestamp }) => timestamp).sort((a, b) => b - a);
+    return workouts[index].doneWorkouts.map(({ timestamp }) => timestamp).sort((a, b) => a - b);
 });
 
 export const getWorkoutColor = createSelector([getEditedWorkout], (editedWorkout) => editedWorkout?.workout.calendarColor);

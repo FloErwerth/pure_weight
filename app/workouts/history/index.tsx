@@ -1,6 +1,6 @@
 import { SiteNavigationButtons } from "../../../components/SiteNavigationButtons/SiteNavigationButtons";
 import { useTranslation } from "react-i18next";
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "../../../hooks/navigate";
 import { AppState, useAppSelector } from "../../../store";
 import { PageContent } from "../../../components/PageContent/PageContent";
@@ -21,24 +21,24 @@ import { DayProps } from "react-native-calendars/src/calendar/day";
 import { getEditedWorkout, getFirstWorkoutDate, getHistoryByMonth, getLatestWorkoutDate, getSortedDoneWorkout, getWorkoutColor } from "../../../store/reducers/workout/workoutSelectors";
 import { getWeightUnit } from "../../../store/reducers/settings/settingsSelectors";
 import { Temporal } from "@js-temporal/polyfill";
-import { getTitle } from "../../../utils/date";
+import { getIsoDate, getTitle } from "../../../utils/date";
 import { Chip } from "../../../components/Chip/Chip";
 
 export type SectionListItemInfo = { color: string; name: string; duration?: string; date: IsoDate; weight: string; numExercisesDone: number };
 
 const useMarkedDates = (index?: number) => {
     const { mainColor } = useTheme();
-    const dates = useAppSelector((state: AppState) => getSortedDoneWorkout(state, index ?? 0));
+    const timestamps = useAppSelector((state: AppState) => getSortedDoneWorkout(state, index ?? 0));
     const color = useAppSelector(getWorkoutColor);
     return useMemo(
         () =>
-            dates?.reduce(
-                (markedDates, date) => {
-                    return { ...markedDates, [date]: color ?? mainColor };
+            timestamps?.reduce(
+                (markedDates, timestamp) => {
+                    return { ...markedDates, [getIsoDate(timestamp)]: color ?? mainColor };
                 },
                 {} as Record<IsoDate, string>,
             ),
-        [color, dates, mainColor],
+        [color, timestamps, mainColor],
     );
 };
 
@@ -58,6 +58,10 @@ export function WorkoutHistory() {
     const dateData = useAppSelector((state: AppState) => getHistoryByMonth(state, selectedDate));
     const navigate = useNavigate();
     const weightUnit = useAppSelector(getWeightUnit);
+
+    useEffect(() => {
+        setSelectedDate(latestWorkoutDate);
+    }, [latestWorkoutDate]);
 
     const calendarTheme = useMemo(
         () => ({

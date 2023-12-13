@@ -10,17 +10,17 @@ export const styles = StyleSheet.create({
     },
     date: {
         fontStyle: "italic",
-        fontSize: 12,
     },
     trainingDayName: {
         fontSize: 24,
     },
     outerTrainWrapper: {
-        gap: 5,
+        gap: 15,
         justifyContent: "space-between",
     },
     innerTrainWrapper: {
         gap: 5,
+        alignSelf: "stretch",
         alignItems: "center",
     },
     trainWrapper: {
@@ -28,7 +28,7 @@ export const styles = StyleSheet.create({
         flex: 1,
     },
     title: {
-        fontSize: 30,
+        fontSize: 26,
     },
     listContainer: {
         borderRadius,

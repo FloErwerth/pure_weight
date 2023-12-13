@@ -16,10 +16,11 @@ import { ThemedPressable } from "../../../../Themed/Pressable/Pressable";
 import { useNavigate } from "../../../../../hooks/navigate";
 
 import { getTrainingDayData } from "../../../../../store/reducers/workout/workoutSelectors";
-import { getWeightUnit } from "../../../../../store/reducers/settings/settingsSelectors";
+import { getLanguage, getWeightUnit } from "../../../../../store/reducers/settings/settingsSelectors";
 import { trunicateToNthSignificantDigit } from "../../../../../utils/number";
 import Chart from "../../../../Chart/Chart";
 import { ExerciseSets, WeightBasedExerciseData } from "../../../../../store/reducers/workout/types";
+import { getLocaleDate } from "../../../../../utils/date";
 
 interface ExerciseChartProps {
     exerciseName: string;
@@ -99,6 +100,7 @@ const useChartTypeLabel = (chartType: ChartType) => {
 export const ExerciseChart = ({ exerciseName, data }: ExerciseChartProps) => {
     const [chartType, setChartType] = useState<ChartType>("CUMULATIVE");
     const [lineChartData] = useExerciseData(data, chartType);
+    const language = useAppSelector(getLanguage);
     const { t } = useTranslation();
     const { mainColor } = useTheme();
     const [ref, open, close] = useBottomSheetRef();
@@ -124,6 +126,13 @@ export const ExerciseChart = ({ exerciseName, data }: ExerciseChartProps) => {
         close();
     }, [close]);
 
+    const getXLabel = useCallback(
+        (xValue: string) => {
+            return getLocaleDate(xValue as IsoDate, language, { day: "2-digit", month: "2-digit", year: "2-digit" });
+        },
+        [language],
+    );
+
     const mappedChartProps = useMemo(
         () =>
             Object.entries(chartTypeMap).map(([type, text]) => {
@@ -148,7 +157,7 @@ export const ExerciseChart = ({ exerciseName, data }: ExerciseChartProps) => {
                     </Text>
                 </ThemedPressable>
             </HStack>
-            <Chart lineChartStyles={styles.lineChart} getYLabel={() => ""} getDotContent={getDotContent} data={lineChartData} />
+            <Chart lineChartStyles={styles.lineChart} getYLabel={() => ""} getXLabel={getXLabel} getDotContent={getDotContent} data={lineChartData} />
             <ThemedBottomSheetModal title={t("progress_modal_title")} ref={ref}>
                 <VStack ghost style={styles.selectionModal}>
                     {mappedChartProps.map(({ onPress, title, chartType }) => (

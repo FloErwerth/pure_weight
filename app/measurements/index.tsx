@@ -1,4 +1,4 @@
-import { SiteNavigationButtons } from "../../components/SiteNavigationButtons/SiteNavigationButtons";
+import { DEFAULT_PLUS, SiteNavigationButtons } from "../../components/SiteNavigationButtons/SiteNavigationButtons";
 import { useTranslation } from "react-i18next";
 import { useCallback, useMemo, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../store";
@@ -6,7 +6,7 @@ import { MeasurementModal } from "../../components/MeasurementModal/MeasurementM
 import { PageContent } from "../../components/PageContent/PageContent";
 import { ThemedView } from "../../components/Themed/ThemedView/View";
 import { Swipeable } from "../../components/WorkoutCard/Swipeable";
-import { RenderedMeasurement } from "../../components/App/measurements/Measurement";
+import { RenderedMeasurement } from "../../components/App/measurements/RenderedMeasurement";
 import { BottomToast } from "../../components/BottomToast/BottomToast";
 import { useBottomSheetRef } from "../../components/BottomSheetModal/ThemedBottomSheetModal";
 import { deleteMeasurement, recoverMeasurement, setEditedMeasurement, setupNewMeasurement } from "../../store/reducers/measurements";
@@ -62,7 +62,7 @@ export function Measurements() {
 
     return (
         <ThemedView stretch background>
-            <SiteNavigationButtons titleFontSize={40} title={t("measurements")} handleConfirm={handleAddNewMeasurement} handleConfirmIcon={{ name: "plus", size: 40 }} />
+            <SiteNavigationButtons titleFontSize={40} title={t("measurements")} handleConfirm={handleAddNewMeasurement} handleConfirmIcon={DEFAULT_PLUS} />
             <MeasurementSorting />
             <PageContent ignoreGap paddingTop={20} scrollable>
                 {mappedMeasurements}

@@ -108,6 +108,16 @@ export const mockState: AppState = {
                             },
                         ],
                     },
+                    {
+                        timestamp: 1701385200000 + 60 * 60 * 1000 * 24,
+                        duration: "120",
+                        doneExercises: [
+                            {
+                                name: "Klimmzüge unterstützt",
+                                sets: [{ weight: "50", reps: "5" }],
+                            },
+                        ],
+                    },
                 ],
             },
             {

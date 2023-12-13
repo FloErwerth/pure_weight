@@ -7,7 +7,6 @@ import { HStack } from "../../Stack/HStack/HStack";
 import { useCallback, useMemo } from "react";
 import { styles } from "./styles";
 import { AppState, useAppDispatch, useAppSelector } from "../../../store";
-import { useTheme } from "../../../theme/context";
 import { ProgressDisplay } from "../../WorkoutCard/components/ProgressDisplay/ProgressDisplay";
 import { Measurement } from "./types";
 
@@ -25,9 +24,6 @@ export const RenderedMeasurement = ({ index, measurement }: MeasurementProps) =>
     const latestMeasurements = useAppSelector(getLatestMeasurements);
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
-    const { mainColor, componentBackgroundColor } = useTheme();
-    const pressableWrapperStyle = useMemo(() => [styles.pressableWrapper, { backgroundColor: componentBackgroundColor }], [componentBackgroundColor]);
-    const textStyle = useMemo(() => [styles.text, { color: mainColor }], [mainColor]);
     const language = useAppSelector(getLanguage);
     const progress = useAppSelector((state: AppState) => getMeasurmentProgress(state, index));
     const wasPositive = useMemo(() => progress !== undefined && progress > 0, [progress]);
@@ -37,15 +33,15 @@ export const RenderedMeasurement = ({ index, measurement }: MeasurementProps) =>
     }, [dispatch, index, navigate]);
 
     return (
-        <HStack style={pressableWrapperStyle}>
+        <HStack style={styles.pressableWrapper}>
             <VStack style={styles.vStack}>
                 <View>
-                    <Text style={textStyle}>{measurement.name}</Text>
+                    <Text style={styles.text}>{measurement.name}</Text>
                     <Text style={styles.date}>{getSinceDate(latestMeasurements[index], language)}</Text>
                 </View>
                 <ProgressDisplay type="Measurement" wasPositive={wasPositive} higherIsBetter={measurement.higherIsBetter} name={measurement?.name} percent={progress} onPress={handleNavigateToChart} />
             </VStack>
-            <ThemedMaterialCommunityIcons name="table-large-plus" size={26} />
+            <ThemedMaterialCommunityIcons name="chevron-right" size={24} />
         </HStack>
     );
 };
