@@ -1,7 +1,7 @@
 import { createSelector } from "@reduxjs/toolkit";
 import { AppState } from "../../index";
 import { getLanguage } from "../settings/settingsSelectors";
-import { getDate, getDateTodayIso, getMonth, getSinceDate } from "../../../utils/date";
+import { getDate, getDateTodayIso, getIsoDate, getMonth, getSinceDate } from "../../../utils/date";
 import { IsoDate } from "../../../types/date";
 import { PALETTE } from "../../../utils/colorPalette";
 import { getLastNEntries } from "../../../utils/getLastNEntries";
@@ -22,13 +22,13 @@ export const getSortedDoneWorkout = createSelector([getWorkouts, (workouts, inde
 export const getWorkoutColor = createSelector([getEditedWorkout], (editedWorkout) => editedWorkout?.workout.calendarColor);
 
 export const getLatestWorkoutDate = createSelector([getSortedDoneWorkout], (timestamps) => {
-    return getDate(timestamps[timestamps.length - 1]) as IsoDate;
+    return getIsoDate(timestamps[timestamps.length - 1]) as IsoDate;
 });
 export const getLatestWorkoutDateDisplay = createSelector([getSortedDoneWorkout, getLanguage], (dates, language) => {
     return getSinceDate(dates[dates.length - 1], language ?? "de");
 });
 export const getFirstWorkoutDate = createSelector([getSortedDoneWorkout], (dates) => {
-    return getDate(dates[0]);
+    return getIsoDate(dates[0]);
 });
 export const getWorkoutByIndex = createSelector([getWorkouts, (workouts, index: number) => index], (trainings, index) => {
     return trainings[index];
@@ -51,14 +51,14 @@ export const getTrainingDayData = createSelector([getEditedWorkout], (editedWork
 
     slicedDoneWorkouts
         .filter(({ doneExercises }) => doneExercises !== undefined)
-        .forEach(({ date, doneExercises }) => {
+        .forEach(({ timestamp, doneExercises }) => {
             doneExercises!.forEach(({ name, sets }) => {
                 const foundEntry = sortedData.get(name);
                 if (foundEntry) {
-                    foundEntry.data.push({ sets, date });
+                    foundEntry.data.push({ sets, date: getIsoDate(timestamp) });
                     return;
                 }
-                sortedData.set(name, { exerciseName: name, data: [{ sets, date }] });
+                sortedData.set(name, { exerciseName: name, data: [{ sets, date: getIsoDate(timestamp) }] });
             });
         });
 
@@ -84,12 +84,13 @@ export const getHistoryByMonth = createSelector([getEditedWorkout, (editedWorkou
     > = new Map();
 
     workout?.doneWorkouts.forEach((doneWorkout) => {
-        foundTrainings.set(doneWorkout.date, [
-            ...(foundTrainings.get(doneWorkout.date) ?? []),
+        const date = getIsoDate(doneWorkout.timestamp);
+        foundTrainings.set(date, [
+            ...(foundTrainings.get(date) ?? []),
             {
                 color: workout?.calendarColor,
                 name: workout?.name,
-                date: doneWorkout.date,
+                date: date,
                 duration: doneWorkout.duration,
                 weight: (
                     doneWorkout.doneExercises?.reduce(

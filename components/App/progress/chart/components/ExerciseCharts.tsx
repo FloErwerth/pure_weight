@@ -11,7 +11,6 @@ import { ThemedView } from "../../../../Themed/ThemedView/View";
 import { Text } from "../../../../Themed/ThemedText/Text";
 import { ThemedScrollView } from "../../../../Themed/ThemedScrollView/ThemedScrollView";
 import { useTheme } from "../../../../../theme/context";
-import { getDate } from "../../../../../utils/date";
 import { IsoDate } from "../../../../../types/date";
 import { ThemedPressable } from "../../../../Themed/Pressable/Pressable";
 import { useNavigate } from "../../../../../hooks/navigate";
@@ -125,10 +124,6 @@ export const ExerciseChart = ({ exerciseName, data }: ExerciseChartProps) => {
         close();
     }, [close]);
 
-    const getXLabel = useCallback((xValue: string) => {
-        return getDate(xValue);
-    }, []);
-
     const mappedChartProps = useMemo(
         () =>
             Object.entries(chartTypeMap).map(([type, text]) => {
@@ -153,7 +148,7 @@ export const ExerciseChart = ({ exerciseName, data }: ExerciseChartProps) => {
                     </Text>
                 </ThemedPressable>
             </HStack>
-            <Chart lineChartStyles={styles.lineChart} getYLabel={() => ""} getXLabel={getXLabel} getDotContent={getDotContent} data={lineChartData} />
+            <Chart lineChartStyles={styles.lineChart} getYLabel={() => ""} getDotContent={getDotContent} data={lineChartData} />
             <ThemedBottomSheetModal title={t("progress_modal_title")} ref={ref}>
                 <VStack ghost style={styles.selectionModal}>
                     {mappedChartProps.map(({ onPress, title, chartType }) => (
