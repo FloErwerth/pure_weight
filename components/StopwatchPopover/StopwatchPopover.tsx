@@ -11,30 +11,59 @@ import { Temporal } from "@js-temporal/polyfill";
 import { noop } from "lodash";
 import { ThemedMaterialCommunityIcons } from "../Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
 import { AnimatedView } from "../Themed/AnimatedView/AnimatedView";
-
 import { getPauseTime } from "../../store/reducers/workout/workoutSelectors";
 
-let interval = setInterval(noop);
+const interval = setInterval(noop);
+
+const useStopwatchRefs = () => {
+    const fullStopwatchRef = useRef<StopwatchTimerMethods>(null);
+    const smallStopwatchRef = useRef<StopwatchTimerMethods>(null);
+
+    const start = useCallback(() => {
+        fullStopwatchRef.current?.play();
+        smallStopwatchRef.current?.play();
+    }, []);
+
+    const pause = useCallback(() => {
+        fullStopwatchRef.current?.pause();
+        smallStopwatchRef.current?.pause();
+    }, []);
+
+    const stop = useCallback(() => {
+        fullStopwatchRef.current?.reset();
+        smallStopwatchRef.current?.reset();
+    }, []);
+
+    const reset = useCallback(() => {
+        fullStopwatchRef.current?.reset();
+        smallStopwatchRef.current?.reset();
+    }, []);
+
+    const getSnapshot = useCallback(() => {
+        return fullStopwatchRef.current?.getSnapshot() ?? 0;
+    }, []);
+
+    return useMemo(() => ({ fullStopwatchRef, smallStopwatchRef, start, pause, stop, getSnapshot, reset }), []);
+};
 
 export const StopwatchPopover = () => {
     const currentPauseTime = useAppSelector(getPauseTime);
     const opacity = useRef(new Animated.Value(0)).current;
     const iconOpacity = useRef(new Animated.Value(1)).current;
-    const [trackedTime, setTrackedTime] = useState(0);
     const [timerStarted, setTimerStarted] = useState(false);
-    const [startingTime, setStartingTime] = useState<number>(0);
+    const [remainingTime, setRemainingTime] = useState<number>(0);
     const [timerPaused, setTimerPaused] = useState(false);
     const [timestamp, setTimestamp] = useState<number>(0);
     const [unmountTime, setUnmountTime] = useState<number>(0);
     const [showPopover, setShowPopover] = useState(false);
     const [buttonPos, setButtonPos] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
     const top = useRef(new Animated.Value(200)).current;
-    const stopwatchRef = useRef<StopwatchTimerMethods>(null);
+    const { fullStopwatchRef, smallStopwatchRef, start, stop, pause, getSnapshot, reset } = useStopwatchRefs();
     const buttonRef = useRef<View>(null);
     const { mainColor, inputFieldBackgroundColor, textDisabled } = useTheme();
 
     const handleTimerFinished = useCallback(() => {
-        if ((stopwatchRef.current?.getSnapshot() ?? 0) <= 30) {
+        if ((getSnapshot() ?? 0) <= 30) {
             clearInterval(interval);
             setTimerStarted(false);
             setTimerPaused(false);
@@ -43,33 +72,17 @@ export const StopwatchPopover = () => {
 
     useEffect(() => {
         if (!timerStarted && !timerPaused) {
-            setStartingTime(currentPauseTime);
+            setRemainingTime(currentPauseTime);
         }
     }, [timerPaused, timerStarted, currentPauseTime]);
-
-    useEffect(() => {
-        if (timerStarted && !showPopover) {
-            const currentTime = stopwatchRef.current?.getSnapshot();
-            if (currentTime !== undefined) {
-                setTrackedTime(currentTime);
-                const timeToStartCount = parseInt((currentTime / 1000).toString().split(".")[1]);
-                setTimeout(() => {
-                    setTrackedTime(stopwatchRef.current?.getSnapshot() ?? 0);
-                    interval = setInterval(() => {
-                        setTrackedTime(stopwatchRef.current?.getSnapshot() ?? 0);
-                    }, 1000);
-                }, timeToStartCount);
-            }
-        }
-    }, [showPopover, timerStarted]);
 
     const handleAppStateChange = useCallback(
         (state: AppState["currentState"]) => {
             if (timerStarted) {
                 if (state === "inactive") {
                     setTimestamp(Temporal.Now.instant().epochMilliseconds);
-                    setUnmountTime(stopwatchRef.current?.getSnapshot() ?? 0);
-                    stopwatchRef.current?.pause();
+                    setUnmountTime(getSnapshot() ?? 0);
+                    pause();
                 }
             }
             if (state === "active") {
@@ -79,24 +92,24 @@ export const StopwatchPopover = () => {
                     handleTimerFinished();
                     return;
                 }
-                setStartingTime(newTime);
+                setRemainingTime(newTime);
             }
         },
         [handleTimerFinished, timerStarted, timestamp, unmountTime],
     );
 
     useEffect(() => {
-        if (!timerStarted && showPopover && (stopwatchRef.current?.getSnapshot() ?? 0) <= 5) {
-            setStartingTime(currentPauseTime);
-            stopwatchRef.current?.reset();
+        if (!timerStarted && showPopover && (getSnapshot() ?? 0) <= 5) {
+            setRemainingTime(currentPauseTime);
+            reset();
         }
     }, [currentPauseTime, showPopover, timerStarted]);
 
     useEffect(() => {
         if (timerStarted) {
-            stopwatchRef.current?.play();
+            start();
         }
-    }, [startingTime, timerStarted]);
+    }, [remainingTime, timerStarted]);
 
     useEffect(() => {
         AppState.addEventListener("change", handleAppStateChange);
@@ -105,22 +118,22 @@ export const StopwatchPopover = () => {
     useEffect(() => {
         if (showPopover) {
             if (!timerStarted && timestamp && timestamp <= 0) {
-                setStartingTime(currentPauseTime);
+                setRemainingTime(currentPauseTime);
             }
         }
-    }, [currentPauseTime, timestamp, showPopover, startingTime, timerStarted]);
+    }, [currentPauseTime, timestamp, showPopover, remainingTime, timerStarted]);
 
     const toggleTimer = useCallback(() => {
         if (timerStarted) {
-            setTimestamp(stopwatchRef.current?.getSnapshot() ?? 0);
+            setTimestamp(getSnapshot() ?? 0);
             setTimerStarted(false);
-            stopwatchRef.current?.pause();
+            pause();
             clearInterval(interval);
             setTimerPaused(true);
         } else {
             setTimerPaused(false);
             setTimerStarted(true);
-            stopwatchRef.current?.play();
+            start();
         }
     }, [timerStarted]);
 
@@ -129,8 +142,8 @@ export const StopwatchPopover = () => {
     }, [showPopover]);
 
     const resetTimer = useCallback(() => {
-        stopwatchRef.current?.reset();
-        setStartingTime(currentPauseTime);
+        reset();
+        setRemainingTime(currentPauseTime);
         setTimerStarted(false);
         setTimerPaused(false);
         clearInterval(interval);
@@ -189,18 +202,18 @@ export const StopwatchPopover = () => {
     }, [buttonPos.y, getButtonPos, showPopover, top, buttonPos.x, opacity, iconOpacity, timerStarted]);
 
     const handleRewind15 = useCallback(() => {
-        const currentTimeMilliseconds = stopwatchRef.current?.getSnapshot();
+        const currentTimeMilliseconds = getSnapshot();
         if (currentTimeMilliseconds !== undefined) {
-            stopwatchRef.current?.reset();
-            setStartingTime(currentTimeMilliseconds + 15 * 1000);
+            reset();
+            setRemainingTime(currentTimeMilliseconds + 15 * 1000);
         }
     }, []);
 
     const handleFastForward15 = useCallback(() => {
-        const currentTimeMilliseconds = stopwatchRef.current?.getSnapshot();
+        const currentTimeMilliseconds = getSnapshot();
         if (currentTimeMilliseconds !== undefined) {
-            stopwatchRef.current?.reset();
-            setStartingTime(currentTimeMilliseconds - 15 * 1000);
+            reset();
+            setRemainingTime(currentTimeMilliseconds - 15 * 1000);
         }
     }, []);
 
@@ -223,10 +236,10 @@ export const StopwatchPopover = () => {
 
     const digitStyle = useMemo(() => [stopWatchStyles.digit, { color: mainColor }], [mainColor]);
 
-    const fastForwardDisabled = (startingTime ?? 0) <= 15000;
+    const fastForwardDisabled = (remainingTime ?? 0) <= 15000;
     const fastForwardColor = fastForwardDisabled ? textDisabled : mainColor;
 
-    if (currentPauseTime === -404 || startingTime === -404) {
+    if (currentPauseTime === -404 || remainingTime === -404) {
         return null;
     }
 
@@ -246,8 +259,8 @@ export const StopwatchPopover = () => {
                         mode="timer"
                         leadingZeros={2}
                         trailingZeros={0}
-                        initialTimeInMs={startingTime}
-                        ref={stopwatchRef}
+                        initialTimeInMs={remainingTime}
+                        ref={fullStopwatchRef}
                     />
                     <Pressable onPress={handleRewind15}>
                         <MaterialCommunityIcons size={40} color={mainColor} name="fast-forward-15" />
@@ -276,7 +289,8 @@ export const StopwatchPopover = () => {
                         mode="timer"
                         leadingZeros={2}
                         trailingZeros={0}
-                        initialTimeInMs={trackedTime}
+                        initialTimeInMs={remainingTime}
+                        ref={smallStopwatchRef}
                     />
                 </AnimatedView>
             </Button>
