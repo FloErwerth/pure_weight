@@ -68,7 +68,7 @@ export const StopwatchPopover = () => {
             setTimerStarted(false);
             setTimerPaused(false);
         }
-    }, []);
+    }, [getSnapshot]);
 
     useEffect(() => {
         if (!timerStarted && !timerPaused) {
@@ -95,7 +95,7 @@ export const StopwatchPopover = () => {
                 setRemainingTime(newTime);
             }
         },
-        [handleTimerFinished, timerStarted, timestamp, unmountTime],
+        [getSnapshot, handleTimerFinished, pause, timerStarted, timestamp, unmountTime],
     );
 
     useEffect(() => {
@@ -103,13 +103,13 @@ export const StopwatchPopover = () => {
             setRemainingTime(currentPauseTime);
             reset();
         }
-    }, [currentPauseTime, showPopover, timerStarted]);
+    }, [currentPauseTime, getSnapshot, reset, showPopover, timerStarted]);
 
     useEffect(() => {
         if (timerStarted) {
             start();
         }
-    }, [remainingTime, timerStarted]);
+    }, [remainingTime, start, timerStarted]);
 
     useEffect(() => {
         AppState.addEventListener("change", handleAppStateChange);
@@ -135,7 +135,7 @@ export const StopwatchPopover = () => {
             setTimerStarted(true);
             start();
         }
-    }, [timerStarted]);
+    }, [getSnapshot, pause, start, timerStarted]);
 
     const togglePopover = useCallback(() => {
         setShowPopover(!showPopover);
@@ -147,7 +147,7 @@ export const StopwatchPopover = () => {
         setTimerStarted(false);
         setTimerPaused(false);
         clearInterval(interval);
-    }, [currentPauseTime]);
+    }, [currentPauseTime, reset]);
 
     const getButtonPos = useCallback(() => {
         buttonRef.current?.measureInWindow((x, y) => {
@@ -207,7 +207,7 @@ export const StopwatchPopover = () => {
             reset();
             setRemainingTime(currentTimeMilliseconds + 15 * 1000);
         }
-    }, []);
+    }, [getSnapshot, reset]);
 
     const handleFastForward15 = useCallback(() => {
         const currentTimeMilliseconds = getSnapshot();
@@ -215,7 +215,7 @@ export const StopwatchPopover = () => {
             reset();
             setRemainingTime(currentTimeMilliseconds - 15 * 1000);
         }
-    }, []);
+    }, [getSnapshot, reset]);
 
     const animatedViewStyles = useMemo(
         () => ({
