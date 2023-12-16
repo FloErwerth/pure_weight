@@ -58,7 +58,7 @@ export const StopwatchPopover = () => {
     const [showPopover, setShowPopover] = useState(false);
     const [buttonPos, setButtonPos] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
     const top = useRef(new Animated.Value(200)).current;
-    const { fullStopwatchRef, smallStopwatchRef, start, stop, pause, getSnapshot, reset } = useStopwatchRefs();
+    const { fullStopwatchRef, smallStopwatchRef, start, pause, getSnapshot, reset } = useStopwatchRefs();
     const buttonRef = useRef<View>(null);
     const { mainColor, inputFieldBackgroundColor, textDisabled } = useTheme();
 
@@ -84,15 +84,15 @@ export const StopwatchPopover = () => {
                     setUnmountTime(getSnapshot() ?? 0);
                     pause();
                 }
-            }
-            if (state === "active") {
-                const timeDifference = Temporal.Now.instant().epochMilliseconds - timestamp;
-                const newTime = unmountTime - timeDifference;
-                if (unmountTime <= 0 || newTime <= 250) {
-                    handleTimerFinished();
-                    return;
+                if (state === "active") {
+                    const timeDifference = Temporal.Now.instant().epochMilliseconds - timestamp;
+                    const newTime = unmountTime - timeDifference;
+                    if (unmountTime <= 0 || newTime <= 250) {
+                        handleTimerFinished();
+                        return;
+                    }
+                    setRemainingTime(newTime);
                 }
-                setRemainingTime(newTime);
             }
         },
         [getSnapshot, handleTimerFinished, pause, timerStarted, timestamp, unmountTime],
