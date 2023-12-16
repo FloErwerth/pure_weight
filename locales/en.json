@@ -30,7 +30,8 @@
   "alert_delete_title": "Delete exercise?",
 
   "workout_deleted_title": "Workout successfully deleted",
-  "workout_deleted_message": "Undo the deletion",
+  "exercise_deleted_title": "Exercise successfully deleted",
+  "undo_message": "Undo the deletion",
   "edit_workout": "Edit workout",
   "create_workout": "Create workout",
   "workout_name": "Workout name",

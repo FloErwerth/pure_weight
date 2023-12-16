@@ -1,5 +1,5 @@
 import { Text } from "../../../components/Themed/ThemedText/Text";
-import { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import { useNavigate } from "../../../hooks/navigate";
 import { useAppDispatch, useAppSelector } from "../../../store";
 import { AddButton } from "../../../components/AddButton/AddButton";
@@ -24,6 +24,7 @@ import { cleanErrors, setError } from "../../../store/reducers/errors";
 import {
     createNewExercise,
     deleteExerciseFromEditedWorkout,
+    recoverExercise,
     saveEditedWorkout,
     setEditedExercise,
     setEditedWorkoutName,
@@ -34,6 +35,8 @@ import {
 import { getEditedWorkout } from "../../../store/reducers/workout/workoutSelectors";
 import { EditableExerciseModal } from "../../../components/EditableExerciseModal/EditableExerciseModal";
 import { ExerciseMetaData } from "../../../store/reducers/workout/types";
+import { BottomToast } from "../../../components/BottomToast/BottomToast";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 type MappedExercises = {
     onDelete: () => void;
@@ -46,14 +49,16 @@ type MappedExercises = {
 type RenderedItem = { index: number; exercise: ExerciseMetaData; onEdit: () => void; onDelete: () => void };
 export function Create() {
     const navigate = useNavigate();
+    const { bottom } = useSafeAreaInsets();
     const { t } = useTranslation();
     const [alertConfig, setAlertConfig] = useState<AlertConfig | undefined>(undefined);
     const editedWorkout = useAppSelector(getEditedWorkout);
     const title = useMemo(() => (editedWorkout ? t("edit_workout") : t("create_workout")), [editedWorkout, t]);
     const dispatch = useAppDispatch();
-    const [alertRef, openAlert, closeAlert] = useBottomSheetRef();
+    const [alertRef, _, closeAlert] = useBottomSheetRef();
     const [addRef, openAdd, closeAdd] = useBottomSheetRef();
     const [colorPickerRef, openPicker] = useBottomSheetRef();
+    const [showToast, setShowToast] = useState(false);
     const handleSetWorkoutName = useCallback(
         (value?: string) => {
             dispatch(setEditedWorkoutName(value));
@@ -90,10 +95,10 @@ export function Create() {
                     openAdd();
                 };
 
-                const handleConfirmDelete = () => {
-                    closeAlert();
+                const handleDelete = () => {
                     void Haptics.notificationAsync(NotificationFeedbackType.Success);
                     dispatch(deleteExerciseFromEditedWorkout(index));
+                    setShowToast(true);
                 };
 
                 const handleOnConfirmEdit = () => {
@@ -106,20 +111,10 @@ export function Create() {
                     closeAlert();
                     dispatch(setEditedExercise(undefined));
                 };
-
-                const onDelete = () => {
-                    setAlertConfig({
-                        title: t("alert_delete_title"),
-                        content: t("alert_delete_message"),
-                        onConfirm: handleConfirmDelete,
-                    });
-                    closeAdd();
-                    openAlert();
-                };
-                return { onDelete, handleCancel, onEdit, exercise, index, handleOnConfirmEdit };
+                return { onDelete: handleDelete, handleCancel, onEdit, exercise, index, handleOnConfirmEdit };
             }) ?? []
         );
-    }, [closeAdd, closeAlert, dispatch, editedWorkout?.workout.exercises, openAdd, openAlert, t]);
+    }, [closeAdd, closeAlert, dispatch, editedWorkout?.workout.exercises, openAdd]);
 
     const handleNavigateHome = useCallback(() => {
         handleCleanErrors();
@@ -187,8 +182,13 @@ export function Create() {
         [editedWorkout?.workout.exercises?.length],
     );
 
+    const handleRecoverExercise = useCallback(() => {
+        dispatch(recoverExercise());
+        setShowToast(false);
+    }, [dispatch]);
+
     return (
-        <>
+        <ThemedView stretch>
             <ThemedView background style={styles.innerWrapper}>
                 <SiteNavigationButtons handleBack={handleBackButton} handleConfirm={handleConfirm} titleFontSize={30} title={title} />
                 <PageContent safeBottom stretch style={styles.contentWrapper}>
@@ -216,9 +216,18 @@ export function Create() {
                     <AddButton onPress={handleAddExercise} />
                 </PageContent>
             </ThemedView>
+            <BottomToast
+                bottom={bottom}
+                padding={40}
+                onRequestClose={() => setShowToast(false)}
+                open={showToast}
+                messageKey={"undo_message"}
+                titleKey={"exercise_deleted_title"}
+                onRedo={handleRecoverExercise}
+            />
             <AlertModal reference={alertRef} onConfirm={alertConfig?.onConfirm} title={alertConfig?.title} content={alertConfig?.content} onCancel={closeAlert} />
             <EditableExerciseModal reference={addRef} />
             <ColorPickerModal reference={colorPickerRef} />
-        </>
+        </ThemedView>
     );
 }

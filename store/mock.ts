@@ -153,7 +153,7 @@ export const mockState: AppState = {
             {
                 name: "Real Chest",
                 calendarColor: "#ff0000",
-                exercises: [{ type: "WEIGHT_BASED", name: "Bankdrücken", weight: "50", sets: "5", pause: { seconds: "0", minutes: "2" }, reps: "5" }],
+                exercises: [{ type: "WEIGHT_BASED", name: "Bankdrücken", weight: "50", sets: "5", pause: { seconds: "3", minutes: "0" }, reps: "5" }],
                 doneWorkouts: [
                     {
                         timestamp: 1701385200000,
