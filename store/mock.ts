@@ -192,7 +192,7 @@ export const emptyState = {
         errors: [],
     },
     settingsState: {
-        stopwatchSettings: { startOnDoneSet: false, startOnLastSet: false },
+        stopwatchSettings: { startOnDoneSet: true, startOnLastSet: true },
         keepAwake: true,
         language: "en",
         theme: "light",
