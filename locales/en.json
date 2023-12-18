@@ -62,6 +62,10 @@
   "settings_workout_history_all": "Show all of my workouts",
   "settings_measurement_history_all": "Show all of my measurements",
 
+  "settings_keep_awake_title": "Keep display awake",
+  "settings_keep_awake": "Keep awake",
+  "settings_keep_not_awake": "Don't keep awake",
+
   "settings_measurement_history_entry_title": "Number of entries from measurements",
 
   "alert_delete_message": "This action can't be undone",

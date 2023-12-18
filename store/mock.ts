@@ -81,6 +81,7 @@ export const mockState: AppState = {
         ],
     },
     settingsState: {
+        keepAwake: true,
         theme: "dark",
         language: "en",
         unitSystem: "metric",
@@ -190,6 +191,7 @@ export const emptyState = {
         errors: [],
     },
     settingsState: {
+        keepAwake: true,
         language: "en",
         theme: "light",
         unitSystem: "metric",

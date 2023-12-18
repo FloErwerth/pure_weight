@@ -56,8 +56,9 @@
   "settings_entries_title": "Letzte Einträge",
   "settings_workout_history_all": "Zeige alle meine Workouts",
   "settings_measurement_history_all": "Zeige alle meine Messungen",
-
-
+  "settings_keep_awake_title": "Display aktiv halten",
+    "settings_keep_awake": "Aktiv halten",
+    "settings_keep_not_awake": "Nicht aktiv halten",
 
   "alert_delete_message": "Dies kann nicht rückgängig gemacht werden",
   "alert_quit_title": "Das Workout frühzeitig beenden?",
