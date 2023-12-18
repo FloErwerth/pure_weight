@@ -34,8 +34,14 @@ export const UnitSystemSection = () => {
     return (
         <ProfileContent title={t("settings_unit_system_title")}>
             <ThemedView style={selectionStyles.vStack}>
-                <SelectableSetting prependedExtraContent={kgIcon} selected={unitSystem === "metric"} onSelect={() => handleSelectWeightUnit("metric")} titleKey="unit_system_metric" />
-                <SelectableSetting prependedExtraContent={poundIcon} selected={unitSystem === "imperial"} onSelect={() => handleSelectWeightUnit("imperial")} titleKey="unit_system_imperial" />
+                <SelectableSetting position="TOP" prependedExtraContent={kgIcon} selected={unitSystem === "metric"} onSelect={() => handleSelectWeightUnit("metric")} titleKey="unit_system_metric" />
+                <SelectableSetting
+                    position="BOTTOM"
+                    prependedExtraContent={poundIcon}
+                    selected={unitSystem === "imperial"}
+                    onSelect={() => handleSelectWeightUnit("imperial")}
+                    titleKey="unit_system_imperial"
+                />
             </ThemedView>
         </ProfileContent>
     );

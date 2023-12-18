@@ -60,6 +60,10 @@
     "settings_keep_awake": "Aktiv halten",
     "settings_keep_not_awake": "Nicht aktiv halten",
 
+  "settings_stopwatch_title": "Stoppuhr",
+  "settings_stopwatch_done_set": "Autmatisch nach jedem Satz starten",
+  "settings_stopwatch_last_set": "Autmatisch nach dem letzten Satz starten",
+
   "alert_delete_message": "Dies kann nicht rückgängig gemacht werden",
   "alert_quit_title": "Das Workout frühzeitig beenden?",
   "alert_quit_message": "Der bisherige Fortschritt wird gespeichert",

@@ -28,8 +28,8 @@ export const KeepAwakeSelection = () => {
     return (
         <ProfileContent title={t("settings_keep_awake_title")}>
             <ThemedView style={selectionStyles.vStack}>
-                <SelectableSetting prependedExtraContent={awakeIcon} selected={awake} onSelect={() => handleSelectAwake(true)} titleKey="settings_keep_awake" />
-                <SelectableSetting prependedExtraContent={notAwakeIcon} selected={!awake} onSelect={() => handleSelectAwake(false)} titleKey="settings_keep_not_awake" />
+                <SelectableSetting position="TOP" prependedExtraContent={awakeIcon} selected={awake} onSelect={() => handleSelectAwake(true)} titleKey="settings_keep_awake" />
+                <SelectableSetting position="BOTTOM" prependedExtraContent={notAwakeIcon} selected={!awake} onSelect={() => handleSelectAwake(false)} titleKey="settings_keep_not_awake" />
             </ThemedView>
         </ProfileContent>
     );

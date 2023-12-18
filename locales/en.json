@@ -66,6 +66,10 @@
   "settings_keep_awake": "Keep awake",
   "settings_keep_not_awake": "Don't keep awake",
 
+  "settings_stopwatch_title": "Stopwatch",
+  "settings_stopwatch_done_set": "Automatically start on done set",
+  "settings_stopwatch_last_set": "Automatically start on last set",
+
   "settings_measurement_history_entry_title": "Number of entries from measurements",
 
   "alert_delete_message": "This action can't be undone",

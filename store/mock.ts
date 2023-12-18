@@ -81,6 +81,7 @@ export const mockState: AppState = {
         ],
     },
     settingsState: {
+        stopwatchSettings: { startOnDoneSet: false, startOnLastSet: false },
         keepAwake: true,
         theme: "dark",
         language: "en",
@@ -191,6 +192,7 @@ export const emptyState = {
         errors: [],
     },
     settingsState: {
+        stopwatchSettings: { startOnDoneSet: false, startOnLastSet: false },
         keepAwake: true,
         language: "en",
         theme: "light",

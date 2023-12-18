@@ -23,8 +23,8 @@ export const DevelopmentSelection = () => {
     return (
         <ProfileContent title={"Development"}>
             <ThemedView style={selectionStyles.vStack}>
-                <SelectableSetting selected={stateType === "mock"} onSelect={handleSelectMockState} titleKey="Mock state" />
-                <SelectableSetting selected={stateType === "empty"} onSelect={handleSelectEmptyState} titleKey="Empty state" />
+                <SelectableSetting position="TOP" selected={stateType === "mock"} onSelect={handleSelectMockState} titleKey="Mock state" />
+                <SelectableSetting position="BOTTOM" selected={stateType === "empty"} onSelect={handleSelectEmptyState} titleKey="Empty state" />
             </ThemedView>
         </ProfileContent>
     );

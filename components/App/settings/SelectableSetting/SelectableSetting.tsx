@@ -8,6 +8,8 @@ import { useTheme } from "../../../../theme/context";
 import { useTranslation } from "react-i18next";
 import { ThemedMaterialCommunityIcons } from "../../../Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
 import { SvgProps } from "react-native-svg";
+import * as Haptics from "expo-haptics";
+import { borderRadius } from "../../../../theme/border";
 
 export type Icon = {
     name: ComponentProps<typeof MaterialCommunityIcons>["name"];
@@ -19,11 +21,12 @@ export type SvgType = {
     size: number;
 };
 type SelectableSettingProps = {
-    prependedExtraContent?: Icon | SvgType;
-    appendedExtraContent?: Icon | SvgType;
     selected: boolean;
+    position?: "TOP" | "MIDDLE" | "BOTTOM";
     onSelect: () => void;
     titleKey: string;
+    prependedExtraContent?: Icon | SvgType;
+    appendedExtraContent?: Icon | SvgType;
     stretch?: boolean;
     center?: boolean;
     hint?: {
@@ -31,11 +34,27 @@ type SelectableSettingProps = {
         size: number;
     };
 };
-export function SelectableSetting({ appendedExtraContent, prependedExtraContent, onSelect, selected, titleKey, stretch, center, hint }: SelectableSettingProps) {
+
+export const usePositionStyles = (position: SelectableSettingProps["position"]) => {
+    return useMemo(() => {
+        switch (position) {
+            case "TOP":
+                return { borderTopLeftRadius: 10, borderTopRightRadius: 10 };
+            case "MIDDLE":
+                return {};
+            case "BOTTOM":
+                return { borderBottomLeftRadius: 10, borderBottomRightRadius: 10 };
+            default:
+                return { borderRadius };
+        }
+    }, [position]);
+};
+
+export function SelectableSetting({ position, appendedExtraContent, prependedExtraContent, onSelect, selected, titleKey, stretch, center, hint }: SelectableSettingProps) {
     const { secondaryColor } = useTheme();
     const { t } = useTranslation();
-
-    const wrapperStyles = useMemo(() => [styles.innerWrapper, selected && { borderColor: secondaryColor }, stretch && { flex: 1 }], [secondaryColor, selected, stretch]);
+    const positionStyles = usePositionStyles(position);
+    const wrapperStyles = useMemo(() => [positionStyles, styles.innerWrapper, selected && { borderColor: secondaryColor }, stretch && { flex: 1 }], [secondaryColor, selected, stretch]);
     const textStyles = useMemo(() => [styles.text, center && ({ textAlign: "center" } as const)], [center]);
     const PrependedExtraContent = useCallback(() => {
         if (!prependedExtraContent) {
@@ -56,8 +75,14 @@ export function SelectableSetting({ appendedExtraContent, prependedExtraContent,
         return <appendedExtraContent.Svg width={appendedExtraContent?.size ?? 24} height={appendedExtraContent?.size ?? 24} />;
     }, [appendedExtraContent, secondaryColor, selected]);
     const hintStyle = useMemo(() => ({ fontSize: hint ? hint.size : 0 }), [hint]);
+
+    const handleSelect = useCallback(() => {
+        void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+        onSelect();
+    }, [onSelect]);
+
     return (
-        <ThemedPressable input onPress={onSelect} style={wrapperStyles}>
+        <ThemedPressable input onPress={handleSelect} style={wrapperStyles}>
             <HStack input style={styles.outerStack}>
                 <PrependedExtraContent />
                 <HStack stretch ghost style={styles.innerStack}>

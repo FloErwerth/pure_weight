@@ -5,6 +5,8 @@ export const getSettingsState = ({ settingsState }: AppState) => settingsState;
 export const getThemeKey = createSelector([getSettingsState], (settings) => settings.theme);
 export const getLanguage = createSelector([getSettingsState], (settings) => settings.language ?? "en");
 export const getUnitSystem = createSelector([getSettingsState], (settings) => settings.unitSystem);
+export const getStartStopwatchOnDoneSet = createSelector([getSettingsState], (settings) => settings.stopwatchSettings?.startOnDoneSet);
+export const getStartStopwatchOnLastSet = createSelector([getSettingsState], (settings) => settings.stopwatchSettings?.startOnLastSet);
 export const getKeepAwake = createSelector([getSettingsState], (settings) => settings.keepAwake);
 const languageUnitSystemWeightUnitMap = {
     en: {

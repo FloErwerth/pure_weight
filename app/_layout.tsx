@@ -21,7 +21,7 @@ import { IsoDate } from "../types/date";
 import { setAppInstallDate } from "../store/reducers/metadata";
 import { getAppInstallDate } from "../store/reducers/metadata/metadataSelectors";
 import { Display } from "./settings/display";
-import { GeneralSettings } from "./settings/workout";
+import { GeneralSettings } from "./settings/generalSettings";
 import { MeasurementProgress } from "./measurements/progress";
 
 const Stack = createNativeStackNavigator();

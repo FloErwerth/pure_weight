@@ -4,13 +4,14 @@ import { ThemeKey } from "../../../theme/types";
 import { activateKeepAwakeAsync, deactivateKeepAwake } from "expo-keep-awake";
 
 export type NumberEntries = "10" | "25" | "100" | "ALL";
-export type SettingsState = { language: Language; theme: ThemeKey; unitSystem: UnitSystem; keepAwake: boolean };
-
+export type StopwatchSettings = { startOnDoneSet: boolean; startOnLastSet: boolean };
+export type SettingsState = { language: Language; theme: ThemeKey; unitSystem: UnitSystem; keepAwake: boolean; stopwatchSettings: StopwatchSettings };
 export const setSettingsState = createAction<SettingsState, "settings_set_state">("settings_set_state");
 export const setKeepAwake = createAction<boolean, "settings_keep_awake">("settings_keep_awake");
 export const setLanguage = createAction<Language, "settings_set_language">("settings_set_language");
 export const setTheme = createAction<ThemeKey, "theme_set">("theme_set");
 export const setUnitSystem = createAction<UnitSystem, "set_unit_system">("set_unit_system");
+export const setStopwatchSettings = createAction<Partial<StopwatchSettings>, "set_stopwatch_settings">("set_stopwatch_settings");
 
 export type SettingsAction = typeof setSettingsState.type | typeof setLanguage.type | typeof setTheme.type | typeof setUnitSystem.type | typeof setKeepAwake.type;
 
@@ -20,11 +21,15 @@ export const settingsRecuder = createReducer<SettingsState>(
         language: "en",
         unitSystem: "metric",
         keepAwake: true,
+        stopwatchSettings: { startOnDoneSet: false, startOnLastSet: false },
     },
     (builder) => {
         builder
             .addCase(setSettingsState, (_, action) => {
                 return action.payload;
+            })
+            .addCase(setStopwatchSettings, (state, action) => {
+                state.stopwatchSettings = { ...state.stopwatchSettings, ...action.payload };
             })
             .addCase(setKeepAwake, (state, action) => {
                 if (action.payload) {

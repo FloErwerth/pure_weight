@@ -5,7 +5,7 @@ import { DevelopmentSelection } from "../../components/App/settings/components/S
 import { ThemedView } from "../../components/Themed/ThemedView/View";
 import { ScrollView } from "react-native";
 import { Display } from "./display";
-import { GeneralSettings } from "./workout";
+import { GeneralSettings } from "./generalSettings";
 
 const isProduction = process.env["EXPO_PUBLIC_IS_PRODUCTION"] === "true";
 

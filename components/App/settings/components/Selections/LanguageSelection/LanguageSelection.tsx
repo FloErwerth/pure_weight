@@ -41,8 +41,8 @@ export const LanguageSelection = () => {
     return (
         <ProfileContent title={t("settings_language")}>
             <VStack style={selectionStyles.vStack}>
-                <SelectableSetting prependedExtraContent={germanSvg} selected={isGerman} onSelect={() => handleSelectLanguage("de")} titleKey="settings_language_german" />
-                <SelectableSetting prependedExtraContent={americanSvg} selected={!isGerman} onSelect={() => handleSelectLanguage("en")} titleKey="settings_language_english" />
+                <SelectableSetting position="TOP" prependedExtraContent={germanSvg} selected={isGerman} onSelect={() => handleSelectLanguage("de")} titleKey="settings_language_german" />
+                <SelectableSetting position="BOTTOM" prependedExtraContent={americanSvg} selected={!isGerman} onSelect={() => handleSelectLanguage("en")} titleKey="settings_language_english" />
             </VStack>
         </ProfileContent>
     );
