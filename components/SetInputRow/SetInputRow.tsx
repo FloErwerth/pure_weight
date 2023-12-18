@@ -11,8 +11,9 @@ import { useTheme } from "../../theme/context";
 import { AppState, useAppDispatch, useAppSelector } from "../../store";
 import * as Haptics from "expo-haptics";
 import { handleMutateSet, markSetAsDone } from "../../store/reducers/workout";
-import { getSetData } from "../../store/reducers/workout/workoutSelectors";
+import { getIsLastSet, getSetData } from "../../store/reducers/workout/workoutSelectors";
 import { ThemedPressable } from "../Themed/Pressable/Pressable";
+import { emitter } from "../../utils/event";
 
 interface SetInputRowProps {
     setIndex: number;
@@ -23,6 +24,7 @@ interface SetInputRowProps {
 export const SetInputRow = ({ setIndex, exerciseIndex, isActiveSet }: SetInputRowProps) => {
     const { primaryColor, mainColor, secondaryBackgroundColor, componentBackgroundColor, inputFieldBackgroundColor, textDisabled } = useTheme();
     const data = useAppSelector((state: AppState) => getSetData(state, setIndex))?.[exerciseIndex];
+    const isLastSetGetter = useAppSelector((state: AppState) => getIsLastSet(state, exerciseIndex));
     const { weight, reps, isEditable, isConfirmed } = data ?? {};
     const dispatch = useAppDispatch();
 
@@ -47,8 +49,14 @@ export const SetInputRow = ({ setIndex, exerciseIndex, isActiveSet }: SetInputRo
             dispatch(handleMutateSet({ setIndex, key: "weight", value: weight }));
             dispatch(handleMutateSet({ setIndex, key: "reps", value: reps }));
             dispatch(markSetAsDone({ setIndex }));
+
+            if (isLastSetGetter(setIndex)) {
+                emitter.emit("workoutLastSet");
+            } else {
+                emitter.emit("workoutDoneSet");
+            }
         }
-    }, [dispatch, reps, setIndex, weight]);
+    }, [isLastSetGetter, dispatch, reps, setIndex, weight]);
 
     const activeStackStyles = useMemo(() => {
         return { backgroundColor: isActiveSet ? inputFieldBackgroundColor : "transparent" };

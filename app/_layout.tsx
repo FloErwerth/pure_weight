@@ -23,6 +23,7 @@ import { getAppInstallDate } from "../store/reducers/metadata/metadataSelectors"
 import { Display } from "./settings/display";
 import { GeneralSettings } from "./settings/generalSettings";
 import { MeasurementProgress } from "./measurements/progress";
+import { LogBox } from "react-native";
 
 const Stack = createNativeStackNavigator();
 
@@ -35,7 +36,7 @@ const ThemedApp = () => {
             dispatch(setAppInstallDate(date as IsoDate));
         });
     }
-
+    LogBox.ignoreAllLogs(true);
     return (
         <NavigationContainer ref={navigationRef} independent={true}>
             <GestureHandlerRootView style={{ flex: 1 }}>

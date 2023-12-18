@@ -43,9 +43,9 @@ export function Workouts() {
         [dispatch],
     );
 
-    const onClick = useCallback(
-        (index: number) => {
-            dispatch(startWorkout(index));
+    const handleStartWorkout = useCallback(
+        (workoutIndex: number) => {
+            dispatch(startWorkout(workoutIndex));
             navigate("train");
         },
         [dispatch, navigate],
@@ -57,12 +57,12 @@ export function Workouts() {
 
     const mappedWorkouts = useMemo(
         () =>
-            savedWorkouts.map(({ name }, index) => (
-                <Swipeable key={name.concat(index.toString())} onClick={() => onClick(index)} onDelete={() => onDelete(index)} onEdit={() => onEdit(index)}>
-                    <RenderedWorkout index={index} />
+            savedWorkouts.map(({ name }, workoutIndex) => (
+                <Swipeable key={name.concat(workoutIndex.toString())} onClick={() => handleStartWorkout(workoutIndex)} onDelete={() => onDelete(workoutIndex)} onEdit={() => onEdit(workoutIndex)}>
+                    <RenderedWorkout index={workoutIndex} />
                 </Swipeable>
             )),
-        [savedWorkouts, onClick, onDelete, onEdit],
+        [savedWorkouts, handleStartWorkout, onDelete, onEdit],
     );
 
     return (

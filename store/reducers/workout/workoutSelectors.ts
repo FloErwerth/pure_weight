@@ -36,6 +36,10 @@ export const getWorkoutByIndex = createSelector([getWorkouts, (workouts, index: 
 export const getEditedWorkoutName = createSelector([getEditedWorkout], (editedWorkout) => editedWorkout?.workout?.name);
 
 export const getWorkoutExercises = createSelector([getEditedWorkout], (editedWorkout) => editedWorkout?.workout?.exercises);
+export const getExercisesFromIndex = createSelector(
+    [getTrainedWorkout, (trainedWorkout, exerciseIndex: number) => exerciseIndex],
+    (trainedWorkout, exerciseIndex) => trainedWorkout?.workout?.exercises[exerciseIndex],
+);
 
 type SortedData = { exerciseName: string; data: { sets: ExerciseSets; date: IsoDate }[] };
 
@@ -132,6 +136,19 @@ export const getPreviousTraining = createSelector([getEditedWorkout, getLanguage
         });
     }
     return foundEntries.get(editedWorkout?.workout.exercises[exerciseIndex].name);
+});
+export const getIsLastSet = createSelector([getTrainedWorkout, (trainedWorkout, exerciseIndex: number) => exerciseIndex], (trainedWorkout, exerciseIndex) => {
+    return (setIndex: number) => {
+        const exercise = trainedWorkout?.workout.exercises[exerciseIndex];
+        if (!exercise) {
+            return false;
+        }
+        const parsedSets = parseFloat(exercise.sets);
+        if (isNaN(parsedSets)) {
+            return false;
+        }
+        return parseFloat(exercise.sets) - 1 === setIndex;
+    };
 });
 export const getOverallTrainingTrend = createSelector([getWorkouts, (workouts, index: number) => index], (workouts, index) => {
     const workout = workouts[index];

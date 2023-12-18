@@ -43,7 +43,6 @@ export const saveEditedWorkout = createAction("workout_save_edited_workout");
 export const setEditedWorkoutName = createAction<string | undefined, "workout_set_edited_workout_name">("workout_set_edited_workout_name");
 export const handleMutateSet = createAction<{ setIndex: number; key: keyof WeightBasedExerciseData; value?: string | boolean }, "handle_mutate_set">("handle_mutate_set");
 export const markSetAsDone = createAction<{ setIndex: number }, "mark_set_as_done">("mark_set_as_done");
-export const setActiveSetIndex = createAction<{ setIndex: number }, "set_active_set_index">("set_active_set_index");
 export const setColor = createAction<string, "set_color">("set_color");
 
 export type WorkoutAction =
@@ -109,11 +108,6 @@ export const workoutReducer = createReducer<WorkoutState>({ workouts: [], sortin
                         state.editedExercise = { exercise: workout.exercises[action.payload.index], index: action.payload.index, isTrained: action.payload.isTrained };
                     }
                 }
-            }
-        })
-        .addCase(setActiveSetIndex, (state, action) => {
-            if (state.trainedWorkout) {
-                state.trainedWorkout.exerciseData[state.trainedWorkout.activeExerciseIndex].activeSetIndex = action.payload.setIndex;
             }
         })
         .addCase(handleMutateSet, (state, action) => {

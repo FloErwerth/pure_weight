@@ -13,7 +13,7 @@ import { TrainingHeader } from "../../TrainingHeader/TrainingHeader";
 import { SetInputRow } from "../../../../SetInputRow/SetInputRow";
 import { AppState, useAppSelector } from "../../../../../store";
 import { useBottomSheetRef } from "../../../../BottomSheetModal/ThemedBottomSheetModal";
-import { getActiveSetIndex, getWorkoutExercises } from "../../../../../store/reducers/workout/workoutSelectors";
+import { getActiveSetIndex, getExercisesFromIndex } from "../../../../../store/reducers/workout/workoutSelectors";
 
 interface WeightBasedExerciseProps {
     exerciseIndex: number;
@@ -23,7 +23,7 @@ export const Exercise = ({ exerciseIndex }: WeightBasedExerciseProps) => {
     const [editNoteModalRef, open, close] = useBottomSheetRef();
     const showEditNoteModalTitleStyle = useMemo(() => ({ padding: 10, paddingHorizontal: 15, alignSelf: "center" }) as const, []);
     const { mainColor, componentBackgroundColor } = useTheme();
-    const exercises = useAppSelector(getWorkoutExercises);
+    const exerciseData = useAppSelector((state: AppState) => getExercisesFromIndex(state, exerciseIndex));
     const activeSetIndex = useAppSelector((state: AppState) => getActiveSetIndex(state, exerciseIndex));
     const id = useId();
     const hideNoteModal = useCallback(() => {
@@ -36,10 +36,10 @@ export const Exercise = ({ exerciseIndex }: WeightBasedExerciseProps) => {
 
     const mappedSets = useMemo(
         () =>
-            Array(parseFloat(exercises?.[exerciseIndex].sets ?? "0"))
+            Array(parseFloat(exerciseData?.sets ?? "0"))
                 .fill(undefined)
                 .map((_, setIndex) => ({ isActiveSet: setIndex === activeSetIndex })),
-        [activeSetIndex, exerciseIndex, exercises],
+        [activeSetIndex, exerciseIndex, exerciseData],
     );
 
     return (

@@ -12,6 +12,8 @@ import { noop } from "lodash";
 import { ThemedMaterialCommunityIcons } from "../Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
 import { AnimatedView } from "../Themed/AnimatedView/AnimatedView";
 import { getPauseTime } from "../../store/reducers/workout/workoutSelectors";
+import { getStopwatchSettings } from "../../store/reducers/settings/settingsSelectors";
+import { emitter } from "../../utils/event";
 
 const interval = setInterval(noop);
 
@@ -61,6 +63,7 @@ export const StopwatchPopover = () => {
     const { fullStopwatchRef, smallStopwatchRef, start, pause, getSnapshot, reset } = useStopwatchRefs();
     const buttonRef = useRef<View>(null);
     const { mainColor, inputFieldBackgroundColor, textDisabled } = useTheme();
+    const { startOnDoneSet, startOnLastSet } = useAppSelector(getStopwatchSettings);
 
     const handleTimerFinished = useCallback(() => {
         if ((getSnapshot() ?? 0) <= 30) {
@@ -110,6 +113,29 @@ export const StopwatchPopover = () => {
             start();
         }
     }, [remainingTime, start, timerStarted]);
+
+    const handleDoneSetCallback = useCallback(() => {
+        if (startOnDoneSet && !timerStarted) {
+            toggleTimer();
+        }
+    }, [startOnDoneSet]);
+
+    const handleLastSetCallback = useCallback(() => {
+        if (startOnLastSet) {
+            reset();
+            start();
+        }
+    }, [startOnLastSet]);
+
+    useEffect(() => {
+        emitter.addListener("workoutDoneSet", handleDoneSetCallback);
+        emitter.addListener("workoutLastSet", handleLastSetCallback);
+
+        return () => {
+            emitter.removeListener("workoutDoneSet", handleDoneSetCallback);
+            emitter.removeListener("workoutLastSet", handleLastSetCallback);
+        };
+    }, [handleDoneSetCallback, handleLastSetCallback]);
 
     useEffect(() => {
         AppState.addEventListener("change", handleAppStateChange);

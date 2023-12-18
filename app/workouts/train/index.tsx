@@ -16,9 +16,6 @@ import { useBottomSheetRef } from "../../../components/BottomSheetModal/ThemedBo
 import { addDoneWorkout, resetTrainedWorkout, setActiveExerciseIndex } from "../../../store/reducers/workout";
 
 import { getHasAnyTrainedWorkoutData, getIsDoneWithTraining, getTrainedWorkout } from "../../../store/reducers/workout/workoutSelectors";
-import { WeightBasedExerciseData } from "../../../store/reducers/workout/types";
-
-export type DoneExercises = Map<number, { note?: string; sets: Map<number, WeightBasedExerciseData> }>;
 
 export function Train() {
     const { bottom } = useSafeAreaInsets();
