@@ -23,8 +23,8 @@ const TIME = 5000;
 const TIME_STEP = 50;
 const TIME_PERCENTAGE = (TIME_STEP / TIME) * 100;
 
-export const BottomToast = ({ titleKey, messageKey, onRedo, open, onRequestClose, bottom = 0, padding = 0 }: BottomToastProps) => {
-    const timer = useRef<NodeJS.Timeout | undefined>(undefined);
+export const BottomToast = ({ titleKey, messageKey, onRedo, open, onRequestClose, bottom = 0, padding = 20 }: BottomToastProps) => {
+    const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
     const { t } = useTranslation();
     const [percent, setPercent] = useState(100);
     const animatedPercent = useSharedValue(100);
@@ -75,8 +75,7 @@ export const BottomToast = ({ titleKey, messageKey, onRedo, open, onRequestClose
                         padding: 20,
                         marginHorizontal: padding / 2,
                         width: deviceWidth - padding,
-                        borderTopStartRadius: borderRadius,
-                        borderTopEndRadius: borderRadius,
+                        borderRadius,
                     }}
                 >
                     <Text ghost style={{ fontSize: 20, textAlign: "center", fontWeight: "bold" }}>

@@ -11,12 +11,13 @@ import { RenderedWorkout } from "../../components/App/workout/RenderedWorkout";
 import { PageContent } from "../../components/PageContent/PageContent";
 import { Swipeable } from "../../components/WorkoutCard/Swipeable";
 import { BottomToast } from "../../components/BottomToast/BottomToast";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export function Workouts() {
     const dispatch = useAppDispatch();
     const { t } = useTranslation();
     const [showToast, setShowToast] = useState(false);
-
+    const { bottom } = useSafeAreaInsets();
     const savedWorkouts = useAppSelector(getWorkouts);
     const navigate = useNavigate();
 
@@ -69,10 +70,17 @@ export function Workouts() {
         <ThemedView stretch background>
             <SiteNavigationButtons titleFontSize={40} title={t("workouts")} handleConfirmIcon={confirmIcon} handleConfirm={handleCreateWorkout} />
             <WorkoutSorting />
-            <PageContent ignoreGap paddingTop={20}>
+            <PageContent ignoreGap stretch paddingTop={20}>
                 {mappedWorkouts}
             </PageContent>
-            <BottomToast onRequestClose={() => setShowToast(false)} open={showToast} messageKey={"workout_deleted_message"} titleKey={"workout_deleted_title"} onRedo={handleRecoverWorkout} />
+            <BottomToast
+                bottom={5}
+                onRequestClose={() => setShowToast(false)}
+                open={showToast}
+                messageKey={"workout_deleted_message"}
+                titleKey={"workout_deleted_title"}
+                onRedo={handleRecoverWorkout}
+            />
         </ThemedView>
     );
 }
