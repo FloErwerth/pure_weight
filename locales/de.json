@@ -57,8 +57,8 @@
   "settings_workout_history_all": "Zeige alle meine Workouts",
   "settings_measurement_history_all": "Zeige alle meine Messungen",
   "settings_keep_awake_title": "Display aktiv halten",
-    "settings_keep_awake": "Aktiv halten",
-    "settings_keep_not_awake": "Nicht aktiv halten",
+  "settings_keep_awake": "Aktiv halten",
+  "settings_keep_not_awake": "Nicht aktiv halten",
 
   "settings_stopwatch_title": "Stoppuhr",
   "settings_stopwatch_done_set": "Automatisch nach jedem Satz starten",
