@@ -1,4 +1,3 @@
-import { ProfileContent } from "../../SettingsSection/SettingsNavigator";
 import { VStack } from "../../../../../Stack/VStack/VStack";
 import { useTranslation } from "react-i18next";
 import { useCallback, useMemo } from "react";
@@ -11,6 +10,7 @@ import AmericanFlag from "../../../../../../media/icons/UsaFlag.svg";
 import { getLanguage } from "../../../../../../store/reducers/settings/settingsSelectors";
 import { SelectableSetting, SvgType } from "../../../SelectableSetting/SelectableSetting";
 import { selectionStyles } from "../../selectionStyles";
+import { ProfileContent } from "../../ProfileContent/ProfileContent";
 
 const germanSvg: SvgType = {
     Svg: GermanFlag,

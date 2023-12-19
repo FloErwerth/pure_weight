@@ -1,4 +1,3 @@
-import { ProfileContent } from "../../SettingsSection/SettingsNavigator";
 import { ThemedView } from "../../../../../Themed/ThemedView/View";
 import { selectionStyles } from "../../selectionStyles";
 import { Icon, SelectableSetting } from "../../../SelectableSetting/SelectableSetting";
@@ -7,6 +6,7 @@ import { useAppDispatch, useAppSelector } from "../../../../../../store";
 import { getKeepAwake } from "../../../../../../store/reducers/settings/settingsSelectors";
 import { setKeepAwake } from "../../../../../../store/reducers/settings";
 import { useTranslation } from "react-i18next";
+import { ProfileContent } from "../../ProfileContent/ProfileContent";
 
 const awakeIcon: Icon = {
     name: "lightbulb-on",
@@ -21,9 +21,12 @@ export const KeepAwakeSelection = () => {
     const { t } = useTranslation();
     const dispatch = useAppDispatch();
     const awake = useAppSelector(getKeepAwake);
-    const handleSelectAwake = useCallback((awake: boolean) => {
-        dispatch(setKeepAwake(awake));
-    }, []);
+    const handleSelectAwake = useCallback(
+        (awake: boolean) => {
+            dispatch(setKeepAwake(awake));
+        },
+        [dispatch],
+    );
 
     return (
         <ProfileContent title={t("settings_keep_awake_title")}>

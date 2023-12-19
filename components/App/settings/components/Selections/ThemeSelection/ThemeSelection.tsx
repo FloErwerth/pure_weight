@@ -1,5 +1,4 @@
 import { Appearance } from "react-native";
-import { ProfileContent } from "../../SettingsSection/SettingsNavigator";
 import { useTranslation } from "react-i18next";
 import { useAppDispatch, useAppSelector } from "../../../../../../store";
 import { useCallback, useState } from "react";
@@ -10,6 +9,7 @@ import { getThemeKey } from "../../../../../../store/reducers/settings/settingsS
 import { Icon, SelectableSetting } from "../../../SelectableSetting/SelectableSetting";
 import { ThemedView } from "../../../../../Themed/ThemedView/View";
 import { selectionStyles } from "../../selectionStyles";
+import { ProfileContent } from "../../ProfileContent/ProfileContent";
 
 const dark: Icon = {
     name: "weather-night",

@@ -20,8 +20,8 @@ import DeviceInfo from "react-native-device-info";
 import { IsoDate } from "../types/date";
 import { setAppInstallDate } from "../store/reducers/metadata";
 import { getAppInstallDate } from "../store/reducers/metadata/metadataSelectors";
-import { Display } from "./settings/display";
-import { GeneralSettings } from "./settings/generalSettings";
+import { Display } from "../components/App/settings/Sections/display";
+import { GeneralSettings } from "../components/App/settings/Sections/generalSettings";
 import { MeasurementProgress } from "./measurements/progress";
 import { LogBox } from "react-native";
 

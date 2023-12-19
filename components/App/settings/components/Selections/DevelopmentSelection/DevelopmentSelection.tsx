@@ -1,4 +1,3 @@
-import { ProfileContent } from "../../SettingsSection/SettingsNavigator";
 import { useAppDispatch, useAppSelector } from "../../../../../../store";
 import { useCallback } from "react";
 
@@ -7,6 +6,7 @@ import { ThemedView } from "../../../../../Themed/ThemedView/View";
 import { setEmptyState, setMockState } from "../../../../../../store/reducers/metadata";
 import { getStateType } from "../../../../../../store/reducers/metadata/metadataSelectors";
 import { selectionStyles } from "../../selectionStyles";
+import { ProfileContent } from "../../ProfileContent/ProfileContent";
 
 export const DevelopmentSelection = () => {
     const dispatch = useAppDispatch();

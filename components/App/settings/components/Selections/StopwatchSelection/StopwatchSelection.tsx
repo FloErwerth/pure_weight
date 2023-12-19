@@ -1,12 +1,12 @@
 import { useTranslation } from "react-i18next";
 import { useAppDispatch, useAppSelector } from "../../../../../../store";
 import { useCallback } from "react";
-import { ProfileContent } from "../../SettingsSection/SettingsNavigator";
 import { VStack } from "../../../../../Stack/VStack/VStack";
 import { selectionStyles } from "../../selectionStyles";
 import { setStopwatchSettings } from "../../../../../../store/reducers/settings";
 import { getStartStopwatchOnDoneSet, getStartStopwatchOnLastSet } from "../../../../../../store/reducers/settings/settingsSelectors";
 import { SelectableSetting } from "../../../SelectableSetting/SelectableSetting";
+import { ProfileContent } from "../../ProfileContent/ProfileContent";
 
 export const StopwatchSelection = () => {
     const { t } = useTranslation();
