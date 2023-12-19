@@ -11,13 +11,11 @@ import { RenderedWorkout } from "../../components/App/workout/RenderedWorkout";
 import { PageContent } from "../../components/PageContent/PageContent";
 import { Swipeable } from "../../components/WorkoutCard/Swipeable";
 import { BottomToast } from "../../components/BottomToast/BottomToast";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export function Workouts() {
     const dispatch = useAppDispatch();
     const { t } = useTranslation();
     const [showToast, setShowToast] = useState(false);
-    const { bottom } = useSafeAreaInsets();
     const savedWorkouts = useAppSelector(getWorkouts);
     const navigate = useNavigate();
 

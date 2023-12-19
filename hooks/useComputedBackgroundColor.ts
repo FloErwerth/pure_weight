@@ -6,6 +6,7 @@ export interface ComputedBackgroundColorProps {
     ghost?: boolean;
     input?: boolean;
     background?: boolean;
+    link?: boolean;
 }
 export const useComputedBackgroundColor = (props: ComputedBackgroundColorProps) => {
     const { componentBackgroundColor, secondaryBackgroundColor, backgroundColor, inputFieldBackgroundColor } = useTheme();
@@ -14,7 +15,7 @@ export const useComputedBackgroundColor = (props: ComputedBackgroundColorProps) 
         if (props.background) {
             return backgroundColor;
         }
-        if (props.ghost) {
+        if (props.ghost || props.link) {
             return "transparent";
         }
         if (props.secondary) {
@@ -24,14 +25,5 @@ export const useComputedBackgroundColor = (props: ComputedBackgroundColorProps) 
             return inputFieldBackgroundColor;
         }
         return componentBackgroundColor;
-    }, [
-        backgroundColor,
-        componentBackgroundColor,
-        inputFieldBackgroundColor,
-        props.background,
-        props.ghost,
-        props.input,
-        props.secondary,
-        secondaryBackgroundColor,
-    ]);
+    }, [backgroundColor, componentBackgroundColor, inputFieldBackgroundColor, props.background, props.ghost, props.input, props.secondary, secondaryBackgroundColor]);
 };

@@ -1,4 +1,4 @@
-import React, { forwardRef, PropsWithChildren, useCallback, useMemo, useRef } from "react";
+import React, { forwardRef, PropsWithChildren, RefObject, useCallback, useEffect, useMemo, useRef } from "react";
 import { Keyboard, ViewStyle } from "react-native";
 import { Text } from "../Themed/ThemedText/Text";
 import { HStack } from "../Stack/HStack/HStack";
@@ -19,6 +19,7 @@ export interface ThemedBottomSheetModalProps extends PropsWithChildren {
     allowSwipeDownToClose?: boolean;
 }
 
+const refs: RefObject<BottomSheetModal>[] = [];
 export const useBottomSheetRef = () => {
     const ref = useRef<BottomSheetModal>(null);
     const handleOpen = useCallback(() => {
@@ -30,7 +31,18 @@ export const useBottomSheetRef = () => {
         ref.current?.close();
     }, []);
 
-    return [ref, handleOpen, handleClose] as const;
+    const closeAll = useCallback(() => {
+        refs.forEach((ref) => ref.current?.close());
+    }, []);
+
+    useEffect(() => {
+        refs.push(ref);
+        return () => {
+            refs.splice(refs.indexOf(ref), 1);
+        };
+    }, []);
+
+    return [ref, handleOpen, handleClose, closeAll] as const;
 };
 
 const defaultSnapshots = ["50%", "50%", "100%"];
@@ -70,7 +82,7 @@ export const ThemedBottomSheetModal = forwardRef<BottomSheetModal, ThemedBottomS
             >
                 <HStack ghost style={styles.wrapper}>
                     {title && (
-                        <Text input placeholder style={styles.title}>
+                        <Text input style={styles.title}>
                             {title}
                         </Text>
                     )}

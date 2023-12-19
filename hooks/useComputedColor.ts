@@ -7,6 +7,7 @@ interface ComputedColorProps {
     warning?: boolean;
     placeholder?: boolean;
     textBackground?: boolean;
+    link?: boolean;
 }
 export const useComputedColor = (props: ComputedColorProps) => {
     const { errorColor, textDisabled, warningColor, secondaryColor, mainColor, backgroundColor } = useTheme();
@@ -14,6 +15,9 @@ export const useComputedColor = (props: ComputedColorProps) => {
     return useMemo(() => {
         if (props.error) {
             return errorColor;
+        }
+        if (props.link) {
+            return "#777799";
         }
         if (props.textBackground) {
             return backgroundColor;
@@ -28,5 +32,5 @@ export const useComputedColor = (props: ComputedColorProps) => {
             return secondaryColor;
         }
         return mainColor;
-    }, [backgroundColor, errorColor, mainColor, props.disabled, props.error, props.placeholder, props.textBackground, props.warning, secondaryColor, textDisabled, warningColor]);
+    }, [backgroundColor, errorColor, mainColor, props.disabled, props.error, props.link, props.placeholder, props.textBackground, props.warning, secondaryColor, textDisabled, warningColor]);
 };

@@ -2,7 +2,7 @@ import { createNavigationContainerRef } from "@react-navigation/native";
 
 export const Routes = {
     workouts: {
-        screen: "tabs",
+        screen: "tabs/workouts",
     },
     train: {
         screen: "workouts/train/index",
@@ -17,19 +17,25 @@ export const Routes = {
         screen: "progress/chart/index",
     },
     settings: {
-        screen: "tabs",
+        screen: "tabs/settings",
+    },
+    "settings/help/faqs": {
+        screen: "settings/help/faqs/index",
+    },
+    "settings/help/workouts": {
+        screen: "settings/help/workouts/index",
+    },
+    "settings/help/measurements": {
+        screen: "settings/help/measurements/index",
     },
     history: {
         screen: "workouts/workoutHistory/index",
     },
     measurements: {
-        screen: "tabs",
+        screen: "tabs/measurements",
     },
     display: {
         screen: "settings/display/index",
-    },
-    "workout/settings": {
-        screen: "settings/workout/index",
     },
     entries: {
         screen: "settings/statistics/entries/index",

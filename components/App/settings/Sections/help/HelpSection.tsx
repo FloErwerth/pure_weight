@@ -6,8 +6,9 @@ export const HelpSection = () => {
     return (
         <PageContent paddingTop={30}>
             <ProfileContent title="Hilfe">
-                <SettingsNavigator title={"Workouts"} />
-                <SettingsNavigator title={"Measurements"} />
+                <SettingsNavigator page={"settings/help/faqs"} title={"FAQs"} />
+                <SettingsNavigator page={"settings/help/workouts"} title={"Workouts"} />
+                <SettingsNavigator page={"settings/help/measurements"} title={"Measurements"} />
             </ProfileContent>
         </PageContent>
     );

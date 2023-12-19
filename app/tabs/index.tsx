@@ -33,7 +33,7 @@ export function TabsWrapper() {
                         tabBarActiveTintColor: mainColor,
                         tabBarInactiveTintColor: secondaryColor,
                     }}
-                    name="workouts"
+                    name="tabs/workouts"
                 />
                 <Tabs.Screen
                     component={Measurements}
@@ -44,7 +44,7 @@ export function TabsWrapper() {
                         tabBarButton: TabBarButton,
                         tabBarLabel: ({ focused }) => <TabBarLabel focused={focused} title={t("measurements")} />,
                     }}
-                    name="measurements"
+                    name="tabs/measurements"
                 />
                 <Tabs.Screen
                     component={Settings}
@@ -55,7 +55,7 @@ export function TabsWrapper() {
                         tabBarButton: TabBarButton,
                         tabBarLabel: ({ focused }) => <TabBarLabel focused={focused} title={t("settings")} />,
                     }}
-                    name="settings"
+                    name="tabs/settings"
                 />
             </Tabs.Navigator>
         );
