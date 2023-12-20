@@ -122,8 +122,7 @@ export const StopwatchPopover = () => {
 
     const handleLastSetCallback = useCallback(() => {
         if (startOnLastSet) {
-            reset();
-            start();
+            toggleTimer();
         }
     }, [startOnLastSet]);
 

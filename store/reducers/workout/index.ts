@@ -14,6 +14,10 @@ export const mutateEditedExercise = createAction<
     },
     "exercise_edit_mutate"
 >("exercise_edit_mutate");
+export const mutateActiveExerciseInTrainedWorkout = createAction<
+    { key: keyof TrainedWorkout["exerciseData"][number]; value: TrainedWorkout["exerciseData"][number][keyof TrainedWorkout["exerciseData"][number]] },
+    "exercise_edit_mutate_active_exercise"
+>("exercise_edit_mutate_active_exercise");
 export const mutateEditedExercisePause = createAction<
     {
         key: keyof TimeInput;
@@ -78,6 +82,15 @@ export const workoutReducer = createReducer<WorkoutState>({ workouts: [], sortin
         .addCase(saveNote, (state, action) => {
             if (state.trainedWorkout) {
                 state.trainedWorkout.exerciseData[state.trainedWorkout.workoutIndex].note = action.payload;
+            }
+        })
+        .addCase(mutateActiveExerciseInTrainedWorkout, (state, action) => {
+            if (state.trainedWorkout) {
+                const exerciseData = state.trainedWorkout.exerciseData[state.trainedWorkout.activeExerciseIndex];
+                state.trainedWorkout.exerciseData[state.trainedWorkout.activeExerciseIndex] = {
+                    ...exerciseData,
+                    [action.payload.key]: action.payload.value,
+                };
             }
         })
         .addCase(setColor, (state, action) => {
@@ -283,6 +296,7 @@ export const workoutReducer = createReducer<WorkoutState>({ workouts: [], sortin
                             setIndex: 0,
                             doneSets: [],
                             note: "",
+                            canSnap: true,
                         };
                         return prefilledMetaData;
                     }),

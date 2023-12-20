@@ -59,6 +59,7 @@ export type TrainedWorkout = {
         doneSets: ExerciseSets;
         name: string;
         note?: string;
+        canSnap: boolean;
     }[];
 };
 export type WorkoutState = {

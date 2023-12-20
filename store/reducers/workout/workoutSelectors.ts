@@ -73,6 +73,21 @@ export const getColor = createSelector([getEditedWorkout], (editedWorkout) => ({
     color: editedWorkout?.workout?.calendarColor ?? PALETTE[Math.floor(PALETTE.length * Math.random())],
     palette: PALETTE,
 }));
+export const getExerciseDone = createSelector([getTrainedWorkout], (trainedWorkout) => {
+    const exerciseIndex = trainedWorkout?.activeExerciseIndex;
+    if (exerciseIndex === undefined || !trainedWorkout || trainedWorkout?.exerciseData.length === 0) {
+        return false;
+    }
+    const sets = parseFloat(trainedWorkout?.workout?.exercises[exerciseIndex].sets ?? "-1");
+    return trainedWorkout.exerciseData[exerciseIndex].doneSets.length === sets;
+});
+export const getCanSnap = createSelector([getTrainedWorkout], (trainedWorkout) => {
+    const exerciseIndex = trainedWorkout?.activeExerciseIndex;
+    if (exerciseIndex === undefined || !trainedWorkout || trainedWorkout?.exerciseData.length === 0) {
+        return false;
+    }
+    return trainedWorkout.exerciseData[exerciseIndex].canSnap;
+});
 export const getHistoryByMonth = createSelector([getEditedWorkout, (editedWorkout, month?: string) => month ?? getDateTodayIso()], (editedWorkout, searchedMonth) => {
     const workout = editedWorkout?.workout;
     const foundTrainings: Map<

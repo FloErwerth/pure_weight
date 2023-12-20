@@ -13,9 +13,27 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Carousel from "react-native-reanimated-carousel/src/Carousel";
 import { Exercise } from "../../../components/App/train/Exercise/WeightBased/WeightBasedExercise";
 import { useBottomSheetRef } from "../../../components/BottomSheetModal/ThemedBottomSheetModal";
-import { addDoneWorkout, resetTrainedWorkout, setActiveExerciseIndex } from "../../../store/reducers/workout";
+import { addDoneWorkout, mutateActiveExerciseInTrainedWorkout, resetTrainedWorkout, setActiveExerciseIndex } from "../../../store/reducers/workout";
 
-import { getHasAnyTrainedWorkoutData, getIsDoneWithTraining, getTrainedWorkout } from "../../../store/reducers/workout/workoutSelectors";
+import { getCanSnap, getExerciseDone, getHasAnyTrainedWorkoutData, getIsDoneWithTraining, getTrainedWorkout } from "../../../store/reducers/workout/workoutSelectors";
+import { ICarouselInstance } from "react-native-reanimated-carousel";
+
+const useSnapToNextExercise = () => {
+    const carouselRef = useRef<ICarouselInstance>(null);
+    const isExerciseDone = useAppSelector(getExerciseDone);
+    const canSnap = useAppSelector(getCanSnap);
+    const dispatch = useAppDispatch();
+    useEffect(() => {
+        if (isExerciseDone && canSnap) {
+            setTimeout(() => {
+                carouselRef.current?.next({ animated: true });
+            }, 500);
+            dispatch(mutateActiveExerciseInTrainedWorkout({ key: "canSnap", value: false }));
+        }
+    }, [isExerciseDone]);
+
+    return carouselRef;
+};
 
 export function Train() {
     const { bottom } = useSafeAreaInsets();
@@ -27,6 +45,7 @@ export function Train() {
     const [alertRef, openAlert, closeAlert] = useBottomSheetRef();
     const isDone = useAppSelector(getIsDoneWithTraining);
     const hasAnyData = useAppSelector(getHasAnyTrainedWorkoutData);
+    const carouselRef = useSnapToNextExercise();
 
     useEffect(() => {
         if (isDone) {
@@ -108,8 +127,9 @@ export function Train() {
             </ThemedView>
             <ThemedView background stretch>
                 <Carousel
+                    ref={carouselRef}
                     onSnapToItem={handleSetActiveExerciseIndex}
-                    scrollAnimationDuration={100}
+                    scrollAnimationDuration={300}
                     width={Dimensions.get("screen").width}
                     loop={false}
                     vertical={false}
