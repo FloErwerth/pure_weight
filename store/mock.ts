@@ -109,6 +109,7 @@ export const mockState: AppState = {
                             {
                                 name: "Klimmzüge unterstützt",
                                 sets: [{ weight: "50", reps: "5" }],
+                                note: "Das war ein guter Satz",
                             },
                         ],
                     },

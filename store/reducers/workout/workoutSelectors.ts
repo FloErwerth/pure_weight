@@ -131,26 +131,25 @@ export const getNumberHistories = createSelector([getWorkouts, (workouts, workou
     const workout = workouts[workoutIndex];
     return workout?.doneWorkouts.length;
 });
-export const getPreviousTraining = createSelector([getEditedWorkout, getLanguage, (editedWorkout, language, exerciseIndex: number) => exerciseIndex], (editedWorkout, language, exerciseIndex) => {
-    const doneWorkouts = editedWorkout?.workout?.doneWorkouts;
+export const getPreviousTraining = createSelector([getTrainedWorkout, getLanguage, (trainedWorkout, language, exerciseIndex: number) => exerciseIndex], (trainedWorkout, language, exerciseIndex) => {
+    const doneWorkouts = trainedWorkout?.workout?.doneWorkouts;
     if (!doneWorkouts || doneWorkouts.length === 0) {
         return undefined;
     }
 
     const foundEntries = new Map<string, { date: string; sets: ExerciseSets; note?: string }>();
-
     for (let workoutIndex = doneWorkouts.length - 1; workoutIndex >= 0; workoutIndex--) {
         doneWorkouts[workoutIndex].doneExercises?.forEach((exercise) => {
             if (!foundEntries.get(exercise.name)) {
                 foundEntries.set(exercise.name, {
-                    date: getDate(doneWorkouts[workoutIndex].timestamp, language),
+                    date: getDate(doneWorkouts[workoutIndex].timestamp, language, "short"),
                     sets: exercise.sets,
                     note: exercise.note,
                 });
             }
         });
     }
-    return foundEntries.get(editedWorkout?.workout.exercises[exerciseIndex].name);
+    return foundEntries.get(trainedWorkout?.workout?.exercises[exerciseIndex].name);
 });
 export const getIsLastSet = createSelector([getTrainedWorkout, (trainedWorkout, exerciseIndex: number) => exerciseIndex], (trainedWorkout, exerciseIndex) => {
     return (setIndex: number) => {

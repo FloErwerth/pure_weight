@@ -13,16 +13,20 @@ import { ThemedView } from "../Themed/ThemedView/View";
 import { ThemedBottomSheetModal, useBottomSheetRef } from "../BottomSheetModal/ThemedBottomSheetModal";
 
 import { getActiveSetIndex, getPreviousTraining } from "../../store/reducers/workout/workoutSelectors";
+import { ThemedPressable } from "../Themed/Pressable/Pressable";
+import { getWeightUnit } from "../../store/reducers/settings/settingsSelectors";
 
 interface PreviousTrainingProps {
     exerciseIndex: number;
 }
 export const PreviousTraining = ({ exerciseIndex }: PreviousTrainingProps) => {
     const previousWorkout = useAppSelector((state: AppState) => getPreviousTraining(state, state.settingsState.language, exerciseIndex));
+
     const { t } = useTranslation();
     const { textDisabled, componentBackgroundColor, mainColor, secondaryColor, inputFieldBackgroundColor } = useTheme();
-    const [ref] = useBottomSheetRef();
+    const [ref, , close] = useBottomSheetRef();
     const activeSetIndex = useAppSelector((state: AppState) => getActiveSetIndex(state, exerciseIndex));
+    const weightUnit = useAppSelector(getWeightUnit);
     const mappedData = useMemo(
         () =>
             previousWorkout?.sets.map(({ weight, reps }, index) => {
@@ -72,7 +76,7 @@ export const PreviousTraining = ({ exerciseIndex }: PreviousTrainingProps) => {
                     {date}
                 </Text>
                 {note && (
-                    <ThemedView>
+                    <ThemedView ghost>
                         <Pressable onPress={handleShowEditNoteModal}>
                             <HStack style={styles.noteButtonWrapper}>
                                 <Text>Show note</Text>
@@ -87,15 +91,22 @@ export const PreviousTraining = ({ exerciseIndex }: PreviousTrainingProps) => {
                     <VStack style={{ backgroundColor: componentBackgroundColor }}>
                         <HStack ghost style={styles.innerWrapper}>
                             <Text style={[styles.setDisplayStyle, { color: secondaryColor }]}>{"#"}</Text>
-                            <Text style={[{ color: secondaryColor }, styles.set]}>{t("training_header_weight")}</Text>
+                            <Text style={[{ color: secondaryColor }, styles.set]}>{weightUnit}</Text>
                             <Text style={[{ color: secondaryColor }, styles.set]}>{t("training_header_reps")}</Text>
                         </HStack>
                         {mappedData}
                     </VStack>
                 )}
             </ThemedView>
-            <ThemedBottomSheetModal title={`Your note from ${date}`} onRequestClose={handleCloseNote} ref={ref}>
-                <Text style={{ fontSize: 20 }}>{note}</Text>
+            <ThemedBottomSheetModal snapPoints={["100%"]} title={t("previous_training_note_title").concat(date)} onRequestClose={handleCloseNote} ref={ref}>
+                <ThemedView ghost stretch style={{ margin: 20 }}>
+                    <Text ghost stretch style={{ fontSize: 20 }}>
+                        {note}
+                    </Text>
+                    <ThemedPressable onPress={close} padding center round>
+                        <Text style={{ fontSize: 20 }}>{t("close_note")}</Text>
+                    </ThemedPressable>
+                </ThemedView>
             </ThemedBottomSheetModal>
         </View>
     );

@@ -251,12 +251,12 @@ export const workoutReducer = createReducer<WorkoutState>({ workouts: [], sortin
             const workout = state.trainedWorkout;
             const workoutIndex = state.trainedWorkout?.workoutIndex;
             if (workout && workoutIndex !== undefined) {
-                const beginTimestamp = workout.timetamp;
+                const beginTimestamp = workout.timestamp;
                 const endTimestamp = Temporal.Now.instant().epochMilliseconds;
                 const duration = (endTimestamp - beginTimestamp) / 1000;
                 const doneExercises: DoneExerciseData[] = workout.exerciseData.map((data) => ({ name: data.name, sets: data.doneSets, note: data.note }));
                 state.workouts[workoutIndex].doneWorkouts.push({
-                    timestamp: endTimestamp - beginTimestamp,
+                    timestamp: endTimestamp,
                     duration: duration.toString(),
                     doneExercises,
                 });
@@ -284,7 +284,7 @@ export const workoutReducer = createReducer<WorkoutState>({ workouts: [], sortin
             state.trainedWorkout = {
                 activeExerciseIndex: 0,
                 workout,
-                timetamp: Temporal.Now.instant().epochMilliseconds,
+                timestamp: Temporal.Now.instant().epochMilliseconds,
                 workoutIndex: action.payload,
                 exerciseData: Array(workout.exercises.length)
                     .fill(undefined)
