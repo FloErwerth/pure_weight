@@ -6,8 +6,10 @@ import ReAnimated, { Layout, SlideInDown, SlideOutDown, useAnimatedStyle, useSha
 import { borderRadius } from "../../theme/border";
 import { HStack } from "../Stack/HStack/HStack";
 import { ThemedMaterialCommunityIcons } from "../Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ThemedPressable } from "../Themed/Pressable/Pressable";
+import { useAppSelector } from "../../store";
+import { getDeletionTime } from "../../store/reducers/settings/settingsSelectors";
 
 interface BottomToastProps {
     titleKey: string;
@@ -19,15 +21,15 @@ interface BottomToastProps {
     padding?: number;
 }
 const deviceWidth = Dimensions.get("screen").width;
-const TIME = 5000;
-const TIME_STEP = 50;
-const TIME_PERCENTAGE = (TIME_STEP / TIME) * 100;
 
+const TIME_STEP = 50;
 export const BottomToast = ({ titleKey, messageKey, onRedo, open, onRequestClose, bottom = 0, padding = 20 }: BottomToastProps) => {
     const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
     const { t } = useTranslation();
     const [percent, setPercent] = useState(100);
     const animatedPercent = useSharedValue(100);
+    const time = useAppSelector(getDeletionTime);
+    const timePercentage = useMemo(() => (TIME_STEP / time) * 100, [time]);
 
     const handleRequestClose = useCallback(() => {
         onRequestClose();
@@ -41,13 +43,15 @@ export const BottomToast = ({ titleKey, messageKey, onRedo, open, onRequestClose
 
     const startTimer = useCallback(() => {
         timer.current = setInterval(() => {
-            setPercent((prev) => prev - TIME_PERCENTAGE);
+            setPercent((prev) => prev - timePercentage);
         }, TIME_STEP);
-    }, []);
+    }, [timePercentage]);
 
     useEffect(() => {
         if (open && timer.current === undefined) {
             startTimer();
+        } else if (!open) {
+            handleRequestClose();
         }
     }, [open]);
 

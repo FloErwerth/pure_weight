@@ -8,8 +8,6 @@ type AdditionalScrollViewProps = {
 };
 export const ThemedScrollView = (props: ScrollViewProps & ComputedBackgroundColorProps & AdditionalScrollViewProps) => {
     const backgroundColor = useComputedBackgroundColor(props);
-
     const scrollViewStyles = useMemo(() => [{ flex: props.stretch ? 1 : 0, backgroundColor, borderRadius }, props.style], [backgroundColor, props.stretch, props.style]);
-
     return <ScrollView {...props} style={scrollViewStyles} />;
 };

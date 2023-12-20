@@ -461,24 +461,26 @@ export const QuestionsAndAnswers = () => {
     );
 
     return (
-        <ThemedScrollView ghost contentContainerStyle={{ gap: 20 }}>
-            {Object.entries(data).map(([section, data]) => {
-                return (
-                    <View key="QUESTIONS_CONTAINER_WRAPPER">
-                        <Text ghost style={{ marginBottom: 10, fontSize: 30 }}>
-                            {sectionTitleMap[section as unknown as SECTIONS]}
-                        </Text>
-                        <ProfileContent>
-                            {data.map(({ title }, index) => (
-                                <HelpQuestion key={index} question={title} title={title} onPress={() => handleSetSelectedQuestion(section as unknown as SECTIONS, index)} />
-                            ))}
-                        </ProfileContent>
-                    </View>
-                );
-            })}
+        <View style={{ paddingBottom: 100 }}>
+            <ThemedScrollView showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false} ghost contentContainerStyle={{ gap: 20 }}>
+                {Object.entries(data).map(([section, data]) => {
+                    return (
+                        <View key="QUESTIONS_CONTAINER_WRAPPER">
+                            <Text ghost style={{ marginBottom: 10, fontSize: 30 }}>
+                                {sectionTitleMap[section as unknown as SECTIONS]}
+                            </Text>
+                            <ProfileContent>
+                                {data.map(({ title }, index) => (
+                                    <HelpQuestion key={index} question={title} title={title} onPress={() => handleSetSelectedQuestion(section as unknown as SECTIONS, index)} />
+                                ))}
+                            </ProfileContent>
+                        </View>
+                    );
+                })}
+            </ThemedScrollView>
             <ThemedBottomSheetModal ref={ref} title={selectedQuesiton?.title} snapPoints={selectedQuesiton?.snapPoints}>
                 {selectedQuesiton?.answer}
             </ThemedBottomSheetModal>
-        </ThemedScrollView>
+        </View>
     );
 };
