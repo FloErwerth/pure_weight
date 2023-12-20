@@ -17,14 +17,16 @@ import { addDoneWorkout, mutateActiveExerciseInTrainedWorkout, resetTrainedWorko
 
 import { getCanSnap, getExerciseDone, getHasAnyTrainedWorkoutData, getIsDoneWithTraining, getTrainedWorkout } from "../../../store/reducers/workout/workoutSelectors";
 import { ICarouselInstance } from "react-native-reanimated-carousel";
+import { getSwitchToNextExercise } from "../../../store/reducers/settings/settingsSelectors";
 
 const useSnapToNextExercise = () => {
     const carouselRef = useRef<ICarouselInstance>(null);
     const isExerciseDone = useAppSelector(getExerciseDone);
     const canSnap = useAppSelector(getCanSnap);
+    const shouldSwitch = useAppSelector(getSwitchToNextExercise);
     const dispatch = useAppDispatch();
     useEffect(() => {
-        if (isExerciseDone && canSnap) {
+        if (shouldSwitch && isExerciseDone && canSnap) {
             setTimeout(() => {
                 carouselRef.current?.next({ animated: true });
             }, 500);
