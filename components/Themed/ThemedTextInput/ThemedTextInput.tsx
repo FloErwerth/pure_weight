@@ -35,7 +35,7 @@ export const ThemedTextInput = (props: ThemedTextInputProps) => {
             }
             props.onChangeText?.(value);
         },
-        [dispatch, getHasError, props],
+        [getHasError, props, dispatch],
     );
 
     const handleFocus = useCallback(

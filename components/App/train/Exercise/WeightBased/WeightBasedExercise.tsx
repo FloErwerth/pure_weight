@@ -39,7 +39,7 @@ export const Exercise = ({ exerciseIndex }: WeightBasedExerciseProps) => {
             Array(parseFloat(exerciseData?.sets ?? "0"))
                 .fill(undefined)
                 .map((_, setIndex) => ({ isActiveSet: setIndex === activeSetIndex })),
-        [activeSetIndex, exerciseIndex, exerciseData],
+        [activeSetIndex, exerciseData],
     );
 
     return (
