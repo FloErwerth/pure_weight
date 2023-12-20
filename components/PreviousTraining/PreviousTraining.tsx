@@ -1,6 +1,6 @@
 import { AppState, useAppSelector } from "../../store";
 import { Text } from "../Themed/ThemedText/Text";
-import { Pressable, View } from "react-native";
+import { View } from "react-native";
 import { borderRadius } from "../../theme/border";
 import { VStack } from "../Stack/VStack/VStack";
 import { useTranslation } from "react-i18next";
@@ -8,7 +8,6 @@ import { useTheme } from "../../theme/context";
 import { useCallback, useMemo } from "react";
 import { HStack } from "../Stack/HStack/HStack";
 import { styles } from "./styles";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { ThemedView } from "../Themed/ThemedView/View";
 import { ThemedBottomSheetModal, useBottomSheetRef } from "../BottomSheetModal/ThemedBottomSheetModal";
 
@@ -77,12 +76,9 @@ export const PreviousTraining = ({ exerciseIndex }: PreviousTrainingProps) => {
                 </Text>
                 {note && (
                     <ThemedView ghost>
-                        <Pressable onPress={handleShowEditNoteModal}>
-                            <HStack style={styles.noteButtonWrapper}>
-                                <Text>Show note</Text>
-                                <MaterialCommunityIcons name="note-text-outline" color={mainColor} size={20} />
-                            </HStack>
-                        </Pressable>
+                        <ThemedPressable padding style={styles.noteButtonWrapper} onPress={handleShowEditNoteModal}>
+                            <Text>{t("training_input_show_note")}</Text>
+                        </ThemedPressable>
                     </ThemedView>
                 )}
             </HStack>

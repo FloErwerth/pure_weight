@@ -506,6 +506,41 @@ export const QuestionsAndAnswers = () => {
                         ),
                     snapPoints: ["65%"],
                 },
+                {
+                    title: language === "de" ? "Bereits absolvierte Übungen" : "Already completed exercises",
+                    answer:
+                        language === "de" ? (
+                            <HelpAnswer>
+                                <ThemedView ghost stretch style={{ gap: 20 }}>
+                                    <AnswerText>
+                                        Hast Du die ausgewählte Übung in einem <InlinePressable handlePress={() => handleSelectFromAnswer(SECTIONS.WORKOUTS, 0)}>vorherigen Workout</InlinePressable>{" "}
+                                        bereits einmal absolviert, dann werden die Daten der letzten Durchführung unterhalb der aktuellen Übung angezeigt. <NewLine />
+                                        Hier kannst Du sehen an welchem Datum du die Übung das letzte Mal absolviert hast und auch welche{" "}
+                                        <InlinePressable handlePress={() => handleSelectFromAnswer(SECTIONS.TRAININGS, 4)}>Notizen</InlinePressable> gemacht wurden. <NewLine />
+                                        Ähnlich wie bei dem <InlinePressable handlePress={() => handleSelectFromAnswer(SECTIONS.TRAININGS, 1)}>Durchführen eines Satzes</InlinePressable> wird in der
+                                        Anzeige der vorherigen Übung der aktuelle Satz mit einem {colorOfBackground} Hintergrund hervorgehoben. <NewLine />
+                                        Um die Notiz von der vorherigen Durchführung zu sehen, klicke auf &quot;Notiz anz.&quot;, welches sich neben dem Datum der vorherigen Übung befindet.
+                                    </AnswerText>
+                                </ThemedView>
+                            </HelpAnswer>
+                        ) : (
+                            <HelpAnswer>
+                                <ThemedView ghost stretch style={{ gap: 20 }}>
+                                    <AnswerText>
+                                        If you have already completed the selected exercise in a{" "}
+                                        <InlinePressable handlePress={() => handleSelectFromAnswer(SECTIONS.WORKOUTS, 0)}>previous workout</InlinePressable>, the data of the last execution will be
+                                        displayed below the current exercise. <NewLine />
+                                        Here you can see on which date you last completed the exercise and also which{" "}
+                                        <InlinePressable handlePress={() => handleSelectFromAnswer(SECTIONS.TRAININGS, 4)}>notes</InlinePressable> were made. <NewLine />
+                                        Similar to the <InlinePressable handlePress={() => handleSelectFromAnswer(SECTIONS.TRAININGS, 1)}>execution of a set</InlinePressable>, the current set is
+                                        highlighted with a {colorOfBackground} background in the display of the previous exercise. <NewLine />
+                                        To see the note from the previous execution, click on &quot;Show note&quot;, which is next to the date of the previous exercise.
+                                    </AnswerText>
+                                </ThemedView>
+                            </HelpAnswer>
+                        ),
+                    snapPoints: ["75%"],
+                },
             ],
 
             [SECTIONS.MISCELLANEOUS]: [
