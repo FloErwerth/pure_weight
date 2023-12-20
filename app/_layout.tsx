@@ -24,9 +24,7 @@ import { Display } from "../components/App/settings/Sections/display";
 import { GeneralSettings } from "../components/App/settings/Sections/generalSettings";
 import { MeasurementProgress } from "./measurements/progress";
 import { LogBox } from "react-native";
-import { HelpWorkouts } from "./settings/help/workout";
-import { HelpFaqs } from "./settings/help/faqs";
-import { HelpMeasurements } from "./settings/help/measurements";
+import { Help } from "./settings/help";
 
 const Stack = createNativeStackNavigator();
 
@@ -56,9 +54,7 @@ const ThemedApp = () => {
                                     <Stack.Screen component={Display} options={{ headerShown: false }} name="settings/display/index" />
                                     <Stack.Screen component={GeneralSettings} options={{ headerShown: false }} name="settings/workout/index" />
                                     <Stack.Screen component={MeasurementProgress} options={{ headerShown: false }} name="measurement/progress/index" />
-                                    <Stack.Screen component={HelpWorkouts} options={{ headerShown: false }} name="settings/help/workouts/index" />
-                                    <Stack.Screen component={HelpFaqs} options={{ headerShown: false }} name="settings/help/faqs/index" />
-                                    <Stack.Screen component={HelpMeasurements} options={{ headerShown: false }} name="settings/help/measurements/index" />
+                                    <Stack.Screen component={Help} options={{ headerShown: false }} name="settings/help/index" />
                                 </Stack.Navigator>
                             </SafeAreaView>
                         </BottomSheetModalProvider>

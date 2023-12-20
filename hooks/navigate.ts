@@ -19,15 +19,6 @@ export const Routes = {
     settings: {
         screen: "tabs/settings",
     },
-    "settings/help/faqs": {
-        screen: "settings/help/faqs/index",
-    },
-    "settings/help/workouts": {
-        screen: "settings/help/workouts/index",
-    },
-    "settings/help/measurements": {
-        screen: "settings/help/measurements/index",
-    },
     history: {
         screen: "workouts/workoutHistory/index",
     },
@@ -36,6 +27,9 @@ export const Routes = {
     },
     display: {
         screen: "settings/display/index",
+    },
+    "settings/help": {
+        screen: "settings/help/index",
     },
     entries: {
         screen: "settings/statistics/entries/index",

@@ -8,6 +8,8 @@ export const getUnitSystem = createSelector([getSettingsState], (settings) => se
 export const getStopwatchSettings = createSelector([getSettingsState], (settings) => settings.stopwatchSettings);
 export const getStartStopwatchOnDoneSet = createSelector([getStopwatchSettings], (settings) => settings?.startOnDoneSet);
 export const getStartStopwatchOnLastSet = createSelector([getStopwatchSettings], (settings) => settings?.startOnLastSet);
+export const getDeletionTime = createSelector([getSettingsState], (settings) => settings.deletionTimeMs);
+export const getSwitchToNextExercise = createSelector([getSettingsState], (settings) => settings.switchToNextExercise);
 export const getKeepAwake = createSelector([getSettingsState], (settings) => settings.keepAwake);
 const languageUnitSystemWeightUnitMap = {
     en: {

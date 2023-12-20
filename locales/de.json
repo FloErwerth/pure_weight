@@ -64,6 +64,15 @@
   "settings_stopwatch_done_set": "Automatisch nach jedem Satz starten",
   "settings_stopwatch_last_set": "Automatisch nach dem letzten Satz starten",
 
+  "settings_deletion_time_title": "Löschzeit",
+  "settings_deletion_time_5": "Nachricht 5 Sekunden anzeigen",
+  "settings_deletion_time_10": "Nachricht 10 Sekunden anzeigen",
+  "settings_deletion_time_25": "Nachricht 25 Sekunden anzeigen",
+
+  "settings_switch_to_next_exercise_title": "Zur nächsten Übung wechseln",
+    "settings_switch_to_next_exercise_true": "Automatisch nach jedem Satz wechseln",
+    "settings_switch_to_next_exercise_false": "Nicht automatisch wechseln",
+
   "alert_delete_message": "Dies kann nicht rückgängig gemacht werden",
   "alert_quit_title": "Das Workout frühzeitig beenden?",
   "alert_quit_message": "Der bisherige Fortschritt wird gespeichert",

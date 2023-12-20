@@ -185,7 +185,7 @@ export function WorkoutHistory() {
     return (
         <ThemedView stretch>
             <SiteNavigationButtons handleBack={handleNavigateBack} title={t("history_front").concat(" ", workout?.workout.name ?? "")} />
-            <PageContent stretch safeBottom style={styles.pageWrapper}>
+            <PageContent background stretch safeBottom style={styles.pageWrapper}>
                 <SectionList
                     ref={sectionListRef}
                     horizontal={false}

@@ -7,6 +7,7 @@ import { ScrollView } from "react-native";
 import { Display } from "../../components/App/settings/Sections/display";
 import { GeneralSettings } from "../../components/App/settings/Sections/generalSettings";
 import { HelpSection } from "../../components/App/settings/Sections/help/HelpSection";
+import { WorkoutSettings } from "../../components/App/settings/Sections/workout";
 
 const isProduction = process.env["EXPO_PUBLIC_IS_PRODUCTION"] === "true";
 
@@ -17,15 +18,18 @@ export function Settings() {
         <ThemedView stretch background>
             <SiteNavigationButtons titleFontSize={40} title={t("settings")} />
             <ScrollView contentContainerStyle={{ paddingBottom: 20 }}>
-                <PageContent paddingTop={10} titleConfig={{ title: t("general"), size: 24 }}>
+                <PageContent background paddingTop={10} titleConfig={{ title: t("general"), size: 30 }}>
                     <GeneralSettings />
                 </PageContent>
-                <PageContent paddingTop={30} titleConfig={{ title: t("display"), size: 24 }}>
+                <PageContent background paddingTop={10} titleConfig={{ title: t("workout"), size: 30 }}>
+                    <WorkoutSettings />
+                </PageContent>
+                <PageContent background paddingTop={30} titleConfig={{ title: t("display"), size: 30 }}>
                     <Display />
                 </PageContent>
                 <HelpSection />
                 {!isProduction && (
-                    <PageContent paddingTop={30}>
+                    <PageContent background paddingTop={30}>
                         <DevelopmentSelection />
                     </PageContent>
                 )}

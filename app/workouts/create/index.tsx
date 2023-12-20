@@ -191,7 +191,7 @@ export function Create() {
         <ThemedView stretch>
             <ThemedView background style={styles.innerWrapper}>
                 <SiteNavigationButtons handleBack={handleBackButton} handleConfirm={handleConfirm} titleFontSize={30} title={title} />
-                <PageContent safeBottom stretch style={styles.contentWrapper}>
+                <PageContent background safeBottom stretch style={styles.contentWrapper}>
                     <HStack style={styles.nameColorStack} ghost>
                         <ThemedTextInput style={styles.workoutNameInput} showClear value={editedWorkout?.workout.name} onChangeText={handleSetWorkoutName} placeholder={t("workout_name")} />
                         <ColorPickerButton openPicker={openPicker} />

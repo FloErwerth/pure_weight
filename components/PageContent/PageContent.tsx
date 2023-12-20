@@ -10,7 +10,7 @@ import { ComputedBackgroundColorProps, useComputedBackgroundColor } from "../../
 interface PageContentProps extends PropsWithChildren, ComputedBackgroundColorProps {
     style?: StyleProp<ViewStyle>;
     scrollable?: boolean;
-    titleConfig?: { title: string; size: number };
+    titleConfig?: { title: string; size: 24 | 30 };
     stretch?: boolean;
     paddingTop?: number;
     safeBottom?: boolean;

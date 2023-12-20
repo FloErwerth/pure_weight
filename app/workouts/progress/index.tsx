@@ -50,7 +50,7 @@ export function WorkoutProgress() {
     return (
         <ThemedView background stretch>
             <SiteNavigationButtons handleBack={handleNavigateToWorkouts} title={trainingDayName} />
-            <PageContent>
+            <PageContent background>
                 <Suspense fallback={<Fallback />}>
                     <ExerciseCharts />
                 </Suspense>

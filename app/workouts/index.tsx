@@ -68,7 +68,7 @@ export function Workouts() {
         <ThemedView stretch background>
             <SiteNavigationButtons titleFontSize={40} title={t("workouts")} handleConfirmIcon={confirmIcon} handleConfirm={handleCreateWorkout} />
             <WorkoutSorting />
-            <PageContent ignoreGap stretch paddingTop={20}>
+            <PageContent background ignoreGap stretch paddingTop={20}>
                 {mappedWorkouts}
             </PageContent>
             <BottomToast

@@ -70,6 +70,15 @@
   "settings_stopwatch_done_set": "Automatically start on done set",
   "settings_stopwatch_last_set": "Automatically start on last set",
 
+  "settings_deletion_time_title": "Deletion time",
+  "settings_deletion_time_5": "Show message for 5 seconds",
+  "settings_deletion_time_10": "Show message for 10 seconds",
+  "settings_deletion_time_25": "Show message for 25 seconds",
+
+  "settings_switch_to_next_exercise_title": "Switch to next exercise",
+  "settings_switch_to_next_exercise_true": "Automatically switch to next exercise",
+  "settings_switch_to_next_exercise_false": "Don't switch automatically",
+
   "settings_measurement_history_entry_title": "Number of entries from measurements",
 
   "alert_delete_message": "This action can't be undone",

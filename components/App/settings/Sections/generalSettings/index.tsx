@@ -1,11 +1,11 @@
 import { UnitSystemSection } from "../../components/Selections/UnitSystemSelection/UnitSystemSection";
-import { StopwatchSelection } from "../../components/Selections/StopwatchSelection/StopwatchSelection";
+import { DeletionTimeSelection } from "../../components/Selections/DeleteSelection/DeletionTimeSelection";
 
 export const GeneralSettings = () => {
     return (
         <>
             <UnitSystemSection />
-            <StopwatchSelection />
+            <DeletionTimeSelection />
         </>
     );
 };

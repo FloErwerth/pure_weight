@@ -81,11 +81,13 @@ export const mockState: AppState = {
         ],
     },
     settingsState: {
+        switchToNextExercise: true,
         stopwatchSettings: { startOnDoneSet: false, startOnLastSet: false },
         keepAwake: true,
         theme: "dark",
         language: "en",
         unitSystem: "metric",
+        deletionTimeMs: 5000,
     },
     workoutState: {
         sorting: "A_Z",
@@ -192,10 +194,12 @@ export const emptyState = {
         errors: [],
     },
     settingsState: {
+        switchToNextExercise: true,
         stopwatchSettings: { startOnDoneSet: true, startOnLastSet: true },
         keepAwake: true,
         language: "en",
         theme: "light",
         unitSystem: "metric",
+        deletionTimeMs: 5000,
     },
 } satisfies AppState;

@@ -11,7 +11,7 @@ export const styles = StyleSheet.create({
         paddingTop: 5,
     },
     question: {
-        fontSize: 24,
+        fontSize: 20,
     },
     answer: {
         padding: 5,
