@@ -1,4 +1,50 @@
-import { createNavigationContainerRef } from "@react-navigation/native";
+import { createNavigationContainerRef, ParamListBase } from "@react-navigation/native";
+
+export type RoutesParamaters = {
+    ["workouts/train/index"]: {
+        name: "workouts/train/index";
+    };
+    ["workouts/create/index"]: {
+        name: "workouts/create/index";
+    };
+    ["workouts/progress/index"]: {
+        name: "workouts/progress/index";
+    };
+    ["progress/chart/index"]: {
+        name: "progress/chart/index";
+    };
+    ["tabs/settings"]: {
+        name: "tabs/settings";
+        scrollIndex?: number;
+    };
+    ["tabs/workouts"]: {
+        name: "tabs/workouts";
+    };
+    ["tabs/measurements"]: {
+        name: "tabs/measurements";
+    };
+    ["settings/display/index"]: {
+        name: "settings/display/index";
+    };
+    ["settings/workout/index"]: {
+        name: "settings/workout/index";
+    };
+    ["settings/help/index"]: {
+        name: "settings/help/index";
+    };
+    ["settings/statistics/entries/index"]: {
+        name: "settings/statistics/entries/index";
+    };
+    ["measurement/progress/index"]: {
+        name: "measurement/progress/index";
+    };
+    ["workouts/workoutHistory/index"]: {
+        name: "workouts/workoutHistory/index";
+    };
+    ["tabs"]: {
+        name: "tabs";
+    };
+};
 
 export const Routes = {
     workouts: {
@@ -40,13 +86,12 @@ export const Routes = {
 };
 
 export const navigationRef = createNavigationContainerRef<typeof Routes>();
-
 export function useNavigate() {
-    function navigate<T extends keyof typeof Routes>(name: T) {
+    function navigate<T extends keyof typeof Routes>(name: T, params?: ParamListBase[T]) {
         if (navigationRef.isReady()) {
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
-            navigationRef.navigate(Routes[name]["screen"]);
+            navigationRef.navigate(Routes[name]["screen"], { ...params });
         }
     }
 

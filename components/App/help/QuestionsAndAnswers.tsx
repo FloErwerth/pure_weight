@@ -31,6 +31,7 @@ export const QuestionsAndAnswers = () => {
     const handleNavigateToWorkouts = useCallback(() => {
         navigate("workouts");
     }, [navigate]);
+
     const [ref, open, , closeAll] = useBottomSheetRef();
     const [selectedQuesiton, setSelectedQuesiton] = useState<{ title: string; answer: JSX.Element; snapPoints?: SnapPoint[] } | undefined>();
     const language = useAppSelector(getLanguage);
@@ -41,9 +42,12 @@ export const QuestionsAndAnswers = () => {
         dispatch(createNewWorkout());
     }, [closeAll, dispatch, navigate]);
 
-    const navigateToSettings = useCallback(() => {
-        navigate("settings");
-    }, [navigate]);
+    const navigateToSettings = useCallback(
+        (scrollIndex?: number) => {
+            navigate("settings", { scrollIndex });
+        },
+        [navigate],
+    );
 
     const sectionTitleMap = useMemo(
         () => ({
@@ -126,7 +130,8 @@ export const QuestionsAndAnswers = () => {
                                         Um ein Workout zu löschen, navigiere zu den <InlinePressable handlePress={handleNavigateToWorkouts}>Workouts</InlinePressable> und wische dann das gewünschte
                                         Workout nach links. {"\n\n"}
                                         Dieses Workout wird nun gelöscht. Ein gelöschtes Workout kann nicht wiederhergestellt werden, nachdem{" "}
-                                        <InlinePressable handlePress={() => handleSelectFromAnswer(SECTIONS.WORKOUTS, 4)}>das Zeitfenster</InlinePressable> für das Rückgängig machen abgelaufen ist.
+                                        <InlinePressable handlePress={() => handleSelectFromAnswer(SECTIONS.MISCELLANEOUS, 0)}>das Zeitfenster</InlinePressable> für das Rückgängig machen abgelaufen
+                                        ist.
                                     </AnswerText>
                                 </ThemedView>
                             </HelpAnswer>
@@ -137,7 +142,7 @@ export const QuestionsAndAnswers = () => {
                                         To delete a workout, navigate to the <InlinePressable handlePress={handleNavigateToWorkouts}>Workouts</InlinePressable> and then swipe the desired workout to
                                         the left. {"\n\n"}
                                         This workout will now be deleted. A deleted workout cannot be restored after{" "}
-                                        <InlinePressable handlePress={() => handleSelectFromAnswer(SECTIONS.WORKOUTS, 4)}>the time window</InlinePressable> for undoing has expired.
+                                        <InlinePressable handlePress={() => handleSelectFromAnswer(SECTIONS.MISCELLANEOUS, 0)}>the time window</InlinePressable> for undoing has expired.
                                     </AnswerText>
                                 </ThemedView>
                             </HelpAnswer>
@@ -219,7 +224,8 @@ export const QuestionsAndAnswers = () => {
                                         -Symbol neben dem Namen der Übung geklickt wurde. <NewLine />
                                         Es erscheint ein Dialog, ob Du dir sicher bist, dass Du die Übung löschen möchtest. Bestätige nun die Löschung der Übung. <NewLine />
                                         Die Übung wird nun aus dem Workout gelöscht. Eine gelöschte Übung kann nicht wiederhergestellt werden, nachdem{" "}
-                                        <InlinePressable handlePress={() => handleSelectFromAnswer(SECTIONS.WORKOUTS, 4)}>das Zeitfenster</InlinePressable> für das Rückgängig machen abgelaufen ist.
+                                        <InlinePressable handlePress={() => handleSelectFromAnswer(SECTIONS.MISCELLANEOUS, 0)}>das Zeitfenster</InlinePressable> für das Rückgängig machen abgelaufen
+                                        ist.
                                     </AnswerText>
                                 </ThemedView>
                             </HelpAnswer>
@@ -234,7 +240,7 @@ export const QuestionsAndAnswers = () => {
                                         exercise. <NewLine />
                                         A dialog appears asking if you are sure you want to delete the exercise. Now confirm the deletion of the exercise. <NewLine />
                                         The exercise will now be deleted from the workout. A deleted exercise cannot be restored after{" "}
-                                        <InlinePressable handlePress={() => handleSelectFromAnswer(SECTIONS.WORKOUTS, 4)}>the time window</InlinePressable> for undoing has expired.
+                                        <InlinePressable handlePress={() => handleSelectFromAnswer(SECTIONS.MISCELLANEOUS, 0)}>the time window</InlinePressable> for undoing has expired.
                                     </AnswerText>
                                 </ThemedView>
                             </HelpAnswer>
@@ -315,8 +321,8 @@ export const QuestionsAndAnswers = () => {
                                         -Symbol. <NewLine /> Wird ein Satz als beendet markiert, wird der nächste aktive Satz automatisch ausgewählt und das{" "}
                                         <ThemedMaterialCommunityIcons ghost name="check-bold" size={24} /> des vorherigen Satzes wird grün. <NewLine />
                                         Falls der Eintrag des vorherigen Satzes nicht stimmt, kannst Du die Daten einfach ändern. <NewLine />
-                                        Ist es in den <InlinePressable handlePress={navigateToSettings}>Workout Einstellungen</InlinePressable> unter &quot;Stoppuhr&quot; aktiviert, wird die Stoppuhr
-                                        automatisch mit der eingestellten Pausenzeit der Übung gestartet.
+                                        Ist es in den <InlinePressable handlePress={() => navigateToSettings(1)}>Workout Einstellungen</InlinePressable> unter &quot;Stoppuhr&quot; aktiviert, wird die
+                                        Stoppuhr automatisch mit der eingestellten Pausenzeit der Übung gestartet.
                                     </AnswerText>
                                 </ThemedView>
                             </HelpAnswer>
@@ -331,8 +337,8 @@ export const QuestionsAndAnswers = () => {
                                         <ThemedMaterialCommunityIcons ghost name="check-bold" size={24} /> symbol. <NewLine /> If a set is marked as finished, the next active set is automatically
                                         selected and the <ThemedMaterialCommunityIcons ghost name="check-bold" size={24} /> of the previous set turns green. <NewLine />
                                         If the entry of the previous set is not correct, you can simply change the data. <NewLine />
-                                        If it is activated in the <InlinePressable handlePress={navigateToSettings}>workout settings</InlinePressable> under &quot;Stopwatch&quot;, the stopwatch will
-                                        automatically start with the set rest time.
+                                        If it is activated in the <InlinePressable handlePress={() => navigateToSettings(1)}>workout settings</InlinePressable> under &quot;Stopwatch&quot;, the
+                                        stopwatch will automatically start with the set rest time.
                                     </AnswerText>
                                 </ThemedView>
                             </HelpAnswer>
@@ -346,15 +352,15 @@ export const QuestionsAndAnswers = () => {
                             <HelpAnswer>
                                 <ThemedView ghost stretch style={{ gap: 20 }}>
                                     <AnswerText>
-                                        Nachdem Du ein <InlinePressable handlePress={() => handleSelectFromAnswer(SECTIONS.TRAININGS, 0)}>Workout gestartet</InlinePressable> und alle{" "}
+                                        Nachdem Du ein <InlinePressable handlePress={() => handleSelectFromAnswer(SECTIONS.TRAININGS, 0)}>Workout gestartet</InlinePressable>,alle{" "}
                                         <InlinePressable handlePress={() => handleSelectFromAnswer(SECTIONS.TRAININGS, 1)}>alle Sätze einer Übung abgeschlossen</InlinePressable> und es in den{" "}
-                                        <InlinePressable handlePress={navigateToSettings}>Workout Einstellungen</InlinePressable> unter &quot;Zur nächsten Übung wechseln&quot; aktiviert hast, wird die
-                                        aktive Übung automatisch gewechselt.
+                                        <InlinePressable handlePress={() => navigateToSettings(1)}>Workout Einstellungen</InlinePressable> unter &quot;Zur nächsten Übung wechseln&quot; aktiviert hast,
+                                        wird die aktive Übung automatisch gewechselt.
                                         <NewLine />
-                                        Sofern Du es in den <InlinePressable handlePress={navigateToSettings}>Allgemeinen Einstellungen</InlinePressable> unter &quot;Stoppuhr&quot; aktiviert hast,
-                                        wird die Stoppuhr nach dem Ende des letzten Satzes automatisch mit der eingestellten Pausenzeit der Übung gestartet. <NewLine />
+                                        Sofern Du es in den <InlinePressable handlePress={() => navigateToSettings(0)}>Allgemeinen Einstellungen</InlinePressable> unter &quot;Stoppuhr&quot; aktiviert
+                                        hast, wird die Stoppuhr nach dem Ende des letzten Satzes automatisch mit der eingestellten Pausenzeit der Übung gestartet. <NewLine />
                                         Sind alle Sätze aller Übungen abgeschlossen, kann das{" "}
-                                        <InlinePressable handlePress={() => handleSelectFromAnswer(SECTIONS.WORKOUTS, 3)}>Workout beendet</InlinePressable> werden. <NewLine />
+                                        <InlinePressable handlePress={() => handleSelectFromAnswer(SECTIONS.TRAININGS, 3)}>Workout beendet</InlinePressable> werden. <NewLine />
                                         Das durchgeführte Workout wird in die Historie aufgenommen und wird für die Anzeige des Fortschritts verwendet.
                                     </AnswerText>
                                 </ThemedView>
@@ -365,14 +371,14 @@ export const QuestionsAndAnswers = () => {
                                     <AnswerText>
                                         After you have <InlinePressable handlePress={() => handleSelectFromAnswer(SECTIONS.TRAININGS, 0)}>started a workout</InlinePressable> and completed all{" "}
                                         <InlinePressable handlePress={() => handleSelectFromAnswer(SECTIONS.TRAININGS, 1)}>all sets of an exercise</InlinePressable> and have activated it under
-                                        &quot;Switch to next exercise&quot; in the <InlinePressable handlePress={navigateToSettings}>workout settings</InlinePressable>, the active exercise will
-                                        automatically be changed.
+                                        &quot;Switch to next exercise&quot; in the <InlinePressable handlePress={() => navigateToSettings(1)}>workout settings</InlinePressable>, the active exercise
+                                        will automatically be changed.
                                         <NewLine />
-                                        If you have activated it in the <InlinePressable handlePress={navigateToSettings}>general settings</InlinePressable> under &quot;Stopwatch&quot;, the stopwatch
-                                        will automatically start after the end of the last set with the set rest time.
+                                        If you have activated it in the <InlinePressable handlePress={() => navigateToSettings(0)}>general settings</InlinePressable> under &quot;Stopwatch&quot;, the
+                                        stopwatch will automatically start after the end of the last set with the set rest time.
                                         <NewLine />
                                         If all sets of all exercises are completed, the{" "}
-                                        <InlinePressable handlePress={() => handleSelectFromAnswer(SECTIONS.WORKOUTS, 3)}>workout can be ended</InlinePressable>.
+                                        <InlinePressable handlePress={() => handleSelectFromAnswer(SECTIONS.TRAININGS, 3)}>workout can be ended</InlinePressable>.
                                         <NewLine />
                                         The performed workout is added to the history and is used to display the progress.
                                     </AnswerText>
@@ -418,7 +424,7 @@ export const QuestionsAndAnswers = () => {
                     snapPoints: ["60%"],
                 },
                 {
-                    title: language === "de" ? "Editieren einer Übung" : "Editing an exercise",
+                    title: language === "de" ? "Übungen in Traingings bearbeiten" : "Editing an exercise in training",
                     answer:
                         language === "de" ? (
                             <HelpAnswer>
@@ -427,7 +433,7 @@ export const QuestionsAndAnswers = () => {
                                         Nach dem Du ein <InlinePressable handlePress={() => handleSelectFromAnswer(SECTIONS.TRAININGS, 0)}>Workout gestartet</InlinePressable> hast, kannst Du eine{" "}
                                         <InlinePressable handlePress={() => handleSelectFromAnswer(SECTIONS.EXERCISES, 1)}>Übung editieren</InlinePressable>, indem auf das{" "}
                                         <ThemedMaterialCommunityIcons ghost name="pencil" size={24} />
-                                        -Symbol neben den <InlinePressable handlePress={() => handleSelectFromAnswer(SECTIONS.WORKOUTS, 5)}>Metadaten der Übung</InlinePressable> klickst. <NewLine />
+                                        -Symbol neben den <InlinePressable handlePress={() => handleSelectFromAnswer(SECTIONS.TRAININGS, 5)}>Metadaten der Übung</InlinePressable> klickst. <NewLine />
                                     </AnswerText>
                                 </ThemedView>
                             </HelpAnswer>
@@ -438,7 +444,7 @@ export const QuestionsAndAnswers = () => {
                                         After you have <InlinePressable handlePress={() => handleSelectFromAnswer(SECTIONS.TRAININGS, 0)}>started a workout</InlinePressable>, you can{" "}
                                         <InlinePressable handlePress={() => handleSelectFromAnswer(SECTIONS.EXERCISES, 1)}>edit an exercise</InlinePressable> by clicking on the{" "}
                                         <ThemedMaterialCommunityIcons ghost name="pencil" size={24} /> symbol next to the{" "}
-                                        <InlinePressable handlePress={() => handleSelectFromAnswer(SECTIONS.WORKOUTS, 5)}>metadata of the exercise</InlinePressable>.
+                                        <InlinePressable handlePress={() => handleSelectFromAnswer(SECTIONS.TRAININGS, 5)}>metadata of the exercise</InlinePressable>.
                                     </AnswerText>
                                 </ThemedView>
                             </HelpAnswer>
@@ -484,7 +490,7 @@ export const QuestionsAndAnswers = () => {
                                     <AnswerText>
                                         Während eines Workouts ist es möglich zu jeder Übung Notizen zu machen. <NewLine />
                                         Eine Notiz kann gemacht werden, indem auf das <ThemedMaterialCommunityIcons ghost name="note" size={24} />
-                                        -Symbol neben den <InlinePressable handlePress={() => handleSelectFromAnswer(SECTIONS.EXERCISES, 4)}>Metadaten</InlinePressable> einer Übung geklickt wird.{" "}
+                                        -Symbol neben den <InlinePressable handlePress={() => handleSelectFromAnswer(SECTIONS.TRAININGS, 5)}>Metadaten</InlinePressable> einer Übung geklickt wird.{" "}
                                         <NewLine />
                                         Es öffnet sich ein Dialog, in dem die Notiz gemacht werden kann. Hast Du bereits eine Notiz gemacht, so wird diese im Textfeld angezeigt. <NewLine />
                                         Nachdem Du die Notiz fertig geschrieben hast, drücke auf &quot;Speichern&quot;. Dieser Button befindet sich am Ende des Dialogs. <NewLine />
@@ -497,7 +503,7 @@ export const QuestionsAndAnswers = () => {
                                     <AnswerText>
                                         During a workout it is possible to make notes for each exercise. <NewLine />
                                         A note can be made by clicking on the <ThemedMaterialCommunityIcons ghost name="note" size={24} /> symbol next to the{" "}
-                                        <InlinePressable handlePress={() => handleSelectFromAnswer(SECTIONS.EXERCISES, 4)}>metadata</InlinePressable> of an exercise. <NewLine />
+                                        <InlinePressable handlePress={() => handleSelectFromAnswer(SECTIONS.TRAININGS, 5)}>metadata</InlinePressable> of an exercise. <NewLine />
                                         A dialog opens in which the note can be made. If you have already made a note, it will be displayed in the text field. <NewLine />
                                         After you have finished writing the note, press &quot;Save&quot;. This button is located at the end of the dialog. <NewLine />
                                     </AnswerText>
@@ -513,7 +519,7 @@ export const QuestionsAndAnswers = () => {
                             <HelpAnswer>
                                 <ThemedView ghost stretch style={{ gap: 20 }}>
                                     <AnswerText>
-                                        Hast Du die ausgewählte Übung in einem <InlinePressable handlePress={() => handleSelectFromAnswer(SECTIONS.WORKOUTS, 0)}>vorherigen Workout</InlinePressable>{" "}
+                                        Hast Du die ausgewählte Übung in einem <InlinePressable handlePress={() => handleSelectFromAnswer(SECTIONS.WORKOUTS, 3)}>vorherigen Workout</InlinePressable>{" "}
                                         bereits einmal absolviert, dann werden die Daten der letzten Durchführung unterhalb der aktuellen Übung angezeigt. <NewLine />
                                         Hier kannst Du sehen an welchem Datum du die Übung das letzte Mal absolviert hast und auch welche{" "}
                                         <InlinePressable handlePress={() => handleSelectFromAnswer(SECTIONS.TRAININGS, 4)}>Notizen</InlinePressable> gemacht wurden. <NewLine />
@@ -528,7 +534,7 @@ export const QuestionsAndAnswers = () => {
                                 <ThemedView ghost stretch style={{ gap: 20 }}>
                                     <AnswerText>
                                         If you have already completed the selected exercise in a{" "}
-                                        <InlinePressable handlePress={() => handleSelectFromAnswer(SECTIONS.WORKOUTS, 0)}>previous workout</InlinePressable>, the data of the last execution will be
+                                        <InlinePressable handlePress={() => handleSelectFromAnswer(SECTIONS.WORKOUTS, 3)}>previous workout</InlinePressable>, the data of the last execution will be
                                         displayed below the current exercise. <NewLine />
                                         Here you can see on which date you last completed the exercise and also which{" "}
                                         <InlinePressable handlePress={() => handleSelectFromAnswer(SECTIONS.TRAININGS, 4)}>notes</InlinePressable> were made. <NewLine />
@@ -554,7 +560,7 @@ export const QuestionsAndAnswers = () => {
                                         Nachdem Du etwas gelöscht hast, erscheint am unteren Bildschirmrand ein Hinweis, dass etwas gelöscht wurde. Klicke auf den Hinweis, um die Löschung rückgängig
                                         zu machen. Dieser Hinweis wird nach einiger Zeit automatisch verschwinden.
                                         <NewLine /> Nach dem Ablauf dieser Zeit kann die Löschung nicht rückgängig gemacht werden. Die Zeit für die Rückgängig-Machung kann in den{" "}
-                                        <InlinePressable handlePress={navigateToSettings}>Einstellungen</InlinePressable> unter &quot;Löschzeit&quot; geändert werden.
+                                        <InlinePressable handlePress={() => navigateToSettings(0)}>allgemeinen Einstellungen</InlinePressable> unter &quot;Löschzeit&quot; geändert werden.
                                     </AnswerText>
                                 </ThemedView>
                             </HelpAnswer>
@@ -565,7 +571,7 @@ export const QuestionsAndAnswers = () => {
                                         After you have deleted something, a message will appear at the bottom of the screen that something has been deleted.
                                         <NewLine /> Click on the message to undo the deletion. This message will automatically disappear after a certain time.
                                         <NewLine /> After this time has expired, the deletion cannot be undone. The time for undoing can be changed in the{" "}
-                                        <InlinePressable handlePress={navigateToSettings}>settings</InlinePressable> under &quot;Deletion time&quot;.
+                                        <InlinePressable handlePress={() => navigateToSettings(0)}>general settings</InlinePressable> under &quot;Deletion time&quot;.
                                     </AnswerText>
                                 </ThemedView>
                             </HelpAnswer>

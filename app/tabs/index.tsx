@@ -8,8 +8,9 @@ import { Workouts } from "../workouts";
 import { Measurements } from "../measurements";
 import { Settings } from "../settings";
 import { useTheme } from "../../theme/context";
+import { RoutesParamaters } from "../../hooks/navigate";
 
-const Tabs = createBottomTabNavigator();
+const Tabs = createBottomTabNavigator<RoutesParamaters>();
 
 export function TabsWrapper() {
     const App = () => {
@@ -17,7 +18,6 @@ export function TabsWrapper() {
         const { t } = useTranslation();
         return (
             <Tabs.Navigator
-                initialRouteName="workouts"
                 screenOptions={{
                     tabBarStyle: { backgroundColor: componentBackgroundColor, borderTopWidth: 0, paddingTop: 5, height: 80, zIndex: 1 },
                 }}
@@ -48,6 +48,11 @@ export function TabsWrapper() {
                 />
                 <Tabs.Screen
                     component={Settings}
+                    listeners={({ navigation }) => ({
+                        blur: () => {
+                            navigation.setParams({ scrollIndex: 0 });
+                        },
+                    })}
                     options={{
                         headerShown: false,
                         tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} Icon={"cog"} />,

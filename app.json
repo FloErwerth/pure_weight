@@ -27,7 +27,7 @@
       "usesIcloudStorage": false,
       "supportsTablet": false,
       "bundleIdentifier": "com.FlorianErwerth.PureWeight",
-      "buildNumber": "13"
+      "buildNumber": "14"
     },
     "android": {
       "permissions": [

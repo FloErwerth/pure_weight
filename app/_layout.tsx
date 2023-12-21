@@ -10,7 +10,7 @@ import { Train } from "./workouts/train";
 import { WorkoutProgress } from "./workouts/progress";
 import { Create } from "./workouts/create";
 import { NavigationContainer } from "@react-navigation/native";
-import { navigationRef } from "../hooks/navigate";
+import { navigationRef, RoutesParamaters } from "../hooks/navigate";
 import { SafeAreaView } from "../components/Themed/ThemedSaveAreaView/SafeAreaView";
 import { ThemeProvider } from "../theme/context";
 import { RootSiblingParent } from "react-native-root-siblings";
@@ -23,10 +23,9 @@ import { getAppInstallDate } from "../store/reducers/metadata/metadataSelectors"
 import { Display } from "../components/App/settings/Sections/display";
 import { GeneralSettings } from "../components/App/settings/Sections/generalSettings";
 import { MeasurementProgress } from "./measurements/progress";
-import { LogBox } from "react-native";
 import { Help } from "./settings/help";
 
-const Stack = createNativeStackNavigator();
+const Stack = createNativeStackNavigator<RoutesParamaters>();
 
 const ThemedApp = () => {
     const dispatch = useAppDispatch();
@@ -37,7 +36,6 @@ const ThemedApp = () => {
             dispatch(setAppInstallDate(date as IsoDate));
         });
     }
-    LogBox.ignoreAllLogs(true);
     return (
         <NavigationContainer ref={navigationRef} independent={true}>
             <GestureHandlerRootView style={{ flex: 1 }}>
