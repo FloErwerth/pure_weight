@@ -50,7 +50,7 @@ export function TabsWrapper() {
                     component={Settings}
                     listeners={({ navigation }) => ({
                         blur: () => {
-                            navigation.setParams({ scrollIndex: 0 });
+                            navigation.setParams({ scrollIndex: undefined });
                         },
                     })}
                     options={{

@@ -15,6 +15,7 @@
   "history_front": "History:",
   "history_latest_workout": "Latest Workout",
   "history_latest_workout_short": "latest",
+  "history_browse": "Browse history",
 
   "create_select_type": "Select exercise type",
   "create_exercise_type_label": "Exercise type",
@@ -145,8 +146,8 @@
 
   "sorting_modal_title": "Pick a sorting method",
   "sorting_label": "Sorting: ",
-  "sorting_A_Z": "Alphabetical",
-  "sorting_Z_A": "Reverse Alphabetical",
+  "sorting_A_Z": "Alphabetically ascending",
+  "sorting_Z_A": "Alphabetically descending",
   "sorting_LONGEST_AGO": "Longest ago",
-  "sorting_MOST_RECENT": "Most recent"
+  "sorting_MOST_RECENT": "Most recently"
 }

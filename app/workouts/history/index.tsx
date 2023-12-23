@@ -196,7 +196,7 @@ export function WorkoutHistory() {
                     renderSectionHeader={renderSectionHeader}
                 />
                 <ThemedPressable style={styles.browseButtonWrapper} onPress={open}>
-                    <Text style={styles.browseButton}>Browse History</Text>
+                    <Text style={styles.browseButton}>{t("history_browse")}</Text>
                 </ThemedPressable>
             </PageContent>
             <ThemedBottomSheetModal snapPoints={["50%"]} ref={ref}>
