@@ -10,6 +10,7 @@ export const getStartStopwatchOnDoneSet = createSelector([getStopwatchSettings],
 export const getStartStopwatchOnLastSet = createSelector([getStopwatchSettings], (settings) => settings?.startOnLastSet);
 export const getDeletionTime = createSelector([getSettingsState], (settings) => settings.deletionTimeMs);
 export const getSwitchToNextExercise = createSelector([getSettingsState], (settings) => settings.switchToNextExercise);
+export const getSearchManual = createSelector([getSettingsState], (settings) => settings.searchManual);
 export const getKeepAwake = createSelector([getSettingsState], (settings) => settings.keepAwake);
 const languageUnitSystemWeightUnitMap = {
     en: {

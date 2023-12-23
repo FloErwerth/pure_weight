@@ -74,6 +74,11 @@
     "settings_switch_to_next_exercise_true": "Automatisch nach jedem Satz wechseln",
     "settings_switch_to_next_exercise_false": "Nicht automatisch wechseln",
 
+  "settings_help_content": "Bedienungshilfe",
+  "settings_help_training": "Training",
+
+  "settings_search_placeholder": "Suche",
+
   "alert_delete_message": "Dies kann nicht rückgängig gemacht werden",
   "alert_quit_title": "Das Workout frühzeitig beenden?",
   "alert_quit_message": "Der bisherige Fortschritt wird gespeichert",

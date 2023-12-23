@@ -29,8 +29,8 @@ export type RoutesParamaters = {
     ["settings/workout/index"]: {
         name: "settings/workout/index";
     };
-    ["settings/help/index"]: {
-        name: "settings/help/index";
+    ["settings/manual/index"]: {
+        name: "settings/manual/index";
     };
     ["settings/statistics/entries/index"]: {
         name: "settings/statistics/entries/index";
@@ -74,8 +74,8 @@ export const Routes = {
     display: {
         screen: "settings/display/index",
     },
-    "settings/help": {
-        screen: "settings/help/index",
+    "settings/manual": {
+        screen: "settings/manual/index",
     },
     entries: {
         screen: "settings/statistics/entries/index",

@@ -82,6 +82,11 @@
 
   "settings_measurement_history_entry_title": "Number of entries from measurements",
 
+  "settings_help_content": "Manual",
+  "settings_help_training": "Training",
+  "settings_search_placeholder": "Search",
+
+
   "alert_delete_message": "This action can't be undone",
   "alert_quit_title": "Quit training early?",
   "alert_quit_message": "The progress so far will be saved",
