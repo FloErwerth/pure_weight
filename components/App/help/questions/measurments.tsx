@@ -101,6 +101,36 @@ export const getMeasurementQuestions = (
         snapPoints: ["85%"],
     },
     {
+        title: language === "de" ? "Bearbeitung eines Messpunkts" : "Editing measurement data",
+        answer:
+            language === "de" ? (
+                <HelpAnswer>
+                    <ThemedView ghost stretch style={{ gap: 20 }}>
+                        <AnswerText>
+                            Um einen Messpunkt zu bearbeiten, navigiere zu den <InlinePressable handlePress={handleNavigateToMeasurements}>Messungen</InlinePressable> und ziehe die zu bearbeitende
+                            Messung nach rechts. <NewLine />
+                            Du gelangst zu einer Übersicht über aller gemachten Messpunkte deiner ausgewählten Messung. Drücke auf den Messpunkt, welchen Du bearbeiten möchtest. <NewLine />
+                            Du wirst nun zur Bearbeitungsansicht weitergeleitet, welche dem Dialog der Erstellung der Messung ähnelt. Du kannst hier jedoch nur den Wert und das Datum ändern.{" "}
+                            <NewLine />
+                        </AnswerText>
+                    </ThemedView>
+                </HelpAnswer>
+            ) : (
+                <HelpAnswer>
+                    <ThemedView ghost stretch style={{ gap: 20 }}>
+                        <AnswerText>
+                            To edit a measurement data point, navigate to the <InlinePressable handlePress={handleNavigateToMeasurements}>measurements</InlinePressable> and swipe the measurement to be
+                            edited to the right. <NewLine />
+                            You will be taken to an overview of all the measurement data points of your selected measurement. Press on the measurement data point you want to edit. <NewLine />
+                            You will now be redirected to the editing view, which is similar to the dialog of creating the measurement. However, you can only change the value and the date here.{" "}
+                            <NewLine />
+                        </AnswerText>
+                    </ThemedView>
+                </HelpAnswer>
+            ),
+        snapPoints: ["65%"],
+    },
+    {
         title: language === "de" ? "Löschen von Messungen" : "Deletion of measurements",
         answer:
             language === "de" ? (
