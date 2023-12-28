@@ -90,7 +90,7 @@ export const QuestionsAndAnswers = () => {
             [SECTIONS.MEASUREMENTS]: getMeasurementQuestions(language, navigateToMesurements, handleSelectFromAnswer, createNewMeasurement, measurementOptionMap),
             [SECTIONS.MISCELLANEOUS]: getMiscellaneousQuestions(navigateToSettings, language),
         };
-    }, [colorOfBackground, createNewMeasurement, handleNavigateToWorkouts, language, navigateToMesurements, navigateToSettings, open, setupNewWorkout]);
+    }, [colorOfBackground, createNewMeasurement, handleNavigateToWorkouts, language, measurementOptionMap, navigateToMesurements, navigateToSettings, open, setupNewWorkout]);
 
     const handleSetSelectedQuestion = useCallback(
         (section: SECTIONS, index: number) => {
