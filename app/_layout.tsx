@@ -24,6 +24,7 @@ import { Display } from "../components/App/settings/Sections/display";
 import { GeneralSettings } from "../components/App/settings/Sections/generalSettings";
 import { MeasurementProgress } from "./measurements/progress";
 import { Manual } from "./settings/manual";
+import { CreateMeasurement } from "./measurements/create";
 
 const Stack = createNativeStackNavigator<RoutesParamaters>();
 
@@ -53,6 +54,7 @@ const ThemedApp = () => {
                                     <Stack.Screen component={GeneralSettings} options={{ headerShown: false }} name="settings/workout/index" />
                                     <Stack.Screen component={MeasurementProgress} options={{ headerShown: false }} name="measurement/progress/index" />
                                     <Stack.Screen component={Manual} options={{ headerShown: false }} name="settings/manual/index" />
+                                    <Stack.Screen component={CreateMeasurement} options={{ headerShown: false }} name="measurement/create/index" />
                                 </Stack.Navigator>
                             </SafeAreaView>
                         </BottomSheetModalProvider>

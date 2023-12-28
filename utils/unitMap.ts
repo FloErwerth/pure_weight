@@ -11,12 +11,12 @@ export const unitMap = {
 export const measurementUnitMap = {
     metric: {
         weight: "kg",
-        growth: "cm",
+        length: "cm",
         percent: "%",
     },
     imperial: {
         weight: "lbs",
-        growth: "inch",
+        length: "inch",
         percent: "%",
     },
 };

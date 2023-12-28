@@ -2,39 +2,34 @@ import { DEFAULT_PLUS, SiteNavigationButtons } from "../../components/SiteNaviga
 import { useTranslation } from "react-i18next";
 import { useCallback, useMemo, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../store";
-import { MeasurementModal } from "../../components/MeasurementModal/MeasurementModal";
 import { PageContent } from "../../components/PageContent/PageContent";
 import { ThemedView } from "../../components/Themed/ThemedView/View";
 import { Swipeable } from "../../components/WorkoutCard/Swipeable";
 import { RenderedMeasurement } from "../../components/App/measurements/RenderedMeasurement";
 import { BottomToast } from "../../components/BottomToast/BottomToast";
-import { useBottomSheetRef } from "../../components/BottomSheetModal/ThemedBottomSheetModal";
 import { deleteMeasurement, recoverMeasurement, setEditedMeasurement, setupNewMeasurement } from "../../store/reducers/measurements";
 import { getMeasurements } from "../../store/reducers/measurements/measurementSelectors";
 import { MeasurementSorting } from "../../components/App/measurements/Sorting/MeasurementSorting";
+import { useNavigate } from "../../hooks/navigate";
 
 export function Measurements() {
     const { t } = useTranslation();
     const measurements = useAppSelector(getMeasurements);
     const dispatch = useAppDispatch();
     const [showToast, setShowToast] = useState(false);
-    const [ref, open, close] = useBottomSheetRef();
+    const navigate = useNavigate();
 
     const handleAddNewMeasurement = useCallback(() => {
         dispatch(setupNewMeasurement());
-        open();
-    }, [dispatch, open]);
-
-    const handleCloseModal = useCallback(() => {
-        close();
-    }, [close]);
+        navigate("measurement/create");
+    }, [dispatch, navigate]);
 
     const handleAddExistingMeasurement = useCallback(
         (index: number) => {
             dispatch(setEditedMeasurement({ index, isNew: false }));
-            open();
+            navigate("measurement/create");
         },
-        [dispatch, open],
+        [dispatch, navigate],
     );
 
     const handleDeleteMeasurement = useCallback(
@@ -67,7 +62,6 @@ export function Measurements() {
             <PageContent background ignoreGap paddingTop={20} scrollable>
                 {mappedMeasurements}
             </PageContent>
-            <MeasurementModal reference={ref} onRequestClose={handleCloseModal} />
             <BottomToast
                 onRequestClose={() => setShowToast(false)}
                 open={showToast}

@@ -55,7 +55,7 @@ export const convertMeasurements = (type: MeasurementType | undefined, data: Mea
     if (type === "weight") {
         return convertWeight(getNextUnit(nextUnitSystem).weight, data);
     }
-    if (type === "growth") {
+    if (type === "length") {
         return convertLength(getNextUnit(nextUnitSystem).length, data);
     }
 

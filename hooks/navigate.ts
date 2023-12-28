@@ -38,6 +38,9 @@ export type RoutesParamaters = {
     ["measurement/progress/index"]: {
         name: "measurement/progress/index";
     };
+    ["measurement/create/index"]: {
+        name: "measurement/create/index";
+    };
     ["workouts/workoutHistory/index"]: {
         name: "workouts/workoutHistory/index";
     };
@@ -82,6 +85,9 @@ export const Routes = {
     },
     "measurement/progress": {
         screen: "measurement/progress/index",
+    },
+    "measurement/create": {
+        screen: "measurement/create/index",
     },
 };
 

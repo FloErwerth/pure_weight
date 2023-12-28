@@ -1,6 +1,6 @@
 import { z } from "zod/lib";
 
-export const measurementTypes = ["weight", "growth", "percent"] as const;
+export const measurementTypes = ["weight", "length", "percent"] as const;
 export const MeasurementUnit = z.enum(measurementTypes);
 export type MeasurementType = z.infer<typeof MeasurementUnit>;
 
