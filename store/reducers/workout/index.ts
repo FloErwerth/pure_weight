@@ -4,6 +4,7 @@ import { Temporal } from "@js-temporal/polyfill";
 import { sortWorkouts } from "./sortWorkouts";
 import { DoneExerciseData, ExerciseMetaData, TimeInput, TrainedWorkout, WeightBasedExerciseData, WeightBasedExerciseMetaData, Workout, WorkoutState } from "./types";
 import { getRandomColorFromPalette } from "../../../utils/colorPalette";
+import { getDateTodayIso } from "../../../utils/date";
 
 export const setWorkoutState = createAction<WorkoutState, "workout_set_state">("workout_set_state");
 export const setWorkouts = createAction<Workout[], "workout_set_workouts">("workout_set_workouts");
@@ -256,7 +257,7 @@ export const workoutReducer = createReducer<WorkoutState>({ workouts: [], sortin
                 const duration = (endTimestamp - beginTimestamp) / 1000;
                 const doneExercises: DoneExerciseData[] = workout.exerciseData.map((data) => ({ name: data.name, sets: data.doneSets, note: data.note }));
                 state.workouts[workoutIndex].doneWorkouts.push({
-                    timestamp: endTimestamp,
+                    isoDate: getDateTodayIso(),
                     duration: duration.toString(),
                     doneExercises,
                 });

@@ -1,5 +1,4 @@
 import { createSelector } from "@reduxjs/toolkit";
-import { getDate, getIsoDate } from "../../../utils/date";
 import { AppState } from "../../index";
 import { getUnitSystem } from "../settings/settingsSelectors";
 import { getLastNEntries } from "../../../utils/getLastNEntries";
@@ -8,13 +7,16 @@ import { MeasurementType } from "../../../components/App/measurements/types";
 import { measurementUnitMap } from "../../../utils/unitMap";
 
 export const getMeasurementsState = (state: AppState) => state.measurmentState;
-export const getEditedMeasurementData = createSelector([getMeasurementsState], (state) => state.editedMeasurement);
+export const getEditedMeasurement = createSelector([getMeasurementsState], (state) => state.editedMeasurement);
 
 export const getMeasurements = createSelector([getMeasurementsState], (state) => state.measurements);
+export const getMeasurementDataPoint = createSelector([getEditedMeasurement], (editedMeasurement) => {
+    return Boolean(editedMeasurement && !editedMeasurement.isNew && editedMeasurement.isDataPoint);
+});
 
 export const getLatestMeasurements = createSelector([getMeasurements], (measurements) =>
     measurements.map(({ data }) => {
-        return data[data.length - 1]?.timestamp ?? 0;
+        return data[data.length - 1]?.isoDate ?? 0;
     }),
 );
 
@@ -25,7 +27,7 @@ export const getUnitByType = (unitSystem: UnitSystem, type?: MeasurementType) =>
 
     return measurementUnitMap[unitSystem][type];
 };
-export const getMeasurementData = createSelector([getMeasurements, getEditedMeasurementData, getUnitSystem], (measurements, data, unitSystem) => {
+export const getMeasurementData = createSelector([getMeasurements, getEditedMeasurement, getUnitSystem], (measurements, data, unitSystem) => {
     if (data === undefined || data.isNew) {
         return undefined;
     }
@@ -35,8 +37,8 @@ export const getMeasurementData = createSelector([getMeasurements, getEditedMeas
     if (measurement?.data) {
         const labels: string[] = [];
         const data: number[] = [];
-        entries.forEach(({ timestamp, value }) => {
-            labels.push(getDate(timestamp));
+        entries.forEach(({ isoDate, value }) => {
+            labels.push(isoDate);
             data.push(parseFloat(value));
         });
         return {
@@ -53,6 +55,7 @@ export const getMeasurementData = createSelector([getMeasurements, getEditedMeas
     return undefined;
 });
 export const getMeasurementSorting = createSelector([getMeasurementsState], (state) => state.sorting);
+export const getEditedMeasurementDataPoint = createSelector([getMeasurementsState], (state) => state.editedMeasurementDataPoint);
 export const getMeasurmentProgress = createSelector([getMeasurements, (byIndex, index: number) => index], (measurements, index) => {
     const measurement = measurements[index];
     const data = measurement.data.map(({ value }) => value);
@@ -68,9 +71,9 @@ export const getMeasurmentProgress = createSelector([getMeasurements, (byIndex, 
 
     return undefined;
 });
-export const getDatesFromCurrentMeasurement = createSelector([getEditedMeasurementData], (measurement) => {
+export const getDatesFromCurrentMeasurement = createSelector([getEditedMeasurement], (measurement) => {
     if (!measurement || measurement.isNew) {
         return undefined;
     }
-    return measurement.measurement.data.map(({ timestamp }) => getIsoDate(timestamp));
+    return measurement.measurement.data.map(({ isoDate }) => isoDate);
 });

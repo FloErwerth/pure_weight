@@ -1,13 +1,14 @@
 import { AppState } from "./index";
 import { MeasurementDataPoint } from "../components/App/measurements/types";
 import { DoneWorkouts } from "./reducers/workout/types";
+import { convertDate } from "../utils/date";
 
 const constructedDoneWorkouts: DoneWorkouts = [];
 for (let i = 1; i <= 15; i++) {
     const currentDate = new Date("2023-09-01");
     currentDate.setDate(currentDate.getDate() + i * Math.random() * 10 - 5);
     constructedDoneWorkouts.push({
-        timestamp: currentDate.getTime(),
+        isoDate: convertDate.toIsoDate(currentDate),
         duration: (i * 100).toString(),
         doneExercises: [
             {
@@ -38,7 +39,7 @@ const getConstructedMeasurement = (): MeasurementDataPoint[] => {
     for (let i = 1; i <= 15; i++) {
         const currentDate = new Date("2023-12-01");
         currentDate.setDate(currentDate.getDate() + i * Math.random() * 10 - 5);
-        datapoints.push({ timestamp: currentDate.getTime(), value: (i * Math.random() * 10).toString() });
+        datapoints.push({ isoDate: convertDate.toIsoDate(currentDate), value: (i * Math.random() * 10).toString() });
     }
     return datapoints;
 };
@@ -55,13 +56,21 @@ export const mockState: AppState = {
                 name: "Körpergewicht",
                 type: "weight",
                 data: [
-                    { timestamp: 1702271012832, value: "70" },
-                    { timestamp: 1702271012832, value: "70" },
-                    { timestamp: 1702271012832, value: "70" },
-                    { timestamp: 1702271012832, value: "72" },
-                    { timestamp: 1702271012832, value: "73" },
-                    { timestamp: 1702271012832, value: "75" },
-                    { timestamp: 1702271012832, value: "74" },
+                    { isoDate: "2023-12-01", value: "70" },
+                    { isoDate: "2023-12-02", value: "70" },
+                    { isoDate: "2023-12-03", value: "70" },
+                    { isoDate: "2023-12-04", value: "72" },
+                    { isoDate: "2023-12-05", value: "73" },
+                    { isoDate: "2023-12-06", value: "75" },
+                    { isoDate: "2023-12-07", value: "74" },
+                    { isoDate: "2023-12-08", value: "74" },
+                    { isoDate: "2023-12-09", value: "74" },
+                    { isoDate: "2023-12-10", value: "74" },
+                    { isoDate: "2023-12-11", value: "74" },
+                    { isoDate: "2023-12-12", value: "74" },
+                    { isoDate: "2023-12-13", value: "74" },
+                    { isoDate: "2023-12-14", value: "74" },
+                    { isoDate: "2023-12-15", value: "74" },
                 ],
                 higherIsBetter: true,
             },
@@ -69,13 +78,13 @@ export const mockState: AppState = {
                 name: "Körperfettanteil",
                 type: "percent",
                 data: [
-                    { timestamp: 1702271012832, value: "15" },
-                    { timestamp: 1702271012832, value: "16" },
-                    { timestamp: 1702271012832, value: "17" },
-                    { timestamp: 1702271012832, value: "18" },
-                    { timestamp: 1702271012832, value: "20" },
-                    { timestamp: 1702271012832, value: "19" },
-                    { timestamp: 1702271012832, value: "23" },
+                    { isoDate: "2023-12-01", value: "15" },
+                    { isoDate: "2023-12-02", value: "15" },
+                    { isoDate: "2023-12-03", value: "15" },
+                    { isoDate: "2023-12-04", value: "16" },
+                    { isoDate: "2023-12-05", value: "14" },
+                    { isoDate: "2023-12-06", value: "13" },
+                    { isoDate: "2023-12-07", value: "12" },
                 ],
             },
         ],
@@ -103,7 +112,7 @@ export const mockState: AppState = {
                 ],
                 doneWorkouts: [
                     {
-                        timestamp: 1701385200000,
+                        isoDate: "2023-12-01",
                         duration: "120",
                         doneExercises: [
                             {
@@ -114,7 +123,7 @@ export const mockState: AppState = {
                         ],
                     },
                     {
-                        timestamp: 1701385200000 + 60 * 60 * 1000 * 24,
+                        isoDate: "2023-12-04",
                         duration: "120",
                         doneExercises: [
                             {
@@ -124,7 +133,7 @@ export const mockState: AppState = {
                         ],
                     },
                     {
-                        timestamp: 1701385200000 + 60 * 60 * 1000 * 24 * 2,
+                        isoDate: "2023-12-05",
                         duration: "120",
                         doneExercises: [
                             {
@@ -134,7 +143,7 @@ export const mockState: AppState = {
                         ],
                     },
                     {
-                        timestamp: 1701385200000 + 60 * 60 * 1000 * 24 * 2,
+                        isoDate: "2023-12-06",
                         duration: "120",
                         doneExercises: [
                             {
@@ -144,7 +153,7 @@ export const mockState: AppState = {
                         ],
                     },
                     {
-                        timestamp: 1701385200000 + 60 * 60 * 1000 * 24 * 2,
+                        isoDate: "2023-12-07",
                         duration: "120",
                         doneExercises: [
                             {
@@ -161,7 +170,7 @@ export const mockState: AppState = {
                 exercises: [{ type: "WEIGHT_BASED", name: "Bankdrücken", weight: "50", sets: "5", pause: { seconds: "3", minutes: "0" }, reps: "5" }],
                 doneWorkouts: [
                     {
-                        timestamp: 1701385200000,
+                        isoDate: "2023-12-01",
                         duration: "120",
                         doneExercises: [
                             {

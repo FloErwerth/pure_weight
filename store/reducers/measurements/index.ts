@@ -2,16 +2,20 @@ import { createAction, createReducer } from "@reduxjs/toolkit/src";
 import { Measurement } from "../../../components/App/measurements/types";
 import { SortingType } from "../../types";
 import { sortMeasurements } from "./utils/sortMeasurements";
+import { IsoDate } from "../../../types/date";
 
 type NewMeasurement = { isNew: true };
-type ExistingMeasurement = { isNew: false; index: number };
-type EditedMeasurementPayload = NewMeasurement | ExistingMeasurement | undefined;
-type EditedMeasurment = EditedMeasurementPayload & { measurement: Measurement };
+type ExistingMeasurement = { isNew: false; isDataPoint: false; index: number };
+export type MeasurementDataPoint = { isNew: false; isDataPoint: true; dataPointIndex: number; index: number };
+type EditedMeasurementPayload = NewMeasurement | ExistingMeasurement | MeasurementDataPoint | undefined;
+export type EditedMeasurement = EditedMeasurementPayload & { measurement: Measurement };
+export type EditedMeasurementDataPoint = { indexInData: number; timestamp: number; value: string; editedMeasurement: EditedMeasurement };
 export type MeasurementState = {
     measurements: Measurement[];
     deletedMeasurement?: { measurement: Measurement; index: number };
     inspectedMeasurement?: number;
-    editedMeasurement?: EditedMeasurment;
+    editedMeasurement?: EditedMeasurement;
+    editedMeasurementDataPoint?: EditedMeasurementDataPoint;
     sorting: SortingType;
 };
 export const setMeasurementState = createAction<MeasurementState, "measurement_set_state">("measurement_set_state");
@@ -22,9 +26,11 @@ export const editMeasurement = createAction<{ measurement: Measurement; index: n
 export const deleteMeasurement = createAction<number, "measurement_delete">("measurement_delete");
 export const setMeasurementSorting = createAction<SortingType, "measurement_sort">("measurement_sort");
 export const mutateEditedMeasurement = createAction<{ key: keyof Measurement; value: Measurement[keyof Measurement] }, "mutate_measurement">("mutate_measurement");
-export const saveEditedMeasurement = createAction<{ hadWarning: boolean }, "save_inspected_measurement">("save_inspected_measurement");
+export const mutateEditedMeasurementDataPoint = createAction<{ key: "value" | "timestamp"; value: Measurement[keyof Measurement] }, "mutate_measurement">("mutate_measurement");
+export const setDatapointIndexInEditedExercise = createAction<number, "setDatapointIndexInEditedExercise">("setDatapointIndexInEditedExercise");
+export const saveEditedMeasurement = createAction<{ isoDate: IsoDate; replaceIndex: number | undefined }, "save_inspected_measurement">("save_inspected_measurement");
+export const saveMeasurementDataPoint = createAction<{ isoDate: IsoDate }, "save_measurement_data_point">("save_measurement_data_point");
 export const setupNewMeasurement = createAction("setup_new_measurement");
-
 export const recoverMeasurement = createAction("measurement_recover");
 
 export type MeasurementActions =
@@ -40,6 +46,19 @@ export const measurementReducer = createReducer<MeasurementState>({ measurements
         .addCase(setMeasurementState, (_, action) => {
             return action.payload;
         })
+        .addCase(setDatapointIndexInEditedExercise, (state, action) => {
+            if (state.editedMeasurement && action.payload !== undefined) {
+                state.editedMeasurement = {
+                    ...state.editedMeasurement,
+                    measurement: {
+                        ...state.editedMeasurement.measurement,
+                        value: state.editedMeasurement.measurement.data[action.payload]?.value ?? "",
+                    },
+                    isDataPoint: true,
+                    dataPointIndex: action.payload,
+                };
+            }
+        })
         .addCase(setEditedMeasurement, (state, action) => {
             if (action.payload === undefined) {
                 state.editedMeasurement = undefined;
@@ -47,8 +66,19 @@ export const measurementReducer = createReducer<MeasurementState>({ measurements
             }
             if (!action.payload.isNew) {
                 const measurement = state.measurements[action.payload.index];
-                measurement.value = measurement.data[measurement.data.length - 1]?.value ?? "";
-                state.editedMeasurement = { isNew: false, measurement: state.measurements[action.payload.index], index: action.payload?.index };
+                if (action.payload.isDataPoint) {
+                    measurement.value = measurement.data[action.payload.dataPointIndex]?.value ?? "";
+                    state.editedMeasurement = {
+                        isNew: false,
+                        isDataPoint: true,
+                        dataPointIndex: action.payload.dataPointIndex,
+                        measurement: state.measurements[action.payload.index],
+                        index: action.payload?.index,
+                    };
+                } else {
+                    measurement.value = measurement.data[measurement.data.length - 1]?.value ?? "";
+                    state.editedMeasurement = { isNew: false, isDataPoint: false, measurement: state.measurements[action.payload.index], index: action.payload?.index };
+                }
             } else {
                 state.editedMeasurement = { isNew: true, measurement: { name: "", data: [] } };
             }
@@ -57,16 +87,26 @@ export const measurementReducer = createReducer<MeasurementState>({ measurements
             const newMeasurement: Measurement = { name: "", data: [] };
             state.editedMeasurement = { isNew: true, measurement: newMeasurement };
         })
+        .addCase(saveMeasurementDataPoint, (state, action) => {
+            const editedMeasurement = state.editedMeasurement;
+            if (editedMeasurement && !editedMeasurement.isNew && editedMeasurement.isDataPoint) {
+                const measurements = [...state.measurements];
+                const newMeasurement = editedMeasurement.measurement;
+                newMeasurement.data.splice(editedMeasurement.dataPointIndex, 1, { isoDate: action.payload.isoDate, value: newMeasurement.value ?? "" });
+                measurements.splice(editedMeasurement.index, 1, newMeasurement);
+                state.measurements = measurements;
+            }
+            state.editedMeasurement = undefined;
+        })
         .addCase(saveEditedMeasurement, (state, action) => {
             const editedMeasurement = state.editedMeasurement;
             if (editedMeasurement) {
                 const measurements = [...state.measurements];
                 const newMeasurement = editedMeasurement.measurement;
-                if (action.payload.hadWarning) {
-                    newMeasurement.data.splice(newMeasurement.data.length - 1, 1, { timestamp: Date.now(), value: newMeasurement.value ?? "" });
-                } else {
-                    newMeasurement.data.push({ timestamp: Date.now(), value: newMeasurement.value ?? "" });
+                if (action.payload.replaceIndex) {
+                    newMeasurement.data.splice(action.payload.replaceIndex, 1);
                 }
+                newMeasurement.data.push({ isoDate: action.payload.isoDate, value: newMeasurement.value ?? "" });
                 if (editedMeasurement.isNew) {
                     measurements.push(newMeasurement);
                 } else {

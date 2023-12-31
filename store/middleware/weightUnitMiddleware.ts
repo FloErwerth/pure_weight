@@ -24,10 +24,10 @@ const calculateWeight = (weight: string, nextUnit: WeightUnit) => {
     return convertedWeight;
 };
 
-const convertKgToPound = (data: MeasurementDataPoint[]): MeasurementDataPoint[] => data.map(({ timestamp, value }) => ({ timestamp, value: round(convert(parseFloat(value), "kg").to("pound")) }));
-const convertPoundToKg = (data: MeasurementDataPoint[]) => data.map(({ timestamp, value }) => ({ timestamp, value: calculateWeight(value, "kg") }));
-const convertCmToInch = (data: MeasurementDataPoint[]) => data.map(({ timestamp, value }) => ({ timestamp, value: calculateWeight(value, "lbs") }));
-const convertInchToCm = (data: MeasurementDataPoint[]) => data.map(({ timestamp, value }) => ({ timestamp, value: round(convert(parseFloat(value), "inch").to("cm")) }));
+const convertKgToPound = (data: MeasurementDataPoint[]): MeasurementDataPoint[] => data.map(({ isoDate, value }) => ({ isoDate, value: round(convert(parseFloat(value), "kg").to("pound")) }));
+const convertPoundToKg = (data: MeasurementDataPoint[]) => data.map(({ isoDate, value }) => ({ isoDate, value: calculateWeight(value, "kg") }));
+const convertCmToInch = (data: MeasurementDataPoint[]) => data.map(({ isoDate, value }) => ({ isoDate, value: calculateWeight(value, "lbs") }));
+const convertInchToCm = (data: MeasurementDataPoint[]) => data.map(({ isoDate, value }) => ({ isoDate, value: round(convert(parseFloat(value), "inch").to("cm")) }));
 
 const convertWeight = (nextUnit: LengthUnit | WeightUnit, data: MeasurementDataPoint[]) => {
     switch (nextUnit) {

@@ -1,4 +1,5 @@
 import { SortingType } from "../../types";
+import { IsoDate } from "../../../types/date";
 
 export type Workout = {
     name: string;
@@ -13,7 +14,7 @@ export type WeightBasedExerciseData = {
 };
 
 export type DoneWorkouts = {
-    timestamp: number;
+    isoDate: IsoDate;
     duration: string;
     doneExercises?: DoneExerciseData[];
 }[];

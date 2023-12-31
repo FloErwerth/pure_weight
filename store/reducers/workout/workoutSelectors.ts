@@ -1,11 +1,13 @@
 import { createSelector } from "@reduxjs/toolkit";
 import { AppState } from "../../index";
 import { getLanguage } from "../settings/settingsSelectors";
-import { getDate, getDateTodayIso, getIsoDate, getMonth, getSinceDate } from "../../../utils/date";
+import { getDateTodayIso, getMonth } from "../../../utils/date";
 import { IsoDate } from "../../../types/date";
 import { PALETTE } from "../../../utils/colorPalette";
 import { getLastNEntries } from "../../../utils/getLastNEntries";
 import { ExerciseSets } from "./types";
+import { Temporal } from "@js-temporal/polyfill";
+import { getSinceDate } from "../../../utils/timeAgo";
 
 export const getWorkoutState = ({ workoutState }: AppState) => workoutState;
 export const getTrainedWorkout = createSelector([getWorkoutState], (state) => state.trainedWorkout);
@@ -16,19 +18,19 @@ export const getEditedExercise = createSelector([getWorkoutState], (state) => st
 export const getIsExistingEditedExercise = createSelector([getEditedExercise], (editedExercise) => editedExercise?.index !== undefined);
 export const getNumberSavedWorkouts = createSelector([getWorkouts], (workouts) => workouts.length);
 export const getSortedDoneWorkout = createSelector([getWorkouts, (workouts, index: number) => index], (workouts, index) => {
-    return workouts[index].doneWorkouts.map(({ timestamp }) => timestamp).sort((a, b) => a - b);
+    return workouts[index].doneWorkouts.map(({ isoDate }) => isoDate).sort(Temporal.PlainDate.compare);
 });
 
 export const getWorkoutColor = createSelector([getEditedWorkout], (editedWorkout) => editedWorkout?.workout.calendarColor);
 
-export const getLatestWorkoutDate = createSelector([getSortedDoneWorkout], (timestamps) => {
-    return getIsoDate(timestamps[timestamps.length - 1]) as IsoDate;
+export const getLatestWorkoutDate = createSelector([getSortedDoneWorkout], (isoDates) => {
+    return isoDates[isoDates.length - 1];
 });
 export const getLatestWorkoutDateDisplay = createSelector([getSortedDoneWorkout, getLanguage], (dates, language) => {
     return getSinceDate(dates[dates.length - 1], language ?? "de");
 });
 export const getFirstWorkoutDate = createSelector([getSortedDoneWorkout], (dates) => {
-    return getIsoDate(dates[0]);
+    return dates[0];
 });
 export const getWorkoutByIndex = createSelector([getWorkouts, (workouts, index: number) => index], (trainings, index) => {
     return trainings[index];
@@ -55,14 +57,14 @@ export const getTrainingDayData = createSelector([getEditedWorkout], (editedWork
 
     slicedDoneWorkouts
         .filter(({ doneExercises }) => doneExercises !== undefined)
-        .forEach(({ timestamp, doneExercises }) => {
+        .forEach(({ isoDate, doneExercises }) => {
             doneExercises!.forEach(({ name, sets }) => {
                 const foundEntry = sortedData.get(name);
                 if (foundEntry) {
-                    foundEntry.data.push({ sets, date: getIsoDate(timestamp) });
+                    foundEntry.data.push({ sets, date: isoDate });
                     return;
                 }
-                sortedData.set(name, { exerciseName: name, data: [{ sets, date: getIsoDate(timestamp) }] });
+                sortedData.set(name, { exerciseName: name, data: [{ sets, date: isoDate }] });
             });
         });
 
@@ -103,7 +105,7 @@ export const getHistoryByMonth = createSelector([getEditedWorkout, (editedWorkou
     > = new Map();
 
     workout?.doneWorkouts.forEach((doneWorkout) => {
-        const date = getIsoDate(doneWorkout.timestamp);
+        const date = doneWorkout.isoDate;
         foundTrainings.set(date, [
             ...(foundTrainings.get(date) ?? []),
             {
@@ -142,7 +144,7 @@ export const getPreviousTraining = createSelector([getTrainedWorkout, getLanguag
         doneWorkouts[workoutIndex].doneExercises?.forEach((exercise) => {
             if (!foundEntries.get(exercise.name)) {
                 foundEntries.set(exercise.name, {
-                    date: getDate(doneWorkouts[workoutIndex].timestamp, language, "short"),
+                    date: doneWorkouts[workoutIndex].isoDate,
                     sets: exercise.sets,
                     note: exercise.note,
                 });

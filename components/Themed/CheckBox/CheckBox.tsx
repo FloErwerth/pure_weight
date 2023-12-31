@@ -11,13 +11,14 @@ import { Pressable } from "react-native";
 
 interface CheckBoxProps {
     checked?: boolean;
-    onChecked: (checked: boolean) => void;
+    onChecked?: (checked: boolean) => void;
     size?: number;
     label: string;
     helpText?: string;
+    disabled?: boolean;
 }
 
-export const CheckBox = ({ checked = false, onChecked, size = 20, label, helpText }: CheckBoxProps) => {
+export const CheckBox = ({ checked = false, onChecked, size = 20, label, helpText, disabled }: CheckBoxProps) => {
     const opacity = useSharedValue(0);
     const checkBoxWrapperStyle = useMemo(() => ({ borderRadius: borderRadius < size ? size / 4 : borderRadius, width: size, height: size }), [size]);
     const checkStyle = useMemo(() => ({ opacity: opacity }), [opacity]);
@@ -27,11 +28,11 @@ export const CheckBox = ({ checked = false, onChecked, size = 20, label, helpTex
     }, [checked]);
 
     const handleCheck = useCallback(() => {
-        onChecked(!checked);
+        onChecked?.(!checked);
     }, [checked, onChecked]);
 
     return (
-        <ThemedPressable style={styles.outerWrapper} ghost onPress={handleCheck}>
+        <ThemedPressable style={styles.outerWrapper} disabled={disabled} ghost onPress={handleCheck}>
             <HStack input style={styles.wrapper}>
                 <Text ghost style={styles.text}>
                     {label}
@@ -42,7 +43,7 @@ export const CheckBox = ({ checked = false, onChecked, size = 20, label, helpTex
                             <ThemedMaterialCommunityIcons ghost name="check" size={size} />
                         </Animated.View>
                     </ThemedView>
-                    {helpText && (
+                    {!disabled && helpText && (
                         <Pressable>
                             <ThemedMaterialCommunityIcons ghost name="help-circle-outline" size={size} />
                         </Pressable>

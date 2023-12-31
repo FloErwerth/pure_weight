@@ -1,13 +1,12 @@
 import { useAppDispatch, useAppSelector } from "../../../store";
 import { getLanguage, getThemeKey, getUnitSystem } from "../../../store/reducers/settings/settingsSelectors";
-import { getDatesFromCurrentMeasurement, getEditedMeasurementData, getUnitByType } from "../../../store/reducers/measurements/measurementSelectors";
+import { getDatesFromCurrentMeasurement, getEditedMeasurement, getMeasurementDataPoint, getUnitByType } from "../../../store/reducers/measurements/measurementSelectors";
 import { useCallback, useMemo, useState } from "react";
 import { useTheme } from "../../../theme/context";
 import { useTranslation } from "react-i18next";
 import { getAppInstallDate } from "../../../store/reducers/metadata/metadataSelectors";
-import { mutateEditedMeasurement, saveEditedMeasurement } from "../../../store/reducers/measurements";
-import { IsoDate } from "../../../types/date";
-import DateTimePicker, { DateTimePickerEvent } from "@react-native-community/datetimepicker";
+import { mutateEditedMeasurement, saveEditedMeasurement, saveMeasurementDataPoint } from "../../../store/reducers/measurements";
+import DateTimePicker from "@react-native-community/datetimepicker";
 import { ThemedTextInput } from "../../../components/Themed/ThemedTextInput/ThemedTextInput";
 import { HStack } from "../../../components/Stack/HStack/HStack";
 import { ThemedDropdown } from "../../../components/Themed/Dropdown/ThemedDropdown";
@@ -17,11 +16,11 @@ import { Text } from "../../../components/Themed/ThemedText/Text";
 import { AddButton } from "../../../components/AddButton/AddButton";
 import { createStyles } from "../../../components/App/measurements/styles";
 import { MeasurementType, measurementTypes } from "../../../components/App/measurements/types";
-import { getDateTodayIso } from "../../../utils/date";
 import { ThemedView } from "../../../components/Themed/ThemedView/View";
 import { SiteNavigationButtons } from "../../../components/SiteNavigationButtons/SiteNavigationButtons";
 import { PageContent } from "../../../components/PageContent/PageContent";
 import { useNavigate } from "../../../hooks/navigate";
+import { convertDate, getDateTodayIso } from "../../../utils/date";
 
 export const useMeasurementOptions = () => {
     const unitSystem = useAppSelector(getUnitSystem);
@@ -41,7 +40,7 @@ export const useMeasurementOptionMap = () => {
 
 const useDropdownValue = () => {
     const unitSystem = useAppSelector(getUnitSystem);
-    const type = useAppSelector(getEditedMeasurementData)?.measurement.type;
+    const type = useAppSelector(getEditedMeasurement)?.measurement.type;
     return getUnitByType(unitSystem, type);
 };
 const getTypeByUnit = (unit: string) => {
@@ -50,21 +49,31 @@ const getTypeByUnit = (unit: string) => {
 
 const MAX_DATE = new Date(getDateTodayIso());
 
+const useDate = () => {
+    const isMeasurementDataPoint = useAppSelector(getMeasurementDataPoint);
+    const editedMeasurement = useAppSelector(getEditedMeasurement);
+    if (isMeasurementDataPoint && !editedMeasurement?.isNew && editedMeasurement?.isDataPoint) {
+        return convertDate.toDate(editedMeasurement.measurement.data[editedMeasurement.dataPointIndex].isoDate);
+    }
+};
+
 export const CreateMeasurement = () => {
     const themeKey = useAppSelector(getThemeKey);
     const language = useAppSelector(getLanguage);
     const dates = useAppSelector(getDatesFromCurrentMeasurement);
     const [showWarning, setShowWarnining] = useState(false);
-    const [date, setDate] = useState(MAX_DATE);
+    const generatedDate = useDate() ?? MAX_DATE;
+    const [date, setDate] = useState(generatedDate);
     const dispatch = useAppDispatch();
     const { mainColor, warningColor } = useTheme();
     const { t } = useTranslation();
     const dropdownValue = useDropdownValue();
     const measurementOptions = useMeasurementOptions();
-    const editedMeasurement = useAppSelector(getEditedMeasurementData);
+    const editedMeasurement = useAppSelector(getEditedMeasurement);
     const installDate = useAppSelector(getAppInstallDate);
     const minimiumDate = useMemo(() => new Date(installDate ?? "2023-01-01"), [installDate]);
     const navigate = useNavigate();
+    const isMeasurementDataPoint = useAppSelector(getMeasurementDataPoint);
 
     const handleSetMeasurementName = useCallback(
         (name: string) => {
@@ -107,7 +116,7 @@ export const CreateMeasurement = () => {
     const buttonIcon = useMemo(() => ({ name: !editedMeasurement?.isNew ? "table-check" : "table-large-plus", size: 24 }) as const, [editedMeasurement?.isNew]);
 
     const handleDateChange = useCallback(
-        (event: DateTimePickerEvent, selectedDate?: Date) => {
+        (_: unknown, selectedDate?: Date) => {
             const currentDate = selectedDate || date;
             setDate(currentDate);
         },
@@ -119,14 +128,19 @@ export const CreateMeasurement = () => {
     }, [navigate]);
 
     const handleSaveMeasurement = useCallback(() => {
-        if (!showWarning && date && dates?.includes(date?.toISOString().split("T")[0] as IsoDate)) {
+        const sameDateIndex = dates?.findIndex((searchDate) => searchDate === convertDate.toIsoDate(date));
+        if (!isMeasurementDataPoint && !showWarning && sameDateIndex !== -1) {
             setShowWarnining(true);
             return;
         }
-        dispatch(saveEditedMeasurement({ hadWarning: showWarning }));
+        if (isMeasurementDataPoint) {
+            dispatch(saveMeasurementDataPoint({ isoDate: convertDate.toIsoDate(date) }));
+        } else {
+            dispatch(saveEditedMeasurement({ isoDate: convertDate.toIsoDate(date), replaceIndex: sameDateIndex !== -1 ? sameDateIndex : undefined }));
+        }
         setShowWarnining(false);
         handleNavigateToMeasurements();
-    }, [showWarning, date, dates, dispatch, handleNavigateToMeasurements]);
+    }, [dates, showWarning, date, dispatch, handleNavigateToMeasurements, isMeasurementDataPoint]);
 
     return (
         <ThemedView background stretch round>
@@ -139,6 +153,7 @@ export const CreateMeasurement = () => {
                     onChangeText={handleSetMeasurementName}
                     value={editedMeasurement?.measurement.name}
                     clearButtonMode="while-editing"
+                    editable={!isMeasurementDataPoint}
                     placeholder={t("measurement_placeholder")}
                 />
                 <HStack ghost style={{ alignSelf: "stretch", gap: 10 }}>
@@ -168,6 +183,7 @@ export const CreateMeasurement = () => {
                     checked={editedMeasurement?.measurement.higherIsBetter}
                     size={26}
                     onChecked={handleSelectHigherIsBetter}
+                    disabled={isMeasurementDataPoint}
                 />
                 <DateTimePicker
                     display="inline"

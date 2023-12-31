@@ -1,7 +1,6 @@
 import { VStack } from "../../Stack/VStack/VStack";
 import { View } from "react-native";
 import { Text } from "../../Themed/ThemedText/Text";
-import { getSinceDate } from "../../../utils/date";
 import { ThemedMaterialCommunityIcons } from "../../Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
 import { HStack } from "../../Stack/HStack/HStack";
 import { useCallback, useMemo } from "react";
@@ -14,6 +13,7 @@ import { getLanguage } from "../../../store/reducers/settings/settingsSelectors"
 import { getLatestMeasurements, getMeasurmentProgress } from "../../../store/reducers/measurements/measurementSelectors";
 import { useNavigate } from "../../../hooks/navigate";
 import { setEditedMeasurement } from "../../../store/reducers/measurements";
+import { getSinceDate } from "../../../utils/timeAgo";
 
 interface MeasurementProps {
     index: number;
@@ -28,7 +28,7 @@ export const RenderedMeasurement = ({ index, measurement }: MeasurementProps) =>
     const progress = useAppSelector((state: AppState) => getMeasurmentProgress(state, index));
     const wasPositive = useMemo(() => progress !== undefined && progress > 0, [progress]);
     const handleNavigateToChart = useCallback(() => {
-        dispatch(setEditedMeasurement({ index, isNew: false }));
+        dispatch(setEditedMeasurement({ index, isNew: false, isDataPoint: false }));
         navigate("measurement/progress");
     }, [dispatch, index, navigate]);
 

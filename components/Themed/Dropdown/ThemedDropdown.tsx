@@ -13,10 +13,10 @@ import { getErrorByKey } from "../../../store/reducers/errors/errorSelectors";
 
 interface ThemedDropdownProps<T extends readonly string[]> {
     isSelectable?: boolean;
-    onSelectItem: (value: T[number]) => void;
+    onSelectItem?: (value: T[number]) => void;
     placeholder?: string;
     value?: T[number];
-    options: T;
+    options?: T;
     errorKey?: ErrorFields;
     secondary?: boolean;
 }
@@ -74,7 +74,7 @@ export function ThemedDropdown<T extends readonly string[]>({ secondary, isSelec
     const handleSelectItem = useCallback(
         (value: T[number]) => {
             setOpen(false);
-            onSelectItem(value);
+            onSelectItem?.(value);
         },
         [onSelectItem],
     );
@@ -99,7 +99,7 @@ export function ThemedDropdown<T extends readonly string[]>({ secondary, isSelec
                 {open && (
                     <Animated.View style={dropdownStyles} layout={Layout} entering={FadeIn.duration(200)} exiting={FadeOut.duration(200)}>
                         <ThemedView input style={{ borderColor: componentBackgroundColor, borderWidth: 1, borderRadius }}>
-                            {options.map((value, index) => (
+                            {options?.map((value, index) => (
                                 <>
                                     <Item key={value} onSelectItem={handleSelectItem} value={value} />
                                     <Separator show={index < options.length - 1} />

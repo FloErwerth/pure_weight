@@ -2,10 +2,6 @@ import { Temporal } from "@js-temporal/polyfill";
 import { isoDateDecoder } from "../decoders/date";
 import { IsoDate } from "../types/date";
 import * as Locale from "expo-localization";
-import TimeAgo from "javascript-time-ago";
-import en from "javascript-time-ago/locale/en";
-import de from "javascript-time-ago/locale/de";
-import { Language } from "../store/reducers/settings/types";
 
 export const getDateToday = () => {
     return Temporal.Now.plainDateISO();
@@ -29,32 +25,24 @@ export const getIsoDate = (timestamp: number | string) => {
     const convertedTimestamp = typeof timestamp === "string" ? parseInt(timestamp) : timestamp;
     return Temporal.Instant.fromEpochMilliseconds(convertedTimestamp).toString().split("T")[0] as IsoDate;
 };
-export const getDate = (timestamp: number | string, language?: "en" | "de", dateStyle?: "short" | "medium" | "long") => {
-    const convertedTimestamp = typeof timestamp === "string" ? parseInt(timestamp) : timestamp;
-    return Temporal.Instant.fromEpochMilliseconds(convertedTimestamp).toLocaleString(language ?? Locale.locale, {
-        dateStyle: dateStyle ?? "medium",
-    }) as IsoDate;
-};
 
 export const getLocaleDate = (date: IsoDate, language?: "en" | "de", options?: Intl.DateTimeFormatOptions) => {
     return Temporal.PlainDate.from(date).toLocaleString(language ?? Locale.locale, options);
 };
 
-TimeAgo.addLocale(en);
-TimeAgo.addLocale(de);
-
-export function getSinceDate(timestamp?: number, language?: Language): string {
-    if (!timestamp) {
-        return "";
-    }
-    const timeAgo = new TimeAgo(language ?? Locale.locale);
-    return timeAgo.format(timestamp);
-}
-
-export const getIsoDateFromDate = (date: Date, language?: "en" | "de", dateStyle?: "short" | "medium" | "long") => {
-    return Temporal.PlainDate.from(date.toString()).toLocaleString(language ?? Locale.locale, {
-        dateStyle: dateStyle ?? "medium",
-    }) as IsoDate;
+export const convertDate = {
+    toIsoDate: (date?: Date) => {
+        if (!date) {
+            return getDateTodayIso();
+        }
+        return Temporal.Instant.from(date.toISOString()).toString().split("T")[0] as IsoDate;
+    },
+    toDate: (isoDate: IsoDate) => {
+        return new Date(isoDate);
+    },
+    toTemporal: (isoDate: IsoDate) => {
+        return Temporal.PlainDate.from(isoDate);
+    },
 };
 
 export const getMonth = (date?: IsoDate) => {

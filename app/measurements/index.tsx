@@ -26,7 +26,7 @@ export function Measurements() {
 
     const handleAddExistingMeasurement = useCallback(
         (index: number) => {
-            dispatch(setEditedMeasurement({ index, isNew: false }));
+            dispatch(setEditedMeasurement({ index, isNew: false, isDataPoint: false }));
             navigate("measurement/create");
         },
         [dispatch, navigate],
@@ -45,14 +45,27 @@ export function Measurements() {
         setShowToast(false);
     }, [dispatch]);
 
+    const handleEditMeasurement = useCallback(
+        (index: number) => {
+            dispatch(setEditedMeasurement({ index, isNew: false, isDataPoint: false }));
+            navigate("measurement/edit");
+        },
+        [dispatch, navigate],
+    );
+
     const mappedMeasurements = useMemo(
         () =>
             measurements?.map((measurement, index) => (
-                <Swipeable onDelete={() => handleDeleteMeasurement(index)} key={`${measurement.name}-pressable`} onClick={() => handleAddExistingMeasurement(index)}>
+                <Swipeable
+                    onEdit={() => handleEditMeasurement(index)}
+                    onDelete={() => handleDeleteMeasurement(index)}
+                    key={`${measurement.name}-pressable`}
+                    onClick={() => handleAddExistingMeasurement(index)}
+                >
                     <RenderedMeasurement index={index} measurement={measurement} />
                 </Swipeable>
             )),
-        [handleAddExistingMeasurement, handleDeleteMeasurement, measurements],
+        [handleAddExistingMeasurement, handleDeleteMeasurement, handleEditMeasurement, measurements],
     );
 
     return (

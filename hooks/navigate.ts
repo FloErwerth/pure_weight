@@ -41,6 +41,10 @@ export type RoutesParamaters = {
     ["measurement/create/index"]: {
         name: "measurement/create/index";
     };
+    ["measurement/edit/index"]: {
+        name: "measurement/edit/index";
+        measurementIndex: number;
+    };
     ["workouts/workoutHistory/index"]: {
         name: "workouts/workoutHistory/index";
     };
@@ -88,6 +92,9 @@ export const Routes = {
     },
     "measurement/create": {
         screen: "measurement/create/index",
+    },
+    "measurement/edit": {
+        screen: "measurement/edit/index",
     },
 };
 
