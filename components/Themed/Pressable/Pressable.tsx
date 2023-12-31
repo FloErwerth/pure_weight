@@ -16,6 +16,7 @@ interface ThemedPressableProps extends ComponentProps<typeof Pressable>, Compute
     padding?: boolean;
     center?: boolean;
     safeBottom?: boolean;
+    hideBorder?: boolean;
 }
 export const ThemedPressable = (props: ThemedPressableProps) => {
     const { errorColor } = useTheme();
@@ -37,7 +38,7 @@ export const ThemedPressable = (props: ThemedPressableProps) => {
                 zIndex: props.behind ? -1 : 0,
                 backgroundColor: computedBackgroundColor,
                 borderColor: props.error ? errorColor : "transparent",
-                borderWidth: 1,
+                borderWidth: props.hideBorder ? 0 : 1,
                 padding: props.padding ? 10 : undefined,
                 borderRadius: props.round ? borderRadius : undefined,
                 alignItems: props.center ? "center" : undefined,

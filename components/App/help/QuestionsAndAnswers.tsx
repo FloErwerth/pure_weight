@@ -9,7 +9,6 @@ import { ThemedView } from "../../Themed/ThemedView/View";
 import { Text } from "../../Themed/ThemedText/Text";
 import { ThemedScrollView } from "../../Themed/ThemedScrollView/ThemedScrollView";
 import { View } from "react-native";
-import { ProfileContent } from "../settings/components/ProfileContent/ProfileContent";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { getMiscellaneousQuestions } from "./questions/miscellaneous";
 import { getWorkoutsQuestions } from "./questions/workouts";
@@ -105,14 +104,7 @@ export const QuestionsAndAnswers = () => {
         return Object.entries(data).map(([section, data]) => ({
             sectionTitle: sectionTitleMap[section as unknown as SECTIONS],
             handleSelectQuestion: (index: number) => handleSetSelectedQuestion(section as unknown as SECTIONS, index),
-            data: data
-                .map(({ title, answer, snapPoints }) => ({ title, answer, snapPoints }))
-                .filter(({ title }) => {
-                    if (!searchedManual) {
-                        return true;
-                    }
-                    return title.toLowerCase().includes(searchedManual.toLowerCase());
-                }),
+            data: data.map(({ title, answer, snapPoints }) => ({ title, answer, snapPoints, shown: !searchedManual || title.toLowerCase().includes(searchedManual.toLowerCase()) })),
         }));
     }, [data, handleSetSelectedQuestion, searchedManual, sectionTitleMap]);
 
@@ -127,7 +119,7 @@ export const QuestionsAndAnswers = () => {
                 contentContainerStyle={{ gap: 20 }}
             >
                 {mappedAndFilteredData.map(({ sectionTitle, handleSelectQuestion, data }) => {
-                    if (data.length === 0) {
+                    if (data.every(({ shown }) => !shown)) {
                         return null;
                     }
                     return (
@@ -135,11 +127,11 @@ export const QuestionsAndAnswers = () => {
                             <Text ghost style={{ marginBottom: 10, fontSize: 30 }}>
                                 {sectionTitle}
                             </Text>
-                            <ProfileContent>
-                                {data.map(({ title }, index) => (
-                                    <HelpQuestion key={index} question={title} title={title} onPress={() => handleSelectQuestion(index)} />
+                            <ThemedView round style={{ padding: 10, paddingBottom: 0 }}>
+                                {data.map(({ title, shown }, index) => (
+                                    <HelpQuestion key={index} shown={shown} question={title} title={title} onPress={() => handleSelectQuestion(index)} />
                                 ))}
-                            </ProfileContent>
+                            </ThemedView>
                         </View>
                     );
                 })}

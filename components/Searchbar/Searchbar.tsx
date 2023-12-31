@@ -13,7 +13,7 @@ export const Searchbar = ({ handleSetSearchManual }: SearchbarProps) => {
         <ThemedView input round>
             <HStack padding style={{ gap: 10, alignItems: "center" }} ghost>
                 <ThemedMaterialCommunityIcons name="magnify" ghost size={30} />
-                <ThemedTextInput onChangeText={handleSetSearchManual} placeholder={t("settings_search_placeholder")} stretch />
+                <ThemedTextInput showClear onChangeText={handleSetSearchManual} placeholder={t("settings_search_placeholder")} stretch />
             </HStack>
         </ThemedView>
     );
