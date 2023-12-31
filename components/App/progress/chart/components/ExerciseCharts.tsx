@@ -128,7 +128,7 @@ export const ExerciseChart = ({ exerciseName, data }: ExerciseChartProps) => {
 
     const getXLabel = useCallback(
         (xValue: string) => {
-            return getLocaleDate(xValue as IsoDate, language, { day: "2-digit", month: "2-digit", year: "2-digit" });
+            return getLocaleDate(xValue as IsoDate, language, { dateStyle: "medium" });
         },
         [language],
     );

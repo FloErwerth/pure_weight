@@ -15,6 +15,9 @@ import { VStack } from "../../../components/Stack/VStack/VStack";
 import { HStack } from "../../../components/Stack/HStack/HStack";
 import { Skeleton } from "../../../components/Skeleton/Skeleton";
 import { Dimensions } from "react-native";
+import { IsoDate } from "../../../types/date";
+import { getLocaleDate } from "../../../utils/date";
+import { getLanguage } from "../../../store/reducers/settings/settingsSelectors";
 
 const Chart = lazy(() => import("../../../components/Chart/Chart"));
 const Fallback = () => {
@@ -40,6 +43,7 @@ export const MeasurementProgress = () => {
     const { mainColor } = useTheme();
     const data = useAppSelector(getMeasurementData);
     const navigate = useNavigate();
+    const language = useAppSelector(getLanguage);
     const navigateToMeasurement = useCallback(() => {
         navigate("measurements");
     }, [navigate]);
@@ -57,6 +61,13 @@ export const MeasurementProgress = () => {
         [data?.unit, mainColor],
     );
 
+    const getXLabel = useCallback(
+        (label: string) => {
+            return getLocaleDate(label as IsoDate, language, { dateStyle: "medium" });
+        },
+        [language],
+    );
+
     if (!data) {
         navigate("measurements");
         return null;
@@ -68,7 +79,7 @@ export const MeasurementProgress = () => {
             <PageContent background paddingTop={20}>
                 <Suspense fallback={<Fallback />}>
                     <ThemedView style={{ padding: 10 }} round>
-                        <Chart transparent lineChartStyles={{ left: -30, top: 20, borderRadius }} getYLabel={() => ""} data={data} getDotContent={getDotContent} />
+                        <Chart transparent lineChartStyles={{ left: -30, top: 20, borderRadius }} getXLabel={getXLabel} getYLabel={() => ""} data={data} getDotContent={getDotContent} />
                     </ThemedView>
                 </Suspense>
             </PageContent>
