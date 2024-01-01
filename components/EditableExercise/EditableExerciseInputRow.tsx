@@ -13,12 +13,11 @@ import { ThemedPressable } from "../Themed/Pressable/Pressable";
 import { TextInput } from "react-native";
 import { EditableExerciseInputRowProps } from "./types";
 
-export const EditableExerciseInputRow = ({ value, setValue, errorKey, i18key, stretch, suffix }: EditableExerciseInputRowProps) => {
+export const EditableExerciseInputRow = ({ value = "0", setValue, errorKey, i18key, stretch, suffix }: EditableExerciseInputRowProps) => {
     const { t } = useTranslation();
     const { errorColor } = useTheme();
     const hasError = useAppSelector((state: AppState) => getErrorByKey(state)(errorKey));
     const inputStyles = useMemo(() => [{ borderColor: hasError ? errorColor : "transparent" }, styles.input], [errorColor, hasError]);
-
     const textInputRef = useRef<TextInput>(null);
 
     const handleSetValue = useCallback(
@@ -44,7 +43,7 @@ export const EditableExerciseInputRow = ({ value, setValue, errorKey, i18key, st
                     onChangeText={handleSetValue}
                     value={value}
                 ></ThemedTextInput>
-                {value && suffix && (
+                {suffix && (
                     <ThemedView ghost>
                         <Text ghost>{suffix}</Text>
                     </ThemedView>

@@ -18,7 +18,7 @@ export const WeightBasedExercise = () => {
 
     const handleEditExercise = useCallback(
         (key: keyof WeightBasedExerciseMetaData, value: string | undefined) => {
-            dispatch(mutateEditedExercise({ key, value }));
+            dispatch(mutateEditedExercise({ key, value: value ?? "0" }));
         },
         [dispatch],
     );
@@ -39,7 +39,7 @@ export const WeightBasedExercise = () => {
                     i18key="weight"
                     setValue={(weight) => handleEditExercise?.("weight", weight)}
                     errorKey={"create_weight"}
-                    value={editedExercise?.exercise.weight}
+                    value={editedExercise?.exercise?.weight}
                 />
                 <EditableExerciseInputRow stretch i18key="sets" setValue={(sets) => handleEditExercise?.("sets", sets)} errorKey={"create_sets"} value={editedExercise?.exercise.sets} />
                 <EditableExerciseInputRow stretch i18key="reps" setValue={(reps) => handleEditExercise?.("reps", reps)} errorKey={"create_reps"} value={editedExercise?.exercise.reps} />

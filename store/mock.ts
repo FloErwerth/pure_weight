@@ -123,6 +123,17 @@ export const mockState: AppState = {
                         ],
                     },
                     {
+                        isoDate: "2023-12-01",
+                        duration: "120",
+                        doneExercises: [
+                            {
+                                name: "Klimmzüge unterstützt",
+                                sets: [{ weight: "50", reps: "5" }],
+                                note: "Das war ein guter Satz",
+                            },
+                        ],
+                    },
+                    {
                         isoDate: "2023-12-04",
                         duration: "120",
                         doneExercises: [

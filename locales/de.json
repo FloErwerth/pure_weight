@@ -8,6 +8,7 @@
   "general": "Allgemein",
   "statistics": "Statistiken",
   "number_entries": "Anzahl der Einträge",
+  "workout_no_done_workouts_hint": "Noch keine Workouts abgeschlossen",
 
 
 
@@ -59,7 +60,6 @@
   "settings_keep_awake_title": "Ruheszustand",
   "settings_keep_awake": "Display aktiv halten",
   "settings_keep_awake_helptext_text": "Diese Einstellung erlaubt es Dir den Ruhezustand des Bildschirms zu steuern. \n\nWenn ausgewählt bleibt der Bildschirm während der Nutzung der App aktiviert.",
-
   "settings_unit_system_title": "Einheiten-System",
   "settings_unit_system_helptext_text": "Diese Einstellung erlaubt es Dir das Einheiten-System für die App einzustellen. \n\nDas metrische System umfasst Einheiten wie Kilogramm, Zentimeter und Liter. \n\nDas angloamerikanische System umfasst Einheiten wie Pfund, Inch und Gallonen. \n\nWechselst Du zwischen den Einheiten-Systemen, werden alle gespeicherten Werte umgerechnet",
 

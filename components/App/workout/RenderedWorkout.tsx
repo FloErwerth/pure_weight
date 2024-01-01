@@ -11,6 +11,8 @@ import { View } from "react-native";
 import { ThemedMaterialCommunityIcons } from "../../Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
 import { ProgressDisplay } from "../../WorkoutCard/components/ProgressDisplay/ProgressDisplay";
 import { HistoryDisplay } from "../history/HistoryDisplay/HistoryDisplay";
+import { useTranslation } from "react-i18next";
+import { ThemedView } from "../../Themed/ThemedView/View";
 
 type RenderedWorkoutProps = {
     index: number;
@@ -22,6 +24,9 @@ export const RenderedWorkout = ({ index }: RenderedWorkoutProps) => {
     const hasHistory = useAppSelector((state: AppState) => getHasHistory(state, index));
     const latestWorkoutDate = useAppSelector((state: AppState) => getLatestWorkoutDateDisplay(state, index));
     const navigate = useNavigate();
+    const { t } = useTranslation();
+    const showHint = trend || hasHistory;
+
     const handleNavigateToProgress = useCallback(() => {
         dispatch(setEditedWorkout({ index }));
         navigate("workout/progress");
@@ -44,10 +49,16 @@ export const RenderedWorkout = ({ index }: RenderedWorkoutProps) => {
                 </View>
                 <ThemedMaterialCommunityIcons name="chevron-right" size={24} />
             </HStack>
-            <View style={styles.innerTrainWrapper}>
-                {trend !== undefined && <ProgressDisplay type="Workout" wasPositive={trend.isPositive} onPress={handleNavigateToProgress} name={trend.name} percent={trend.percent} />}
-                {hasHistory && <HistoryDisplay workoutIndex={index} handleNavigateToHistory={handleNavigateToHistory} />}
-            </View>
+            {showHint ? (
+                <View style={styles.innerTrainWrapper}>
+                    {trend !== undefined && <ProgressDisplay type="Workout" wasPositive={trend.isPositive} onPress={handleNavigateToProgress} name={trend.name} percent={trend.percent} />}
+                    {hasHistory && <HistoryDisplay workoutIndex={index} handleNavigateToHistory={handleNavigateToHistory} />}
+                </View>
+            ) : (
+                <ThemedView ghost round>
+                    <Text italic>{t("workout_no_done_workouts_hint")}</Text>
+                </ThemedView>
+            )}
         </View>
     );
 };

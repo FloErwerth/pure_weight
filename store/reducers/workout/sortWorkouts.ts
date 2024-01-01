@@ -4,9 +4,14 @@ import { Temporal } from "@js-temporal/polyfill";
 import { convertDate } from "../../../utils/date";
 
 const sortDates = (a: Workout, b: Workout) => {
+    if (!a?.doneWorkouts || !b?.doneWorkouts || a.doneWorkouts[a.doneWorkouts.length - 1] === undefined || b.doneWorkouts[b.doneWorkouts.length - 1] === undefined) {
+        return 0;
+    }
+
     const isoDatesA = a.doneWorkouts.map((workout) => workout.isoDate);
-    const isoDatesB = b.doneWorkouts.map((workout) => workout.isoDate);
-    return Temporal.PlainDate.compare(convertDate.toTemporal(isoDatesB[isoDatesB.length - 1]), convertDate.toTemporal(isoDatesA[isoDatesA.length - 1]));
+    const isoDatesB = b.doneWorkouts?.map((workout) => workout.isoDate);
+
+    return Temporal.PlainDate.compare(convertDate.toTemporal(isoDatesB[isoDatesB?.length - 1]), convertDate.toTemporal(isoDatesA[isoDatesA?.length - 1]));
 };
 
 export const sortWorkouts = (workouts: Workout[], sorting: SortingType) => {

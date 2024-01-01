@@ -8,6 +8,7 @@
   "general": "General",
   "statistics": "Statistics",
   "number_entries": "Number of entries",
+  "workout_no_done_workouts_hint": "No workouts have been completed yet",
 
   "workout_front": "Workout:",
 

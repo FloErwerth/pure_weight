@@ -49,11 +49,9 @@ export const TimeInputRow = ({ value, setValue, i18key, errorKey }: TimeInputRow
                             onChangeText={handleChangeMinutes}
                             value={value?.minutes}
                         ></ThemedTextInput>
-                        {value?.minutes && (
-                            <ThemedView ghost>
-                                <Text ghost>{minutesSuffix}</Text>
-                            </ThemedView>
-                        )}
+                        <ThemedView ghost>
+                            <Text ghost>{minutesSuffix}</Text>
+                        </ThemedView>
                     </HStack>
                 </ThemedPressable>
                 <ThemedPressable stretch ghost onPress={() => secondsRef.current?.focus()}>
@@ -67,11 +65,9 @@ export const TimeInputRow = ({ value, setValue, i18key, errorKey }: TimeInputRow
                             onChangeText={handleChangeSeconds}
                             value={value?.seconds}
                         ></ThemedTextInput>
-                        {value?.seconds && (
-                            <ThemedView ghost>
-                                <Text ghost>{secondsSuffix}</Text>
-                            </ThemedView>
-                        )}
+                        <ThemedView ghost>
+                            <Text ghost>{secondsSuffix}</Text>
+                        </ThemedView>
                     </HStack>
                 </ThemedPressable>
             </HStack>

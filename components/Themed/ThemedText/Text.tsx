@@ -17,6 +17,7 @@ interface ThemedTextProps extends TextProps {
     behind?: boolean;
     link?: boolean;
     textBackground?: boolean;
+    italic?: boolean;
 }
 
 export const Text = (props: ThemedTextProps) => {
@@ -31,6 +32,7 @@ export const Text = (props: ThemedTextProps) => {
                 textAlign: props.center ? "center" : "left",
                 color: computedColor,
                 backgroundColor: computedBackgroundColor,
+                fontStyle: props.italic ? "italic" : "normal",
             } as const,
             props.style,
         ],
