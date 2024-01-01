@@ -7,10 +7,9 @@ import { ThemedPressable } from "../Themed/Pressable/Pressable";
 import { Text } from "../Themed/ThemedText/Text";
 import { HStack } from "../Stack/HStack/HStack";
 
-export type SlidingSwitchOption = { value: string; label: string; Component: ReactElement };
+export type SlidingSwitchOption = { value: string; label: string; Component?: ReactElement };
 
 interface SlidingSwitchProps {
-    hasComponents?: boolean;
     options: SlidingSwitchOption[];
     onSelectValue: (value: string) => void;
     disabled?: boolean;
@@ -18,7 +17,7 @@ interface SlidingSwitchProps {
 }
 const HEIGHT = 37;
 
-export function SlidingSwitch({ hasComponents = true, options, onSelectValue, value, disabled }: SlidingSwitchProps) {
+export function SlidingSwitch({ options, onSelectValue, value, disabled }: SlidingSwitchProps) {
     const [selectedValue, setSelectedValue] = useState<string>(value ?? "");
     const backgroundLeft = useRef(new Animated.Value(0)).current;
     const animatedViewRef = useRef<View>(null);
@@ -61,7 +60,10 @@ export function SlidingSwitch({ hasComponents = true, options, onSelectValue, va
         [onSelectValue],
     );
 
-    const renderItem = useCallback(({ item: { Component } }: { item: { Component: ReactElement } }) => {
+    const renderItem = useCallback(({ item: { Component } }: { item: { Component?: ReactElement } }) => {
+        if (!Component) {
+            return null;
+        }
         return Component;
     }, []);
 
@@ -70,32 +72,14 @@ export function SlidingSwitch({ hasComponents = true, options, onSelectValue, va
             <ThemedView onLayout={measureContainer} reference={animatedViewRef} style={styles.wrapper}>
                 <HStack ghost>
                     {options.map(({ label, value }) => (
-                        <ThemedPressable
-                            disabled={disabled}
-                            key={label + value}
-                            ghost
-                            style={styles.pressable}
-                            stretch
-                            onPress={() => handleSelectValue(value)}
-                        >
+                        <ThemedPressable disabled={disabled} key={label + value} ghost style={styles.pressable} stretch onPress={() => handleSelectValue(value)}>
                             <Text ghost>{label}</Text>
                         </ThemedPressable>
                     ))}
                 </HStack>
                 <AnimatedView input style={animatedBackgroundStyle} />
             </ThemedView>
-            {hasComponents && (
-                <FlatList
-                    scrollEnabled={false}
-                    ref={flatListRef}
-                    snapToInterval={200}
-                    snapToOffsets={[0]}
-                    decelerationRate={0}
-                    data={options}
-                    renderItem={renderItem}
-                    horizontal
-                />
-            )}
+            <FlatList scrollEnabled={false} ref={flatListRef} snapToInterval={200} snapToOffsets={[0]} decelerationRate={0} data={options} renderItem={renderItem} horizontal />
         </>
     );
 }

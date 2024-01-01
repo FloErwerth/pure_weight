@@ -264,6 +264,8 @@ export const StopwatchPopover = () => {
     const fastForwardDisabled = (remainingTime ?? 0) <= 15000;
     const fastForwardColor = fastForwardDisabled ? textDisabled : mainColor;
 
+    const smallDigitStyles = useMemo(() => [stopWatchStyles.smallDigit, { color: mainColor }], [mainColor]);
+
     if (currentPauseTime === -404 || remainingTime === -404) {
         return null;
     }
@@ -310,7 +312,7 @@ export const StopwatchPopover = () => {
                         animationDuration={0}
                         separatorStyle={separatorStyle}
                         containerStyle={stopWatchStyles.container}
-                        digitStyle={{ fontSize: 35, textAlign: "center", color: mainColor }}
+                        digitStyle={smallDigitStyles}
                         mode="timer"
                         leadingZeros={2}
                         trailingZeros={0}

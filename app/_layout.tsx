@@ -1,5 +1,5 @@
 import { persistor, store, useAppDispatch, useAppSelector } from "../store";
-import React from "react";
+import React, { useEffect } from "react";
 import { PersistGate } from "redux-persist/integration/react";
 import { Provider } from "react-redux";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
@@ -26,18 +26,28 @@ import { MeasurementProgress } from "./measurements/progress";
 import { Manual } from "./settings/manual";
 import { CreateMeasurement } from "./measurements/create";
 import { MeasurementEdit } from "./measurements/edit";
+import { useTranslation } from "react-i18next";
+import { getLanguage } from "../store/reducers/settings/settingsSelectors";
 
 const Stack = createNativeStackNavigator<RoutesParamaters>();
 
 const ThemedApp = () => {
     const dispatch = useAppDispatch();
+    const { i18n } = useTranslation();
+    const language = useAppSelector(getLanguage);
     const installDate = useAppSelector(getAppInstallDate);
+
     if (!installDate) {
         DeviceInfo.getFirstInstallTime().then((installTime) => {
             const date = new Date(installTime ?? 0).toISOString().split("T")[0];
             dispatch(setAppInstallDate(date as IsoDate));
         });
     }
+
+    useEffect(() => {
+        i18n.changeLanguage(language);
+    }, []);
+
     return (
         <NavigationContainer ref={navigationRef} independent={true}>
             <GestureHandlerRootView style={{ flex: 1 }}>

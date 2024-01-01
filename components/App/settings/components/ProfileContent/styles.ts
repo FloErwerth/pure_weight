@@ -9,6 +9,10 @@ export const styles = StyleSheet.create({
     innerWrapperChildren: {
         gap: 5,
     },
+    stack: {
+        justifyContent: "space-between",
+        paddingRight: 5,
+    },
     title: {
         fontSize: 20,
         paddingVertical: 2.5,

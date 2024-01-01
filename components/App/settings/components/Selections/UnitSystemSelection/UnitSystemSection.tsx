@@ -32,7 +32,14 @@ export const UnitSystemSection = () => {
     );
 
     return (
-        <ProfileContent title={t("settings_unit_system_title")}>
+        <ProfileContent
+            title={t("settings_unit_system_title")}
+            helpText={{
+                title: t("settings_unit_system_title"),
+                text: t("settings_unit_system_helptext_text"),
+            }}
+            snapPoints={["60%"]}
+        >
             <ThemedView style={selectionStyles.vStack}>
                 <SelectableSetting position="TOP" prependedExtraContent={kgIcon} selected={unitSystem === "metric"} onSelect={() => handleSelectWeightUnit("metric")} titleKey="unit_system_metric" />
                 <SelectableSetting

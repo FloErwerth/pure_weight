@@ -41,19 +41,23 @@ export const AlertModal = ({ reference, onConfirm, onCancel, content, title, chi
     const buttonStyle = useMemo(() => ({ flex: 1, padding: 10, borderRadius }), []);
 
     return (
-        <ThemedBottomSheetModal ref={reference}>
-            <ThemedView style={styles.innerWrapper}>
-                <Text style={styles.title}>{title}</Text>
-                <Text style={styles.text}>{content}</Text>
+        <ThemedBottomSheetModal snapPoints={["25%"]} ref={reference}>
+            <ThemedView input style={styles.innerWrapper}>
+                <Text ghost style={styles.title}>
+                    {title}
+                </Text>
+                <Text ghost style={styles.text}>
+                    {content}
+                </Text>
                 {children}
-                <HStack style={styles.buttons}>
-                    <ThemedPressable input style={buttonStyle} onPress={handleCancelButton}>
-                        <Text center input>
+                <HStack ghost style={styles.buttons}>
+                    <ThemedPressable secondary style={buttonStyle} onPress={handleCancelButton}>
+                        <Text center ghost>
                             {t("alert_delete_cancel")}
                         </Text>
                     </ThemedPressable>
-                    <ThemedPressable input style={buttonStyle} onPress={handleConfirmButton}>
-                        <Text center input>
+                    <ThemedPressable secondary style={buttonStyle} onPress={handleConfirmButton}>
+                        <Text center ghost>
                             {t("alert_delete_confirm")}
                         </Text>
                     </ThemedPressable>
