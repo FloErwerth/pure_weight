@@ -21,10 +21,10 @@ import { DayProps } from "react-native-calendars/src/calendar/day";
 import { getEditedWorkout, getFirstWorkoutDate, getHistoryByMonth, getLatestWorkoutDate, getSortedDoneWorkout, getWorkoutColor } from "../../../store/reducers/workout/workoutSelectors";
 import { getWeightUnit } from "../../../store/reducers/settings/settingsSelectors";
 import { Temporal } from "@js-temporal/polyfill";
-import { getIsoDate, getTitle } from "../../../utils/date";
+import { getTitle } from "../../../utils/date";
 import { Chip } from "../../../components/Chip/Chip";
 
-export type SectionListItemInfo = { color: string; name: string; duration?: string; date: IsoDate; weight: string; numExercisesDone: number };
+export type SectionListItemInfo = { color: string; name: string; doneWorkouts: { weight: string; numExercisesDone: number; duration?: string }[]; date: IsoDate };
 
 const useMarkedDates = (index?: number) => {
     const { mainColor } = useTheme();
@@ -33,8 +33,8 @@ const useMarkedDates = (index?: number) => {
     return useMemo(
         () =>
             timestamps?.reduce(
-                (markedDates, timestamp) => {
-                    return { ...markedDates, [getIsoDate(timestamp)]: color ?? mainColor };
+                (markedDates, date) => {
+                    return { ...markedDates, [date]: color ?? mainColor };
                 },
                 {} as Record<IsoDate, string>,
             ),
@@ -96,35 +96,29 @@ export function WorkoutHistory() {
             if (item === undefined) {
                 return <ThemedView key="GHOST" ghost stretch style={styles.workout} />;
             }
-            const { color, weight, date, name, duration, numExercisesDone } = item;
+            const { color, date, name, doneWorkouts } = item;
             const selected = date === selectedDate;
             const workoutWrapperStyles: ViewStyle = { ...styles.workout, borderColor: selected ? color : "transparent" };
             return (
-                <ThemedView
-                    input
-                    style={workoutWrapperStyles}
-                    key={name
-                        .concat(date)
-                        .concat(weight.toString())
-                        .concat(numExercisesDone.toString())
-                        .concat(duration ?? "DURATION")}
-                >
-                    <HStack ghost style={styles.displayedWorkoutWrapper}>
-                        <HStack ghost style={styles.hstack}>
-                            <ThemedMaterialCommunityIcons ghost name="weight" size={20} />
-                            <Text ghost>
-                                {weight} {weightUnit}
-                            </Text>
+                <ThemedView input style={workoutWrapperStyles} key={name.concat(date)}>
+                    {doneWorkouts.map(({ weight, duration, numExercisesDone }) => (
+                        <HStack key={weight.concat(duration?.toString() ?? "0").concat(numExercisesDone.toString())} ghost style={styles.displayedWorkoutWrapper}>
+                            <HStack ghost style={styles.hstack}>
+                                <ThemedMaterialCommunityIcons ghost name="weight" size={20} />
+                                <Text ghost>
+                                    {weight} {weightUnit}
+                                </Text>
+                            </HStack>
+                            <HStack ghost style={styles.hstack}>
+                                <ThemedMaterialCommunityIcons ghost name="clock" size={20} />
+                                <Text ghost>{getDuration(duration)}</Text>
+                            </HStack>
+                            <HStack ghost style={styles.hstack}>
+                                <ThemedMaterialCommunityIcons ghost name="weight-lifter" size={20} />
+                                <Text ghost>{numExercisesDone}</Text>
+                            </HStack>
                         </HStack>
-                        <HStack ghost style={styles.hstack}>
-                            <ThemedMaterialCommunityIcons ghost name="clock" size={20} />
-                            <Text ghost>{getDuration(duration)}</Text>
-                        </HStack>
-                        <HStack ghost style={styles.hstack}>
-                            <ThemedMaterialCommunityIcons ghost name="weight-lifter" size={20} />
-                            <Text ghost>{numExercisesDone}</Text>
-                        </HStack>
-                    </HStack>
+                    ))}
                 </ThemedView>
             );
         },

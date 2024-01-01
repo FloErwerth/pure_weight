@@ -141,7 +141,7 @@ export const CreateMeasurement = () => {
         setShowWarnining(false);
         handleNavigateToMeasurements();
     }, [dates, showWarning, date, dispatch, handleNavigateToMeasurements, isMeasurementDataPoint]);
-
+    const helpText = useMemo(() => ({ title: t("measurement_higher_is_better"), text: t("measurement_higher_is_better_help") }), [t]);
     return (
         <ThemedView background stretch round>
             <SiteNavigationButtons handleBack={handleNavigateToMeasurements} titleFontSize={40} title={t("measurement_page_title")} />
@@ -179,7 +179,7 @@ export const CreateMeasurement = () => {
                 </HStack>
                 <CheckBox
                     label={t("measurement_higher_is_better")}
-                    helpText={t("measurement_higher_is_better_help")}
+                    helpText={helpText}
                     checked={editedMeasurement?.measurement.higherIsBetter}
                     size={26}
                     onChecked={handleSelectHigherIsBetter}

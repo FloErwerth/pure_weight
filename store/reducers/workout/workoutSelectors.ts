@@ -8,6 +8,7 @@ import { getLastNEntries } from "../../../utils/getLastNEntries";
 import { ExerciseSets } from "./types";
 import { Temporal } from "@js-temporal/polyfill";
 import { getSinceDate } from "../../../utils/timeAgo";
+import { SectionListItemInfo } from "../../../app/workouts/history";
 
 export const getWorkoutState = ({ workoutState }: AppState) => workoutState;
 export const getTrainedWorkout = createSelector([getWorkoutState], (state) => state.trainedWorkout);
@@ -92,41 +93,29 @@ export const getCanSnap = createSelector([getTrainedWorkout], (trainedWorkout) =
 });
 export const getHistoryByMonth = createSelector([getEditedWorkout, (editedWorkout, month?: string) => month ?? getDateTodayIso()], (editedWorkout, searchedMonth) => {
     const workout = editedWorkout?.workout;
-    const foundTrainings: Map<
-        string,
-        {
-            color: string;
-            name: string;
-            duration?: string;
-            date: IsoDate;
-            weight: string;
-            numExercisesDone: number;
-        }[]
-    > = new Map();
+    const foundTrainings: Map<string, SectionListItemInfo> = new Map();
 
     workout?.doneWorkouts.forEach((doneWorkout) => {
         const date = doneWorkout.isoDate;
-        foundTrainings.set(date, [
-            ...(foundTrainings.get(date) ?? []),
-            {
-                color: workout?.calendarColor,
-                name: workout?.name,
-                date: date,
-                duration: doneWorkout.duration,
-                weight: (
-                    doneWorkout.doneExercises?.reduce(
-                        (sum, current) => sum + current.sets.reduce((sumSet, currentSet) => sumSet + parseFloat(currentSet.weight) * parseFloat(currentSet.reps), 0),
-                        0,
-                    ) ?? 0
-                ).toFixed(2),
-                numExercisesDone: doneWorkout.doneExercises?.length ?? 0,
-            },
-        ]);
+        const doneWorkouts = foundTrainings.get(date)?.doneWorkouts ?? [];
+        doneWorkouts.push({
+            duration: doneWorkout.duration,
+            weight: (
+                doneWorkout.doneExercises?.reduce((sum, current) => sum + current.sets.reduce((sumSet, currentSet) => sumSet + parseFloat(currentSet.weight) * parseFloat(currentSet.reps), 0), 0) ?? 0
+            ).toFixed(2),
+            numExercisesDone: doneWorkout.doneExercises?.length ?? 0,
+        });
+        foundTrainings.set(date, {
+            color: workout?.calendarColor,
+            name: workout?.name,
+            date,
+            doneWorkouts,
+        });
     });
 
     return Array.from(foundTrainings)
         .filter((value) => getMonth(value[0] as IsoDate) === getMonth((searchedMonth ?? getDateTodayIso()) as IsoDate))
-        .map(([month, data]) => ({ title: month, data }));
+        .map(([month, data]) => ({ title: month, data: [data] }));
 });
 export const getHasHistory = createSelector([getWorkouts, (workouts, index: number) => index], (workouts, index) => workouts[index].doneWorkouts.length > 0);
 export const getNumberHistories = createSelector([getWorkouts, (workouts, workoutIndex: number) => workoutIndex], (workouts, workoutIndex) => {
