@@ -41,6 +41,7 @@ export type ExerciseMetaData = WeightBasedExerciseMetaData;
 
 export type EditedWorkout = {
     workout: Workout;
+    isNew?: boolean;
     index?: number;
 };
 

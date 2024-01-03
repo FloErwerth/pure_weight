@@ -22,6 +22,7 @@ export const getTrainedWorkoutExercises = createSelector([getTrainedWorkout, get
     return workouts[trainedWorkout.workoutIndex].exercises;
 });
 export const getEditedWorkout = createSelector([getWorkoutState], (state) => state.editedWorkout);
+export const getIsEditedWorkout = createSelector([getEditedWorkout], (editedWorkout) => !editedWorkout?.isNew);
 export const getEditedExercise = createSelector([getWorkoutState], (state) => state.editedExercise);
 export const getIsExistingEditedExercise = createSelector([getEditedExercise], (editedExercise) => editedExercise?.index !== undefined);
 export const getNumberSavedWorkouts = createSelector([getWorkouts], (workouts) => workouts.length);

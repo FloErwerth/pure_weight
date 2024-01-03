@@ -104,7 +104,7 @@ export function Train() {
         return workoutExercises?.map((_, index) => ({
             index,
         }));
-    }, [navigate, trainedWorkout]);
+    }, [navigate, trainedWorkout, workoutExercises]);
 
     const renderItem = useCallback(({ index }: { index: number }) => {
         return <Exercise exerciseIndex={index} />;
@@ -116,6 +116,21 @@ export function Train() {
         },
         [dispatch],
     );
+
+    const confirmButtonConfig = useMemo(
+        () => ({
+            localeKey: "workout_save_confirm",
+            onPress: handleNotDoneConfirm,
+        }),
+        [handleNotDoneConfirm],
+    );
+
+    const handleCancelWorkout = useCallback(() => {
+        handleReset();
+        closeAlert();
+    }, [handleReset, closeAlert]);
+
+    const cancelButtonConfig = useMemo(() => ({ localeKey: "workout_confirm_delete", onPress: handleCancelWorkout }), [handleCancelWorkout]);
 
     return (
         <ThemedView background style={trainStyles.wrapper} stretch>
@@ -143,7 +158,14 @@ export function Train() {
             <HStack background style={buttonsStyle}>
                 <StopwatchPopover />
             </HStack>
-            <AlertModal reference={alertRef} title={alertModalConfig.title} content={alertModalConfig.content} onConfirm={handleNotDoneConfirm} onCancel={closeAlert} />
+            <AlertModal
+                snapPoints={["30%"]}
+                reference={alertRef}
+                title={alertModalConfig.title}
+                content={alertModalConfig.content}
+                confirmButtonConfig={confirmButtonConfig}
+                cancelButtonConfig={cancelButtonConfig}
+            />
         </ThemedView>
     );
 }

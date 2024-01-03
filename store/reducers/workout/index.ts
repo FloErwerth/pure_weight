@@ -146,11 +146,12 @@ export const workoutReducer = createReducer<WorkoutState>({ workouts: [], sortin
         .addCase(setEditedWorkoutName, (state, action) => {
             const workout = state.editedWorkout?.workout;
             if (workout) {
-                state.editedWorkout = { workout: { ...workout, name: action.payload ?? "" }, index: state.editedWorkout?.index };
+                state.editedWorkout = { ...state.editedWorkout, workout: { ...workout, name: action.payload ?? "" }, index: state.editedWorkout?.index };
             }
         })
         .addCase(createNewWorkout, (state) => {
             state.editedWorkout = {
+                isNew: true,
                 workout: {
                     name: "",
                     exercises: [],
@@ -168,6 +169,7 @@ export const workoutReducer = createReducer<WorkoutState>({ workouts: [], sortin
         .addCase(setEditedWorkout, (state, action) => {
             const storedWorkout = state.workouts[action.payload.index];
             state.editedWorkout = {
+                isNew: false,
                 workout: storedWorkout,
                 index: action.payload.index,
             };

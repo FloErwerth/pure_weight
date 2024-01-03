@@ -32,7 +32,7 @@ import {
     storeEditedExercise,
 } from "../../../store/reducers/workout";
 
-import { getEditedWorkout } from "../../../store/reducers/workout/workoutSelectors";
+import { getEditedWorkout, getIsEditedWorkout } from "../../../store/reducers/workout/workoutSelectors";
 import { EditableExerciseModal } from "../../../components/EditableExerciseModal/EditableExerciseModal";
 import { ExerciseMetaData } from "../../../store/reducers/workout/types";
 import { BottomToast } from "../../../components/BottomToast/BottomToast";
@@ -53,9 +53,10 @@ export function Create() {
     const { t } = useTranslation();
     const [alertConfig, setAlertConfig] = useState<AlertConfig | undefined>(undefined);
     const editedWorkout = useAppSelector(getEditedWorkout);
-    const title = useMemo(() => (editedWorkout ? t("edit_workout") : t("create_workout")), [editedWorkout, t]);
+    const isEditedWorkout = useAppSelector(getIsEditedWorkout);
+    const title = useMemo(() => (isEditedWorkout ? t("edit_workout") : t("create_workout")), [isEditedWorkout, t]);
     const dispatch = useAppDispatch();
-    const [alertRef, _, closeAlert] = useBottomSheetRef();
+    const [alertRef, open, closeAlert] = useBottomSheetRef();
     const [addRef, openAdd, closeAdd] = useBottomSheetRef();
     const [colorPickerRef, openPicker] = useBottomSheetRef();
     const [showToast, setShowToast] = useState(false);
@@ -75,7 +76,7 @@ export function Create() {
         dispatch(cleanErrors());
     }, [dispatch]);
 
-    const handleConfirmDiscardChanges = useCallback(() => {
+    const handleDeleteWorkout = useCallback(() => {
         closeAlert();
         handleCleanErrors();
         navigate("workouts");
@@ -123,7 +124,7 @@ export function Create() {
         navigate("workouts");
     }, [dispatch, handleCleanErrors, navigate]);
 
-    const handleConfirm = useCallback(() => {
+    const handleSaveWorkout = useCallback(() => {
         if (!editedWorkout?.workout.name || editedWorkout.workout.exercises.length === 0) {
             if (!editedWorkout?.workout.name) {
                 dispatch(setError(["workout_name"]));
@@ -143,18 +144,18 @@ export function Create() {
         if (editedWorkout?.workout.exercises.length === 0) {
             handleNavigateHome();
         } else if (editedWorkout?.workout.exercises.length !== 0 || editedWorkout.workout.name) {
-            const title = t(editedWorkout ? "alert_edit_workout_discard_title" : "alert_create_workout_discard_title");
-            const content = t(editedWorkout ? "alert_edit_workout_discard_content" : "alert_create_workout_discard_content");
+            const title = t(isEditedWorkout ? "alert_edit_workout_discard_title" : "alert_create_workout_discard_title");
+            const content = t(isEditedWorkout ? "alert_edit_workout_discard_content" : "alert_create_workout_discard_content");
             setAlertConfig({
                 title,
                 content,
-                onConfirm: handleConfirmDiscardChanges,
+                onConfirm: handleDeleteWorkout,
             });
             alertRef.current?.present();
         } else {
             handleNavigateHome();
         }
-    }, [alertRef, editedWorkout, handleConfirmDiscardChanges, handleNavigateHome, t]);
+    }, [alertRef, editedWorkout?.workout.exercises.length, editedWorkout?.workout.name, handleDeleteWorkout, handleNavigateHome, isEditedWorkout, t]);
 
     const handleOnDragEnd = useCallback(
         ({ data }: { data: MappedExercises[] }) => {
@@ -187,10 +188,18 @@ export function Create() {
         setShowToast(false);
     }, [dispatch]);
 
+    const confirmButtonConfig = useMemo(
+        () => ({ localeKey: isEditedWorkout ? "alert_edit_workout_confirm_cancel" : "alert_create_workout_confirm_cancel", onPress: handleNavigateHome }) as const,
+        [handleNavigateHome, isEditedWorkout],
+    );
+    const cancelButtonConfig = useMemo(() => ({ localeKey: "alert_create_workout_continue", onPress: closeAlert }) as const, [closeAlert]);
+    const alertContent = useMemo(() => t(isEditedWorkout ? "alert_edit_workout_discard_content" : "alert_create_workout_discard_content"), [t, isEditedWorkout]);
+    const alertTitle = useMemo(() => t(isEditedWorkout ? "alert_edit_workout_discard_title" : "alert_create_workout_discard_title"), [t, isEditedWorkout]);
+
     return (
         <ThemedView stretch>
             <ThemedView background style={styles.innerWrapper}>
-                <SiteNavigationButtons handleBack={handleBackButton} handleConfirm={handleConfirm} titleFontSize={30} title={title} />
+                <SiteNavigationButtons handleBack={handleBackButton} handleConfirm={handleSaveWorkout} titleFontSize={30} title={title} />
                 <PageContent background safeBottom stretch style={styles.contentWrapper}>
                     <HStack style={styles.nameColorStack} ghost>
                         <ThemedTextInput style={styles.workoutNameInput} showClear value={editedWorkout?.workout.name} onChangeText={handleSetWorkoutName} placeholder={t("workout_name")} />
@@ -225,7 +234,7 @@ export function Create() {
                 titleKey={"exercise_deleted_title"}
                 onRedo={handleRecoverExercise}
             />
-            <AlertModal reference={alertRef} onConfirm={alertConfig?.onConfirm} title={alertConfig?.title} content={alertConfig?.content} onCancel={closeAlert} />
+            <AlertModal reference={alertRef} confirmButtonConfig={confirmButtonConfig} title={alertTitle} content={alertContent} cancelButtonConfig={cancelButtonConfig} />
             <EditableExerciseModal reference={addRef} />
             <ColorPickerModal reference={colorPickerRef} />
         </ThemedView>

@@ -1,6 +1,6 @@
 import { styles } from "./styles";
 import { PropsWithChildren, RefObject, useCallback, useMemo } from "react";
-import { ThemedBottomSheetModal } from "../BottomSheetModal/ThemedBottomSheetModal";
+import { SnapPoint, ThemedBottomSheetModal } from "../BottomSheetModal/ThemedBottomSheetModal";
 import { HStack } from "../Stack/HStack/HStack";
 import * as Haptics from "expo-haptics";
 import { useTranslation } from "react-i18next";
@@ -18,30 +18,38 @@ export type AlertConfig = {
 };
 
 interface TrainingNotDoneModalProps extends PropsWithChildren {
-    onConfirm?: () => void;
-    onCancel: () => void;
-    content?: string;
+    confirmButtonConfig: {
+        localeKey: string;
+        onPress: () => void;
+    };
+    snapPoints?: SnapPoint[];
+
+    cancelButtonConfig: {
+        localeKey: string;
+        onPress: () => void;
+    };
+    content?: string | JSX.Element;
     title?: string;
     isVisible?: boolean;
     reference: RefObject<BottomSheetModal>;
 }
-export const AlertModal = ({ reference, onConfirm, onCancel, content, title, children }: TrainingNotDoneModalProps) => {
+export const AlertModal = ({ snapPoints = ["25%"], reference, confirmButtonConfig, cancelButtonConfig, content, title, children }: TrainingNotDoneModalProps) => {
     const { t } = useTranslation();
 
     const handleConfirmButton = useCallback(() => {
         void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-        onConfirm?.();
-    }, [onConfirm]);
+        confirmButtonConfig.onPress();
+    }, [confirmButtonConfig]);
 
     const handleCancelButton = useCallback(() => {
         void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-        onCancel();
-    }, [onCancel]);
+        cancelButtonConfig.onPress();
+    }, [cancelButtonConfig]);
 
     const buttonStyle = useMemo(() => ({ flex: 1, padding: 10, borderRadius }), []);
 
     return (
-        <ThemedBottomSheetModal snapPoints={["25%"]} ref={reference}>
+        <ThemedBottomSheetModal snapPoints={snapPoints} ref={reference}>
             <ThemedView input style={styles.innerWrapper}>
                 <Text ghost style={styles.title}>
                     {title}
@@ -51,14 +59,14 @@ export const AlertModal = ({ reference, onConfirm, onCancel, content, title, chi
                 </Text>
                 {children}
                 <HStack ghost style={styles.buttons}>
-                    <ThemedPressable secondary style={buttonStyle} onPress={handleCancelButton}>
-                        <Text center ghost>
-                            {t("alert_delete_cancel")}
-                        </Text>
-                    </ThemedPressable>
                     <ThemedPressable secondary style={buttonStyle} onPress={handleConfirmButton}>
                         <Text center ghost>
-                            {t("alert_delete_confirm")}
+                            {t(confirmButtonConfig.localeKey)}
+                        </Text>
+                    </ThemedPressable>
+                    <ThemedPressable secondary style={buttonStyle} onPress={handleCancelButton}>
+                        <Text center ghost>
+                            {t(cancelButtonConfig.localeKey)}
                         </Text>
                     </ThemedPressable>
                 </HStack>

@@ -49,6 +49,7 @@ export function Workouts() {
         },
         [dispatch, navigate],
     );
+
     const handleRecoverWorkout = useCallback(() => {
         dispatch(recoverWorkout());
         setShowToast(false);

@@ -87,10 +87,10 @@
   "settings_search_placeholder": "Suche",
 
   "alert_delete_message": "Dies kann nicht rückgängig gemacht werden",
-  "alert_quit_title": "Das Workout frühzeitig beenden?",
-  "alert_quit_message": "Der bisherige Fortschritt wird gespeichert",
-  "alert_delete_confirm": "Bestätigen",
-  "alert_delete_cancel": "Abbrechen",
+  "workout_quit_title": "Das Workout frühzeitig beenden?",
+  "workout_quit_message": "Der bisherige Fortschritt kann gespeichert werden. Möchtest Du den fortschritt speichern?. \n\nWenn Du das Workout fortsetzen willst, dann schließe das Overlay einfach mit einer Berührung auf das verdunkelte Workout.",
+  "workout_save_confirm": "Speichern",
+  "workout_confirm_delete": "Löschen",
   "workout_deleted_title": "Workout erfolgreich gelöscht",
   "undo_message": "Löschung rückgängig machen",
   "exercise_deleted_message": "Übung erfolgreich gelöscht",
@@ -115,6 +115,9 @@
 
   "create_select_type": "Einheitentyp auswählen",
 
+  "create_workout_delete_progress": "Workout löschen",
+  "create_workout_save_progress": "Workout speichern",
+
   "theme_device": "Geräteeinstellung verwenden",
   "progress_cumulative": "Kumulativ",
   "progress_modal_title": "Auswahl der Diagramm-Art",
@@ -123,10 +126,15 @@
   "progress_avg_reps_hint": "Zeigt die durchschnittliche Anzahl an Wiederholungen pro Tag an",
   "progress_avg_weight": "Ø Gewicht",
   "progress_avg_weight_hint": "Zeigt das durchschnittlich bewegte Gewicht pro Tag an",
-  "alert_create_workout_discard_title": "Einheiterstellung abbrechen",
-  "alert_create_workout_discard_content": "Alle Änderungen gehen dabei verloren",
-  "alert_edit_workout_discard_title": "Einheitenbearbeitung abbrechen",
-  "alert_edit_workout_discard_content": "Alle Änderungen gehen dabei verloren",
+
+  "alert_create_workout_confirm_cancel": "Erstellung abbrechen",
+  "alert_edit_workout_confirm_cancel": "Bearbeitung abbrechen",
+  "alert_create_workout_continue": "Dialog schließen",
+  "alert_edit_workout_discard_title": "Bearbeitung des Workouts abbrechen",
+  "alert_create_workout_discard_title": "Erstellung des Workouts abbrechen",
+  "alert_edit_workout_discard_content": "Wenn Du die Bearbeitung des Workouts abbrichst gehen die bisherigen Änderungen verloren.",
+  "alert_create_workout_discard_content": "Wenn Du die Erstellung deines Workouts abbrichst geht der bisherige Fortschritt verloren.",
+
   "progress_placeholder": "Messdaten oder Daten von Einheiten hinzufügen, um Graphen anzeigen zu können",
 
   "progress_increased": "gestiegen",
