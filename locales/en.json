@@ -104,6 +104,8 @@
   "alert_edit_workout_discard_content": "If you cancel the workout edit the changes so far will be lost.",
   "alert_create_workout_discard_content": "If you cancel the workout creation the changes so far will be lost.",
 
+  "workout_quit_title": "Quit workout early?",
+  "workout_quit_message": "The progress in this workout can be saved. Do you want to save the progress?. \n\nIf you want to continue the workout tab on the dark area above the overlay.",
   "workout_save_confirm": "Save",
   "workout_confirm_delete": "Delete",
   "training_done": "Complete training",

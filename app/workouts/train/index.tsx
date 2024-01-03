@@ -15,7 +15,7 @@ import { Exercise } from "../../../components/App/train/Exercise/WeightBased/Wei
 import { useBottomSheetRef } from "../../../components/BottomSheetModal/ThemedBottomSheetModal";
 import { addDoneWorkout, mutateActiveExerciseInTrainedWorkout, resetTrainedWorkout, setActiveExerciseIndex } from "../../../store/reducers/workout";
 
-import { getCanSnap, getExerciseDone, getHasAnyTrainedWorkoutData, getIsDoneWithTraining, getTrainedWorkout, getTrainedWorkoutExercises } from "../../../store/reducers/workout/workoutSelectors";
+import { getCanSnap, getExerciseDone, getHasNoTrainingDataSaved, getIsDoneWithTraining, getTrainedWorkout, getTrainedWorkoutExercises } from "../../../store/reducers/workout/workoutSelectors";
 import { ICarouselInstance } from "react-native-reanimated-carousel";
 import { getSwitchToNextExercise } from "../../../store/reducers/settings/settingsSelectors";
 
@@ -47,7 +47,7 @@ export function Train() {
     const confirmButtonOpacity = useRef(new Animated.Value(0)).current;
     const [alertRef, openAlert, closeAlert] = useBottomSheetRef();
     const isDone = useAppSelector(getIsDoneWithTraining);
-    const hasAnyData = useAppSelector(getHasAnyTrainedWorkoutData);
+    const hasNoTrainingData = useAppSelector(getHasNoTrainingDataSaved);
     const carouselRef = useSnapToNextExercise();
 
     useEffect(() => {
@@ -81,7 +81,7 @@ export function Train() {
     }, [handleSaveTrainingData, handleReset, closeAlert]);
 
     const handleCloseButton = useCallback(() => {
-        if (!hasAnyData) {
+        if (!hasNoTrainingData) {
             handleReset();
         } else {
             if (!isDone) {
@@ -91,10 +91,10 @@ export function Train() {
                 handleReset();
             }
         }
-    }, [hasAnyData, handleReset, isDone, openAlert, handleSaveTrainingData]);
+    }, [hasNoTrainingData, handleReset, isDone, openAlert, handleSaveTrainingData]);
 
     const buttonsStyle = useMemo(() => [trainStyles.buttons, { marginBottom: bottom }], [bottom]);
-    const alertModalConfig = useMemo(() => ({ title: t("alert_quit_title"), content: t("alert_quit_message") }), [t]);
+    const alertModalConfig = useMemo(() => ({ title: t("workout_quit_title"), content: t("workout_quit_message") }), [t]);
 
     const mappedExercises: { index: number }[] = useMemo(() => {
         if (!trainedWorkout) {

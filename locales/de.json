@@ -127,6 +127,8 @@
   "progress_avg_weight": "Ø Gewicht",
   "progress_avg_weight_hint": "Zeigt das durchschnittlich bewegte Gewicht pro Tag an",
 
+
+
   "alert_create_workout_confirm_cancel": "Erstellung abbrechen",
   "alert_edit_workout_confirm_cancel": "Bearbeitung abbrechen",
   "alert_create_workout_continue": "Dialog schließen",

@@ -295,8 +295,8 @@ export const getIsDoneWithTraining = createSelector([getTrainedWorkout], (traine
     );
 });
 
-export const getHasAnyTrainedWorkoutData = createSelector([getTrainedWorkout], (trainedWorkout) => {
-    return !(trainedWorkout?.exerciseData.length === 0 || trainedWorkout?.exerciseData.every((data) => data.doneSets.length === 0));
+export const getHasNoTrainingDataSaved = createSelector([getTrainedWorkout], (trainedWorkout) => {
+    return trainedWorkout?.exerciseData.some((data) => data.doneSets.some((set) => set.confirmed));
 });
 export const getNote = createSelector([getTrainedWorkout], (trainedWorkout) => trainedWorkout?.exerciseData?.[trainedWorkout?.activeExerciseIndex]?.note);
 export const getWeightBasedExerciseMetaDataFromTrainedWorkout = createSelector([getTrainedWorkout, (trainedWorkout, exerciseIndex?: number) => exerciseIndex], (trainedWorkout, exerciseIndex) => {
