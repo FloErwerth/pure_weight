@@ -82,7 +82,7 @@ export const workoutReducer = createReducer<WorkoutState>({ workouts: [], sortin
         .addCase(resetTrainedWorkout, (state) => (state.trainedWorkout = undefined))
         .addCase(saveNote, (state, action) => {
             if (state.trainedWorkout) {
-                state.trainedWorkout.exerciseData[state.trainedWorkout.workoutIndex].note = action.payload;
+                state.trainedWorkout.exerciseData[state.trainedWorkout.activeExerciseIndex].note = action.payload;
             }
         })
         .addCase(mutateActiveExerciseInTrainedWorkout, (state, action) => {
@@ -252,7 +252,7 @@ export const workoutReducer = createReducer<WorkoutState>({ workouts: [], sortin
             const workout = state.trainedWorkout;
             const workoutIndex = state.trainedWorkout?.workoutIndex;
             if (workout && workoutIndex !== undefined) {
-                const beginTimestamp = workout.timestamp;
+                const beginTimestamp = workout.beginTimestamp;
                 const endTimestamp = Temporal.Now.instant().epochMilliseconds;
                 const duration = (endTimestamp - beginTimestamp) / 1000;
                 const doneExercises: DoneExerciseData[] = workout.exerciseData.map((data) => ({ name: data.name, sets: data.doneSets, note: data.note }));
@@ -285,7 +285,7 @@ export const workoutReducer = createReducer<WorkoutState>({ workouts: [], sortin
             state.trainedWorkout = {
                 activeExerciseIndex: 0,
                 workout,
-                timestamp: Temporal.Now.instant().epochMilliseconds,
+                beginTimestamp: Temporal.Now.instant().epochMilliseconds,
                 workoutIndex: action.payload,
                 exerciseData: Array(workout.exercises.length)
                     .fill(undefined)

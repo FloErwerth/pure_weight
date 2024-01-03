@@ -15,7 +15,7 @@ import { Exercise } from "../../../components/App/train/Exercise/WeightBased/Wei
 import { useBottomSheetRef } from "../../../components/BottomSheetModal/ThemedBottomSheetModal";
 import { addDoneWorkout, mutateActiveExerciseInTrainedWorkout, resetTrainedWorkout, setActiveExerciseIndex } from "../../../store/reducers/workout";
 
-import { getCanSnap, getExerciseDone, getHasAnyTrainedWorkoutData, getIsDoneWithTraining, getTrainedWorkout } from "../../../store/reducers/workout/workoutSelectors";
+import { getCanSnap, getExerciseDone, getHasAnyTrainedWorkoutData, getIsDoneWithTraining, getTrainedWorkout, getTrainedWorkoutExercises } from "../../../store/reducers/workout/workoutSelectors";
 import { ICarouselInstance } from "react-native-reanimated-carousel";
 import { getSwitchToNextExercise } from "../../../store/reducers/settings/settingsSelectors";
 
@@ -40,6 +40,7 @@ const useSnapToNextExercise = () => {
 export function Train() {
     const { bottom } = useSafeAreaInsets();
     const { t } = useTranslation();
+    const workoutExercises = useAppSelector(getTrainedWorkoutExercises);
     const trainedWorkout = useAppSelector(getTrainedWorkout);
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
@@ -100,7 +101,7 @@ export function Train() {
             navigate("workouts");
             return [] as { index: number }[];
         }
-        return trainedWorkout.workout.exercises.map((_, index) => ({
+        return workoutExercises?.map((_, index) => ({
             index,
         }));
     }, [navigate, trainedWorkout]);

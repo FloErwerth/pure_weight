@@ -53,7 +53,7 @@ export type TrainedWorkout = {
     workoutIndex: number;
     workout: Workout;
     activeExerciseIndex: number;
-    timestamp: number;
+    beginTimestamp: number;
     exerciseData: {
         setIndex: number;
         activeSetIndex: number;

@@ -11,22 +11,23 @@ import { useTheme } from "../../theme/context";
 import { AppState, useAppDispatch, useAppSelector } from "../../store";
 import * as Haptics from "expo-haptics";
 import { handleMutateSet, markSetAsDone } from "../../store/reducers/workout";
-import { getIsLastSet, getSetData } from "../../store/reducers/workout/workoutSelectors";
+import { getIsActiveSet, getIsLastSet, getSetData } from "../../store/reducers/workout/workoutSelectors";
 import { ThemedPressable } from "../Themed/Pressable/Pressable";
 import { emitter } from "../../utils/event";
 
 interface SetInputRowProps {
     setIndex: number;
     exerciseIndex: number;
-    isActiveSet: boolean;
 }
 
-export const SetInputRow = ({ setIndex, exerciseIndex, isActiveSet }: SetInputRowProps) => {
+export const SetInputRow = ({ setIndex, exerciseIndex }: SetInputRowProps) => {
     const { primaryColor, mainColor, secondaryBackgroundColor, componentBackgroundColor, inputFieldBackgroundColor, textDisabled } = useTheme();
     const data = useAppSelector((state: AppState) => getSetData(state, setIndex))?.[exerciseIndex];
     const isLastSetGetter = useAppSelector((state: AppState) => getIsLastSet(state, exerciseIndex));
     const { weight, reps, isEditable, isConfirmed } = data ?? {};
+
     const dispatch = useAppDispatch();
+    const isActiveSet = useAppSelector((state: AppState) => getIsActiveSet(state, exerciseIndex, setIndex));
 
     const handleSetWeight = useCallback(
         (newWeight?: string) => {

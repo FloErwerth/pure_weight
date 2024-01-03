@@ -10,10 +10,10 @@ import { AddNoteModal } from "../../../../AddNoteModal/AddNoteModal";
 import { useTheme } from "../../../../../theme/context";
 import { borderRadius } from "../../../../../theme/border";
 import { TrainingHeader } from "../../TrainingHeader/TrainingHeader";
-import { SetInputRow } from "../../../../SetInputRow/SetInputRow";
 import { AppState, useAppSelector } from "../../../../../store";
 import { useBottomSheetRef } from "../../../../BottomSheetModal/ThemedBottomSheetModal";
-import { getActiveSetIndex, getExercisesFromIndex } from "../../../../../store/reducers/workout/workoutSelectors";
+import { getSetsArray } from "../../../../../store/reducers/workout/workoutSelectors";
+import { SetInputRow } from "../../../../SetInputRow/SetInputRow";
 
 interface WeightBasedExerciseProps {
     exerciseIndex: number;
@@ -23,8 +23,8 @@ export const Exercise = ({ exerciseIndex }: WeightBasedExerciseProps) => {
     const [editNoteModalRef, open, close] = useBottomSheetRef();
     const showEditNoteModalTitleStyle = useMemo(() => ({ padding: 10, paddingHorizontal: 15, alignSelf: "center" }) as const, []);
     const { mainColor, componentBackgroundColor } = useTheme();
-    const exerciseData = useAppSelector((state: AppState) => getExercisesFromIndex(state, exerciseIndex));
-    const activeSetIndex = useAppSelector((state: AppState) => getActiveSetIndex(state, exerciseIndex));
+    const setsArray = useAppSelector((state: AppState) => getSetsArray(state, exerciseIndex));
+
     const id = useId();
     const hideNoteModal = useCallback(() => {
         close();
@@ -33,14 +33,6 @@ export const Exercise = ({ exerciseIndex }: WeightBasedExerciseProps) => {
     const showNoteModal = useCallback(() => {
         open();
     }, [open]);
-
-    const mappedSets = useMemo(
-        () =>
-            Array(parseFloat(exerciseData?.sets ?? "0"))
-                .fill(undefined)
-                .map((_, setIndex) => ({ isActiveSet: setIndex === activeSetIndex })),
-        [activeSetIndex, exerciseData],
-    );
 
     return (
         <View key={id} style={trainStyles.carouselWrapper}>
@@ -55,9 +47,11 @@ export const Exercise = ({ exerciseIndex }: WeightBasedExerciseProps) => {
             <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={trainStyles.innerWrapper}>
                 <ThemedView style={{ paddingTop: 15, paddingBottom: 10, borderRadius, backgroundColor: componentBackgroundColor }}>
                     <TrainingHeader />
-                    {mappedSets?.map(({ isActiveSet }, setIndex) => {
-                        return <SetInputRow isActiveSet={isActiveSet} key={Math.random()} exerciseIndex={exerciseIndex} setIndex={setIndex} />;
-                    })}
+                    <View>
+                        {setsArray?.map((_, setIndex) => {
+                            return <SetInputRow key={exerciseIndex.toString().concat(setIndex.toString())} exerciseIndex={exerciseIndex} setIndex={setIndex} />;
+                        })}
+                    </View>
                 </ThemedView>
                 <PreviousTraining exerciseIndex={exerciseIndex} />
             </ScrollView>
