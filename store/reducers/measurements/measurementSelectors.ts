@@ -55,7 +55,6 @@ export const getMeasurementData = createSelector([getMeasurements, getEditedMeas
     return undefined;
 });
 export const getMeasurementSorting = createSelector([getMeasurementsState], (state) => state.sorting);
-export const getEditedMeasurementDataPoint = createSelector([getMeasurementsState], (state) => state.editedMeasurementDataPoint);
 export const getMeasurmentProgress = createSelector([getMeasurements, (byIndex, index: number) => index], (measurements, index) => {
     const measurement = measurements[index];
     const data = measurement.data.map(({ value }) => value);

@@ -31,7 +31,7 @@ const useText = (type: "Workout" | "Measurement", even: boolean, higherPercentag
             return `${t("progress_text_even")}`;
         }
         if (language === "en") {
-            return `${t("progress_text_1").concat(name, " ", t(higherPercentage ? "progress_increased" : "progress_decreased"))} by {processedPercent} %`;
+            return `${t("progress_text_1").concat(name, " ", t(higherPercentage ? "progress_increased" : "progress_decreased"))} by ${processedPercent} %`;
         }
         return `${t("progress_text_1")} ${processedPercent}% ${t(higherPercentage ? "progress_increased" : "progress_decreased")}`;
     }, [even, language, t, processedPercent, higherPercentage, name]);

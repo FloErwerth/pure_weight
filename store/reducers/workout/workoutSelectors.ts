@@ -186,17 +186,18 @@ export const getOverallTrainingTrend = createSelector([getWorkouts, (workouts, i
             isPositive?: boolean;
         }
     > = new Map();
-    for (let i = 1; i < workout.doneWorkouts.length; i += 2) {
-        const workoutBefore = workout.doneWorkouts[i - 1];
-        const currentWorkout = workout.doneWorkouts[i];
+
+    for (let i = 0; i < workout.doneWorkouts.length - 1; i++) {
+        const workoutBefore = workout.doneWorkouts[i];
+        const currentWorkout = workout.doneWorkouts[i + 1];
 
         for (let j = 0; j < workoutBefore.doneExercises!.length; j++) {
             const beforeExercise = workoutBefore.doneExercises![j];
             const currentExercise = currentWorkout.doneExercises![j];
-
             if (currentExercise !== undefined && currentExercise.name === beforeExercise.name) {
                 const beforeOverall = beforeExercise.sets.reduce((sum, set) => sum + parseFloat(set.reps) * parseFloat(set.weight), 0);
                 const currentOverall = currentExercise.sets.reduce((sum, set) => sum + parseFloat(set.reps) * parseFloat(set.weight), 0);
+
                 const result: {
                     cleanedPercent: number;
                     isPositive?: boolean;
