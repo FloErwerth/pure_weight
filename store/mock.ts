@@ -112,6 +112,28 @@ export const mockState: AppState = {
                 ],
                 doneWorkouts: [
                     {
+                        isoDate: "2023-10-01",
+                        duration: "120",
+                        doneExercises: [
+                            {
+                                name: "Klimmzüge unterstützt",
+                                sets: [{ weight: "50", reps: "5" }],
+                                note: "Das war ein guter Satz",
+                            },
+                        ],
+                    },
+                    {
+                        isoDate: "2023-11-12",
+                        duration: "120",
+                        doneExercises: [
+                            {
+                                name: "Klimmzüge unterstützt",
+                                sets: [{ weight: "50", reps: "5" }],
+                                note: "Das war ein guter Satz",
+                            },
+                        ],
+                    },
+                    {
                         isoDate: "2023-12-01",
                         duration: "120",
                         doneExercises: [
@@ -165,6 +187,16 @@ export const mockState: AppState = {
                     },
                     {
                         isoDate: "2023-12-07",
+                        duration: "120",
+                        doneExercises: [
+                            {
+                                name: "Klimmzüge unterstützt",
+                                sets: [{ weight: "50", reps: "5" }],
+                            },
+                        ],
+                    },
+                    {
+                        isoDate: "2023-12-31",
                         duration: "120",
                         doneExercises: [
                             {

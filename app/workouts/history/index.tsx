@@ -20,7 +20,6 @@ import { RenderedDay } from "../../../components/App/history/RenderedDay/Rendere
 import { DayProps } from "react-native-calendars/src/calendar/day";
 import { getEditedWorkout, getFirstWorkoutDate, getHistoryByMonth, getLatestWorkoutDate, getSortedDoneWorkout, getWorkoutColor } from "../../../store/reducers/workout/workoutSelectors";
 import { getWeightUnit } from "../../../store/reducers/settings/settingsSelectors";
-import { Temporal } from "@js-temporal/polyfill";
 import { getTitle } from "../../../utils/date";
 import { Chip } from "../../../components/Chip/Chip";
 
@@ -42,15 +41,30 @@ const useMarkedDates = (index?: number) => {
     );
 };
 
+function monthDiff(d1: Date, d2: Date) {
+    let months;
+    months = (d2.getFullYear() - d1.getFullYear()) * 12;
+    months -= d1.getMonth();
+    months += d2.getMonth();
+    return months <= 0 ? 0 : months;
+}
+const useScrollRanges = (selectedDate: IsoDate) => {
+    const editedWorkout = useAppSelector(getEditedWorkout);
+    const latestWorkoutDate = useAppSelector((state: AppState) => getLatestWorkoutDate(state, editedWorkout?.index ?? 0));
+    const firstWorkoutDate = useAppSelector((state: AppState) => getFirstWorkoutDate(state, editedWorkout?.index ?? 0));
+    const pastScrollRange = useMemo(() => monthDiff(new Date(firstWorkoutDate), new Date(selectedDate)), [firstWorkoutDate, selectedDate]);
+    const futureScrollRange = useMemo(() => monthDiff(new Date(selectedDate), new Date(latestWorkoutDate)), [latestWorkoutDate, selectedDate]);
+
+    return useMemo(() => ({ past: pastScrollRange, future: futureScrollRange }), [pastScrollRange, futureScrollRange]);
+};
+
 export function WorkoutHistory() {
     const { t } = useTranslation();
     const { inputFieldBackgroundColor, mainColor, textDisabled } = useTheme();
     const editedWorkout = useAppSelector(getEditedWorkout);
     const latestWorkoutDate = useAppSelector((state: AppState) => getLatestWorkoutDate(state, editedWorkout?.index ?? 0));
-    const firstWorkoutDate = useAppSelector((state: AppState) => getFirstWorkoutDate(state, editedWorkout?.index ?? 0));
     const [selectedDate, setSelectedDate] = useState<IsoDate>(latestWorkoutDate);
-    const pastScrollRange = useMemo(() => Temporal.PlainDate.from(selectedDate).month - Temporal.PlainDate.from(firstWorkoutDate).month, [firstWorkoutDate, selectedDate]);
-    const futureScrollRange = useMemo(() => Temporal.PlainDate.from(latestWorkoutDate).month - Temporal.PlainDate.from(selectedDate).month, [latestWorkoutDate, selectedDate]);
+    const { past, future } = useScrollRanges(selectedDate);
     const markedDates = useMarkedDates(editedWorkout?.index);
     const workout = useAppSelector(getEditedWorkout);
     const [ref, open, close] = useBottomSheetRef();
@@ -101,8 +115,8 @@ export function WorkoutHistory() {
             const workoutWrapperStyles: ViewStyle = { ...styles.workout, borderColor: selected ? color : "transparent" };
             return (
                 <ThemedView input style={workoutWrapperStyles} key={name.concat(date)}>
-                    {doneWorkouts.map(({ weight, duration, numExercisesDone }) => (
-                        <HStack key={weight.concat(duration?.toString() ?? "0").concat(numExercisesDone.toString())} ghost style={styles.displayedWorkoutWrapper}>
+                    {doneWorkouts.map(({ weight, duration, numExercisesDone }, index) => (
+                        <HStack key={Math.random() * 1000} ghost style={styles.displayedWorkoutWrapper}>
                             <HStack ghost style={styles.hstack}>
                                 <ThemedMaterialCommunityIcons ghost name="weight" size={20} />
                                 <Text ghost>
@@ -197,8 +211,8 @@ export function WorkoutHistory() {
                 <CalendarList
                     current={selectedDate ?? latestWorkoutDate}
                     dayComponent={dayComponent}
-                    futureScrollRange={futureScrollRange}
-                    pastScrollRange={pastScrollRange}
+                    futureScrollRange={future}
+                    pastScrollRange={past}
                     showScrollIndicator
                     theme={calendarTheme}
                     disabledByDefault
