@@ -41,14 +41,8 @@ export const UnitSystemSection = () => {
             snapPoints={["60%"]}
         >
             <ThemedView style={selectionStyles.vStack}>
-                <SelectableSetting position="TOP" prependedExtraContent={kgIcon} selected={unitSystem === "metric"} onSelect={() => handleSelectWeightUnit("metric")} titleKey="unit_system_metric" />
-                <SelectableSetting
-                    position="BOTTOM"
-                    prependedExtraContent={poundIcon}
-                    selected={unitSystem === "imperial"}
-                    onSelect={() => handleSelectWeightUnit("imperial")}
-                    titleKey="unit_system_imperial"
-                />
+                <SelectableSetting prependedExtraContent={kgIcon} selected={unitSystem === "metric"} onSelect={() => handleSelectWeightUnit("metric")} titleKey="unit_system_metric" />
+                <SelectableSetting prependedExtraContent={poundIcon} selected={unitSystem === "imperial"} onSelect={() => handleSelectWeightUnit("imperial")} titleKey="unit_system_imperial" />
             </ThemedView>
         </ProfileContent>
     );

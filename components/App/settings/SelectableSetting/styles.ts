@@ -1,10 +1,12 @@
 import { StyleSheet } from "react-native";
+import { borderRadius } from "../../../../theme/border";
 
 export const styles = StyleSheet.create({
     innerWrapper: {
         padding: 10,
         borderColor: "black",
         borderWidth: 1,
+        borderRadius,
     },
     vStack: {
         alignSelf: "stretch",

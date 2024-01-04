@@ -42,9 +42,9 @@ export const DeletionTimeSelection = () => {
     return (
         <ProfileContent snapPoints={["40%"]} title={t("settings_deletion_time_title")} helpText={helpText}>
             <VStack style={selectionStyles.vStack}>
-                <SelectableSetting position="TOP" selected={deletionTime === 5000} onSelect={handleSetDeletionTime5} titleKey={"settings_deletion_time_5"} />
-                <SelectableSetting position="MIDDLE" selected={deletionTime === 10000} onSelect={handleSetDeletionTime10} titleKey={"settings_deletion_time_10"} />
-                <SelectableSetting position="BOTTOM" selected={deletionTime === 25000} onSelect={handleSetDeletionTime25} titleKey={"settings_deletion_time_25"} />
+                <SelectableSetting selected={deletionTime === 5000} onSelect={handleSetDeletionTime5} titleKey={"settings_deletion_time_5"} />
+                <SelectableSetting selected={deletionTime === 10000} onSelect={handleSetDeletionTime10} titleKey={"settings_deletion_time_10"} />
+                <SelectableSetting selected={deletionTime === 25000} onSelect={handleSetDeletionTime25} titleKey={"settings_deletion_time_25"} />
             </VStack>
         </ProfileContent>
     );

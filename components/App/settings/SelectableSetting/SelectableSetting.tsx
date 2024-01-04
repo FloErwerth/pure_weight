@@ -9,7 +9,6 @@ import { useTranslation } from "react-i18next";
 import { ThemedMaterialCommunityIcons } from "../../../Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
 import { SvgProps } from "react-native-svg";
 import * as Haptics from "expo-haptics";
-import { borderRadius } from "../../../../theme/border";
 
 export type Icon = {
     name: ComponentProps<typeof MaterialCommunityIcons>["name"];
@@ -22,7 +21,6 @@ export type SvgType = {
 };
 type SelectableSettingProps = {
     selected: boolean;
-    position?: "TOP" | "MIDDLE" | "BOTTOM";
     onSelect: () => void;
     titleKey: string;
     prependedExtraContent?: Icon | SvgType;
@@ -35,26 +33,10 @@ type SelectableSettingProps = {
     };
 };
 
-export const usePositionStyles = (position: SelectableSettingProps["position"]) => {
-    return useMemo(() => {
-        switch (position) {
-            case "TOP":
-                return { borderTopLeftRadius: 10, borderTopRightRadius: 10 };
-            case "MIDDLE":
-                return {};
-            case "BOTTOM":
-                return { borderBottomLeftRadius: 10, borderBottomRightRadius: 10 };
-            default:
-                return { borderRadius };
-        }
-    }, [position]);
-};
-
-export function SelectableSetting({ position, appendedExtraContent, prependedExtraContent, onSelect, selected, titleKey, stretch, center, hint }: SelectableSettingProps) {
+export function SelectableSetting({ appendedExtraContent, prependedExtraContent, onSelect, selected, titleKey, stretch, center, hint }: SelectableSettingProps) {
     const { secondaryColor } = useTheme();
     const { t } = useTranslation();
-    const positionStyles = usePositionStyles(position);
-    const wrapperStyles = useMemo(() => [positionStyles, styles.innerWrapper, selected && { borderColor: secondaryColor }, stretch && { flex: 1 }], [secondaryColor, selected, stretch]);
+    const wrapperStyles = useMemo(() => [styles.innerWrapper, stretch && { flex: 1 }], [stretch]);
     const textStyles = useMemo(() => [styles.text, center && ({ textAlign: "center" } as const)], [center]);
     const PrependedExtraContent = useCallback(() => {
         if (!prependedExtraContent) {
@@ -67,7 +49,7 @@ export function SelectableSetting({ position, appendedExtraContent, prependedExt
     }, [prependedExtraContent]);
     const AppendedExtraContent = useCallback(() => {
         if (!appendedExtraContent) {
-            return <>{selected && <MaterialCommunityIcons name="check" size={24} color={secondaryColor} />}</>;
+            return <>{selected && <ThemedMaterialCommunityIcons name="check" ghost size={26} />}</>;
         }
         if (appendedExtraContent && "name" in appendedExtraContent) {
             return <ThemedMaterialCommunityIcons color={appendedExtraContent.color} ghost name={appendedExtraContent.name} size={appendedExtraContent.size} />;
