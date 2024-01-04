@@ -13,14 +13,16 @@ import { ThemedBottomSheetModal, useBottomSheetRef } from "../BottomSheetModal/T
 
 import { getActiveSetIndex, getPreviousTraining } from "../../store/reducers/workout/workoutSelectors";
 import { ThemedPressable } from "../Themed/Pressable/Pressable";
-import { getWeightUnit } from "../../store/reducers/settings/settingsSelectors";
+import { getLanguage, getWeightUnit } from "../../store/reducers/settings/settingsSelectors";
+import { getLocaleDate } from "../../utils/date";
+import { IsoDate } from "../../types/date";
 
 interface PreviousTrainingProps {
     exerciseIndex: number;
 }
 export const PreviousTraining = ({ exerciseIndex }: PreviousTrainingProps) => {
     const previousWorkout = useAppSelector((state: AppState) => getPreviousTraining(state, state.settingsState.language, exerciseIndex));
-
+    const language = useAppSelector(getLanguage);
     const { t } = useTranslation();
     const { textDisabled, componentBackgroundColor, mainColor, secondaryColor, inputFieldBackgroundColor } = useTheme();
     const [ref, , close] = useBottomSheetRef();
@@ -94,7 +96,12 @@ export const PreviousTraining = ({ exerciseIndex }: PreviousTrainingProps) => {
                     </VStack>
                 )}
             </ThemedView>
-            <ThemedBottomSheetModal snapPoints={["100%"]} title={t("previous_training_note_title").concat(date)} onRequestClose={handleCloseNote} ref={ref}>
+            <ThemedBottomSheetModal
+                snapPoints={["100%"]}
+                title={t("previous_training_note_title").concat(getLocaleDate(date as IsoDate, language, { dateStyle: "medium" }))}
+                onRequestClose={handleCloseNote}
+                ref={ref}
+            >
                 <ThemedView ghost stretch style={{ margin: 20 }}>
                     <Text ghost stretch style={{ fontSize: 20 }}>
                         {note}
