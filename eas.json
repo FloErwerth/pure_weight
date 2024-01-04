@@ -7,7 +7,7 @@
       "developmentClient": true,
       "distribution": "internal",
       "env": {
-        "EXPO_PUBLIC_IS_PRODUCTION":"true"
+        "EXPO_PUBLIC_IS_PRODUCTION":"false"
       }
     },
     "production": {
