@@ -23,9 +23,6 @@ export type RoutesParamaters = {
     ["tabs/measurements"]: {
         name: "tabs/measurements";
     };
-    ["settings/display/index"]: {
-        name: "settings/display/index";
-    };
     ["settings/workout/index"]: {
         name: "settings/workout/index";
     };
@@ -77,9 +74,6 @@ export const Routes = {
     },
     measurements: {
         screen: "tabs/measurements",
-    },
-    display: {
-        screen: "settings/display/index",
     },
     "settings/manual": {
         screen: "settings/manual/index",

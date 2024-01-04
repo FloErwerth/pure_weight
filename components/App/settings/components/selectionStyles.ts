@@ -11,6 +11,7 @@ export const selectionStyles = StyleSheet.create({
     vStack: {
         alignSelf: "stretch",
         justifyContent: "flex-start",
+        gap: 5,
     },
     hStack: {
         gap: 10,

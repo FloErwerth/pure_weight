@@ -20,7 +20,6 @@ import DeviceInfo from "react-native-device-info";
 import { IsoDate } from "../types/date";
 import { setAppInstallDate } from "../store/reducers/metadata";
 import { getAppInstallDate } from "../store/reducers/metadata/metadataSelectors";
-import { Display } from "../components/App/settings/Sections/display";
 import { GeneralSettings } from "../components/App/settings/Sections/generalSettings";
 import { MeasurementProgress } from "./measurements/progress";
 import { Manual } from "./settings/manual";
@@ -61,7 +60,6 @@ const ThemedApp = () => {
                                     <Stack.Screen component={Create} options={{ gestureEnabled: false, headerShown: false }} name="workouts/create/index" />
                                     <Stack.Screen component={WorkoutProgress} options={{ headerShown: false }} name="workouts/progress/index" />
                                     <Stack.Screen component={WorkoutHistory} options={{ headerShown: false }} name="workouts/workoutHistory/index" />
-                                    <Stack.Screen component={Display} options={{ headerShown: false }} name="settings/display/index" />
                                     <Stack.Screen component={GeneralSettings} options={{ headerShown: false }} name="settings/workout/index" />
                                     <Stack.Screen component={MeasurementProgress} options={{ headerShown: false }} name="measurement/progress/index" />
                                     <Stack.Screen component={Manual} options={{ headerShown: false }} name="settings/manual/index" />

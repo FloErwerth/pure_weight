@@ -24,7 +24,7 @@ interface CheckBoxProps {
 
 export const CheckBox = ({ checked = false, onChecked, size = 20, label, helpText, disabled, snapPoints }: CheckBoxProps) => {
     const opacity = useSharedValue(0);
-    const checkBoxWrapperStyle = useMemo(() => ({ borderRadius: borderRadius < size ? size / 4 : borderRadius, width: size, height: size }), [size]);
+    const checkBoxWrapperStyle = useMemo(() => ({ borderRadius: borderRadius < size ? size / 4 : borderRadius, width: size + 2, height: size + 2 }), [size]);
     const checkStyle = useMemo(() => ({ opacity: opacity }), [opacity]);
     const [ref, open, close] = useBottomSheetRef();
     useEffect(() => {
@@ -37,25 +37,25 @@ export const CheckBox = ({ checked = false, onChecked, size = 20, label, helpTex
 
     return (
         <View>
-            <ThemedPressable style={styles.outerWrapper} disabled={disabled} ghost onPress={handleCheck}>
+            <ThemedView style={styles.outerWrapper} ghost>
                 <HStack input style={styles.wrapper}>
                     <Text ghost style={styles.text}>
                         {label}
                     </Text>
                     <HStack ghost style={{ gap: 10 }}>
-                        <ThemedView secondary style={checkBoxWrapperStyle}>
+                        <ThemedPressable secondary style={checkBoxWrapperStyle} onPress={handleCheck}>
                             <Animated.View style={checkStyle}>
                                 <ThemedMaterialCommunityIcons ghost name="check" size={size} />
                             </Animated.View>
-                        </ThemedView>
+                        </ThemedPressable>
                         {!disabled && helpText && (
-                            <Pressable onPress={open}>
+                            <Pressable disabled={disabled} onPress={open}>
                                 <ThemedMaterialCommunityIcons ghost name="help-circle-outline" size={size} />
                             </Pressable>
                         )}
                     </HStack>
                 </HStack>
-            </ThemedPressable>
+            </ThemedView>
             <ThemedBottomSheetModal snapPoints={snapPoints} title={helpText?.title} ref={ref}>
                 <HelpAnswer>
                     <AnswerText>{helpText?.text}</AnswerText>
