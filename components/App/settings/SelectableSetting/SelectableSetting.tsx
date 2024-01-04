@@ -9,6 +9,7 @@ import { useTranslation } from "react-i18next";
 import { ThemedMaterialCommunityIcons } from "../../../Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
 import { SvgProps } from "react-native-svg";
 import * as Haptics from "expo-haptics";
+import { View } from "react-native";
 
 export type Icon = {
     name: ComponentProps<typeof MaterialCommunityIcons>["name"];
@@ -49,7 +50,7 @@ export function SelectableSetting({ appendedExtraContent, prependedExtraContent,
     }, [prependedExtraContent]);
     const AppendedExtraContent = useCallback(() => {
         if (!appendedExtraContent) {
-            return <>{selected && <ThemedMaterialCommunityIcons name="check" ghost size={26} />}</>;
+            return <View style={styles.checkboxCompensation}>{selected && <ThemedMaterialCommunityIcons name="check" ghost size={26} />}</View>;
         }
         if (appendedExtraContent && "name" in appendedExtraContent) {
             return <ThemedMaterialCommunityIcons color={appendedExtraContent.color} ghost name={appendedExtraContent.name} size={appendedExtraContent.size} />;

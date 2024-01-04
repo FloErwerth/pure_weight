@@ -8,6 +8,10 @@ export const styles = StyleSheet.create({
         borderWidth: 1,
         borderRadius,
     },
+    checkboxCompensation: {
+        height: 24,
+        width: 24,
+    },
     vStack: {
         alignSelf: "stretch",
         justifyContent: "flex-start",

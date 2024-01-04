@@ -65,11 +65,26 @@ export const StopwatchPopover = () => {
     const { mainColor, inputFieldBackgroundColor, textDisabled } = useTheme();
     const { startOnDoneSet, startOnLastSet } = useAppSelector(getStopwatchSettings);
 
+    const toggleTimer = useCallback(() => {
+        if (timerStarted) {
+            setTimestamp(getSnapshot() ?? 0);
+            setTimerStarted(false);
+            pause();
+            clearInterval(interval);
+            setTimerPaused(true);
+        } else {
+            setTimerPaused(false);
+            setTimerStarted(true);
+            start();
+        }
+    }, [getSnapshot, pause, start, timerStarted]);
+
     const handleTimerFinished = useCallback(() => {
         if ((getSnapshot() ?? 0) <= 30) {
             clearInterval(interval);
             setTimerStarted(false);
             setTimerPaused(false);
+            setShowPopover(false);
         }
     }, [getSnapshot]);
 
@@ -114,28 +129,6 @@ export const StopwatchPopover = () => {
         }
     }, [remainingTime, start, timerStarted]);
 
-    const handleDoneSetCallback = useCallback(() => {
-        if (startOnDoneSet && !timerStarted) {
-            toggleTimer();
-        }
-    }, [startOnDoneSet]);
-
-    const handleLastSetCallback = useCallback(() => {
-        if (startOnLastSet) {
-            toggleTimer();
-        }
-    }, [startOnLastSet]);
-
-    useEffect(() => {
-        emitter.addListener("workoutDoneSet", handleDoneSetCallback);
-        emitter.addListener("workoutLastSet", handleLastSetCallback);
-
-        return () => {
-            emitter.removeListener("workoutDoneSet", handleDoneSetCallback);
-            emitter.removeListener("workoutLastSet", handleLastSetCallback);
-        };
-    }, [handleDoneSetCallback, handleLastSetCallback]);
-
     useEffect(() => {
         AppState.addEventListener("change", handleAppStateChange);
     }, [handleAppStateChange]);
@@ -148,19 +141,27 @@ export const StopwatchPopover = () => {
         }
     }, [currentPauseTime, timestamp, showPopover, remainingTime, timerStarted]);
 
-    const toggleTimer = useCallback(() => {
-        if (timerStarted) {
-            setTimestamp(getSnapshot() ?? 0);
-            setTimerStarted(false);
-            pause();
-            clearInterval(interval);
-            setTimerPaused(true);
-        } else {
-            setTimerPaused(false);
-            setTimerStarted(true);
-            start();
+    const handleDoneSetCallback = useCallback(() => {
+        if (startOnDoneSet && !timerStarted) {
+            toggleTimer();
         }
-    }, [getSnapshot, pause, start, timerStarted]);
+    }, [startOnDoneSet, timerStarted, toggleTimer]);
+
+    const handleLastSetCallback = useCallback(() => {
+        if (startOnLastSet) {
+            toggleTimer();
+        }
+    }, [startOnLastSet, toggleTimer]);
+
+    useEffect(() => {
+        emitter.addListener("workoutDoneSet", handleDoneSetCallback);
+        emitter.addListener("workoutLastSet", handleLastSetCallback);
+
+        return () => {
+            emitter.removeListener("workoutDoneSet", handleDoneSetCallback);
+            emitter.removeListener("workoutLastSet", handleLastSetCallback);
+        };
+    }, [handleDoneSetCallback, handleLastSetCallback]);
 
     const togglePopover = useCallback(() => {
         setShowPopover(!showPopover);
