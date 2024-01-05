@@ -12,6 +12,7 @@ export const styles = StyleSheet.create({
         alignSelf: "stretch",
         alignItems: "center",
         gap: 10,
+        marginBottom: 30,
         justifyContent: "space-evenly",
     },
     buttons: { gap: 20, justifyContent: "center" },

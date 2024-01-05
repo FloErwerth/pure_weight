@@ -27,6 +27,7 @@ import { CreateMeasurement } from "./measurements/create";
 import { MeasurementEdit } from "./measurements/edit";
 import { useTranslation } from "react-i18next";
 import { getLanguage } from "../store/reducers/settings/settingsSelectors";
+import { FullscreenAlertContextProvider } from "../components/FullscreenAlert/FullscreenAlertContextProvider";
 
 const Stack = createNativeStackNavigator<RoutesParamaters>();
 
@@ -48,30 +49,32 @@ const ThemedApp = () => {
     }, []);
 
     return (
-        <NavigationContainer ref={navigationRef} independent={true}>
-            <GestureHandlerRootView style={{ flex: 1 }}>
-                <ThemeProvider>
-                    <RootSiblingParent>
-                        <BottomSheetModalProvider>
-                            <SafeAreaView>
-                                <Stack.Navigator screenOptions={{ headerShown: false }}>
-                                    <Stack.Screen component={TabsWrapper} options={{ headerShown: false }} name="tabs" />
-                                    <Stack.Screen component={Train} options={{ gestureEnabled: false, headerShown: false }} name="workouts/train/index" />
-                                    <Stack.Screen component={Create} options={{ gestureEnabled: false, headerShown: false }} name="workouts/create/index" />
-                                    <Stack.Screen component={WorkoutProgress} options={{ headerShown: false }} name="workouts/progress/index" />
-                                    <Stack.Screen component={WorkoutHistory} options={{ headerShown: false }} name="workouts/workoutHistory/index" />
-                                    <Stack.Screen component={GeneralSettings} options={{ headerShown: false }} name="settings/workout/index" />
-                                    <Stack.Screen component={MeasurementProgress} options={{ headerShown: false }} name="measurement/progress/index" />
-                                    <Stack.Screen component={Manual} options={{ headerShown: false }} name="settings/manual/index" />
-                                    <Stack.Screen component={CreateMeasurement} options={{ headerShown: false }} name="measurement/create/index" />
-                                    <Stack.Screen component={MeasurementEdit} options={{ headerShown: false }} name="measurement/edit/index" />
-                                </Stack.Navigator>
-                            </SafeAreaView>
-                        </BottomSheetModalProvider>
-                    </RootSiblingParent>
-                </ThemeProvider>
-            </GestureHandlerRootView>
-        </NavigationContainer>
+        <FullscreenAlertContextProvider>
+            <NavigationContainer ref={navigationRef} independent={true}>
+                <GestureHandlerRootView style={{ flex: 1 }}>
+                    <ThemeProvider>
+                        <RootSiblingParent>
+                            <BottomSheetModalProvider>
+                                <SafeAreaView>
+                                    <Stack.Navigator screenOptions={{ headerShown: false }}>
+                                        <Stack.Screen component={TabsWrapper} options={{ headerShown: false }} name="tabs" />
+                                        <Stack.Screen component={Train} options={{ gestureEnabled: false, headerShown: false }} name="workouts/train/index" />
+                                        <Stack.Screen component={Create} options={{ gestureEnabled: false, headerShown: false }} name="workouts/create/index" />
+                                        <Stack.Screen component={WorkoutProgress} options={{ headerShown: false }} name="workouts/progress/index" />
+                                        <Stack.Screen component={WorkoutHistory} options={{ headerShown: false }} name="workouts/workoutHistory/index" />
+                                        <Stack.Screen component={GeneralSettings} options={{ headerShown: false }} name="settings/workout/index" />
+                                        <Stack.Screen component={MeasurementProgress} options={{ headerShown: false }} name="measurement/progress/index" />
+                                        <Stack.Screen component={Manual} options={{ headerShown: false }} name="settings/manual/index" />
+                                        <Stack.Screen component={CreateMeasurement} options={{ headerShown: false }} name="measurement/create/index" />
+                                        <Stack.Screen component={MeasurementEdit} options={{ headerShown: false }} name="measurement/edit/index" />
+                                    </Stack.Navigator>
+                                </SafeAreaView>
+                            </BottomSheetModalProvider>
+                        </RootSiblingParent>
+                    </ThemeProvider>
+                </GestureHandlerRootView>
+            </NavigationContainer>
+        </FullscreenAlertContextProvider>
     );
 };
 

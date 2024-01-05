@@ -70,10 +70,14 @@
   "settings_keep_awake": "Keep display awake",
   "settings_keep_awake_helptext_text": "This setting makes you able to set the idle state of your display. \n\nIf selected, the display will be active during the usage of the app.",
 
+  "stopwatch_pause_notification_title": "Your pause is over",
+  "stopwatch_pause_notification_text": "It is time to get back to the training",
 
   "settings_stopwatch_title": "Stopwatch",
   "settings_stopwatch_done_set": "Start if set is done",
   "settings_stopwatch_last_set": "Start if last set is done",
+  "settings_stopwatch_notify": "Notify when the pause is done",
+  "settings_notification_help_text": "If activated, a notification will be shown when the pause is done",
   "settings_stopwatch_done_set_helptext_text": "After you have finished a set, the stopwatch will start automatically",
   "settings_stopwatch_last_set_helptext_text": "After you have finished the last set, the stopwatch will start automatically",
 

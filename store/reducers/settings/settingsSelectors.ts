@@ -7,6 +7,7 @@ export const getLanguage = createSelector([getSettingsState], (settings) => sett
 export const getUnitSystem = createSelector([getSettingsState], (settings) => settings.unitSystem);
 export const getStopwatchSettings = createSelector([getSettingsState], (settings) => settings.stopwatchSettings);
 export const getStartStopwatchOnDoneSet = createSelector([getStopwatchSettings], (settings) => settings?.startOnDoneSet);
+export const getStopwatchNotify = createSelector([getStopwatchSettings], (settings) => settings?.notifications);
 export const getStartStopwatchOnLastSet = createSelector([getStopwatchSettings], (settings) => settings?.startOnLastSet);
 export const getDeletionTime = createSelector([getSettingsState], (settings) => settings.deletionTimeMs);
 export const getSwitchToNextExercise = createSelector([getSettingsState], (settings) => settings.switchToNextExercise);

@@ -4,7 +4,7 @@ import { ThemeKey } from "../../../theme/types";
 import { activateKeepAwakeAsync, deactivateKeepAwake } from "expo-keep-awake";
 
 export type NumberEntries = "10" | "25" | "100" | "ALL";
-export type StopwatchSettings = { startOnDoneSet: boolean; startOnLastSet: boolean };
+export type StopwatchSettings = { startOnDoneSet: boolean; startOnLastSet: boolean; notifications: { allowed: false } | { allowed: true; notify: boolean } };
 export type SettingsState = {
     language: Language;
     theme: ThemeKey;
@@ -33,7 +33,7 @@ export const settingsRecuder = createReducer<SettingsState>(
         language: "en",
         unitSystem: "metric",
         keepAwake: true,
-        stopwatchSettings: { startOnDoneSet: false, startOnLastSet: false },
+        stopwatchSettings: { startOnDoneSet: false, startOnLastSet: false, notifications: { allowed: true, notify: true } },
         deletionTimeMs: 5000,
         switchToNextExercise: true,
     },

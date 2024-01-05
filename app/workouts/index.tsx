@@ -11,6 +11,7 @@ import { RenderedWorkout } from "../../components/App/workout/RenderedWorkout";
 import { PageContent } from "../../components/PageContent/PageContent";
 import { Swipeable } from "../../components/WorkoutCard/Swipeable";
 import { BottomToast } from "../../components/BottomToast/BottomToast";
+import { useRegisterForPushNotifications } from "../../hooks/useRegisterForPushNotifications";
 
 export function Workouts() {
     const dispatch = useAppDispatch();
@@ -18,6 +19,7 @@ export function Workouts() {
     const [showToast, setShowToast] = useState(false);
     const savedWorkouts = useAppSelector(getWorkouts);
     const navigate = useNavigate();
+    const registerNotifications = useRegisterForPushNotifications();
 
     const handleCreateWorkout = useCallback(() => {
         dispatch(createNewWorkout());
