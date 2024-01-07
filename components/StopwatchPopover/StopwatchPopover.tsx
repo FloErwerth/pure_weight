@@ -38,7 +38,6 @@ const useStopwatch = () => {
 
     const update = useCallback(() => {
         setRemainingTime((remainingTime) => {
-            console.log("update");
             if (remainingTime <= 0) {
                 reset();
                 void showNotification();
@@ -190,10 +189,10 @@ export const StopwatchPopover = () => {
                 </HStack>
                 <HStack input style={styles.buttons}>
                     <Pressable onPress={toggleTimer}>
-                        <ThemedMaterialCommunityIcons size={40} name={timerStarted ? "pause-circle" : "play-circle"} />
+                        <ThemedMaterialCommunityIcons ghost size={40} name={timerStarted ? "pause-circle" : "play-circle"} />
                     </Pressable>
                     <Pressable onPress={reset}>
-                        <ThemedMaterialCommunityIcons size={40} name="sync-circle" />
+                        <ThemedMaterialCommunityIcons ghost size={40} name="sync-circle" />
                     </Pressable>
                 </HStack>
             </AnimatedView>
