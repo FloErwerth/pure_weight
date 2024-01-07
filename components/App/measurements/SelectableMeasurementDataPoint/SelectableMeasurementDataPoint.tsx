@@ -1,12 +1,12 @@
 import { Text } from "../../../Themed/ThemedText/Text";
 import { getUnitByType } from "../../../../store/reducers/measurements/measurementSelectors";
 import { ThemedPressable } from "../../../Themed/Pressable/Pressable";
-import { getUnitSystem } from "../../../../store/reducers/settings/settingsSelectors";
+import { getLanguage, getUnitSystem } from "../../../../store/reducers/settings/settingsSelectors";
 import { useAppSelector } from "../../../../store";
 import { MeasurementType } from "../types";
 import { styles } from "./styles";
 import { IsoDate } from "../../../../types/date";
-import { getSinceDate } from "../../../../utils/timeAgo";
+import { getLocaleDate } from "../../../../utils/date";
 
 type EditedMeasurementDataPointProps = {
     isoDate: IsoDate;
@@ -17,12 +17,13 @@ type EditedMeasurementDataPointProps = {
 
 export const SelectableMeasurementDataPoint = ({ isoDate, value, type, selectMeasurementPoint }: EditedMeasurementDataPointProps) => {
     const unitSystem = useAppSelector(getUnitSystem);
+    const language = useAppSelector(getLanguage);
     return (
         <ThemedPressable round padding stretch onPress={selectMeasurementPoint}>
             <Text style={styles.value}>
                 {value} {getUnitByType(unitSystem, type)}
             </Text>
-            <Text style={styles.date}>{getSinceDate(isoDate)}</Text>
+            <Text style={styles.date}>{getLocaleDate(isoDate, language, { dateStyle: "medium" })}</Text>
         </ThemedPressable>
     );
 };

@@ -83,8 +83,8 @@ TimeAgo.addLabels("de", "full_day", {
 TimeAgo.addLabels("en", "full_day", {
     second: {
         past: {
-            one: "{0} second earlier",
-            other: "{0} seconds earlier",
+            one: "{0} second ago",
+            other: "{0} seconds ago",
         },
         future: {
             one: "{0} second later",
@@ -93,8 +93,8 @@ TimeAgo.addLabels("en", "full_day", {
     },
     minute: {
         past: {
-            one: "{0} minute earlier",
-            other: "{0} minutes earlier",
+            one: "{0} minute ago",
+            other: "{0} minutes ago",
         },
         future: {
             one: "{0} minute later",
@@ -103,8 +103,8 @@ TimeAgo.addLabels("en", "full_day", {
     },
     hour: {
         past: {
-            one: "{0} hour earlier",
-            other: "{0} hours earlier",
+            one: "{0} hour ago",
+            other: "{0} hours ago",
         },
         future: {
             one: "{0} hour later",
@@ -123,8 +123,8 @@ TimeAgo.addLabels("en", "full_day", {
     },
     week: {
         past: {
-            one: "{0} week earlier",
-            other: "{0} weeks earlier",
+            one: "{0} week ago",
+            other: "{0} weeks ago",
         },
         future: {
             one: "{0} week later",
@@ -133,8 +133,8 @@ TimeAgo.addLabels("en", "full_day", {
     },
     month: {
         past: {
-            one: "{0} month earlier",
-            other: "{0} months earlier",
+            one: "{0} month ago",
+            other: "{0} months ago",
         },
         future: {
             one: "{0} month later",
@@ -143,7 +143,7 @@ TimeAgo.addLabels("en", "full_day", {
     },
     year: {
         past: {
-            one: "{0} year earlier",
+            one: "{0} year ago",
             other: "{0} years earlier",
         },
         future: {

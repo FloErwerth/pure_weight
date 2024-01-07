@@ -1,8 +1,13 @@
 import { SortingType } from "../../../types";
 import { Measurement } from "../../../../components/App/measurements/types";
-import { getEpochMilliseconds } from "../../../../utils/date";
-import { IsoDate } from "../../../../types/date";
+import { convertDate } from "../../../../utils/date";
+import { Temporal } from "@js-temporal/polyfill";
 
+const sortAfterDate = (a: Measurement, b: Measurement) => {
+    const latestDateA = a.data[a.data.length - 1].isoDate;
+    const latestDateB = b.data[b.data.length - 1].isoDate;
+    return Temporal.PlainDate.compare(convertDate.toTemporal(latestDateA), convertDate.toTemporal(latestDateB));
+};
 export const sortMeasurements = (measurements: Measurement[], sorting: SortingType) => {
     const sortedMeasurement = [...measurements];
     switch (sorting) {
@@ -11,17 +16,9 @@ export const sortMeasurements = (measurements: Measurement[], sorting: SortingTy
         case "Z_A":
             return sortedMeasurement.sort((a, b) => b.name.localeCompare(a.name));
         case "MOST_RECENT":
-            return sortedMeasurement.sort((a, b) => {
-                const latestDateA = Object.entries(a.data)[Object.entries(a.data).length - 1][0] as IsoDate;
-                const latestDateB = Object.entries(b.data)[Object.entries(b.data).length - 1][0] as IsoDate;
-                return getEpochMilliseconds(latestDateB) - getEpochMilliseconds(latestDateA);
-            });
+            return sortedMeasurement.sort((a, b) => sortAfterDate(a, b)).reverse();
         case "LONGEST_AGO":
-            return sortedMeasurement.sort((a, b) => {
-                const latestDateA = Object.entries(a.data)[Object.entries(a.data).length - 1][0] as IsoDate;
-                const latestDateB = Object.entries(b.data)[Object.entries(b.data).length - 1][0] as IsoDate;
-                return getEpochMilliseconds(latestDateA) - getEpochMilliseconds(latestDateB);
-            });
+            return sortedMeasurement.sort((a, b) => sortAfterDate(a, b));
     }
 
     return sortedMeasurement;

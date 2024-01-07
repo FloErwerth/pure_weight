@@ -173,9 +173,8 @@ export const getIsLastSet = createSelector([getTrainedWorkout, (trainedWorkout, 
     };
 });
 export const getOverallTrainingTrend = createSelector([getWorkouts, (workouts, index: number) => index], (workouts, index) => {
-    const workout = workouts[index];
-
-    if (!workout.doneWorkouts || workout.doneWorkouts?.length < 2 || workout.doneWorkouts.some(({ doneExercises }) => !doneExercises)) {
+    const workout = workouts.find((workout) => workout.index === index);
+    if (!workout?.doneWorkouts || workout.doneWorkouts?.length < 2 || workout.doneWorkouts.some(({ doneExercises }) => !doneExercises)) {
         return undefined;
     }
 
@@ -339,5 +338,5 @@ export const getSetData = createSelector([getExerciseData, (exerciseData, setInd
 });
 
 export const getIsOngoingWorkout = createSelector([getTrainedWorkout, (trainedWorkout, workoutIndex: number) => workoutIndex], (trainedWorkout, workoutIndex) => {
-    return trainedWorkout?.workoutIndex === workoutIndex && trainedWorkout.paused;
+    return trainedWorkout && trainedWorkout?.workoutIndex === workoutIndex && trainedWorkout.paused;
 });

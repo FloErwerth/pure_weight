@@ -111,8 +111,8 @@ export function Workouts() {
 
     const mappedWorkouts = useMemo(
         () =>
-            savedWorkouts.map(({ name }, workoutIndex) => (
-                <Swipeable key={name.concat(workoutIndex.toString())} onClick={() => handleStartWorkoutCases(workoutIndex)} onDelete={() => onDelete(workoutIndex)} onEdit={() => onEdit(workoutIndex)}>
+            savedWorkouts.map(({ name, index }, workoutIndex) => (
+                <Swipeable key={name.concat(index.toString())} onClick={() => handleStartWorkoutCases(index)} onDelete={() => onDelete(index)} onEdit={() => onEdit(index)}>
                     <RenderedWorkout index={workoutIndex} />
                 </Swipeable>
             )),

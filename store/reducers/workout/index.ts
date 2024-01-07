@@ -40,7 +40,6 @@ export const recoverWorkout = createAction("workout_recover");
 export const recoverExercise = createAction("exercise_recover");
 export const setWorkoutSorting = createAction<SortingType, "workout_sort">("workout_sort");
 export const removeWorkout = createAction<number, "workout_remove">("workout_remove");
-export const addWorkout = createAction<{ name: string; exercises: ExerciseMetaData[]; color: string }, "workout_add">("workout_add");
 export const addDoneWorkout = createAction("set_training_data");
 export const createNewExercise = createAction("workout_create_new_exercise");
 export const createNewWorkout = createAction("workout_create_new_workout");
@@ -61,7 +60,6 @@ export type WorkoutAction =
     | typeof recoverWorkout.type
     | typeof setWorkoutSorting.type
     | typeof removeWorkout.type
-    | typeof addWorkout.type
     | typeof addDoneWorkout.type
     | typeof setWorkouts.type
     | typeof saveEditedWorkout.type
@@ -176,6 +174,7 @@ export const workoutReducer = createReducer<WorkoutState>({ workouts: [], sortin
             state.editedWorkout = {
                 isNew: true,
                 workout: {
+                    index: state.workouts.length,
                     name: "",
                     exercises: [],
                     doneWorkouts: [],
@@ -263,12 +262,6 @@ export const workoutReducer = createReducer<WorkoutState>({ workouts: [], sortin
                 const editedWorkout = state.editedWorkout;
                 state.editedWorkout = { index: editedWorkout.index, workout: { ...editedWorkout.workout, exercises: action.payload } };
             }
-        })
-        .addCase(addWorkout, (state, action) => {
-            state.workouts = sortWorkouts(
-                [...state.workouts, { name: action.payload.name, exercises: action.payload.exercises, calendarColor: action.payload.color, doneWorkouts: [] }],
-                state.sorting,
-            );
         })
         .addCase(removeWorkout, (state, action) => {
             const newWorkouts = [...state.workouts];

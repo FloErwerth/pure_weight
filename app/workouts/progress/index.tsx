@@ -12,7 +12,7 @@ import { HStack } from "../../../components/Stack/HStack/HStack";
 import { styles } from "../../../components/App/progress/chart/components/styles";
 import { useTheme } from "../../../theme/context";
 
-import { getEditedWorkoutName, getWorkoutExercises } from "../../../store/reducers/workout/workoutSelectors";
+import { getEditedWorkoutName, getTrainingDayData } from "../../../store/reducers/workout/workoutSelectors";
 import { ThemedScrollView } from "../../../components/Themed/ThemedScrollView/ThemedScrollView";
 
 const ExerciseCharts = lazy(() => import("../../../components/App/progress/chart/components/ExerciseCharts"));
@@ -22,7 +22,7 @@ const PromiseTrigger = () => {
 
 export function WorkoutProgress() {
     const navigate = useNavigate();
-    const exercises = useAppSelector(getWorkoutExercises);
+    const exercises = useAppSelector(getTrainingDayData);
     const trainingDayName = useAppSelector(getEditedWorkoutName);
 
     const handleNavigateToWorkouts = useCallback(() => {

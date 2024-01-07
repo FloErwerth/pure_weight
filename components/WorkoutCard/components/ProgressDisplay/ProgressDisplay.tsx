@@ -117,9 +117,6 @@ export const ProgressDisplay = ({ percent, onPress, higherIsBetter = true, wasPo
                         <Text secondary style={styles.text}>
                             {text}
                         </Text>
-                        <Text secondary style={styles.hint}>
-                            {hint}
-                        </Text>
                     </ThemedView>
                     <ThemedMaterialCommunityIcons ghost name="chevron-right" size={20} />
                 </HStack>

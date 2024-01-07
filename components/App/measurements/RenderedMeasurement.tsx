@@ -1,7 +1,6 @@
 import { VStack } from "../../Stack/VStack/VStack";
 import { View } from "react-native";
 import { Text } from "../../Themed/ThemedText/Text";
-import { ThemedMaterialCommunityIcons } from "../../Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
 import { HStack } from "../../Stack/HStack/HStack";
 import { useCallback, useMemo } from "react";
 import { styles } from "./styles";
@@ -41,7 +40,6 @@ export const RenderedMeasurement = ({ index, measurement }: MeasurementProps) =>
                 </View>
                 <ProgressDisplay type="Measurement" wasPositive={wasPositive} higherIsBetter={measurement.higherIsBetter} name={measurement?.name} percent={progress} onPress={handleNavigateToChart} />
             </VStack>
-            <ThemedMaterialCommunityIcons name="chevron-right" size={24} />
         </HStack>
     );
 };
