@@ -1,7 +1,7 @@
 import { createSelector } from "@reduxjs/toolkit";
 import { AppState } from "../../index";
 import { getLanguage } from "../settings/settingsSelectors";
-import { getDateTodayIso, getMonth } from "../../../utils/date";
+import { getDateTodayIso, getLocaleDate, getMonth } from "../../../utils/date";
 import { IsoDate } from "../../../types/date";
 import { PALETTE } from "../../../utils/colorPalette";
 import { getLastNEntries } from "../../../utils/getLastNEntries";
@@ -150,7 +150,7 @@ export const getPreviousTraining = createSelector([getTrainedWorkout, getLanguag
         doneWorkouts[workoutIndex].doneExercises?.forEach((exercise) => {
             if (!foundEntries.get(exercise.name)) {
                 foundEntries.set(exercise.name, {
-                    date: doneWorkouts[workoutIndex].isoDate,
+                    date: getLocaleDate(doneWorkouts[workoutIndex].isoDate, language, { dateStyle: "medium" }),
                     sets: exercise.sets,
                     note: exercise.note,
                 });

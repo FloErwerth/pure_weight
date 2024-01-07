@@ -198,26 +198,27 @@ export const workoutReducer = createReducer<WorkoutState>({ workouts: [], sortin
         })
         .addCase(storeEditedExercise, (state) => {
             const isTrained = state.editedExercise?.isTrained;
-            const workout = isTrained ? state.trainedWorkout?.workout : state.editedWorkout?.workout;
-            if (workout && state.editedWorkout && state.editedExercise) {
-                const exercises = workout.exercises;
+            const storedWorkout = isTrained ? state.trainedWorkout : state.editedWorkout;
+            if (storedWorkout && state.editedExercise) {
+                const exercises = storedWorkout.workout.exercises;
                 if (state.editedExercise.index !== undefined) {
                     exercises.splice(state.editedExercise.index, 1, state.editedExercise.exercise);
+                    if (isTrained && state.trainedWorkout?.workout) {
+                        storedWorkout.workout.exercises = exercises;
+                        state.trainedWorkout.exerciseData[state.editedExercise?.index].doneSets.map((data) => {
+                            if (!data.confirmed) {
+                                return { filled: false, reps: state.editedExercise?.exercise.reps, weight: state.editedExercise?.exercise.weight };
+                            }
+                            return data;
+                        });
+                    }
+                    if (!isTrained && state.editedWorkout?.workout) {
+                        state.editedWorkout.workout.exercises = exercises;
+                    }
                 } else {
                     exercises.push(state.editedExercise.exercise);
                 }
-                if (isTrained && state.trainedWorkout?.workout) {
-                    state.trainedWorkout.workout.exercises = exercises;
-                    state.trainedWorkout.exerciseData[state.trainedWorkout.activeExerciseIndex].doneSets.map((data) => {
-                        if (!data.confirmed) {
-                            return { filled: false, reps: state.editedExercise?.exercise.reps, weight: state.editedExercise?.exercise.weight };
-                        }
-                        return data;
-                    });
-                }
-                if (!isTrained && state.editedWorkout?.workout) {
-                    state.editedWorkout.workout.exercises = exercises;
-                }
+                state.workouts[storedWorkout.workout.index] = storedWorkout.workout;
             }
         })
         .addCase(deleteExerciseFromEditedWorkout, (state, action) => {

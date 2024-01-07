@@ -17,6 +17,7 @@ export const StopwatchSelection = ({ quick }: StopwatchSelectionProps) => {
     const startStopwatchOnDoneSet = useAppSelector(getStartStopwatchOnDoneSet);
     const startStopwatchOnLastSet = useAppSelector(getStartStopwatchOnLastSet);
     const notify = useAppSelector(getStopwatchNotify);
+
     const dispatch = useAppDispatch();
     const requestPermissions = useRegisterForPushNotifications();
     const checked = useMemo(() => {

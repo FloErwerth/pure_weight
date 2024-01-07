@@ -1,5 +1,5 @@
 import { ThemedPressable } from "../Pressable/Pressable";
-import { useCallback, useMemo, useRef } from "react";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 import { ThemedMaterialCommunityIcons } from "../ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
 import { HStack } from "../../Stack/HStack/HStack";
 import { Text } from "../ThemedText/Text";
@@ -27,14 +27,16 @@ export const CheckBox = ({ checked, onChecked, size = 20, label, helpText, disab
     const checkStyle = useMemo(() => ({ opacity: opacity.current }), [opacity]);
     const [ref, open] = useBottomSheetRef();
 
+    useEffect(() => {
+        Animated.timing(opacity.current, {
+            toValue: checked ? 1 : 0,
+            duration: 25,
+            useNativeDriver: true,
+        }).start();
+    }, [checked]);
+
     const handleCheck = useCallback(() => {
-        if (checked) {
-            onChecked?.(false);
-            Animated.timing(opacity.current, { toValue: 0, duration: 50, useNativeDriver: false }).start();
-        } else {
-            onChecked?.(true);
-            Animated.timing(opacity.current, { toValue: 1, duration: 50, useNativeDriver: false }).start();
-        }
+        onChecked?.(!checked);
     }, [checked, onChecked, opacity]);
 
     return (

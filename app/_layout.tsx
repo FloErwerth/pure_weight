@@ -27,6 +27,8 @@ import { CreateMeasurement } from "./measurements/create";
 import { MeasurementEdit } from "./measurements/edit";
 import { useTranslation } from "react-i18next";
 import { getLanguage } from "../store/reducers/settings/settingsSelectors";
+import { Appearance, NativeModules } from "react-native";
+import { setLanguage, setTheme } from "../store/reducers/settings";
 
 const Stack = createNativeStackNavigator<RoutesParamaters>();
 
@@ -42,6 +44,15 @@ const ThemedApp = () => {
             dispatch(setAppInstallDate(date as IsoDate));
         });
         dispatch(setEmptyState());
+        const lang = (NativeModules.SettingsManager.settings.AppleLocale as string).split("_")[0];
+        if (lang === "de") {
+            dispatch(setLanguage("de"));
+        } else {
+            dispatch(setLanguage("en"));
+        }
+        const theme = Appearance.getColorScheme();
+        dispatch(setTheme(theme === "dark" ? "dark" : "light"));
+        i18n.changeLanguage(NativeModules.SettingsManager.settings.AppleLocale as string);
     }
 
     useEffect(() => {
