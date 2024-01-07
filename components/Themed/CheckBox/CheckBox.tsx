@@ -1,20 +1,19 @@
 import { ThemedPressable } from "../Pressable/Pressable";
-import { useCallback, useEffect, useMemo } from "react";
+import { useCallback, useMemo, useRef } from "react";
 import { ThemedMaterialCommunityIcons } from "../ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
-import Animated, { useSharedValue, withTiming } from "react-native-reanimated";
 import { HStack } from "../../Stack/HStack/HStack";
 import { Text } from "../ThemedText/Text";
 import { styles } from "./styles";
 import { ThemedView } from "../ThemedView/View";
 import { borderRadius } from "../../../theme/border";
-import { Pressable, View } from "react-native";
+import { Animated, Pressable, View } from "react-native";
 import { SnapPoint, ThemedBottomSheetModal, useBottomSheetRef } from "../../BottomSheetModal/ThemedBottomSheetModal";
 import { HelpAnswer } from "../../HelpQuestionAnswer/HelpQuestion";
 import { AnswerText } from "../../HelpQuestionAnswer/AnswerText";
 
 interface CheckBoxProps {
-    checked?: boolean;
-    onChecked?: (checked: boolean) => void;
+    checked: boolean;
+    onChecked: (checked: boolean) => void;
     size?: number;
     label: string;
     helpText?: { title?: string; text: string };
@@ -22,18 +21,21 @@ interface CheckBoxProps {
     snapPoints?: SnapPoint[];
 }
 
-export const CheckBox = ({ checked = false, onChecked, size = 20, label, helpText, disabled, snapPoints }: CheckBoxProps) => {
-    const opacity = useSharedValue(0);
+export const CheckBox = ({ checked, onChecked, size = 20, label, helpText, disabled, snapPoints }: CheckBoxProps) => {
+    const opacity = useRef(new Animated.Value(0));
     const checkBoxWrapperStyle = useMemo(() => ({ borderRadius: borderRadius < size ? size / 4 : borderRadius, width: size + 2, height: size + 2 }), [size]);
-    const checkStyle = useMemo(() => ({ opacity: opacity }), [opacity]);
-    const [ref, open, close] = useBottomSheetRef();
-    useEffect(() => {
-        opacity.value = withTiming(checked ? 1 : 0, { duration: 100 });
-    }, [checked]);
+    const checkStyle = useMemo(() => ({ opacity: opacity.current }), [opacity]);
+    const [ref, open] = useBottomSheetRef();
 
     const handleCheck = useCallback(() => {
-        onChecked?.(!checked);
-    }, [checked, onChecked]);
+        if (checked) {
+            onChecked?.(false);
+            Animated.timing(opacity.current, { toValue: 0, duration: 50, useNativeDriver: false }).start();
+        } else {
+            onChecked?.(true);
+            Animated.timing(opacity.current, { toValue: 1, duration: 50, useNativeDriver: false }).start();
+        }
+    }, [checked, onChecked, opacity]);
 
     return (
         <View>

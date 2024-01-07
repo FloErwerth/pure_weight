@@ -91,7 +91,7 @@ export const mockState: AppState = {
     },
     settingsState: {
         switchToNextExercise: true,
-        stopwatchSettings: { startOnDoneSet: false, startOnLastSet: false },
+        stopwatchSettings: { startOnDoneSet: false, startOnLastSet: false, notifications: { allowed: false } },
         keepAwake: true,
         theme: "dark",
         language: "en",
@@ -248,7 +248,7 @@ export const emptyState = {
     },
     settingsState: {
         switchToNextExercise: true,
-        stopwatchSettings: { startOnDoneSet: true, startOnLastSet: true },
+        stopwatchSettings: { startOnDoneSet: true, startOnLastSet: true, notifications: { allowed: false } },
         keepAwake: true,
         language: "en",
         theme: "light",

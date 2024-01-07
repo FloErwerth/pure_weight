@@ -180,7 +180,7 @@ export const CreateMeasurement = () => {
                 <CheckBox
                     label={t("measurement_higher_is_better")}
                     helpText={helpText}
-                    checked={editedMeasurement?.measurement.higherIsBetter}
+                    checked={Boolean(editedMeasurement?.measurement.higherIsBetter)}
                     size={26}
                     onChecked={handleSelectHigherIsBetter}
                     disabled={isMeasurementDataPoint}

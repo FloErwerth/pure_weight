@@ -6,7 +6,6 @@ import { AddButton } from "../../../components/AddButton/AddButton";
 import { styles } from "../../../components/App/create/styles";
 import { SiteNavigationButtons } from "../../../components/SiteNavigationButtons/SiteNavigationButtons";
 import { PressableRowWithIconSlots } from "../../../components/PressableRowWithIconSlots/PressableRowWithIconSlots";
-import { AlertConfig, BackButtonModal } from "../../../components/AlertModal/BackButtonModal";
 import { View } from "react-native";
 import * as Haptics from "expo-haptics";
 import { NotificationFeedbackType } from "expo-haptics";
@@ -16,7 +15,7 @@ import { useTranslation } from "react-i18next";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { PageContent } from "../../../components/PageContent/PageContent";
 import { ThemedView } from "../../../components/Themed/ThemedView/View";
-import { useBottomSheetRef } from "../../../components/BottomSheetModal/ThemedBottomSheetModal";
+import { ThemedBottomSheetModal, useBottomSheetRef } from "../../../components/BottomSheetModal/ThemedBottomSheetModal";
 import { HStack } from "../../../components/Stack/HStack/HStack";
 import { ColorPickerButton, ColorPickerModal } from "../../../components/ColorPickerWithModal/ColorPickerWithModal";
 import { ThemedTextInput } from "../../../components/Themed/ThemedTextInput/ThemedTextInput";
@@ -37,6 +36,8 @@ import { EditableExerciseModal } from "../../../components/EditableExerciseModal
 import { ExerciseMetaData } from "../../../store/reducers/workout/types";
 import { BottomToast } from "../../../components/BottomToast/BottomToast";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { ThemedPressable } from "../../../components/Themed/Pressable/Pressable";
+import { ThemedMaterialCommunityIcons } from "../../../components/Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
 
 type MappedExercises = {
     onDelete: () => void;
@@ -51,7 +52,6 @@ export function Create() {
     const navigate = useNavigate();
     const { bottom } = useSafeAreaInsets();
     const { t } = useTranslation();
-    const [alertConfig, setAlertConfig] = useState<AlertConfig | undefined>(undefined);
     const editedWorkout = useAppSelector(getEditedWorkout);
     const isEditedWorkout = useAppSelector(getIsEditedWorkout);
     const title = useMemo(() => (isEditedWorkout ? t("edit_workout") : t("create_workout")), [isEditedWorkout, t]);
@@ -60,6 +60,7 @@ export function Create() {
     const [addRef, openAdd, closeAdd] = useBottomSheetRef();
     const [colorPickerRef, openPicker] = useBottomSheetRef();
     const [showToast, setShowToast] = useState(false);
+
     const handleSetWorkoutName = useCallback(
         (value?: string) => {
             dispatch(setEditedWorkoutName(value));
@@ -119,7 +120,6 @@ export function Create() {
 
     const handleNavigateHome = useCallback(() => {
         handleCleanErrors();
-        setAlertConfig(undefined);
         dispatch(setEditedExercise(undefined));
         navigate("workouts");
     }, [dispatch, handleCleanErrors, navigate]);
@@ -144,18 +144,11 @@ export function Create() {
         if (editedWorkout?.workout.exercises.length === 0) {
             handleNavigateHome();
         } else if (editedWorkout?.workout.exercises.length !== 0 || editedWorkout.workout.name) {
-            const title = t(isEditedWorkout ? "alert_edit_workout_discard_title" : "alert_create_workout_discard_title");
-            const content = t(isEditedWorkout ? "alert_edit_workout_discard_content" : "alert_create_workout_discard_content");
-            setAlertConfig({
-                title,
-                content,
-                onConfirm: handleDeleteWorkout,
-            });
-            alertRef.current?.present();
+            open();
         } else {
             handleNavigateHome();
         }
-    }, [alertRef, editedWorkout?.workout.exercises.length, editedWorkout?.workout.name, handleDeleteWorkout, handleNavigateHome, isEditedWorkout, t]);
+    }, [editedWorkout?.workout.exercises.length, editedWorkout?.workout.name, handleNavigateHome, open]);
 
     const handleOnDragEnd = useCallback(
         ({ data }: { data: MappedExercises[] }) => {
@@ -189,10 +182,10 @@ export function Create() {
     }, [dispatch]);
 
     const confirmButtonConfig = useMemo(
-        () => ({ localeKey: isEditedWorkout ? "alert_edit_workout_confirm_cancel" : "alert_create_workout_confirm_cancel", onPress: handleNavigateHome }) as const,
-        [handleNavigateHome, isEditedWorkout],
+        () => ({ localeKey: isEditedWorkout ? "alert_edit_workout_confirm_cancel" : "alert_create_workout_confirm_cancel", onPress: handleDeleteWorkout }) as const,
+        [handleDeleteWorkout, isEditedWorkout],
     );
-    const cancelButtonConfig = useMemo(() => ({ localeKey: "alert_create_workout_continue", onPress: closeAlert }) as const, [closeAlert]);
+
     const alertContent = useMemo(() => t(isEditedWorkout ? "alert_edit_workout_discard_content" : "alert_create_workout_discard_content"), [t, isEditedWorkout]);
     const alertTitle = useMemo(() => t(isEditedWorkout ? "alert_edit_workout_discard_title" : "alert_create_workout_discard_title"), [t, isEditedWorkout]);
 
@@ -234,7 +227,21 @@ export function Create() {
                 titleKey={"exercise_deleted_title"}
                 onRedo={handleRecoverExercise}
             />
-            <BackButtonModal reference={alertRef} confirmButtonConfig={confirmButtonConfig} title={alertTitle} content={alertContent} cancelButtonConfig={cancelButtonConfig} />
+            <ThemedBottomSheetModal snapPoints={["35%"]} title={alertTitle} ref={alertRef}>
+                <PageContent stretch paddingTop={20} ghost>
+                    <Text style={{ fontSize: 20 }} stretch ghost>
+                        {alertContent}
+                    </Text>
+                    <ThemedView ghost style={{ gap: 10, marginBottom: 20 }}>
+                        <ThemedPressable round padding secondary onPress={confirmButtonConfig.onPress}>
+                            <HStack ghost style={{ alignItems: "center", gap: 10 }}>
+                                <ThemedMaterialCommunityIcons name={"delete"} size={24} />
+                                <Text>{t(confirmButtonConfig.localeKey)}</Text>
+                            </HStack>
+                        </ThemedPressable>
+                    </ThemedView>
+                </PageContent>
+            </ThemedBottomSheetModal>
             <EditableExerciseModal reference={addRef} />
             <ColorPickerModal reference={colorPickerRef} />
         </ThemedView>

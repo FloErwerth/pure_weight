@@ -3,7 +3,7 @@ import { useAppDispatch, useAppSelector } from "../../../../../../store";
 import React, { useCallback, useMemo } from "react";
 import { VStack } from "../../../../../Stack/VStack/VStack";
 import { selectionStyles } from "../../selectionStyles";
-import { setStopwatchSettings } from "../../../../../../store/reducers/settings";
+import { mutateStopwatchSettings } from "../../../../../../store/reducers/settings";
 import { getStartStopwatchOnDoneSet, getStartStopwatchOnLastSet, getStopwatchNotify } from "../../../../../../store/reducers/settings/settingsSelectors";
 import { ProfileContent } from "../../ProfileContent/ProfileContent";
 import { CheckBox } from "../../../../../Themed/CheckBox/CheckBox";
@@ -27,25 +27,25 @@ export const StopwatchSelection = ({ quick }: StopwatchSelectionProps) => {
     }, [notify]);
 
     const handleSelectStartStopwatchOnDoneSet = useCallback(() => {
-        dispatch(setStopwatchSettings({ startOnDoneSet: !startStopwatchOnDoneSet }));
+        dispatch(mutateStopwatchSettings({ key: "startOnDoneSet", value: !startStopwatchOnDoneSet }));
     }, [dispatch, startStopwatchOnDoneSet]);
 
     const handleSelectStartStopwatchOnLastSet = useCallback(() => {
-        dispatch(setStopwatchSettings({ startOnLastSet: !startStopwatchOnLastSet }));
+        dispatch(mutateStopwatchSettings({ key: "startOnLastSet", value: !startStopwatchOnLastSet }));
     }, [startStopwatchOnLastSet, dispatch]);
 
     const handleSelectNotification = useCallback(async () => {
         if (!notify?.allowed) {
             const hasPermission = await requestPermissions();
             if (hasPermission) {
-                dispatch(setStopwatchSettings({ notifications: { allowed: true, notify: true } }));
+                dispatch(mutateStopwatchSettings({ key: "notifications", value: { allowed: true, notify: true } }));
             } else {
-                dispatch(setStopwatchSettings({ notifications: { allowed: false } }));
+                dispatch(mutateStopwatchSettings({ key: "notifications", value: { allowed: false } }));
             }
         } else {
-            dispatch(setStopwatchSettings({ notifications: { allowed: true, notify: !notify.notify } }));
+            dispatch(mutateStopwatchSettings({ key: "notifications", value: { allowed: true, notify: !notify.notify } }));
         }
-    }, [notify, startStopwatchOnLastSet, dispatch]);
+    }, [notify, requestPermissions, dispatch]);
 
     const doneSetHelpText = useMemo(() => ({ title: t("settings_stopwatch_done_set"), text: t("settings_stopwatch_done_set_helptext_text") }), [t]);
     const lastDoneSetHelpText = useMemo(() => ({ title: t("settings_stopwatch_last_set"), text: t("settings_stopwatch_last_set_helptext_text") }), [t]);
