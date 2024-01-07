@@ -1,11 +1,14 @@
 import { SwitchToNextExerciseSelection } from "../../components/Selections/SwitchToNextExerciseSelection/SwitchToNextExerciseSelection";
 import { StopwatchSelection } from "../../components/Selections/StopwatchSelection/StopwatchSelection";
 
-export const WorkoutSettings = () => {
+type WorkoutSettingsProps = {
+    quick?: boolean;
+};
+export const WorkoutSettings = ({ quick }: WorkoutSettingsProps) => {
     return (
         <>
-            <StopwatchSelection />
-            <SwitchToNextExerciseSelection />
+            <StopwatchSelection quick={quick} />
+            <SwitchToNextExerciseSelection quick={quick} />
         </>
     );
 };

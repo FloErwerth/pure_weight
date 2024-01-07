@@ -22,6 +22,7 @@ import { getEditedWorkout, getFirstWorkoutDate, getHistoryByMonth, getLatestWork
 import { getWeightUnit } from "../../../store/reducers/settings/settingsSelectors";
 import { getTitle } from "../../../utils/date";
 import { Chip } from "../../../components/Chip/Chip";
+import { noop } from "lodash";
 
 export type SectionListItemInfo = { color: string; name: string; doneWorkouts: { weight: string; numExercisesDone: number; duration?: string }[]; date: IsoDate };
 
@@ -150,7 +151,6 @@ export function WorkoutHistory() {
             const scrollCallback = () => {
                 const possibleIndexToScrollTo = sectionListRef.current?.props.sections.findIndex((data) => data.data[0].date === isoDate);
                 const indexToScrollTo = possibleIndexToScrollTo !== undefined && possibleIndexToScrollTo !== -1 ? possibleIndexToScrollTo : 0;
-
                 sectionListRef.current?.scrollToLocation({
                     sectionIndex: indexToScrollTo,
                     itemIndex: 1,
@@ -209,6 +209,7 @@ export function WorkoutHistory() {
             </PageContent>
             <ThemedBottomSheetModal snapPoints={["50%"]} ref={ref}>
                 <CalendarList
+                    onScrollToIndexFailed={noop}
                     current={selectedDate ?? latestWorkoutDate}
                     dayComponent={dayComponent}
                     futureScrollRange={future}

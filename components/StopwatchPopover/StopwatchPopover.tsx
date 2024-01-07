@@ -3,7 +3,6 @@ import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useSta
 import { Animated, Dimensions, Easing, Pressable, View } from "react-native";
 import { useTheme } from "../../theme/context";
 import { HStack } from "../Stack/HStack/HStack";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { styles } from "./styles";
 import { ThemedMaterialCommunityIcons } from "../Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
 import { AnimatedView } from "../Themed/AnimatedView/AnimatedView";
@@ -15,21 +14,17 @@ import { ThemedPressable } from "../Themed/Pressable/Pressable";
 import { ThemedView } from "../Themed/ThemedView/View";
 import { useScheduleNotification } from "../../hooks/useScheduleNotification";
 import { useTranslation } from "react-i18next";
+import { getPauseTime } from "../../store/reducers/workout/workoutSelectors";
 
 const UPDATE_INTERVAL = 1000;
 let id: number = 0;
 
 const useStopwatch = () => {
-    const currentPauseTime = 1000;
+    const currentPauseTime = useAppSelector(getPauseTime);
     const [remainingTime, setRemainingTime] = useState<number>(currentPauseTime);
     const [timerStarted, setTimerStarted] = useState(false);
     const { t } = useTranslation();
     const showNotification = useScheduleNotification({ title: t("stopwatch_pause_notification_title"), body: t("stopwatch_pause_notification_text") });
-
-    const startTimer = useCallback(() => {
-        setTimerStarted(true);
-        id = BackgroundTimer.setInterval(update, UPDATE_INTERVAL);
-    }, []);
 
     const stopTimer = useCallback(() => {
         BackgroundTimer.clearInterval(id);
@@ -39,10 +34,11 @@ const useStopwatch = () => {
     const reset = useCallback(() => {
         stopTimer();
         setRemainingTime(currentPauseTime);
-    }, []);
+    }, [currentPauseTime, stopTimer]);
 
     const update = useCallback(() => {
         setRemainingTime((remainingTime) => {
+            console.log("update");
             if (remainingTime <= 0) {
                 reset();
                 void showNotification();
@@ -50,7 +46,12 @@ const useStopwatch = () => {
             }
             return remainingTime - UPDATE_INTERVAL;
         });
-    }, [remainingTime]);
+    }, [reset, showNotification]);
+
+    const startTimer = useCallback(() => {
+        setTimerStarted(true);
+        id = BackgroundTimer.setInterval(update, UPDATE_INTERVAL);
+    }, [update]);
 
     useEffect(() => {
         if (!timerStarted) {
@@ -78,7 +79,7 @@ export const StopwatchPopover = () => {
     const top = useRef(new Animated.Value(200)).current;
     const { timerStarted, reset, remainingTime, stopTimer, startTimer } = useStopwatch();
     const buttonRef = useRef<View>(null);
-    const { mainColor, inputFieldBackgroundColor, textDisabled } = useTheme();
+    const { inputFieldBackgroundColor } = useTheme();
     const { startOnDoneSet, startOnLastSet } = useAppSelector(getStopwatchSettings);
 
     const toggleTimer = useCallback(() => {
@@ -189,10 +190,10 @@ export const StopwatchPopover = () => {
                 </HStack>
                 <HStack input style={styles.buttons}>
                     <Pressable onPress={toggleTimer}>
-                        <MaterialCommunityIcons size={40} color={mainColor} name={timerStarted ? "pause-circle" : "play-circle"} />
+                        <ThemedMaterialCommunityIcons size={40} name={timerStarted ? "pause-circle" : "play-circle"} />
                     </Pressable>
                     <Pressable onPress={reset}>
-                        <MaterialCommunityIcons size={40} color={mainColor} name="sync-circle" />
+                        <ThemedMaterialCommunityIcons size={40} name="sync-circle" />
                     </Pressable>
                 </HStack>
             </AnimatedView>

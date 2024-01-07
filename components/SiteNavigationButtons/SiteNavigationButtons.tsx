@@ -6,6 +6,8 @@ import { Animated, Pressable, View } from "react-native";
 import { Text } from "../Themed/ThemedText/Text";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useTheme } from "../../theme/context";
+import { ThemedMaterialCommunityIcons } from "../Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
+import { ThemedPressable } from "../Themed/Pressable/Pressable";
 
 interface SiteNavigationButtonsProps {
     handleBack?: () => void;
@@ -17,6 +19,7 @@ interface SiteNavigationButtonsProps {
     confirmButtonDisabled?: boolean;
     closeButtonDisabled?: boolean;
     confirmButtonRef?: RefObject<View>;
+    handleQuicksettings?: () => void;
 }
 export const DEFAULT_PLUS = { name: "plus", size: 40 } as const;
 export const SiteNavigationButtons = ({
@@ -29,6 +32,7 @@ export const SiteNavigationButtons = ({
     handleConfirmIcon = { name: "check", size: 30 },
     confirmButtonRef,
     handleConfirmOpacity,
+    handleQuicksettings,
 }: SiteNavigationButtonsProps) => {
     const titleStyles = useMemo(() => ({ ...styles.title, fontSize: titleFontSize, paddingVertical: titleFontSize <= 40 ? (40 - titleFontSize) / 2 : 0 }), [titleFontSize]);
 
@@ -65,13 +69,22 @@ export const SiteNavigationButtons = ({
                     {title}
                 </Text>
             </HStack>
-            <Animated.View style={{ opacity: handleConfirmOpacity !== undefined ? handleConfirmOpacity : 1 }}>
-                {handleConfirm && (
-                    <Pressable ref={confirmButtonRef} disabled={confirmButtonDisabled} onPress={handleConfirmButton}>
-                        <MaterialCommunityIcons color={mainColor} size={handleConfirmIcon?.size} name={handleConfirmIcon?.name} />
-                    </Pressable>
+            <HStack style={styles.actions} ghost>
+                {handleQuicksettings && (
+                    <HStack ghost>
+                        <ThemedPressable ghost onPress={handleQuicksettings}>
+                            <ThemedMaterialCommunityIcons ghost size={Math.min(28, titleFontSize)} name="cog" />
+                        </ThemedPressable>
+                    </HStack>
                 )}
-            </Animated.View>
+                <Animated.View style={{ opacity: handleConfirmOpacity !== undefined ? handleConfirmOpacity : 1 }}>
+                    {handleConfirm && (
+                        <Pressable ref={confirmButtonRef} disabled={confirmButtonDisabled} onPress={handleConfirmButton}>
+                            <MaterialCommunityIcons color={mainColor} size={handleConfirmIcon?.size} name={handleConfirmIcon?.name} />
+                        </Pressable>
+                    )}
+                </Animated.View>
+            </HStack>
         </HStack>
     );
 };

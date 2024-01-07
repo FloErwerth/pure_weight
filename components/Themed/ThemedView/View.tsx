@@ -8,6 +8,7 @@ export interface ThemedViewProps extends ViewProps, ComputedBackgroundColorProps
     reference?: RefObject<View>;
     behind?: boolean;
     round?: boolean;
+    hint?: boolean;
 }
 
 export const ThemedView = (props: ThemedViewProps) => {

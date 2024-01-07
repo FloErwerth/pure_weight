@@ -12,7 +12,7 @@
 
 
 
-  "workout_front": "Workout:",
+  "train_title": "Workout",
   "history_cta": "Verlauf anzeigen",
   "history_front": "Verlauf:",
   "history_latest_workout": "Aktuellstes Workout",
@@ -33,6 +33,11 @@
   "edit_workout": "Workout bearbeiten",
   "create_workout": "Workout erstellen",
   "workout_name": "Name der Einheit",
+  "workout_quick_settings_title": "Schnelleinstellungen",
+
+  "workout_save": "Workout speichern",
+  "workout_pause": "Workout pausieren",
+  "workout_cancel": "Workout abbrechen",
 
   "seconds": "sek.",
   "minutes": "min.",
@@ -92,8 +97,11 @@
   "settings_search_placeholder": "Suche",
 
   "alert_delete_message": "Dies kann nicht rückgängig gemacht werden",
-  "workout_quit_title": "Das Workout frühzeitig beenden?",
-  "workout_quit_message": "Der bisherige Fortschritt kann gespeichert werden. Möchtest Du den fortschritt speichern?. \n\nWenn Du das Workout fortsetzen willst, dann schließe das Overlay einfach mit einer Berührung auf das verdunkelte Workout.",
+
+  "workout_early_quit_title": "Das Workout frühzeitig beenden?",
+  "workout_quit_title": "Dein Workout beenden",
+  "workout_paused_hint": "Pausiertes Workout",
+
   "workout_save_confirm": "Speichern",
   "workout_confirm_delete": "Löschen",
   "workout_deleted_title": "Workout erfolgreich gelöscht",

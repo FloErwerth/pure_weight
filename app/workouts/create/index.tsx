@@ -6,7 +6,7 @@ import { AddButton } from "../../../components/AddButton/AddButton";
 import { styles } from "../../../components/App/create/styles";
 import { SiteNavigationButtons } from "../../../components/SiteNavigationButtons/SiteNavigationButtons";
 import { PressableRowWithIconSlots } from "../../../components/PressableRowWithIconSlots/PressableRowWithIconSlots";
-import { AlertConfig, AlertModal } from "../../../components/AlertModal/AlertModal";
+import { AlertConfig, BackButtonModal } from "../../../components/AlertModal/BackButtonModal";
 import { View } from "react-native";
 import * as Haptics from "expo-haptics";
 import { NotificationFeedbackType } from "expo-haptics";
@@ -234,7 +234,7 @@ export function Create() {
                 titleKey={"exercise_deleted_title"}
                 onRedo={handleRecoverExercise}
             />
-            <AlertModal reference={alertRef} confirmButtonConfig={confirmButtonConfig} title={alertTitle} content={alertContent} cancelButtonConfig={cancelButtonConfig} />
+            <BackButtonModal reference={alertRef} confirmButtonConfig={confirmButtonConfig} title={alertTitle} content={alertContent} cancelButtonConfig={cancelButtonConfig} />
             <EditableExerciseModal reference={addRef} />
             <ColorPickerModal reference={colorPickerRef} />
         </ThemedView>

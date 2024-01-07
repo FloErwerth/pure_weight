@@ -48,7 +48,9 @@ export const saveEditedWorkout = createAction("workout_save_edited_workout");
 export const setEditedWorkoutName = createAction<string | undefined, "workout_set_edited_workout_name">("workout_set_edited_workout_name");
 export const handleMutateSet = createAction<{ setIndex: number; key: keyof WeightBasedExerciseData; value?: string | boolean }, "handle_mutate_set">("handle_mutate_set");
 export const markSetAsDone = createAction<{ setIndex: number }, "mark_set_as_done">("mark_set_as_done");
+export const setIsActiveSet = createAction<{ setIndex: number }, "set_is_active_set">("set_is_active_set");
 export const setColor = createAction<string, "set_color">("set_color");
+export const pauseTrainedWorkout = createAction("pause_trained_workout");
 
 export type WorkoutAction =
     | typeof setEditedWorkout.type
@@ -83,6 +85,11 @@ export const workoutReducer = createReducer<WorkoutState>({ workouts: [], sortin
         .addCase(saveNote, (state, action) => {
             if (state.trainedWorkout) {
                 state.trainedWorkout.exerciseData[state.trainedWorkout.activeExerciseIndex].note = action.payload;
+            }
+        })
+        .addCase(pauseTrainedWorkout, (state) => {
+            if (state.trainedWorkout) {
+                state.trainedWorkout.paused = true;
             }
         })
         .addCase(mutateActiveExerciseInTrainedWorkout, (state, action) => {
@@ -137,9 +144,25 @@ export const workoutReducer = createReducer<WorkoutState>({ workouts: [], sortin
                 const exerciseIndex = trainedWorkout.activeExerciseIndex;
                 const doneSet = trainedWorkout.exerciseData[exerciseIndex].doneSets[action.payload.setIndex];
                 const exercise = trainedWorkout.exerciseData[exerciseIndex];
-                exercise.doneSets[action.payload.setIndex] = { ...doneSet, confirmed: true };
-                exercise.setIndex += 1;
-                exercise.activeSetIndex += 1;
+                if (action.payload.setIndex === exercise.latestSetIndex || action.payload.setIndex === exercise.activeSetIndex) {
+                    exercise.doneSets[action.payload.setIndex] = { ...doneSet, confirmed: true };
+                    exercise.setIndex += 1;
+                    if (exercise.activeSetIndex !== exercise.latestSetIndex) {
+                        exercise.activeSetIndex = exercise.latestSetIndex;
+                    } else {
+                        exercise.activeSetIndex += 1;
+                        exercise.latestSetIndex += 1;
+                    }
+                    trainedWorkout.exerciseData[exerciseIndex] = exercise;
+                }
+            }
+        })
+        .addCase(setIsActiveSet, (state, action) => {
+            const trainedWorkout = state.trainedWorkout;
+            if (trainedWorkout) {
+                const exerciseIndex = trainedWorkout.activeExerciseIndex;
+                const exercise = trainedWorkout.exerciseData[exerciseIndex];
+                exercise.activeSetIndex = action.payload.setIndex;
                 trainedWorkout.exerciseData[exerciseIndex] = exercise;
             }
         })
@@ -229,6 +252,9 @@ export const workoutReducer = createReducer<WorkoutState>({ workouts: [], sortin
         })
         .addCase(recoverWorkout, (state) => {
             if (state.deletedWorkout?.index !== undefined && state.deletedWorkout?.workout) {
+                if (state.deletedWorkout.trainedWorkout) {
+                    state.trainedWorkout = state.deletedWorkout.trainedWorkout;
+                }
                 state.workouts.splice(state.deletedWorkout.index, 0, state.deletedWorkout.workout);
             }
         })
@@ -248,7 +274,12 @@ export const workoutReducer = createReducer<WorkoutState>({ workouts: [], sortin
             const newWorkouts = [...state.workouts];
             const deletedTrainingDay = newWorkouts.splice(action.payload, 1);
             state.workouts = sortWorkouts(newWorkouts, state.sorting);
-            state.deletedWorkout = { index: action.payload, workout: deletedTrainingDay[0] };
+            const wasPaused = state.trainedWorkout?.workoutIndex === action.payload;
+
+            state.deletedWorkout = { index: action.payload, workout: deletedTrainingDay[0], trainedWorkout: wasPaused ? state.trainedWorkout : undefined };
+            if (wasPaused) {
+                state.trainedWorkout = undefined;
+            }
         })
         .addCase(addDoneWorkout, (state) => {
             const workout = state.trainedWorkout;
@@ -270,6 +301,9 @@ export const workoutReducer = createReducer<WorkoutState>({ workouts: [], sortin
             if (state.editedWorkout !== undefined) {
                 const newWorkouts: Workout[] = [...state.workouts];
                 if (state.editedWorkout.index !== undefined) {
+                    if (state.trainedWorkout?.workoutIndex === state.editedWorkout.index) {
+                        state.trainedWorkout.workout = state.editedWorkout.workout;
+                    }
                     newWorkouts.splice(state.editedWorkout.index, 1, state.editedWorkout.workout);
                 } else {
                     newWorkouts.push(state.editedWorkout.workout);
@@ -285,6 +319,7 @@ export const workoutReducer = createReducer<WorkoutState>({ workouts: [], sortin
         .addCase(startWorkout, (state, action) => {
             const workout = state.workouts[action.payload];
             state.trainedWorkout = {
+                paused: false,
                 activeExerciseIndex: 0,
                 workout,
                 beginTimestamp: Temporal.Now.instant().epochMilliseconds,
@@ -296,6 +331,7 @@ export const workoutReducer = createReducer<WorkoutState>({ workouts: [], sortin
                         const prefilledMetaData: TrainedWorkout["exerciseData"][number] = {
                             name: metaData?.name ?? "",
                             activeSetIndex: 0,
+                            latestSetIndex: 0,
                             setIndex: 0,
                             doneSets: [],
                             note: "",

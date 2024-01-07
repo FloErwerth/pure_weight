@@ -6,7 +6,10 @@ import { getSwitchToNextExercise } from "../../../../../../store/reducers/settin
 import { setSwitchToNextExercise } from "../../../../../../store/reducers/settings";
 import { CheckBox } from "../../../../../Themed/CheckBox/CheckBox";
 
-export const SwitchToNextExerciseSelection = () => {
+type SwitchToNextExerciseSelectionProps = {
+    quick?: boolean;
+};
+export const SwitchToNextExerciseSelection = ({ quick }: SwitchToNextExerciseSelectionProps) => {
     const { t } = useTranslation();
     const dispatch = useAppDispatch();
     const switchToNextExercise = useAppSelector(getSwitchToNextExercise);

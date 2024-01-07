@@ -1,7 +1,7 @@
 import { useAppDispatch, useAppSelector } from "../../../store";
 import { useCallback, useEffect, useMemo, useRef } from "react";
 import { trainStyles } from "../../../components/App/train/trainStyles";
-import { AlertModal } from "../../../components/AlertModal/AlertModal";
+import { BackButtonModal } from "../../../components/AlertModal/BackButtonModal";
 import { useNavigate } from "../../../hooks/navigate";
 import { SiteNavigationButtons } from "../../../components/SiteNavigationButtons/SiteNavigationButtons";
 import { Animated, Dimensions } from "react-native";
@@ -12,12 +12,13 @@ import { StopwatchPopover } from "../../../components/StopwatchPopover/Stopwatch
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Carousel from "react-native-reanimated-carousel/src/Carousel";
 import { Exercise } from "../../../components/App/train/Exercise/WeightBased/WeightBasedExercise";
-import { useBottomSheetRef } from "../../../components/BottomSheetModal/ThemedBottomSheetModal";
-import { addDoneWorkout, mutateActiveExerciseInTrainedWorkout, resetTrainedWorkout, setActiveExerciseIndex } from "../../../store/reducers/workout";
+import { ThemedBottomSheetModal, useBottomSheetRef } from "../../../components/BottomSheetModal/ThemedBottomSheetModal";
+import { addDoneWorkout, mutateActiveExerciseInTrainedWorkout, pauseTrainedWorkout, resetTrainedWorkout, setActiveExerciseIndex } from "../../../store/reducers/workout";
 
 import { getCanSnap, getExerciseDone, getHasNoTrainingDataSaved, getIsDoneWithTraining, getTrainedWorkout, getTrainedWorkoutExercises } from "../../../store/reducers/workout/workoutSelectors";
 import { ICarouselInstance } from "react-native-reanimated-carousel";
 import { getSwitchToNextExercise } from "../../../store/reducers/settings/settingsSelectors";
+import { WorkoutSettings } from "../../../components/App/settings/Sections/workout";
 
 const useSnapToNextExercise = () => {
     const carouselRef = useRef<ICarouselInstance>(null);
@@ -25,6 +26,7 @@ const useSnapToNextExercise = () => {
     const canSnap = useAppSelector(getCanSnap);
     const shouldSwitch = useAppSelector(getSwitchToNextExercise);
     const dispatch = useAppDispatch();
+
     useEffect(() => {
         if (shouldSwitch && isExerciseDone && canSnap) {
             setTimeout(() => {
@@ -44,11 +46,12 @@ export function Train() {
     const trainedWorkout = useAppSelector(getTrainedWorkout);
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
-    const confirmButtonOpacity = useRef(new Animated.Value(0)).current;
+    const confirmButtonOpacity = useRef(new Animated.Value(0.3)).current;
     const [alertRef, openAlert, closeAlert] = useBottomSheetRef();
     const isDone = useAppSelector(getIsDoneWithTraining);
     const hasNoTrainingData = useAppSelector(getHasNoTrainingDataSaved);
     const carouselRef = useSnapToNextExercise();
+    const [ref, open] = useBottomSheetRef();
 
     useEffect(() => {
         if (isDone) {
@@ -60,10 +63,19 @@ export function Train() {
         }
     }, [isDone]);
 
-    const handleReset = useCallback(() => {
+    const handleNavigateToWorkouts = useCallback(() => {
         navigate("workouts");
+    }, [navigate]);
+
+    const handlePauseWorkout = useCallback(() => {
+        dispatch(pauseTrainedWorkout());
+        handleNavigateToWorkouts();
+    }, [dispatch, handleNavigateToWorkouts]);
+
+    const handleReset = useCallback(() => {
+        handleNavigateToWorkouts();
         dispatch(resetTrainedWorkout());
-    }, [dispatch, navigate]);
+    }, [dispatch, handleNavigateToWorkouts]);
 
     const handleSaveTrainingData = useCallback(() => {
         dispatch(addDoneWorkout());
@@ -84,27 +96,22 @@ export function Train() {
         if (!hasNoTrainingData) {
             handleReset();
         } else {
-            if (!isDone) {
-                openAlert();
-            } else {
-                handleSaveTrainingData();
-                handleReset();
-            }
+            openAlert();
         }
-    }, [hasNoTrainingData, handleReset, isDone, openAlert, handleSaveTrainingData]);
+    }, [hasNoTrainingData, handleReset, openAlert]);
 
     const buttonsStyle = useMemo(() => [trainStyles.buttons, { marginBottom: bottom }], [bottom]);
-    const alertModalConfig = useMemo(() => ({ title: t("workout_quit_title"), content: t("workout_quit_message") }), [t]);
+    const alertModalConfig = useMemo(() => ({ title: t(isDone ? "workout_quit_title" : "workout_early_quit_title") }), [isDone, t]);
 
     const mappedExercises: { index: number }[] = useMemo(() => {
         if (!trainedWorkout) {
-            navigate("workouts");
+            handleNavigateToWorkouts();
             return [] as { index: number }[];
         }
         return workoutExercises?.map((_, index) => ({
             index,
         }));
-    }, [navigate, trainedWorkout, workoutExercises]);
+    }, [handleNavigateToWorkouts, trainedWorkout, workoutExercises]);
 
     const renderItem = useCallback(({ index }: { index: number }) => {
         return <Exercise exerciseIndex={index} />;
@@ -117,20 +124,12 @@ export function Train() {
         [dispatch],
     );
 
-    const confirmButtonConfig = useMemo(
-        () => ({
-            localeKey: "workout_save_confirm",
-            onPress: handleNotDoneConfirm,
-        }),
-        [handleNotDoneConfirm],
-    );
-
     const handleCancelWorkout = useCallback(() => {
         handleReset();
         closeAlert();
     }, [handleReset, closeAlert]);
 
-    const cancelButtonConfig = useMemo(() => ({ localeKey: "workout_confirm_delete", onPress: handleCancelWorkout }), [handleCancelWorkout]);
+    const quickSettingsTitle = useMemo(() => t("workout_quick_settings_title"), [t]);
 
     return (
         <ThemedView background style={trainStyles.wrapper} stretch>
@@ -140,7 +139,9 @@ export function Train() {
                     handleConfirmOpacity={confirmButtonOpacity}
                     handleBack={handleCloseButton}
                     handleConfirm={handleDone}
-                    title={t("workout_front").concat(" ", trainedWorkout?.workout?.name ?? "")}
+                    title={t("train_title")}
+                    titleFontSize={40}
+                    handleQuicksettings={open}
                 />
             </ThemedView>
             <ThemedView background stretch>
@@ -158,14 +159,20 @@ export function Train() {
             <HStack background style={buttonsStyle}>
                 <StopwatchPopover />
             </HStack>
-            <AlertModal
-                snapPoints={["30%"]}
+            <BackButtonModal
+                workoutDone={isDone}
+                snapPoints={["40%"]}
                 reference={alertRef}
                 title={alertModalConfig.title}
-                content={alertModalConfig.content}
-                confirmButtonConfig={confirmButtonConfig}
-                cancelButtonConfig={cancelButtonConfig}
+                onConfirm={handleNotDoneConfirm}
+                onPause={handlePauseWorkout}
+                onCancel={handleCancelWorkout}
             />
+            <ThemedBottomSheetModal title={quickSettingsTitle} snapPoints={["60%"]} ref={ref}>
+                <ThemedView style={trainStyles.quickSettingsWrapper} ghost>
+                    <WorkoutSettings quick={true} />
+                </ThemedView>
+            </ThemedBottomSheetModal>
         </ThemedView>
     );
 }

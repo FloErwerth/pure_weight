@@ -12,6 +12,9 @@ export const styles = StyleSheet.create({
         gap: 10,
         paddingRight: 20,
     },
+    actions: {
+        gap: 10,
+    },
     headerWrapper: {
         justifyContent: "space-between",
         alignSelf: "stretch",

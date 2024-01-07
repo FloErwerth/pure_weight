@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { useTheme } from "../../../../theme/context";
-import { useCallback, useContext, useMemo } from "react";
+import React, { useCallback, useContext, useMemo } from "react";
 import { styles } from "../../styles";
 import { HStack } from "../../../Stack/HStack/HStack";
 import { ThemedMaterialCommunityIcons } from "../../../Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
@@ -121,6 +121,7 @@ export const ProgressDisplay = ({ percent, onPress, higherIsBetter = true, wasPo
                             {hint}
                         </Text>
                     </ThemedView>
+                    <ThemedMaterialCommunityIcons ghost name="chevron-right" size={20} />
                 </HStack>
             </HStack>
         </ThemedPressable>

@@ -86,7 +86,7 @@ export const getTrainingDayData = createSelector([getEditedWorkout], (editedWork
             });
         });
 
-    return Array.from(sortedData.values());
+    return Array.from(sortedData.values()).filter(({ data }) => data.length > 1);
 });
 
 export const getColor = createSelector([getEditedWorkout], (editedWorkout) => ({
@@ -99,7 +99,7 @@ export const getExerciseDone = createSelector([getTrainedWorkout], (trainedWorko
         return false;
     }
     const sets = parseFloat(trainedWorkout?.workout?.exercises[exerciseIndex].sets ?? "-1");
-    return trainedWorkout.exerciseData[exerciseIndex].doneSets.length === sets;
+    return trainedWorkout.exerciseData[exerciseIndex].doneSets.length === sets && trainedWorkout.exerciseData[exerciseIndex].doneSets.every(({ confirmed }) => Boolean(confirmed));
 });
 export const getCanSnap = createSelector([getTrainedWorkout], (trainedWorkout) => {
     const exerciseIndex = trainedWorkout?.activeExerciseIndex;
@@ -319,17 +319,25 @@ export const getIsActiveSet = createSelector(
 
 export const getTrainedWorkoutWorkout = createSelector([getTrainedWorkout], (trainedWorkout) => trainedWorkout?.workout);
 export const getExerciseData = createSelector([getTrainedWorkout], (trainedWorkout) => trainedWorkout?.exerciseData);
-export const getSetData = createSelector([getExerciseData, (exerciseData, setIndex: number) => setIndex, getTrainedWorkoutWorkout], (exerciseData, setIndex, workout) => {
+export const getSetData = createSelector([getExerciseData, (exerciseData, setIndex: number) => setIndex, getTrainedWorkout], (exerciseData, setIndex, trainedWorkout) => {
     return exerciseData?.map((exerciseData, exerciseIndex) => {
         const hasData = Boolean(exerciseData?.doneSets[setIndex]);
         const isConfirmed = Boolean(exerciseData?.doneSets[setIndex]?.confirmed);
+        const workout = trainedWorkout?.workout;
+        const isEditingLatestSet = exerciseData?.latestSetIndex === exerciseData?.activeSetIndex;
+        const isEditable = isConfirmed || hasData || setIndex === exerciseData?.activeSetIndex;
+        const isEditedOtherSet = isEditingLatestSet && setIndex === exerciseData?.activeSetIndex;
 
         return {
             weight: exerciseData?.doneSets[setIndex]?.weight ?? workout?.exercises[exerciseIndex].weight,
             reps: exerciseData?.doneSets[setIndex]?.reps ?? workout?.exercises[exerciseIndex].reps,
-            isEditable: isConfirmed || hasData || setIndex === exerciseData?.activeSetIndex,
+            isEditable: isEditable || isEditedOtherSet,
             isConfirmed,
             hasData,
         };
     });
+});
+
+export const getIsOngoingWorkout = createSelector([getTrainedWorkout, (trainedWorkout, workoutIndex: number) => workoutIndex], (trainedWorkout, workoutIndex) => {
+    return trainedWorkout?.workoutIndex === workoutIndex && trainedWorkout.paused;
 });

@@ -11,6 +11,10 @@ export const styles = StyleSheet.create({
     date: {
         fontStyle: "italic",
     },
+    pausedTrainigWrapper: {
+        paddingVertical: 5,
+        paddingHorizontal: 10,
+    },
     trainingDayName: {
         fontSize: 24,
     },

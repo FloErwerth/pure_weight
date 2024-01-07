@@ -9,8 +9,15 @@ export const trainStyles = StyleSheet.create({
         flex: 1,
     },
     button: {
-        padding: 10,
-        borderRadius,
+        fontSize: 20,
+    },
+    confirmOverwriteWrapper: {
+        marginBottom: 10,
+    },
+    quickSettingsWrapper: {
+        gap: 10,
+        paddingHorizontal: 10,
+        paddingTop: 20,
     },
     carouselWrapper: {
         paddingRight: 20,

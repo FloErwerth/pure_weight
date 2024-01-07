@@ -9,7 +9,10 @@ import { ProfileContent } from "../../ProfileContent/ProfileContent";
 import { CheckBox } from "../../../../../Themed/CheckBox/CheckBox";
 import { useRegisterForPushNotifications } from "../../../../../../hooks/useRegisterForPushNotifications";
 
-export const StopwatchSelection = () => {
+type StopwatchSelectionProps = {
+    quick?: boolean;
+};
+export const StopwatchSelection = ({ quick }: StopwatchSelectionProps) => {
     const { t } = useTranslation();
     const startStopwatchOnDoneSet = useAppSelector(getStartStopwatchOnDoneSet);
     const startStopwatchOnLastSet = useAppSelector(getStartStopwatchOnLastSet);
@@ -50,7 +53,7 @@ export const StopwatchSelection = () => {
 
     return (
         <ProfileContent title={t("settings_stopwatch_title")}>
-            <VStack style={selectionStyles.vStack}>
+            <VStack ghost={quick} style={selectionStyles.vStack}>
                 <CheckBox
                     snapPoints={["25%"]}
                     helpText={doneSetHelpText}

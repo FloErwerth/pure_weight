@@ -5,10 +5,9 @@ import { Text } from "../../Themed/ThemedText/Text";
 import { ColorIndicator } from "../../ColorIndicator/ColorIndicator";
 import React, { useCallback } from "react";
 import { AppState, useAppDispatch, useAppSelector } from "../../../store";
-import { getHasHistory, getLatestWorkoutDateDisplay, getOverallTrainingTrend, getWorkoutByIndex } from "../../../store/reducers/workout/workoutSelectors";
+import { getHasHistory, getIsOngoingWorkout, getLatestWorkoutDateDisplay, getOverallTrainingTrend, getWorkoutByIndex } from "../../../store/reducers/workout/workoutSelectors";
 import { useNavigate } from "../../../hooks/navigate";
 import { View } from "react-native";
-import { ThemedMaterialCommunityIcons } from "../../Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
 import { ProgressDisplay } from "../../WorkoutCard/components/ProgressDisplay/ProgressDisplay";
 import { HistoryDisplay } from "../history/HistoryDisplay/HistoryDisplay";
 import { useTranslation } from "react-i18next";
@@ -25,6 +24,7 @@ export const RenderedWorkout = ({ index }: RenderedWorkoutProps) => {
     const latestWorkoutDate = useAppSelector((state: AppState) => getLatestWorkoutDateDisplay(state, index));
     const navigate = useNavigate();
     const { t } = useTranslation();
+    const isOngoingWorkout = useAppSelector((state: AppState) => getIsOngoingWorkout(state, index));
     const showHint = trend || hasHistory;
 
     const handleNavigateToProgress = useCallback(() => {
@@ -47,8 +47,13 @@ export const RenderedWorkout = ({ index }: RenderedWorkoutProps) => {
                     </HStack>
                     {latestWorkoutDate && <Text style={styles.date}>{latestWorkoutDate}</Text>}
                 </View>
-                <ThemedMaterialCommunityIcons name="chevron-right" size={24} />
+                {isOngoingWorkout && (
+                    <ThemedView style={styles.pausedTrainigWrapper} input round>
+                        <Text ghost>{t("workout_paused_hint")}</Text>
+                    </ThemedView>
+                )}
             </HStack>
+
             {showHint ? (
                 <View style={styles.innerTrainWrapper}>
                     {trend !== undefined && <ProgressDisplay type="Workout" wasPositive={trend.isPositive} onPress={handleNavigateToProgress} name={trend.name} percent={trend.percent} />}

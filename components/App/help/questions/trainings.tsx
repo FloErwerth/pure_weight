@@ -131,14 +131,14 @@ export const getTrainingsQuestions = (
                     <HelpAnswer>
                         <ThemedView ghost stretch style={{ gap: 20 }}>
                             <AnswerText>
-                                Nach dem Du ein <InlinePressable handlePress={() => handleSelectFromAnswer(SECTIONS.WORKOUTS, 0)}>Workout gestartet</InlinePressable> hast, gibt es zwei Möglichkeiten,
-                                um das Training zu beenden.
-                                <NewLine />
-                                Die erste Möglichkeit ist der Abbruch des Trainings mit dem Drücken auf das <ThemedMaterialCommunityIcons name="arrow-left" size={24} ghost />
-                                -Symbol am oberen linken Rand deines Bildschirms. Der Fortschritt wird bis zu diesem Punkt gespeichert.
-                                <NewLine />
-                                Die zweite Möglchkeit ist das Beenden des Trainings mit dem Drücken auf das <ThemedMaterialCommunityIcons name="check" size={24} ghost />
-                                -Symbol am oberen rechten Rand deines Bildschirms. Dies erscheint jedoch erst, wenn das Workout komplett beendet wurde.
+                                Nach dem Du ein <InlinePressable handlePress={() => handleSelectFromAnswer(SECTIONS.WORKOUTS, 0)}>Workout gestartet</InlinePressable> hast kannst Du das Workout mit dem{" "}
+                                <ThemedMaterialCommunityIcons name="arrow-left" size={24} ghost /> am oberen linken Rand deines Bildschirms abbrechen. <NewLine />
+                                Hier gibt es drei Möglichkeiten das Workout zu beenden. <NewLine />
+                                1. Speichern des Trainings mit dem Drücken auf den Button &quot;Workout speichern&quot;. Der Fortschritt wird bis zu diesem Punkt gespeichert. <NewLine />
+                                2. Beenden des Trainings mit dem Drücken auf den Button &quot;Workout pausieren&quot;. Der Fortschritt wird nicht gespeichert, aber das Training kann zu einem späteren
+                                Zeitpunkt fortgesetzt werden. <NewLine numberOfLines={1} />
+                                Diese Option wird nur angezeigt, wenn das Workout noch nicht beendet wurde. <NewLine />
+                                3. Abbruch des Trainings mit dem Drücken auf den Button &quot;Workout abbrechen&quot;. Der Fortschritt wird nicht gespeichert und das Training wird beendet.
                             </AnswerText>
                         </ThemedView>
                     </HelpAnswer>
@@ -146,19 +146,19 @@ export const getTrainingsQuestions = (
                     <HelpAnswer>
                         <ThemedView ghost stretch style={{ gap: 20 }}>
                             <AnswerText>
-                                After you have <InlinePressable handlePress={() => handleSelectFromAnswer(SECTIONS.WORKOUTS, 0)}>started a workout</InlinePressable>, there are two ways to end the
-                                training.
-                                <NewLine />
-                                The first possibility is to abort the training by pressing the <ThemedMaterialCommunityIcons name="arrow-left" size={24} ghost /> symbol at the top left of your screen.
-                                The progress will be saved up to this point.
-                                <NewLine />
-                                The second possibility is to end the training by pressing the <ThemedMaterialCommunityIcons name="check" size={24} ghost /> symbol at the top right of your screen.
-                                However, this only appears when the workout has been completed.
+                                After you have <InlinePressable handlePress={() => handleSelectFromAnswer(SECTIONS.WORKOUTS, 0)}>started a workout</InlinePressable>, you can end the workout with the{" "}
+                                <ThemedMaterialCommunityIcons name="arrow-left" size={24} ghost /> at the top left of your screen. <NewLine />
+                                There are three ways to end the workout. <NewLine />
+                                1. Save the training by pressing the button &quot;Save workout&quot;. The progress is saved up to this point. <NewLine />
+                                2. Pause the training by pressing the button &quot;Pause workout&quot;. The progress is not saved, but the training can be continued at a later time.{" "}
+                                <NewLine numberOfLines={1} />
+                                This option is only displayed, if your workout is not completed. <NewLine />
+                                3. Cancel the training by pressing the button &quot;Cancel workout&quot;. The progress is not saved and the training is ended.
                             </AnswerText>
                         </ThemedView>
                     </HelpAnswer>
                 ),
-            snapPoints: ["60%"],
+            snapPoints: ["100%"],
         },
         {
             title: language === "de" ? "Übungen in Traingings bearbeiten" : "Editing an exercise in training",

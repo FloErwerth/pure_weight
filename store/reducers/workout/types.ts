@@ -55,8 +55,10 @@ export type TrainedWorkout = {
     workout: Workout;
     activeExerciseIndex: number;
     beginTimestamp: number;
+    paused: boolean;
     exerciseData: {
         setIndex: number;
+        latestSetIndex: number;
         activeSetIndex: number;
         doneSets: ExerciseSets;
         name: string;
@@ -67,7 +69,7 @@ export type TrainedWorkout = {
 export type WorkoutState = {
     workouts: Workout[];
     sorting: SortingType;
-    deletedWorkout?: { workout: Workout; index: number };
+    deletedWorkout?: { workout: Workout; index: number; trainedWorkout?: TrainedWorkout };
     deletedExercise?: { exercise: ExerciseMetaData; index: number };
     editedWorkout?: EditedWorkout;
     trainedWorkout?: TrainedWorkout;
