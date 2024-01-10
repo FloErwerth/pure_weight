@@ -1,7 +1,6 @@
 import React, { forwardRef, PropsWithChildren, RefObject, useCallback, useEffect, useMemo, useRef } from "react";
 import { Keyboard, ViewStyle } from "react-native";
 import { Text } from "../Themed/ThemedText/Text";
-import { HStack } from "../Stack/HStack/HStack";
 import { styles } from "./styles";
 import { BottomSheetBackdrop, BottomSheetBackdropProps, BottomSheetModal } from "@gorhom/bottom-sheet";
 import { useTheme } from "../../theme/context";
@@ -64,6 +63,8 @@ export const ThemedBottomSheetModal = forwardRef<BottomSheetModal, ThemedBottomS
 
         const customIndicator = useMemo(() => ({ backgroundColor: allowSwipeDownToClose && !hideIndicator ? mainColor : "transparent" }), [allowSwipeDownToClose, hideIndicator, mainColor]);
         const contentStyle = useMemo(() => ({ paddingBottom: bottom }), [bottom]);
+        const titleWrapperStyle = useMemo(() => [styles.wrapper, {}], [inputFieldBackgroundColor]);
+
         return (
             <BottomSheetModal
                 enablePanDownToClose={allowSwipeDownToClose}
@@ -80,13 +81,13 @@ export const ThemedBottomSheetModal = forwardRef<BottomSheetModal, ThemedBottomS
                 keyboardBehavior="extend"
                 snapPoints={combinedSnapshots}
             >
-                <HStack ghost style={styles.wrapper}>
+                <ThemedView ghost style={titleWrapperStyle}>
                     {title && (
                         <Text input style={styles.title}>
                             {title}
                         </Text>
                     )}
-                </HStack>
+                </ThemedView>
                 <ThemedView ghost stretch style={contentStyle}>
                     {children}
                 </ThemedView>

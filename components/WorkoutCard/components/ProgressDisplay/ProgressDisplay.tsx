@@ -13,16 +13,15 @@ import { ThemedView } from "../../../Themed/ThemedView/View";
 
 import { getLanguage } from "../../../../store/reducers/settings/settingsSelectors";
 
+type Trend = { isPositive?: boolean; percent: number; name: string };
 export interface ProgressDisplayProps {
     onPress: () => void;
     higherIsBetter?: boolean;
-    wasPositive?: boolean;
-    percent?: number;
-    name: string;
+    trend: Trend | undefined;
     type: "Workout" | "Measurement";
 }
 
-const useText = (type: "Workout" | "Measurement", even: boolean, higherPercentage: boolean = true, processedPercent: number, name: string) => {
+const useText = (type: "Workout" | "Measurement", even: boolean, higherPercentage: boolean = true, processedPercent: number, trend?: Trend) => {
     const language = useAppSelector(getLanguage);
     const { t } = useTranslation();
 
@@ -31,10 +30,10 @@ const useText = (type: "Workout" | "Measurement", even: boolean, higherPercentag
             return `${t("progress_text_even")}`;
         }
         if (language === "en") {
-            return `${t("progress_text_1").concat(name, " ", t(higherPercentage ? "progress_increased" : "progress_decreased"))} by ${processedPercent} %`;
+            return `${t("progress_text_1").concat(trend?.name ?? "", " ", t(higherPercentage ? "progress_increased" : "progress_decreased"))} by ${processedPercent} %`;
         }
         return `${t("progress_text_1")} ${processedPercent}% ${t(higherPercentage ? "progress_increased" : "progress_decreased")}`;
-    }, [even, language, t, processedPercent, higherPercentage, name]);
+    }, [even, language, t, processedPercent, higherPercentage, trend?.name]);
 
     const measurementText = useMemo(() => {
         if (even) {
@@ -45,15 +44,15 @@ const useText = (type: "Workout" | "Measurement", even: boolean, higherPercentag
         }
         if (higherPercentage) {
             if (language === "en") {
-                return `Your measurement ${name} ${t("progress_increased")} by ${processedPercent} %`;
+                return `Your measurement ${trend?.name ?? ""} ${t("progress_increased")} by ${processedPercent} %`;
             }
-            return `Deine Messung ${name} ist um ${processedPercent} % ${t("progress_increased")}`;
+            return `Deine Messung ${trend?.name ?? ""} ist um ${processedPercent} % ${t("progress_increased")}`;
         }
         if (language === "en") {
-            return `Your measurement ${name} ${t("progress_decreased")} by ${processedPercent} %`;
+            return `Your measurement ${trend?.name ?? ""} ${t("progress_decreased")} by ${processedPercent} %`;
         }
-        return `Deine Messung ${name} ist um ${processedPercent} % ${t("progress_decreased")}`;
-    }, [even, higherPercentage, language, name, processedPercent, t]);
+        return `Deine Messung ${trend?.name ?? ""} ist um ${processedPercent} % ${t("progress_decreased")}`;
+    }, [even, higherPercentage, language, trend?.name ?? "", processedPercent, t]);
 
     if (type === "Measurement") {
         return measurementText;
@@ -61,16 +60,12 @@ const useText = (type: "Workout" | "Measurement", even: boolean, higherPercentag
     return workoutText;
 };
 
-const hintTypeMap = {
-    Workout: "progress_text_hint_workout",
-    Measurement: "progress_text_hint_measurement",
-};
+export const ProgressDisplay = ({ trend, onPress, higherIsBetter = true, type }: ProgressDisplayProps) => {
+    const isPositive = trend?.isPositive && higherIsBetter;
+    const processedPercent = trunicateToNthSignificantDigit(trend?.percent ?? 0);
 
-export const ProgressDisplay = ({ percent, onPress, higherIsBetter = true, wasPositive, name, type }: ProgressDisplayProps) => {
-    const isPositive = wasPositive && higherIsBetter;
-    const processedPercent = trunicateToNthSignificantDigit(percent ?? 0);
     const even = processedPercent === 0;
-    const text = useText(type, even, wasPositive, processedPercent, name);
+    const text = useText(type, even, isPositive, processedPercent, trend);
     const active = useContext(swipableContext);
     const { t } = useTranslation();
     const { secondaryColor } = useTheme();
@@ -79,11 +74,11 @@ export const ProgressDisplay = ({ percent, onPress, higherIsBetter = true, wasPo
         if (even) {
             return "arrow-right";
         }
-        if (wasPositive) {
+        if (trend?.isPositive) {
             return "arrow-up";
         }
         return "arrow-down";
-    }, [even, wasPositive]);
+    }, [even, trend?.isPositive]);
 
     const chartStyle = useMemo(() => {
         if (isPositive) {
@@ -102,24 +97,20 @@ export const ProgressDisplay = ({ percent, onPress, higherIsBetter = true, wasPo
         onPress();
     }, [active, onPress]);
 
-    const hint = useMemo(() => t(hintTypeMap[type]), [t, type]);
-
-    if (percent === undefined) {
+    if (!trend) {
         return null;
     }
 
     return (
         <ThemedPressable secondary style={styles.progressWrapper} onPress={handlePress}>
             <HStack secondary style={styles.diffWrapper}>
-                <HStack secondary style={styles.diffWrapper}>
-                    <ThemedMaterialCommunityIcons secondary name={icon} color={chartStyle.color} size={26} />
-                    <ThemedView stretch secondary>
-                        <Text secondary style={styles.text}>
-                            {text}
-                        </Text>
-                    </ThemedView>
-                    <ThemedMaterialCommunityIcons ghost name="chevron-right" size={20} />
-                </HStack>
+                <ThemedMaterialCommunityIcons secondary name={icon} color={chartStyle.color} size={20} />
+                <ThemedView stretch background>
+                    <Text secondary style={styles.text}>
+                        {text}
+                    </Text>
+                </ThemedView>
+                <ThemedMaterialCommunityIcons ghost name="chevron-right" size={20} />
             </HStack>
         </ThemedPressable>
     );

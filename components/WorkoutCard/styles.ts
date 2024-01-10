@@ -22,11 +22,10 @@ export const styles = StyleSheet.create({
         fontSize: 11,
     },
     text: {
-        fontSize: 13,
-        paddingRight: 40,
+        fontSize: 16,
     },
     progressWrapper: {
-        paddingVertical: 5,
+        paddingVertical: 12.5,
         paddingHorizontal: 10,
         borderRadius,
     },

@@ -18,6 +18,11 @@
   "history_latest_workout_short": "latest",
   "history_browse": "Browse history",
 
+
+  "workout_history_empty": "No workouts have been completed yet",
+  "workout_history_single": "One workout completed",
+  "workout_history_plural": "workouts completed",
+
   "create_select_type": "Select exercise type",
   "create_exercise_type_label": "Exercise type",
   "create_exercise_WEIGHT_BASED": "Weight based",
@@ -108,11 +113,11 @@
   "settings_exercises_title": "Exercises",
   "settings_switch_exercises_helptext": "If activated the exercises will be switched automatically after the exercise is done",
 
-  "alert_create_workout_confirm_cancel": "Cancel creation",
-  "alert_edit_workout_confirm_cancel": "Cancel edit",
+  "alert_create_workout_confirm_cancel": "Cancel creation anyway",
+  "alert_edit_workout_confirm_cancel": "Cancel edit anyway",
   "alert_create_workout_continue": "Close dialog",
-  "alert_edit_workout_discard_title": "Cancel workout edit",
-  "alert_create_workout_discard_title": "Cancel workout creation",
+  "alert_edit_workout_discard_title": "Cancel edit",
+  "alert_create_workout_discard_title": "Cancel creation",
   "alert_edit_workout_discard_content": "If you cancel the workout edit the changes so far will be lost.",
   "alert_create_workout_discard_content": "If you cancel the workout creation the changes so far will be lost.",
 

@@ -142,7 +142,7 @@ export const getHasHistory = createSelector([getWorkouts, (workouts, workoutId: 
     if (doneWorkouts === undefined) {
         return false;
     }
-    return doneWorkouts.length >= 0;
+    return doneWorkouts.length > 0;
 });
 export const getNumberHistories = createSelector([getWorkouts, (workouts, workoutIndex: number) => workoutIndex], (workouts, workoutIndex) => {
     const workout = workouts.find((workout) => workout.workoutId === workoutIndex);

@@ -1,4 +1,4 @@
-import { SortingType } from "../../types";
+import { Sortingtypes } from "../../types";
 import { IsoDate } from "../../../types/date";
 
 export type Workout = {
@@ -68,7 +68,7 @@ export type TrainedWorkout = {
 };
 export type WorkoutState = {
     workouts: Workout[];
-    sorting: SortingType;
+    sorting: Sortingtypes;
     deletedWorkout?: { workout: Workout; trainedWorkout?: TrainedWorkout };
     deletedExercise?: { exercise: ExerciseMetaData; index: number };
     editedWorkout?: EditedWorkout;

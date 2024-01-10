@@ -96,6 +96,10 @@
   "create_exercise_success_title": "Übung erfolgreich erstellt",
   "settings_search_placeholder": "Suche",
 
+  "workout_history_empty": "Noch keine Workouts vorhanden",
+  "workout_history_single": "Ein Workout abgeschlossen",
+  "workout_history_plural": "Workouts abgeschlossen",
+
   "alert_delete_message": "Dies kann nicht rückgängig gemacht werden",
 
   "workout_early_quit_title": "Das Workout frühzeitig beenden?",
@@ -142,11 +146,11 @@
 
 
 
-  "alert_create_workout_confirm_cancel": "Erstellung abbrechen",
-  "alert_edit_workout_confirm_cancel": "Bearbeitung abbrechen",
+  "alert_create_workout_confirm_cancel": "Erstellung trotzdem abbrechen",
+  "alert_edit_workout_confirm_cancel": "Bearbeitung trotzdem abbrechen",
   "alert_create_workout_continue": "Dialog schließen",
-  "alert_edit_workout_discard_title": "Bearbeitung des Workouts abbrechen",
-  "alert_create_workout_discard_title": "Erstellung des Workouts abbrechen",
+  "alert_edit_workout_discard_title": "Bearbeitung abbrechen",
+  "alert_create_workout_discard_title": "Erstellung abbrechen",
   "alert_edit_workout_discard_content": "Wenn Du die Bearbeitung des Workouts abbrichst gehen die bisherigen Änderungen verloren.",
   "alert_create_workout_discard_content": "Wenn Du die Erstellung deines Workouts abbrichst geht der bisherige Fortschritt verloren.",
 

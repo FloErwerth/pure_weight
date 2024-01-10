@@ -11,6 +11,9 @@ export const styles = StyleSheet.create({
     date: {
         fontStyle: "italic",
     },
+    noWorkoutsHint: {
+        paddingLeft: 5,
+    },
     pausedTrainigWrapper: {
         paddingVertical: 5,
         paddingHorizontal: 10,

@@ -4,26 +4,26 @@ import { Temporal } from "@js-temporal/polyfill";
 import { convertDate } from "../../../utils/date";
 
 const sortDates = (a: Workout, b: Workout) => {
-    if (!a?.doneWorkouts || !b?.doneWorkouts || a.doneWorkouts[a.doneWorkouts.length - 1] === undefined || b.doneWorkouts[b.doneWorkouts.length - 1] === undefined) {
-        return 0;
-    }
-
     const isoDatesA = a.doneWorkouts.map((workout) => workout.isoDate);
     const isoDatesB = b.doneWorkouts?.map((workout) => workout.isoDate);
 
-    return Temporal.PlainDate.compare(convertDate.toTemporal(isoDatesB[isoDatesB?.length - 1]), convertDate.toTemporal(isoDatesA[isoDatesA?.length - 1]));
+    const lastDateA = isoDatesA[isoDatesA?.length - 1];
+    const lastDateB = isoDatesB[isoDatesB?.length - 1];
+
+    return Temporal.PlainDate.compare(convertDate.toTemporal(lastDateA), convertDate.toTemporal(lastDateB));
 };
 
 export const sortWorkouts = (workouts: Workout[], sorting: SortingType) => {
-    const sortedWorkouts = [...workouts];
+    const sortableWorkouts = [...workouts.filter((workout) => workout.doneWorkouts.length > 0)];
+    const unsortableWorkouts = [...workouts.filter((workout) => workout.doneWorkouts.length === 0)];
     switch (sorting) {
         case "A_Z":
-            return sortedWorkouts.sort((a, b) => a.name.localeCompare(b.name));
+            return [...sortableWorkouts, ...unsortableWorkouts].sort((a, b) => a.name.localeCompare(b.name));
         case "Z_A":
-            return sortedWorkouts.sort((a, b) => b.name.localeCompare(a.name));
+            return [...sortableWorkouts, ...unsortableWorkouts].sort((a, b) => b.name.localeCompare(a.name));
         case "MOST_RECENT":
-            return sortedWorkouts.sort(sortDates);
+            return [...sortableWorkouts.sort((a, b) => sortDates(a, b)), ...unsortableWorkouts];
         case "LONGEST_AGO":
-            return sortedWorkouts.sort(sortDates).reverse();
+            return [...sortableWorkouts.sort((a, b) => sortDates(a, b)).reverse(), ...unsortableWorkouts];
     }
 };

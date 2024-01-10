@@ -2,7 +2,7 @@ import { useTranslation } from "react-i18next";
 import { useAppDispatch, useAppSelector } from "../store";
 import { getWorkoutSorting } from "../store/reducers/workout/workoutSelectors";
 import { useComposedTranslation } from "./useComposedTranslation";
-import { SortingType } from "../store/types";
+import { Sortingtypes } from "../store/types";
 import { useMemo } from "react";
 import { setWorkoutSorting } from "../store/reducers/workout";
 import { setMeasurementSorting } from "../store/reducers/measurements";
@@ -34,7 +34,7 @@ export const useSorting = ({ type }: SortingConfig) => {
 
     const mappedSorting = useMemo(
         () =>
-            SortingType.map(
+            Sortingtypes.map(
                 (sorting) =>
                     ({
                         value: sorting,

@@ -221,7 +221,7 @@ export function Create() {
                     <AddButton onPress={handleAddExercise} />
                 </PageContent>
             </ThemedView>
-            <ThemedBottomSheetModal snapPoints={["35%"]} title={alertTitle} ref={alertRef}>
+            <ThemedBottomSheetModal snapPoints={["40%"]} title={alertTitle} ref={alertRef}>
                 <PageContent stretch paddingTop={20} ghost>
                     <Text style={{ fontSize: 20 }} stretch ghost>
                         {alertContent}
@@ -229,8 +229,8 @@ export function Create() {
                     <ThemedView ghost style={{ gap: 10, marginBottom: 20 }}>
                         <ThemedPressable round padding secondary onPress={confirmButtonConfig.onPress}>
                             <HStack ghost style={{ alignItems: "center", gap: 10 }}>
-                                <ThemedMaterialCommunityIcons name={"delete"} size={24} />
-                                <Text>{t(confirmButtonConfig.localeKey)}</Text>
+                                <ThemedMaterialCommunityIcons ghost name={"delete"} size={24} />
+                                <Text ghost>{t(confirmButtonConfig.localeKey)}</Text>
                             </HStack>
                         </ThemedPressable>
                     </ThemedView>

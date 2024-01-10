@@ -25,7 +25,7 @@ export const RenderedWorkout = ({ workoutId }: RenderedWorkoutProps) => {
     const navigate = useNavigate();
     const { t } = useTranslation();
     const isOngoingWorkout = useAppSelector((state: AppState) => getIsOngoingWorkout(state, workoutId));
-    const showHint = trend || hasHistory;
+    const showStats = trend || hasHistory;
 
     const handleNavigateToProgress = useCallback(() => {
         dispatch(setEditedWorkout({ workoutId }));
@@ -54,14 +54,16 @@ export const RenderedWorkout = ({ workoutId }: RenderedWorkoutProps) => {
                 )}
             </HStack>
 
-            {showHint ? (
+            {showStats ? (
                 <View style={styles.innerTrainWrapper}>
-                    {trend !== undefined && <ProgressDisplay type="Workout" wasPositive={trend.isPositive} onPress={handleNavigateToProgress} name={trend?.name} percent={trend?.percent} />}
-                    {hasHistory && <HistoryDisplay workoutId={workoutId} handleNavigateToHistory={handleNavigateToHistory} />}
+                    <ProgressDisplay type="Workout" trend={trend} onPress={handleNavigateToProgress} />
+                    <HistoryDisplay workoutId={workoutId} handleNavigateToHistory={handleNavigateToHistory} />
                 </View>
             ) : (
-                <ThemedView ghost round>
-                    <Text italic>{t("workout_no_done_workouts_hint")}</Text>
+                <ThemedView ghost>
+                    <Text style={styles.noWorkoutsHint} italic>
+                        {t("workout_no_done_workouts_hint")}
+                    </Text>
                 </ThemedView>
             )}
         </View>

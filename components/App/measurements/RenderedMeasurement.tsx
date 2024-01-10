@@ -30,7 +30,14 @@ export const RenderedMeasurement = ({ index, measurement }: MeasurementProps) =>
         dispatch(setEditedMeasurement({ index, isNew: false, isDataPoint: false }));
         navigate("measurement/progress");
     }, [dispatch, index, navigate]);
-
+    const trend = useMemo(
+        () => ({
+            isPositive: wasPositive,
+            percent: progress ?? 0,
+            name: measurement.name,
+        }),
+        [wasPositive, progress, measurement.name],
+    );
     return (
         <HStack style={styles.pressableWrapper}>
             <VStack style={styles.vStack}>
@@ -38,7 +45,7 @@ export const RenderedMeasurement = ({ index, measurement }: MeasurementProps) =>
                     <Text style={styles.text}>{measurement.name}</Text>
                     <Text style={styles.date}>{getSinceDate(latestMeasurements[index], language)}</Text>
                 </View>
-                <ProgressDisplay type="Measurement" wasPositive={wasPositive} higherIsBetter={measurement.higherIsBetter} name={measurement?.name} percent={progress} onPress={handleNavigateToChart} />
+                <ProgressDisplay type="Measurement" trend={trend} higherIsBetter={measurement.higherIsBetter} onPress={handleNavigateToChart} />
             </VStack>
         </HStack>
     );
