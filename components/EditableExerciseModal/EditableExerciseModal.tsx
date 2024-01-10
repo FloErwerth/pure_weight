@@ -1,6 +1,6 @@
 import { EditableExercise } from "../EditableExercise/EditableExercise";
 import { ThemedBottomSheetModal, ThemedBottomSheetModalProps } from "../BottomSheetModal/ThemedBottomSheetModal";
-import { RefObject, useCallback, useMemo } from "react";
+import { RefObject, useCallback, useMemo, useState } from "react";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { useTranslation } from "react-i18next";
 import { HStack } from "../Stack/HStack/HStack";
@@ -11,11 +11,12 @@ import * as Haptics from "expo-haptics";
 import { useAppDispatch, useAppSelector } from "../../store";
 import { ThemedMaterialCommunityIcons } from "../Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
 import { ThemedView } from "../Themed/ThemedView/View";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ErrorFields, setError } from "../../store/reducers/errors";
 import { getEditedExercise, getIsExistingEditedExercise } from "../../store/reducers/workout/workoutSelectors";
-import { storeEditedExercise } from "../../store/reducers/workout";
+import { createNewExercise, storeEditedExercise } from "../../store/reducers/workout";
 import { ExerciseMetaData } from "../../store/reducers/workout/types";
+import { View } from "react-native";
+import { BottomToast } from "../BottomToast/BottomToast";
 
 const validateData = (data: Partial<ExerciseMetaData>) => {
     const errors: ErrorFields[] = [];
@@ -38,15 +39,21 @@ const validateData = (data: Partial<ExerciseMetaData>) => {
 
 type AddExerciseModalProps = ThemedBottomSheetModalProps & {
     reference: RefObject<BottomSheetModal>;
+    closeAfterEdit?: boolean;
 };
 
 export const EditableExerciseModal = (props: AddExerciseModalProps) => {
-    const { bottom } = useSafeAreaInsets();
     const { t } = useTranslation();
     const isEditingExercise = useAppSelector(getIsExistingEditedExercise);
     const title = useMemo(() => t(isEditingExercise ? "exercise_edit_title" : "create_exercise"), [isEditingExercise, t]);
     const dispatch = useAppDispatch();
     const editedExercise = useAppSelector(getEditedExercise);
+    const [wantsAddAnotherExercise, setWantsAddAnotherExercise] = useState(false);
+    const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+
+    const openSuccessMessage = useCallback(() => {
+        setShowSuccessMessage(true);
+    }, []);
 
     const handleConfirm = useCallback(() => {
         if (editedExercise) {
@@ -55,25 +62,35 @@ export const EditableExerciseModal = (props: AddExerciseModalProps) => {
                 dispatch(setError(possibleErrors));
             } else {
                 dispatch(storeEditedExercise());
+                dispatch(createNewExercise());
                 void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-                props.reference.current?.close();
+                if (props.closeAfterEdit) {
+                    props.reference.current?.close();
+                }
+                openSuccessMessage();
             }
         }
     }, [dispatch, editedExercise, props]);
 
-    const buttonStyles = useMemo(() => ({ marginBottom: bottom }), [bottom]);
+    const closeSuccessMessage = useCallback(() => {
+        setShowSuccessMessage(false);
+    }, []);
+
     return (
         <ThemedBottomSheetModal snapPoints={["100%"]} ref={props.reference} {...props} title={title}>
             <ThemedView stretch ghost style={styles.innerWrapper}>
                 <EditableExercise />
-                <ThemedPressable style={buttonStyles} ghost behind onPress={handleConfirm}>
-                    <HStack secondary style={styles.button}>
-                        <Text secondary style={styles.buttonText}>
-                            {t(isEditingExercise ? "edit_exercise" : "create_exercise")}
-                        </Text>
-                        <ThemedMaterialCommunityIcons ghost name="pencil-plus-outline" size={20} />
-                    </HStack>
-                </ThemedPressable>
+                <BottomToast topCorrection={25} leftCorrection={-10} padding={20} titleKey="create_exercise_success_title" onRequestClose={closeSuccessMessage} open={showSuccessMessage} />
+                <View>
+                    <ThemedPressable ghost behind onPress={handleConfirm}>
+                        <HStack secondary style={styles.button}>
+                            <Text secondary style={styles.buttonText}>
+                                {t(isEditingExercise ? "edit_exercise" : "create_exercise")}
+                            </Text>
+                            <ThemedMaterialCommunityIcons ghost name="pencil-plus-outline" size={20} />
+                        </HStack>
+                    </ThemedPressable>
+                </View>
             </ThemedView>
         </ThemedBottomSheetModal>
     );

@@ -12,7 +12,6 @@ import { NotificationFeedbackType } from "expo-haptics";
 import DraggableFlatList from "react-native-draggable-flatlist/src/components/DraggableFlatList";
 import { RenderItemParams, ScaleDecorator } from "react-native-draggable-flatlist";
 import { useTranslation } from "react-i18next";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { PageContent } from "../../../components/PageContent/PageContent";
 import { ThemedView } from "../../../components/Themed/ThemedView/View";
 import { ThemedBottomSheetModal, useBottomSheetRef } from "../../../components/BottomSheetModal/ThemedBottomSheetModal";
@@ -56,7 +55,7 @@ export function Create() {
     const isEditedWorkout = useAppSelector(getIsEditedWorkout);
     const title = useMemo(() => (isEditedWorkout ? t("edit_workout") : t("create_workout")), [isEditedWorkout, t]);
     const dispatch = useAppDispatch();
-    const [alertRef, open, closeAlert] = useBottomSheetRef();
+    const [alertRef, openAlert, closeAlert] = useBottomSheetRef();
     const [addRef, openAdd, closeAdd] = useBottomSheetRef();
     const [colorPickerRef, openPicker] = useBottomSheetRef();
     const [showToast, setShowToast] = useState(false);
@@ -71,7 +70,7 @@ export function Create() {
     const handleAddExercise = useCallback(() => {
         dispatch(createNewExercise());
         openAdd();
-    }, [addRef, dispatch]);
+    }, [dispatch, openAdd]);
 
     const handleCleanErrors = useCallback(() => {
         dispatch(cleanErrors());
@@ -140,14 +139,12 @@ export function Create() {
     }, [editedWorkout, handleNavigateHome, dispatch]);
 
     const handleBackButton = useCallback(() => {
-        if (editedWorkout?.workout.exercises.length === 0) {
-            handleNavigateHome();
-        } else if (editedWorkout?.workout.exercises.length !== 0 || editedWorkout.workout.name) {
-            open();
+        if (editedWorkout?.workout.exercises.length !== 0 || editedWorkout.workout.name.length !== 0) {
+            openAlert();
         } else {
             handleNavigateHome();
         }
-    }, [editedWorkout?.workout.exercises.length, editedWorkout?.workout.name, handleNavigateHome, open]);
+    }, [editedWorkout?.workout.exercises.length, editedWorkout?.workout.name, handleNavigateHome, openAlert]);
 
     const handleOnDragEnd = useCallback(
         ({ data }: { data: MappedExercises[] }) => {
@@ -198,7 +195,7 @@ export function Create() {
                         <ColorPickerButton openPicker={openPicker} />
                     </HStack>
                     <View style={styles.listContainer}>
-                        {mappedExercises?.length > 0 ? (
+                        {mappedExercises?.length > 0 && (
                             <DraggableFlatList
                                 scrollsToTop
                                 removeClippedSubviews
@@ -208,24 +205,22 @@ export function Create() {
                                 onDragEnd={handleOnDragEnd}
                                 renderItem={renderItem}
                             />
-                        ) : (
-                            <View style={{ flex: 1, justifyContent: "center" }}>
-                                <MaterialCommunityIcons style={{ alignSelf: "center" }} name="clipboard-search-outline" size={256} color="#444" />
-                            </View>
                         )}
                     </View>
+                    <BottomToast
+                        topCorrection={30}
+                        leftCorrection={-20}
+                        bottom={bottom}
+                        padding={40}
+                        onRequestClose={() => setShowToast(false)}
+                        open={showToast}
+                        messageKey={"undo_message"}
+                        titleKey={"exercise_deleted_title"}
+                        onRedo={handleRecoverExercise}
+                    />
                     <AddButton onPress={handleAddExercise} />
                 </PageContent>
             </ThemedView>
-            <BottomToast
-                bottom={bottom}
-                padding={40}
-                onRequestClose={() => setShowToast(false)}
-                open={showToast}
-                messageKey={"undo_message"}
-                titleKey={"exercise_deleted_title"}
-                onRedo={handleRecoverExercise}
-            />
             <ThemedBottomSheetModal snapPoints={["35%"]} title={alertTitle} ref={alertRef}>
                 <PageContent stretch paddingTop={20} ghost>
                     <Text style={{ fontSize: 20 }} stretch ghost>

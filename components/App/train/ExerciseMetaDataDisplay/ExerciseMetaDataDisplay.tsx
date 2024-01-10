@@ -81,12 +81,12 @@ export const SmallMetadataDisplay = ({ style, exerciseIndex }: SmallMetadataDisp
 
 export const ExerciseMetaDataDisplay = ({ exerciseIndex }: ExerciseMetaDataDisplayProps) => {
     const dispatch = useAppDispatch();
-    const [addExerciseRef] = useBottomSheetRef();
+    const [addExerciseRef, open] = useBottomSheetRef();
 
     const handleShowModal = useCallback(() => {
         dispatch(setEditedExercise({ index: exerciseIndex, isTrained: true }));
         void Haptics.selectionAsync();
-        addExerciseRef.current?.present();
+        open();
     }, [addExerciseRef, dispatch, exerciseIndex]);
 
     const exerciseMetaData = useAppSelector((state: AppState) => getWeightBasedExerciseMetaDataFromTrainedWorkout(state, exerciseIndex));
@@ -110,7 +110,7 @@ export const ExerciseMetaDataDisplay = ({ exerciseIndex }: ExerciseMetaDataDispl
                     <ThemedMaterialCommunityIcons name="pencil" size={24} />
                 </Pressable>
             </HStack>
-            <EditableExerciseModal reference={addExerciseRef} onRequestClose={handleClose} />
+            <EditableExerciseModal closeAfterEdit reference={addExerciseRef} onRequestClose={handleClose} />
         </>
     );
 };

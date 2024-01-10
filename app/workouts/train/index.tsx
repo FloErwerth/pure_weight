@@ -31,7 +31,7 @@ const useSnapToNextExercise = () => {
         if (shouldSwitch && isExerciseDone && canSnap) {
             setTimeout(() => {
                 carouselRef.current?.next({ animated: true });
-            }, 500);
+            }, 100);
             dispatch(mutateActiveExerciseInTrainedWorkout({ key: "canSnap", value: false }));
         }
     }, [isExerciseDone]);

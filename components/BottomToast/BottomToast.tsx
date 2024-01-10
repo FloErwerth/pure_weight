@@ -1,8 +1,8 @@
 import { useTranslation } from "react-i18next";
 import { Text } from "../Themed/ThemedText/Text";
-import { Dimensions, Pressable } from "react-native";
+import { Dimensions } from "react-native";
 import { ThemedView } from "../Themed/ThemedView/View";
-import ReAnimated, { Layout, SlideInDown, SlideOutDown, useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
+import ReAnimated, { FadeInDown, FadeOutDown, Layout, useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 import { borderRadius } from "../../theme/border";
 import { HStack } from "../Stack/HStack/HStack";
 import { ThemedMaterialCommunityIcons } from "../Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
@@ -13,17 +13,19 @@ import { getDeletionTime } from "../../store/reducers/settings/settingsSelectors
 
 interface BottomToastProps {
     titleKey: string;
-    messageKey: string;
-    onRedo: () => void;
+    messageKey?: string;
+    onRedo?: () => void;
     onRequestClose: () => void;
     open: boolean;
     bottom?: number;
     padding?: number;
+    leftCorrection?: number;
+    topCorrection?: number;
 }
 const deviceWidth = Dimensions.get("screen").width;
 
 const TIME_STEP = 50;
-export const BottomToast = ({ titleKey, messageKey, onRedo, open, onRequestClose, bottom = 0, padding = 20 }: BottomToastProps) => {
+export const BottomToast = ({ titleKey, messageKey, onRedo, open, onRequestClose, bottom = 0, padding = 20, leftCorrection, topCorrection }: BottomToastProps) => {
     const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
     const { t } = useTranslation();
     const [percent, setPercent] = useState(100);
@@ -68,34 +70,37 @@ export const BottomToast = ({ titleKey, messageKey, onRedo, open, onRequestClose
     }
 
     return (
-        <ReAnimated.View layout={Layout} entering={SlideInDown} exiting={SlideOutDown}>
-            <Pressable onLongPress={handleRequestClose}>
-                <ThemedView
-                    secondary
-                    style={{
-                        position: "absolute",
-                        gap: 10,
-                        bottom,
-                        padding: 20,
-                        marginHorizontal: padding / 2,
-                        width: deviceWidth - padding,
-                        borderRadius,
-                    }}
-                >
-                    <Text ghost style={{ fontSize: 20, textAlign: "center", fontWeight: "bold" }}>
-                        {t(titleKey)}
-                    </Text>
+        <ReAnimated.View layout={Layout} entering={FadeInDown} exiting={FadeOutDown}>
+            <ThemedView
+                secondary
+                style={{
+                    position: "absolute",
+                    gap: 10,
+                    bottom,
+                    padding: 20,
+                    paddingBottom: 10,
+                    marginHorizontal: padding / 2,
+                    width: deviceWidth - padding,
+                    borderRadius,
+                    left: leftCorrection ? leftCorrection : 0,
+                    transform: [{ translateY: topCorrection ? topCorrection : 0 }],
+                }}
+            >
+                <Text ghost style={{ fontSize: 20, textAlign: "center", fontWeight: "bold", marginBottom: messageKey ? 0 : 5 }}>
+                    {t(titleKey)}
+                </Text>
+                {messageKey && (
                     <ThemedPressable style={{ padding: 10, borderRadius }} onPress={onRedo}>
                         <HStack style={{ flex: 1, justifyContent: "space-between", paddingHorizontal: 10 }}>
                             <Text>{t(messageKey)}</Text>
                             <ThemedMaterialCommunityIcons ghost name="undo" size={16} />
                         </HStack>
                     </ThemedPressable>
-                    <ThemedView style={{ width: "100%" }}>
-                        <ReAnimated.View style={progressBarStyle} />
-                    </ThemedView>
+                )}
+                <ThemedView style={{ width: "100%" }}>
+                    <ReAnimated.View style={progressBarStyle} />
                 </ThemedView>
-            </Pressable>
+            </ThemedView>
         </ReAnimated.View>
     );
 };

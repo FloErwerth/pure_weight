@@ -30,6 +30,7 @@
   "exercise_edit_title": "Edit exercise",
   "add_exercise": "Add new exercise",
   "alert_delete_title": "Delete exercise?",
+  "create_exercise_success_title": "Exercise successfully created",
 
   "workout_deleted_title": "Workout successfully deleted",
   "exercise_deleted_title": "Exercise successfully deleted",
