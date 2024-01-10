@@ -6,7 +6,7 @@ export type Workout = {
     calendarColor: string;
     exercises: WeightBasedExerciseMetaData[];
     doneWorkouts: DoneWorkouts;
-    index: number;
+    storageIndex: number;
 };
 export type WeightBasedExerciseData = {
     weight: string;

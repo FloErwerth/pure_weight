@@ -108,9 +108,11 @@ export function Train() {
             handleNavigateToWorkouts();
             return [] as { index: number }[];
         }
-        return workoutExercises?.map((_, index) => ({
-            index,
-        }));
+        return (
+            workoutExercises?.map((_, index) => ({
+                index,
+            })) ?? []
+        );
     }, [handleNavigateToWorkouts, trainedWorkout, workoutExercises]);
 
     const renderItem = useCallback(({ index }: { index: number }) => {

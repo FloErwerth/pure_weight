@@ -16,7 +16,7 @@ import { useScheduleNotification } from "../../hooks/useScheduleNotification";
 import { useTranslation } from "react-i18next";
 import { getPauseTime } from "../../store/reducers/workout/workoutSelectors";
 
-const UPDATE_INTERVAL = 1000;
+const UPDATE_INTERVAL = 975;
 let id: number = 0;
 
 const useStopwatch = () => {

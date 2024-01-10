@@ -116,7 +116,7 @@ export function WorkoutHistory() {
             const workoutWrapperStyles: ViewStyle = { ...styles.workout, borderColor: selected ? color : "transparent" };
             return (
                 <ThemedView input style={workoutWrapperStyles} key={name.concat(date)}>
-                    {doneWorkouts.map(({ weight, duration, numExercisesDone }, index) => (
+                    {doneWorkouts.map(({ weight, duration, numExercisesDone }) => (
                         <HStack key={Math.random() * 1000} ghost style={styles.displayedWorkoutWrapper}>
                             <HStack ghost style={styles.hstack}>
                                 <ThemedMaterialCommunityIcons ghost name="weight" size={20} />
@@ -163,7 +163,7 @@ export function WorkoutHistory() {
                 setTimeout(scrollCallback, 200);
             };
 
-            const color = markedDates[isoDate];
+            const color = markedDates?.[isoDate];
             const isLatest = isoDate === latestWorkoutDate;
             return <RenderedDay latestDay={isLatest} selected={selectedDate === isoDate} handleSelectDate={handleDayPress} day={day} color={color} />;
         },

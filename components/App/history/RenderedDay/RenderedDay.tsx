@@ -8,13 +8,13 @@ import { ColorIndicator } from "../../../ColorIndicator/ColorIndicator";
 
 interface RenderedDayProps {
     day: string;
-    color: string;
+    color?: string;
     handleSelectDate: () => void;
     selected: boolean;
     latestDay?: boolean;
 }
 
-const useMarkedDayStyles = (color: string, selected: boolean) => {
+const useMarkedDayStyles = (selected: boolean, color?: string) => {
     const { mainColor, textDisabled } = useTheme();
 
     const viewStyle = useMemo(() => {
@@ -31,7 +31,7 @@ const useMarkedDayStyles = (color: string, selected: boolean) => {
 };
 
 export const RenderedDay = ({ day, color, handleSelectDate, selected, latestDay }: RenderedDayProps) => {
-    const { viewStyle, textStyle } = useMarkedDayStyles(color, selected);
+    const { viewStyle, textStyle } = useMarkedDayStyles(selected, color);
     const showDot = Boolean(color && !selected);
     return (
         <Pressable onPress={handleSelectDate}>

@@ -46,13 +46,14 @@ const ThemedApp = () => {
         dispatch(setEmptyState());
         const lang = (NativeModules.SettingsManager.settings.AppleLocale as string).split("_")[0];
         if (lang === "de") {
+            i18n.changeLanguage("de");
             dispatch(setLanguage("de"));
         } else {
+            i18n.changeLanguage("en");
             dispatch(setLanguage("en"));
         }
         const theme = Appearance.getColorScheme();
         dispatch(setTheme(theme === "dark" ? "dark" : "light"));
-        i18n.changeLanguage(NativeModules.SettingsManager.settings.AppleLocale as string);
     }
 
     useEffect(() => {

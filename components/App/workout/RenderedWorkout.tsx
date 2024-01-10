@@ -42,8 +42,8 @@ export const RenderedWorkout = ({ index }: RenderedWorkoutProps) => {
             <HStack style={styles.outerTrainWrapper}>
                 <View>
                     <HStack style={styles.innerTrainWrapper}>
-                        <Text style={styles.title}>{workout.name}</Text>
-                        <ColorIndicator color={workout.calendarColor} height={6} width={6} />
+                        <Text style={styles.title}>{workout?.name}</Text>
+                        <ColorIndicator color={workout?.calendarColor} height={6} width={6} />
                     </HStack>
                     {latestWorkoutDate && <Text style={styles.date}>{latestWorkoutDate}</Text>}
                 </View>

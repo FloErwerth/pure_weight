@@ -34,6 +34,7 @@ for (let i = 1; i <= 15; i++) {
         ],
     });
 }
+
 const getConstructedMeasurement = (): MeasurementDataPoint[] => {
     const datapoints: MeasurementDataPoint[] = [];
     for (let i = 1; i <= 15; i++) {
@@ -102,7 +103,7 @@ export const mockState: AppState = {
         sorting: "A_Z",
         workouts: [
             {
-                index: 0,
+                storageIndex: 0,
                 name: "Real Back",
                 calendarColor: "#ffff00",
                 exercises: [
@@ -210,7 +211,7 @@ export const mockState: AppState = {
             },
             {
                 name: "Real Chest",
-                index: 1,
+                storageIndex: 1,
                 calendarColor: "#ff0000",
                 exercises: [{ type: "WEIGHT_BASED", name: "Bankdrücken", weight: "50", sets: "5", pause: { seconds: "3", minutes: "0" }, reps: "5" }],
                 doneWorkouts: [

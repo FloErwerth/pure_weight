@@ -4,7 +4,7 @@ import { useAppDispatch, useAppSelector } from "../../store";
 import { SiteNavigationButtons } from "../../components/SiteNavigationButtons/SiteNavigationButtons";
 import { useTranslation } from "react-i18next";
 import { ThemedView } from "../../components/Themed/ThemedView/View";
-import { getTrainedWorkout, getWorkouts } from "../../store/reducers/workout/workoutSelectors";
+import { getSortedWorkouts, getTrainedWorkout } from "../../store/reducers/workout/workoutSelectors";
 import { createNewWorkout, recoverWorkout, removeWorkout, setEditedWorkout, startWorkout } from "../../store/reducers/workout";
 import { WorkoutSorting } from "../../components/App/train/WorkoutSorting/WorkoutSorting";
 import { RenderedWorkout } from "../../components/App/workout/RenderedWorkout";
@@ -38,7 +38,7 @@ export function Workouts() {
     const dispatch = useAppDispatch();
     const { t } = useTranslation();
     const [showToast, setShowToast] = useState(false);
-    const savedWorkouts = useAppSelector(getWorkouts);
+    const savedWorkouts = useAppSelector(getSortedWorkouts);
     const navigate = useNavigate();
     const trainedWorkout = useAppSelector(getTrainedWorkout);
     const [ref, open, close] = useBottomSheetRef();
@@ -111,9 +111,9 @@ export function Workouts() {
 
     const mappedWorkouts = useMemo(
         () =>
-            savedWorkouts.map(({ name, index }, workoutIndex) => (
-                <Swipeable key={name.concat(index.toString())} onClick={() => handleStartWorkoutCases(index)} onDelete={() => onDelete(index)} onEdit={() => onEdit(index)}>
-                    <RenderedWorkout index={workoutIndex} />
+            savedWorkouts.map(({ name, storageIndex }) => (
+                <Swipeable key={name.concat(storageIndex.toString())} onClick={() => handleStartWorkoutCases(storageIndex)} onDelete={() => onDelete(storageIndex)} onEdit={() => onEdit(storageIndex)}>
+                    <RenderedWorkout index={storageIndex} />
                 </Swipeable>
             )),
         [savedWorkouts, handleStartWorkoutCases, onDelete, onEdit],
