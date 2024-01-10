@@ -53,27 +53,27 @@ export function Workouts() {
     const confirmIcon = useMemo((): { name: "plus"; size: number } => ({ name: "plus", size: 40 }), []);
 
     const onEdit = useCallback(
-        (index: number) => {
-            dispatch(setEditedWorkout({ index }));
+        (workoutId: number) => {
+            dispatch(setEditedWorkout({ workoutId }));
             navigate("create");
         },
         [dispatch, navigate],
     );
 
     const onDelete = useCallback(
-        (index: number) => {
-            dispatch(removeWorkout(index));
+        (workoutId: number) => {
+            dispatch(removeWorkout(workoutId));
             setShowToast(true);
         },
         [dispatch],
     );
 
     const handleStartWorkout = useCallback(
-        (workoutIndex?: number) => {
-            if (workoutIndex === undefined && newWorkoutIndex !== undefined) {
+        (workoutId?: number) => {
+            if (workoutId === undefined && newWorkoutIndex !== undefined) {
                 dispatch(startWorkout(newWorkoutIndex));
-            } else if (workoutIndex !== undefined) {
-                dispatch(startWorkout(workoutIndex));
+            } else if (workoutId !== undefined) {
+                dispatch(startWorkout(workoutId));
             } else {
                 navigate("workouts");
                 return;
@@ -85,11 +85,11 @@ export function Workouts() {
 
     const handleStartWorkoutCases = useCallback(
         (workoutIndex: number) => {
-            if (trainedWorkout && trainedWorkout.workoutIndex === workoutIndex) {
+            if (trainedWorkout && trainedWorkout.workout.workoutId === workoutIndex) {
                 navigate("train");
                 return;
             }
-            if (trainedWorkout && trainedWorkout.workoutIndex !== workoutIndex) {
+            if (trainedWorkout && trainedWorkout.workout.workoutId !== workoutIndex) {
                 open();
                 setNewWorkoutIndex(workoutIndex);
                 return;
@@ -111,9 +111,9 @@ export function Workouts() {
 
     const mappedWorkouts = useMemo(
         () =>
-            savedWorkouts.map(({ name, storageIndex }) => (
-                <Swipeable key={name.concat(storageIndex.toString())} onClick={() => handleStartWorkoutCases(storageIndex)} onDelete={() => onDelete(storageIndex)} onEdit={() => onEdit(storageIndex)}>
-                    <RenderedWorkout index={storageIndex} />
+            savedWorkouts.map(({ name, workoutId }) => (
+                <Swipeable key={name.concat(workoutId?.toString())} onClick={() => handleStartWorkoutCases(workoutId)} onDelete={() => onDelete(workoutId)} onEdit={() => onEdit(workoutId)}>
+                    <RenderedWorkout workoutId={workoutId} />
                 </Swipeable>
             )),
         [savedWorkouts, handleStartWorkoutCases, onDelete, onEdit],

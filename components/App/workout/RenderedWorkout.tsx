@@ -14,28 +14,28 @@ import { useTranslation } from "react-i18next";
 import { ThemedView } from "../../Themed/ThemedView/View";
 
 type RenderedWorkoutProps = {
-    index: number;
+    workoutId: number;
 };
-export const RenderedWorkout = ({ index }: RenderedWorkoutProps) => {
-    const workout = useAppSelector((state: AppState) => getWorkoutByIndex(state, index));
+export const RenderedWorkout = ({ workoutId }: RenderedWorkoutProps) => {
+    const workout = useAppSelector((state: AppState) => getWorkoutByIndex(state, workoutId));
     const dispatch = useAppDispatch();
-    const trend = useAppSelector((state: AppState) => getOverallTrainingTrend(state, index));
-    const hasHistory = useAppSelector((state: AppState) => getHasHistory(state, index));
-    const latestWorkoutDate = useAppSelector((state: AppState) => getLatestWorkoutDateDisplay(state, index));
+    const trend = useAppSelector((state: AppState) => getOverallTrainingTrend(state, workoutId));
+    const hasHistory = useAppSelector((state: AppState) => getHasHistory(state, workoutId));
+    const latestWorkoutDate = useAppSelector((state: AppState) => getLatestWorkoutDateDisplay(state, workoutId));
     const navigate = useNavigate();
     const { t } = useTranslation();
-    const isOngoingWorkout = useAppSelector((state: AppState) => getIsOngoingWorkout(state, index));
+    const isOngoingWorkout = useAppSelector((state: AppState) => getIsOngoingWorkout(state, workoutId));
     const showHint = trend || hasHistory;
 
     const handleNavigateToProgress = useCallback(() => {
-        dispatch(setEditedWorkout({ index }));
+        dispatch(setEditedWorkout({ workoutId }));
         navigate("workout/progress");
-    }, [dispatch, index, navigate]);
+    }, [dispatch, workoutId, navigate]);
 
     const handleNavigateToHistory = useCallback(() => {
-        dispatch(setEditedWorkout({ index }));
+        dispatch(setEditedWorkout({ workoutId }));
         navigate("history");
-    }, [dispatch, index, navigate]);
+    }, [dispatch, workoutId, navigate]);
 
     return (
         <View style={styles.outerTrainWrapper}>
@@ -56,8 +56,8 @@ export const RenderedWorkout = ({ index }: RenderedWorkoutProps) => {
 
             {showHint ? (
                 <View style={styles.innerTrainWrapper}>
-                    {trend !== undefined && <ProgressDisplay type="Workout" wasPositive={trend.isPositive} onPress={handleNavigateToProgress} name={trend.name} percent={trend.percent} />}
-                    {hasHistory && <HistoryDisplay workoutIndex={index} handleNavigateToHistory={handleNavigateToHistory} />}
+                    {trend !== undefined && <ProgressDisplay type="Workout" wasPositive={trend.isPositive} onPress={handleNavigateToProgress} name={trend?.name} percent={trend?.percent} />}
+                    {hasHistory && <HistoryDisplay workoutId={workoutId} handleNavigateToHistory={handleNavigateToHistory} />}
                 </View>
             ) : (
                 <ThemedView ghost round>

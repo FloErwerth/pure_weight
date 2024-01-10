@@ -19,7 +19,7 @@ export const getTrainedWorkoutExercises = createSelector([getTrainedWorkout, get
     if (trainedWorkout === undefined) {
         return [];
     }
-    return workouts.find((workout) => workout.storageIndex === trainedWorkout.workoutIndex)?.exercises;
+    return workouts.find((workout) => workout.workoutId === trainedWorkout.workout.workoutId)?.exercises;
 });
 export const getEditedWorkout = createSelector([getWorkoutState], (state) => state.editedWorkout);
 export const getIsEditedWorkout = createSelector([getEditedWorkout], (editedWorkout) => !editedWorkout?.isNew);
@@ -28,7 +28,7 @@ export const getIsExistingEditedExercise = createSelector([getEditedExercise], (
 export const getNumberSavedWorkouts = createSelector([getWorkouts], (workouts) => workouts.length);
 export const getSortedDoneWorkout = createSelector([getWorkouts, (workouts, index: number) => index], (workouts, index) => {
     return workouts
-        .find((workout) => workout.storageIndex === index)
+        .find((workout) => workout.workoutId === index)
         ?.doneWorkouts.map(({ isoDate }) => isoDate)
         .sort(Temporal.PlainDate.compare);
 });
@@ -44,7 +44,7 @@ export const getFirstWorkoutDate = createSelector([getSortedDoneWorkout], (dates
     return dates?.[0] ?? ("1970-01-01" as IsoDate);
 });
 export const getWorkoutByIndex = createSelector([getWorkouts, (workouts, index: number) => index], (workouts, index) => {
-    return workouts.find((workout) => workout.storageIndex === index);
+    return workouts.find((workout) => workout.workoutId === index);
 });
 export const getSortedWorkouts = createSelector([getWorkouts, getWorkoutSorting], (workouts, sorting) => {
     return sortWorkouts(workouts, sorting);
@@ -52,7 +52,7 @@ export const getSortedWorkouts = createSelector([getWorkouts, getWorkoutSorting]
 export const getEditedWorkoutName = createSelector([getEditedWorkout], (editedWorkout) => editedWorkout?.workout?.name);
 export const getExercisesFromIndex = createSelector([getTrainedWorkout, getWorkouts, (workouts, exerciseIndex: number) => exerciseIndex], (trainedWorkout, workouts, exerciseIndex) => {
     if (trainedWorkout) {
-        return workouts.find((workout) => workout.storageIndex === trainedWorkout.workoutIndex)?.exercises[exerciseIndex];
+        return workouts.find((workout) => workout.workoutId === trainedWorkout.workout.workoutId)?.exercises[exerciseIndex];
     }
 });
 
@@ -69,12 +69,12 @@ type SortedData = { exerciseName: string; data: { sets: ExerciseSets; date: IsoD
 export const getTrainingDayData = createSelector([getEditedWorkout], (editedWorkout) => {
     const workout = editedWorkout?.workout;
 
-    if (workout?.doneWorkouts === undefined || workout.doneWorkouts.length === 0) {
+    if (workout?.doneWorkouts === undefined || workout?.doneWorkouts.length === 0) {
         return undefined;
     }
 
     const sortedData: Map<string, SortedData> = new Map();
-    const slicedDoneWorkouts = getLastNEntries(workout.doneWorkouts, 25);
+    const slicedDoneWorkouts = getLastNEntries(workout?.doneWorkouts, 25);
 
     slicedDoneWorkouts
         .filter(({ doneExercises }) => doneExercises !== undefined)
@@ -115,7 +115,7 @@ export const getHistoryByMonth = createSelector([getEditedWorkout, (editedWorkou
     const workout = editedWorkout?.workout;
     const foundTrainings: Map<string, SectionListItemInfo> = new Map();
 
-    workout?.doneWorkouts.forEach((doneWorkout) => {
+    workout?.doneWorkouts?.forEach((doneWorkout) => {
         const date = doneWorkout.isoDate;
         const doneWorkouts = foundTrainings.get(date)?.doneWorkouts ?? [];
         doneWorkouts.push({
@@ -137,23 +137,29 @@ export const getHistoryByMonth = createSelector([getEditedWorkout, (editedWorkou
         .filter((value) => getMonth(value[0] as IsoDate) === getMonth((searchedMonth ?? getDateTodayIso()) as IsoDate))
         .map(([month, data]) => ({ title: month, data: [data] }));
 });
-export const getHasHistory = createSelector([getWorkouts, (workouts, index: number) => index], (workouts, index) => workouts[index].doneWorkouts.length > 0);
+export const getHasHistory = createSelector([getWorkouts, (workouts, workoutId: number) => workoutId], (workouts, workoutId) => {
+    const doneWorkouts = workouts?.find((workout) => workout?.workoutId === workoutId)?.doneWorkouts;
+    if (doneWorkouts === undefined) {
+        return false;
+    }
+    return doneWorkouts.length >= 0;
+});
 export const getNumberHistories = createSelector([getWorkouts, (workouts, workoutIndex: number) => workoutIndex], (workouts, workoutIndex) => {
-    const workout = workouts.find((workout) => workout.storageIndex === workoutIndex);
-    return workout?.doneWorkouts.length;
+    const workout = workouts.find((workout) => workout.workoutId === workoutIndex);
+    return workout?.doneWorkouts?.length;
 });
 export const getPreviousTraining = createSelector([getTrainedWorkout, getLanguage, (trainedWorkout, language, exerciseIndex: number) => exerciseIndex], (trainedWorkout, language, exerciseIndex) => {
     const doneWorkouts = trainedWorkout?.workout?.doneWorkouts;
-    if (!doneWorkouts || doneWorkouts.length === 0) {
+    if (!doneWorkouts || doneWorkouts?.length === 0) {
         return undefined;
     }
 
     const foundEntries = new Map<string, { date: string; sets: ExerciseSets; note?: string }>();
-    for (let workoutIndex = doneWorkouts.length - 1; workoutIndex >= 0; workoutIndex--) {
-        doneWorkouts[workoutIndex].doneExercises?.forEach((exercise) => {
+    for (let workoutIndex = doneWorkouts?.length - 1; workoutIndex >= 0; workoutIndex--) {
+        doneWorkouts?.[workoutIndex].doneExercises?.forEach((exercise) => {
             if (!foundEntries.get(exercise.name)) {
                 foundEntries.set(exercise.name, {
-                    date: getLocaleDate(doneWorkouts[workoutIndex].isoDate, language, { dateStyle: "medium" }),
+                    date: getLocaleDate(doneWorkouts?.[workoutIndex].isoDate, language, { dateStyle: "medium" }),
                     sets: exercise.sets,
                     note: exercise.note,
                 });
@@ -176,8 +182,8 @@ export const getIsLastSet = createSelector([getTrainedWorkout, (trainedWorkout, 
     };
 });
 export const getOverallTrainingTrend = createSelector([getWorkouts, (workouts, index: number) => index], (workouts, index) => {
-    const workout = workouts.find((workout) => workout.storageIndex === index);
-    if (!workout?.doneWorkouts || workout.doneWorkouts?.length < 2 || workout.doneWorkouts.some(({ doneExercises }) => !doneExercises)) {
+    const workout = workouts.find((workout) => workout.workoutId === index);
+    if (!workout?.doneWorkouts || workout?.doneWorkouts?.length < 2 || workout?.doneWorkouts.some(({ doneExercises }) => !doneExercises)) {
         return undefined;
     }
 
@@ -190,8 +196,8 @@ export const getOverallTrainingTrend = createSelector([getWorkouts, (workouts, i
     > = new Map();
 
     for (let i = 0; i < workout.doneWorkouts.length - 1; i++) {
-        const workoutBefore = workout.doneWorkouts[i];
-        const currentWorkout = workout.doneWorkouts[i + 1];
+        const workoutBefore = workout?.doneWorkouts[i];
+        const currentWorkout = workout?.doneWorkouts[i + 1];
 
         for (let j = 0; j < workoutBefore.doneExercises!.length; j++) {
             const beforeExercise = workoutBefore.doneExercises![j];
@@ -339,5 +345,5 @@ export const getSetData = createSelector([getExerciseData, (exerciseData, setInd
 });
 
 export const getIsOngoingWorkout = createSelector([getTrainedWorkout, (trainedWorkout, workoutIndex: number) => workoutIndex], (trainedWorkout, workoutIndex) => {
-    return trainedWorkout && trainedWorkout?.workoutIndex === workoutIndex && trainedWorkout.paused;
+    return trainedWorkout && trainedWorkout?.workout.workoutId === workoutIndex && trainedWorkout.paused;
 });

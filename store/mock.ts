@@ -103,7 +103,7 @@ export const mockState: AppState = {
         sorting: "A_Z",
         workouts: [
             {
-                storageIndex: 0,
+                workoutId: 128901238901,
                 name: "Real Back",
                 calendarColor: "#ffff00",
                 exercises: [
@@ -211,7 +211,7 @@ export const mockState: AppState = {
             },
             {
                 name: "Real Chest",
-                storageIndex: 1,
+                workoutId: 231390123891,
                 calendarColor: "#ff0000",
                 exercises: [{ type: "WEIGHT_BASED", name: "Bankdrücken", weight: "50", sets: "5", pause: { seconds: "3", minutes: "0" }, reps: "5" }],
                 doneWorkouts: [

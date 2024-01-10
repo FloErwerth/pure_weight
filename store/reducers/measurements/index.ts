@@ -10,6 +10,7 @@ export type MeasurementDataPoint = { isNew: false; isDataPoint: true; dataPointI
 type EditedMeasurementPayload = NewMeasurement | ExistingMeasurement | MeasurementDataPoint | undefined;
 export type EditedMeasurement = EditedMeasurementPayload & { measurement: Measurement };
 export type EditedMeasurementDataPoint = { indexInData: number; timestamp: number; value: string; editedMeasurement: EditedMeasurement };
+
 export type MeasurementState = {
     measurements: Measurement[];
     deletedMeasurement?: { measurement: Measurement; index: number };
@@ -18,6 +19,7 @@ export type MeasurementState = {
     editedMeasurementDataPoint?: EditedMeasurementDataPoint;
     sorting: SortingType;
 };
+
 export const setMeasurementState = createAction<MeasurementState, "measurement_set_state">("measurement_set_state");
 export const setMeasurements = createAction<Measurement[], "measurement_set_measurement">("measurement_set_measurement");
 export const setEditedMeasurement = createAction<EditedMeasurementPayload, "measurement_set_inspected_measurement">("measurement_set_inspected_measurement");
@@ -131,7 +133,6 @@ export const measurementReducer = createReducer<MeasurementState>({ measurements
         })
         .addCase(setMeasurementSorting, (state, action) => {
             state.sorting = action.payload;
-            state.measurements = sortMeasurements(state.measurements, action.payload);
         })
         .addCase(addMeasurement, (state, action) => {
             if (action.payload.index !== undefined) {

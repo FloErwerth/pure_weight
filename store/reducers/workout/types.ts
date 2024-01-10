@@ -6,7 +6,7 @@ export type Workout = {
     calendarColor: string;
     exercises: WeightBasedExerciseMetaData[];
     doneWorkouts: DoneWorkouts;
-    storageIndex: number;
+    workoutId: number;
 };
 export type WeightBasedExerciseData = {
     weight: string;
@@ -42,8 +42,7 @@ export type ExerciseMetaData = WeightBasedExerciseMetaData;
 
 export type EditedWorkout = {
     workout: Workout;
-    isNew?: boolean;
-    index?: number;
+    isNew: boolean;
 };
 
 export type EditedExercise = {
@@ -51,8 +50,8 @@ export type EditedExercise = {
     isTrained?: boolean;
     index?: number;
 };
+
 export type TrainedWorkout = {
-    workoutIndex: number;
     workout: Workout;
     activeExerciseIndex: number;
     beginTimestamp: number;
@@ -70,7 +69,7 @@ export type TrainedWorkout = {
 export type WorkoutState = {
     workouts: Workout[];
     sorting: SortingType;
-    deletedWorkout?: { workout: Workout; index: number; trainedWorkout?: TrainedWorkout };
+    deletedWorkout?: { workout: Workout; trainedWorkout?: TrainedWorkout };
     deletedExercise?: { exercise: ExerciseMetaData; index: number };
     editedWorkout?: EditedWorkout;
     trainedWorkout?: TrainedWorkout;

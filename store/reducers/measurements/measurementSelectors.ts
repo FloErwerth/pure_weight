@@ -5,6 +5,7 @@ import { getLastNEntries } from "../../../utils/getLastNEntries";
 import { UnitSystem } from "../settings/types";
 import { MeasurementType } from "../../../components/App/measurements/types";
 import { measurementUnitMap } from "../../../utils/unitMap";
+import { sortMeasurements } from "./utils/sortMeasurements";
 
 export const getMeasurementsState = (state: AppState) => state.measurmentState;
 export const getEditedMeasurement = createSelector([getMeasurementsState], (state) => state.editedMeasurement);
@@ -69,6 +70,9 @@ export const getMeasurmentProgress = createSelector([getMeasurements, (byIndex, 
     }
 
     return undefined;
+});
+export const getSortedMeasurements = createSelector([getMeasurements, getMeasurementSorting], (measurements, sorting) => {
+    return sortMeasurements(measurements, sorting);
 });
 export const getDatesFromCurrentMeasurement = createSelector([getEditedMeasurement], (measurement) => {
     if (!measurement || measurement.isNew) {

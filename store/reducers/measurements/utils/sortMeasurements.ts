@@ -20,6 +20,4 @@ export const sortMeasurements = (measurements: Measurement[], sorting: SortingTy
         case "LONGEST_AGO":
             return sortedMeasurement.sort((a, b) => sortAfterDate(a, b));
     }
-
-    return sortedMeasurement;
 };

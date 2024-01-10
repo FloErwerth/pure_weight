@@ -51,8 +51,8 @@ function monthDiff(d1: Date, d2: Date) {
 }
 const useScrollRanges = (selectedDate: IsoDate) => {
     const editedWorkout = useAppSelector(getEditedWorkout);
-    const latestWorkoutDate = useAppSelector((state: AppState) => getLatestWorkoutDate(state, editedWorkout?.index ?? 0));
-    const firstWorkoutDate = useAppSelector((state: AppState) => getFirstWorkoutDate(state, editedWorkout?.index ?? 0));
+    const latestWorkoutDate = useAppSelector((state: AppState) => getLatestWorkoutDate(state, editedWorkout?.workout?.workoutId ?? 0));
+    const firstWorkoutDate = useAppSelector((state: AppState) => getFirstWorkoutDate(state, editedWorkout?.workout?.workoutId ?? 0));
     const pastScrollRange = useMemo(() => monthDiff(new Date(firstWorkoutDate), new Date(selectedDate)), [firstWorkoutDate, selectedDate]);
     const futureScrollRange = useMemo(() => monthDiff(new Date(selectedDate), new Date(latestWorkoutDate)), [latestWorkoutDate, selectedDate]);
 
@@ -63,10 +63,10 @@ export function WorkoutHistory() {
     const { t } = useTranslation();
     const { inputFieldBackgroundColor, mainColor, textDisabled } = useTheme();
     const editedWorkout = useAppSelector(getEditedWorkout);
-    const latestWorkoutDate = useAppSelector((state: AppState) => getLatestWorkoutDate(state, editedWorkout?.index ?? 0));
+    const latestWorkoutDate = useAppSelector((state: AppState) => getLatestWorkoutDate(state, editedWorkout?.workout.workoutId ?? 0));
     const [selectedDate, setSelectedDate] = useState<IsoDate>(latestWorkoutDate);
     const { past, future } = useScrollRanges(selectedDate);
-    const markedDates = useMarkedDates(editedWorkout?.index);
+    const markedDates = useMarkedDates(editedWorkout?.workout.workoutId);
     const workout = useAppSelector(getEditedWorkout);
     const [ref, open, close] = useBottomSheetRef();
     const sectionListRef = useRef<SectionList>(null);
@@ -115,7 +115,7 @@ export function WorkoutHistory() {
             const selected = date === selectedDate;
             const workoutWrapperStyles: ViewStyle = { ...styles.workout, borderColor: selected ? color : "transparent" };
             return (
-                <ThemedView input style={workoutWrapperStyles} key={name.concat(date)}>
+                <ThemedView input style={workoutWrapperStyles} key={name?.concat(date)}>
                     {doneWorkouts.map(({ weight, duration, numExercisesDone }) => (
                         <HStack key={Math.random() * 1000} ghost style={styles.displayedWorkoutWrapper}>
                             <HStack ghost style={styles.hstack}>
@@ -192,7 +192,7 @@ export function WorkoutHistory() {
 
     return (
         <ThemedView stretch>
-            <SiteNavigationButtons handleBack={handleNavigateBack} title={t("history_front").concat(" ", workout?.workout.name ?? "")} />
+            <SiteNavigationButtons handleBack={handleNavigateBack} title={t("history_front").concat(" ", workout?.workout?.name ?? "")} />
             <PageContent background stretch safeBottom style={styles.pageWrapper}>
                 <SectionList
                     ref={sectionListRef}

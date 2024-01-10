@@ -70,7 +70,7 @@ export function Create() {
 
     const handleAddExercise = useCallback(() => {
         dispatch(createNewExercise());
-        addRef.current?.present();
+        openAdd();
     }, [addRef, dispatch]);
 
     const handleCleanErrors = useCallback(() => {
@@ -120,12 +120,11 @@ export function Create() {
 
     const handleNavigateHome = useCallback(() => {
         handleCleanErrors();
-        dispatch(setEditedExercise(undefined));
         navigate("workouts");
     }, [dispatch, handleCleanErrors, navigate]);
 
     const handleSaveWorkout = useCallback(() => {
-        if (!editedWorkout?.workout.name || editedWorkout.workout.exercises.length === 0) {
+        if (!editedWorkout?.workout?.name || editedWorkout.workout.exercises.length === 0) {
             if (!editedWorkout?.workout.name) {
                 dispatch(setError(["workout_name"]));
             }

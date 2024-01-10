@@ -8,12 +8,12 @@ import { AppState, useAppSelector } from "../../../../store";
 import { getNumberHistories } from "../../../../store/reducers/workout/workoutSelectors";
 
 interface HistoryDisplayProps {
-    workoutIndex: number;
+    workoutId: number;
     handleNavigateToHistory: () => void;
 }
 
-export const HistoryDisplay = ({ workoutIndex, handleNavigateToHistory }: HistoryDisplayProps) => {
-    const numberHistoryEntries = useAppSelector((state: AppState) => getNumberHistories(state, workoutIndex));
+export const HistoryDisplay = ({ workoutId, handleNavigateToHistory }: HistoryDisplayProps) => {
+    const numberHistoryEntries = useAppSelector((state: AppState) => getNumberHistories(state, workoutId));
     return (
         <ThemedPressable style={styles.wrapper} secondary onPress={handleNavigateToHistory}>
             <HStack style={{ justifyContent: "space-between", alignItems: "center" }} ghost>

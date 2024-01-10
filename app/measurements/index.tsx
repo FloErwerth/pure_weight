@@ -8,13 +8,13 @@ import { Swipeable } from "../../components/WorkoutCard/Swipeable";
 import { RenderedMeasurement } from "../../components/App/measurements/RenderedMeasurement";
 import { BottomToast } from "../../components/BottomToast/BottomToast";
 import { deleteMeasurement, recoverMeasurement, setEditedMeasurement, setupNewMeasurement } from "../../store/reducers/measurements";
-import { getMeasurements } from "../../store/reducers/measurements/measurementSelectors";
+import { getSortedMeasurements } from "../../store/reducers/measurements/measurementSelectors";
 import { MeasurementSorting } from "../../components/App/measurements/Sorting/MeasurementSorting";
 import { useNavigate } from "../../hooks/navigate";
 
 export function Measurements() {
     const { t } = useTranslation();
-    const measurements = useAppSelector(getMeasurements);
+    const measurements = useAppSelector(getSortedMeasurements);
     const dispatch = useAppDispatch();
     const [showToast, setShowToast] = useState(false);
     const navigate = useNavigate();
