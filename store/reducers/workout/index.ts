@@ -317,27 +317,29 @@ export const workoutReducer = createReducer<WorkoutState>({ workouts: [], sortin
             }
         })
         .addCase(startWorkout, (state, action) => {
-            const workout = state.workouts[action.payload];
-            state.trainedWorkout = {
-                paused: false,
-                activeExerciseIndex: 0,
-                workout,
-                beginTimestamp: Temporal.Now.instant().epochMilliseconds,
-                exerciseData: Array(workout.exercises.length)
-                    .fill(undefined)
-                    .map((_, exerciseIndex) => {
-                        const metaData = workout?.exercises[exerciseIndex];
-                        const prefilledMetaData: TrainedWorkout["exerciseData"][number] = {
-                            name: metaData?.name ?? "",
-                            activeSetIndex: 0,
-                            latestSetIndex: 0,
-                            setIndex: 0,
-                            doneSets: [],
-                            note: "",
-                            canSnap: true,
-                        };
-                        return prefilledMetaData;
-                    }),
-            };
+            const workout = state.workouts.find((workout) => workout.workoutId === action.payload);
+            if (workout) {
+                state.trainedWorkout = {
+                    paused: false,
+                    activeExerciseIndex: 0,
+                    workout,
+                    beginTimestamp: Temporal.Now.instant().epochMilliseconds,
+                    exerciseData: Array(workout.exercises.length)
+                        .fill(undefined)
+                        .map((_, exerciseIndex) => {
+                            const metaData = workout?.exercises[exerciseIndex];
+                            const prefilledMetaData: TrainedWorkout["exerciseData"][number] = {
+                                name: metaData?.name ?? "",
+                                activeSetIndex: 0,
+                                latestSetIndex: 0,
+                                setIndex: 0,
+                                doneSets: [],
+                                note: "",
+                                canSnap: true,
+                            };
+                            return prefilledMetaData;
+                        }),
+                };
+            }
         });
 });

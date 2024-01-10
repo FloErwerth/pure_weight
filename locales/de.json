@@ -106,7 +106,7 @@
   "workout_confirm_delete": "Löschen",
   "workout_deleted_title": "Workout erfolgreich gelöscht",
   "undo_message": "Löschung rückgängig machen",
-  "exercise_deleted_message": "Übung erfolgreich gelöscht",
+  "exercise_deleted_title": "Übung erfolgreich gelöscht",
   "training_done": "Workout abschließen",
   "training_header_reps": "Wdh.",
   "training_header_sets_single": "Satz",

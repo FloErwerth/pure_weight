@@ -126,14 +126,7 @@ export function Workouts() {
             <PageContent background ignoreGap stretch paddingTop={20}>
                 {mappedWorkouts}
             </PageContent>
-            <BottomToast
-                bottom={5}
-                onRequestClose={() => setShowToast(false)}
-                open={showToast}
-                messageKey={"workout_deleted_message"}
-                titleKey={"workout_deleted_title"}
-                onRedo={handleRecoverWorkout}
-            />
+            <BottomToast bottom={5} onRequestClose={() => setShowToast(false)} open={showToast} messageKey={"undo_message"} titleKey={"workout_deleted_title"} onRedo={handleRecoverWorkout} />
             <ThemedBottomSheetModal snapPoints={["40%"]} title={title} ref={ref}>
                 <PageContent paddingTop={20} stretch ghost>
                     <Text style={trainStyles.button} ghost stretch>
