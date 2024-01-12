@@ -1,10 +1,10 @@
 import React, { useCallback, useMemo, useState } from "react";
 import { useNavigate } from "../../hooks/navigate";
-import { useAppDispatch, useAppSelector } from "../../store";
+import { AppState, useAppDispatch, useAppSelector } from "../../store";
 import { SiteNavigationButtons } from "../../components/SiteNavigationButtons/SiteNavigationButtons";
 import { useTranslation } from "react-i18next";
 import { ThemedView } from "../../components/Themed/ThemedView/View";
-import { getSortedWorkouts, getTrainedWorkout } from "../../store/reducers/workout/workoutSelectors";
+import { getIsOngoingWorkout, getSortedWorkouts, getTrainedWorkout } from "../../store/reducers/workout/workoutSelectors";
 import { createNewWorkout, recoverWorkout, removeWorkout, setEditedWorkout, startWorkout } from "../../store/reducers/workout";
 import { WorkoutSorting } from "../../components/App/train/WorkoutSorting/WorkoutSorting";
 import { RenderedWorkout } from "../../components/App/workout/RenderedWorkout";
@@ -16,6 +16,8 @@ import { Text } from "../../components/Themed/ThemedText/Text";
 import { ThemedPressable } from "../../components/Themed/Pressable/Pressable";
 import { getLanguage } from "../../store/reducers/settings/settingsSelectors";
 import { trainStyles } from "../../components/App/train/trainStyles";
+import { HStack } from "../../components/Stack/HStack/HStack";
+import { ThemedMaterialCommunityIcons } from "../../components/Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
 
 const usePauseWarningContent = () => {
     const language = useAppSelector(getLanguage);
@@ -23,14 +25,16 @@ const usePauseWarningContent = () => {
     if (language === "de") {
         return {
             title: "Bereits pausiertes Training",
-            message: `Bitte beachte, dass ein Workout pausiert ist. \n\nDurch das starten eines neuen Workouts wird das pausierte Training gelöscht.`,
-            buttonText: "Neues Training starten",
+            message: `Bitte beachte, dass ein Workout pausiert ist. Bitte wähle, ob Du ein neues Workout starten oder dein pausiertes Training fortsetzen möchtest.`,
+            resumeTrainingText: "Training fortsetzen",
+            newTrainingText: "Neues Training starten",
         };
     }
     return {
         title: "Paused workout",
-        message: `Please note that a workout is paused. \n\nStarting a new workout will delete the paused workout.`,
-        buttonText: "Start new workout",
+        message: `Please note that a workout is paused. Please choose whether you want to start a new workout or continue your paused training.`,
+        resumeTrainingText: "Resume training",
+        newTrainingText: "Start new workout",
     };
 };
 
@@ -43,7 +47,9 @@ export function Workouts() {
     const trainedWorkout = useAppSelector(getTrainedWorkout);
     const [ref, open, close] = useBottomSheetRef();
     const [newWorkoutIndex, setNewWorkoutIndex] = useState<number | undefined>(undefined);
-    const { title, message, buttonText } = usePauseWarningContent();
+    const isOngoingWorkout = useAppSelector((state: AppState) => getIsOngoingWorkout(state, newWorkoutIndex ?? -1));
+
+    const { resumeTrainingText, title, message, newTrainingText } = usePauseWarningContent();
 
     const handleCreateWorkout = useCallback(() => {
         dispatch(createNewWorkout());
@@ -84,20 +90,21 @@ export function Workouts() {
     );
 
     const handleStartWorkoutCases = useCallback(
-        (workoutIndex: number) => {
-            if (trainedWorkout && trainedWorkout.workout.workoutId === workoutIndex) {
-                navigate("train");
-                return;
-            }
-            if (trainedWorkout && trainedWorkout.workout.workoutId !== workoutIndex) {
+        (workoutId: number) => {
+            if (trainedWorkout) {
                 open();
-                setNewWorkoutIndex(workoutIndex);
+                setNewWorkoutIndex(workoutId);
                 return;
             }
-            handleStartWorkout(workoutIndex);
+            handleStartWorkout(workoutId);
         },
         [handleStartWorkout, navigate, open, trainedWorkout],
     );
+
+    const handleConfirmResume = useCallback(() => {
+        navigate("train");
+        close();
+    }, [navigate]);
 
     const handleConfirmOverwrite = useCallback(() => {
         handleStartWorkout();
@@ -134,11 +141,24 @@ export function Workouts() {
                     <Text style={trainStyles.button} ghost stretch>
                         {message}
                     </Text>
-                    <ThemedPressable style={trainStyles.confirmOverwriteWrapper} padding round onPress={handleConfirmOverwrite}>
-                        <Text ghost style={trainStyles.button}>
-                            {buttonText}
-                        </Text>
-                    </ThemedPressable>
+                    {isOngoingWorkout && (
+                        <HStack style={trainStyles.confirmOverwriteWrapper} round center>
+                            <ThemedMaterialCommunityIcons ghost name="play" size={24} />
+                            <ThemedPressable center onPress={handleConfirmResume}>
+                                <Text center ghost style={trainStyles.button}>
+                                    {resumeTrainingText}
+                                </Text>
+                            </ThemedPressable>
+                        </HStack>
+                    )}
+                    <HStack style={trainStyles.confirmOverwriteWrapper} round center>
+                        <ThemedMaterialCommunityIcons ghost name="restart" size={24} />
+                        <ThemedPressable center onPress={handleConfirmOverwrite}>
+                            <Text center ghost style={trainStyles.button}>
+                                {newTrainingText}
+                            </Text>
+                        </ThemedPressable>
+                    </HStack>
                 </PageContent>
             </ThemedBottomSheetModal>
         </ThemedView>

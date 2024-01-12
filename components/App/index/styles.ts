@@ -14,9 +14,12 @@ export const styles = StyleSheet.create({
     noWorkoutsHint: {
         paddingLeft: 5,
     },
+    pausedTrainingHint: {
+        fontSize: 12,
+    },
     pausedTrainigWrapper: {
-        paddingVertical: 5,
-        paddingHorizontal: 10,
+        paddingVertical: 3,
+        paddingHorizontal: 5,
     },
     trainingDayName: {
         fontSize: 24,

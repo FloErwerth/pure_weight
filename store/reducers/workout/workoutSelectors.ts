@@ -354,5 +354,5 @@ export const getSetData = createSelector([getExerciseData, (exerciseData, setInd
 });
 
 export const getIsOngoingWorkout = createSelector([getTrainedWorkout, (trainedWorkout, workoutIndex: number) => workoutIndex], (trainedWorkout, workoutIndex) => {
-    return trainedWorkout && trainedWorkout?.workout.workoutId === workoutIndex && trainedWorkout.paused;
+    return trainedWorkout && trainedWorkout?.workout.workoutId === workoutIndex;
 });

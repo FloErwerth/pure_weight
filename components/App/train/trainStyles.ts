@@ -10,9 +10,11 @@ export const trainStyles = StyleSheet.create({
     },
     button: {
         fontSize: 20,
+        paddingTop: 1,
     },
     confirmOverwriteWrapper: {
-        marginBottom: 10,
+        padding: 10,
+        gap: 10,
     },
     quickSettingsWrapper: {
         gap: 10,

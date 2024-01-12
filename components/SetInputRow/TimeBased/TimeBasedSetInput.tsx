@@ -244,7 +244,7 @@ export const TimeBasedSetInput = ({ setIndex, exerciseIndex }: SetInputRowProps)
         } else {
             startTimer();
         }
-    }, [isLatestSet, isActiveSet, handleReset, isConfirmed, reset, startTimer, timerStarted]);
+    }, [isActiveSet, handleReset, reset, startTimer, timerStarted]);
 
     const iconStyle = useMemo(() => ({ color: isConfirmed ? "green" : isActiveSet ? primaryColor : textDisabled }), [isConfirmed, isActiveSet, primaryColor, textDisabled]);
 

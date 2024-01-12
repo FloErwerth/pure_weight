@@ -26,7 +26,6 @@ export const RenderedWorkout = ({ workoutId }: RenderedWorkoutProps) => {
     const { t } = useTranslation();
     const isOngoingWorkout = useAppSelector((state: AppState) => getIsOngoingWorkout(state, workoutId));
     const showStats = trend || hasHistory;
-
     const handleNavigateToProgress = useCallback(() => {
         dispatch(setEditedWorkout({ workoutId }));
         navigate("workout/progress");
@@ -49,7 +48,9 @@ export const RenderedWorkout = ({ workoutId }: RenderedWorkoutProps) => {
                 </View>
                 {isOngoingWorkout && (
                     <ThemedView style={styles.pausedTrainigWrapper} input round>
-                        <Text ghost>{t("workout_paused_hint")}</Text>
+                        <Text style={styles.pausedTrainingHint} ghost>
+                            {t("workout_paused_hint")}
+                        </Text>
                     </ThemedView>
                 )}
             </HStack>
