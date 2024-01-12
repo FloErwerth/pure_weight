@@ -21,6 +21,9 @@ export const getTrainedWorkoutExercises = createSelector([getTrainedWorkout, get
     }
     return workouts.find((workout) => workout.workoutId === trainedWorkout.workout.workoutId)?.exercises;
 });
+export const getExerciseByIndex = createSelector([getTrainedWorkout, (workout, index: number) => index], (workout, index) => {
+    return workout?.workout.exercises?.[index];
+});
 export const getEditedWorkout = createSelector([getWorkoutState], (state) => state.editedWorkout);
 export const getIsEditedWorkout = createSelector([getEditedWorkout], (editedWorkout) => !editedWorkout?.isNew);
 export const getEditedExercise = createSelector([getWorkoutState], (state) => state.editedExercise);
@@ -121,7 +124,10 @@ export const getHistoryByMonth = createSelector([getEditedWorkout, (editedWorkou
         doneWorkouts.push({
             duration: doneWorkout.duration,
             weight: (
-                doneWorkout.doneExercises?.reduce((sum, current) => sum + current.sets.reduce((sumSet, currentSet) => sumSet + parseFloat(currentSet.weight) * parseFloat(currentSet.reps), 0), 0) ?? 0
+                doneWorkout.doneExercises?.reduce(
+                    (sum, current) => sum + current.sets.reduce((sumSet, currentSet) => sumSet + parseFloat(currentSet?.weight ?? "0") * parseFloat(currentSet.reps), 0),
+                    0,
+                ) ?? 0
             ).toFixed(2),
             numExercisesDone: doneWorkout.doneExercises?.length ?? 0,
         });
@@ -203,8 +209,8 @@ export const getOverallTrainingTrend = createSelector([getWorkouts, (workouts, i
             const beforeExercise = workoutBefore.doneExercises![j];
             const currentExercise = currentWorkout.doneExercises![j];
             if (currentExercise !== undefined && currentExercise.name === beforeExercise.name) {
-                const beforeOverall = beforeExercise.sets.reduce((sum, set) => sum + parseFloat(set.reps) * parseFloat(set.weight), 0);
-                const currentOverall = currentExercise.sets.reduce((sum, set) => sum + parseFloat(set.reps) * parseFloat(set.weight), 0);
+                const beforeOverall = beforeExercise.sets.reduce((sum, set) => sum + parseFloat(set.reps) * parseFloat(set?.weight ?? "0"), 0);
+                const currentOverall = currentExercise.sets.reduce((sum, set) => sum + parseFloat(set.reps) * parseFloat(set?.weight ?? "0"), 0);
 
                 const result: {
                     cleanedPercent: number;
@@ -308,7 +314,7 @@ export const getHasNoTrainingDataSaved = createSelector([getTrainedWorkout], (tr
     return trainedWorkout?.exerciseData.some((data) => data.doneSets.some((set) => set.confirmed));
 });
 export const getNote = createSelector([getTrainedWorkout], (trainedWorkout) => trainedWorkout?.exerciseData?.[trainedWorkout?.activeExerciseIndex]?.note);
-export const getWeightBasedExerciseMetaDataFromTrainedWorkout = createSelector([getTrainedWorkout, (trainedWorkout, exerciseIndex?: number) => exerciseIndex], (trainedWorkout, exerciseIndex) => {
+export const getExerciseMetadataFromWorkoutByIndex = createSelector([getTrainedWorkout, (trainedWorkout, exerciseIndex?: number) => exerciseIndex], (trainedWorkout, exerciseIndex) => {
     if (exerciseIndex === undefined) {
         return undefined;
     }
@@ -337,6 +343,8 @@ export const getSetData = createSelector([getExerciseData, (exerciseData, setInd
         return {
             weight: exerciseData?.doneSets[setIndex]?.weight ?? workout?.exercises[exerciseIndex].weight,
             reps: exerciseData?.doneSets[setIndex]?.reps ?? workout?.exercises[exerciseIndex].reps,
+            duration: workout?.exercises[exerciseIndex].duration,
+            preparation: workout?.exercises[exerciseIndex].preparation,
             isEditable: isEditable || isEditedOtherSet,
             isConfirmed,
             hasData,

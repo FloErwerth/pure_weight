@@ -11,7 +11,7 @@
   "workout_no_done_workouts_hint": "Noch keine Workouts abgeschlossen",
 
 
-
+  "preparation": "Vorbereitung",
   "train_title": "Workout",
   "history_cta": "Verlauf anzeigen",
   "history_front": "Verlauf:",
@@ -32,8 +32,12 @@
 
   "edit_workout": "Workout bearbeiten",
   "create_workout": "Workout erstellen",
-  "workout_name": "Name der Einheit",
+  "workout_name": "Name des Workouts",
   "workout_quick_settings_title": "Schnelleinstellungen",
+  "duration": "Dauer",
+  "weight_based_label": "Gewichtbasiert",
+    "time_based_label": "Zeitbasiert",
+    "with": "mit",
 
   "workout_save": "Workout speichern",
   "workout_pause": "Workout pausieren",

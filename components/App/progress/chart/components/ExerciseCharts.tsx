@@ -19,7 +19,7 @@ import { getTrainingDayData } from "../../../../../store/reducers/workout/workou
 import { getLanguage, getWeightUnit } from "../../../../../store/reducers/settings/settingsSelectors";
 import { trunicateToNthSignificantDigit } from "../../../../../utils/number";
 import Chart from "../../../../Chart/Chart";
-import { ExerciseSets, WeightBasedExerciseData } from "../../../../../store/reducers/workout/types";
+import { ExerciseData, ExerciseSets } from "../../../../../store/reducers/workout/types";
 import { getLocaleDate } from "../../../../../utils/date";
 
 interface ExerciseChartProps {
@@ -49,7 +49,7 @@ const getCumulativeExerciseData = (data: ExerciseSets[]) => {
     }, [] as number[]);
 };
 
-const getAveragePerDay = (data: ExerciseSets[], dataType: keyof Omit<WeightBasedExerciseData, "confirmed">) => {
+const getAveragePerDay = (data: ExerciseSets[], dataType: keyof Omit<ExerciseData, "confirmed">) => {
     return data.reduce((values, sets) => {
         const setValues = sets;
         return [...values, parseFloat((setValues.map((set) => parseFloat(set?.[dataType] ?? "0")).reduce((cumulative, entry) => cumulative + entry, 0) / setValues.length).toFixed(3))];

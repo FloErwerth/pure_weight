@@ -48,7 +48,6 @@ export const EditableExerciseModal = (props: AddExerciseModalProps) => {
     const title = useMemo(() => t(isEditingExercise ? "exercise_edit_title" : "create_exercise"), [isEditingExercise, t]);
     const dispatch = useAppDispatch();
     const editedExercise = useAppSelector(getEditedExercise);
-    const [wantsAddAnotherExercise, setWantsAddAnotherExercise] = useState(false);
     const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 
     const openSuccessMessage = useCallback(() => {
@@ -70,7 +69,7 @@ export const EditableExerciseModal = (props: AddExerciseModalProps) => {
                 openSuccessMessage();
             }
         }
-    }, [dispatch, editedExercise, props]);
+    }, [dispatch, editedExercise, openSuccessMessage, props.closeAfterEdit, props.reference]);
 
     const closeSuccessMessage = useCallback(() => {
         setShowSuccessMessage(false);

@@ -8,75 +8,20 @@ import { ThemedMaterialCommunityIcons } from "../Themed/ThemedMaterialCommunityI
 import { AnimatedView } from "../Themed/AnimatedView/AnimatedView";
 import { getStopwatchSettings } from "../../store/reducers/settings/settingsSelectors";
 import { emitter } from "../../utils/event";
-import BackgroundTimer from "react-native-background-timer";
 import { StopwatchDisplay } from "./StopwatchDisplay/StopwatchDisplay";
 import { ThemedPressable } from "../Themed/Pressable/Pressable";
 import { ThemedView } from "../Themed/ThemedView/View";
-import { useScheduleNotification } from "../../hooks/useScheduleNotification";
-import { useTranslation } from "react-i18next";
 import { getPauseTime } from "../../store/reducers/workout/workoutSelectors";
-
-const UPDATE_INTERVAL = 975;
-let id: number = 0;
-
-const useStopwatch = () => {
-    const currentPauseTime = useAppSelector(getPauseTime);
-    const [remainingTime, setRemainingTime] = useState<number>(currentPauseTime);
-    const [timerStarted, setTimerStarted] = useState(false);
-    const { t } = useTranslation();
-    const showNotification = useScheduleNotification({ title: t("stopwatch_pause_notification_title"), body: t("stopwatch_pause_notification_text") });
-
-    const stopTimer = useCallback(() => {
-        BackgroundTimer.clearInterval(id);
-        setTimerStarted(false);
-    }, []);
-
-    const reset = useCallback(() => {
-        stopTimer();
-        setRemainingTime(currentPauseTime);
-    }, [currentPauseTime, stopTimer]);
-
-    const update = useCallback(() => {
-        setRemainingTime((remainingTime) => {
-            if (remainingTime <= 0) {
-                reset();
-                void showNotification();
-                return 0;
-            }
-            return remainingTime - UPDATE_INTERVAL;
-        });
-    }, [reset, showNotification]);
-
-    const startTimer = useCallback(() => {
-        setTimerStarted(true);
-        id = BackgroundTimer.setInterval(update, UPDATE_INTERVAL);
-    }, [update]);
-
-    useEffect(() => {
-        if (!timerStarted) {
-            setRemainingTime(currentPauseTime);
-        }
-    }, [currentPauseTime]);
-
-    return useMemo(
-        () => ({
-            timerStarted,
-            remainingTime,
-            startTimer,
-            stopTimer,
-            reset,
-        }),
-        [timerStarted, remainingTime, reset],
-    );
-};
+import { useStopwatch } from "../../hooks/useStopwatch";
 
 export const StopwatchPopover = () => {
+    const pauseTime = useAppSelector(getPauseTime);
     const opacity = useRef(new Animated.Value(0)).current;
     const iconOpacity = useRef(new Animated.Value(1)).current;
     const [showPopover, setShowPopover] = useState(false);
     const [buttonPos, setButtonPos] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
     const top = useRef(new Animated.Value(200)).current;
-    const { timerStarted, reset, remainingTime, stopTimer, startTimer } = useStopwatch();
+    const { timerStarted, reset, remainingTime, stopTimer, startTimer } = useStopwatch(pauseTime);
     const buttonRef = useRef<View>(null);
     const { inputFieldBackgroundColor } = useTheme();
     const { startOnDoneSet, startOnLastSet } = useAppSelector(getStopwatchSettings);

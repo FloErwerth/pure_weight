@@ -11,7 +11,6 @@ import { ThemedView } from "../../../components/Themed/ThemedView/View";
 import { StopwatchPopover } from "../../../components/StopwatchPopover/StopwatchPopover";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Carousel from "react-native-reanimated-carousel/src/Carousel";
-import { Exercise } from "../../../components/App/train/Exercise/WeightBased/WeightBasedExercise";
 import { ThemedBottomSheetModal, useBottomSheetRef } from "../../../components/BottomSheetModal/ThemedBottomSheetModal";
 import { addDoneWorkout, mutateActiveExerciseInTrainedWorkout, pauseTrainedWorkout, resetTrainedWorkout, setActiveExerciseIndex } from "../../../store/reducers/workout";
 
@@ -19,6 +18,7 @@ import { getCanSnap, getExerciseDone, getHasNoTrainingDataSaved, getIsDoneWithTr
 import { ICarouselInstance } from "react-native-reanimated-carousel";
 import { getSwitchToNextExercise } from "../../../store/reducers/settings/settingsSelectors";
 import { WorkoutSettings } from "../../../components/App/settings/Sections/workout";
+import { TrainedExercise } from "../../../components/App/train/Exercise/TrainedExercise";
 
 const useSnapToNextExercise = () => {
     const carouselRef = useRef<ICarouselInstance>(null);
@@ -116,7 +116,7 @@ export function Train() {
     }, [handleNavigateToWorkouts, trainedWorkout, workoutExercises]);
 
     const renderItem = useCallback(({ index }: { index: number }) => {
-        return <Exercise exerciseIndex={index} />;
+        return <TrainedExercise exerciseIndex={index} />;
     }, []);
 
     const handleSetActiveExerciseIndex = useCallback(

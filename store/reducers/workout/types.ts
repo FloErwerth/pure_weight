@@ -1,16 +1,18 @@
-import { Sortingtypes } from "../../types";
+import { SortingType } from "../../types";
 import { IsoDate } from "../../../types/date";
 
 export type Workout = {
     name: string;
     calendarColor: string;
-    exercises: WeightBasedExerciseMetaData[];
+    exercises: ExerciseMetaData[];
     doneWorkouts: DoneWorkouts;
     workoutId: number;
 };
-export type WeightBasedExerciseData = {
-    weight: string;
+
+export type ExerciseData = {
+    weight?: string;
     reps: string;
+    duration?: string;
     confirmed?: boolean;
 };
 
@@ -29,16 +31,19 @@ export type TimeInput = {
     seconds?: string;
     minutes?: string;
 };
-export type ExerciseSets = WeightBasedExerciseData[];
-export type WeightBasedExerciseMetaData = {
-    type: "WEIGHT_BASED";
+
+export type ExerciseSets = ExerciseData[];
+
+export type ExerciseMetaData = {
+    type: "WEIGHT_BASED" | "TIME_BASED";
     name: string;
     weight: string;
     sets: string;
-    reps: string;
+    reps?: string;
     pause?: TimeInput;
+    duration?: TimeInput;
+    preparation?: TimeInput;
 };
-export type ExerciseMetaData = WeightBasedExerciseMetaData;
 
 export type EditedWorkout = {
     workout: Workout;
@@ -68,7 +73,7 @@ export type TrainedWorkout = {
 };
 export type WorkoutState = {
     workouts: Workout[];
-    sorting: Sortingtypes;
+    sorting: SortingType;
     deletedWorkout?: { workout: Workout; trainedWorkout?: TrainedWorkout };
     deletedExercise?: { exercise: ExerciseMetaData; index: number };
     editedWorkout?: EditedWorkout;

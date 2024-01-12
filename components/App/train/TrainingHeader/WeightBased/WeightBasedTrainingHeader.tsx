@@ -1,15 +1,15 @@
 import { View } from "react-native";
-import { HStack } from "../../../Stack/HStack/HStack";
-import { Text } from "../../../Themed/ThemedText/Text";
+import { HStack } from "../../../../Stack/HStack/HStack";
+import { Text } from "../../../../Themed/ThemedText/Text";
 import { useTranslation } from "react-i18next";
-import { useAppSelector } from "../../../../store";
-import { getWeightUnit } from "../../../../store/reducers/settings/settingsSelectors";
-import { styles } from "./styles";
+import { useAppSelector } from "../../../../../store";
+import { getWeightUnit } from "../../../../../store/reducers/settings/settingsSelectors";
+import { styles } from "../styles";
 
 interface TrainingHeaderProps {
     showPlaceholderForDoneButton?: boolean;
 }
-export const TrainingHeader = ({ showPlaceholderForDoneButton = true }: TrainingHeaderProps) => {
+export const WeightBasedTrainingHeader = ({ showPlaceholderForDoneButton = true }: TrainingHeaderProps) => {
     const { t } = useTranslation();
     const weightUnit = useAppSelector(getWeightUnit);
     return (

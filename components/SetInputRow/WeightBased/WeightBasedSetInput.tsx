@@ -2,25 +2,25 @@ import { Keyboard, View } from "react-native";
 import { styles } from "./styles";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useCallback, useMemo } from "react";
-import { HStack } from "../Stack/HStack/HStack";
-import { Center } from "../Center/Center";
-import { Text } from "../Themed/ThemedText/Text";
-import { borderRadius } from "../../theme/border";
-import { ThemedTextInput } from "../Themed/ThemedTextInput/ThemedTextInput";
-import { useTheme } from "../../theme/context";
-import { AppState, useAppDispatch, useAppSelector } from "../../store";
+import { HStack } from "../../Stack/HStack/HStack";
+import { Center } from "../../Center/Center";
+import { Text } from "../../Themed/ThemedText/Text";
+import { borderRadius } from "../../../theme/border";
+import { ThemedTextInput } from "../../Themed/ThemedTextInput/ThemedTextInput";
+import { useTheme } from "../../../theme/context";
+import { AppState, useAppDispatch, useAppSelector } from "../../../store";
 import * as Haptics from "expo-haptics";
-import { handleMutateSet, markSetAsDone, setIsActiveSet } from "../../store/reducers/workout";
-import { getIsActiveSet, getIsLastSet, getSetData } from "../../store/reducers/workout/workoutSelectors";
-import { ThemedPressable } from "../Themed/Pressable/Pressable";
-import { emitter } from "../../utils/event";
+import { handleMutateSet, markSetAsDone, setIsActiveSet } from "../../../store/reducers/workout";
+import { getIsActiveSet, getIsLastSet, getSetData } from "../../../store/reducers/workout/workoutSelectors";
+import { ThemedPressable } from "../../Themed/Pressable/Pressable";
+import { emitter } from "../../../utils/event";
 
 interface SetInputRowProps {
     setIndex: number;
     exerciseIndex: number;
 }
 
-export const SetInputRow = ({ setIndex, exerciseIndex }: SetInputRowProps) => {
+export const WeightBasedSetInput = ({ setIndex, exerciseIndex }: SetInputRowProps) => {
     const { primaryColor, mainColor, secondaryBackgroundColor, componentBackgroundColor, inputFieldBackgroundColor, textDisabled } = useTheme();
     const data = useAppSelector((state: AppState) => getSetData(state, setIndex))?.[exerciseIndex];
     const isLastSetGetter = useAppSelector((state: AppState) => getIsLastSet(state, exerciseIndex));
@@ -28,15 +28,19 @@ export const SetInputRow = ({ setIndex, exerciseIndex }: SetInputRowProps) => {
 
     const dispatch = useAppDispatch();
     const isActiveSet = useAppSelector((state: AppState) => getIsActiveSet(state, exerciseIndex, setIndex));
-
+    const handleSetActive = useCallback(() => {
+        if (!isActiveSet) {
+            dispatch(setIsActiveSet({ setIndex }));
+        }
+    }, [dispatch, isActiveSet, setIndex]);
     const handleSetWeight = useCallback(
         (newWeight?: string) => {
             dispatch(handleMutateSet({ setIndex, key: "weight", value: newWeight }));
             if (!isActiveSet) {
-                dispatch(setIsActiveSet({ setIndex }));
+                handleSetActive();
             }
         },
-        [dispatch, isActiveSet, setIndex],
+        [dispatch, handleSetActive, isActiveSet, setIndex],
     );
 
     const handleSetReps = useCallback(
@@ -49,21 +53,25 @@ export const SetInputRow = ({ setIndex, exerciseIndex }: SetInputRowProps) => {
         [dispatch, isActiveSet, setIndex],
     );
 
-    const handleSetDone = useCallback(() => {
-        Keyboard.dismiss();
-        if (weight && reps) {
-            void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-            dispatch(handleMutateSet({ setIndex, key: "weight", value: weight }));
-            dispatch(handleMutateSet({ setIndex, key: "reps", value: reps }));
-            dispatch(markSetAsDone({ setIndex }));
+    const handleToggle = useCallback(() => {
+        if (isActiveSet) {
+            Keyboard.dismiss();
+            if (weight && reps) {
+                void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+                dispatch(handleMutateSet({ setIndex, key: "weight", value: weight }));
+                dispatch(handleMutateSet({ setIndex, key: "reps", value: reps }));
+                dispatch(markSetAsDone({ setIndex }));
 
-            if (isLastSetGetter(setIndex)) {
-                emitter.emit("workoutLastSet");
-            } else {
-                emitter.emit("workoutDoneSet");
+                if (isLastSetGetter(setIndex)) {
+                    emitter.emit("workoutLastSet");
+                } else {
+                    emitter.emit("workoutDoneSet");
+                }
             }
+        } else {
+            handleSetActive();
         }
-    }, [weight, reps, dispatch, setIndex, isLastSetGetter]);
+    }, [isActiveSet, weight, reps, dispatch, setIndex, isLastSetGetter, handleSetActive]);
 
     const activeStackStyles = useMemo(() => {
         return { backgroundColor: isActiveSet ? inputFieldBackgroundColor : "transparent" };
@@ -98,37 +106,43 @@ export const SetInputRow = ({ setIndex, exerciseIndex }: SetInputRowProps) => {
 
     const textNumberStyles = useMemo(() => [styles.textNumber, { color: computedColor }], [computedColor]);
     const textInputStyles = useMemo(() => [styles.textInput, { backgroundColor: computedTextfieldBackgroundColor, color: computedColor }], [computedTextfieldBackgroundColor, computedColor]);
-    const buttonStyles = useMemo(() => ({ ...styles.button, ...{ backgroundColor: computedButtonBackgroundColor } }), [computedButtonBackgroundColor]);
+    const buttonStyles = useMemo(() => [styles.button, { backgroundColor: computedButtonBackgroundColor }], [computedButtonBackgroundColor]);
     const iconStyle = useMemo(() => ({ color: isConfirmed ? "green" : isActiveSet ? primaryColor : textDisabled }), [isConfirmed, isActiveSet, primaryColor, textDisabled]);
+    const playStyle = useMemo(() => ({ color: isConfirmed || isActiveSet ? mainColor : textDisabled }), [isConfirmed, mainColor, isActiveSet, textDisabled]);
+
+    const confirmIcon = useMemo(() => {
+        if (isConfirmed && isActiveSet) {
+            return "check-bold";
+        }
+        if (isConfirmed) {
+            return "sync";
+        }
+        return "check-bold";
+    }, [isActiveSet, isConfirmed]);
 
     return (
         <HStack style={[styles.vStack, activeStackStyles]}>
             <Center style={styles.numberCenter}>
                 <View style={{ borderRadius }}>
-                    <Text ghost style={textNumberStyles}>
-                        {setIndex + 1}
-                    </Text>
+                    {isConfirmed && !isActiveSet ? (
+                        <MaterialCommunityIcons size={24} style={iconStyle} name="check-bold" />
+                    ) : (
+                        <Text ghost style={textNumberStyles}>
+                            {setIndex + 1}
+                        </Text>
+                    )}
                 </View>
             </Center>
             <HStack ghost stretch style={styles.inputStack}>
                 <Center style={styles.center}>
-                    <ThemedTextInput
-                        onStartShouldSetResponder={() => true}
-                        editable={isEditable}
-                        returnKeyType="done"
-                        style={textInputStyles}
-                        value={weight}
-                        onChangeText={handleSetWeight}
-                        textAlign="center"
-                        inputMode="decimal"
-                    />
+                    <ThemedTextInput editable={isEditable} returnKeyType="done" style={textInputStyles} value={weight} onChangeText={handleSetWeight} textAlign="center" inputMode="decimal" />
                 </Center>
                 <Center style={styles.center}>
                     <ThemedTextInput editable={isEditable} returnKeyType="done" style={textInputStyles} value={reps} onChangeText={handleSetReps} textAlign="center" inputMode="decimal" />
                 </Center>
                 <Center style={styles.center}>
-                    <ThemedPressable disabled={!isEditable} style={buttonStyles} onPress={handleSetDone}>
-                        <MaterialCommunityIcons size={24} style={iconStyle} name="check-bold" />
+                    <ThemedPressable disabled={!isEditable} style={buttonStyles} onPress={handleToggle}>
+                        <MaterialCommunityIcons size={24} style={playStyle} name={confirmIcon} />
                     </ThemedPressable>
                 </Center>
             </HStack>

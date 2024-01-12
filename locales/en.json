@@ -17,7 +17,7 @@
   "history_latest_workout": "Latest Workout",
   "history_latest_workout_short": "latest",
   "history_browse": "Browse history",
-
+  "preparation": "Preparation",
 
   "workout_history_empty": "No workouts have been completed yet",
   "workout_history_single": "One workout completed",
@@ -43,7 +43,11 @@
   "edit_workout": "Edit workout",
   "create_workout": "Create workout",
   "workout_name": "Workout name",
+  "duration": "Duration",
   "workout_quick_settings_title": "Quick settings",
+  "weight_based_label": "Weight based",
+    "time_based_label": "Time based",
+  "with": "with",
 
   "workout_save": "Save workout",
   "workout_pause": "Pause workout",

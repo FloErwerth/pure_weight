@@ -1,5 +1,5 @@
 import { persistor, store, useAppDispatch, useAppSelector } from "../store";
-import React, { useEffect } from "react";
+import React from "react";
 import { PersistGate } from "redux-persist/integration/react";
 import { Provider } from "react-redux";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
@@ -19,14 +19,13 @@ import { WorkoutHistory } from "./workouts/history";
 import DeviceInfo from "react-native-device-info";
 import { IsoDate } from "../types/date";
 import { setAppInstallDate, setEmptyState } from "../store/reducers/metadata";
-import { getAppInstallDate } from "../store/reducers/metadata/metadataSelectors";
+import { getIsFirstTimeRendered } from "../store/reducers/metadata/metadataSelectors";
 import { GeneralSettings } from "../components/App/settings/Sections/generalSettings";
 import { MeasurementProgress } from "./measurements/progress";
 import { Manual } from "./settings/manual";
 import { CreateMeasurement } from "./measurements/create";
 import { MeasurementEdit } from "./measurements/edit";
 import { useTranslation } from "react-i18next";
-import { getLanguage } from "../store/reducers/settings/settingsSelectors";
 import { Appearance, NativeModules } from "react-native";
 import { setLanguage, setTheme } from "../store/reducers/settings";
 
@@ -35,10 +34,9 @@ const Stack = createNativeStackNavigator<RoutesParamaters>();
 const ThemedApp = () => {
     const dispatch = useAppDispatch();
     const { i18n } = useTranslation();
-    const language = useAppSelector(getLanguage);
-    const installDate = useAppSelector(getAppInstallDate);
+    const isFirstTimeRendered = useAppSelector(getIsFirstTimeRendered);
 
-    if (!installDate) {
+    if (isFirstTimeRendered) {
         DeviceInfo.getFirstInstallTime().then((installTime) => {
             const date = new Date(installTime ?? 0).toISOString().split("T")[0];
             dispatch(setAppInstallDate(date as IsoDate));
@@ -46,19 +44,15 @@ const ThemedApp = () => {
         dispatch(setEmptyState());
         const lang = (NativeModules.SettingsManager.settings.AppleLocale as string).split("_")[0];
         if (lang === "de") {
-            i18n.changeLanguage("de");
+            void i18n.changeLanguage("de");
             dispatch(setLanguage("de"));
         } else {
-            i18n.changeLanguage("en");
+            void i18n.changeLanguage("en");
             dispatch(setLanguage("en"));
         }
         const theme = Appearance.getColorScheme();
         dispatch(setTheme(theme === "dark" ? "dark" : "light"));
     }
-
-    useEffect(() => {
-        i18n.changeLanguage(language);
-    }, []);
 
     return (
         <NavigationContainer ref={navigationRef} independent={true}>

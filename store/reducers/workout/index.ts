@@ -2,7 +2,7 @@ import { createAction, createReducer } from "@reduxjs/toolkit/src";
 import { SortingType } from "../../types";
 import { Temporal } from "@js-temporal/polyfill";
 import { sortWorkouts } from "./sortWorkouts";
-import { DoneExerciseData, ExerciseMetaData, TimeInput, TrainedWorkout, WeightBasedExerciseData, WeightBasedExerciseMetaData, Workout, WorkoutState } from "./types";
+import { DoneExerciseData, ExerciseData, ExerciseMetaData, TimeInput, TrainedWorkout, Workout, WorkoutState } from "./types";
 import { getRandomColorFromPalette } from "../../../utils/colorPalette";
 import { getDateTodayIso } from "../../../utils/date";
 
@@ -10,7 +10,7 @@ export const setWorkoutState = createAction<WorkoutState, "workout_set_state">("
 export const setWorkouts = createAction<Workout[], "workout_set_workouts">("workout_set_workouts");
 export const mutateEditedExercise = createAction<
     {
-        key: keyof WeightBasedExerciseMetaData;
+        key: keyof ExerciseMetaData;
         value: string | undefined;
     },
     "exercise_edit_mutate"
@@ -19,10 +19,10 @@ export const mutateActiveExerciseInTrainedWorkout = createAction<
     { key: keyof TrainedWorkout["exerciseData"][number]; value: TrainedWorkout["exerciseData"][number][keyof TrainedWorkout["exerciseData"][number]] },
     "exercise_edit_mutate_active_exercise"
 >("exercise_edit_mutate_active_exercise");
-export const mutateEditedExercisePause = createAction<
+export const mutateEditedExerciseTimeValue = createAction<
     {
-        key: keyof TimeInput;
-        value: string | undefined;
+        key: "pause" | "duration" | "preparation";
+        value: TimeInput;
     },
     "exercise_edit_mutate_pause"
 >("exercise_edit_mutate_pause");
@@ -45,9 +45,10 @@ export const createNewExercise = createAction("workout_create_new_exercise");
 export const createNewWorkout = createAction("workout_create_new_workout");
 export const saveEditedWorkout = createAction("workout_save_edited_workout");
 export const setEditedWorkoutName = createAction<string | undefined, "workout_set_edited_workout_name">("workout_set_edited_workout_name");
-export const handleMutateSet = createAction<{ setIndex: number; key: keyof WeightBasedExerciseData; value?: string | boolean }, "handle_mutate_set">("handle_mutate_set");
+export const handleMutateSet = createAction<{ setIndex: number; key: keyof ExerciseData; value?: string | boolean }, "handle_mutate_set">("handle_mutate_set");
 export const markSetAsDone = createAction<{ setIndex: number }, "mark_set_as_done">("mark_set_as_done");
 export const setIsActiveSet = createAction<{ setIndex: number }, "set_is_active_set">("set_is_active_set");
+export const resetSet = createAction<{ setIndex: number }, "reset_set">("reset_set");
 export const setColor = createAction<string, "set_color">("set_color");
 export const pauseTrainedWorkout = createAction("pause_trained_workout");
 
@@ -66,14 +67,26 @@ export type WorkoutAction =
     | typeof setEditedWorkoutName.type
     | typeof handleMutateSet.type
     | typeof markSetAsDone.type
-    | typeof mutateEditedExercisePause.type;
+    | typeof mutateEditedExerciseTimeValue.type;
 
 export const emptyExercise: ExerciseMetaData = {
     name: "",
     type: "WEIGHT_BASED",
-    sets: "",
-    reps: "",
-    weight: "",
+    sets: "0",
+    reps: "0",
+    weight: "0",
+    duration: {
+        seconds: "0",
+        minutes: "0",
+    },
+    pause: {
+        seconds: "0",
+        minutes: "0",
+    },
+    preparation: {
+        seconds: "0",
+        minutes: "0",
+    },
 };
 
 export const workoutReducer = createReducer<WorkoutState>({ workouts: [], sorting: "LONGEST_AGO" }, (builder) => {
@@ -164,6 +177,16 @@ export const workoutReducer = createReducer<WorkoutState>({ workouts: [], sortin
                 trainedWorkout.exerciseData[exerciseIndex] = exercise;
             }
         })
+        .addCase(resetSet, (state, action) => {
+            const trainedWorkout = state.trainedWorkout;
+            if (trainedWorkout) {
+                const exerciseIndex = trainedWorkout.activeExerciseIndex;
+                const exercise = trainedWorkout.exerciseData[exerciseIndex];
+                exercise.activeSetIndex = action.payload.setIndex;
+                exercise.doneSets[action.payload.setIndex] = { ...exercise.doneSets[action.payload.setIndex], ...exercise.doneSets[action.payload.setIndex], confirmed: false };
+                trainedWorkout.exerciseData[exerciseIndex] = exercise;
+            }
+        })
         .addCase(setEditedWorkoutName, (state, action) => {
             const workout = state.editedWorkout?.workout;
             if (workout) {
@@ -241,11 +264,15 @@ export const workoutReducer = createReducer<WorkoutState>({ workouts: [], sortin
                 };
             }
         })
-        .addCase(mutateEditedExercisePause, (state, action) => {
+        .addCase(mutateEditedExerciseTimeValue, (state, action) => {
             if (state.editedExercise) {
+                console.log(action.payload);
                 state.editedExercise = {
                     index: state.editedExercise.index,
-                    exercise: { ...state.editedExercise.exercise, pause: { ...state.editedExercise.exercise.pause, [action.payload.key]: action.payload.value } },
+                    exercise: {
+                        ...state.editedExercise.exercise,
+                        [action.payload.key]: action.payload.value,
+                    },
                     isTrained: state.editedExercise.isTrained,
                 };
             }
@@ -296,6 +323,7 @@ export const workoutReducer = createReducer<WorkoutState>({ workouts: [], sortin
         })
         .addCase(saveEditedWorkout, (state) => {
             if (state.editedWorkout !== undefined) {
+                console.log(state.editedWorkout);
                 if (state.editedWorkout.isNew) {
                     state.workouts = [...state.workouts, state.editedWorkout.workout];
                 } else {

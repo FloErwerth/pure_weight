@@ -15,7 +15,12 @@ export const styles = StyleSheet.create({
         textAlign: "center",
         fontSize: 16,
     },
+    durationInput: {
+        fontSize: 16,
+        flex: 4,
+        textAlign: "center",
+    },
     inputStack: { flex: 1, gap: 12 },
     input: { flex: 1, textAlign: "center", fontSize: 16 },
-    placeholder: { flex: 1, width: 40 },
+    placeholder: { flex: 1 },
 });

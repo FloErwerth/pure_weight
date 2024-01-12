@@ -210,10 +210,22 @@ export const mockState: AppState = {
                 ],
             },
             {
-                name: "Real Chest",
+                name: "Weight and Time Based",
                 workoutId: 231390123891,
                 calendarColor: "#ff0000",
-                exercises: [{ type: "WEIGHT_BASED", name: "Bankdrücken", weight: "50", sets: "5", pause: { seconds: "3", minutes: "0" }, reps: "5" }],
+                exercises: [
+                    { type: "WEIGHT_BASED", name: "Bankdrücken", weight: "50", sets: "5", pause: { seconds: "3", minutes: "0" }, reps: "5" },
+                    {
+                        type: "TIME_BASED",
+                        weight: "0",
+                        reps: "0",
+                        name: "Planks",
+                        sets: "5",
+                        duration: { seconds: "45", minutes: "0" },
+                        pause: { seconds: "3", minutes: "0" },
+                        preparation: { seconds: "15", minutes: "0" },
+                    },
+                ],
                 doneWorkouts: [
                     {
                         isoDate: "2023-12-01",

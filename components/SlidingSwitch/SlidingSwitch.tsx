@@ -14,10 +14,11 @@ interface SlidingSwitchProps {
     onSelectValue: (value: string) => void;
     disabled?: boolean;
     value?: string;
+    initialIndex?: number;
 }
 const HEIGHT = 37;
 
-export function SlidingSwitch({ options, onSelectValue, value, disabled }: SlidingSwitchProps) {
+export function SlidingSwitch({ options, onSelectValue, value, disabled, initialIndex }: SlidingSwitchProps) {
     const [selectedValue, setSelectedValue] = useState<string>(value ?? "");
     const backgroundLeft = useRef(new Animated.Value(0)).current;
     const animatedViewRef = useRef<View>(null);
@@ -35,6 +36,12 @@ export function SlidingSwitch({ options, onSelectValue, value, disabled }: Slidi
             });
         }
     }, []);
+
+    useEffect(() => {
+        if (initialIndex !== undefined && initialIndex !== selectedValueIndex) {
+            setSelectedValue(options[initialIndex ?? 0].value);
+        }
+    }, [initialIndex, options, selectedValueIndex]);
 
     useEffect(() => {
         if (selectedValue && containerSize.width !== 0) {
@@ -72,7 +79,7 @@ export function SlidingSwitch({ options, onSelectValue, value, disabled }: Slidi
             <ThemedView onLayout={measureContainer} reference={animatedViewRef} style={styles.wrapper}>
                 <HStack ghost>
                     {options.map(({ label, value }) => (
-                        <ThemedPressable disabled={disabled} key={label + value} ghost style={styles.pressable} stretch onPress={() => handleSelectValue(value)}>
+                        <ThemedPressable disabled={disabled} key={label + value + Math.random()} ghost style={styles.pressable} stretch onPress={() => handleSelectValue(value)}>
                             <Text ghost>{label}</Text>
                         </ThemedPressable>
                     ))}

@@ -13,7 +13,7 @@ export interface EditableExerciseInputRowProps {
 
 export interface TimeInputRowProps {
     value?: TimeInput;
-    setValue: (key: keyof TimeInput, value: string | undefined) => void;
+    setValue: (value: { timeInputKey: keyof TimeInput; value: string }) => void;
     errorKey?: ErrorFields;
     i18key?: string;
     stretch?: boolean;

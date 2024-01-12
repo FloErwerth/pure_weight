@@ -20,14 +20,14 @@ export const TimeInputRow = ({ value, setValue, i18key, errorKey }: TimeInputRow
 
     const handleChangeSeconds = useCallback(
         (seconds: string) => {
-            setValue("seconds", seconds);
+            setValue({ timeInputKey: "seconds", value: seconds });
         },
         [setValue],
     );
 
     const handleChangeMinutes = useCallback(
         (minutes: string) => {
-            setValue("minutes", minutes);
+            setValue({ timeInputKey: "minutes", value: minutes });
         },
         [setValue],
     );
