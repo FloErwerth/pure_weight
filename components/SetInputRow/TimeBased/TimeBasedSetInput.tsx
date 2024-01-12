@@ -9,7 +9,7 @@ import { borderRadius } from "../../../theme/border";
 import { useTheme } from "../../../theme/context";
 import { AppState, useAppDispatch, useAppSelector } from "../../../store";
 import * as Haptics from "expo-haptics";
-import { handleMutateSet, markSetAsDone, resetSet } from "../../../store/reducers/workout";
+import { handleMutateSet, markSetAsDone, setIsActiveSet } from "../../../store/reducers/workout";
 import { getIsActiveSet, getIsLastSet, getSetData } from "../../../store/reducers/workout/workoutSelectors";
 import { ThemedPressable } from "../../Themed/Pressable/Pressable";
 import { emitter } from "../../../utils/event";
@@ -38,7 +38,7 @@ export const TimeBasedSetInput = ({ setIndex, exerciseIndex }: SetInputRowProps)
     const { mainColor, warningColor, primaryColor, secondaryBackgroundColor, componentBackgroundColor, inputFieldBackgroundColor, textDisabled } = useTheme();
     const data = useAppSelector((state: AppState) => getSetData(state, setIndex))?.[exerciseIndex];
     const isLastSetGetter = useAppSelector((state: AppState) => getIsLastSet(state, exerciseIndex));
-    const { reps, isEditable, isConfirmed, duration, preparation } = data ?? {};
+    const { isLatestSet, reps, isEditable, isConfirmed, duration, preparation } = data ?? {};
     const dispatch = useAppDispatch();
     const isActiveSet = useAppSelector((state: AppState) => getIsActiveSet(state, exerciseIndex, setIndex));
 
@@ -69,7 +69,7 @@ export const TimeBasedSetInput = ({ setIndex, exerciseIndex }: SetInputRowProps)
 
     const handleReset = useCallback(() => {
         dispatch(handleMutateSet({ setIndex, key: "duration", value: undefined }));
-        dispatch(resetSet({ setIndex }));
+        dispatch(setIsActiveSet({ setIndex }));
         reset();
     }, [dispatch, reset, setIndex]);
 
@@ -117,7 +117,7 @@ export const TimeBasedSetInput = ({ setIndex, exerciseIndex }: SetInputRowProps)
     const textNumberStyles = useMemo(() => [styles.textNumber, { color: setNumberColor }], [textColor]);
     const textInputStyles = useMemo(() => [styles.textInput, { backgroundColor: computedTextfieldBackgroundColor, color: textColor }], [computedTextfieldBackgroundColor, textColor]);
     const buttonStyles = useMemo(() => [styles.button, { backgroundColor: computedButtonBackgroundColor }], [computedButtonBackgroundColor]);
-    const playStyle = useMemo(() => ({ color: isConfirmed || isActiveSet ? mainColor : textDisabled }), [isConfirmed, mainColor, isActiveSet, textDisabled]);
+    const playStyle = useMemo(() => ({ color: isConfirmed || isActiveSet || isLatestSet ? mainColor : textDisabled }), [isConfirmed, mainColor, isActiveSet, textDisabled]);
     const preparationTop = useRef(new Animated.Value(9)).current;
     const durationTop = useRef(new Animated.Value(5)).current;
     const preparationFontSize = useRef(new Animated.Value(20)).current;
@@ -143,11 +143,21 @@ export const TimeBasedSetInput = ({ setIndex, exerciseIndex }: SetInputRowProps)
     }, [duration, isInPreparation, overallTimeDisplay, timeDisplay, timerStarted]);
 
     const playIcon = useMemo(() => {
-        if (timerStarted || isConfirmed) {
-            return "sync";
+        if (timerStarted) {
+            return "stop";
+        } else {
+            if (isActiveSet) {
+                return "play";
+            }
+            if (isLatestSet) {
+                return "arrow-left-bold";
+            }
+            if (isConfirmed && !isActiveSet) {
+                return "restart";
+            }
         }
         return "play";
-    }, [isConfirmed, timerStarted]);
+    }, [isActiveSet, isLatestSet, isConfirmed, timerStarted]);
 
     useEffect(() => {
         if (isInPreparation) {
@@ -225,7 +235,7 @@ export const TimeBasedSetInput = ({ setIndex, exerciseIndex }: SetInputRowProps)
     );
 
     const handleToggleTimer = useCallback(() => {
-        if (isConfirmed) {
+        if (!isActiveSet) {
             handleReset();
             return;
         }
@@ -234,7 +244,7 @@ export const TimeBasedSetInput = ({ setIndex, exerciseIndex }: SetInputRowProps)
         } else {
             startTimer();
         }
-    }, [handleReset, isConfirmed, reset, startTimer, timerStarted]);
+    }, [isLatestSet, isActiveSet, handleReset, isConfirmed, reset, startTimer, timerStarted]);
 
     const iconStyle = useMemo(() => ({ color: isConfirmed ? "green" : isActiveSet ? primaryColor : textDisabled }), [isConfirmed, isActiveSet, primaryColor, textDisabled]);
 

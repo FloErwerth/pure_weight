@@ -336,18 +336,19 @@ export const getSetData = createSelector([getExerciseData, (exerciseData, setInd
         const hasData = Boolean(exerciseData?.doneSets[setIndex]);
         const isConfirmed = Boolean(exerciseData?.doneSets[setIndex]?.confirmed);
         const workout = trainedWorkout?.workout;
+        const isLatestSet = setIndex === exerciseData?.latestSetIndex;
         const isEditingLatestSet = exerciseData?.latestSetIndex === exerciseData?.activeSetIndex;
         const isEditable = isConfirmed || hasData || setIndex === exerciseData?.activeSetIndex;
         const isEditedOtherSet = isEditingLatestSet && setIndex === exerciseData?.activeSetIndex;
-
         return {
             weight: exerciseData?.doneSets[setIndex]?.weight ?? workout?.exercises[exerciseIndex].weight,
             reps: exerciseData?.doneSets[setIndex]?.reps ?? workout?.exercises[exerciseIndex].reps,
             duration: workout?.exercises[exerciseIndex].duration,
             preparation: workout?.exercises[exerciseIndex].preparation,
-            isEditable: isEditable || isEditedOtherSet,
+            isEditable: isEditable || isEditedOtherSet || exerciseData.latestSetIndex === setIndex,
             isConfirmed,
             hasData,
+            isLatestSet,
         };
     });
 });

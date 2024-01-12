@@ -24,10 +24,10 @@ export const WeightBasedSetInput = ({ setIndex, exerciseIndex }: SetInputRowProp
     const { primaryColor, mainColor, secondaryBackgroundColor, componentBackgroundColor, inputFieldBackgroundColor, textDisabled } = useTheme();
     const data = useAppSelector((state: AppState) => getSetData(state, setIndex))?.[exerciseIndex];
     const isLastSetGetter = useAppSelector((state: AppState) => getIsLastSet(state, exerciseIndex));
-    const { weight, reps, isEditable, isConfirmed } = data ?? {};
+    const { isLatestSet, weight, reps, isEditable, isConfirmed } = data ?? {};
+    const isActiveSet = useAppSelector((state: AppState) => getIsActiveSet(state, exerciseIndex, setIndex));
 
     const dispatch = useAppDispatch();
-    const isActiveSet = useAppSelector((state: AppState) => getIsActiveSet(state, exerciseIndex, setIndex));
     const handleSetActive = useCallback(() => {
         if (!isActiveSet) {
             dispatch(setIsActiveSet({ setIndex }));
@@ -108,16 +108,19 @@ export const WeightBasedSetInput = ({ setIndex, exerciseIndex }: SetInputRowProp
     const textInputStyles = useMemo(() => [styles.textInput, { backgroundColor: computedTextfieldBackgroundColor, color: computedColor }], [computedTextfieldBackgroundColor, computedColor]);
     const buttonStyles = useMemo(() => [styles.button, { backgroundColor: computedButtonBackgroundColor }], [computedButtonBackgroundColor]);
     const iconStyle = useMemo(() => ({ color: isConfirmed ? "green" : isActiveSet ? primaryColor : textDisabled }), [isConfirmed, isActiveSet, primaryColor, textDisabled]);
-    const playStyle = useMemo(() => ({ color: isConfirmed || isActiveSet ? mainColor : textDisabled }), [isConfirmed, mainColor, isActiveSet, textDisabled]);
+    const playStyle = useMemo(() => ({ color: isConfirmed || isActiveSet || isLatestSet ? mainColor : textDisabled }), [isConfirmed, mainColor, isActiveSet, textDisabled]);
 
     const confirmIcon = useMemo(() => {
-        if (isConfirmed && isActiveSet) {
-            return "check-bold";
+        if (isActiveSet) {
+            return "check";
         }
         if (isConfirmed) {
-            return "sync";
+            return "restart";
         }
-        return "check-bold";
+        if (isLatestSet && !isActiveSet) {
+            return "arrow-left-bold";
+        }
+        return "check";
     }, [isActiveSet, isConfirmed]);
 
     return (

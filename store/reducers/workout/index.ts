@@ -177,16 +177,7 @@ export const workoutReducer = createReducer<WorkoutState>({ workouts: [], sortin
                 trainedWorkout.exerciseData[exerciseIndex] = exercise;
             }
         })
-        .addCase(resetSet, (state, action) => {
-            const trainedWorkout = state.trainedWorkout;
-            if (trainedWorkout) {
-                const exerciseIndex = trainedWorkout.activeExerciseIndex;
-                const exercise = trainedWorkout.exerciseData[exerciseIndex];
-                exercise.activeSetIndex = action.payload.setIndex;
-                exercise.doneSets[action.payload.setIndex] = { ...exercise.doneSets[action.payload.setIndex], ...exercise.doneSets[action.payload.setIndex], confirmed: false };
-                trainedWorkout.exerciseData[exerciseIndex] = exercise;
-            }
-        })
+
         .addCase(setEditedWorkoutName, (state, action) => {
             const workout = state.editedWorkout?.workout;
             if (workout) {
