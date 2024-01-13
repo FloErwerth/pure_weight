@@ -43,21 +43,22 @@ export const WeightBasedSmallExerciseMetadataDisplay = ({ style, exerciseIndex }
     }
 
     return (
-        <HStack>
-            <Text style={textStyle}>
-                {exerciseMetaData?.sets}&thinsp;{t(`training_header_sets_${isSingle ? "single" : "multi"}`)}
-            </Text>
-            <Text style={textStyle}> x </Text>
-            <Text style={textStyle}>
-                {exerciseMetaData?.reps}&thinsp;{t("training_header_reps")}
-            </Text>
-            <Text style={textStyle}>&thinsp;{`${mit}`} </Text>
-            <Text style={textStyle}>
-                {exerciseMetaData?.weight}&thinsp;{weightUnit}
-            </Text>
+        <ThemedView>
+            <HStack>
+                <Text style={textStyle}>
+                    {exerciseMetaData?.sets}&thinsp;{t(`training_header_sets_${isSingle ? "single" : "multi"}`)}
+                </Text>
+                <Text style={textStyle}> x </Text>
+                <Text style={textStyle}>
+                    {exerciseMetaData?.reps}&thinsp;{t("training_header_reps")}
+                </Text>
+                <Text style={textStyle}>&thinsp;{`${mit}`} </Text>
+                <Text style={textStyle}>
+                    {exerciseMetaData?.weight}&thinsp;{weightUnit}
+                </Text>
+            </HStack>
             {showPause && (
                 <HStack>
-                    <Text style={textStyle}>&#x30FB;</Text>
                     <HStack style={styles.timeStack}>
                         {showMinutes && (
                             <ThemedView>
@@ -76,9 +77,10 @@ export const WeightBasedSmallExerciseMetadataDisplay = ({ style, exerciseIndex }
                             </ThemedView>
                         )}
                     </HStack>
+                    <Text style={textStyle}> {t("pause_lower")}</Text>
                 </HStack>
             )}
-        </HStack>
+        </ThemedView>
     );
 };
 

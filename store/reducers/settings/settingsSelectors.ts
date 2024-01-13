@@ -25,12 +25,12 @@ const languageUnitSystemWeightUnitMap = {
 };
 const languageUnitSystemTimeUnitsMap = {
     en: {
-        secondsUnit: "sec",
-        minutesUnit: "min",
+        secondsUnit: "sec.",
+        minutesUnit: "min.",
     },
     de: {
-        secondsUnit: "sek",
-        minutesUnit: "min",
+        secondsUnit: "sek.",
+        minutesUnit: "min.",
     },
 };
 

@@ -62,6 +62,8 @@
   "sets": "Sets",
   "reps": "Reps",
   "pause": "Pause",
+  "after": "after",
+  "pause_lower": "pause",
   "timePerSet": "Time per set",
   "timeBeforeSet": "Time before set",
   "unit_weight_kg": "Kilogram",

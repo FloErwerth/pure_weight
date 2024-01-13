@@ -49,6 +49,8 @@
   "sets": "Sets",
   "reps": "Wdh.",
   "pause": "Pause",
+  "after": "nach",
+  "pause_lower": "Pause",
   "timePerSet": "Zeit pro Satz",
   "timeBeforeSet": "Zeit vor dem Satz",
   "unit_system_metric": "Metrisch",

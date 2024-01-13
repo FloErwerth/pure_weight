@@ -24,23 +24,28 @@ export const TimeBasedSmallExerciseDataDisplay = ({ style, exerciseIndex }: Smal
     const textStyle = useMemo(() => [trainStyles.exerciseMetaText, style], [style]);
     const exerciseMetaData = useAppSelector((state: AppState) => getExerciseMetadataFromWorkoutByIndex(state, exerciseIndex));
     const isSingle = useMemo(() => parseFloat(exerciseMetaData?.sets ?? "0") === 1, [exerciseMetaData?.sets]);
-    const showMinutes = parseFloat(exerciseMetaData?.pause?.minutes ?? "0") !== 0;
-    const showSeconds = parseFloat(exerciseMetaData?.pause?.seconds ?? "0") !== 0;
+    const showDurationMinutes = parseFloat(exerciseMetaData?.duration?.minutes ?? "0") !== 0;
+    const showDurationSeconds = parseFloat(exerciseMetaData?.duration?.seconds ?? "0") !== 0;
+    const showPauseMinutes = parseFloat(exerciseMetaData?.pause?.minutes ?? "0") !== 0;
+    const showPauseSecnds = parseFloat(exerciseMetaData?.pause?.seconds ?? "0") !== 0;
+    const showPreparationMinutes = parseFloat(exerciseMetaData?.preparation?.minutes ?? "0") !== 0;
+    const showPreparationSeconds = parseFloat(exerciseMetaData?.preparation?.seconds ?? "0") !== 0;
     const { secondsUnit, minutesUnit } = useAppSelector(getTimeUnit);
-    const showPause = showMinutes || showSeconds;
+    const showPause = showPauseMinutes || showPauseSecnds;
+    const showPreparation = showPreparationMinutes || showPreparationSeconds;
     if (!exerciseMetaData) {
         return null;
     }
 
     return (
-        <HStack>
-            <Text style={textStyle}>
-                {exerciseMetaData?.sets}&thinsp;{t(`training_header_sets_${isSingle ? "single" : "multi"}`)}
-            </Text>
+        <ThemedView>
             <HStack>
-                <Text style={textStyle}> x </Text>
+                <Text style={textStyle}>
+                    {exerciseMetaData?.sets}&thinsp;{t(`training_header_sets_${isSingle ? "single" : "multi"}`)}
+                </Text>
+                <Text style={textStyle}>&#x30FB;</Text>
                 <HStack style={styles.timeStack}>
-                    {showMinutes && (
+                    {showDurationMinutes && (
                         <ThemedView>
                             <HStack style={styles.smallGap}>
                                 <Text style={textStyle}>{exerciseMetaData.duration?.minutes}</Text>
@@ -48,7 +53,7 @@ export const TimeBasedSmallExerciseDataDisplay = ({ style, exerciseIndex }: Smal
                             </HStack>
                         </ThemedView>
                     )}
-                    {showSeconds && (
+                    {showDurationSeconds && (
                         <ThemedView>
                             <HStack style={styles.smallGap}>
                                 <Text style={textStyle}>{exerciseMetaData.duration?.seconds}</Text>
@@ -57,30 +62,55 @@ export const TimeBasedSmallExerciseDataDisplay = ({ style, exerciseIndex }: Smal
                         </ThemedView>
                     )}
                 </HStack>
-            </HStack>
-            {showPause && (
-                <HStack>
-                    <Text style={textStyle}>&#x30FB;</Text>
-                    <HStack style={styles.timeStack}>
-                        {showMinutes && (
-                            <ThemedView>
-                                <HStack style={styles.smallGap}>
-                                    <Text style={textStyle}>{exerciseMetaData.pause?.minutes}</Text>
-                                    <Text style={textStyle}>{minutesUnit}</Text>
-                                </HStack>
-                            </ThemedView>
-                        )}
-                        {showSeconds && (
-                            <ThemedView>
-                                <HStack style={styles.smallGap}>
-                                    <Text style={textStyle}>{exerciseMetaData.pause?.seconds}</Text>
-                                    <Text style={textStyle}>{secondsUnit}</Text>
-                                </HStack>
-                            </ThemedView>
-                        )}
+                <Text style={textStyle}>{` ${t("after")} `}</Text>
+                {showPreparation && (
+                    <HStack>
+                        <HStack style={styles.timeStack}>
+                            {showPreparationMinutes && (
+                                <ThemedView>
+                                    <HStack style={styles.smallGap}>
+                                        <Text style={textStyle}>{exerciseMetaData.preparation?.minutes}</Text>
+                                        <Text style={textStyle}>{minutesUnit}</Text>
+                                    </HStack>
+                                </ThemedView>
+                            )}
+                            {showPreparationSeconds && (
+                                <ThemedView>
+                                    <HStack style={styles.smallGap}>
+                                        <Text style={textStyle}>{exerciseMetaData.preparation?.seconds}</Text>
+                                        <Text style={textStyle}>{secondsUnit}</Text>
+                                    </HStack>
+                                </ThemedView>
+                            )}
+                        </HStack>
                     </HStack>
-                </HStack>
-            )}
-        </HStack>
+                )}
+            </HStack>
+            <HStack>
+                {showPause && (
+                    <HStack>
+                        <HStack style={styles.timeStack}>
+                            {showPauseMinutes && (
+                                <ThemedView>
+                                    <HStack style={styles.smallGap}>
+                                        <Text style={textStyle}>{exerciseMetaData.pause?.minutes}</Text>
+                                        <Text style={textStyle}>{minutesUnit}</Text>
+                                    </HStack>
+                                </ThemedView>
+                            )}
+                            {showPauseSecnds && (
+                                <ThemedView>
+                                    <HStack style={styles.smallGap}>
+                                        <Text style={textStyle}>{exerciseMetaData.pause?.seconds}</Text>
+                                        <Text style={textStyle}>{secondsUnit}</Text>
+                                    </HStack>
+                                </ThemedView>
+                            )}
+                        </HStack>
+                        <Text style={textStyle}>{` ${t("pause_lower")} `}</Text>
+                    </HStack>
+                )}
+            </HStack>
+        </ThemedView>
     );
 };

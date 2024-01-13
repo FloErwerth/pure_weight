@@ -29,9 +29,9 @@ export const TimeBasedExercise = () => {
 
     const handleSetDuration = useCallback(
         (value: { timeInputKey: keyof TimeInput; value: string }) => {
-            dispatch(mutateEditedExerciseTimeValue({ key: "duration", value: { ...editedExercise?.exercise?.pause, [value.timeInputKey]: value.value } }));
+            dispatch(mutateEditedExerciseTimeValue({ key: "duration", value: { ...editedExercise?.exercise?.duration, [value.timeInputKey]: value.value } }));
         },
-        [dispatch, editedExercise?.exercise?.pause],
+        [dispatch, editedExercise?.exercise?.duration],
     );
 
     const handleSetPreperation = useCallback(
