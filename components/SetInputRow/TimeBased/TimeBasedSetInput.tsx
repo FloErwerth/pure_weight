@@ -61,10 +61,12 @@ export const TimeBasedSetInput = ({ setIndex, exerciseIndex }: SetInputRowProps)
         onTimerDone: handleSetDone,
     });
 
-    const isInPreparation = useMemo(() => remainingTime > getMillisecondsFromDuration(duration), [duration, remainingTime]);
+    const preparationMilliseconds = useMemo(() => getMillisecondsFromDuration(preparation), [preparation]);
+    const hasPreparation = useMemo(() => Boolean(preparationMilliseconds > 0), [preparationMilliseconds]);
+    const isInPreparation = useMemo(() => Boolean(hasPreparation && remainingTime > getMillisecondsFromDuration(duration)), [duration, preparation, remainingTime]);
 
     const timeDisplay = useTimeDisplay(getMillisecondsFromDuration(duration));
-    const prepartionDisplay = useTimeDisplay(getMillisecondsFromDuration(preparation));
+    const prepartionDisplay = useTimeDisplay(preparationMilliseconds);
     const overallTimeDisplay = useTimeDisplay(isInPreparation ? remainingTime - getMillisecondsFromDuration(duration) : remainingTime);
 
     const handleReset = useCallback(() => {
@@ -209,7 +211,10 @@ export const TimeBasedSetInput = ({ setIndex, exerciseIndex }: SetInputRowProps)
         }
     }, [isInPreparation]);
 
-    const animatedPreparationStyles = useMemo(() => ({ opacity: preparationOpacity, top: 0, position: "absolute", width: 50, left: preparationLeft }) as const, [preparationLeft, preparationOpacity]);
+    const animatedPreparationStyles = useMemo(
+        () => ({ opacity: hasPreparation ? preparationOpacity : 0, top: 0, position: "absolute", width: 50, left: preparationLeft }) as const,
+        [hasPreparation, preparationLeft, preparationOpacity],
+    );
     const animatedDurationStyles = useMemo(() => ({ opacity: durationOpacity, top: 0, position: "absolute", width: 50, left: durationLeft }) as const, [durationLeft, durationOpacity]);
 
     const preparationTextStyles = useMemo(
