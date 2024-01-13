@@ -54,6 +54,7 @@ export const mockState: AppState = {
         sorting: "A_Z",
         measurements: [
             {
+                measurementId: 1,
                 name: "Körpergewicht",
                 type: "weight",
                 data: [
@@ -76,6 +77,7 @@ export const mockState: AppState = {
                 higherIsBetter: true,
             },
             {
+                measurementId: 2,
                 name: "Körperfettanteil",
                 type: "percent",
                 data: [

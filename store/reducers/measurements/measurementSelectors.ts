@@ -6,6 +6,7 @@ import { UnitSystem } from "../settings/types";
 import { MeasurementType } from "../../../components/App/measurements/types";
 import { measurementUnitMap } from "../../../utils/unitMap";
 import { sortMeasurements } from "./utils/sortMeasurements";
+import { IsoDate } from "../../../types/date";
 
 export const getMeasurementsState = (state: AppState) => state.measurmentState;
 export const getEditedMeasurement = createSelector([getMeasurementsState], (state) => state.editedMeasurement);
@@ -16,9 +17,12 @@ export const getMeasurementDataPoint = createSelector([getEditedMeasurement], (e
 });
 
 export const getLatestMeasurements = createSelector([getMeasurements], (measurements) =>
-    measurements.map(({ data }) => {
-        return data[data.length - 1]?.isoDate ?? 0;
-    }),
+    measurements.reduce(
+        (obj, { measurementId, data }) => {
+            return { ...obj, [measurementId]: data[data.length - 1]?.isoDate ?? 0 };
+        },
+        {} as Record<string, IsoDate>,
+    ),
 );
 
 export const getUnitByType = (unitSystem: UnitSystem, type?: MeasurementType) => {
@@ -28,14 +32,12 @@ export const getUnitByType = (unitSystem: UnitSystem, type?: MeasurementType) =>
 
     return measurementUnitMap[unitSystem][type];
 };
-export const getMeasurementData = createSelector([getMeasurements, getEditedMeasurement, getUnitSystem], (measurements, data, unitSystem) => {
-    if (data === undefined || data.isNew) {
+export const getMeasurementData = createSelector([getEditedMeasurement, getUnitSystem], (editedMeasurement, unitSystem) => {
+    if (!editedMeasurement || editedMeasurement?.isNew) {
         return undefined;
     }
-    const { index } = data;
-    const measurement = measurements[index];
-    const entries = getLastNEntries(measurement.data ?? [], 25);
-    if (measurement?.data) {
+    const entries = getLastNEntries(editedMeasurement.measurement?.data ?? [], 25);
+    if (editedMeasurement.measurement?.data) {
         const labels: string[] = [];
         const data: number[] = [];
         entries.forEach(({ isoDate, value }) => {
@@ -44,8 +46,8 @@ export const getMeasurementData = createSelector([getMeasurements, getEditedMeas
         });
         return {
             labels,
-            name: measurement.name,
-            unit: getUnitByType(unitSystem, measurement.type),
+            name: editedMeasurement.measurement.name,
+            unit: getUnitByType(unitSystem, editedMeasurement.measurement.type),
             datasets: [
                 {
                     data,
@@ -57,8 +59,8 @@ export const getMeasurementData = createSelector([getMeasurements, getEditedMeas
 });
 export const getMeasurementSorting = createSelector([getMeasurementsState], (state) => state.sorting);
 export const getMeasurmentProgress = createSelector([getMeasurements, (byIndex, index: number) => index], (measurements, index) => {
-    const measurement = measurements[index];
-    const data = measurement.data.map(({ value }) => value);
+    const measurement = measurements.find((measurement) => measurement.measurementId === index);
+    const data = measurement?.data.map(({ value }) => value);
     if (data && data?.length >= 2) {
         const latest = parseFloat(data[data?.length - 1]);
         const secondLatest = parseFloat(data[data?.length - 2]);

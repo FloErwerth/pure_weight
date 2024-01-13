@@ -25,8 +25,8 @@ export function Measurements() {
     }, [dispatch, navigate]);
 
     const handleAddExistingMeasurement = useCallback(
-        (index: number) => {
-            dispatch(setEditedMeasurement({ index, isNew: false, isDataPoint: false }));
+        (measurementId: number) => {
+            dispatch(setEditedMeasurement({ measurementId, isNew: false, isDataPoint: false }));
             navigate("measurement/create");
         },
         [dispatch, navigate],
@@ -46,8 +46,8 @@ export function Measurements() {
     }, [dispatch]);
 
     const handleEditMeasurement = useCallback(
-        (index: number) => {
-            dispatch(setEditedMeasurement({ index, isNew: false, isDataPoint: false }));
+        (measurementId: number) => {
+            dispatch(setEditedMeasurement({ measurementId, isNew: false, isDataPoint: false }));
             navigate("measurement/edit");
         },
         [dispatch, navigate],
@@ -55,14 +55,14 @@ export function Measurements() {
 
     const mappedMeasurements = useMemo(
         () =>
-            measurements?.map((measurement, index) => (
+            measurements?.map((measurement) => (
                 <Swipeable
-                    onEdit={() => handleEditMeasurement(index)}
-                    onDelete={() => handleDeleteMeasurement(index)}
+                    onEdit={() => handleEditMeasurement(measurement.measurementId)}
+                    onDelete={() => handleDeleteMeasurement(measurement.measurementId)}
                     key={`${measurement.name}-pressable`}
-                    onClick={() => handleAddExistingMeasurement(index)}
+                    onClick={() => handleAddExistingMeasurement(measurement.measurementId)}
                 >
-                    <RenderedMeasurement index={index} measurement={measurement} />
+                    <RenderedMeasurement measurement={measurement} />
                 </Swipeable>
             )),
         [handleAddExistingMeasurement, handleDeleteMeasurement, handleEditMeasurement, measurements],

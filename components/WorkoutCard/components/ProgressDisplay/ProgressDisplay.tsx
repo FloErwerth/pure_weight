@@ -67,7 +67,6 @@ export const ProgressDisplay = ({ trend, onPress, higherIsBetter = true, type }:
     const even = processedPercent === 0;
     const text = useText(type, even, isPositive, processedPercent, trend);
     const active = useContext(swipableContext);
-    const { t } = useTranslation();
     const { secondaryColor } = useTheme();
 
     const icon = useMemo(() => {

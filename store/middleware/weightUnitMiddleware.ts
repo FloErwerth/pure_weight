@@ -80,7 +80,7 @@ export const weightMiddleware: Middleware<Record<string, string>, AppState> = (s
                         ...doneWorkout,
                         doneExercises: doneWorkout.doneExercises?.map((doneExercise) => ({
                             ...doneExercise,
-                            sets: doneExercise.sets.map((set) => ({ ...set, weight: calculateWeight(set.weight, nextUnit.weight) })),
+                            sets: doneExercise.sets.map((set) => ({ ...set, weight: calculateWeight(set.weight ?? "0", nextUnit.weight) })),
                         })),
                     })),
                     exercises: workout.exercises.map((exercise) => ({ ...exercise, weight: calculateWeight(exercise.weight, nextUnit.weight) })),
