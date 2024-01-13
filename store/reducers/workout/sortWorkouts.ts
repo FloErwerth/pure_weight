@@ -10,7 +10,7 @@ const sortDates = (a: Workout, b: Workout) => {
     const lastDateA = isoDatesA[isoDatesA?.length - 1];
     const lastDateB = isoDatesB[isoDatesB?.length - 1];
 
-    return Temporal.PlainDate.compare(convertDate.toTemporal(lastDateA), convertDate.toTemporal(lastDateB));
+    return Temporal.PlainDate.compare(convertDate.toTemporal(lastDateB), convertDate.toTemporal(lastDateA));
 };
 
 export const sortWorkouts = (workouts: Workout[], sorting: SortingType) => {
