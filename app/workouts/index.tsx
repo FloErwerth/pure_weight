@@ -104,7 +104,7 @@ export function Workouts() {
     const handleConfirmResume = useCallback(() => {
         navigate("train");
         close();
-    }, [navigate]);
+    }, [close, navigate]);
 
     const handleConfirmOverwrite = useCallback(() => {
         handleStartWorkout();

@@ -77,7 +77,7 @@ export const getTrainingDayData = createSelector([getEditedWorkout], (editedWork
     }
 
     const sortedData: Map<string, SortedData> = new Map();
-    const slicedDoneWorkouts = getLastNEntries(workout?.doneWorkouts, 25);
+    const slicedDoneWorkouts = getLastNEntries(workout?.doneWorkouts, 100);
 
     slicedDoneWorkouts
         .filter(({ doneExercises }) => doneExercises !== undefined)

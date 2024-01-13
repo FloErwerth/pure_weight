@@ -118,10 +118,10 @@ export const TimeBasedSetInput = ({ setIndex, exerciseIndex }: SetInputRowProps)
     const textInputStyles = useMemo(() => [styles.textInput, { backgroundColor: computedTextfieldBackgroundColor, color: textColor }], [computedTextfieldBackgroundColor, textColor]);
     const buttonStyles = useMemo(() => [styles.button, { backgroundColor: computedButtonBackgroundColor }], [computedButtonBackgroundColor]);
     const playStyle = useMemo(() => ({ color: isConfirmed || isActiveSet || isLatestSet ? mainColor : textDisabled }), [isConfirmed, mainColor, isActiveSet, textDisabled]);
-    const preparationTop = useRef(new Animated.Value(9)).current;
-    const durationTop = useRef(new Animated.Value(5)).current;
-    const preparationFontSize = useRef(new Animated.Value(20)).current;
-    const durationFontSize = useRef(new Animated.Value(16)).current;
+    const preparationLeft = useRef(new Animated.Value(24)).current;
+    const durationLeft = useRef(new Animated.Value(-20)).current;
+    const preparationOpacity = useRef(new Animated.Value(1)).current;
+    const durationOpacity = useRef(new Animated.Value(0.5)).current;
 
     const preparationValue = useMemo(() => {
         if (preparation) {
@@ -162,46 +162,46 @@ export const TimeBasedSetInput = ({ setIndex, exerciseIndex }: SetInputRowProps)
     useEffect(() => {
         if (isInPreparation) {
             Animated.parallel([
-                Animated.timing(preparationTop, {
-                    toValue: 8,
+                Animated.timing(preparationLeft, {
+                    toValue: 24,
                     duration: 200,
                     useNativeDriver: false,
                 }),
-                Animated.timing(durationTop, {
-                    toValue: 8,
+                Animated.timing(durationLeft, {
+                    toValue: -34,
                     duration: 200,
                     useNativeDriver: false,
                 }),
-                Animated.timing(preparationFontSize, {
-                    toValue: 20,
+                Animated.timing(preparationOpacity, {
+                    toValue: 1,
                     duration: 200,
                     useNativeDriver: false,
                 }),
-                Animated.timing(durationFontSize, {
-                    toValue: 16,
+                Animated.timing(durationOpacity, {
+                    toValue: 0.2,
                     duration: 200,
                     useNativeDriver: false,
                 }),
             ]).start();
         } else {
             Animated.parallel([
-                Animated.timing(preparationTop, {
-                    toValue: -8,
+                Animated.timing(preparationLeft, {
+                    toValue: 84,
                     duration: 200,
                     useNativeDriver: false,
                 }),
-                Animated.timing(durationTop, {
-                    toValue: -8,
+                Animated.timing(durationLeft, {
+                    toValue: 24,
                     duration: 200,
                     useNativeDriver: false,
                 }),
-                Animated.timing(preparationFontSize, {
-                    toValue: 16,
+                Animated.timing(preparationOpacity, {
+                    toValue: 0.2,
                     duration: 200,
                     useNativeDriver: false,
                 }),
-                Animated.timing(durationFontSize, {
-                    toValue: 20,
+                Animated.timing(durationOpacity, {
+                    toValue: 1,
                     duration: 200,
                     useNativeDriver: false,
                 }),
@@ -209,29 +209,27 @@ export const TimeBasedSetInput = ({ setIndex, exerciseIndex }: SetInputRowProps)
         }
     }, [isInPreparation]);
 
-    const animatedPreparationStyles = useMemo(() => ({ top: preparationTop }), [preparationTop]);
-    const animatedDurationStyles = useMemo(() => ({ top: durationTop }), [durationTop]);
-    const prepareColorAnimation = useMemo(() => preparationTop.interpolate({ inputRange: [0, 9], outputRange: ["black", mainColor] }), [preparationTop, warningColor]);
-    const durationColorAnimation = useMemo(() => durationTop.interpolate({ inputRange: [-5, 5], outputRange: [mainColor, "black"] }), [durationTop, mainColor]);
+    const animatedPreparationStyles = useMemo(() => ({ opacity: preparationOpacity, top: 0, position: "absolute", width: 50, left: preparationLeft }) as const, [preparationLeft, preparationOpacity]);
+    const animatedDurationStyles = useMemo(() => ({ opacity: durationOpacity, top: 0, position: "absolute", width: 50, left: durationLeft }) as const, [durationLeft, durationOpacity]);
 
     const preparationTextStyles = useMemo(
         () =>
             ({
                 textAlign: "center",
-                color: isEditable ? prepareColorAnimation : textDisabled,
-                fontSize: preparationFontSize,
+                color: isEditable ? mainColor : textDisabled,
+                fontSize: 20,
             }) as const,
-        [isEditable, preparationFontSize, prepareColorAnimation, textDisabled],
+        [isEditable, mainColor, textDisabled],
     );
 
     const trainTextStyles = useMemo(
         () =>
             ({
-                fontSize: durationFontSize,
                 textAlign: "center",
-                color: isEditable ? durationColorAnimation : textDisabled,
+                color: isEditable ? mainColor : textDisabled,
+                fontSize: 20,
             }) as const,
-        [durationColorAnimation, durationFontSize, isEditable, textDisabled],
+        [isEditable, mainColor, textDisabled],
     );
 
     const handleToggleTimer = useCallback(() => {
@@ -263,12 +261,14 @@ export const TimeBasedSetInput = ({ setIndex, exerciseIndex }: SetInputRowProps)
             </Center>
             <HStack ghost stretch style={styles.inputStack}>
                 <ThemedView stretch round style={textInputStyles}>
-                    <AnimatedView style={animatedPreparationStyles} ghost>
-                        <Animated.Text style={preparationTextStyles}>{preparationValue}</Animated.Text>
-                    </AnimatedView>
-                    <AnimatedView style={animatedDurationStyles} ghost>
-                        <Animated.Text style={trainTextStyles}>{durationValue}</Animated.Text>
-                    </AnimatedView>
+                    <ThemedView ghost style={{ alignSelf: "center", height: 20, width: 100 }}>
+                        <AnimatedView style={animatedPreparationStyles} ghost>
+                            <Animated.Text style={preparationTextStyles}>{preparationValue}</Animated.Text>
+                        </AnimatedView>
+                        <AnimatedView style={animatedDurationStyles} ghost>
+                            <Animated.Text style={trainTextStyles}>{durationValue}</Animated.Text>
+                        </AnimatedView>
+                    </ThemedView>
                 </ThemedView>
                 <HStack ghost style={styles.controlsWrapper}>
                     <ThemedPressable disabled={!isEditable} style={buttonStyles} onPress={handleToggleTimer}>
