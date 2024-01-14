@@ -24,7 +24,6 @@ export const RenderedMeasurement = ({ measurement }: MeasurementProps) => {
     const dispatch = useAppDispatch();
     const language = useAppSelector(getLanguage);
     const progress = useAppSelector((state: AppState) => getMeasurmentProgress(state, measurement.measurementId));
-    const wasPositive = useMemo(() => progress !== undefined && progress > 0, [progress]);
 
     const handleNavigateToChart = useCallback(() => {
         dispatch(setEditedMeasurement({ measurementId: measurement.measurementId, isNew: false, isDataPoint: false }));
@@ -33,12 +32,12 @@ export const RenderedMeasurement = ({ measurement }: MeasurementProps) => {
 
     const trend = useMemo(
         () => ({
-            isPositive: wasPositive,
             percent: progress ?? 0,
             name: measurement.name,
         }),
-        [wasPositive, progress, measurement.name],
+        [progress, measurement.name],
     );
+
     return (
         <HStack style={styles.pressableWrapper}>
             <VStack style={styles.vStack}>

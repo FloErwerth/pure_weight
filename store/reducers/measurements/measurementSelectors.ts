@@ -64,11 +64,7 @@ export const getMeasurmentProgress = createSelector([getMeasurements, (byIndex, 
     if (data && data?.length >= 2) {
         const latest = parseFloat(data[data?.length - 1]);
         const secondLatest = parseFloat(data[data?.length - 2]);
-        const percent = (latest / secondLatest) * 100;
-        if (percent > 100) {
-            return percent - 100;
-        }
-        return 100 - percent;
+        return (latest / secondLatest) * 100;
     }
 
     return undefined;
