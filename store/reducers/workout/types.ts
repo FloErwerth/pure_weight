@@ -17,6 +17,7 @@ export type ExerciseData = {
 };
 
 export type DoneWorkouts = {
+    doneWorkoutId: number;
     isoDate: IsoDate;
     duration: string;
     doneExercises?: DoneExerciseData[];
@@ -26,7 +27,9 @@ export type DoneExerciseData = {
     name: string;
     sets: ExerciseSets;
     note?: string;
+    storageExerciseId: number;
 };
+
 export type TimeInput = {
     seconds?: string;
     minutes?: string;

@@ -2,7 +2,7 @@ import { VStack } from "../../Stack/VStack/VStack";
 import { View } from "react-native";
 import { Text } from "../../Themed/ThemedText/Text";
 import { HStack } from "../../Stack/HStack/HStack";
-import { useCallback, useMemo } from "react";
+import React, { useCallback, useMemo } from "react";
 import { styles } from "./styles";
 import { AppState, useAppDispatch, useAppSelector } from "../../../store";
 import { ProgressDisplay } from "../../WorkoutCard/components/ProgressDisplay/ProgressDisplay";
@@ -13,6 +13,7 @@ import { getLatestMeasurements, getMeasurmentProgress } from "../../../store/red
 import { useNavigate } from "../../../hooks/navigate";
 import { setEditedMeasurement } from "../../../store/reducers/measurements";
 import { getSinceDate } from "../../../utils/timeAgo";
+import { HistoryDisplay } from "../history/HistoryDisplay/HistoryDisplay";
 
 interface MeasurementProps {
     measurement: Measurement;
@@ -30,6 +31,11 @@ export const RenderedMeasurement = ({ measurement }: MeasurementProps) => {
         navigate("measurement/progress");
     }, [dispatch, measurement, navigate]);
 
+    const handleGoToHistory = useCallback(() => {
+        dispatch(setEditedMeasurement({ measurementId: measurement.measurementId, isNew: false, isDataPoint: false }));
+        navigate("measurement/history");
+    }, [dispatch, measurement.measurementId, navigate]);
+
     const trend = useMemo(
         () => ({
             percent: progress ?? 0,
@@ -41,11 +47,12 @@ export const RenderedMeasurement = ({ measurement }: MeasurementProps) => {
     return (
         <HStack style={styles.pressableWrapper}>
             <VStack style={styles.vStack}>
-                <View>
+                <View style={styles.titleWrapper}>
                     <Text style={styles.text}>{measurement.name}</Text>
                     <Text style={styles.date}>{getSinceDate(latestMeasurements[measurement.measurementId], language)}</Text>
                 </View>
                 <ProgressDisplay type="Measurement" trend={trend} higherIsBetter={measurement.higherIsBetter} onPress={handleNavigateToChart} />
+                <HistoryDisplay id={measurement.measurementId} type="Measurement" handleNavigateToHistory={handleGoToHistory} />
             </VStack>
         </HStack>
     );

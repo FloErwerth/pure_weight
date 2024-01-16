@@ -105,6 +105,12 @@
   "workout_history_empty": "Noch keine Workouts vorhanden",
   "workout_history_single": "Ein Workout abgeschlossen",
   "workout_history_plural": "Workouts abgeschlossen",
+  "workout_history_edit_title": "Vorher. Workout bearbeiten",
+
+  "measurement_history_empty": "Noch keine Messungen vorhanden",
+  "measurement_history_single": "Eine Messung gespeichert",
+  "measurement_history_plural": "Messungen gespeichert",
+
 
   "alert_delete_message": "Dies kann nicht rückgängig gemacht werden",
 

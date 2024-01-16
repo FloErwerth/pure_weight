@@ -58,7 +58,7 @@ export const RenderedWorkout = ({ workoutId }: RenderedWorkoutProps) => {
             {showStats ? (
                 <View style={styles.innerTrainWrapper}>
                     <ProgressDisplay type="Workout" trend={trend} onPress={handleNavigateToProgress} />
-                    <HistoryDisplay workoutId={workoutId} handleNavigateToHistory={handleNavigateToHistory} />
+                    <HistoryDisplay type="Workout" id={workoutId} handleNavigateToHistory={handleNavigateToHistory} />
                 </View>
             ) : (
                 <ThemedView ghost>

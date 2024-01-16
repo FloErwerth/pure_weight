@@ -98,7 +98,7 @@ export function Workouts() {
             }
             handleStartWorkout(workoutId);
         },
-        [handleStartWorkout, navigate, open, trainedWorkout],
+        [handleStartWorkout, open, trainedWorkout],
     );
 
     const handleConfirmResume = useCallback(() => {
@@ -125,9 +125,11 @@ export function Workouts() {
             )),
         [savedWorkouts, handleStartWorkoutCases, onDelete, onEdit],
     );
+
     const closeToast = useCallback(() => {
         setShowToast(false);
     }, []);
+
     return (
         <ThemedView stretch background>
             <SiteNavigationButtons titleFontSize={40} title={t("workouts")} handleConfirmIcon={confirmIcon} handleConfirm={handleCreateWorkout} />

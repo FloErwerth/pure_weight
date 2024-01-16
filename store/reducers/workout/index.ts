@@ -301,10 +301,16 @@ export const workoutReducer = createReducer<WorkoutState>({ workouts: [], sortin
                 const beginTimestamp = workout.beginTimestamp;
                 const endTimestamp = Temporal.Now.instant().epochMilliseconds;
                 const duration = (endTimestamp - beginTimestamp) / 1000;
-                const doneExercises: DoneExerciseData[] = workout.exerciseData.map((data) => ({ name: data.name, sets: data.doneSets, note: data.note }));
+                const doneExercises: DoneExerciseData[] = workout.exerciseData.map((data) => ({
+                    storageExerciseId: workout.workout.exercises.findIndex((exercise) => exercise.name === data.name),
+                    name: data.name,
+                    sets: data.doneSets,
+                    note: data.note,
+                }));
                 state.workouts
                     .find((workout) => workout.workoutId === workoutIndex)
                     ?.doneWorkouts.push({
+                        doneWorkoutId: Date.now(),
                         isoDate: getDateTodayIso(),
                         duration: duration.toString(),
                         doneExercises,
@@ -314,7 +320,6 @@ export const workoutReducer = createReducer<WorkoutState>({ workouts: [], sortin
         })
         .addCase(saveEditedWorkout, (state) => {
             if (state.editedWorkout !== undefined) {
-                console.log(state.editedWorkout);
                 if (state.editedWorkout.isNew) {
                     state.workouts = [...state.workouts, state.editedWorkout.workout];
                 } else {

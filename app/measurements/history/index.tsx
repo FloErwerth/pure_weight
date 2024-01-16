@@ -11,7 +11,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { MeasurementDataPoint } from "../../../components/App/measurements/types";
 import { setDatapointIndexInEditedExercise } from "../../../store/reducers/measurements";
 
-export const MeasurementEdit = () => {
+export const MeasurementHistory = () => {
     const navigate = useNavigate();
     const editedMeasurement = useAppSelector(getEditedMeasurement);
     const { bottom } = useSafeAreaInsets();

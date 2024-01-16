@@ -15,10 +15,11 @@ interface PageContentProps extends PropsWithChildren, ComputedBackgroundColorPro
     paddingTop?: number;
     safeBottom?: boolean;
     ignoreGap?: boolean;
+    ignorePadding?: boolean;
 }
 export const PageContent = (props: PageContentProps) => {
     const { bottom } = useSafeAreaInsets();
-    const { children, style, scrollable, titleConfig, stretch, paddingTop, safeBottom, ignoreGap = false } = props;
+    const { children, style, scrollable, titleConfig, stretch, paddingTop, safeBottom, ignoreGap = false, ignorePadding = false } = props;
     const computedBackground = useComputedBackgroundColor(props);
 
     const titleStyles = useMemo(() => {
@@ -29,8 +30,18 @@ export const PageContent = (props: PageContentProps) => {
     }, [titleConfig]);
 
     const wrapperStyles = useMemo(
-        () => [styles.wrapper, style, { gap: ignoreGap ? 0 : styles.wrapper.gap, paddingTop, paddingBottom: safeBottom ? bottom : undefined, backgroundColor: computedBackground }],
-        [bottom, computedBackground, ignoreGap, paddingTop, safeBottom, style],
+        () => [
+            styles.wrapper,
+            style,
+            {
+                gap: ignoreGap ? 0 : styles.wrapper.gap,
+                paddingTop,
+                paddingBottom: safeBottom ? bottom : undefined,
+                backgroundColor: computedBackground,
+                paddingHorizontal: ignorePadding ? 0 : 20,
+            },
+        ],
+        [bottom, computedBackground, ignoreGap, ignorePadding, paddingTop, safeBottom, style],
     );
 
     if (scrollable) {

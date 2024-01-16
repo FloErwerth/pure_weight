@@ -2,9 +2,6 @@ import { StyleSheet } from "react-native";
 import { borderRadius } from "../../../theme/border";
 
 export const styles = StyleSheet.create({
-    pageWrapper: {
-        gap: 10,
-    },
     title: { fontSize: 26, padding: 1, flex: 1, borderRadius, marginTop: 20 },
     latestWorkoutChip: { paddingTop: 26 },
     titleWrapper: {
@@ -16,13 +13,9 @@ export const styles = StyleSheet.create({
         alignItems: "center",
         gap: 5,
     },
-    scrollView: { gap: 5, top: -20 },
+    scrollView: { gap: 10 },
     workout: {
-        padding: 10,
-        gap: 20,
-        flex: 1,
-        borderRadius,
-        borderWidth: 0.5,
+        gap: 10,
     },
     workoutTitle: {
         fontSize: 26,
@@ -37,7 +30,6 @@ export const styles = StyleSheet.create({
     },
     displayedWorkoutWrapper: {
         justifyContent: "space-between",
-        gap: 5,
         borderRadius,
     },
 });

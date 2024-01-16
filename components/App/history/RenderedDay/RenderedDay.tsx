@@ -34,7 +34,7 @@ export const RenderedDay = ({ day, color, handleSelectDate, selected, latestDay 
     const { viewStyle, textStyle } = useMarkedDayStyles(selected, color);
     const showDot = Boolean(color && !selected);
     return (
-        <Pressable onPress={handleSelectDate}>
+        <Pressable disabled={!color} onPress={handleSelectDate}>
             <View style={viewStyle}>
                 <Text style={textStyle} ghost>
                     {day}

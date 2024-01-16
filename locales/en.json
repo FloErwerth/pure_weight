@@ -22,6 +22,10 @@
   "workout_history_empty": "No workouts have been completed yet",
   "workout_history_single": "One workout completed",
   "workout_history_plural": "workouts completed",
+  "workout_history_edit_title": "Edit previous workout",
+  "measurement_history_empty": "No measurements available",
+  "measurement_history_single": "One measurement saved",
+  "measurement_history_plural": "measurements saved",
 
   "create_select_type": "Select exercise type",
   "create_exercise_type_label": "Exercise type",

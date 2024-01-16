@@ -10,8 +10,17 @@ export const styles = StyleSheet.create({
     date: {
         fontStyle: "italic",
     },
-    text: { fontSize: 26 },
-    vStack: { gap: 15, flex: 1, paddingRight: 10 },
+    text: {
+        fontSize: 26,
+    },
+    vStack: {
+        gap: 5,
+        flex: 1,
+        paddingRight: 10,
+    },
+    titleWrapper: {
+        marginBottom: 10,
+    },
 });
 
 export const createStyles = StyleSheet.create({

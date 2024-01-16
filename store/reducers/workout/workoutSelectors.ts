@@ -8,7 +8,7 @@ import { getLastNEntries } from "../../../utils/getLastNEntries";
 import { ExerciseSets } from "./types";
 import { Temporal } from "@js-temporal/polyfill";
 import { getSinceDate } from "../../../utils/timeAgo";
-import { SectionListItemInfo } from "../../../app/workouts/history";
+import { FlatListData } from "../../../app/workouts/history";
 import { sortWorkouts } from "./sortWorkouts";
 
 export const getWorkoutState = ({ workoutState }: AppState) => workoutState;
@@ -116,12 +116,12 @@ export const getCanSnap = createSelector([getTrainedWorkout], (trainedWorkout) =
 });
 export const getHistoryByMonth = createSelector([getEditedWorkout, (editedWorkout, month?: string) => month ?? getDateTodayIso()], (editedWorkout, searchedMonth) => {
     const workout = editedWorkout?.workout;
-    const foundTrainings: Map<string, SectionListItemInfo> = new Map();
+    const foundTrainings: Map<string, FlatListData> = new Map();
 
     workout?.doneWorkouts?.forEach((doneWorkout) => {
         const date = doneWorkout.isoDate;
-        const doneWorkouts = foundTrainings.get(date)?.doneWorkouts ?? [];
-        doneWorkouts.push({
+        const calculatedWorkoutData = foundTrainings.get(date)?.calculatedWorkoutData ?? [];
+        calculatedWorkoutData.push({
             duration: doneWorkout.duration,
             weight: (
                 doneWorkout.doneExercises?.reduce(
@@ -132,10 +132,11 @@ export const getHistoryByMonth = createSelector([getEditedWorkout, (editedWorkou
             numExercisesDone: doneWorkout.doneExercises?.length ?? 0,
         });
         foundTrainings.set(date, {
+            doneWorkoutId: doneWorkout.doneWorkoutId,
             color: workout?.calendarColor,
             name: workout?.name,
             date,
-            doneWorkouts,
+            calculatedWorkoutData,
         });
     });
 
@@ -150,7 +151,7 @@ export const getHasHistory = createSelector([getWorkouts, (workouts, workoutId: 
     }
     return doneWorkouts.length > 0;
 });
-export const getNumberHistories = createSelector([getWorkouts, (workouts, workoutIndex: number) => workoutIndex], (workouts, workoutIndex) => {
+export const getNumberWorkoutHistoryEntries = createSelector([getWorkouts, (workouts, workoutIndex: number) => workoutIndex], (workouts, workoutIndex) => {
     const workout = workouts.find((workout) => workout.workoutId === workoutIndex);
     return workout?.doneWorkouts?.length;
 });
@@ -221,12 +222,9 @@ export const getOverallTrainingTrend = createSelector([getWorkouts, (workouts, i
                 const fraction = currentOverall / beforeOverall;
                 if (fraction === 1) {
                     result.cleanedPercent = 0;
-                } else if (fraction > 1) {
-                    result.cleanedPercent = fraction * 100 - 100;
-                    result.isPositive = true;
                 } else {
-                    result.cleanedPercent = 100 - fraction * 100;
-                    result.isPositive = false;
+                    result.isPositive = fraction > 1;
+                    result.cleanedPercent = fraction * 100;
                 }
                 latestExercisePairs.set(currentExercise.name, result);
             }
@@ -355,4 +353,17 @@ export const getSetData = createSelector([getExerciseData, (exerciseData, setInd
 
 export const getIsOngoingWorkout = createSelector([getTrainedWorkout, (trainedWorkout, workoutIndex: number) => workoutIndex], (trainedWorkout, workoutIndex) => {
     return trainedWorkout && trainedWorkout?.workout.workoutId === workoutIndex;
+});
+
+export const getDoneWorkoutDataByIndex = createSelector(
+    [getEditedWorkout, (workout, doneWorkoutId: number) => doneWorkoutId, (workout, doneWorkoutId, doneExerciseIndex: number) => doneExerciseIndex],
+    (editedWorkout, doneExerciseIndex, doneWorkoutId) => {
+        const doneWorkout = editedWorkout?.workout?.doneWorkouts?.find((doneWorkout) => doneWorkoutId === doneWorkout.doneWorkoutId);
+        return doneWorkout?.doneExercises?.[doneWorkoutId];
+    },
+);
+
+export const getDoneExercises = createSelector([getEditedWorkout, (workout, doneWorkoutId: number) => doneWorkoutId], (editedWorkout, doneWorkoutId) => {
+    const doneWorkout = editedWorkout?.workout?.doneWorkouts?.find((doneWorkout) => doneWorkoutId === doneWorkout.doneWorkoutId);
+    return doneWorkout?.doneExercises;
 });

@@ -69,6 +69,12 @@ export const getMeasurmentProgress = createSelector([getMeasurements, (byIndex, 
 
     return undefined;
 });
+export const getNumberMeasurementEntries = createSelector([getMeasurements, (measurements, measurementId: number) => measurementId], (measurements, measurementId) => {
+    const measurement = measurements.find((measurement) => measurement.measurementId === measurementId);
+
+    return measurement?.data.length ?? 0;
+});
+
 export const getSortedMeasurements = createSelector([getMeasurements, getMeasurementSorting], (measurements, sorting) => {
     return sortMeasurements(measurements, sorting);
 });

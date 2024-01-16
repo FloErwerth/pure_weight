@@ -1,49 +1,4 @@
 import { AppState } from "./index";
-import { MeasurementDataPoint } from "../components/App/measurements/types";
-import { DoneWorkouts } from "./reducers/workout/types";
-import { convertDate } from "../utils/date";
-
-const constructedDoneWorkouts: DoneWorkouts = [];
-for (let i = 1; i <= 15; i++) {
-    const currentDate = new Date("2023-09-01");
-    currentDate.setDate(currentDate.getDate() + i * Math.random() * 10 - 5);
-    constructedDoneWorkouts.push({
-        isoDate: convertDate.toIsoDate(currentDate),
-        duration: (i * 100).toString(),
-        doneExercises: [
-            {
-                name: "Bankdrücken",
-                sets: [
-                    { weight: (i * Math.random() * 50).toString(), reps: "5" },
-                    { weight: (i * Math.random() * 50).toString(), reps: "5" },
-                    { weight: (i * Math.random() * 50).toString(), reps: "5" },
-                    { weight: (i * Math.random() * 50).toString(), reps: "5" },
-                    { weight: (i * Math.random() * 50).toString(), reps: "5" },
-                ],
-            },
-            {
-                name: "Butterfly",
-                sets: [
-                    { weight: (Math.random() * 5 + i).toString(), reps: (Math.random() * 5 + i).toString() },
-                    { weight: (Math.random() * 5 + i).toString(), reps: (Math.random() * 5 + i).toString() },
-                    { weight: (Math.random() * 5 + i).toString(), reps: (Math.random() * 5 + i).toString() },
-                    { weight: (Math.random() * 5 + i).toString(), reps: (Math.random() * 5 + i).toString() },
-                    { weight: (Math.random() * 5 + i).toString(), reps: (Math.random() * 5 + i).toString() },
-                ],
-            },
-        ],
-    });
-}
-
-const getConstructedMeasurement = (): MeasurementDataPoint[] => {
-    const datapoints: MeasurementDataPoint[] = [];
-    for (let i = 1; i <= 15; i++) {
-        const currentDate = new Date("2023-12-01");
-        currentDate.setDate(currentDate.getDate() + i * Math.random() * 10 - 5);
-        datapoints.push({ isoDate: convertDate.toIsoDate(currentDate), value: (i * Math.random() * 10).toString() });
-    }
-    return datapoints;
-};
 
 export const mockState: AppState = {
     metadataState: {
@@ -116,10 +71,12 @@ export const mockState: AppState = {
                 ],
                 doneWorkouts: [
                     {
+                        doneWorkoutId: 1,
                         isoDate: "2023-10-01",
                         duration: "120",
                         doneExercises: [
                             {
+                                storageExerciseId: 0,
                                 name: "Klimmzüge unterstützt",
                                 sets: [{ weight: "50", reps: "5" }],
                                 note: "Das war ein guter Satz",
@@ -127,10 +84,12 @@ export const mockState: AppState = {
                         ],
                     },
                     {
+                        doneWorkoutId: 2,
                         isoDate: "2023-11-12",
                         duration: "120",
                         doneExercises: [
                             {
+                                storageExerciseId: 0,
                                 name: "Klimmzüge unterstützt",
                                 sets: [{ weight: "50", reps: "5" }],
                                 note: "Das war ein guter Satz",
@@ -138,10 +97,12 @@ export const mockState: AppState = {
                         ],
                     },
                     {
+                        doneWorkoutId: 3,
                         isoDate: "2023-12-01",
                         duration: "120",
                         doneExercises: [
                             {
+                                storageExerciseId: 0,
                                 name: "Klimmzüge unterstützt",
                                 sets: [{ weight: "50", reps: "5" }],
                                 note: "Das war ein guter Satz",
@@ -149,10 +110,12 @@ export const mockState: AppState = {
                         ],
                     },
                     {
+                        doneWorkoutId: 4,
                         isoDate: "2023-12-01",
                         duration: "120",
                         doneExercises: [
                             {
+                                storageExerciseId: 0,
                                 name: "Klimmzüge unterstützt",
                                 sets: [{ weight: "50", reps: "5" }],
                                 note: "Das war ein guter Satz",
@@ -160,50 +123,60 @@ export const mockState: AppState = {
                         ],
                     },
                     {
+                        doneWorkoutId: 5,
                         isoDate: "2023-12-04",
                         duration: "120",
                         doneExercises: [
                             {
+                                storageExerciseId: 0,
                                 name: "Klimmzüge unterstützt",
                                 sets: [{ weight: "50", reps: "5" }],
                             },
                         ],
                     },
                     {
+                        doneWorkoutId: 6,
                         isoDate: "2023-12-05",
                         duration: "120",
                         doneExercises: [
                             {
+                                storageExerciseId: 0,
                                 name: "Klimmzüge unterstützt",
                                 sets: [{ weight: "50", reps: "5" }],
                             },
                         ],
                     },
                     {
+                        doneWorkoutId: 7,
                         isoDate: "2023-12-06",
                         duration: "120",
                         doneExercises: [
                             {
+                                storageExerciseId: 0,
                                 name: "Klimmzüge unterstützt",
                                 sets: [{ weight: "50", reps: "5" }],
                             },
                         ],
                     },
                     {
+                        doneWorkoutId: 8,
                         isoDate: "2023-12-07",
                         duration: "120",
                         doneExercises: [
                             {
+                                storageExerciseId: 0,
                                 name: "Klimmzüge unterstützt",
                                 sets: [{ weight: "50", reps: "5" }],
                             },
                         ],
                     },
                     {
+                        doneWorkoutId: 9,
                         isoDate: "2023-12-31",
                         duration: "120",
                         doneExercises: [
                             {
+                                storageExerciseId: 0,
                                 name: "Klimmzüge unterstützt",
                                 sets: [{ weight: "50", reps: "5" }],
                             },
@@ -230,10 +203,12 @@ export const mockState: AppState = {
                 ],
                 doneWorkouts: [
                     {
+                        doneWorkoutId: 1,
                         isoDate: "2023-12-01",
                         duration: "120",
                         doneExercises: [
                             {
+                                storageExerciseId: 0,
                                 name: "Bankdrücken",
                                 sets: [{ weight: "50", reps: "5" }],
                             },

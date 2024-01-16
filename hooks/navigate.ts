@@ -38,12 +38,17 @@ export type RoutesParamaters = {
     ["measurement/create/index"]: {
         name: "measurement/create/index";
     };
-    ["measurement/edit/index"]: {
-        name: "measurement/edit/index";
+    ["measurement/history/index"]: {
+        name: "measurement/history/index";
         measurementIndex: number;
     };
     ["workouts/workoutHistory/index"]: {
         name: "workouts/workoutHistory/index";
+    };
+    "workouts/history/edit/index": {
+        screen: "workouts/history/edit/index";
+        doneExerciseIndex: number;
+        doneWorkoutId: number;
     };
     ["tabs"]: {
         name: "tabs";
@@ -72,6 +77,9 @@ export const Routes = {
     history: {
         screen: "workouts/workoutHistory/index",
     },
+    "workouts/history/edit/index": {
+        screen: "workouts/history/edit/index",
+    },
     measurements: {
         screen: "tabs/measurements",
     },
@@ -87,8 +95,8 @@ export const Routes = {
     "measurement/create": {
         screen: "measurement/create/index",
     },
-    "measurement/edit": {
-        screen: "measurement/edit/index",
+    "measurement/history": {
+        screen: "measurement/history/index",
     },
 };
 

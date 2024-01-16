@@ -24,10 +24,11 @@ import { GeneralSettings } from "../components/App/settings/Sections/generalSett
 import { MeasurementProgress } from "./measurements/progress";
 import { Manual } from "./settings/manual";
 import { CreateMeasurement } from "./measurements/create";
-import { MeasurementEdit } from "./measurements/edit";
+import { MeasurementHistory } from "./measurements/history";
 import { useTranslation } from "react-i18next";
 import { Appearance, NativeModules } from "react-native";
 import { setLanguage, setTheme } from "../store/reducers/settings";
+import { WorkoutHistoryEdit } from "./workouts/history/edit";
 
 const Stack = createNativeStackNavigator<RoutesParamaters>();
 
@@ -67,11 +68,12 @@ const ThemedApp = () => {
                                     <Stack.Screen component={Create} options={{ gestureEnabled: false, headerShown: false }} name="workouts/create/index" />
                                     <Stack.Screen component={WorkoutProgress} options={{ headerShown: false }} name="workouts/progress/index" />
                                     <Stack.Screen component={WorkoutHistory} options={{ headerShown: false }} name="workouts/workoutHistory/index" />
+                                    <Stack.Screen component={WorkoutHistoryEdit} options={{ headerShown: false }} name="workouts/history/edit/index" />
                                     <Stack.Screen component={GeneralSettings} options={{ headerShown: false }} name="settings/workout/index" />
                                     <Stack.Screen component={MeasurementProgress} options={{ headerShown: false }} name="measurement/progress/index" />
                                     <Stack.Screen component={Manual} options={{ headerShown: false }} name="settings/manual/index" />
                                     <Stack.Screen component={CreateMeasurement} options={{ headerShown: false }} name="measurement/create/index" />
-                                    <Stack.Screen component={MeasurementEdit} options={{ headerShown: false }} name="measurement/edit/index" />
+                                    <Stack.Screen component={MeasurementHistory} options={{ headerShown: false }} name="measurement/history/index" />
                                 </Stack.Navigator>
                             </SafeAreaView>
                         </BottomSheetModalProvider>
