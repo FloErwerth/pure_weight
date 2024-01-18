@@ -9,10 +9,12 @@ export type Workout = {
     workoutId: number;
 };
 
+export type ExerciseType = "WEIGHT_BASED" | "TIME_BASED";
+
 export type ExerciseData = {
     weight?: string;
-    reps: string;
-    duration?: string;
+    reps?: string;
+    duration?: TimeInput;
     confirmed?: boolean;
 };
 
@@ -25,6 +27,7 @@ export type DoneWorkouts = {
 
 export type DoneExerciseData = {
     doneExerciseId: number;
+    type: ExerciseType;
     name: string;
     sets: ExerciseSets;
     fallbackSets?: ExerciseSets;
@@ -39,7 +42,7 @@ export type TimeInput = {
 export type ExerciseSets = ExerciseData[];
 
 export type ExerciseMetaData = {
-    type: "WEIGHT_BASED" | "TIME_BASED";
+    type: ExerciseType;
     name: string;
     weight: string;
     sets: string;
@@ -66,6 +69,7 @@ export type TrainedWorkout = {
     beginTimestamp: number;
     paused: boolean;
     exerciseData: {
+        exerciseType: ExerciseType;
         setIndex: number;
         latestSetIndex: number;
         activeSetIndex: number;

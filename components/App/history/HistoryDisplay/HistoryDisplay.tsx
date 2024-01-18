@@ -15,7 +15,7 @@ interface HistoryDisplayProps {
     handleNavigateToHistory: () => void;
 }
 
-const useHistoryText = (numberHistoryEntries?: number, type: "Workout" | "Measurement") => {
+const useHistoryText = (numberHistoryEntries?: number, type: "Workout" | "Measurement" = "Workout") => {
     const { t } = useTranslation();
     if (!numberHistoryEntries || numberHistoryEntries === 0) {
         return type === "Workout" ? t("workout_history_empty") : t("measurement_history_empty");

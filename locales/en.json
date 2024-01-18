@@ -70,7 +70,9 @@
 
   "weight": "Weight",
   "sets": "Sets",
+  "sets_lower": "sets",
   "reps": "Reps",
+  "reps_lower": "reps",
   "pause": "Pause",
   "after": "after",
   "pause_lower": "pause",

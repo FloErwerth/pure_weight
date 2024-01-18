@@ -1,5 +1,3 @@
-import { Center } from "../../../../Center/Center";
-import { ThemedTextInput } from "../../../../Themed/ThemedTextInput/ThemedTextInput";
 import { styles } from "../styles";
 import { AppState, useAppDispatch, useAppSelector } from "../../../../../store";
 import { getDoneExerciseById } from "../../../../../store/reducers/workout/workoutSelectors";
@@ -8,6 +6,9 @@ import { HStack } from "../../../../Stack/HStack/HStack";
 import { Text } from "../../../../Themed/ThemedText/Text";
 import { mutateDoneExercise } from "../../../../../store/reducers/workout";
 import { View } from "react-native";
+import { getWeightUnit } from "../../../../../store/reducers/settings/settingsSelectors";
+import { EditableExerciseInputRow } from "../../../../EditableExercise/EditableExerciseInputRow";
+import { useTranslation } from "react-i18next";
 
 type WeightBasedEditedExerciseProps = {
     index: number;
@@ -18,6 +19,8 @@ export const WeightBasedEditedExercise = ({ doneWorkoutId, index }: WeightBasedE
     const doneExercise = useAppSelector((state: AppState) => getDoneExerciseById(state, doneWorkoutId, index));
     const dispatch = useAppDispatch();
     const id = useId();
+    const weightUnit = useAppSelector(getWeightUnit);
+    const { t } = useTranslation();
 
     const handleSetWeight = useCallback(
         (setIndex: number, newWeight?: string) => {
@@ -48,19 +51,8 @@ export const WeightBasedEditedExercise = ({ doneWorkoutId, index }: WeightBasedE
                     <Text ghost center style={styles.setIndex}>
                         {index + 1}
                     </Text>
-                    <Center style={styles.center}>
-                        <ThemedTextInput
-                            returnKeyType="done"
-                            style={styles.textInput}
-                            value={weight}
-                            onChangeText={(weight) => handleSetWeight(index, weight)}
-                            textAlign="center"
-                            inputMode="decimal"
-                        />
-                    </Center>
-                    <Center style={styles.center}>
-                        <ThemedTextInput returnKeyType="done" style={styles.textInput} value={reps} onChangeText={(reps) => handleSetReps(index, reps)} textAlign="center" inputMode="decimal" />
-                    </Center>
+                    <EditableExerciseInputRow stretch suffix={weightUnit} value={weight} setValue={(value) => handleSetWeight(index, value)} />
+                    <EditableExerciseInputRow stretch suffix={t("reps_lower")} value={reps} setValue={(value) => handleSetReps(index, value)} />
                 </HStack>
             ))}
         </View>

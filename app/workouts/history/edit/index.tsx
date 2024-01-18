@@ -18,6 +18,7 @@ import { PageContent } from "../../../../components/PageContent/PageContent";
 import { AnswerText } from "../../../../components/HelpQuestionAnswer/AnswerText";
 import { HStack } from "../../../../components/Stack/HStack/HStack";
 import { ThemedMaterialCommunityIcons } from "../../../../components/Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
+import { TimeBasedEditedExercise } from "../../../../components/App/history/EditedExercise/TimeBased";
 
 const saveButtonConfig = { name: "content-save-outline", size: 34 } as const;
 
@@ -62,7 +63,11 @@ export const WorkoutHistoryEdit = ({
                     <Text style={{ fontSize: 20, marginBottom: 10 }} ghost>
                         {item?.name}
                     </Text>
-                    <WeightBasedEditedExercise index={index} doneWorkoutId={doneWorkoutId} />
+                    {item?.type === "WEIGHT_BASED" ? (
+                        <WeightBasedEditedExercise index={index} doneWorkoutId={doneWorkoutId} />
+                    ) : (
+                        <TimeBasedEditedExercise index={index} doneWorkoutId={doneWorkoutId} />
+                    )}
                 </ThemedView>
             );
         },

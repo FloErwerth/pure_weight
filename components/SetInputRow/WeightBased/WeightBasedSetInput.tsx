@@ -36,7 +36,7 @@ export const WeightBasedSetInput = ({ setIndex, exerciseIndex }: SetInputRowProp
 
     const handleSetWeight = useCallback(
         (newWeight?: string) => {
-            dispatch(handleMutateSet({ setIndex, key: "weight", value: newWeight }));
+            dispatch(handleMutateSet({ setIndex, key: "weight", value: newWeight, type: "WEIGHT_BASED" }));
             if (!isActiveSet) {
                 handleSetActive();
             }
@@ -46,7 +46,7 @@ export const WeightBasedSetInput = ({ setIndex, exerciseIndex }: SetInputRowProp
 
     const handleSetReps = useCallback(
         (newReps?: string) => {
-            dispatch(handleMutateSet({ setIndex, key: "reps", value: newReps }));
+            dispatch(handleMutateSet({ setIndex, key: "reps", value: newReps, type: "WEIGHT_BASED" }));
             if (!isActiveSet) {
                 dispatch(setIsActiveSet({ setIndex }));
             }
@@ -59,8 +59,8 @@ export const WeightBasedSetInput = ({ setIndex, exerciseIndex }: SetInputRowProp
             Keyboard.dismiss();
             if (weight && reps) {
                 void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-                dispatch(handleMutateSet({ setIndex, key: "weight", value: weight }));
-                dispatch(handleMutateSet({ setIndex, key: "reps", value: reps }));
+                dispatch(handleMutateSet({ setIndex, key: "weight", value: weight, type: "WEIGHT_BASED" }));
+                dispatch(handleMutateSet({ setIndex, key: "reps", value: reps, type: "WEIGHT_BASED" }));
                 dispatch(markSetAsDone({ setIndex }));
 
                 if (isLastSetGetter(setIndex)) {

@@ -47,7 +47,7 @@ export const TimeBasedSetInput = ({ setIndex, exerciseIndex }: SetInputRowProps)
         if (duration && reps) {
             void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
             dispatch(markSetAsDone({ setIndex }));
-            dispatch(handleMutateSet({ setIndex, key: "duration", value: getMillisecondsFromDuration(duration).toString() }));
+            dispatch(handleMutateSet({ setIndex, key: "duration", value: getMillisecondsFromDuration(duration).toString(), type: "TIME_BASED" }));
 
             if (isLastSetGetter(setIndex)) {
                 emitter.emit("workoutLastSet");
@@ -70,7 +70,7 @@ export const TimeBasedSetInput = ({ setIndex, exerciseIndex }: SetInputRowProps)
     const overallTimeDisplay = useTimeDisplay(isInPreparation ? remainingTime - getMillisecondsFromDuration(duration) : remainingTime);
 
     const handleReset = useCallback(() => {
-        dispatch(handleMutateSet({ setIndex, key: "duration", value: undefined }));
+        dispatch(handleMutateSet({ setIndex, key: "duration", value: undefined, type: "TIME_BASED" }));
         dispatch(setIsActiveSet({ setIndex }));
         reset();
     }, [dispatch, reset, setIndex]);

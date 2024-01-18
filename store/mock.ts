@@ -76,6 +76,7 @@ export const mockState: AppState = {
                         duration: "120",
                         doneExercises: [
                             {
+                                type: "WEIGHT_BASED",
                                 doneExerciseId: 1,
                                 name: "Klimmzüge unterstützt",
                                 sets: [
@@ -87,6 +88,7 @@ export const mockState: AppState = {
                                 note: "Das war ein guter Satz",
                             },
                             {
+                                type: "WEIGHT_BASED",
                                 doneExerciseId: 2,
                                 name: "Rudern",
                                 sets: [
@@ -97,6 +99,7 @@ export const mockState: AppState = {
                                 note: "Das war ein guter Satz",
                             },
                             {
+                                type: "WEIGHT_BASED",
                                 doneExerciseId: 3,
                                 name: "Bizeps",
                                 sets: [
@@ -115,6 +118,7 @@ export const mockState: AppState = {
                         duration: "120",
                         doneExercises: [
                             {
+                                type: "WEIGHT_BASED",
                                 doneExerciseId: 2,
                                 name: "Klimmzüge unterstützt",
                                 sets: [{ weight: "50", reps: "5" }],
@@ -128,6 +132,7 @@ export const mockState: AppState = {
                         duration: "120",
                         doneExercises: [
                             {
+                                type: "WEIGHT_BASED",
                                 doneExerciseId: 3,
                                 name: "Seilzüge",
                                 sets: [{ weight: "50", reps: "5" }],
@@ -141,6 +146,7 @@ export const mockState: AppState = {
                         duration: "120",
                         doneExercises: [
                             {
+                                type: "WEIGHT_BASED",
                                 doneExerciseId: 4,
                                 name: "Klimmzüge",
                                 sets: [{ weight: "50", reps: "5" }],
@@ -154,6 +160,7 @@ export const mockState: AppState = {
                         duration: "120",
                         doneExercises: [
                             {
+                                type: "WEIGHT_BASED",
                                 doneExerciseId: 5,
                                 name: "Klimmzüge unterstützt",
                                 sets: [{ weight: "50", reps: "5" }],
@@ -166,6 +173,7 @@ export const mockState: AppState = {
                         duration: "120",
                         doneExercises: [
                             {
+                                type: "WEIGHT_BASED",
                                 doneExerciseId: 6,
                                 name: "Klimmzüge unterstützt",
                                 sets: [{ weight: "50", reps: "5" }],
@@ -178,6 +186,7 @@ export const mockState: AppState = {
                         duration: "120",
                         doneExercises: [
                             {
+                                type: "WEIGHT_BASED",
                                 doneExerciseId: 7,
                                 name: "Klimmzüge unterstützt",
                                 sets: [{ weight: "50", reps: "5" }],
@@ -190,6 +199,7 @@ export const mockState: AppState = {
                         duration: "120",
                         doneExercises: [
                             {
+                                type: "WEIGHT_BASED",
                                 doneExerciseId: 8,
                                 name: "Klimmzüge unterstützt",
                                 sets: [{ weight: "50", reps: "5" }],
@@ -202,6 +212,7 @@ export const mockState: AppState = {
                         duration: "120",
                         doneExercises: [
                             {
+                                type: "WEIGHT_BASED",
                                 doneExerciseId: 9,
                                 name: "Klimmzüge unterstützt",
                                 sets: [{ weight: "50", reps: "5" }],
@@ -234,9 +245,16 @@ export const mockState: AppState = {
                         duration: "120",
                         doneExercises: [
                             {
+                                type: "WEIGHT_BASED",
                                 doneExerciseId: 1,
                                 name: "Bankdrücken",
                                 sets: [{ weight: "50", reps: "5" }],
+                            },
+                            {
+                                type: "TIME_BASED",
+                                doneExerciseId: 2,
+                                name: "Planks",
+                                sets: [{ duration: { seconds: "30", minutes: "1" } }],
                             },
                         ],
                     },

@@ -184,8 +184,8 @@ export const getOverallTrainingTrend = createSelector([getWorkouts, (workouts, i
             const beforeExercise = workoutBefore.doneExercises![j];
             const currentExercise = currentWorkout.doneExercises![j];
             if (currentExercise !== undefined && currentExercise.name === beforeExercise.name) {
-                const beforeOverall = beforeExercise.sets.reduce((sum, set) => sum + parseFloat(set.reps) * parseFloat(set?.weight ?? "0"), 0);
-                const currentOverall = currentExercise.sets.reduce((sum, set) => sum + parseFloat(set.reps) * parseFloat(set?.weight ?? "0"), 0);
+                const beforeOverall = beforeExercise.sets.reduce((sum, set) => sum + parseFloat(set?.reps ?? "0") * parseFloat(set?.weight ?? "0"), 0);
+                const currentOverall = currentExercise.sets.reduce((sum, set) => sum + parseFloat(set?.reps ?? "0") * parseFloat(set?.weight ?? "0"), 0);
 
                 const result: {
                     cleanedPercent: number;

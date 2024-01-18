@@ -2,7 +2,7 @@ import { createAction, createReducer } from "@reduxjs/toolkit/src";
 import { SortingType } from "../../types";
 import { Temporal } from "@js-temporal/polyfill";
 import { sortWorkouts } from "./sortWorkouts";
-import { DoneExerciseData, ExerciseData, ExerciseMetaData, TimeInput, TrainedWorkout, Workout, WorkoutState } from "./types";
+import { DoneExerciseData, ExerciseData, ExerciseMetaData, ExerciseType, TimeInput, TrainedWorkout, Workout, WorkoutState } from "./types";
 import { getRandomColorFromPalette } from "../../../utils/colorPalette";
 import { getDateTodayIso } from "../../../utils/date";
 
@@ -45,14 +45,18 @@ export const createNewExercise = createAction("workout_create_new_exercise");
 export const createNewWorkout = createAction("workout_create_new_workout");
 export const saveEditedWorkout = createAction<boolean | undefined, "workout_save_edited_workout">("workout_save_edited_workout");
 export const setEditedWorkoutName = createAction<string | undefined, "workout_set_edited_workout_name">("workout_set_edited_workout_name");
-export const handleMutateSet = createAction<{ setIndex: number; key: keyof ExerciseData; value?: string | boolean }, "handle_mutate_set">("handle_mutate_set");
+export const handleMutateSet = createAction<{ setIndex: number; key: keyof ExerciseData; value?: string | boolean; type: ExerciseType }, "handle_mutate_set">("handle_mutate_set");
 export const markSetAsDone = createAction<{ setIndex: number }, "mark_set_as_done">("mark_set_as_done");
 export const setIsActiveSet = createAction<{ setIndex: number }, "set_is_active_set">("set_is_active_set");
 export const setColor = createAction<string, "set_color">("set_color");
 export const pauseTrainedWorkout = createAction("pause_trained_workout");
-export const mutateDoneExercise = createAction<{ doneWorkoutId: number; doneExerciseId: number; setIndex: number; key: keyof ExerciseData; value: ExerciseData[keyof ExerciseData] }>(
-    "mutate_done_exercise",
-);
+export const mutateDoneExercise = createAction<{
+    doneWorkoutId: number;
+    doneExerciseId: number;
+    setIndex: number;
+    key: keyof ExerciseData;
+    value: ExerciseData[keyof ExerciseData];
+}>("mutate_done_exercise");
 
 export const discardChangesToDoneExercises = createAction<{ doneWorkoutId: number }>("discardChangesToDoneExercises");
 export const deleteFallbackSets = createAction<{ doneWorkoutId: number }>("deleteFallbackSets");
@@ -151,7 +155,10 @@ export const workoutReducer = createReducer<WorkoutState>({ workouts: [], sortin
             const trainedWorkout = state.trainedWorkout;
             if (trainedWorkout) {
                 const doneSet = trainedWorkout.exerciseData[trainedWorkout.activeExerciseIndex].doneSets[action.payload.setIndex];
-                trainedWorkout.exerciseData[trainedWorkout.activeExerciseIndex].doneSets[action.payload.setIndex] = { ...doneSet, [action.payload.key]: action.payload.value };
+                const exercise = trainedWorkout.exerciseData[trainedWorkout.activeExerciseIndex];
+                exercise.exerciseType = action.payload.type;
+                exercise.doneSets[action.payload.setIndex] = { ...doneSet, [action.payload.key]: action.payload.value };
+                trainedWorkout.exerciseData[trainedWorkout.activeExerciseIndex] = exercise;
             }
         })
         .addCase(markSetAsDone, (state, action) => {
@@ -262,7 +269,6 @@ export const workoutReducer = createReducer<WorkoutState>({ workouts: [], sortin
         })
         .addCase(mutateEditedExerciseTimeValue, (state, action) => {
             if (state.editedExercise) {
-                console.log(action.payload);
                 state.editedExercise = {
                     index: state.editedExercise.index,
                     exercise: {
@@ -311,6 +317,7 @@ export const workoutReducer = createReducer<WorkoutState>({ workouts: [], sortin
                     name: data.name,
                     sets: data.doneSets,
                     note: data.note,
+                    type: data.exerciseType,
                 }));
                 state.workouts
                     .find((workout) => workout.workoutId === workoutIndex)
@@ -361,6 +368,7 @@ export const workoutReducer = createReducer<WorkoutState>({ workouts: [], sortin
                         .map((_, exerciseIndex) => {
                             const metaData = workout?.exercises[exerciseIndex];
                             const prefilledMetaData: TrainedWorkout["exerciseData"][number] = {
+                                exerciseType: "WEIGHT_BASED",
                                 name: metaData?.name ?? "",
                                 activeSetIndex: 0,
                                 latestSetIndex: 0,
@@ -385,6 +393,7 @@ export const workoutReducer = createReducer<WorkoutState>({ workouts: [], sortin
                         if (!doneExercise.fallbackSets) {
                             doneExercise.fallbackSets = [...doneExercise.sets];
                         }
+                        console.log(doneExercise.sets[action.payload.setIndex]);
                         doneExercise.sets[action.payload.setIndex] = { ...doneExercise.sets[action.payload.setIndex], [action.payload.key]: action.payload.value };
                     }
                     doneWorkout.doneExercises[doneExerciseIndex] = doneExercise;
