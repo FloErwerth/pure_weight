@@ -47,7 +47,6 @@ export type RoutesParamaters = {
     };
     "workouts/history/edit/index": {
         screen: "workouts/history/edit/index";
-        doneExerciseIndex: number;
         doneWorkoutId: number;
     };
     ["tabs"]: {

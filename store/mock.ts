@@ -72,13 +72,39 @@ export const mockState: AppState = {
                 doneWorkouts: [
                     {
                         doneWorkoutId: 1,
-                        isoDate: "2023-10-01",
+                        isoDate: "2023-11-12",
                         duration: "120",
                         doneExercises: [
                             {
-                                storageExerciseId: 0,
+                                doneExerciseId: 1,
                                 name: "Klimmzüge unterstützt",
-                                sets: [{ weight: "50", reps: "5" }],
+                                sets: [
+                                    { weight: "50", reps: "5" },
+                                    { weight: "50", reps: "5" },
+                                    { weight: "50", reps: "5" },
+                                    { weight: "50", reps: "5" },
+                                ],
+                                note: "Das war ein guter Satz",
+                            },
+                            {
+                                doneExerciseId: 2,
+                                name: "Rudern",
+                                sets: [
+                                    { weight: "50", reps: "5" },
+                                    { weight: "50", reps: "5" },
+                                    { weight: "50", reps: "5" },
+                                ],
+                                note: "Das war ein guter Satz",
+                            },
+                            {
+                                doneExerciseId: 3,
+                                name: "Bizeps",
+                                sets: [
+                                    { weight: "50", reps: "5" },
+                                    { weight: "50", reps: "5" },
+                                    { weight: "50", reps: "5" },
+                                    { weight: "50", reps: "5" },
+                                ],
                                 note: "Das war ein guter Satz",
                             },
                         ],
@@ -89,7 +115,7 @@ export const mockState: AppState = {
                         duration: "120",
                         doneExercises: [
                             {
-                                storageExerciseId: 0,
+                                doneExerciseId: 2,
                                 name: "Klimmzüge unterstützt",
                                 sets: [{ weight: "50", reps: "5" }],
                                 note: "Das war ein guter Satz",
@@ -102,8 +128,8 @@ export const mockState: AppState = {
                         duration: "120",
                         doneExercises: [
                             {
-                                storageExerciseId: 0,
-                                name: "Klimmzüge unterstützt",
+                                doneExerciseId: 3,
+                                name: "Seilzüge",
                                 sets: [{ weight: "50", reps: "5" }],
                                 note: "Das war ein guter Satz",
                             },
@@ -115,8 +141,8 @@ export const mockState: AppState = {
                         duration: "120",
                         doneExercises: [
                             {
-                                storageExerciseId: 0,
-                                name: "Klimmzüge unterstützt",
+                                doneExerciseId: 4,
+                                name: "Klimmzüge",
                                 sets: [{ weight: "50", reps: "5" }],
                                 note: "Das war ein guter Satz",
                             },
@@ -124,11 +150,11 @@ export const mockState: AppState = {
                     },
                     {
                         doneWorkoutId: 5,
-                        isoDate: "2023-12-04",
+                        isoDate: "2023-12-01",
                         duration: "120",
                         doneExercises: [
                             {
-                                storageExerciseId: 0,
+                                doneExerciseId: 5,
                                 name: "Klimmzüge unterstützt",
                                 sets: [{ weight: "50", reps: "5" }],
                             },
@@ -136,11 +162,11 @@ export const mockState: AppState = {
                     },
                     {
                         doneWorkoutId: 6,
-                        isoDate: "2023-12-05",
+                        isoDate: "2023-12-01",
                         duration: "120",
                         doneExercises: [
                             {
-                                storageExerciseId: 0,
+                                doneExerciseId: 6,
                                 name: "Klimmzüge unterstützt",
                                 sets: [{ weight: "50", reps: "5" }],
                             },
@@ -148,11 +174,11 @@ export const mockState: AppState = {
                     },
                     {
                         doneWorkoutId: 7,
-                        isoDate: "2023-12-06",
+                        isoDate: "2023-12-01",
                         duration: "120",
                         doneExercises: [
                             {
-                                storageExerciseId: 0,
+                                doneExerciseId: 7,
                                 name: "Klimmzüge unterstützt",
                                 sets: [{ weight: "50", reps: "5" }],
                             },
@@ -164,7 +190,7 @@ export const mockState: AppState = {
                         duration: "120",
                         doneExercises: [
                             {
-                                storageExerciseId: 0,
+                                doneExerciseId: 8,
                                 name: "Klimmzüge unterstützt",
                                 sets: [{ weight: "50", reps: "5" }],
                             },
@@ -176,7 +202,7 @@ export const mockState: AppState = {
                         duration: "120",
                         doneExercises: [
                             {
-                                storageExerciseId: 0,
+                                doneExerciseId: 9,
                                 name: "Klimmzüge unterstützt",
                                 sets: [{ weight: "50", reps: "5" }],
                             },
@@ -208,7 +234,7 @@ export const mockState: AppState = {
                         duration: "120",
                         doneExercises: [
                             {
-                                storageExerciseId: 0,
+                                doneExerciseId: 1,
                                 name: "Bankdrücken",
                                 sets: [{ weight: "50", reps: "5" }],
                             },

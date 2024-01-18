@@ -107,6 +107,11 @@
   "workout_history_plural": "Workouts abgeschlossen",
   "workout_history_edit_title": "Vorher. Workout bearbeiten",
 
+  "workout_history_edit_warning_title": "Änderungen nicht gespeichert",
+  "workout_history_edit_warning_message": "Du hast Änderungen an diesem Workout vorgenommen, die noch nicht gespeichert wurden. \n\nMöchtest Du die Änderungen speichern?",
+  "workout_history_edit_discard_action": "Änderungen verwerfen",
+  "workout_history_edit_save_action": "Änderungen speichern",
+
   "measurement_history_empty": "Noch keine Messungen vorhanden",
   "measurement_history_single": "Eine Messung gespeichert",
   "measurement_history_plural": "Messungen gespeichert",

@@ -24,10 +24,11 @@ export type DoneWorkouts = {
 }[];
 
 export type DoneExerciseData = {
+    doneExerciseId: number;
     name: string;
     sets: ExerciseSets;
+    fallbackSets?: ExerciseSets;
     note?: string;
-    storageExerciseId: number;
 };
 
 export type TimeInput = {

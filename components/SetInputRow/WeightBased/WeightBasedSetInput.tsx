@@ -33,6 +33,7 @@ export const WeightBasedSetInput = ({ setIndex, exerciseIndex }: SetInputRowProp
             dispatch(setIsActiveSet({ setIndex }));
         }
     }, [dispatch, isActiveSet, setIndex]);
+
     const handleSetWeight = useCallback(
         (newWeight?: string) => {
             dispatch(handleMutateSet({ setIndex, key: "weight", value: newWeight }));

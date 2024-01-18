@@ -8,7 +8,6 @@ import { getLastNEntries } from "../../../utils/getLastNEntries";
 import { ExerciseSets } from "./types";
 import { Temporal } from "@js-temporal/polyfill";
 import { getSinceDate } from "../../../utils/timeAgo";
-import { FlatListData } from "../../../app/workouts/history";
 import { sortWorkouts } from "./sortWorkouts";
 
 export const getWorkoutState = ({ workoutState }: AppState) => workoutState;
@@ -114,35 +113,10 @@ export const getCanSnap = createSelector([getTrainedWorkout], (trainedWorkout) =
     }
     return trainedWorkout.exerciseData[exerciseIndex].canSnap;
 });
-export const getHistoryByMonth = createSelector([getEditedWorkout, (editedWorkout, month?: string) => month ?? getDateTodayIso()], (editedWorkout, searchedMonth) => {
+export const getWorkoutsByMonth = createSelector([getEditedWorkout, (editedWorkout, selectedDate?: string) => selectedDate ?? getDateTodayIso()], (editedWorkout, searchedDate) => {
     const workout = editedWorkout?.workout;
-    const foundTrainings: Map<string, FlatListData> = new Map();
 
-    workout?.doneWorkouts?.forEach((doneWorkout) => {
-        const date = doneWorkout.isoDate;
-        const calculatedWorkoutData = foundTrainings.get(date)?.calculatedWorkoutData ?? [];
-        calculatedWorkoutData.push({
-            duration: doneWorkout.duration,
-            weight: (
-                doneWorkout.doneExercises?.reduce(
-                    (sum, current) => sum + current.sets.reduce((sumSet, currentSet) => sumSet + parseFloat(currentSet?.weight ?? "0") * parseFloat(currentSet.reps), 0),
-                    0,
-                ) ?? 0
-            ).toFixed(2),
-            numExercisesDone: doneWorkout.doneExercises?.length ?? 0,
-        });
-        foundTrainings.set(date, {
-            doneWorkoutId: doneWorkout.doneWorkoutId,
-            color: workout?.calendarColor,
-            name: workout?.name,
-            date,
-            calculatedWorkoutData,
-        });
-    });
-
-    return Array.from(foundTrainings)
-        .filter((value) => getMonth(value[0] as IsoDate) === getMonth((searchedMonth ?? getDateTodayIso()) as IsoDate))
-        .map(([month, data]) => ({ title: month, data: [data] }));
+    return workout?.doneWorkouts?.filter(({ isoDate }) => getMonth(isoDate) === getMonth((searchedDate as IsoDate) ?? getDateTodayIso()));
 });
 export const getHasHistory = createSelector([getWorkouts, (workouts, workoutId: number) => workoutId], (workouts, workoutId) => {
     const doneWorkouts = workouts?.find((workout) => workout?.workoutId === workoutId)?.doneWorkouts;
@@ -230,6 +204,7 @@ export const getOverallTrainingTrend = createSelector([getWorkouts, (workouts, i
             }
         }
     }
+
     const foundBestExercise = Array.from(latestExercisePairs).reduce(
         (bestImprovement, [name, { isPositive, cleanedPercent }], index) => {
             if (index === 0) {
@@ -355,15 +330,28 @@ export const getIsOngoingWorkout = createSelector([getTrainedWorkout, (trainedWo
     return trainedWorkout && trainedWorkout?.workout.workoutId === workoutIndex;
 });
 
-export const getDoneWorkoutDataByIndex = createSelector(
-    [getEditedWorkout, (workout, doneWorkoutId: number) => doneWorkoutId, (workout, doneWorkoutId, doneExerciseIndex: number) => doneExerciseIndex],
-    (editedWorkout, doneExerciseIndex, doneWorkoutId) => {
-        const doneWorkout = editedWorkout?.workout?.doneWorkouts?.find((doneWorkout) => doneWorkoutId === doneWorkout.doneWorkoutId);
-        return doneWorkout?.doneExercises?.[doneWorkoutId];
+export const getDoneWorkoutById = createSelector([getEditedWorkout, (editedWorkout, doneWorkoutIndex: number) => doneWorkoutIndex], (editedWorkout, doneWorkoutIndex) => {
+    return editedWorkout?.workout?.doneWorkouts.find((doneWorkout) => doneWorkout.doneWorkoutId === doneWorkoutIndex);
+});
+
+export const getDoneExercises = createSelector([getEditedWorkout, (workout, doneWorkoutIndex: number) => doneWorkoutIndex], (editedWorkout, doneWorkoutIndex) => {
+    const doneWorkout = editedWorkout?.workout?.doneWorkouts.find((doneWorkout) => doneWorkout.doneWorkoutId === doneWorkoutIndex);
+    return doneWorkout?.doneExercises ?? [];
+});
+
+export const getDoneExerciseById = createSelector(
+    [getEditedWorkout, (workout, doneWorkoutId: number) => doneWorkoutId, (workout, doneWorkoutId, doneExerciseIndex) => doneExerciseIndex],
+    (editedWorkout, doneWorkoutId, doneExerciseIndex) => {
+        const doneWorkout = editedWorkout?.workout?.doneWorkouts.find((doneWorkout) => doneWorkout.doneWorkoutId === doneWorkoutId);
+        return doneWorkout?.doneExercises?.[doneExerciseIndex];
     },
 );
 
-export const getDoneExercises = createSelector([getEditedWorkout, (workout, doneWorkoutId: number) => doneWorkoutId], (editedWorkout, doneWorkoutId) => {
-    const doneWorkout = editedWorkout?.workout?.doneWorkouts?.find((doneWorkout) => doneWorkoutId === doneWorkout.doneWorkoutId);
-    return doneWorkout?.doneExercises;
+export const getAnyHasFallbackSets = createSelector([getEditedWorkout, (editedWorkout, doneWorkoutIndex: number) => doneWorkoutIndex], (editedWorkout, doneWorkoutIndex) => {
+    const doneWorkout = editedWorkout?.workout?.doneWorkouts.find((doneWorkout) => doneWorkout.doneWorkoutId === doneWorkoutIndex);
+    const hasFallbackSets = Boolean(doneWorkout?.doneExercises?.some((exercise) => exercise.fallbackSets));
+    const setsAreEqual = Boolean(
+        doneWorkout?.doneExercises?.every((exercise) => exercise.sets.every((set, index) => exercise.fallbackSets?.[index].reps === set.reps && exercise.fallbackSets?.[index].weight === set.weight)),
+    );
+    return hasFallbackSets && !setsAreEqual;
 });

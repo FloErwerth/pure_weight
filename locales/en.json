@@ -23,6 +23,12 @@
   "workout_history_single": "One workout completed",
   "workout_history_plural": "workouts completed",
   "workout_history_edit_title": "Edit previous workout",
+
+  "workout_history_edit_warning_title": "Changes not saved",
+  "workout_history_edit_warning_message": "The changes made to the workout are not saved at the moment. \n\nDo you want to save the changes?",
+  "workout_history_edit_discard_action": "Discard changes",
+  "workout_history_edit_save_action": "Save changes",
+
   "measurement_history_empty": "No measurements available",
   "measurement_history_single": "One measurement saved",
   "measurement_history_plural": "measurements saved",

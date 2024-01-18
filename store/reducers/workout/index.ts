@@ -43,14 +43,19 @@ export const removeWorkout = createAction<number, "workout_remove">("workout_rem
 export const addDoneWorkout = createAction("set_training_data");
 export const createNewExercise = createAction("workout_create_new_exercise");
 export const createNewWorkout = createAction("workout_create_new_workout");
-export const saveEditedWorkout = createAction("workout_save_edited_workout");
+export const saveEditedWorkout = createAction<boolean | undefined, "workout_save_edited_workout">("workout_save_edited_workout");
 export const setEditedWorkoutName = createAction<string | undefined, "workout_set_edited_workout_name">("workout_set_edited_workout_name");
 export const handleMutateSet = createAction<{ setIndex: number; key: keyof ExerciseData; value?: string | boolean }, "handle_mutate_set">("handle_mutate_set");
 export const markSetAsDone = createAction<{ setIndex: number }, "mark_set_as_done">("mark_set_as_done");
 export const setIsActiveSet = createAction<{ setIndex: number }, "set_is_active_set">("set_is_active_set");
-export const resetSet = createAction<{ setIndex: number }, "reset_set">("reset_set");
 export const setColor = createAction<string, "set_color">("set_color");
 export const pauseTrainedWorkout = createAction("pause_trained_workout");
+export const mutateDoneExercise = createAction<{ doneWorkoutId: number; doneExerciseId: number; setIndex: number; key: keyof ExerciseData; value: ExerciseData[keyof ExerciseData] }>(
+    "mutate_done_exercise",
+);
+
+export const discardChangesToDoneExercises = createAction<{ doneWorkoutId: number }>("discardChangesToDoneExercises");
+export const deleteFallbackSets = createAction<{ doneWorkoutId: number }>("deleteFallbackSets");
 
 export type WorkoutAction =
     | typeof setEditedWorkout.type
@@ -302,7 +307,7 @@ export const workoutReducer = createReducer<WorkoutState>({ workouts: [], sortin
                 const endTimestamp = Temporal.Now.instant().epochMilliseconds;
                 const duration = (endTimestamp - beginTimestamp) / 1000;
                 const doneExercises: DoneExerciseData[] = workout.exerciseData.map((data) => ({
-                    storageExerciseId: workout.workout.exercises.findIndex((exercise) => exercise.name === data.name),
+                    doneExerciseId: workout.workout.exercises.findIndex((exercise) => exercise.name === data.name),
                     name: data.name,
                     sets: data.doneSets,
                     note: data.note,
@@ -318,7 +323,7 @@ export const workoutReducer = createReducer<WorkoutState>({ workouts: [], sortin
             }
             state.trainedWorkout = undefined;
         })
-        .addCase(saveEditedWorkout, (state) => {
+        .addCase(saveEditedWorkout, (state, action) => {
             if (state.editedWorkout !== undefined) {
                 if (state.editedWorkout.isNew) {
                     state.workouts = [...state.workouts, state.editedWorkout.workout];
@@ -332,6 +337,9 @@ export const workoutReducer = createReducer<WorkoutState>({ workouts: [], sortin
                         state.editedWorkout.workout,
                     );
                 }
+            }
+            if (action.payload) {
+                return;
             }
             state.editedWorkout = undefined;
         })
@@ -364,6 +372,55 @@ export const workoutReducer = createReducer<WorkoutState>({ workouts: [], sortin
                             return prefilledMetaData;
                         }),
                 };
+            }
+        })
+        .addCase(mutateDoneExercise, (state, action) => {
+            if (state.editedWorkout && state.editedWorkout.workout.doneWorkouts) {
+                const doneWorkoutIndex = state.editedWorkout.workout.doneWorkouts.findIndex((doneWorkout) => doneWorkout.doneWorkoutId === action.payload.doneWorkoutId);
+                const doneWorkout = state.editedWorkout.workout.doneWorkouts[doneWorkoutIndex];
+                if (doneWorkout && doneWorkout.doneExercises) {
+                    const doneExerciseIndex = doneWorkout.doneExercises.findIndex((doneExercise) => doneExercise.doneExerciseId === action.payload.doneExerciseId);
+                    const doneExercise = doneWorkout.doneExercises[doneExerciseIndex];
+                    if (doneExercise) {
+                        if (!doneExercise.fallbackSets) {
+                            doneExercise.fallbackSets = [...doneExercise.sets];
+                        }
+                        doneExercise.sets[action.payload.setIndex] = { ...doneExercise.sets[action.payload.setIndex], [action.payload.key]: action.payload.value };
+                    }
+                    doneWorkout.doneExercises[doneExerciseIndex] = doneExercise;
+                }
+                state.editedWorkout.workout.doneWorkouts[doneWorkoutIndex] = doneWorkout;
+            }
+        })
+        .addCase(discardChangesToDoneExercises, (state, action) => {
+            if (state.editedWorkout && state.editedWorkout.workout.doneWorkouts) {
+                const doneWorkoutIndex = state.editedWorkout.workout.doneWorkouts.findIndex((doneWorkout) => doneWorkout.doneWorkoutId === action.payload.doneWorkoutId);
+                const doneWorkout = state.editedWorkout.workout.doneWorkouts[doneWorkoutIndex];
+                if (doneWorkout && doneWorkout.doneExercises) {
+                    doneWorkout.doneExercises = doneWorkout.doneExercises.map((doneExercise) => {
+                        if (doneExercise.fallbackSets) {
+                            doneExercise.sets = doneExercise.fallbackSets;
+                            delete doneExercise.fallbackSets;
+                        }
+                        return doneExercise;
+                    });
+                }
+                state.editedWorkout.workout.doneWorkouts[doneWorkoutIndex] = doneWorkout;
+            }
+        })
+        .addCase(deleteFallbackSets, (state, action) => {
+            if (state.editedWorkout && state.editedWorkout.workout.doneWorkouts) {
+                const doneWorkoutIndex = state.editedWorkout.workout.doneWorkouts.findIndex((doneWorkout) => doneWorkout.doneWorkoutId === action.payload.doneWorkoutId);
+                const doneWorkout = state.editedWorkout.workout.doneWorkouts[doneWorkoutIndex];
+                if (doneWorkout && doneWorkout.doneExercises) {
+                    doneWorkout.doneExercises = doneWorkout.doneExercises.map((doneExercise) => {
+                        if (doneExercise.fallbackSets) {
+                            delete doneExercise.fallbackSets;
+                        }
+                        return doneExercise;
+                    });
+                }
+                state.editedWorkout.workout.doneWorkouts[doneWorkoutIndex] = doneWorkout;
             }
         });
 });

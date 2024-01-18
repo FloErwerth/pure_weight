@@ -10,8 +10,8 @@ export const styles = StyleSheet.create({
         marginVertical: 3,
     },
     inputStack: { gap: 10 },
-    numberCenter: { flex: 0.2, height: 50 },
     center: { flex: 1, height: 50 },
+    numberCenter: { flex: 0.2, height: 50 },
     textNumber: { padding: 10, fontSize: 16 },
     textInput: {
         padding: 10,

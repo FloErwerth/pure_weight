@@ -12,21 +12,16 @@ import { useMemo } from "react";
 
 type WorkoutHistoryCardProps = {
     date: IsoDate;
-    weight: string;
-    weightUnit: string;
-    duration?: string;
-    numExercisesDone: number;
     doneWorkoutId: number;
-    index: number;
-    handleEdit?: (doneExerciseIndex: number) => void;
+    handleEdit?: () => void;
 };
 
-export const WorkoutHistoryCard = ({ date, doneWorkoutId, numExercisesDone, index, weight, weightUnit, duration, handleEdit }: WorkoutHistoryCardProps) => {
+export const WorkoutHistoryCard = ({ date, doneWorkoutId, handleEdit }: WorkoutHistoryCardProps) => {
     const language = useAppSelector(getLanguage);
     const doneExercises = useAppSelector((state: AppState) => getDoneExercises(state, doneWorkoutId));
-    const key = useMemo(() => Math.random() * doneWorkoutId * index, [doneWorkoutId, index]);
+    const key = useMemo(() => Math.random() * doneWorkoutId, [doneWorkoutId]);
     return (
-        <ThemedPressable style={styles.wrapper} onPress={() => handleEdit?.(index)} key={key} input round padding>
+        <ThemedPressable style={styles.wrapper} onPress={handleEdit} key={key} input round padding>
             <Text style={styles.date} ghost>
                 {getLocaleDate(date, language, { dateStyle: "long" })}
             </Text>

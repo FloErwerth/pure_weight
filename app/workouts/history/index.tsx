@@ -13,8 +13,7 @@ import { IsoDate } from "../../../types/date";
 import { Dimensions, FlatList } from "react-native";
 import { RenderedDay } from "../../../components/App/history/RenderedDay/RenderedDay";
 import { DayProps } from "react-native-calendars/src/calendar/day";
-import { getEditedWorkout, getFirstWorkoutDate, getHistoryByMonth, getLatestWorkoutDate, getSortedDoneWorkout, getWorkoutColor } from "../../../store/reducers/workout/workoutSelectors";
-import { getWeightUnit } from "../../../store/reducers/settings/settingsSelectors";
+import { getEditedWorkout, getFirstWorkoutDate, getLatestWorkoutDate, getSortedDoneWorkout, getWorkoutColor, getWorkoutsByMonth } from "../../../store/reducers/workout/workoutSelectors";
 import { noop } from "lodash";
 import { WorkoutHistoryCard } from "../../../components/WorkoutHistoryCard/WorkoutHistoryCard";
 import { getDateTodayIso } from "../../../utils/date";
@@ -23,10 +22,9 @@ import { Text } from "../../../components/Themed/ThemedText/Text";
 
 export type FlatListData = {
     doneWorkoutId: number;
-    handleEdit?: (doneExerciseIndex: number) => void;
+    handleEdit?: () => void;
     color: string;
     name: string;
-    calculatedWorkoutData: { weight: string; numExercisesDone: number; duration?: string }[];
     date: IsoDate;
 };
 
@@ -54,7 +52,7 @@ function monthDiff(d1: Date, d2: Date) {
     return months <= 0 ? 0 : months;
 }
 
-const useScrollRanges = (selectedDate: IsoDate) => {
+const useScrollRanges = () => {
     const editedWorkout = useAppSelector(getEditedWorkout);
     const latestWorkoutDate = useAppSelector((state: AppState) => getLatestWorkoutDate(state, editedWorkout?.workout?.workoutId ?? 0));
     const firstWorkoutDate = useAppSelector((state: AppState) => getFirstWorkoutDate(state, editedWorkout?.workout?.workoutId ?? 0));
@@ -71,14 +69,13 @@ export function WorkoutHistory() {
     const editedWorkout = useAppSelector(getEditedWorkout);
     const latestWorkoutDate = useAppSelector((state: AppState) => getLatestWorkoutDate(state, editedWorkout?.workout.workoutId ?? 0));
     const [selectedDate, setSelectedDate] = useState<IsoDate>(latestWorkoutDate);
-    const { past, future } = useScrollRanges(selectedDate);
+    const { past, future } = useScrollRanges();
     const markedDates = useMarkedDates(editedWorkout?.workout.workoutId);
     const workout = useAppSelector(getEditedWorkout);
     const [ref, open, close] = useBottomSheetRef();
     const sectionListRef = useRef<FlatList>(null);
-    const dateData = useAppSelector((state: AppState) => getHistoryByMonth(state, selectedDate));
+    const workoutsInMonth = useAppSelector((state: AppState) => getWorkoutsByMonth(state, selectedDate));
     const navigate = useNavigate();
-    const weightUnit = useAppSelector(getWeightUnit);
 
     useEffect(() => {
         setSelectedDate(latestWorkoutDate);
@@ -113,43 +110,28 @@ export function WorkoutHistory() {
     );
 
     const mappedDateData = useMemo(() => {
-        return dateData?.map((section) => {
-            const { date, calculatedWorkoutData, doneWorkoutId } = section.data[0];
-            const handleEdit = (doneExerciseIndex: number) => {
-                navigate("workouts/history/edit/index", { doneWorkoutId, doneExerciseIndex });
+        return workoutsInMonth?.map((section) => {
+            const { doneWorkoutId, isoDate } = section;
+            const handleEdit = () => {
+                navigate("workouts/history/edit/index", { doneWorkoutId });
             };
             const name = workout?.workout?.name ?? "";
-            const color = markedDates?.[date] ?? mainColor;
-            return { handleEdit, date, name, color, calculatedWorkoutData, doneWorkoutId };
+            const color = markedDates?.[isoDate] ?? mainColor;
+            return { handleEdit, date: isoDate, name, color, doneWorkoutId };
         });
-    }, [dateData, mainColor, markedDates, navigate, workout?.workout?.name]);
+    }, [workoutsInMonth, mainColor, markedDates, navigate, workout?.workout?.name]);
 
-    const renderItem = useCallback(
-        ({ item }: { item: FlatListData }) => {
-            if (item === undefined) {
-                return <ThemedView key="GHOST" ghost stretch style={styles.workout} />;
-            }
-            const { handleEdit, calculatedWorkoutData, doneWorkoutId, date } = item;
-            return (
-                <ThemedView ghost style={styles.workout}>
-                    {calculatedWorkoutData.map(({ weight, duration, numExercisesDone }, index) => (
-                        <WorkoutHistoryCard
-                            key={Math.random() * doneWorkoutId * index}
-                            date={date}
-                            doneWorkoutId={doneWorkoutId}
-                            duration={duration}
-                            index={index}
-                            numExercisesDone={numExercisesDone}
-                            weight={weight}
-                            weightUnit={weightUnit}
-                            handleEdit={handleEdit}
-                        />
-                    ))}
-                </ThemedView>
-            );
-        },
-        [weightUnit],
-    );
+    const renderItem = useCallback(({ item }: { item: FlatListData }) => {
+        if (item === undefined) {
+            return <ThemedView key="GHOST" ghost stretch style={styles.workout} />;
+        }
+        const { handleEdit, doneWorkoutId, date } = item;
+        return (
+            <ThemedView ghost style={styles.workout}>
+                <WorkoutHistoryCard key={Math.random() * doneWorkoutId} date={date} doneWorkoutId={doneWorkoutId} handleEdit={handleEdit} />
+            </ThemedView>
+        );
+    }, []);
 
     const dayComponent = useCallback(
         (date: DayProps & { date?: DateData | undefined }) => {

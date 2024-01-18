@@ -2,7 +2,6 @@ import { ReactNode, RefObject, useCallback, useMemo, useState } from "react";
 import { SnapPoint, ThemedBottomSheetModal, useBottomSheetRef } from "../BottomSheetModal/ThemedBottomSheetModal";
 import * as Haptics from "expo-haptics";
 import { useTranslation } from "react-i18next";
-import { borderRadius } from "../../theme/border";
 import { Text } from "../Themed/ThemedText/Text";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { ThemedPressable } from "../Themed/Pressable/Pressable";
@@ -124,7 +123,6 @@ export const BackButtonModal = ({ title, snapPoints = ["25%"], reference, onPaus
         onPause();
     }, [onPause]);
 
-    const buttonStyle = useMemo(() => ({ padding: 10, borderRadius }), []);
     const saveText = useMemo(() => t("workout_save"), [t]);
     const cancelText = useMemo(() => t("workout_cancel"), [t]);
     const pauseText = useMemo(() => t("workout_pause"), [t]);
@@ -148,7 +146,7 @@ export const BackButtonModal = ({ title, snapPoints = ["25%"], reference, onPaus
         <ThemedBottomSheetModal snapPoints={snapPoints} ref={reference} title={title}>
             <PageContent paddingTop={20} ghost>
                 <HStack style={{ gap: 10 }} ghost>
-                    <ThemedPressable stretch secondary style={buttonStyle} onPress={handleConfirmButton}>
+                    <ThemedPressable stretch secondary padding round onPress={handleConfirmButton}>
                         <HStack ghost style={{ gap: 10 }}>
                             <ThemedMaterialCommunityIcons ghost name="content-save-outline" size={26} />
                             <Text style={{ fontSize: 20, alignSelf: "center" }} center ghost>
@@ -162,7 +160,7 @@ export const BackButtonModal = ({ title, snapPoints = ["25%"], reference, onPaus
                 </HStack>
                 {!workoutDone && (
                     <HStack style={{ gap: 10 }} ghost>
-                        <ThemedPressable stretch secondary style={buttonStyle} onPress={handlePauseButton}>
+                        <ThemedPressable stretch secondary padding round onPress={handlePauseButton}>
                             <HStack ghost style={{ gap: 10 }}>
                                 <ThemedMaterialCommunityIcons ghost name="pause" size={26} />
                                 <Text style={{ fontSize: 20, alignSelf: "center" }} center ghost>
@@ -176,7 +174,7 @@ export const BackButtonModal = ({ title, snapPoints = ["25%"], reference, onPaus
                     </HStack>
                 )}
                 <HStack style={{ gap: 10 }} ghost>
-                    <ThemedPressable stretch secondary style={buttonStyle} onPress={handleCancelButton}>
+                    <ThemedPressable stretch secondary padding round onPress={handleCancelButton}>
                         <HStack ghost style={{ gap: 10 }}>
                             <ThemedMaterialCommunityIcons ghost name="delete" size={26} />
                             <Text style={{ fontSize: 20, alignSelf: "center" }} center ghost>
