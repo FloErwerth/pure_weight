@@ -75,22 +75,21 @@ export const getTrainingDayData = createSelector([getEditedWorkout], (editedWork
         return undefined;
     }
 
-    const sortedData: Map<string, SortedData> = new Map();
+    const sortedData: Map<number, SortedData> = new Map();
     const slicedDoneWorkouts = getLastNEntries(workout?.doneWorkouts, 100);
 
-    slicedDoneWorkouts
-        .filter(({ doneExercises }) => doneExercises !== undefined)
-        .forEach(({ isoDate, doneExercises }) => {
-            doneExercises!.forEach(({ name, sets }) => {
-                const foundEntry = sortedData.get(name);
+    slicedDoneWorkouts?.forEach(({ isoDate, doneExercises }) => {
+        if (doneExercises) {
+            doneExercises.forEach(({ name, sets, originalExerciseId }) => {
+                const foundEntry = sortedData.get(originalExerciseId);
                 if (foundEntry) {
                     foundEntry.data.push({ sets, date: isoDate });
                     return;
                 }
-                sortedData.set(name, { exerciseName: name, data: [{ sets, date: isoDate }] });
+                sortedData.set(originalExerciseId, { exerciseName: name, data: [{ sets, date: isoDate }] });
             });
-        });
-
+        }
+    });
     return Array.from(sortedData.values()).filter(({ data }) => data.length > 1);
 });
 
@@ -98,6 +97,7 @@ export const getColor = createSelector([getEditedWorkout], (editedWorkout) => ({
     color: editedWorkout?.workout?.calendarColor ?? PALETTE[Math.floor(PALETTE.length * Math.random())],
     palette: PALETTE,
 }));
+
 export const getExerciseDone = createSelector([getTrainedWorkout], (trainedWorkout) => {
     const exerciseIndex = trainedWorkout?.activeExerciseIndex;
     if (exerciseIndex === undefined || !trainedWorkout || trainedWorkout?.exerciseData.length === 0) {
@@ -176,14 +176,15 @@ export const getOverallTrainingTrend = createSelector([getWorkouts, (workouts, i
         }
     > = new Map();
 
-    for (let i = 0; i < workout.doneWorkouts.length - 1; i++) {
-        const workoutBefore = workout?.doneWorkouts[i];
-        const currentWorkout = workout?.doneWorkouts[i + 1];
+    for (let i = 1; i < workout.doneWorkouts.length; i++) {
+        const workoutBefore = workout?.doneWorkouts[i - 1];
+        const currentWorkout = workout?.doneWorkouts[i];
 
-        for (let j = 0; j < workoutBefore.doneExercises!.length; j++) {
-            const beforeExercise = workoutBefore.doneExercises![j];
-            const currentExercise = currentWorkout.doneExercises![j];
-            if (currentExercise !== undefined && currentExercise.name === beforeExercise.name) {
+        const length = Math.min(workoutBefore?.doneExercises?.length ?? 0, currentWorkout?.doneExercises?.length ?? 0);
+        for (let j = 0; j < length; j++) {
+            const beforeExercise = workoutBefore?.doneExercises?.[j];
+            const currentExercise = currentWorkout?.doneExercises?.[j];
+            if (currentExercise !== undefined && beforeExercise !== undefined && currentExercise.originalExerciseId === beforeExercise.originalExerciseId) {
                 const beforeOverall = beforeExercise.sets.reduce((sum, set) => sum + parseFloat(set?.reps ?? "0") * parseFloat(set?.weight ?? "0"), 0);
                 const currentOverall = currentExercise.sets.reduce((sum, set) => sum + parseFloat(set?.reps ?? "0") * parseFloat(set?.weight ?? "0"), 0);
 

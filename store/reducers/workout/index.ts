@@ -79,6 +79,7 @@ export type WorkoutAction =
     | typeof mutateEditedExerciseTimeValue.type;
 
 export const emptyExercise: ExerciseMetaData = {
+    exerciseId: Date.now(),
     name: "",
     type: "WEIGHT_BASED",
     sets: "0",
@@ -313,11 +314,12 @@ export const workoutReducer = createReducer<WorkoutState>({ workouts: [], sortin
                 const endTimestamp = Temporal.Now.instant().epochMilliseconds;
                 const duration = (endTimestamp - beginTimestamp) / 1000;
                 const doneExercises: DoneExerciseData[] = workout.exerciseData.map((data) => ({
-                    doneExerciseId: workout.workout.exercises.findIndex((exercise) => exercise.name === data.name),
+                    doneExerciseId: Date.now(),
                     name: data.name,
                     sets: data.doneSets,
                     note: data.note,
                     type: data.exerciseType,
+                    originalExerciseId: data.originalExerciseId,
                 }));
                 state.workouts
                     .find((workout) => workout.workoutId === workoutIndex)
@@ -369,6 +371,7 @@ export const workoutReducer = createReducer<WorkoutState>({ workouts: [], sortin
                             const metaData = workout?.exercises[exerciseIndex];
                             const prefilledMetaData: TrainedWorkout["exerciseData"][number] = {
                                 exerciseType: "WEIGHT_BASED",
+                                originalExerciseId: metaData?.exerciseId ?? 0,
                                 name: metaData?.name ?? "",
                                 activeSetIndex: 0,
                                 latestSetIndex: 0,

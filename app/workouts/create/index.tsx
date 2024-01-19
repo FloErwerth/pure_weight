@@ -120,7 +120,7 @@ export function Create() {
     const handleNavigateHome = useCallback(() => {
         handleCleanErrors();
         navigate("workouts");
-    }, [dispatch, handleCleanErrors, navigate]);
+    }, [handleCleanErrors, navigate]);
 
     const handleSaveWorkout = useCallback(() => {
         if (!editedWorkout?.workout?.name || editedWorkout.workout.exercises.length === 0) {

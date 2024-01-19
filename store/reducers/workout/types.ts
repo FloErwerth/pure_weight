@@ -26,6 +26,7 @@ export type DoneWorkouts = {
 }[];
 
 export type DoneExerciseData = {
+    originalExerciseId: number;
     doneExerciseId: number;
     type: ExerciseType;
     name: string;
@@ -42,6 +43,7 @@ export type TimeInput = {
 export type ExerciseSets = ExerciseData[];
 
 export type ExerciseMetaData = {
+    exerciseId: number;
     type: ExerciseType;
     name: string;
     weight: string;
@@ -69,6 +71,7 @@ export type TrainedWorkout = {
     beginTimestamp: number;
     paused: boolean;
     exerciseData: {
+        originalExerciseId: number;
         exerciseType: ExerciseType;
         setIndex: number;
         latestSetIndex: number;
