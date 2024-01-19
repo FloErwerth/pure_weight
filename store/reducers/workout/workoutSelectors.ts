@@ -162,104 +162,54 @@ export const getIsLastSet = createSelector([getTrainedWorkout, (trainedWorkout, 
         return parseFloat(exercise.sets) - 1 === setIndex;
     };
 });
-export const getOverallTrainingTrend = createSelector([getWorkouts, (workouts, index: number) => index], (workouts, index) => {
+
+const getSumOfSets = (sets?: ExerciseSets) => {
+    return sets?.reduce((sum, set) => sum + parseFloat(set?.reps ?? "0") * parseFloat(set?.weight ?? "0"), 0);
+};
+export const getOverallTrainingTrend = createSelector([getWorkouts, (workouts, index: number) => index, getLatestWorkoutDate], (workouts, index, latestWorkoutDate) => {
     const workout = workouts.find((workout) => workout.workoutId === index);
     if (!workout?.doneWorkouts || workout?.doneWorkouts?.length < 2 || workout?.doneWorkouts.some(({ doneExercises }) => !doneExercises)) {
         return undefined;
     }
 
-    const latestExercisePairs: Map<
-        string,
-        {
-            cleanedPercent: number;
-            isPositive?: boolean;
-        }
-    > = new Map();
+    const foundCompareables: { current: { name?: string; sum: number }; before: { name?: string; sum: number } }[] = [];
 
-    for (let i = 1; i < workout.doneWorkouts.length; i++) {
-        const workoutBefore = workout?.doneWorkouts[i - 1];
-        const currentWorkout = workout?.doneWorkouts[i];
+    workout?.doneWorkouts.forEach(({ isoDate, doneExercises }, index) => {
+        if (isoDate === latestWorkoutDate && index > 0) {
+            const workoutBefore = workout?.doneWorkouts[index - 1];
 
-        const length = Math.min(workoutBefore?.doneExercises?.length ?? 0, currentWorkout?.doneExercises?.length ?? 0);
-        for (let j = 0; j < length; j++) {
-            const beforeExercise = workoutBefore?.doneExercises?.[j];
-            const currentExercise = currentWorkout?.doneExercises?.[j];
-            if (currentExercise !== undefined && beforeExercise !== undefined && currentExercise.originalExerciseId === beforeExercise.originalExerciseId) {
-                const beforeOverall = beforeExercise.sets.reduce((sum, set) => sum + parseFloat(set?.reps ?? "0") * parseFloat(set?.weight ?? "0"), 0);
-                const currentOverall = currentExercise.sets.reduce((sum, set) => sum + parseFloat(set?.reps ?? "0") * parseFloat(set?.weight ?? "0"), 0);
+            doneExercises?.forEach(({ originalExerciseId, sets }) => {
+                const exerciseName = workout.exercises.find(({ exerciseId }) => exerciseId === originalExerciseId)?.name;
+                const fittingExerciseBefore = workoutBefore?.doneExercises?.findLast(({ originalExerciseId }) => originalExerciseId === originalExerciseId);
 
-                const result: {
-                    cleanedPercent: number;
-                    isPositive?: boolean;
-                } = {
-                    cleanedPercent: 0,
-                };
-                const fraction = currentOverall / beforeOverall;
-                if (fraction === 1) {
-                    result.cleanedPercent = 0;
-                } else {
-                    result.isPositive = fraction > 1;
-                    result.cleanedPercent = fraction * 100;
-                }
-                latestExercisePairs.set(currentExercise.name, result);
-            }
-        }
-    }
-
-    const foundBestExercise = Array.from(latestExercisePairs).reduce(
-        (bestImprovement, [name, { isPositive, cleanedPercent }], index) => {
-            if (index === 0) {
-                return {
-                    name,
-                    isPositive,
-                    percent: cleanedPercent,
-                };
-            }
-            if (isPositive === bestImprovement.isPositive) {
-                if (!isPositive) {
-                    if (bestImprovement.percent > cleanedPercent) {
-                        return {
-                            name,
-                            percent: cleanedPercent,
-                            isPositive: false,
-                        };
-                    }
-                    return bestImprovement;
-                } else {
-                    if (bestImprovement.percent > cleanedPercent) {
-                        return bestImprovement;
-                    }
-                    return {
-                        name,
-                        percent: cleanedPercent,
-                        isPositive: true,
+                if (fittingExerciseBefore) {
+                    const compareable = {
+                        current: { name: exerciseName, sum: getSumOfSets(sets) ?? 0 },
+                        before: { name: exerciseName, sum: getSumOfSets(fittingExerciseBefore.sets) ?? 0 },
                     };
+                    foundCompareables.push(compareable);
                 }
-            }
-            if (isPositive !== bestImprovement.isPositive) {
-                if (isPositive) {
-                    return {
-                        name,
-                        percent: cleanedPercent,
-                        isPositive,
-                    };
+            });
+        }
+    });
+
+    return foundCompareables.reduce(
+        (bestImprovement, { current, before }) => {
+            const percent = (current.sum / before.sum) * 100;
+            if (bestImprovement === undefined) {
+                return { name: current.name, percent, isPositive: percent > 100 };
+            } else {
+                if (percent > bestImprovement.percent) {
+                    return { name: current.name, percent, isPositive: percent > 100 };
                 } else {
                     return bestImprovement;
                 }
             }
-            return bestImprovement;
         },
-        {} as {
-            name: string;
-            percent: number;
-            isPositive?: boolean;
-        },
+        undefined as { name?: string; percent: number; isPositive: boolean } | undefined,
     );
-    if (foundBestExercise.name) {
-        return foundBestExercise;
-    }
-    return undefined;
 });
+
 export const getPauseTime = createSelector([getTrainedWorkout], (trainedWorkout) => {
     const exerciseIndex = trainedWorkout?.activeExerciseIndex;
     if (exerciseIndex === undefined) {
@@ -271,6 +221,7 @@ export const getPauseTime = createSelector([getTrainedWorkout], (trainedWorkout)
     }
     return (parseFloat(pause.minutes ?? "0") * 60 + parseFloat(pause.seconds ?? "0")) * 1000;
 });
+
 export const getIsDoneWithTraining = createSelector([getTrainedWorkout], (trainedWorkout) => {
     if (trainedWorkout?.exerciseData.length === 0 || trainedWorkout?.exerciseData.some((data) => data.doneSets.length === 0)) {
         return false;
