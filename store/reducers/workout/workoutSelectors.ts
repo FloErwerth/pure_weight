@@ -5,7 +5,7 @@ import { getDateTodayIso, getLocaleDate, getMonth } from "../../../utils/date";
 import { IsoDate } from "../../../types/date";
 import { PALETTE } from "../../../utils/colorPalette";
 import { getLastNEntries } from "../../../utils/getLastNEntries";
-import { ExerciseSets } from "./types";
+import { ExerciseSets, ExerciseType } from "./types";
 import { Temporal } from "@js-temporal/polyfill";
 import { getSinceDate } from "../../../utils/timeAgo";
 import { sortWorkouts } from "./sortWorkouts";
@@ -66,7 +66,7 @@ export const getSetsArray = createSelector([getExercisesFromIndex], (exercise) =
     return Array.from({ length: sets }, (_, i) => i);
 });
 
-type SortedData = { exerciseName: string; data: { sets: ExerciseSets; date: IsoDate }[] };
+type SortedData = { exerciseName: string; data: { sets: ExerciseSets; date: IsoDate; type: ExerciseType }[] };
 
 export const getTrainingDayData = createSelector([getEditedWorkout], (editedWorkout) => {
     const workout = editedWorkout?.workout;
@@ -80,13 +80,13 @@ export const getTrainingDayData = createSelector([getEditedWorkout], (editedWork
 
     slicedDoneWorkouts?.forEach(({ isoDate, doneExercises }) => {
         if (doneExercises) {
-            doneExercises.forEach(({ name, sets, originalExerciseId }) => {
+            doneExercises.forEach(({ name, sets, originalExerciseId, type }) => {
                 const foundEntry = sortedData.get(originalExerciseId);
                 if (foundEntry) {
-                    foundEntry.data.push({ sets, date: isoDate });
-                    return;
+                    foundEntry.data.push({ sets, date: isoDate, type });
+                } else {
+                    sortedData.set(originalExerciseId, { exerciseName: name, data: [{ type, sets, date: isoDate }] });
                 }
-                sortedData.set(originalExerciseId, { exerciseName: name, data: [{ sets, date: isoDate }] });
             });
         }
     });
@@ -163,7 +163,10 @@ export const getIsLastSet = createSelector([getTrainedWorkout, (trainedWorkout, 
     };
 });
 
-const getSumOfSets = (sets?: ExerciseSets) => {
+const getSumOfSets = (type: ExerciseType, sets?: ExerciseSets) => {
+    if (type === "TIME_BASED") {
+        return sets?.reduce((sum, set) => sum + parseFloat(set?.duration?.seconds ?? "0") * 1000 + parseFloat(set?.duration?.minutes ?? "0") * 60 * 1000, 0);
+    }
     return sets?.reduce((sum, set) => sum + parseFloat(set?.reps ?? "0") * parseFloat(set?.weight ?? "0"), 0);
 };
 export const getOverallTrainingTrend = createSelector([getWorkouts, (workouts, index: number) => index, getLatestWorkoutDate], (workouts, index, latestWorkoutDate) => {
@@ -178,14 +181,13 @@ export const getOverallTrainingTrend = createSelector([getWorkouts, (workouts, i
         if (isoDate === latestWorkoutDate && index > 0) {
             const workoutBefore = workout?.doneWorkouts[index - 1];
 
-            doneExercises?.forEach(({ originalExerciseId, sets }) => {
+            doneExercises?.forEach(({ originalExerciseId, sets, type }) => {
                 const exerciseName = workout.exercises.find(({ exerciseId }) => exerciseId === originalExerciseId)?.name;
-                const fittingExerciseBefore = workoutBefore?.doneExercises?.findLast(({ originalExerciseId }) => originalExerciseId === originalExerciseId);
-
+                const fittingExerciseBefore = workoutBefore?.doneExercises?.findLast(({ originalExerciseId: id }) => originalExerciseId === id);
                 if (fittingExerciseBefore) {
                     const compareable = {
-                        current: { name: exerciseName, sum: getSumOfSets(sets) ?? 0 },
-                        before: { name: exerciseName, sum: getSumOfSets(fittingExerciseBefore.sets) ?? 0 },
+                        current: { name: exerciseName, sum: getSumOfSets(type, sets) ?? 0 },
+                        before: { name: exerciseName, sum: getSumOfSets(type, fittingExerciseBefore.sets) ?? 0 },
                     };
                     foundCompareables.push(compareable);
                 }

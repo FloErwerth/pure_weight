@@ -279,18 +279,25 @@ export const mockState: AppState = {
                         duration: "120",
                         doneExercises: [
                             {
-                                originalExerciseId: 5,
-                                type: "WEIGHT_BASED",
-                                doneExerciseId: 1,
-                                name: "Bankdrücken",
-                                sets: [{ weight: "50", reps: "5" }],
+                                originalExerciseId: 6,
+                                type: "TIME_BASED",
+                                doneExerciseId: 2,
+                                name: "Planks",
+                                sets: [{ duration: { seconds: "56", minutes: "0" } }],
                             },
+                        ],
+                    },
+                    {
+                        doneWorkoutId: 2,
+                        isoDate: "2023-12-01",
+                        duration: "120",
+                        doneExercises: [
                             {
                                 originalExerciseId: 6,
                                 type: "TIME_BASED",
                                 doneExerciseId: 2,
                                 name: "Planks",
-                                sets: [{ duration: { seconds: "30", minutes: "1" } }],
+                                sets: [{ duration: { seconds: "55", minutes: "0" } }],
                             },
                         ],
                     },

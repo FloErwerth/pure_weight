@@ -16,54 +16,72 @@ import { ThemedPressable } from "../../../../Themed/Pressable/Pressable";
 import { useNavigate } from "../../../../../hooks/navigate";
 
 import { getTrainingDayData } from "../../../../../store/reducers/workout/workoutSelectors";
-import { getLanguage, getWeightUnit } from "../../../../../store/reducers/settings/settingsSelectors";
+import { getLanguage, getTimeUnit, getWeightUnit } from "../../../../../store/reducers/settings/settingsSelectors";
 import { trunicateToNthSignificantDigit } from "../../../../../utils/number";
 import Chart from "../../../../Chart/Chart";
-import { ExerciseData, ExerciseSets } from "../../../../../store/reducers/workout/types";
+import { ExerciseSets, ExerciseType } from "../../../../../store/reducers/workout/types";
 import { getLocaleDate } from "../../../../../utils/date";
+import { getMinutesSecondsFromMilliseconds } from "../../../../../utils/timeDisplay";
 
 interface ExerciseChartProps {
     exerciseName: string;
-    data: { date: IsoDate; sets: ExerciseSets }[];
+    data: { date: IsoDate; sets: ExerciseSets; type: ExerciseType }[];
+    index: number;
 }
 
-const chartTypeMap: Record<string, { title: string; hint: string }> = {
-    CUMULATIVE: {
-        title: "progress_cumulative",
-        hint: "progress_cumulative_hint",
-    },
-    AVG_REPS: {
-        title: "progress_avg_reps",
-        hint: "progress_avg_reps_hint",
-    },
-    AVG_WEIGHT: {
-        title: "progress_avg_weight",
-        hint: "progress_avg_weight_hint",
-    },
+const getChartTypeMap = (exerciseType: ExerciseType): Record<string, { title: string; hint: string }> => {
+    if (exerciseType === "TIME_BASED") {
+        return {
+            CUMULATIVE: {
+                title: "progress_cumulative",
+                hint: "progress_cumulative_hint",
+            },
+        };
+    }
+    return {
+        CUMULATIVE: {
+            title: "progress_cumulative",
+            hint: "progress_cumulative_hint",
+        },
+        AVG_REPS: {
+            title: "progress_avg_reps",
+            hint: "progress_avg_reps_hint",
+        },
+        AVG_WEIGHT: {
+            title: "progress_avg_weight",
+            hint: "progress_avg_weight_hint",
+        },
+    };
 };
-export type ChartType = keyof typeof chartTypeMap;
+export type ChartType = keyof Record<string, { title: string; hint: string }>;
 
-const getCumulativeExerciseData = (data: ExerciseSets[]) => {
-    return data.reduce((vals, sets) => {
+const getCumulativeExerciseData = (data: { sets: ExerciseSets }[], type: ExerciseType) => {
+    return data.reduce((vals, { sets }) => {
+        if (type === "TIME_BASED") {
+            return [
+                ...vals,
+                sets.map((set) => parseFloat(set?.duration?.minutes ?? "0") * 60 * 1000 + parseFloat(set?.duration?.seconds ?? "0") * 1000).reduce((cumulative, entry) => cumulative + entry, 0),
+            ];
+        }
         return [...vals, sets.map((set) => parseFloat(set?.weight ?? "0") * parseFloat(set?.reps ?? "0")).reduce((cumulative, entry) => cumulative + entry, 0)];
     }, [] as number[]);
 };
 
-const getAveragePerDay = (data: ExerciseSets[], dataType: keyof Omit<ExerciseData, "confirmed">) => {
-    return data.reduce((values, sets) => {
+const getAveragePerDay = (data: { sets: ExerciseSets }[], dataType: "weight" | "reps") => {
+    return data.reduce((values, { sets }) => {
         const setValues = sets;
         return [...values, parseFloat((setValues.map((set) => parseFloat(set?.[dataType] ?? "0")).reduce((cumulative, entry) => cumulative + entry, 0) / setValues.length).toFixed(3))];
     }, [] as number[]);
 };
 
-const useExerciseData = (exerciseData: { date: IsoDate; sets: ExerciseSets }[], chartType: ChartType) => {
+const useExerciseData = (exerciseData: { date: IsoDate; sets: ExerciseSets }[], chartType: ChartType["TIME_BASED" & "WEIGHT_BASED"], type: ExerciseType) => {
     const { mainColor } = useTheme();
     const labels = useMemo(() => {
         return exerciseData.map(({ date }) => date);
     }, [exerciseData]);
 
     const data = useMemo(() => {
-        const sets = exerciseData.map(({ sets }) => sets);
+        const sets = exerciseData.map(({ sets }) => ({ sets }));
 
         if (chartType === "AVG_REPS") {
             return getAveragePerDay(sets, "reps");
@@ -71,8 +89,9 @@ const useExerciseData = (exerciseData: { date: IsoDate; sets: ExerciseSets }[], 
         if (chartType === "AVG_WEIGHT") {
             return getAveragePerDay(sets, "weight");
         }
-        return getCumulativeExerciseData(sets);
-    }, [chartType, exerciseData]);
+
+        return getCumulativeExerciseData(sets, type);
+    }, [chartType, exerciseData, type]);
 
     const chartData: LineChartData = {
         labels,
@@ -88,34 +107,56 @@ const useExerciseData = (exerciseData: { date: IsoDate; sets: ExerciseSets }[], 
     return [chartData] as const;
 };
 
-const useChartTypeLabel = (chartType: ChartType) => {
+const useChartTypeLabel = (chartType: ChartType["TIME_BASED" & "WEIGHT_BASED"], exerciseType: ExerciseType) => {
     const weightUnit = useAppSelector(getWeightUnit);
+    const timeUnit = useAppSelector(getTimeUnit);
     return {
-        CUMULATIVE: weightUnit,
+        CUMULATIVE: exerciseType === "WEIGHT_BASED" ? weightUnit : timeUnit,
         AVG_WEIGHT: weightUnit,
         AVG_REPS: "reps",
     }[chartType];
 };
 
-export const ExerciseChart = ({ exerciseName, data }: ExerciseChartProps) => {
+export const ExerciseChart = ({ exerciseName, data, index }: ExerciseChartProps) => {
+    const exerciseType = useMemo(() => data[index].type, [data, index]);
+    const chartTypeMap = useMemo(() => getChartTypeMap(exerciseType), [exerciseType]);
+
     const [chartType, setChartType] = useState<ChartType>("CUMULATIVE");
-    const [lineChartData] = useExerciseData(data, chartType);
+    const [lineChartData] = useExerciseData(data, chartType, exerciseType);
     const language = useAppSelector(getLanguage);
     const { t } = useTranslation();
     const { mainColor } = useTheme();
     const [ref, open, close] = useBottomSheetRef();
-    const chartTypeLabel = useChartTypeLabel(chartType);
+    const chartTypeLabel = useChartTypeLabel(chartType, exerciseType);
+
     const getDotContent = useCallback(
         ({ x, y, indexData }: { x: number; y: number; index: number; indexData: number }) => {
-            return (
-                <ThemedView key={x + y} style={{ position: "absolute", top: y - 25, left: x - 20, flex: 1, padding: 3, borderRadius, alignItems: "center" }}>
-                    <Text style={{ fontSize: 12, color: mainColor }}>
+            const minutesSeconds = getMinutesSecondsFromMilliseconds(indexData);
+            const getContent = () => {
+                if (exerciseType === "TIME_BASED" && typeof chartTypeLabel === "object") {
+                    const minutesContent = minutesSeconds.minutes > 0 ? `${minutesSeconds.minutes} ${chartTypeLabel.minutesUnit}` : "";
+                    const secondsContent = minutesSeconds.seconds > 0 ? `${minutesSeconds.seconds} ${chartTypeLabel.secondsUnit}` : "";
+
+                    return (
+                        <>
+                            {minutesContent} {secondsContent}
+                        </>
+                    );
+                }
+                return (
+                    <>
                         {trunicateToNthSignificantDigit(indexData, false, 1)} {chartTypeLabel}
-                    </Text>
+                    </>
+                );
+            };
+            const left = exerciseType === "TIME_BASED" ? (minutesSeconds.minutes ? x - 35 : x - 25) : x - 20;
+            return (
+                <ThemedView key={x + y} style={{ position: "absolute", top: y - 25, left, flex: 1, padding: 3, borderRadius, alignItems: "center" }}>
+                    <Text style={{ fontSize: 12, color: mainColor }}>{getContent()}</Text>
                 </ThemedView>
             );
         },
-        [chartTypeLabel, mainColor],
+        [chartTypeLabel, exerciseType, mainColor],
     );
 
     const openSelectionModal = useCallback(() => {
@@ -132,7 +173,6 @@ export const ExerciseChart = ({ exerciseName, data }: ExerciseChartProps) => {
         },
         [language],
     );
-
     const mappedChartProps = useMemo(
         () =>
             Object.entries(chartTypeMap).map(([type, text]) => {
@@ -142,7 +182,7 @@ export const ExerciseChart = ({ exerciseName, data }: ExerciseChartProps) => {
                 };
                 return { onPress, title: text, chartType: type };
             }),
-        [closeSelectionModal],
+        [chartTypeMap, closeSelectionModal],
     );
 
     return (
@@ -186,5 +226,9 @@ export default function ExerciseCharts() {
         return null;
     }
 
-    return <ThemedScrollView ghost>{trainingDayData?.map(({ exerciseName, data }) => <ExerciseChart key={Math.random() * 100} exerciseName={exerciseName} data={data} />)}</ThemedScrollView>;
+    return (
+        <ThemedScrollView ghost>
+            {trainingDayData?.map(({ exerciseName, data }, index) => <ExerciseChart index={index} key={Math.random() * 100} exerciseName={exerciseName} data={data} />)}
+        </ThemedScrollView>
+    );
 }
