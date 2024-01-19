@@ -36,7 +36,11 @@ const getChartTypeMap = (exerciseType: ExerciseType): Record<string, { title: st
                 title: "progress_cumulative",
                 hint: "progress_cumulative_hint",
             },
-        };
+            AVG_DUR: {
+                title: "progress_avg_dur",
+                hint: "progress_avg_dur_hint",
+            },
+        } as const;
     }
     return {
         CUMULATIVE: {
@@ -51,7 +55,7 @@ const getChartTypeMap = (exerciseType: ExerciseType): Record<string, { title: st
             title: "progress_avg_weight",
             hint: "progress_avg_weight_hint",
         },
-    };
+    } as const;
 };
 export type ChartType = keyof Record<string, { title: string; hint: string }>;
 
@@ -74,6 +78,22 @@ const getAveragePerDay = (data: { sets: ExerciseSets }[], dataType: "weight" | "
     }, [] as number[]);
 };
 
+const getAverageDurationPerExercise = (data: { sets: ExerciseSets }[]) => {
+    return data.reduce((values, { sets }) => {
+        const setValues = sets;
+        return [
+            ...values,
+            parseFloat(
+                (
+                    setValues
+                        .map((set) => parseFloat(set?.duration?.minutes ?? "0") * 60 * 1000 + parseFloat(set?.duration?.seconds ?? "0") * 1000)
+                        .reduce((cumulative, entry) => cumulative + entry, 0) / setValues.length
+                ).toString(),
+            ),
+        ];
+    }, [] as number[]);
+};
+
 const useExerciseData = (exerciseData: { date: IsoDate; sets: ExerciseSets }[], chartType: ChartType["TIME_BASED" & "WEIGHT_BASED"], type: ExerciseType) => {
     const { mainColor } = useTheme();
     const labels = useMemo(() => {
@@ -82,7 +102,9 @@ const useExerciseData = (exerciseData: { date: IsoDate; sets: ExerciseSets }[], 
 
     const data = useMemo(() => {
         const sets = exerciseData.map(({ sets }) => ({ sets }));
-
+        if (chartType === "AVG_DUR") {
+            return getAverageDurationPerExercise(sets);
+        }
         if (chartType === "AVG_REPS") {
             return getAveragePerDay(sets, "reps");
         }
@@ -111,6 +133,7 @@ const useChartTypeLabel = (chartType: ChartType["TIME_BASED" & "WEIGHT_BASED"], 
     const weightUnit = useAppSelector(getWeightUnit);
     const timeUnit = useAppSelector(getTimeUnit);
     return {
+        AVG_DUR: timeUnit,
         CUMULATIVE: exerciseType === "WEIGHT_BASED" ? weightUnit : timeUnit,
         AVG_WEIGHT: weightUnit,
         AVG_REPS: "reps",
@@ -135,7 +158,7 @@ export const ExerciseChart = ({ exerciseName, data, index }: ExerciseChartProps)
             const getContent = () => {
                 if (exerciseType === "TIME_BASED" && typeof chartTypeLabel === "object") {
                     const minutesContent = minutesSeconds.minutes > 0 ? `${minutesSeconds.minutes} ${chartTypeLabel.minutesUnit}` : "";
-                    const secondsContent = minutesSeconds.seconds > 0 ? `${minutesSeconds.seconds} ${chartTypeLabel.secondsUnit}` : "";
+                    const secondsContent = minutesSeconds.seconds > 0 ? `${trunicateToNthSignificantDigit(minutesSeconds.seconds, false, 1)} ${chartTypeLabel.secondsUnit}` : "";
 
                     return (
                         <>

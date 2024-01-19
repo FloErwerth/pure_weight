@@ -162,7 +162,8 @@
   "progress_avg_reps_hint": "Zeigt die durchschnittliche Anzahl an Wiederholungen pro Tag an",
   "progress_avg_weight": "Ø Gewicht",
   "progress_avg_weight_hint": "Zeigt das durchschnittlich bewegte Gewicht pro Tag an",
-
+  "progress_avg_dur": "Ø Dauer",
+  "progress_avg_dur_hint": "Zeigt die durchschnittliche Dauer eines Satzes an",
 
 
   "alert_create_workout_confirm_cancel": "Erstellung trotzdem abbrechen",
