@@ -62,7 +62,6 @@ const useText = (type: "Workout" | "Measurement", even: boolean, isPositiveTrend
 
 export const ProgressDisplay = ({ trend, onPress, higherIsBetter = true, type }: ProgressDisplayProps) => {
     const positivePercentage = useMemo(() => Boolean((trend?.percent ?? 100) > 100), [trend?.percent]);
-
     const progressDisplayPositive = useMemo(() => {
         if (higherIsBetter) {
             return positivePercentage;
@@ -71,7 +70,7 @@ export const ProgressDisplay = ({ trend, onPress, higherIsBetter = true, type }:
     }, [higherIsBetter, positivePercentage]);
 
     const percent = useMemo(() => {
-        if (trend?.percent === undefined) {
+        if (trend?.percent === undefined || trend?.percent === 0) {
             return 0;
         }
         if (positivePercentage) {

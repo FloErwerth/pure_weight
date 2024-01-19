@@ -2,7 +2,7 @@ import { SiteNavigationButtons } from "../../../components/SiteNavigationButtons
 import { useTranslation } from "react-i18next";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "../../../hooks/navigate";
-import { AppState, useAppSelector } from "../../../store";
+import { AppState, useAppDispatch, useAppSelector } from "../../../store";
 import { PageContent } from "../../../components/PageContent/PageContent";
 import { ThemedView } from "../../../components/Themed/ThemedView/View";
 import { useTheme } from "../../../theme/context";
@@ -19,6 +19,7 @@ import { WorkoutHistoryCard } from "../../../components/WorkoutHistoryCard/Worko
 import { getDateTodayIso } from "../../../utils/date";
 import { ThemedPressable } from "../../../components/Themed/Pressable/Pressable";
 import { Text } from "../../../components/Themed/ThemedText/Text";
+import { saveEditedWorkout } from "../../../store/reducers/workout";
 
 export type FlatListData = {
     doneWorkoutId: number;
@@ -76,6 +77,7 @@ export function WorkoutHistory() {
     const sectionListRef = useRef<FlatList>(null);
     const workoutsInMonth = useAppSelector((state: AppState) => getWorkoutsByMonth(state, selectedDate));
     const navigate = useNavigate();
+    const dispatch = useAppDispatch();
 
     useEffect(() => {
         setSelectedDate(latestWorkoutDate);
@@ -98,8 +100,9 @@ export function WorkoutHistory() {
     );
 
     const handleNavigateBack = useCallback(() => {
+        dispatch(saveEditedWorkout());
         navigate("workouts");
-    }, [navigate]);
+    }, [dispatch, navigate]);
 
     const handleSelectDate = useCallback(
         (date: IsoDate) => {
