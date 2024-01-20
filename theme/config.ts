@@ -10,7 +10,7 @@ const DarkThemeColors: ThemeColors = {
     errorColor: "rgba(255,0,0,0.5)",
     secondaryErrorColor: "rgba(170,0,0,0.5)",
     mainColor: "#ddd",
-    secondaryColor: "#aaa",
+    secondaryColor: "#888",
     primaryColor: "#222",
     warningColor: "#af7d00",
     successColor: "#006600",

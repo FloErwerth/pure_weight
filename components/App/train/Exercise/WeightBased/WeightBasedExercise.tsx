@@ -2,18 +2,18 @@ import { trainStyles } from "../../trainStyles";
 import { HStack } from "../../../../Stack/HStack/HStack";
 import { WeightBasedExerciseMetadataDisplay } from "./ExerciseMetaDataDisplay/WeightBasedExerciseMetadataDisplay";
 import { ThemedView } from "../../../../Themed/ThemedView/View";
-import { Pressable, ScrollView, View } from "react-native";
+import { Pressable } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { PreviousTraining } from "../../../../PreviousTraining/PreviousTraining";
+import { PreviousWorkout } from "../../../../PreviousWorkout/PreviousWorkout";
 import { useCallback, useId, useMemo } from "react";
 import { AddNoteModal } from "../../../../AddNoteModal/AddNoteModal";
 import { useTheme } from "../../../../../theme/context";
-import { borderRadius } from "../../../../../theme/border";
 import { WeightBasedTrainingHeader } from "../../TrainingHeader/WeightBased/WeightBasedTrainingHeader";
 import { AppState, useAppSelector } from "../../../../../store";
 import { useBottomSheetRef } from "../../../../BottomSheetModal/ThemedBottomSheetModal";
 import { getSetsArray } from "../../../../../store/reducers/workout/workoutSelectors";
 import { WeightBasedSetInput } from "../../../../SetInputRow/WeightBased/WeightBasedSetInput";
+import { ThemedScrollView } from "../../../../Themed/ThemedScrollView/ThemedScrollView";
 
 interface WeightBasedExerciseProps {
     exerciseIndex: number;
@@ -22,7 +22,7 @@ interface WeightBasedExerciseProps {
 export const WeightBasedExercise = ({ exerciseIndex }: WeightBasedExerciseProps) => {
     const [editNoteModalRef, open, close] = useBottomSheetRef();
     const showEditNoteModalTitleStyle = useMemo(() => ({ padding: 10, paddingHorizontal: 15, alignSelf: "center" }) as const, []);
-    const { mainColor, componentBackgroundColor } = useTheme();
+    const { mainColor } = useTheme();
     const setsArray = useAppSelector((state: AppState) => getSetsArray(state, exerciseIndex));
 
     const id = useId();
@@ -35,7 +35,7 @@ export const WeightBasedExercise = ({ exerciseIndex }: WeightBasedExerciseProps)
     }, [open]);
 
     return (
-        <View key={id} style={trainStyles.carouselWrapper}>
+        <ThemedView stretch ghost key={id} style={trainStyles.carouselWrapper}>
             <HStack background style={trainStyles.headerWrapper}>
                 <WeightBasedExerciseMetadataDisplay exerciseIndex={exerciseIndex} />
                 <ThemedView style={trainStyles.noteButtonWrapper}>
@@ -44,18 +44,16 @@ export const WeightBasedExercise = ({ exerciseIndex }: WeightBasedExerciseProps)
                     </Pressable>
                 </ThemedView>
             </HStack>
-            <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={trainStyles.innerWrapper}>
-                <ThemedView style={{ paddingTop: 15, paddingBottom: 10, borderRadius, backgroundColor: componentBackgroundColor }}>
+            <ThemedScrollView ghost keyboardShouldPersistTaps="handled" contentContainerStyle={trainStyles.innerWrapper}>
+                <ThemedView round padding>
                     <WeightBasedTrainingHeader />
-                    <View>
-                        {setsArray?.map((_, setIndex) => {
-                            return <WeightBasedSetInput key={exerciseIndex.toString().concat(setIndex.toString())} exerciseIndex={exerciseIndex} setIndex={setIndex} />;
-                        })}
-                    </View>
+                    {setsArray?.map((_, setIndex) => {
+                        return <WeightBasedSetInput key={exerciseIndex.toString().concat(setIndex.toString())} exerciseIndex={exerciseIndex} setIndex={setIndex} />;
+                    })}
                 </ThemedView>
-                <PreviousTraining exerciseIndex={exerciseIndex} />
-            </ScrollView>
+                <PreviousWorkout exerciseType="WEIGHT_BASED" exerciseIndex={exerciseIndex} />
+            </ThemedScrollView>
             <AddNoteModal reference={editNoteModalRef} onRequestClose={hideNoteModal} />
-        </View>
+        </ThemedView>
     );
 };

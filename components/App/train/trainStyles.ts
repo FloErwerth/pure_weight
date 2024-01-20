@@ -57,10 +57,14 @@ export const trainStyles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "center",
     },
-    showEditNoteStyle: { padding: 10, paddingHorizontal: 15, alignSelf: "center" },
+    showEditNoteStyle: {
+        padding: 10,
+        paddingHorizontal: 15,
+        alignSelf: "center",
+    },
     innerWrapper: {
         gap: 20,
-        justifyContent: "space-around",
+        marginBottom: 20,
     },
     vStack: {
         alignItems: "center",

@@ -9,6 +9,7 @@ export interface ThemedViewProps extends ViewProps, ComputedBackgroundColorProps
     behind?: boolean;
     round?: boolean;
     hint?: boolean;
+    padding?: boolean;
 }
 
 export const ThemedView = (props: ThemedViewProps) => {
@@ -21,10 +22,11 @@ export const ThemedView = (props: ThemedViewProps) => {
                 backgroundColor,
                 flex: props.stretch ? 1 : 0,
                 borderRadius: props.round ? borderRadius : 0,
+                padding: props.padding ? 10 : 0,
             } as const,
             props.style,
         ],
-        [backgroundColor, props.behind, props.round, props.stretch, props.style],
+        [backgroundColor, props.behind, props.padding, props.round, props.stretch, props.style],
     );
     return <View {...props} ref={props.reference} style={wrapperStyle} />;
 };

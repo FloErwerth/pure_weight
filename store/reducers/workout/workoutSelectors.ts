@@ -129,17 +129,18 @@ export const getNumberWorkoutHistoryEntries = createSelector([getWorkouts, (work
     const workout = workouts.find((workout) => workout.workoutId === workoutIndex);
     return workout?.doneWorkouts?.length;
 });
-export const getPreviousTraining = createSelector([getTrainedWorkout, getLanguage, (trainedWorkout, language, exerciseIndex: number) => exerciseIndex], (trainedWorkout, language, exerciseIndex) => {
+export const getPreviousWorkout = createSelector([getTrainedWorkout, getLanguage, (trainedWorkout, language, exerciseIndex: number) => exerciseIndex], (trainedWorkout, language, exerciseIndex) => {
     const doneWorkouts = trainedWorkout?.workout?.doneWorkouts;
     if (!doneWorkouts || doneWorkouts?.length === 0) {
         return undefined;
     }
 
-    const foundEntries = new Map<string, { date: string; sets: ExerciseSets; note?: string }>();
+    const foundEntries = new Map<string, { date: string; sets: ExerciseSets; note?: string; type: ExerciseType }>();
     for (let workoutIndex = doneWorkouts?.length - 1; workoutIndex >= 0; workoutIndex--) {
         doneWorkouts?.[workoutIndex].doneExercises?.forEach((exercise) => {
             if (!foundEntries.get(exercise.name)) {
                 foundEntries.set(exercise.name, {
+                    type: exercise.type,
                     date: getLocaleDate(doneWorkouts?.[workoutIndex].isoDate, language, { dateStyle: "medium" }),
                     sets: exercise.sets,
                     note: exercise.note,
@@ -194,17 +195,18 @@ export const getOverallTrainingTrend = createSelector([getWorkouts, (workouts, i
             });
         }
     });
-
     return foundCompareables.reduce(
         (bestImprovement, { current, before }) => {
-            const percent = (current.sum / before.sum) * 100;
-            if (bestImprovement === undefined) {
-                return { name: current.name, percent, isPositive: percent > 100 };
-            } else {
-                if (percent > bestImprovement.percent) {
+            if (before.sum !== 0) {
+                const percent = (current.sum / before.sum) * 100;
+                if (bestImprovement === undefined) {
                     return { name: current.name, percent, isPositive: percent > 100 };
                 } else {
-                    return bestImprovement;
+                    if (percent > bestImprovement.percent) {
+                        return { name: current.name, percent, isPositive: percent > 100 };
+                    } else {
+                        return bestImprovement;
+                    }
                 }
             }
         },

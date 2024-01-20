@@ -13,7 +13,7 @@ import { ThemedView } from "../../../Themed/ThemedView/View";
 
 import { getLanguage } from "../../../../store/reducers/settings/settingsSelectors";
 
-type Trend = { percent: number; name: string };
+type Trend = { percent: number; name?: string };
 export interface ProgressDisplayProps {
     onPress: () => void;
     higherIsBetter?: boolean;

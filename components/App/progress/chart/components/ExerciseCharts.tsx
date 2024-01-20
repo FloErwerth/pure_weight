@@ -1,7 +1,6 @@
 import { useCallback, useMemo, useState } from "react";
 import { borderRadius } from "../../../../../theme/border";
 import { LineChartData } from "react-native-chart-kit/dist/line-chart/LineChart";
-import { VStack } from "../../../../Stack/VStack/VStack";
 import { ThemedBottomSheetModal, useBottomSheetRef } from "../../../../BottomSheetModal/ThemedBottomSheetModal";
 import { useAppSelector } from "../../../../../store";
 import { HStack } from "../../../../Stack/HStack/HStack";
@@ -22,6 +21,9 @@ import Chart from "../../../../Chart/Chart";
 import { ExerciseSets, ExerciseType } from "../../../../../store/reducers/workout/types";
 import { getLocaleDate } from "../../../../../utils/date";
 import { getMinutesSecondsFromMilliseconds } from "../../../../../utils/timeDisplay";
+import { ThemedMaterialCommunityIcons } from "../../../../Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
+import { PageContent } from "../../../../PageContent/PageContent";
+import { AnswerText } from "../../../../HelpQuestionAnswer/AnswerText";
 
 interface ExerciseChartProps {
     exerciseName: string;
@@ -111,7 +113,6 @@ const useExerciseData = (exerciseData: { date: IsoDate; sets: ExerciseSets }[], 
         if (chartType === "AVG_WEIGHT") {
             return getAveragePerDay(sets, "weight");
         }
-
         return getCumulativeExerciseData(sets, type);
     }, [chartType, exerciseData, type]);
 
@@ -151,10 +152,12 @@ export const ExerciseChart = ({ exerciseName, data, index }: ExerciseChartProps)
     const { mainColor } = useTheme();
     const [ref, open, close] = useBottomSheetRef();
     const chartTypeLabel = useChartTypeLabel(chartType, exerciseType);
+    const [helpRef, openHelp] = useBottomSheetRef();
 
     const getDotContent = useCallback(
         ({ x, y, indexData }: { x: number; y: number; index: number; indexData: number }) => {
             const minutesSeconds = getMinutesSecondsFromMilliseconds(indexData);
+
             const getContent = () => {
                 if (exerciseType === "TIME_BASED" && typeof chartTypeLabel === "object") {
                     const minutesContent = minutesSeconds.minutes > 0 ? `${minutesSeconds.minutes} ${chartTypeLabel.minutesUnit}` : "";
@@ -221,21 +224,26 @@ export const ExerciseChart = ({ exerciseName, data, index }: ExerciseChartProps)
                 </ThemedPressable>
             </HStack>
             <Chart lineChartStyles={styles.lineChart} getYLabel={() => ""} getXLabel={getXLabel} getDotContent={getDotContent} data={lineChartData} />
-            <ThemedBottomSheetModal title={t("progress_modal_title")} ref={ref}>
-                <VStack ghost style={styles.selectionModal}>
+            <ThemedBottomSheetModal title={t("progress_modal_title")} snapPoints={[exerciseType === "WEIGHT_BASED" ? "40%" : "30%"]} ref={ref}>
+                <ThemedView ghost style={styles.selectionModal}>
                     {mappedChartProps.map(({ onPress, title, chartType }) => (
-                        <ThemedPressable style={{ borderRadius, padding: 10 }} input key={`${chartType}${title}`} onPress={onPress}>
-                            <VStack input>
+                        <HStack ghost key={`${chartType}${title}`}>
+                            <ThemedPressable stretch round background style={styles.chartTypeSelectionButton} padding onPress={onPress}>
                                 <Text center ghost style={styles.chartTypeSelectonTitle}>
                                     {t(chartTypeMap[chartType].title)}
                                 </Text>
-                                <Text center input style={styles.chartTypeSelectionText}>
-                                    {t(chartTypeMap[chartType].hint)}
-                                </Text>
-                            </VStack>
-                        </ThemedPressable>
+                            </ThemedPressable>
+                            <ThemedPressable onPress={openHelp} padding ghost>
+                                <ThemedMaterialCommunityIcons ghost name="help-circle-outline" size={26} />
+                            </ThemedPressable>
+                        </HStack>
                     ))}
-                </VStack>
+                </ThemedView>
+            </ThemedBottomSheetModal>
+            <ThemedBottomSheetModal snapPoints={[exerciseType === "WEIGHT_BASED" ? "40%" : "30%"]} ref={helpRef} title={t(chartTypeMap[chartType].title)}>
+                <PageContent ghost paddingTop={20}>
+                    <AnswerText>{t(chartTypeMap[chartType].hint)}</AnswerText>
+                </PageContent>
             </ThemedBottomSheetModal>
         </ThemedView>
     );

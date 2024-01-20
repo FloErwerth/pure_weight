@@ -45,7 +45,8 @@ export const createNewExercise = createAction("workout_create_new_exercise");
 export const createNewWorkout = createAction("workout_create_new_workout");
 export const saveEditedWorkout = createAction<boolean | undefined, "workout_save_edited_workout">("workout_save_edited_workout");
 export const setEditedWorkoutName = createAction<string | undefined, "workout_set_edited_workout_name">("workout_set_edited_workout_name");
-export const handleMutateSet = createAction<{ setIndex: number; key: keyof ExerciseData; value?: string | boolean; type: ExerciseType }, "handle_mutate_set">("handle_mutate_set");
+export const handleMutateSet = createAction<{ setIndex: number; key: keyof ExerciseData; value?: ExerciseData[keyof ExerciseData]; type: ExerciseType }, "handle_mutate_set">("handle_mutate_set");
+
 export const markSetAsDone = createAction<{ setIndex: number }, "mark_set_as_done">("mark_set_as_done");
 export const setIsActiveSet = createAction<{ setIndex: number }, "set_is_active_set">("set_is_active_set");
 export const setColor = createAction<string, "set_color">("set_color");

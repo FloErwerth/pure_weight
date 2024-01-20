@@ -1,24 +1,12 @@
-export const timeDisplay = (secondsString?: string) => {
-    if (!secondsString) {
-        return undefined;
-    }
+import { TimeInput } from "../store/reducers/workout/types";
 
-    const seconds = parseFloat(secondsString);
-    const hours = Math.floor(seconds / 3600);
-    const minutes = Math.floor((seconds % 3600) / 60);
-    const remainingSeconds = seconds % 60;
+export const getTimeDisplayFromMilliseconds = (milliseconds: number) => {
+    const { minutes, seconds } = getMinutesSecondsFromMilliseconds(milliseconds);
 
-    const hourString = hours > 0 ? `${hours}` : "";
-    const minuteString = minutes > 0 ? `${minutes}` : "";
-    const secondString = remainingSeconds > 0 ? `${remainingSeconds}` : "";
+    const minutesString = minutes.toString().padStart(2, "0");
+    const secondsString = seconds.toString().padStart(2, "0");
 
-    if (hours > 0) {
-        return `${hourString}:${minuteString || "0 minute"}${secondString && `:${secondString}`} hours`;
-    } else if (!hours && minutes > 0) {
-        return `${minuteString}${secondString && `:${secondString}`} minutes`;
-    }
-
-    return secondString.concat(" seconds");
+    return `${minutesString}:${secondsString}`;
 };
 
 export const getMinutesSecondsFromMilliseconds = (milliseconds: number) => {
@@ -30,4 +18,22 @@ export const getMinutesSecondsFromMilliseconds = (milliseconds: number) => {
         minutes,
         seconds: remainingSeconds,
     };
+};
+
+export const getTimeInputFromMilliseconds = (milliseconds: number): TimeInput => {
+    const seconds = milliseconds / 1000;
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+
+    return {
+        minutes: minutes.toString(),
+        seconds: remainingSeconds.toString(),
+    };
+};
+
+export const getMillisecondsFromTimeInput = (timeInput?: TimeInput) => {
+    const minutes = parseFloat(timeInput?.minutes ?? "0");
+    const seconds = parseFloat(timeInput?.seconds ?? "0");
+
+    return (minutes * 60 + seconds) * 1000;
 };

@@ -10,7 +10,7 @@ let id: number = 0;
 type StopwatchConfig =
     | {
           showNotification?: boolean;
-          onTimerDone?: () => void;
+          onTimerDone?: (remainingTime?: number) => void;
       }
     | undefined;
 export const useStopwatch = (totalDuration: number, config: StopwatchConfig = { showNotification: true }) => {
@@ -24,6 +24,10 @@ export const useStopwatch = (totalDuration: number, config: StopwatchConfig = { 
         setTimerStarted(false);
     }, []);
 
+    const pauseTimer = useCallback(() => {
+        BackgroundTimer.clearInterval(id);
+    }, []);
+
     const reset = useCallback(() => {
         stopTimer();
         setRemainingTime(totalDuration);
@@ -34,7 +38,7 @@ export const useStopwatch = (totalDuration: number, config: StopwatchConfig = { 
             if (remainingTime <= 0) {
                 reset();
                 if (config?.onTimerDone) {
-                    config.onTimerDone();
+                    config.onTimerDone(remainingTime);
                 }
                 if (config?.showNotification) {
                     void showNotification();
@@ -62,6 +66,7 @@ export const useStopwatch = (totalDuration: number, config: StopwatchConfig = { 
             remainingTime,
             startTimer,
             stopTimer,
+            pauseTimer,
             reset,
         }),
         [timerStarted, remainingTime, reset],

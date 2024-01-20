@@ -20,6 +20,7 @@ export const WorkoutHistoryCard = ({ date, doneWorkoutId, handleEdit }: WorkoutH
     const language = useAppSelector(getLanguage);
     const doneExercises = useAppSelector((state: AppState) => getDoneExercises(state, doneWorkoutId));
     const key = useMemo(() => Math.random() * doneWorkoutId, [doneWorkoutId]);
+    const filteredExercises = useMemo(() => doneExercises?.filter((exercise) => exercise.sets.length > 0), [doneExercises]);
     return (
         <ThemedPressable style={styles.wrapper} onPress={handleEdit} key={key} input round padding>
             <Text style={styles.date} ghost>
@@ -27,7 +28,7 @@ export const WorkoutHistoryCard = ({ date, doneWorkoutId, handleEdit }: WorkoutH
             </Text>
             <View style={styles.doneExercisesWrapper}>
                 <View>
-                    {doneExercises?.map((exercise) => (
+                    {filteredExercises?.map((exercise) => (
                         <HStack ghost key={key.toString().concat(exercise.name)}>
                             <Text ghost>{exercise.name}</Text>
                         </HStack>

@@ -58,6 +58,8 @@ export const WorkoutHistoryEdit = ({
 
     const renderedExercise = useCallback(
         ({ item, index }: { item: DoneExerciseData | undefined; index: number }) => {
+            if (item?.sets.length === 0) return null;
+
             return (
                 <ThemedView input round style={{ padding: 10, margin: 10 }}>
                     <Text style={{ fontSize: 20, marginBottom: 10 }} ghost>

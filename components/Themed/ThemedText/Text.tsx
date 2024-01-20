@@ -17,6 +17,7 @@ interface ThemedTextProps extends TextProps {
     behind?: boolean;
     link?: boolean;
     textBackground?: boolean;
+    textSecondary?: boolean;
     italic?: boolean;
 }
 

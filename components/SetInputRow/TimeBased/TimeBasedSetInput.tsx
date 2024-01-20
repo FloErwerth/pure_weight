@@ -18,6 +18,10 @@ import { useStopwatch } from "../../../hooks/useStopwatch";
 import { TimeInput } from "../../../store/reducers/workout/types";
 import { ThemedView } from "../../Themed/ThemedView/View";
 import { AnimatedView } from "../../Themed/AnimatedView/AnimatedView";
+import { ThemedBottomSheetModal, useBottomSheetRef } from "../../BottomSheetModal/ThemedBottomSheetModal";
+import { PageContent } from "../../PageContent/PageContent";
+import { ThemedMaterialCommunityIcons } from "../../Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
+import { getTimeInputFromMilliseconds } from "../../../utils/timeDisplay";
 
 interface SetInputRowProps {
     setIndex: number;
@@ -35,45 +39,54 @@ const getMillisecondsFromDuration = (duration?: TimeInput) => {
 };
 
 export const TimeBasedSetInput = ({ setIndex, exerciseIndex }: SetInputRowProps) => {
-    const { mainColor, warningColor, primaryColor, secondaryBackgroundColor, componentBackgroundColor, inputFieldBackgroundColor, textDisabled } = useTheme();
+    const { mainColor, primaryColor, secondaryBackgroundColor, componentBackgroundColor, inputFieldBackgroundColor, textDisabled } = useTheme();
     const data = useAppSelector((state: AppState) => getSetData(state, setIndex))?.[exerciseIndex];
     const isLastSetGetter = useAppSelector((state: AppState) => getIsLastSet(state, exerciseIndex));
     const { isLatestSet, reps, isEditable, isConfirmed, duration, preparation } = data ?? {};
     const dispatch = useAppDispatch();
     const isActiveSet = useAppSelector((state: AppState) => getIsActiveSet(state, exerciseIndex, setIndex));
-
-    const handleSetDone = useCallback(() => {
-        Keyboard.dismiss();
-        if (duration && reps) {
-            void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-            dispatch(markSetAsDone({ setIndex }));
-            dispatch(handleMutateSet({ setIndex, key: "duration", value: getMillisecondsFromDuration(duration).toString(), type: "TIME_BASED" }));
-
-            if (isLastSetGetter(setIndex)) {
-                emitter.emit("workoutLastSet");
-            } else {
-                emitter.emit("workoutDoneSet");
-            }
-        }
-    }, [duration, reps, dispatch, setIndex, isLastSetGetter]);
-
-    const { timerStarted, remainingTime, startTimer, reset } = useStopwatch(getMillisecondsFromDuration(duration) + getMillisecondsFromDuration(preparation), {
-        onTimerDone: handleSetDone,
-    });
-
+    const [cancelHandleRef, openCancelHandle, close] = useBottomSheetRef();
     const preparationMilliseconds = useMemo(() => getMillisecondsFromDuration(preparation), [preparation]);
     const hasPreparation = useMemo(() => Boolean(preparationMilliseconds > 0), [preparationMilliseconds]);
-    const isInPreparation = useMemo(() => Boolean(hasPreparation && remainingTime > getMillisecondsFromDuration(duration)), [duration, preparation, remainingTime]);
 
     const timeDisplay = useTimeDisplay(getMillisecondsFromDuration(duration));
     const prepartionDisplay = useTimeDisplay(preparationMilliseconds);
+
+    const handleSetDone = useCallback(
+        (remainingTime?: number) => {
+            Keyboard.dismiss();
+            close();
+
+            const savedDuration = getMillisecondsFromDuration(duration) - (remainingTime ?? 0);
+
+            if (reps && savedDuration > 0) {
+                void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+                dispatch(markSetAsDone({ setIndex }));
+                dispatch(handleMutateSet({ setIndex, key: "duration", value: getTimeInputFromMilliseconds(savedDuration), type: "TIME_BASED" }));
+
+                if (isLastSetGetter(setIndex)) {
+                    emitter.emit("workoutLastSet");
+                } else {
+                    emitter.emit("workoutDoneSet");
+                }
+            }
+        },
+        [close, duration, reps, dispatch, setIndex, isLastSetGetter],
+    );
+
+    const { timerStarted, remainingTime, startTimer, reset, stopTimer } = useStopwatch(getMillisecondsFromDuration(duration) + getMillisecondsFromDuration(preparation), {
+        onTimerDone: handleSetDone,
+    });
+
+    const isInPreparation = useMemo(() => Boolean(hasPreparation && remainingTime > getMillisecondsFromDuration(duration)), [duration, hasPreparation, remainingTime]);
     const overallTimeDisplay = useTimeDisplay(isInPreparation ? remainingTime - getMillisecondsFromDuration(duration) : remainingTime);
 
     const handleReset = useCallback(() => {
         dispatch(handleMutateSet({ setIndex, key: "duration", value: undefined, type: "TIME_BASED" }));
         dispatch(setIsActiveSet({ setIndex }));
         reset();
-    }, [dispatch, reset, setIndex]);
+        close();
+    }, [close, dispatch, reset, setIndex]);
 
     const activeStackStyles = useMemo(() => {
         return { backgroundColor: isActiveSet ? inputFieldBackgroundColor : "transparent" };
@@ -146,7 +159,10 @@ export const TimeBasedSetInput = ({ setIndex, exerciseIndex }: SetInputRowProps)
 
     const playIcon = useMemo(() => {
         if (timerStarted) {
-            return "stop";
+            if (isInPreparation) {
+                return "stop";
+            }
+            return "check-bold";
         } else {
             if (isActiveSet) {
                 return "play";
@@ -159,7 +175,7 @@ export const TimeBasedSetInput = ({ setIndex, exerciseIndex }: SetInputRowProps)
             }
         }
         return "play";
-    }, [isActiveSet, isLatestSet, isConfirmed, timerStarted]);
+    }, [isInPreparation, isActiveSet, isLatestSet, isConfirmed, timerStarted]);
 
     useEffect(() => {
         if (isInPreparation) {
@@ -243,11 +259,16 @@ export const TimeBasedSetInput = ({ setIndex, exerciseIndex }: SetInputRowProps)
             return;
         }
         if (timerStarted) {
+            if (!isInPreparation) {
+                stopTimer();
+                openCancelHandle();
+                return;
+            }
             reset();
         } else {
             startTimer();
         }
-    }, [isActiveSet, handleReset, reset, startTimer, timerStarted]);
+    }, [isActiveSet, timerStarted, handleReset, isInPreparation, reset, stopTimer, openCancelHandle, startTimer]);
 
     const iconStyle = useMemo(() => ({ color: isConfirmed ? "green" : isActiveSet ? primaryColor : textDisabled }), [isConfirmed, isActiveSet, primaryColor, textDisabled]);
 
@@ -281,6 +302,25 @@ export const TimeBasedSetInput = ({ setIndex, exerciseIndex }: SetInputRowProps)
                     </ThemedPressable>
                 </HStack>
             </HStack>
+            <ThemedBottomSheetModal snapPoints={["35%"]} title="Timer not done" ref={cancelHandleRef}>
+                <PageContent stretch ghost paddingTop={20}>
+                    <Text ghost stretch>
+                        The timer is not done. Do you want to save the current progress or do you want to restart the set?
+                    </Text>
+                    <ThemedPressable padding round onPress={() => handleSetDone(remainingTime)}>
+                        <HStack center style={{ gap: 10 }} ghost>
+                            <ThemedMaterialCommunityIcons ghost name="content-save" size={24} />
+                            <Text>Save</Text>
+                        </HStack>
+                    </ThemedPressable>
+                    <ThemedPressable padding round onPress={handleReset}>
+                        <HStack center style={{ gap: 10 }} ghost>
+                            <ThemedMaterialCommunityIcons ghost name="restart" size={24} />
+                            <Text>Restart</Text>
+                        </HStack>
+                    </ThemedPressable>
+                </PageContent>
+            </ThemedBottomSheetModal>
         </HStack>
     );
 };

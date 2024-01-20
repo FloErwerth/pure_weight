@@ -9,7 +9,7 @@ export const styles = StyleSheet.create({
         marginHorizontal: 5,
         marginVertical: 3,
     },
-    inputStack: { justifyContent: "space-between", gap: 10, height: 60 },
+    inputStack: { justifyContent: "space-between", gap: 10, height: 50 },
     numberCenter: { flex: 0.2, height: 50 },
     textNumber: { padding: 10, fontSize: 16 },
     textInput: {
@@ -17,11 +17,11 @@ export const styles = StyleSheet.create({
         alignSelf: "stretch",
         justifyContent: "center",
         fontSize: 16,
-        height: 50,
+        height: 40,
     },
     controlsWrapper: {
         gap: 5,
-        height: 60,
+        height: 50,
         marginRight: 10,
         alignContent: "center",
         justifyContent: "center",

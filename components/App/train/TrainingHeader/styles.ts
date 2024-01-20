@@ -3,11 +3,9 @@ import { borderRadius } from "../../../../theme/border";
 
 export const styles = StyleSheet.create({
     vStack: {
-        alignItems: "center",
-        alignSelf: "stretch",
         borderRadius,
         marginHorizontal: 5,
-        marginVertical: 3,
+        marginTop: 3,
         marginBottom: 10,
     },
     number: {

@@ -7,6 +7,12 @@ export const styles = StyleSheet.create({
         flex: 0.5,
         borderRadius,
     },
+    chartTypeSelectionButton: {
+        justifyContent: "center",
+    },
+    chartTypeSelectionHelpButton: {
+        marginRight: 10,
+    },
     wrapper: {
         overflow: "hidden",
         marginBottom: 10,
@@ -27,6 +33,7 @@ export const styles = StyleSheet.create({
     },
     chartTypeSelectonTitle: {
         fontSize: 20,
+        alignSelf: "center",
     },
     chartTypeSelectionText: {
         fontSize: 12,
