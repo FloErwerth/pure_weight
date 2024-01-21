@@ -12,9 +12,6 @@ export const getMeasurementsState = (state: AppState) => state.measurmentState;
 export const getEditedMeasurement = createSelector([getMeasurementsState], (state) => state.editedMeasurement);
 
 export const getMeasurements = createSelector([getMeasurementsState], (state) => state.measurements);
-export const getMeasurementDataPoint = createSelector([getEditedMeasurement], (editedMeasurement) => {
-    return Boolean(editedMeasurement && !editedMeasurement.isNew && editedMeasurement.isDataPoint);
-});
 
 export const getLatestMeasurements = createSelector([getMeasurements], (measurements) =>
     measurements.reduce(
@@ -82,5 +79,5 @@ export const getDatesFromCurrentMeasurement = createSelector([getEditedMeasureme
     if (!measurement || measurement.isNew) {
         return undefined;
     }
-    return measurement.measurement.data.map(({ isoDate }) => isoDate);
+    return measurement.measurement?.data.map(({ isoDate }) => isoDate);
 });

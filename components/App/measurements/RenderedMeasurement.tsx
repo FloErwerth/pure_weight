@@ -27,14 +27,14 @@ export const RenderedMeasurement = ({ measurement }: MeasurementProps) => {
     const progress = useAppSelector((state: AppState) => getMeasurmentProgress(state, measurement.measurementId));
 
     const handleNavigateToChart = useCallback(() => {
-        dispatch(setEditedMeasurement({ measurementId: measurement.measurementId, isNew: false, isDataPoint: false }));
+        dispatch(setEditedMeasurement({ isNew: false, isEditing: false, measurement }));
         navigate("measurement/progress");
     }, [dispatch, measurement, navigate]);
 
     const handleGoToHistory = useCallback(() => {
-        dispatch(setEditedMeasurement({ measurementId: measurement.measurementId, isNew: false, isDataPoint: false }));
+        dispatch(setEditedMeasurement({ isNew: false, isEditing: false, measurement }));
         navigate("measurement/history");
-    }, [dispatch, measurement.measurementId, navigate]);
+    }, [dispatch, measurement, navigate]);
 
     const trend = useMemo(
         () => ({

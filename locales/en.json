@@ -143,6 +143,9 @@
   "workout_quit_title": "Your workout is complete",
   "add_more_exercises": "Add more exercises",
 
+  "measurement_edit": "Edit measurement",
+  "measurement_save_edit": "Save changes",
+  "measurement_add_data": "Add measurement",
 
   "workout_save_confirm": "Save",
   "workout_confirm_delete": "Delete",
@@ -194,7 +197,7 @@
   "measurement_warning_text": "There already is an entry on the given date. Please confirm that you want to overwrite the entry.",
   "measurement_create": "Create measurement",
   "measurement_page_title": "New Measurement",
-  "measurement_add": "Add measurement",
+  "measurement_add": "Save data",
   "measurement_placeholder": "Measurement name",
   "measurement_unit": "Unit",
   "measurement_latest": "Latest measurement:",

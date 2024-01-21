@@ -26,10 +26,11 @@ export function Measurements() {
 
     const handleAddExistingMeasurement = useCallback(
         (measurementId: number) => {
-            dispatch(setEditedMeasurement({ measurementId, isNew: false, isDataPoint: false }));
+            const measurement = measurements?.find((measurement) => measurement.measurementId === measurementId);
+            dispatch(setEditedMeasurement({ isEditing: false, isNew: false, measurement }));
             navigate("measurement/create");
         },
-        [dispatch, navigate],
+        [dispatch, measurements, navigate],
     );
 
     const handleDeleteMeasurement = useCallback(
@@ -45,10 +46,20 @@ export function Measurements() {
         setShowToast(false);
     }, [dispatch]);
 
+    const handleEditMeasuremnt = useCallback(
+        (measurementId: number) => {
+            const measurement = measurements?.find((measurement) => measurement.measurementId === measurementId);
+            dispatch(setEditedMeasurement({ isNew: false, isEditing: true, measurement }));
+            navigate("measurement/create");
+        },
+        [dispatch, measurements, navigate],
+    );
+
     const mappedMeasurements = useMemo(
         () =>
             measurements?.map((measurement) => (
                 <Swipeable
+                    onEdit={() => handleEditMeasuremnt(measurement.measurementId)}
                     onDelete={() => handleDeleteMeasurement(measurement.measurementId)}
                     key={`${measurement.name}-pressable`}
                     onClick={() => handleAddExistingMeasurement(measurement.measurementId)}
@@ -56,7 +67,7 @@ export function Measurements() {
                     <RenderedMeasurement measurement={measurement} />
                 </Swipeable>
             )),
-        [handleAddExistingMeasurement, handleDeleteMeasurement, measurements],
+        [handleAddExistingMeasurement, handleDeleteMeasurement, handleEditMeasuremnt, measurements],
     );
 
     return (

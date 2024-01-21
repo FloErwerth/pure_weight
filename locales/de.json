@@ -149,6 +149,9 @@
   "theme_dark": "Dunkel",
   "select_key": "Auswählen",
 
+  "measurement_add_data": "Messdaten hinzufügen",
+  "measurement_edit": "Messung bearbeiten",
+  "measurement_save_edit": "Änderungen speichern",
   "add_more_exercises": "Weitere Übungen hinzufügen",
 
   "create_select_type": "Einheitentyp auswählen",
@@ -190,7 +193,7 @@
   "measurement": "Messung",
   "measurement_create": "Messung erstellen",
   "measurement_page_title": "Neue Messung",
-  "measurement_add": "Messung hinzufügen",
+  "measurement_add": "Daten speichern",
   "measurement_warning_confirm": "Überschreiben bestätigen",
   "measurement_warning_text": "Es ist bereits eine Messung am angegebenen Datum vorhanden. Bitte bestätige, dass Du die Messung überschreiben möchtest.",
   "measurement_placeholder": "Name der Messung",

@@ -1,11 +1,11 @@
 import { useAppDispatch, useAppSelector } from "../../../store";
 import { getLanguage, getThemeKey, getUnitSystem } from "../../../store/reducers/settings/settingsSelectors";
-import { getDatesFromCurrentMeasurement, getEditedMeasurement, getMeasurementDataPoint, getUnitByType } from "../../../store/reducers/measurements/measurementSelectors";
+import { getDatesFromCurrentMeasurement, getEditedMeasurement, getUnitByType } from "../../../store/reducers/measurements/measurementSelectors";
 import { useCallback, useMemo, useState } from "react";
 import { useTheme } from "../../../theme/context";
 import { useTranslation } from "react-i18next";
 import { getAppInstallDate } from "../../../store/reducers/metadata/metadataSelectors";
-import { mutateEditedMeasurement, saveEditedMeasurement, saveMeasurementDataPoint } from "../../../store/reducers/measurements";
+import { mutateEditedMeasurement, saveEditedMeasurement } from "../../../store/reducers/measurements";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { ThemedTextInput } from "../../../components/Themed/ThemedTextInput/ThemedTextInput";
 import { HStack } from "../../../components/Stack/HStack/HStack";
@@ -40,7 +40,7 @@ export const useMeasurementOptionMap = () => {
 
 const useDropdownValue = () => {
     const unitSystem = useAppSelector(getUnitSystem);
-    const type = useAppSelector(getEditedMeasurement)?.measurement.type;
+    const type = useAppSelector(getEditedMeasurement)?.measurement?.type;
     return getUnitByType(unitSystem, type);
 };
 const getTypeByUnit = (unit: string) => {
@@ -49,21 +49,12 @@ const getTypeByUnit = (unit: string) => {
 
 const MAX_DATE = new Date(getDateTodayIso());
 
-const useDate = () => {
-    const isMeasurementDataPoint = useAppSelector(getMeasurementDataPoint);
-    const editedMeasurement = useAppSelector(getEditedMeasurement);
-    if (isMeasurementDataPoint && !editedMeasurement?.isNew && editedMeasurement?.isDataPoint) {
-        return convertDate.toDate(editedMeasurement.measurement.data[editedMeasurement.dataPointIndex].isoDate);
-    }
-};
-
 export const CreateMeasurement = () => {
     const themeKey = useAppSelector(getThemeKey);
     const language = useAppSelector(getLanguage);
     const dates = useAppSelector(getDatesFromCurrentMeasurement);
     const [showWarning, setShowWarnining] = useState(false);
-    const generatedDate = useDate() ?? MAX_DATE;
-    const [date, setDate] = useState(generatedDate);
+    const [date, setDate] = useState(MAX_DATE);
     const dispatch = useAppDispatch();
     const { mainColor, warningColor } = useTheme();
     const { t } = useTranslation();
@@ -73,7 +64,8 @@ export const CreateMeasurement = () => {
     const installDate = useAppSelector(getAppInstallDate);
     const minimiumDate = useMemo(() => new Date(installDate ?? "2023-01-01"), [installDate]);
     const navigate = useNavigate();
-    const isMeasurementDataPoint = useAppSelector(getMeasurementDataPoint);
+    const isEditing = editedMeasurement?.isEditing;
+    const isAddingData = !editedMeasurement?.isEditing && !editedMeasurement?.isNew;
 
     const handleSetMeasurementName = useCallback(
         (name: string) => {
@@ -104,6 +96,9 @@ export const CreateMeasurement = () => {
     );
 
     const measurementButtonText = useMemo(() => {
+        if (editedMeasurement?.isEditing) {
+            return t("measurement_save_edit");
+        }
         if (!editedMeasurement?.isNew) {
             return t("measurement_add");
         }
@@ -111,9 +106,17 @@ export const CreateMeasurement = () => {
             return t("measurement_warning_confirm");
         }
         return t("measurement_create");
-    }, [editedMeasurement?.isNew, showWarning, t]);
+    }, [editedMeasurement?.isEditing, editedMeasurement?.isNew, showWarning, t]);
 
-    const buttonIcon = useMemo(() => ({ name: !editedMeasurement?.isNew ? "table-check" : "table-large-plus", size: 24 }) as const, [editedMeasurement?.isNew]);
+    const buttonIcon = useMemo(() => {
+        if (editedMeasurement?.isEditing) {
+            return { name: "content-save-edit", size: 24 } as const;
+        }
+        if (!editedMeasurement?.isNew) {
+            return { name: "table-plus", size: 24 } as const;
+        }
+        return { name: "table-check", size: 24 } as const;
+    }, [editedMeasurement?.isEditing, editedMeasurement?.isNew]);
 
     const handleDateChange = useCallback(
         (_: unknown, selectedDate?: Date) => {
@@ -123,79 +126,96 @@ export const CreateMeasurement = () => {
         [date],
     );
 
+    const pageTitle = useMemo(() => {
+        if (isAddingData) {
+            return t("measurement_add_data");
+        }
+        if (editedMeasurement?.isEditing) {
+            return t("measurement_edit");
+        }
+        return t("measurement_page_title");
+    }, [editedMeasurement?.isEditing, isAddingData, t]);
+
     const handleNavigateToMeasurements = useCallback(() => {
         navigate("measurements");
     }, [navigate]);
 
     const handleSaveMeasurement = useCallback(() => {
         const sameDateIndex = dates?.findIndex((searchDate) => searchDate === convertDate.toIsoDate(date));
-        if (!isMeasurementDataPoint && !showWarning && sameDateIndex !== -1) {
+        if (!isEditing && !showWarning && sameDateIndex !== -1) {
             setShowWarnining(true);
             return;
         }
-        if (isMeasurementDataPoint) {
-            dispatch(saveMeasurementDataPoint({ isoDate: convertDate.toIsoDate(date) }));
-        } else {
-            dispatch(saveEditedMeasurement({ isoDate: convertDate.toIsoDate(date), replaceIndex: sameDateIndex !== -1 ? sameDateIndex : undefined }));
-        }
+        dispatch(saveEditedMeasurement({ isoDate: convertDate.toIsoDate(date), replaceIndex: sameDateIndex !== -1 ? sameDateIndex : undefined }));
+
         setShowWarnining(false);
         handleNavigateToMeasurements();
-    }, [dates, showWarning, date, dispatch, handleNavigateToMeasurements, isMeasurementDataPoint]);
+    }, [dates, isEditing, showWarning, dispatch, date, handleNavigateToMeasurements]);
+
     const helpText = useMemo(() => ({ title: t("measurement_higher_is_better"), text: t("measurement_higher_is_better_help") }), [t]);
     return (
         <ThemedView background stretch round>
-            <SiteNavigationButtons handleBack={handleNavigateToMeasurements} titleFontSize={40} title={t("measurement_page_title")} />
+            <SiteNavigationButtons handleBack={handleNavigateToMeasurements} titleFontSize={40} title={pageTitle} />
             <PageContent ghost paddingTop={20} stretch>
-                <ThemedTextInput
-                    maxLength={20}
-                    errorKey="measurement_name"
-                    style={createStyles.textInput}
-                    onChangeText={handleSetMeasurementName}
-                    value={editedMeasurement?.measurement.name}
-                    clearButtonMode="while-editing"
-                    editable={!isMeasurementDataPoint}
-                    placeholder={t("measurement_placeholder")}
-                />
-                <HStack ghost style={{ alignSelf: "stretch", gap: 10 }}>
+                {!isAddingData && (
                     <ThemedTextInput
-                        stretch
-                        errorKey="measurement_value"
-                        returnKeyType="done"
-                        keyboardType="decimal-pad"
+                        maxLength={20}
+                        errorKey="measurement_name"
                         style={createStyles.textInput}
-                        onChangeText={handleSetMeasurementValue}
-                        value={editedMeasurement?.measurement.value}
+                        onChangeText={handleSetMeasurementName}
+                        value={editedMeasurement?.measurement?.name}
                         clearButtonMode="while-editing"
-                        placeholder={t("measurement")}
+                        placeholder={t("measurement_placeholder")}
                     />
-                    <ThemedDropdown
-                        isSelectable={editedMeasurement?.isNew}
-                        options={measurementOptions}
-                        errorKey="measurement_type"
-                        value={dropdownValue}
-                        placeholder={t("measurement_unit")}
-                        onSelectItem={handleSetMeasurementType}
+                )}
+                {!isEditing && (
+                    <HStack ghost style={{ alignSelf: "stretch", gap: 10 }}>
+                        <ThemedTextInput
+                            stretch
+                            errorKey="measurement_value"
+                            returnKeyType="done"
+                            keyboardType="decimal-pad"
+                            style={createStyles.textInput}
+                            onChangeText={handleSetMeasurementValue}
+                            value={editedMeasurement?.measurement?.value}
+                            clearButtonMode="while-editing"
+                            placeholder={t("measurement")}
+                            suffix={getUnitByType("metric", editedMeasurement?.measurement?.type)}
+                        />
+                        {!isAddingData && (
+                            <ThemedDropdown
+                                isSelectable={editedMeasurement?.isNew}
+                                options={measurementOptions}
+                                errorKey="measurement_type"
+                                value={dropdownValue}
+                                placeholder={t("measurement_unit")}
+                                onSelectItem={handleSetMeasurementType}
+                            />
+                        )}
+                    </HStack>
+                )}
+                {!isAddingData && (
+                    <CheckBox
+                        label={t("measurement_higher_is_better")}
+                        helpText={helpText}
+                        checked={Boolean(editedMeasurement?.measurement?.higherIsBetter)}
+                        size={26}
+                        onChecked={handleSelectHigherIsBetter}
                     />
-                </HStack>
-                <CheckBox
-                    label={t("measurement_higher_is_better")}
-                    helpText={helpText}
-                    checked={Boolean(editedMeasurement?.measurement.higherIsBetter)}
-                    size={26}
-                    onChecked={handleSelectHigherIsBetter}
-                    disabled={isMeasurementDataPoint}
-                />
-                <DateTimePicker
-                    display="inline"
-                    maximumDate={MAX_DATE}
-                    minimumDate={minimiumDate}
-                    locale={language}
-                    accentColor={mainColor}
-                    themeVariant={themeKey}
-                    style={createStyles.calendar}
-                    onChange={handleDateChange}
-                    value={date}
-                />
+                )}
+                {!isEditing && (
+                    <DateTimePicker
+                        display="inline"
+                        maximumDate={MAX_DATE}
+                        minimumDate={minimiumDate}
+                        locale={language}
+                        accentColor={mainColor}
+                        themeVariant={themeKey}
+                        style={createStyles.calendar}
+                        onChange={handleDateChange}
+                        value={date}
+                    />
+                )}
             </PageContent>
             <PageContent safeBottom ghost>
                 {showWarning && (
