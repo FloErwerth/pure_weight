@@ -4,6 +4,9 @@ import { borderRadius } from "../../../../theme/border";
 export const styles = StyleSheet.create({
     inputStack: {
         gap: 5,
+        alignItems: "center",
+        marginBottom: 5,
+        paddingVertical: 3,
     },
     center: {
         flex: 1,
@@ -12,7 +15,6 @@ export const styles = StyleSheet.create({
     setIndex: {
         fontSize: 16,
         padding: 10,
-        alignSelf: "center",
     },
     textInput: {
         padding: 10,

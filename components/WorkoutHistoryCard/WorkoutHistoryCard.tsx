@@ -9,20 +9,29 @@ import { getLanguage } from "../../store/reducers/settings/settingsSelectors";
 import { getDoneExercises } from "../../store/reducers/workout/workoutSelectors";
 import { View } from "react-native";
 import { useMemo } from "react";
+import { useTheme } from "../../theme/context";
 
 type WorkoutHistoryCardProps = {
     date: IsoDate;
     doneWorkoutId: number;
     handleEdit?: () => void;
+    selected: boolean;
 };
 
-export const WorkoutHistoryCard = ({ date, doneWorkoutId, handleEdit }: WorkoutHistoryCardProps) => {
+export const WorkoutHistoryCard = ({ date, doneWorkoutId, handleEdit, selected }: WorkoutHistoryCardProps) => {
+    const { inputFieldBackgroundColor, secondaryInputFieldBackgroundColor } = useTheme();
     const language = useAppSelector(getLanguage);
     const doneExercises = useAppSelector((state: AppState) => getDoneExercises(state, doneWorkoutId));
     const key = useMemo(() => Math.random() * doneWorkoutId, [doneWorkoutId]);
     const filteredExercises = useMemo(() => doneExercises?.filter((exercise) => exercise.sets.length > 0), [doneExercises]);
+
+    const wrapperStyles = useMemo(
+        () => [styles.wrapper, { backgroundColor: selected ? inputFieldBackgroundColor : secondaryInputFieldBackgroundColor }],
+        [secondaryInputFieldBackgroundColor, inputFieldBackgroundColor, selected],
+    );
+
     return (
-        <ThemedPressable style={styles.wrapper} onPress={handleEdit} key={key} input round padding>
+        <ThemedPressable style={wrapperStyles} onPress={handleEdit} key={key} round padding>
             <Text style={styles.date} ghost>
                 {getLocaleDate(date, language, { dateStyle: "long" })}
             </Text>

@@ -21,16 +21,17 @@ interface BottomToastProps {
     padding?: number;
     leftCorrection?: number;
     topCorrection?: number;
+    customTime?: number;
 }
 const deviceWidth = Dimensions.get("screen").width;
 
-const TIME_STEP = 50;
-export const BottomToast = ({ titleKey, messageKey, onRedo, open, onRequestClose, bottom = 0, padding = 20, leftCorrection, topCorrection }: BottomToastProps) => {
+const TIME_STEP = 10;
+export const BottomToast = ({ customTime, titleKey, messageKey, onRedo, open, onRequestClose, bottom = 0, padding = 20, leftCorrection, topCorrection }: BottomToastProps) => {
     const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
     const { t } = useTranslation();
     const [percent, setPercent] = useState(100);
     const animatedPercent = useSharedValue(100);
-    const time = useAppSelector(getDeletionTime);
+    const time = customTime || useAppSelector(getDeletionTime);
     const timePercentage = useMemo(() => (TIME_STEP / time) * 100, [time]);
 
     const handleRequestClose = useCallback(() => {
@@ -82,6 +83,7 @@ export const BottomToast = ({ titleKey, messageKey, onRedo, open, onRequestClose
                     marginHorizontal: padding / 2,
                     width: deviceWidth - padding,
                     borderRadius,
+                    zIndex: 100,
                     left: leftCorrection ? leftCorrection : 0,
                     transform: [{ translateY: topCorrection ? topCorrection : 0 }],
                 }}

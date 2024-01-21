@@ -47,8 +47,8 @@ export const WeightBasedEditedExercise = ({ doneWorkoutId, index }: WeightBasedE
     return (
         <View>
             {doneExercise?.sets.map(({ weight, reps }, index) => (
-                <HStack key={id + index} ghost style={styles.inputStack}>
-                    <Text ghost center style={styles.setIndex}>
+                <HStack round key={id + index} ghost style={styles.inputStack}>
+                    <Text ghost style={styles.setIndex}>
                         {index + 1}
                     </Text>
                     <EditableExerciseInputRow stretch suffix={weightUnit} value={weight} setValue={(value) => handleSetWeight(index, value)} />

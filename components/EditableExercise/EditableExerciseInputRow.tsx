@@ -8,12 +8,11 @@ import { useTheme } from "../../theme/context";
 import { ThemedView } from "../Themed/ThemedView/View";
 import { HStack } from "../Stack/HStack/HStack";
 import { getErrorByKey } from "../../store/reducers/errors/errorSelectors";
-import { borderRadius } from "../../theme/border";
 import { ThemedPressable } from "../Themed/Pressable/Pressable";
 import { TextInput } from "react-native";
 import { EditableExerciseInputRowProps } from "./types";
 
-export const EditableExerciseInputRow = ({ value = "0", setValue, errorKey, i18key, stretch, suffix }: EditableExerciseInputRowProps) => {
+export const EditableExerciseInputRow = ({ value, setValue, errorKey, i18key, stretch, suffix }: EditableExerciseInputRowProps) => {
     const { t } = useTranslation();
     const { errorColor } = useTheme();
     const hasError = useAppSelector((state: AppState) => getErrorByKey(state)(errorKey));
@@ -29,13 +28,15 @@ export const EditableExerciseInputRow = ({ value = "0", setValue, errorKey, i18k
 
     return (
         <ThemedPressable onPress={() => textInputRef.current?.focus()} behind ghost stretch={stretch}>
-            <Text behind style={styles.label} ghost>
-                {t(i18key ?? "")}
-            </Text>
-            <HStack background style={{ borderRadius, alignItems: "center", justifyContent: "center" }}>
+            {i18key && (
+                <Text behind style={styles.label} ghost>
+                    {t(i18key ?? "")}
+                </Text>
+            )}
+            <HStack round center style={{ justifyContent: "center" }}>
                 <ThemedTextInput
-                    reference={textInputRef}
                     ghost
+                    reference={textInputRef}
                     errorKey={errorKey}
                     inputMode="decimal"
                     textAlign="center"

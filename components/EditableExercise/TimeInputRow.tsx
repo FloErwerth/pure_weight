@@ -39,7 +39,7 @@ export const TimeInputRow = ({ value, setValue, i18key, errorKey }: TimeInputRow
             </Text>
             <HStack ghost style={styles.gap}>
                 <ThemedPressable ghost stretch onPress={() => minutesRef.current?.focus()}>
-                    <HStack ghost background style={{ borderRadius, alignItems: "center", justifyContent: "center" }}>
+                    <HStack style={{ borderRadius, alignItems: "center", justifyContent: "center" }}>
                         <ThemedTextInput
                             reference={minutesRef}
                             ghost
@@ -47,27 +47,23 @@ export const TimeInputRow = ({ value, setValue, i18key, errorKey }: TimeInputRow
                             inputMode="decimal"
                             textAlign="center"
                             onChangeText={handleChangeMinutes}
-                            value={value?.minutes}
+                            value={value?.minutes ?? "0"}
                         ></ThemedTextInput>
-                        <ThemedView ghost>
-                            <Text ghost>{minutesSuffix}</Text>
-                        </ThemedView>
+                        <Text ghost>{minutesSuffix}</Text>
                     </HStack>
                 </ThemedPressable>
                 <ThemedPressable stretch ghost onPress={() => secondsRef.current?.focus()}>
-                    <HStack ghost background style={{ borderRadius, alignItems: "center", justifyContent: "center" }}>
+                    <HStack style={{ borderRadius, alignItems: "center", justifyContent: "center" }}>
                         <ThemedTextInput
                             reference={secondsRef}
-                            background
+                            ghost
                             errorKey={errorKey}
                             inputMode="decimal"
                             textAlign="center"
                             onChangeText={handleChangeSeconds}
-                            value={value?.seconds}
+                            value={value?.seconds ?? "0"}
                         ></ThemedTextInput>
-                        <ThemedView ghost>
-                            <Text ghost>{secondsSuffix}</Text>
-                        </ThemedView>
+                        <Text ghost>{secondsSuffix}</Text>
                     </HStack>
                 </ThemedPressable>
             </HStack>

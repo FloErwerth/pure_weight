@@ -1,6 +1,6 @@
 import { EditableExercise } from "../EditableExercise/EditableExercise";
 import { ThemedBottomSheetModal, ThemedBottomSheetModalProps } from "../BottomSheetModal/ThemedBottomSheetModal";
-import { RefObject, useCallback, useMemo, useState } from "react";
+import { RefObject, useCallback, useEffect, useMemo, useState } from "react";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { useTranslation } from "react-i18next";
 import { HStack } from "../Stack/HStack/HStack";
@@ -17,6 +17,7 @@ import { createNewExercise, storeEditedExercise } from "../../store/reducers/wor
 import { ExerciseMetaData } from "../../store/reducers/workout/types";
 import { View } from "react-native";
 import { BottomToast } from "../BottomToast/BottomToast";
+import { CheckBox } from "../Themed/CheckBox/CheckBox";
 
 const validateData = (data: Partial<ExerciseMetaData>) => {
     const errors: ErrorFields[] = [];
@@ -39,7 +40,6 @@ const validateData = (data: Partial<ExerciseMetaData>) => {
 
 type AddExerciseModalProps = ThemedBottomSheetModalProps & {
     reference: RefObject<BottomSheetModal>;
-    closeAfterEdit?: boolean;
 };
 
 export const EditableExerciseModal = (props: AddExerciseModalProps) => {
@@ -49,12 +49,22 @@ export const EditableExerciseModal = (props: AddExerciseModalProps) => {
     const dispatch = useAppDispatch();
     const editedExercise = useAppSelector(getEditedExercise);
     const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+    const [addMoreExercises, setAddMoreExercises] = useState(false);
+
+    useEffect(() => {
+        if (isEditingExercise) {
+            setAddMoreExercises(false);
+        }
+    }, [isEditingExercise]);
 
     const openSuccessMessage = useCallback(() => {
         setShowSuccessMessage(true);
     }, []);
 
     const handleConfirm = useCallback(() => {
+        if (showSuccessMessage) {
+            setShowSuccessMessage(false);
+        }
         if (editedExercise) {
             const possibleErrors = validateData(editedExercise.exercise);
             if (possibleErrors.length > 0) {
@@ -63,13 +73,14 @@ export const EditableExerciseModal = (props: AddExerciseModalProps) => {
                 dispatch(storeEditedExercise());
                 dispatch(createNewExercise());
                 void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-                if (props.closeAfterEdit) {
+                if (!addMoreExercises) {
                     props.reference.current?.close();
+                } else {
+                    openSuccessMessage();
                 }
-                openSuccessMessage();
             }
         }
-    }, [dispatch, editedExercise, openSuccessMessage, props.closeAfterEdit, props.reference]);
+    }, [addMoreExercises, dispatch, editedExercise, openSuccessMessage, props, props.reference]);
 
     const closeSuccessMessage = useCallback(() => {
         setShowSuccessMessage(false);
@@ -79,8 +90,17 @@ export const EditableExerciseModal = (props: AddExerciseModalProps) => {
         <ThemedBottomSheetModal snapPoints={["100%"]} ref={props.reference} {...props} title={title}>
             <ThemedView stretch ghost style={styles.innerWrapper}>
                 <EditableExercise />
-                <BottomToast topCorrection={25} leftCorrection={-10} padding={20} titleKey="create_exercise_success_title" onRequestClose={closeSuccessMessage} open={showSuccessMessage} />
+                <BottomToast
+                    customTime={1000}
+                    topCorrection={20}
+                    leftCorrection={-10}
+                    padding={20}
+                    titleKey="create_exercise_success_title"
+                    onRequestClose={closeSuccessMessage}
+                    open={showSuccessMessage}
+                />
                 <View>
+                    <CheckBox customWrapperStyles={{ zIndex: -1 }} checked={addMoreExercises} onChecked={setAddMoreExercises} label={t("add_more_exercises")} />
                     <ThemedPressable ghost behind onPress={handleConfirm}>
                         <HStack secondary style={styles.button}>
                             <Text secondary style={styles.buttonText}>
