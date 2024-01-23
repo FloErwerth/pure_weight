@@ -324,7 +324,6 @@ export const workoutReducer = createReducer<WorkoutState>({ workouts: [], sortin
                 const endTimestamp = Temporal.Now.instant().epochMilliseconds;
                 const pausedDuration = workout.pauseTimestamps?.reduce((acc, curr) => acc + (curr.end - curr.begin), 0) ?? 0;
                 const duration = endTimestamp - beginTimestamp - pausedDuration;
-                console.log(endTimestamp - beginTimestamp, duration, pausedDuration);
                 const doneExercises: DoneExerciseData[] = workout.exerciseData.map((data) => ({
                     doneExerciseId: Date.now(),
                     name: data.name,
