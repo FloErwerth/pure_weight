@@ -144,23 +144,23 @@ export function Workouts() {
                         {message}
                     </Text>
                     {isOngoingWorkout && (
-                        <HStack style={trainStyles.confirmOverwriteWrapper} round center>
-                            <ThemedMaterialCommunityIcons ghost name="play" size={24} />
-                            <ThemedPressable center onPress={handleConfirmResume}>
+                        <ThemedPressable round onPress={handleConfirmResume}>
+                            <HStack style={trainStyles.confirmOverwriteWrapper} round center>
+                                <ThemedMaterialCommunityIcons ghost name="play" size={24} />
                                 <Text center ghost style={trainStyles.button}>
                                     {resumeTrainingText}
                                 </Text>
-                            </ThemedPressable>
-                        </HStack>
+                            </HStack>
+                        </ThemedPressable>
                     )}
-                    <HStack style={trainStyles.confirmOverwriteWrapper} round center>
-                        <ThemedMaterialCommunityIcons ghost name="restart" size={24} />
-                        <ThemedPressable center onPress={handleConfirmOverwrite}>
+                    <ThemedPressable round onPress={handleConfirmOverwrite}>
+                        <HStack style={trainStyles.confirmOverwriteWrapper} round center>
+                            <ThemedMaterialCommunityIcons ghost name="restart" size={24} />
                             <Text center ghost style={trainStyles.button}>
                                 {newTrainingText}
                             </Text>
-                        </ThemedPressable>
-                    </HStack>
+                        </HStack>
+                    </ThemedPressable>
                 </PageContent>
             </ThemedBottomSheetModal>
         </ThemedView>
