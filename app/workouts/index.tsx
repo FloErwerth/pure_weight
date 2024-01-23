@@ -18,6 +18,7 @@ import { getLanguage } from "../../store/reducers/settings/settingsSelectors";
 import { trainStyles } from "../../components/App/train/trainStyles";
 import { HStack } from "../../components/Stack/HStack/HStack";
 import { ThemedMaterialCommunityIcons } from "../../components/Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
+import { useToastRef } from "../../components/BottomToast/useToast";
 
 const usePauseWarningContent = () => {
     const language = useAppSelector(getLanguage);
@@ -48,7 +49,7 @@ export function Workouts() {
     const [ref, open, close] = useBottomSheetRef();
     const [newWorkoutIndex, setNewWorkoutIndex] = useState<number | undefined>(undefined);
     const isOngoingWorkout = useAppSelector((state: AppState) => getIsOngoingWorkout(state, newWorkoutIndex ?? -1));
-
+    const toastRef = useToastRef();
     const { resumeTrainingText, title, message, newTrainingText } = usePauseWarningContent();
 
     const handleCreateWorkout = useCallback(() => {
@@ -69,9 +70,12 @@ export function Workouts() {
     const onDelete = useCallback(
         (workoutId: number) => {
             dispatch(removeWorkout(workoutId));
+            if (showToast && toastRef.current) {
+                toastRef.current.restart();
+            }
             setShowToast(true);
         },
-        [dispatch],
+        [dispatch, showToast, toastRef],
     );
 
     const handleStartWorkout = useCallback(
@@ -138,7 +142,7 @@ export function Workouts() {
             <PageContent background ignoreGap stretch paddingTop={20}>
                 {mappedWorkouts}
             </PageContent>
-            <BottomToast bottom={5} onRequestClose={closeToast} open={showToast} messageKey={"undo_message"} titleKey={"workout_deleted_title"} onRedo={handleRecoverWorkout} />
+            <BottomToast reference={toastRef} bottom={5} onRequestClose={closeToast} open={showToast} messageKey={"undo_message"} titleKey={"workout_deleted_title"} onRedo={handleRecoverWorkout} />
             <ThemedBottomSheetModal snapPoints={["40%"]} title={title} ref={ref}>
                 <PageContent paddingTop={20} stretch ghost>
                     <Text style={trainStyles.button} ghost stretch>

@@ -11,6 +11,7 @@ import { deleteMeasurement, recoverMeasurement, setEditedMeasurement, setupNewMe
 import { getSortedMeasurements } from "../../store/reducers/measurements/measurementSelectors";
 import { MeasurementSorting } from "../../components/App/measurements/Sorting/MeasurementSorting";
 import { useNavigate } from "../../hooks/navigate";
+import { useToastRef } from "../../components/BottomToast/useToast";
 
 export function Measurements() {
     const { t } = useTranslation();
@@ -18,6 +19,7 @@ export function Measurements() {
     const dispatch = useAppDispatch();
     const [showToast, setShowToast] = useState(false);
     const navigate = useNavigate();
+    const toastRef = useToastRef();
 
     const handleAddNewMeasurement = useCallback(() => {
         dispatch(setupNewMeasurement());
@@ -36,9 +38,12 @@ export function Measurements() {
     const handleDeleteMeasurement = useCallback(
         (index: number) => {
             dispatch(deleteMeasurement(index));
+            if (showToast && toastRef.current) {
+                toastRef.current.restart();
+            }
             setShowToast(true);
         },
-        [dispatch, setShowToast],
+        [dispatch, showToast],
     );
 
     const handleRecoverMeasurement = useCallback(() => {
@@ -78,6 +83,7 @@ export function Measurements() {
                 {mappedMeasurements}
             </PageContent>
             <BottomToast
+                reference={toastRef}
                 onRequestClose={() => setShowToast(false)}
                 open={showToast}
                 messageKey={"measurement_deleted_undo"}

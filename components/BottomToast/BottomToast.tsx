@@ -6,12 +6,13 @@ import ReAnimated, { FadeInDown, FadeOutDown, Layout, useAnimatedStyle, useShare
 import { borderRadius } from "../../theme/border";
 import { HStack } from "../Stack/HStack/HStack";
 import { ThemedMaterialCommunityIcons } from "../Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { RefObject, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ThemedPressable } from "../Themed/Pressable/Pressable";
 import { useAppSelector } from "../../store";
 import { getDeletionTime } from "../../store/reducers/settings/settingsSelectors";
 
 interface BottomToastProps {
+    reference?: RefObject<{ restart: () => void }>;
     titleKey?: string;
     messageKey?: string;
     onRedo?: () => void;
@@ -36,7 +37,7 @@ const useDeletionTime = (customTime?: number) => {
     return deletionTime;
 };
 
-export const BottomToast = ({ customTime, titleKey, messageKey, onRedo, open, onRequestClose, bottom = 0, padding = 20, leftCorrection, topCorrection }: BottomToastProps) => {
+export const BottomToast = ({ reference, customTime, titleKey, messageKey, onRedo, open, onRequestClose, bottom = 0, padding = 20, leftCorrection, topCorrection }: BottomToastProps) => {
     const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
     const { t } = useTranslation();
     const [percent, setPercent] = useState(100);
@@ -44,21 +45,33 @@ export const BottomToast = ({ customTime, titleKey, messageKey, onRedo, open, on
     const time = useDeletionTime(customTime);
     const timePercentage = useMemo(() => (TIME_STEP / time) * 100, [time]);
 
-    const handleRequestClose = useCallback(() => {
-        onRequestClose();
-
+    const resetTimer = useCallback(() => {
         animatedPercent.value = 100;
         setPercent(100);
 
         clearInterval(timer.current);
         timer.current = undefined;
-    }, [animatedPercent, onRequestClose]);
+    }, [animatedPercent]);
+
+    const handleRequestClose = useCallback(() => {
+        onRequestClose();
+        resetTimer();
+    }, [onRequestClose, resetTimer]);
 
     const startTimer = useCallback(() => {
         timer.current = setInterval(() => {
             setPercent((prev) => prev - timePercentage);
         }, TIME_STEP);
     }, [timePercentage]);
+
+    useEffect(() => {
+        if (open && reference?.current) {
+            reference.current.restart = () => {
+                resetTimer();
+                startTimer();
+            };
+        }
+    }, [open, reference]);
 
     useEffect(() => {
         if (open && timer.current === undefined) {
@@ -76,9 +89,8 @@ export const BottomToast = ({ customTime, titleKey, messageKey, onRedo, open, on
     }, [animatedPercent, handleRequestClose, percent]);
 
     const progressBarStyle = useAnimatedStyle(() => ({ backgroundColor: "#666", width: `${animatedPercent.value}%`, height: 5, borderRadius: 5, overflow: "hidden" }) as const, [animatedPercent]);
-    if (!open) {
-        return null;
-    }
+
+    if (!open) return null;
 
     return (
         <ReAnimated.View layout={Layout} entering={FadeInDown} exiting={FadeOutDown}>
