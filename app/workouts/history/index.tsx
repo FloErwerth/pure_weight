@@ -24,10 +24,9 @@ import { saveEditedWorkout } from "../../../store/reducers/workout";
 export type FlatListData = {
     doneWorkoutId: number;
     handleEdit?: () => void;
-    color: string;
     name: string;
     date: IsoDate;
-    selected: boolean;
+    marked: boolean;
 };
 
 const useMarkedDates = (index?: number) => {
@@ -120,32 +119,31 @@ export function WorkoutHistory() {
                 navigate("workouts/history/edit/index", { doneWorkoutId });
             };
             const name = workout?.workout?.name ?? "";
-            const color = markedDates?.[isoDate] ?? mainColor;
-            const selected = selectedDate === isoDate;
-            return { handleEdit, date: isoDate, name, color, doneWorkoutId, selected };
+            const marked = isoDate === selectedDate;
+            return { handleEdit, date: isoDate, name, doneWorkoutId, marked };
         });
-    }, [workoutsInMonth, mainColor, markedDates, navigate, workout?.workout?.name]);
+    }, [workoutsInMonth, workout?.workout?.name, selectedDate, navigate]);
 
     const renderItem = useCallback(({ item }: { item: FlatListData }) => {
         if (item === undefined) {
             return <ThemedView key="GHOST" ghost stretch style={styles.workout} />;
         }
-        const { handleEdit, doneWorkoutId, date, selected } = item;
+        const { handleEdit, doneWorkoutId, date, marked } = item;
         return (
             <ThemedView ghost style={styles.workout}>
-                <WorkoutHistoryCard key={Math.random() * doneWorkoutId} selected={selected} date={date} doneWorkoutId={doneWorkoutId} handleEdit={handleEdit} />
+                <WorkoutHistoryCard key={Math.random() * doneWorkoutId} marked={marked} date={date} doneWorkoutId={doneWorkoutId} onEdit={handleEdit} />
             </ThemedView>
         );
     }, []);
 
     const dayComponent = useCallback(
-        (date: DayProps & { date?: DateData | undefined }) => {
-            if (!date.date?.dateString || !date.date?.day) {
+        ({ date }: DayProps & { date?: DateData | undefined }) => {
+            if (!date?.dateString || !date?.day) {
                 return null;
             }
 
-            const day = date.date?.day.toString();
-            const isoDate = date?.date?.dateString as IsoDate;
+            const day = date?.day.toString();
+            const isoDate = date?.dateString as IsoDate;
             const scrollCallback = () => {
                 if ((sectionListRef.current?.props.data as Array<FlatListData>)?.findIndex) {
                     const possibleIndexToScrollTo = (sectionListRef.current?.props.data as Array<FlatListData>).findIndex((data: FlatListData) => data.date === isoDate);
@@ -186,7 +184,7 @@ export function WorkoutHistory() {
                 <ThemedPressable style={styles.browseButtonWrapper} onPress={open}>
                     <Text style={styles.browseButton}>{t("history_browse")}</Text>
                 </ThemedPressable>
-                <ThemedBottomSheetModal ref={ref}>
+                <ThemedBottomSheetModal snapPoints={["55%"]} ref={ref}>
                     <CalendarList
                         onScrollToIndexFailed={noop}
                         current={selectedDate ?? latestWorkoutDate}

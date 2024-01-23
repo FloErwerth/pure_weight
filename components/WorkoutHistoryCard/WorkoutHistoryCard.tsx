@@ -14,11 +14,11 @@ import { useTheme } from "../../theme/context";
 type WorkoutHistoryCardProps = {
     date: IsoDate;
     doneWorkoutId: number;
-    handleEdit?: () => void;
-    selected: boolean;
+    onEdit?: () => void;
+    marked: boolean;
 };
 
-export const WorkoutHistoryCard = ({ date, doneWorkoutId, handleEdit, selected }: WorkoutHistoryCardProps) => {
+export const WorkoutHistoryCard = ({ date, doneWorkoutId, onEdit, marked }: WorkoutHistoryCardProps) => {
     const { inputFieldBackgroundColor, secondaryInputFieldBackgroundColor } = useTheme();
     const language = useAppSelector(getLanguage);
     const doneExercises = useAppSelector((state: AppState) => getDoneExercises(state, doneWorkoutId));
@@ -26,12 +26,12 @@ export const WorkoutHistoryCard = ({ date, doneWorkoutId, handleEdit, selected }
     const filteredExercises = useMemo(() => doneExercises?.filter((exercise) => exercise.sets.length > 0), [doneExercises]);
 
     const wrapperStyles = useMemo(
-        () => [styles.wrapper, { backgroundColor: selected ? inputFieldBackgroundColor : secondaryInputFieldBackgroundColor }],
-        [secondaryInputFieldBackgroundColor, inputFieldBackgroundColor, selected],
+        () => [styles.wrapper, { backgroundColor: marked ? inputFieldBackgroundColor : secondaryInputFieldBackgroundColor }],
+        [marked, inputFieldBackgroundColor, secondaryInputFieldBackgroundColor],
     );
 
     return (
-        <ThemedPressable style={wrapperStyles} onPress={handleEdit} key={key} round padding>
+        <ThemedPressable style={wrapperStyles} onPress={onEdit} key={key} round padding>
             <Text style={styles.date} ghost>
                 {getLocaleDate(date, language, { dateStyle: "long" })}
             </Text>
