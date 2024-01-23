@@ -5,7 +5,7 @@ import { SiteNavigationButtons } from "../../components/SiteNavigationButtons/Si
 import { useTranslation } from "react-i18next";
 import { ThemedView } from "../../components/Themed/ThemedView/View";
 import { getIsOngoingWorkout, getSortedWorkouts, getTrainedWorkout } from "../../store/reducers/workout/workoutSelectors";
-import { createNewWorkout, recoverWorkout, removeWorkout, setEditedWorkout, startWorkout } from "../../store/reducers/workout";
+import { createNewWorkout, recoverWorkout, removeWorkout, resumeTrainedWorkout, setEditedWorkout, startWorkout } from "../../store/reducers/workout";
 import { WorkoutSorting } from "../../components/App/train/WorkoutSorting/WorkoutSorting";
 import { RenderedWorkout } from "../../components/App/workout/RenderedWorkout";
 import { PageContent } from "../../components/PageContent/PageContent";
@@ -102,9 +102,10 @@ export function Workouts() {
     );
 
     const handleConfirmResume = useCallback(() => {
+        dispatch(resumeTrainedWorkout());
         navigate("train");
         close();
-    }, [close, navigate]);
+    }, [close, dispatch, navigate]);
 
     const handleConfirmOverwrite = useCallback(() => {
         handleStartWorkout();

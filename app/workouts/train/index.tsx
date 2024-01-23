@@ -12,7 +12,7 @@ import { StopwatchPopover } from "../../../components/StopwatchPopover/Stopwatch
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Carousel from "react-native-reanimated-carousel/src/Carousel";
 import { ThemedBottomSheetModal, useBottomSheetRef } from "../../../components/BottomSheetModal/ThemedBottomSheetModal";
-import { addDoneWorkout, mutateActiveExerciseInTrainedWorkout, pauseTrainedWorkout, resetTrainedWorkout, setActiveExerciseIndex } from "../../../store/reducers/workout";
+import { mutateActiveExerciseInTrainedWorkout, pauseTrainedWorkout, resetTrainedWorkout, saveCurrentWorkout, setActiveExerciseIndex } from "../../../store/reducers/workout";
 
 import { getCanSnap, getExerciseDone, getHasNoTrainingDataSaved, getIsDoneWithTraining, getTrainedWorkout, getTrainedWorkoutExercises } from "../../../store/reducers/workout/workoutSelectors";
 import { ICarouselInstance } from "react-native-reanimated-carousel";
@@ -78,7 +78,7 @@ export function Train() {
     }, [dispatch, handleNavigateToWorkouts]);
 
     const handleSaveTrainingData = useCallback(() => {
-        dispatch(addDoneWorkout());
+        dispatch(saveCurrentWorkout());
     }, [dispatch]);
 
     const handleDone = useCallback(() => {

@@ -41,7 +41,7 @@ export const recoverWorkout = createAction("workout_recover");
 export const recoverExercise = createAction("exercise_recover");
 export const setWorkoutSorting = createAction<SortingType, "workout_sort">("workout_sort");
 export const removeWorkout = createAction<number, "workout_remove">("workout_remove");
-export const addDoneWorkout = createAction("set_training_data");
+export const saveCurrentWorkout = createAction("set_training_data");
 export const createNewExercise = createAction("workout_create_new_exercise");
 export const createNewWorkout = createAction("workout_create_new_workout");
 export const saveEditedWorkout = createAction<boolean | undefined, "workout_save_edited_workout">("workout_save_edited_workout");
@@ -52,6 +52,7 @@ export const markSetAsDone = createAction<{ setIndex: number }, "mark_set_as_don
 export const setIsActiveSet = createAction<{ setIndex: number }, "set_is_active_set">("set_is_active_set");
 export const setColor = createAction<string, "set_color">("set_color");
 export const pauseTrainedWorkout = createAction("pause_trained_workout");
+export const resumeTrainedWorkout = createAction("resume_trained_workout");
 export const cleanupDurationValues = createAction("cleanup_duration_values");
 export const mutateDoneExercise = createAction<{
     doneWorkoutId: number;
@@ -73,7 +74,7 @@ export type WorkoutAction =
     | typeof recoverWorkout.type
     | typeof setWorkoutSorting.type
     | typeof removeWorkout.type
-    | typeof addDoneWorkout.type
+    | typeof saveCurrentWorkout.type
     | typeof setWorkouts.type
     | typeof saveEditedWorkout.type
     | typeof setEditedWorkoutName.type
@@ -114,6 +115,12 @@ export const workoutReducer = createReducer<WorkoutState>({ workouts: [], sortin
         .addCase(pauseTrainedWorkout, (state) => {
             if (state.trainedWorkout) {
                 state.trainedWorkout.paused = true;
+                state.trainedWorkout.pauseTimestamps = [...(state.trainedWorkout.pauseTimestamps ?? []), { begin: Date.now(), end: 0 }];
+            }
+        })
+        .addCase(resumeTrainedWorkout, (state) => {
+            if (state.trainedWorkout && state.trainedWorkout.pauseTimestamps) {
+                state.trainedWorkout.pauseTimestamps[state.trainedWorkout.pauseTimestamps.length - 1].end = Date.now();
             }
         })
         .addCase(mutateActiveExerciseInTrainedWorkout, (state, action) => {
@@ -309,13 +316,15 @@ export const workoutReducer = createReducer<WorkoutState>({ workouts: [], sortin
             }
             state.workouts = newWorkouts;
         })
-        .addCase(addDoneWorkout, (state) => {
+        .addCase(saveCurrentWorkout, (state) => {
             const workout = state.trainedWorkout;
             const workoutIndex = state.trainedWorkout?.workout.workoutId;
             if (workout && workoutIndex !== undefined) {
                 const beginTimestamp = workout.beginTimestamp;
                 const endTimestamp = Temporal.Now.instant().epochMilliseconds;
-                const duration = (endTimestamp - beginTimestamp) / 1000;
+                const pausedDuration = workout.pauseTimestamps?.reduce((acc, curr) => acc + (curr.end - curr.begin), 0) ?? 0;
+                const duration = endTimestamp - beginTimestamp - pausedDuration;
+                console.log(endTimestamp - beginTimestamp, duration, pausedDuration);
                 const doneExercises: DoneExerciseData[] = workout.exerciseData.map((data) => ({
                     doneExerciseId: Date.now(),
                     name: data.name,
