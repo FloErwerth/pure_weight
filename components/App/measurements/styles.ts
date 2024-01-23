@@ -3,7 +3,6 @@ import { borderRadius } from "../../../theme/border";
 
 export const styles = StyleSheet.create({
     pressableWrapper: {
-        borderRadius,
         justifyContent: "space-between",
         alignItems: "flex-start",
     },
@@ -16,7 +15,6 @@ export const styles = StyleSheet.create({
     vStack: {
         gap: 5,
         flex: 1,
-        paddingRight: 10,
     },
     titleWrapper: {
         marginBottom: 10,
@@ -29,6 +27,13 @@ export const createStyles = StyleSheet.create({
         margin: 10,
         borderRadius,
         padding: 10,
+    },
+    actionWrapper: {
+        gap: 10,
+        justifyContent: "center",
+    },
+    warningConfirmWrapper: {
+        gap: 10,
     },
     outerWrapper: {
         flex: 1,

@@ -1,4 +1,4 @@
-import React, { forwardRef, PropsWithChildren, RefObject, useCallback, useEffect, useMemo, useRef } from "react";
+import React, { forwardRef, PropsWithChildren, RefObject, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Keyboard, ViewStyle } from "react-native";
 import { Text } from "../Themed/ThemedText/Text";
 import { styles } from "./styles";
@@ -21,17 +21,21 @@ export interface ThemedBottomSheetModalProps extends PropsWithChildren {
 const refs: RefObject<BottomSheetModal>[] = [];
 export const useBottomSheetRef = () => {
     const ref = useRef<BottomSheetModal>(null);
+    const [isOpen, setIsOpen] = useState(false);
     const handleOpen = useCallback(() => {
+        setIsOpen(true);
         Keyboard.dismiss();
         ref.current?.present();
     }, []);
 
     const handleClose = useCallback(() => {
+        setIsOpen(false);
         ref.current?.close();
     }, []);
 
     const closeAll = useCallback(() => {
         refs.forEach((ref) => ref.current?.close());
+        setIsOpen(false);
     }, []);
 
     useEffect(() => {
@@ -41,7 +45,7 @@ export const useBottomSheetRef = () => {
         };
     }, []);
 
-    return [ref, handleOpen, handleClose, closeAll] as const;
+    return useMemo(() => [ref, handleOpen, handleClose, closeAll, isOpen] as const, [closeAll, handleClose, handleOpen, isOpen]);
 };
 
 const defaultSnapshots = ["50%", "50%", "100%"];

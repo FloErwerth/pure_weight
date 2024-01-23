@@ -15,14 +15,6 @@ type WeightBasedEditedExerciseProps = {
     doneWorkoutId: number;
 };
 
-const getMinutesSecondsFromMilliseconds = (milliseconds?: string) => {
-    if (!milliseconds) return { minutes: "0", seconds: "0" };
-    const parsedMilliseconds = parseFloat(milliseconds);
-    const minutes = Math.floor(parsedMilliseconds / 60000);
-    const seconds = ((parsedMilliseconds % 60000) / 1000).toFixed(0);
-    return { minutes: minutes.toString(), seconds: seconds.toString() };
-};
-
 export const TimeBasedEditedExercise = ({ doneWorkoutId, index }: WeightBasedEditedExerciseProps) => {
     const doneExercise = useAppSelector((state: AppState) => getDoneExerciseById(state, doneWorkoutId, index));
     const dispatch = useAppDispatch();

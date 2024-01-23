@@ -37,9 +37,12 @@ export const getMeasurementData = createSelector([getEditedMeasurement, getUnitS
     if (editedMeasurement.measurement?.data) {
         const labels: string[] = [];
         const data: number[] = [];
-        entries.forEach(({ isoDate, value }) => {
-            labels.push(isoDate);
-            data.push(parseFloat(value));
+        entries.forEach((entry) => {
+            if (!entry) {
+                return;
+            }
+            labels.push(entry.isoDate);
+            data.push(parseFloat(entry.value));
         });
         return {
             labels,
@@ -57,10 +60,10 @@ export const getMeasurementData = createSelector([getEditedMeasurement, getUnitS
 export const getMeasurementSorting = createSelector([getMeasurementsState], (state) => state.sorting);
 export const getMeasurmentProgress = createSelector([getMeasurements, (byIndex, index: number) => index], (measurements, index) => {
     const measurement = measurements.find((measurement) => measurement.measurementId === index);
-    const data = measurement?.data.map(({ value }) => value);
-    if (data && data?.length >= 2) {
-        const latest = parseFloat(data[data?.length - 1]);
-        const secondLatest = parseFloat(data[data?.length - 2]);
+    const data = measurement?.data.map((data) => data?.value);
+    if (data && data.length >= 2) {
+        const latest = parseFloat(data[data.length - 1] ?? "0");
+        const secondLatest = parseFloat(data[data.length - 2] ?? "1");
         return (latest / secondLatest) * 100;
     }
 
@@ -75,9 +78,9 @@ export const getNumberMeasurementEntries = createSelector([getMeasurements, (mea
 export const getSortedMeasurements = createSelector([getMeasurements, getMeasurementSorting], (measurements, sorting) => {
     return sortMeasurements(measurements, sorting);
 });
-export const getDatesFromCurrentMeasurement = createSelector([getEditedMeasurement], (measurement) => {
-    if (!measurement || measurement.isNew) {
+export const getDatesFromCurrentMeasurement = createSelector([getEditedMeasurement], (editedMeasurement) => {
+    if (!editedMeasurement) {
         return undefined;
     }
-    return measurement.measurement?.data.map(({ isoDate }) => isoDate);
+    return editedMeasurement.measurement?.data?.map((data) => data?.isoDate);
 });

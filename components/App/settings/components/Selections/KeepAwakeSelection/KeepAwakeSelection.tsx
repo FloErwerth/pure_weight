@@ -24,7 +24,7 @@ export const KeepAwakeSelection = () => {
     return (
         <ProfileContent title={t("settings_keep_awake_title")}>
             <ThemedView style={selectionStyles.vStack}>
-                <CheckBox snapPoints={["35%"]} helpText={helpText} label={t("settings_keep_awake")} size={26} checked={awake} onChecked={(awake) => handleSelectAwake(awake)} />
+                <CheckBox input snapPoints={["35%"]} helpText={helpText} label={t("settings_keep_awake")} size={26} checked={awake} onChecked={(awake) => handleSelectAwake(awake)} />
             </ThemedView>
         </ProfileContent>
     );

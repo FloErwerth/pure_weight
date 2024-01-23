@@ -25,7 +25,15 @@ export const SwitchToNextExerciseSelection = ({ quick }: SwitchToNextExerciseSel
 
     return (
         <ProfileContent title={t("settings_exercises_title")}>
-            <CheckBox label={t("settings_switch_to_next_exercise_title")} snapPoints={["25%"]} helpText={helpText} size={26} checked={switchToNextExercise} onChecked={handleSwitchToNextExercise} />
+            <CheckBox
+                input
+                label={t("settings_switch_to_next_exercise_title")}
+                snapPoints={["25%"]}
+                helpText={helpText}
+                size={26}
+                checked={switchToNextExercise}
+                onChecked={handleSwitchToNextExercise}
+            />
         </ProfileContent>
     );
 };

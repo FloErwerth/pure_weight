@@ -21,6 +21,7 @@ import { SiteNavigationButtons } from "../../../components/SiteNavigationButtons
 import { PageContent } from "../../../components/PageContent/PageContent";
 import { useNavigate } from "../../../hooks/navigate";
 import { convertDate, getDateTodayIso } from "../../../utils/date";
+import { EditableExerciseInputRow } from "../../../components/EditableExercise/EditableExerciseInputRow";
 
 export const useMeasurementOptions = () => {
     const unitSystem = useAppSelector(getUnitSystem);
@@ -66,6 +67,26 @@ export const CreateMeasurement = () => {
     const navigate = useNavigate();
     const isEditing = editedMeasurement?.isEditing;
     const isAddingData = !editedMeasurement?.isEditing && !editedMeasurement?.isNew;
+    const unitSystem = useAppSelector(getUnitSystem);
+
+    const value = useMemo(() => {
+        const value = editedMeasurement?.measurement?.value;
+        const data = editedMeasurement?.measurement?.data;
+
+        if (!value || data?.length === 0) {
+            return undefined;
+        }
+        if (value) {
+            return value;
+        }
+        if (data) {
+            return data[data.length - 1]?.value;
+        }
+    }, [editedMeasurement?.measurement?.data, editedMeasurement?.measurement?.value]);
+
+    const valueSuffix = useMemo(() => {
+        return isAddingData ? getUnitByType(unitSystem, editedMeasurement?.measurement?.type) : "";
+    }, [isAddingData, unitSystem, editedMeasurement?.measurement?.type]);
 
     const handleSetMeasurementName = useCallback(
         (name: string) => {
@@ -90,7 +111,7 @@ export const CreateMeasurement = () => {
 
     const handleSetMeasurementValue = useCallback(
         (value: string) => {
-            dispatch(mutateEditedMeasurement({ key: "value", value }));
+            dispatch(mutateEditedMeasurement({ key: "value", value: value ?? "0" }));
         },
         [dispatch],
     );
@@ -170,18 +191,7 @@ export const CreateMeasurement = () => {
                 )}
                 {!isEditing && (
                     <HStack ghost style={{ alignSelf: "stretch", gap: 10 }}>
-                        <ThemedTextInput
-                            stretch
-                            errorKey="measurement_value"
-                            returnKeyType="done"
-                            keyboardType="decimal-pad"
-                            style={createStyles.textInput}
-                            onChangeText={handleSetMeasurementValue}
-                            value={editedMeasurement?.measurement?.value}
-                            clearButtonMode="while-editing"
-                            placeholder={t("measurement")}
-                            suffix={getUnitByType("metric", editedMeasurement?.measurement?.type)}
-                        />
+                        <EditableExerciseInputRow placeholder="0" stretch suffix={valueSuffix} setValue={handleSetMeasurementValue} value={value} />
                         {!isAddingData && (
                             <ThemedDropdown
                                 isSelectable={editedMeasurement?.isNew}

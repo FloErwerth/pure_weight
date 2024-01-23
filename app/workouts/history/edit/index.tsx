@@ -13,7 +13,7 @@ import { DoneExerciseData } from "../../../../store/reducers/workout/types";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ThemedBottomSheetModal, useBottomSheetRef } from "../../../../components/BottomSheetModal/ThemedBottomSheetModal";
 import { ThemedPressable } from "../../../../components/Themed/Pressable/Pressable";
-import { deleteFallbackSets, discardChangesToDoneExercises } from "../../../../store/reducers/workout";
+import { cleanupDurationValues, deleteFallbackSets, discardChangesToDoneExercises } from "../../../../store/reducers/workout";
 import { PageContent } from "../../../../components/PageContent/PageContent";
 import { AnswerText } from "../../../../components/HelpQuestionAnswer/AnswerText";
 import { HStack } from "../../../../components/Stack/HStack/HStack";
@@ -38,6 +38,7 @@ export const WorkoutHistoryEdit = ({
 
     const handleNavigateToHistory = useCallback(() => {
         navigate("history");
+        dispatch(cleanupDurationValues());
         if (hasFallbackSet) {
             dispatch(deleteFallbackSets({ doneWorkoutId }));
         }

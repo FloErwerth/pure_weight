@@ -1,5 +1,5 @@
 import { styles } from "./styles";
-import { createContext, PropsWithChildren, useCallback, useMemo, useRef, useState } from "react";
+import { createContext, PropsWithChildren, useCallback, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Gesture, GestureDetector, GestureStateChangeEvent, GestureUpdateEvent, PanGestureChangeEventPayload, PanGestureHandlerEventPayload } from "react-native-gesture-handler";
 import { Animated, Dimensions, Pressable, View } from "react-native";
@@ -7,7 +7,7 @@ import { ThemedView } from "../Themed/ThemedView/View";
 import { useTheme } from "../../theme/context";
 import * as Haptics from "expo-haptics";
 import { useAppSelector } from "../../store";
-import ReAnimated, { FadeIn, FadeOut, Layout } from "react-native-reanimated";
+import ReAnimated, { FadeIn, FadeOut } from "react-native-reanimated";
 
 import { getThemeKey } from "../../store/reducers/settings/settingsSelectors";
 
@@ -134,6 +134,11 @@ const useWorkoutGesturePan = ({ onEdit, onDelete }: { onEdit?: () => void; onDel
 export const swipableContext = createContext<boolean>(false);
 export const Swipeable = ({ onEdit, onDelete, onClick, children }: SwipeableProps) => {
     const [gesture, offsetX, interpolatedBackgroundColor, active] = useWorkoutGesturePan({ onEdit, onDelete });
+    const [mounted, setMounted] = useState(false);
+
+    useLayoutEffect(() => {
+        setMounted(true);
+    }, []);
 
     const Provider = useCallback(
         ({ children }: PropsWithChildren) => {
@@ -196,7 +201,7 @@ export const Swipeable = ({ onEdit, onDelete, onClick, children }: SwipeableProp
     }, [onClick, active]);
 
     return (
-        <ReAnimated.View exiting={FadeOut} entering={FadeIn} layout={Layout}>
+        <ReAnimated.View exiting={FadeOut} entering={mounted ? FadeIn : undefined}>
             <GestureDetector gesture={gesture}>
                 <Pressable onPress={handleClick}>
                     <View ref={viewRef} onLayout={containerMeasurement}>

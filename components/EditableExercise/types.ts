@@ -9,6 +9,7 @@ export interface EditableExerciseInputRowProps {
     i18key?: string;
     stretch?: boolean;
     suffix?: string;
+    placeholder?: string;
 }
 
 export interface TimeInputRowProps {

@@ -29,6 +29,7 @@ import { useTranslation } from "react-i18next";
 import { Appearance, NativeModules } from "react-native";
 import { setLanguage, setTheme } from "../store/reducers/settings";
 import { WorkoutHistoryEdit } from "./workouts/history/edit";
+import { getReactNativeTheme } from "../store/reducers/settings/settingsSelectors";
 
 const Stack = createNativeStackNavigator<RoutesParamaters>();
 
@@ -36,7 +37,7 @@ const ThemedApp = () => {
     const dispatch = useAppDispatch();
     const { i18n } = useTranslation();
     const isFirstTimeRendered = useAppSelector(getIsFirstTimeRendered);
-
+    const reactNativeTheme = useAppSelector(getReactNativeTheme);
     if (isFirstTimeRendered) {
         DeviceInfo.getFirstInstallTime().then((installTime) => {
             const date = new Date(installTime ?? 0).toISOString().split("T")[0];
@@ -56,13 +57,13 @@ const ThemedApp = () => {
     }
 
     return (
-        <NavigationContainer ref={navigationRef} independent={true}>
+        <NavigationContainer theme={reactNativeTheme} ref={navigationRef} independent={true}>
             <GestureHandlerRootView style={{ flex: 1 }}>
                 <ThemeProvider>
                     <RootSiblingParent>
                         <BottomSheetModalProvider>
-                            <SafeAreaView>
-                                <Stack.Navigator screenOptions={{ headerShown: false }}>
+                            <SafeAreaView background>
+                                <Stack.Navigator screenOptions={{ headerShown: false, headerBackButtonMenuEnabled: false }}>
                                     <Stack.Screen component={TabsWrapper} options={{ headerShown: false }} name="tabs" />
                                     <Stack.Screen component={Train} options={{ gestureEnabled: false, headerShown: false }} name="workouts/train/index" />
                                     <Stack.Screen component={Create} options={{ gestureEnabled: false, headerShown: false }} name="workouts/create/index" />

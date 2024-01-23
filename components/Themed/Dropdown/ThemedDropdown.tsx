@@ -5,7 +5,6 @@ import { ThemedPressable } from "../Pressable/Pressable";
 import { ThemedView } from "../ThemedView/View";
 import { Text } from "../ThemedText/Text";
 import Animated, { FadeIn, FadeOut, Layout } from "react-native-reanimated";
-import { borderRadius } from "../../../theme/border";
 import { useTheme } from "../../../theme/context";
 import { AppState, useAppSelector } from "../../../store";
 import { ErrorFields } from "../../../store/reducers/errors";
@@ -86,19 +85,19 @@ export function ThemedDropdown<T extends readonly string[]>({ secondary, isSelec
                     secondary={secondary}
                     error={error}
                     disabled={!isSelectable}
-                    input
                     reference={containerRef}
                     onLayout={measureContainer}
                     style={styles.selectedItemWrapper}
                     onPress={togglePicker}
+                    stretch
                 >
                     <Text ghost disabled={!isSelectable} error={error} style={styles.selectedItem}>
-                        {value ?? placeholder}
+                        {value || placeholder}
                     </Text>
                 </ThemedPressable>
                 {open && (
                     <Animated.View style={dropdownStyles} layout={Layout} entering={FadeIn.duration(200)} exiting={FadeOut.duration(200)}>
-                        <ThemedView input style={{ borderColor: componentBackgroundColor, borderWidth: 1, borderRadius }}>
+                        <ThemedView round input>
                             {options?.map((value, index) => (
                                 <>
                                     <Item key={value} onSelectItem={handleSelectItem} value={value} />

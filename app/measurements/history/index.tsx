@@ -1,6 +1,6 @@
 import { ThemedView } from "../../../components/Themed/ThemedView/View";
 import { SiteNavigationButtons } from "../../../components/SiteNavigationButtons/SiteNavigationButtons";
-import { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import { useNavigate } from "../../../hooks/navigate";
 import { useAppDispatch, useAppSelector } from "../../../store";
 import { getDatesFromCurrentMeasurement, getEditedMeasurement, getUnitByType } from "../../../store/reducers/measurements/measurementSelectors";
@@ -16,11 +16,15 @@ import { useTranslation } from "react-i18next";
 import { EditableExerciseInputRow } from "../../../components/EditableExercise/EditableExerciseInputRow";
 import { ThemedPressable } from "../../../components/Themed/Pressable/Pressable";
 import { Text } from "../../../components/Themed/ThemedText/Text";
-import { saveMeasurementDataPoint } from "../../../store/reducers/measurements";
+import { deleteMeasurementDataPoint, recoverMeasurementDataPoint, saveEditedMeasurement, saveMeasurementDataPoint } from "../../../store/reducers/measurements";
 import { createStyles } from "../../../components/App/measurements/styles";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { getAppInstallDate } from "../../../store/reducers/metadata/metadataSelectors";
 import { useTheme } from "../../../theme/context";
+import { HStack } from "../../../components/Stack/HStack/HStack";
+import { AnswerText } from "../../../components/HelpQuestionAnswer/AnswerText";
+import { ThemedMaterialCommunityIcons } from "../../../components/Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
+import { BottomToast } from "../../../components/BottomToast/BottomToast";
 
 const MAX_DATE = new Date(getDateTodayIso());
 
@@ -40,11 +44,17 @@ export const MeasurementHistory = () => {
     const { mainColor } = useTheme();
     const themeKey = useAppSelector(getThemeKey);
     const measurementDates = useAppSelector(getDatesFromCurrentMeasurement);
+    const [warningRef, openWarning, closeWarning, __, showWarning] = useBottomSheetRef();
+    const [showToast, setShowToast] = useState(false);
 
     const handleEditMeasurementPoint = useCallback(
         (index: number) => {
             if (editedMeasurement?.measurement) {
-                setEditedDatapoint({ ...editedMeasurement?.measurement.data[index], index });
+                const dataPoint = editedMeasurement?.measurement.data[index];
+                if (dataPoint?.isoDate === undefined || dataPoint?.value === undefined) {
+                    return;
+                }
+                setEditedDatapoint({ ...dataPoint, index });
                 open();
             }
         },
@@ -52,13 +62,19 @@ export const MeasurementHistory = () => {
     );
 
     const handleNavigateToMeasurements = useCallback(() => {
+        dispatch(saveEditedMeasurement());
         navigate("measurements");
-    }, [navigate]);
+    }, [dispatch, navigate]);
 
     const renderItem: ListRenderItem<MeasurementDataPoint> = useCallback(
-        ({ item: { isoDate, value }, index }) => (
-            <SelectableMeasurementDataPoint selectMeasurementPoint={() => handleEditMeasurementPoint(index)} type={editedMeasurement?.measurement?.type} isoDate={isoDate} value={value} />
-        ),
+        ({ item, index }) => {
+            if (item === undefined) {
+                return <ThemedView stretch ghost />;
+            } else {
+                const { isoDate, value } = item;
+                return <SelectableMeasurementDataPoint selectMeasurementPoint={() => handleEditMeasurementPoint(index)} type={editedMeasurement?.measurement?.type} isoDate={isoDate} value={value} />;
+            }
+        },
         [editedMeasurement?.measurement?.type, handleEditMeasurementPoint],
     );
 
@@ -80,10 +96,43 @@ export const MeasurementHistory = () => {
     }, [editedMeasurement?.measurement?.type, unitSystem]);
 
     const handleSaveEditedDatapoint = useCallback(() => {
-        dispatch(saveMeasurementDataPoint({ datapoint: editedDatapoint, index: editedDatapoint?.index }));
+        if (editedDatapoint) {
+            const datapoint = { ...editedDatapoint, value: editedDatapoint?.value ?? "0" };
+            if (showWarning) {
+                const overwriteIndex = editedMeasurement?.measurement?.data.findIndex((datapoint) => datapoint?.isoDate === editedDatapoint?.isoDate);
+                dispatch(saveMeasurementDataPoint({ datapoint, index: overwriteIndex }));
+                dispatch(deleteMeasurementDataPoint({ index: datapoint?.index }));
+                closeWarning();
+            } else {
+                dispatch(saveMeasurementDataPoint({ datapoint, index: datapoint?.index }));
+            }
+        }
         Keyboard.dismiss();
         close();
-    }, [close, dispatch, editedDatapoint]);
+    }, [close, closeWarning, dispatch, editedDatapoint, editedMeasurement?.measurement?.data, showWarning]);
+
+    const handleRecoverMeasurementDataPoint = useCallback(() => {
+        dispatch(recoverMeasurementDataPoint());
+        setShowToast(false);
+    }, [dispatch]);
+
+    const handleDeleteDataPoint = useCallback(() => {
+        dispatch(deleteMeasurementDataPoint({ index: editedDatapoint?.index }));
+        setShowToast(true);
+        close();
+    }, [close, dispatch, editedDatapoint?.index]);
+
+    const handleCheckForDates = useCallback(() => {
+        if (editedDatapoint?.isoDate === undefined) {
+            return;
+        }
+        const originalIsoDate = editedMeasurement?.measurement?.data[editedDatapoint?.index]?.isoDate;
+        if (measurementDates?.includes(editedDatapoint?.isoDate) && editedDatapoint?.isoDate !== originalIsoDate) {
+            openWarning();
+            return;
+        }
+        handleSaveEditedDatapoint();
+    }, [editedDatapoint?.isoDate, editedDatapoint?.index, editedMeasurement?.measurement?.data, measurementDates, handleSaveEditedDatapoint, openWarning]);
 
     const handleSetDatapointValue = useCallback(
         (value?: string) => {
@@ -98,17 +147,25 @@ export const MeasurementHistory = () => {
             if (selectedDate === undefined || editedDatapoint?.index === undefined) {
                 return;
             }
-            const isoDate = convertDate.toIsoDate(selectedDate);
-
-            if (measurementDates?.includes(isoDate)) {
-                //todo add warning
-                console.log("already in use");
-            } else {
-                setEditedDatapoint({ isoDate: convertDate.toIsoDate(selectedDate), value: editedDatapoint?.value ?? "0", index: editedDatapoint.index });
-            }
+            setEditedDatapoint({ isoDate: convertDate.toIsoDate(selectedDate), value: editedDatapoint?.value ?? "0", index: editedDatapoint.index });
         },
-        [editedDatapoint?.index, editedDatapoint?.value, measurementDates],
+        [editedDatapoint?.index, editedDatapoint?.value],
     );
+
+    const mappedData = useMemo(() => {
+        if (editedMeasurement !== undefined && editedMeasurement.measurement && editedMeasurement.measurement?.data) {
+            const filledData = 3 - (editedMeasurement.measurement.data.length % 3);
+            return filledData === 0 ? editedMeasurement?.measurement?.data : [...editedMeasurement.measurement.data, ...Array(filledData).fill(undefined)];
+        }
+        return undefined;
+    }, [editedMeasurement]);
+
+    const handleToastClosed = useCallback(() => {
+        setShowToast(false);
+        if (editedMeasurement?.measurement?.data.length === 0) {
+            handleNavigateToMeasurements();
+        }
+    }, [editedMeasurement?.measurement?.data.length, handleNavigateToMeasurements]);
 
     if (editedMeasurement === undefined) {
         navigate("measurements");
@@ -118,20 +175,28 @@ export const MeasurementHistory = () => {
     return (
         <ThemedView background stretch>
             <SiteNavigationButtons handleBack={handleNavigateToMeasurements} title={editedMeasurement.measurement?.name} />
-            <PageContent ghost paddingTop={20}>
+            <PageContent stretch ghost paddingTop={20}>
                 <FlatList
                     contentInset={flatlistConfig.contentInset}
                     contentContainerStyle={flatlistConfig.contentContainerStyle}
                     numColumns={3}
                     columnWrapperStyle={flatlistConfig.columnWrapperStyle}
-                    data={editedMeasurement.measurement?.data}
+                    data={mappedData}
                     renderItem={renderItem}
+                />
+                <BottomToast
+                    leftCorrection={-20}
+                    bottom={bottom}
+                    onRequestClose={handleToastClosed}
+                    open={showToast}
+                    messageKey={"measurement_deleted_message"}
+                    onRedo={handleRecoverMeasurementDataPoint}
                 />
             </PageContent>
 
             <ThemedBottomSheetModal snapPoints={["70%"]} title={title} ref={ref}>
                 <PageContent safeBottom ghost stretch paddingTop={20}>
-                    <EditableExerciseInputRow suffix={unit} setValue={handleSetDatapointValue} value={editedDatapoint?.value}></EditableExerciseInputRow>
+                    <EditableExerciseInputRow placeholder="0" suffix={unit} setValue={handleSetDatapointValue} value={editedDatapoint?.value}></EditableExerciseInputRow>
                     <DateTimePicker
                         display="inline"
                         maximumDate={MAX_DATE}
@@ -143,8 +208,26 @@ export const MeasurementHistory = () => {
                         onChange={handleSetDatapointDate}
                         value={convertDate.toDate(editedDatapoint?.isoDate ?? getDateTodayIso())}
                     />
-                    <ThemedPressable padding round onPress={handleSaveEditedDatapoint}>
-                        <Text>Confirm Change</Text>
+                    <HStack ghost style={createStyles.actionWrapper}>
+                        <ThemedPressable stretch center padding round onPress={handleCheckForDates}>
+                            <Text>{t("measurement_add")}</Text>
+                        </ThemedPressable>
+                        <ThemedPressable stretch center padding round onPress={handleDeleteDataPoint}>
+                            <Text>{t("measurement_delete")}</Text>
+                        </ThemedPressable>
+                    </HStack>
+                </PageContent>
+            </ThemedBottomSheetModal>
+            <ThemedBottomSheetModal snapPoints={["40%"]} ref={warningRef} title={t("measurement_warning_title")}>
+                <PageContent safeBottom stretch ghost>
+                    <HStack stretch ghost style={createStyles.warningWrapper}>
+                        <AnswerText>{t(`measurement_warning_text`)}</AnswerText>
+                    </HStack>
+                    <ThemedPressable center padding round onPress={handleSaveEditedDatapoint}>
+                        <HStack ghost center style={createStyles.warningConfirmWrapper}>
+                            <ThemedMaterialCommunityIcons name="content-save-outline" size={24} />
+                            <Text>{t("measurement_warning_confirm")}</Text>
+                        </HStack>
                     </ThemedPressable>
                 </PageContent>
             </ThemedBottomSheetModal>

@@ -56,6 +56,7 @@ export const StopwatchSelection = ({ quick }: StopwatchSelectionProps) => {
         <ProfileContent title={t("settings_stopwatch_title")}>
             <VStack ghost={quick} style={selectionStyles.vStack}>
                 <CheckBox
+                    input
                     snapPoints={["25%"]}
                     helpText={doneSetHelpText}
                     label={t("settings_stopwatch_done_set")}
@@ -64,6 +65,7 @@ export const StopwatchSelection = ({ quick }: StopwatchSelectionProps) => {
                     onChecked={handleSelectStartStopwatchOnDoneSet}
                 />
                 <CheckBox
+                    input
                     helpText={lastDoneSetHelpText}
                     snapPoints={["25%"]}
                     label={t("settings_stopwatch_last_set")}
@@ -71,7 +73,7 @@ export const StopwatchSelection = ({ quick }: StopwatchSelectionProps) => {
                     checked={startStopwatchOnLastSet}
                     onChecked={handleSelectStartStopwatchOnLastSet}
                 />
-                <CheckBox helpText={notificationHelptext} snapPoints={["25%"]} label={t("settings_stopwatch_notify")} size={26} checked={checked} onChecked={handleSelectNotification} />
+                <CheckBox input helpText={notificationHelptext} snapPoints={["25%"]} label={t("settings_stopwatch_notify")} size={26} checked={checked} onChecked={handleSelectNotification} />
             </VStack>
         </ProfileContent>
     );

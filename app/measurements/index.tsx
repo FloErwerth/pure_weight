@@ -83,6 +83,7 @@ export function Measurements() {
                 messageKey={"measurement_deleted_undo"}
                 titleKey={"measurement_deleted_message"}
                 onRedo={handleRecoverMeasurement}
+                bottom={10}
             />
         </ThemedView>
     );

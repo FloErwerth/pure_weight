@@ -12,7 +12,7 @@ import { useAppSelector } from "../../store";
 import { getDeletionTime } from "../../store/reducers/settings/settingsSelectors";
 
 interface BottomToastProps {
-    titleKey: string;
+    titleKey?: string;
     messageKey?: string;
     onRedo?: () => void;
     onRequestClose: () => void;
@@ -26,12 +26,22 @@ interface BottomToastProps {
 const deviceWidth = Dimensions.get("screen").width;
 
 const TIME_STEP = 10;
+
+const useDeletionTime = (customTime?: number) => {
+    const deletionTime = useAppSelector(getDeletionTime);
+
+    if (customTime) {
+        return customTime;
+    }
+    return deletionTime;
+};
+
 export const BottomToast = ({ customTime, titleKey, messageKey, onRedo, open, onRequestClose, bottom = 0, padding = 20, leftCorrection, topCorrection }: BottomToastProps) => {
     const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
     const { t } = useTranslation();
     const [percent, setPercent] = useState(100);
     const animatedPercent = useSharedValue(100);
-    const time = customTime || useAppSelector(getDeletionTime);
+    const time = useDeletionTime(customTime);
     const timePercentage = useMemo(() => (TIME_STEP / time) * 100, [time]);
 
     const handleRequestClose = useCallback(() => {
@@ -88,9 +98,11 @@ export const BottomToast = ({ customTime, titleKey, messageKey, onRedo, open, on
                     transform: [{ translateY: topCorrection ? topCorrection : 0 }],
                 }}
             >
-                <Text ghost style={{ fontSize: 20, textAlign: "center", fontWeight: "bold", marginBottom: messageKey ? 0 : 5 }}>
-                    {t(titleKey)}
-                </Text>
+                {titleKey && (
+                    <Text ghost style={{ fontSize: 20, textAlign: "center", fontWeight: "bold", marginBottom: messageKey ? 0 : 5 }}>
+                        {t(titleKey)}
+                    </Text>
+                )}
                 {messageKey && (
                     <ThemedPressable style={{ padding: 10, borderRadius }} onPress={onRedo}>
                         <HStack style={{ flex: 1, justifyContent: "space-between", paddingHorizontal: 10 }}>

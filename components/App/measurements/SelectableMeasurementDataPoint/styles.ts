@@ -8,4 +8,7 @@ export const styles = StyleSheet.create({
     value: {
         fontSize: 20,
     },
+    wrapper: {
+        flex: 1,
+    },
 });

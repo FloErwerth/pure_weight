@@ -5,6 +5,7 @@ import { sortWorkouts } from "./sortWorkouts";
 import { DoneExerciseData, ExerciseData, ExerciseMetaData, ExerciseType, TimeInput, TrainedWorkout, Workout, WorkoutState } from "./types";
 import { getRandomColorFromPalette } from "../../../utils/colorPalette";
 import { getDateTodayIso } from "../../../utils/date";
+import { getMillisecondsFromTimeInput, getMinutesSecondsFromMilliseconds } from "../../../utils/timeDisplay";
 
 export const setWorkoutState = createAction<WorkoutState, "workout_set_state">("workout_set_state");
 export const setWorkouts = createAction<Workout[], "workout_set_workouts">("workout_set_workouts");
@@ -51,6 +52,7 @@ export const markSetAsDone = createAction<{ setIndex: number }, "mark_set_as_don
 export const setIsActiveSet = createAction<{ setIndex: number }, "set_is_active_set">("set_is_active_set");
 export const setColor = createAction<string, "set_color">("set_color");
 export const pauseTrainedWorkout = createAction("pause_trained_workout");
+export const cleanupDurationValues = createAction("cleanup_duration_values");
 export const mutateDoneExercise = createAction<{
     doneWorkoutId: number;
     doneExerciseId: number;
@@ -434,6 +436,27 @@ export const workoutReducer = createReducer<WorkoutState>({ workouts: [], sortin
                     });
                 }
                 state.editedWorkout.workout.doneWorkouts[doneWorkoutIndex] = doneWorkout;
+            }
+        })
+        .addCase(cleanupDurationValues, (state) => {
+            if (state.editedWorkout && state.editedWorkout.workout && state.editedWorkout.workout.doneWorkouts) {
+                state.editedWorkout.workout.doneWorkouts = state.editedWorkout.workout.doneWorkouts.map((doneWorkout) => {
+                    return {
+                        ...doneWorkout,
+                        doneExercises: doneWorkout.doneExercises?.map((exercise) => {
+                            if (exercise.type === "TIME_BASED") {
+                                return {
+                                    ...exercise,
+                                    sets: exercise.sets.map((set) => {
+                                        const durationInNumbers = getMinutesSecondsFromMilliseconds(getMillisecondsFromTimeInput(set.duration));
+                                        return { ...set, duration: { minutes: durationInNumbers.minutes.toString(), seconds: durationInNumbers.seconds.toString() } };
+                                    }),
+                                } satisfies DoneExerciseData;
+                            }
+                            return exercise;
+                        }),
+                    };
+                });
             }
         });
 });

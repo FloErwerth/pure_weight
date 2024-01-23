@@ -1,8 +1,25 @@
 import { AppState } from "../../index";
 import { createSelector } from "@reduxjs/toolkit";
+import { Theme } from "@react-navigation/native";
+import { ThemeConfig } from "../../../theme/config";
 
 export const getSettingsState = ({ settingsState }: AppState) => settingsState;
 export const getThemeKey = createSelector([getSettingsState], (settings) => settings.theme);
+export const getReactNativeTheme = createSelector([getThemeKey], (themeKey) => {
+    const themeConfig = ThemeConfig[themeKey];
+    return {
+        dark: themeKey === "dark",
+        colors: {
+            card: "transparent",
+            border: "transparent",
+            background: themeConfig.backgroundColor,
+            primary: "transparent",
+            text: "transparent",
+            notification: "transparent",
+            border: "transparent",
+        },
+    } satisfies Theme;
+});
 export const getLanguage = createSelector([getSettingsState], (settings) => settings.language ?? "en");
 export const getUnitSystem = createSelector([getSettingsState], (settings) => settings.unitSystem);
 export const getStopwatchSettings = createSelector([getSettingsState], (settings) => settings.stopwatchSettings);

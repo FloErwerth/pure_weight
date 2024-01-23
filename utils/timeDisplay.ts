@@ -9,6 +9,26 @@ export const getTimeDisplayFromMilliseconds = (milliseconds: number) => {
     return `${minutesString}:${secondsString}`;
 };
 
+export const getMinutesSecondsFromSeconds = (seconds: number) => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+
+    return {
+        minutes: minutes.toString(),
+        seconds: remainingSeconds.toString(),
+    };
+};
+
+export const getMinutesSecondsFromMinutes = (minutes: number) => {
+    const remainingMinutes = minutes % 60;
+    const hours = Math.floor(minutes / 60);
+
+    return {
+        hours: hours.toString(),
+        minutes: remainingMinutes.toString(),
+    };
+};
+
 export const getMinutesSecondsFromMilliseconds = (milliseconds: number) => {
     const seconds = milliseconds / 1000;
     const minutes = Math.floor(seconds / 60);

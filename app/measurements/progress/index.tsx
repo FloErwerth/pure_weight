@@ -1,4 +1,4 @@
-import { lazy, Suspense, useCallback, useMemo } from "react";
+import { useCallback } from "react";
 import { useTheme } from "../../../theme/context";
 import { useAppSelector } from "../../../store";
 import { ThemedView } from "../../../components/Themed/ThemedView/View";
@@ -9,35 +9,10 @@ import { getMeasurementData } from "../../../store/reducers/measurements/measure
 import { SiteNavigationButtons } from "../../../components/SiteNavigationButtons/SiteNavigationButtons";
 import { useNavigate } from "../../../hooks/navigate";
 import { PageContent } from "../../../components/PageContent/PageContent";
-import { styles } from "../../../components/App/progress/chart/components/styles";
-import { ThemedScrollView } from "../../../components/Themed/ThemedScrollView/ThemedScrollView";
-import { VStack } from "../../../components/Stack/VStack/VStack";
-import { HStack } from "../../../components/Stack/HStack/HStack";
-import { Skeleton } from "../../../components/Skeleton/Skeleton";
-import { Dimensions } from "react-native";
 import { IsoDate } from "../../../types/date";
 import { getLocaleDate } from "../../../utils/date";
 import { getLanguage } from "../../../store/reducers/settings/settingsSelectors";
-
-const Chart = lazy(() => import("../../../components/Chart/Chart"));
-const Fallback = () => {
-    const { componentBackgroundColor } = useTheme();
-    const containerStyles = useMemo(() => [styles.vStack, { backgroundColor: componentBackgroundColor }], [componentBackgroundColor]);
-    return (
-        <ThemedScrollView ghost contentContainerStyle={styles.scrollView}>
-            <VStack key={Math.random() * 10000} style={containerStyles}>
-                <HStack style={styles.hStack}>
-                    <Skeleton borderRadius={borderRadius} width={140} height={40} />
-                    <Skeleton borderRadius={borderRadius} width={140} height={40} />
-                </HStack>
-                <Skeleton borderRadius={borderRadius} width={Dimensions.get("screen").width - 40} height={283} />
-            </VStack>
-        </ThemedScrollView>
-    );
-};
-const PromiseTrigger = () => {
-    throw new Promise(() => {});
-};
+import Chart from "../../../components/Chart/Chart";
 
 export const MeasurementProgress = () => {
     const { mainColor } = useTheme();
@@ -77,11 +52,9 @@ export const MeasurementProgress = () => {
         <ThemedView background stretch round>
             <SiteNavigationButtons handleBack={navigateToMeasurement} title={data.name} />
             <PageContent background paddingTop={20}>
-                <Suspense fallback={<Fallback />}>
-                    <ThemedView style={{ padding: 10 }} round>
-                        <Chart transparent lineChartStyles={{ left: -30, top: 20, borderRadius }} getXLabel={getXLabel} getYLabel={() => ""} data={data} getDotContent={getDotContent} />
-                    </ThemedView>
-                </Suspense>
+                <ThemedView style={{ padding: 10 }} round>
+                    <Chart transparent lineChartStyles={{ left: -30, top: 20, borderRadius }} getXLabel={getXLabel} getYLabel={() => ""} data={data} getDotContent={getDotContent} />
+                </ThemedView>
             </PageContent>
         </ThemedView>
     );

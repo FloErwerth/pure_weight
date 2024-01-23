@@ -20,9 +20,10 @@ interface CheckBoxProps {
     disabled?: boolean;
     snapPoints?: SnapPoint[];
     customWrapperStyles?: ViewStyle;
+    input?: boolean;
 }
 
-export const CheckBox = ({ checked, onChecked, size = 20, label, helpText, disabled, snapPoints, customWrapperStyles }: CheckBoxProps) => {
+export const CheckBox = ({ checked, onChecked, size = 20, label, helpText, disabled, snapPoints, customWrapperStyles, input }: CheckBoxProps) => {
     const opacity = useRef(new Animated.Value(0));
     const checkBoxWrapperStyle = useMemo(() => ({ borderRadius: borderRadius < size ? size / 4 : borderRadius, width: size + 2, height: size + 2 }), [size]);
     const checkStyle = useMemo(() => ({ opacity: opacity.current }), [opacity]);
@@ -45,12 +46,12 @@ export const CheckBox = ({ checked, onChecked, size = 20, label, helpText, disab
     return (
         <>
             <ThemedView style={outerWrapperStyles} ghost>
-                <HStack input style={styles.wrapper}>
+                <HStack input={input} style={styles.wrapper}>
                     <Text ghost style={styles.text}>
                         {label}
                     </Text>
                     <HStack ghost style={{ gap: 10 }}>
-                        <ThemedPressable secondary style={checkBoxWrapperStyle} onPress={handleCheck}>
+                        <ThemedPressable input={!input} style={checkBoxWrapperStyle} onPress={handleCheck}>
                             <Animated.View style={checkStyle}>
                                 <ThemedMaterialCommunityIcons ghost name="check" size={size} />
                             </Animated.View>

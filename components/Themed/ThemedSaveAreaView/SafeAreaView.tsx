@@ -1,10 +1,12 @@
 import { View, ViewProps } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useTheme } from "../../../theme/context";
+import { ComputedBackgroundColorProps, useComputedBackgroundColor } from "../../../hooks/useComputedBackgroundColor";
 
-export const SafeAreaView = (props: ViewProps) => {
-  const { backgroundColor } = useTheme();
-  const insets = useSafeAreaInsets();
+type SafeAreaViewProps = ViewProps & ComputedBackgroundColorProps;
 
-  return <View {...props} style={[props.style, { flex: 1, backgroundColor, paddingLeft: insets.left, paddingTop: insets.top, paddingRight: insets.right }]} />;
+export const SafeAreaView = (props: SafeAreaViewProps) => {
+    const backgroundColor = useComputedBackgroundColor(props);
+    const insets = useSafeAreaInsets();
+
+    return <View {...props} style={[props.style, { flex: 1, backgroundColor, paddingLeft: insets.left, paddingTop: insets.top, paddingRight: insets.right }]} />;
 };

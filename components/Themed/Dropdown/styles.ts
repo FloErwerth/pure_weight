@@ -17,6 +17,7 @@ export const styles = StyleSheet.create({
     },
     wrapper: {
         zIndex: 20,
+        alignSelf: "stretch",
     },
     dropdown: {
         zIndex: 20,
@@ -31,5 +32,6 @@ export const styles = StyleSheet.create({
         borderRadius,
         justifyContent: "center",
         alignItems: "center",
+        alignSelf: "stretch",
     },
 });
