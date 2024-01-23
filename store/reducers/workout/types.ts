@@ -69,6 +69,10 @@ export type TrainedWorkout = {
     workout: Workout;
     activeExerciseIndex: number;
     beginTimestamp: number;
+    pauseTimestamps?: {
+        begin: number;
+        end: number;
+    }[];
     paused: boolean;
     exerciseData: {
         originalExerciseId: number;
