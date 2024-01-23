@@ -100,7 +100,7 @@ export const EditableExerciseModal = (props: AddExerciseModalProps) => {
                     open={showSuccessMessage}
                 />
                 <View>
-                    <CheckBox customWrapperStyles={{ zIndex: -1 }} checked={addMoreExercises} onChecked={setAddMoreExercises} label={t("add_more_exercises")} />
+                    <CheckBox input customWrapperStyles={{ zIndex: -1 }} checked={addMoreExercises} onChecked={setAddMoreExercises} label={t("add_more_exercises")} />
                     <ThemedPressable ghost behind onPress={handleConfirm}>
                         <HStack secondary style={styles.button}>
                             <Text secondary style={styles.buttonText}>

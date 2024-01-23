@@ -48,11 +48,11 @@ export const WeightBasedSmallExerciseMetadataDisplay = ({ style, exerciseIndex }
                 <Text style={textStyle}>
                     {exerciseMetaData?.sets}&thinsp;{t(`training_header_sets_${isSingle ? "single" : "multi"}`)}
                 </Text>
-                <Text style={textStyle}> x </Text>
+                <Text style={textStyle}>&thinsp;x&thinsp;</Text>
                 <Text style={textStyle}>
                     {exerciseMetaData?.reps}&thinsp;{t("training_header_reps")}
                 </Text>
-                <Text style={textStyle}>&thinsp;{`${mit}`} </Text>
+                <Text style={textStyle}>&thinsp;{`${mit}`}&thinsp;</Text>
                 <Text style={textStyle}>
                     {exerciseMetaData?.weight}&thinsp;{weightUnit}
                 </Text>
@@ -115,7 +115,7 @@ export const WeightBasedExerciseMetadataDisplay = ({ exerciseIndex }: ExerciseMe
                     <ThemedMaterialCommunityIcons name="pencil" size={24} />
                 </Pressable>
             </HStack>
-            <EditableExerciseModal closeAfterEdit reference={addExerciseRef} onRequestClose={handleClose} />
+            <EditableExerciseModal reference={addExerciseRef} onRequestClose={handleClose} />
         </>
     );
 };

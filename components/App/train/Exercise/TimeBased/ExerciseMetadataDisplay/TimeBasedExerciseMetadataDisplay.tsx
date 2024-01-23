@@ -43,7 +43,7 @@ export const TimeBasedSmallExerciseDataDisplay = ({ style, exerciseIndex }: Smal
                 <Text style={textStyle}>
                     {exerciseMetaData?.sets}&thinsp;{t(`training_header_sets_${isSingle ? "single" : "multi"}`)}
                 </Text>
-                <Text style={textStyle}>&#x30FB;</Text>
+                <Text style={textStyle}>&thinsp;x&thinsp;</Text>
                 <HStack style={styles.timeStack}>
                     {showDurationMinutes && (
                         <ThemedView>
@@ -62,7 +62,7 @@ export const TimeBasedSmallExerciseDataDisplay = ({ style, exerciseIndex }: Smal
                         </ThemedView>
                     )}
                 </HStack>
-                <Text style={textStyle}>{` ${t("after")} `}</Text>
+                <Text style={textStyle}>&thinsp;{`${t("after")}`}&thinsp;</Text>
                 {showPreparation && (
                     <HStack>
                         <HStack style={styles.timeStack}>
