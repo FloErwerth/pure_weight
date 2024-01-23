@@ -58,8 +58,10 @@ export const WorkoutHistoryEdit = ({
     }, [handleNavigateToHistory, hasFallbackSet, open]);
 
     const renderedExercise = useCallback(
-        ({ item, index }: { item: DoneExerciseData | undefined; index: number }) => {
-            if (item?.sets.length === 0) return null;
+        ({ item }: { item: DoneExerciseData | undefined }) => {
+            if (item === undefined || item.sets.length === 0) {
+                return null;
+            }
 
             return (
                 <ThemedView input round style={{ padding: 10, margin: 10 }}>
@@ -67,9 +69,9 @@ export const WorkoutHistoryEdit = ({
                         {item?.name}
                     </Text>
                     {item?.type === "WEIGHT_BASED" ? (
-                        <WeightBasedEditedExercise index={index} doneWorkoutId={doneWorkoutId} />
+                        <WeightBasedEditedExercise doneExerciseId={item.doneExerciseId} doneWorkoutId={doneWorkoutId} />
                     ) : (
-                        <TimeBasedEditedExercise index={index} doneWorkoutId={doneWorkoutId} />
+                        <TimeBasedEditedExercise doneExerciseId={item.doneExerciseId} doneWorkoutId={doneWorkoutId} />
                     )}
                 </ThemedView>
             );

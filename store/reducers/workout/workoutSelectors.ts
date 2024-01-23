@@ -296,10 +296,10 @@ export const getDoneExercises = createSelector([getEditedWorkout, (workout, done
 });
 
 export const getDoneExerciseById = createSelector(
-    [getEditedWorkout, (workout, doneWorkoutId: number) => doneWorkoutId, (workout, doneWorkoutId, doneExerciseIndex) => doneExerciseIndex],
-    (editedWorkout, doneWorkoutId, doneExerciseIndex) => {
+    [getEditedWorkout, (workout, doneWorkoutId: number) => doneWorkoutId, (workout, doneWorkoutId, doneExerciseId) => doneExerciseId],
+    (editedWorkout, doneWorkoutId, doneExerciseId) => {
         const doneWorkout = editedWorkout?.workout?.doneWorkouts.find((doneWorkout) => doneWorkout.doneWorkoutId === doneWorkoutId);
-        return doneWorkout?.doneExercises?.[doneExerciseIndex];
+        return doneWorkout?.doneExercises?.find((doneExercise) => doneExercise.doneExerciseId === doneExerciseId);
     },
 );
 

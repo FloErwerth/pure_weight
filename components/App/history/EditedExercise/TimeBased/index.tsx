@@ -11,12 +11,12 @@ import { TimeInput } from "../../../../../store/reducers/workout/types";
 import { EditableExerciseInputRow } from "../../../../EditableExercise/EditableExerciseInputRow";
 
 type WeightBasedEditedExerciseProps = {
-    index: number;
+    doneExerciseId: number;
     doneWorkoutId: number;
 };
 
-export const TimeBasedEditedExercise = ({ doneWorkoutId, index }: WeightBasedEditedExerciseProps) => {
-    const doneExercise = useAppSelector((state: AppState) => getDoneExerciseById(state, doneWorkoutId, index));
+export const TimeBasedEditedExercise = ({ doneWorkoutId, doneExerciseId }: WeightBasedEditedExerciseProps) => {
+    const doneExercise = useAppSelector((state: AppState) => getDoneExerciseById(state, doneWorkoutId, doneExerciseId));
     const dispatch = useAppDispatch();
     const id = useId();
     const timeUnit = useAppSelector(getTimeUnit);
@@ -30,7 +30,7 @@ export const TimeBasedEditedExercise = ({ doneWorkoutId, index }: WeightBasedEdi
         [dispatch, doneExercise?.doneExerciseId, doneWorkoutId],
     );
 
-    if (!doneExercise || index === undefined) {
+    if (!doneExercise) {
         return null;
     }
 

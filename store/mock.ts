@@ -123,7 +123,7 @@ export const mockState: AppState = {
                             {
                                 originalExerciseId: 1,
                                 type: "WEIGHT_BASED",
-                                doneExerciseId: 2,
+                                doneExerciseId: 1,
                                 name: "Klimmzüge unterstützt",
                                 sets: [{ weight: "50", reps: "5" }],
                                 note: "Das war ein guter Satz",
@@ -138,7 +138,7 @@ export const mockState: AppState = {
                             {
                                 originalExerciseId: 1,
                                 type: "WEIGHT_BASED",
-                                doneExerciseId: 3,
+                                doneExerciseId: 1,
                                 name: "Seilzüge",
                                 sets: [{ weight: "50", reps: "5" }],
                                 note: "Das war ein guter Satz",
@@ -153,7 +153,7 @@ export const mockState: AppState = {
                             {
                                 originalExerciseId: 1,
                                 type: "WEIGHT_BASED",
-                                doneExerciseId: 4,
+                                doneExerciseId: 1,
                                 name: "Klimmzüge",
                                 sets: [{ weight: "50", reps: "5" }],
                                 note: "Das war ein guter Satz",
@@ -168,7 +168,7 @@ export const mockState: AppState = {
                             {
                                 originalExerciseId: 1,
                                 type: "WEIGHT_BASED",
-                                doneExerciseId: 5,
+                                doneExerciseId: 1,
                                 name: "Klimmzüge unterstützt",
                                 sets: [{ weight: "50", reps: "5" }],
                             },
@@ -182,7 +182,7 @@ export const mockState: AppState = {
                             {
                                 originalExerciseId: 1,
                                 type: "WEIGHT_BASED",
-                                doneExerciseId: 6,
+                                doneExerciseId: 1,
                                 name: "Klimmzüge unterstützt",
                                 sets: [{ weight: "50", reps: "5" }],
                             },
@@ -196,7 +196,7 @@ export const mockState: AppState = {
                             {
                                 originalExerciseId: 1,
                                 type: "WEIGHT_BASED",
-                                doneExerciseId: 7,
+                                doneExerciseId: 1,
                                 name: "Klimmzüge unterstützt",
                                 sets: [{ weight: "50", reps: "5" }],
                             },
@@ -210,14 +210,14 @@ export const mockState: AppState = {
                             {
                                 originalExerciseId: 1,
                                 type: "WEIGHT_BASED",
-                                doneExerciseId: 8,
+                                doneExerciseId: 1,
                                 name: "Klimmzüge unterstützt",
                                 sets: [{ weight: "10", reps: "5" }],
                             },
                             {
                                 originalExerciseId: 2,
                                 type: "WEIGHT_BASED",
-                                doneExerciseId: 9,
+                                doneExerciseId: 2,
                                 name: "Rudern Seilzug",
                                 sets: [
                                     { weight: "45", reps: "4" },
@@ -235,14 +235,14 @@ export const mockState: AppState = {
                             {
                                 originalExerciseId: 1,
                                 type: "WEIGHT_BASED",
-                                doneExerciseId: 9,
+                                doneExerciseId: 1,
                                 name: "Klimmzüge unterstützt",
                                 sets: [{ weight: "25", reps: "5" }],
                             },
                             {
                                 originalExerciseId: 2,
                                 type: "WEIGHT_BASED",
-                                doneExerciseId: 9,
+                                doneExerciseId: 2,
                                 name: "Rudern Seilzug",
                                 sets: [
                                     { weight: "50", reps: "5" },
@@ -281,7 +281,7 @@ export const mockState: AppState = {
                             {
                                 originalExerciseId: 6,
                                 type: "TIME_BASED",
-                                doneExerciseId: 2,
+                                doneExerciseId: 1,
                                 name: "Planks",
                                 sets: [{ duration: { seconds: "56", minutes: "0" } }, { duration: { seconds: "56", minutes: "0" } }, { duration: { seconds: "56", minutes: "0" } }],
                             },
@@ -295,7 +295,7 @@ export const mockState: AppState = {
                             {
                                 originalExerciseId: 6,
                                 type: "TIME_BASED",
-                                doneExerciseId: 2,
+                                doneExerciseId: 1,
                                 name: "Planks",
                                 sets: [{ duration: { seconds: "55", minutes: "0" } }, { duration: { seconds: "56", minutes: "0" } }, { duration: { seconds: "56", minutes: "0" } }],
                             },
