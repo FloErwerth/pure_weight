@@ -31,7 +31,6 @@ import {
 } from "../../../store/reducers/workout";
 
 import { getEditedWorkout, getIsEditedWorkout } from "../../../store/reducers/workout/workoutSelectors";
-import { EditableExerciseModal } from "../../../components/EditableExerciseModal/EditableExerciseModal";
 import { ExerciseMetaData } from "../../../store/reducers/workout/types";
 import { BottomToast } from "../../../components/BottomToast/BottomToast";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -57,7 +56,6 @@ export function Create() {
     const title = useMemo(() => (isEditedWorkout ? t("edit_workout") : t("create_workout")), [isEditedWorkout, t]);
     const dispatch = useAppDispatch();
     const { ref: alertRef, openBottomSheet: openAlert, closeBottomSheet: closeAlert } = useBottomSheetRef();
-    const { ref: addRef, openBottomSheet: openAdd, closeBottomSheet: closeAdd } = useBottomSheetRef();
     const { ref: colorPickerRef, openBottomSheet: openPicker } = useBottomSheetRef();
     const { toastRef, openToast, closeToast, showToast } = useToast();
 
@@ -70,8 +68,8 @@ export function Create() {
 
     const handleAddExercise = useCallback(() => {
         dispatch(createNewExercise());
-        openAdd();
-    }, [dispatch, openAdd]);
+        navigate("workouts/create/exercise");
+    }, [dispatch, navigate]);
 
     const handleCleanErrors = useCallback(() => {
         dispatch(cleanErrors());
@@ -94,7 +92,7 @@ export function Create() {
                             index,
                         }),
                     );
-                    openAdd();
+                    navigate("workouts/create/exercise", { to: "workouts/create" });
                 };
 
                 const handleDelete = () => {
@@ -110,7 +108,6 @@ export function Create() {
                 const handleOnConfirmEdit = () => {
                     dispatch(storeEditedExercise());
                     dispatch(setEditedExercise(undefined));
-                    closeAdd();
                 };
 
                 const handleCancel = () => {
@@ -120,7 +117,7 @@ export function Create() {
                 return { onDelete: handleDelete, handleCancel, onEdit, exercise, index, handleOnConfirmEdit };
             }) ?? []
         );
-    }, [showToast, toastRef, closeAdd, closeAlert, dispatch, editedWorkout?.workout.exercises, openAdd]);
+    }, [editedWorkout?.workout.exercises, dispatch, navigate, showToast, toastRef, openToast, closeAlert]);
 
     const handleNavigateHome = useCallback(() => {
         handleCleanErrors();
@@ -179,7 +176,6 @@ export function Create() {
 
     const handleRecoverExercise = useCallback(() => {
         dispatch(recoverExercise());
-        closeToast();
     }, [dispatch]);
 
     const confirmButtonConfig = useMemo(
@@ -242,7 +238,6 @@ export function Create() {
                     </ThemedView>
                 </PageContent>
             </ThemedBottomSheetModal>
-            <EditableExerciseModal reference={addRef} />
             <ColorPickerModal reference={colorPickerRef} />
         </ThemedView>
     );

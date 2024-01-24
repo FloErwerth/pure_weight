@@ -4,6 +4,7 @@ import { useComputedBackgroundColor } from "../../../hooks/useComputedBackground
 import { useComputedColor } from "../../../hooks/useComputedColor";
 
 interface ThemedTextProps extends TextProps {
+    cta?: boolean;
     stretch?: boolean;
     warning?: boolean;
     secondary?: boolean;

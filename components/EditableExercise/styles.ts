@@ -33,9 +33,8 @@ export const styles = StyleSheet.create({
     inputWrapper: {
         marginTop: 10,
         zIndex: -1,
-        alignSelf: "stretch",
         gap: 5,
-        width: Dimensions.get("screen").width - 20,
+        width: Dimensions.get("screen").width - 40,
     },
     button: {
         justifyContent: "center",
@@ -48,13 +47,7 @@ export const styles = StyleSheet.create({
         alignSelf: "stretch",
         justifyContent: "space-around",
     },
-    innerWrapper: {
-        margin: 10,
-        gap: 20,
-        alignItems: "stretch",
-        alignSelf: "stretch",
-        borderRadius,
-    },
+    innerWrapper: {},
     outerWrapper: {
         padding: 10,
         gap: 5,

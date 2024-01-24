@@ -1,24 +1,25 @@
-import { EditableExercise } from "../EditableExercise/EditableExercise";
-import { ThemedBottomSheetModal, ThemedBottomSheetModalProps } from "../BottomSheetModal/ThemedBottomSheetModal";
-import { RefObject, useCallback, useEffect, useMemo, useState } from "react";
-import { BottomSheetModal } from "@gorhom/bottom-sheet";
+import { ExerciseMetaData } from "../../../../store/reducers/workout/types";
+import { ErrorFields, setError } from "../../../../store/reducers/errors";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { HStack } from "../Stack/HStack/HStack";
-import { styles } from "../EditableExercise/styles";
-import { Text } from "../Themed/ThemedText/Text";
-import { ThemedPressable } from "../Themed/Pressable/Pressable";
-import * as Haptics from "expo-haptics";
-import { useAppDispatch, useAppSelector } from "../../store";
-import { ThemedMaterialCommunityIcons } from "../Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
-import { ThemedView } from "../Themed/ThemedView/View";
-import { ErrorFields, setError } from "../../store/reducers/errors";
-import { getEditedExercise, getIsExistingEditedExercise } from "../../store/reducers/workout/workoutSelectors";
-import { createNewExercise, storeEditedExercise } from "../../store/reducers/workout";
-import { ExerciseMetaData } from "../../store/reducers/workout/types";
+import { useAppDispatch, useAppSelector } from "../../../../store";
+import { getEditedExercise, getIsExistingEditedExercise } from "../../../../store/reducers/workout/workoutSelectors";
+import { useToast } from "../../../../components/BottomToast/useToast";
+import { createNewExercise, storeEditedExercise } from "../../../../store/reducers/workout";
+import { ThemedView } from "../../../../components/Themed/ThemedView/View";
+import { styles } from "../../../../components/EditableExercise/styles";
+import { Text } from "../../../../components/Themed/ThemedText/Text";
+import { EditableExercise } from "../../../../components/EditableExercise/EditableExercise";
+import { BottomToast } from "../../../../components/BottomToast/BottomToast";
 import { View } from "react-native";
-import { BottomToast } from "../BottomToast/BottomToast";
-import { CheckBox } from "../Themed/CheckBox/CheckBox";
-import { useToast } from "../BottomToast/useToast";
+import { CheckBox } from "../../../../components/Themed/CheckBox/CheckBox";
+import { ThemedPressable } from "../../../../components/Themed/Pressable/Pressable";
+import { HStack } from "../../../../components/Stack/HStack/HStack";
+import { ThemedMaterialCommunityIcons } from "../../../../components/Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
+import * as Haptics from "expo-haptics";
+import { SiteNavigationButtons } from "../../../../components/SiteNavigationButtons/SiteNavigationButtons";
+import { PageContent } from "../../../../components/PageContent/PageContent";
+import { useNavigateBack } from "../../../../hooks/navigate";
 
 const validateData = (data: Partial<ExerciseMetaData>) => {
     const errors: ErrorFields[] = [];
@@ -39,11 +40,7 @@ const validateData = (data: Partial<ExerciseMetaData>) => {
     return errors;
 };
 
-type AddExerciseModalProps = ThemedBottomSheetModalProps & {
-    reference: RefObject<BottomSheetModal>;
-};
-
-export const EditableExerciseModal = (props: AddExerciseModalProps) => {
+export const CreateExercise = () => {
     const { t } = useTranslation();
     const isEditingExercise = useAppSelector(getIsExistingEditedExercise);
     const title = useMemo(() => t(isEditingExercise ? "exercise_edit_title" : "create_exercise"), [isEditingExercise, t]);
@@ -51,7 +48,7 @@ export const EditableExerciseModal = (props: AddExerciseModalProps) => {
     const editedExercise = useAppSelector(getEditedExercise);
     const { showToast, openToast, closeToast } = useToast();
     const [addMoreExercises, setAddMoreExercises] = useState(false);
-
+    const navigateBack = useNavigateBack();
     useEffect(() => {
         if (isEditingExercise) {
             setAddMoreExercises(false);
@@ -60,7 +57,7 @@ export const EditableExerciseModal = (props: AddExerciseModalProps) => {
 
     const openSuccessMessage = useCallback(() => {
         openToast();
-    }, []);
+    }, [openToast]);
 
     const handleConfirm = useCallback(() => {
         if (showToast) {
@@ -75,21 +72,22 @@ export const EditableExerciseModal = (props: AddExerciseModalProps) => {
                 dispatch(createNewExercise());
                 void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
                 if (!addMoreExercises) {
-                    props.reference.current?.close();
+                    navigateBack();
                 } else {
                     openSuccessMessage();
                 }
             }
         }
-    }, [addMoreExercises, dispatch, editedExercise, openSuccessMessage, props, props.reference]);
+    }, [addMoreExercises, closeToast, dispatch, editedExercise, navigateBack, openSuccessMessage, showToast]);
 
     const closeSuccessMessage = useCallback(() => {
         closeToast();
-    }, []);
+    }, [closeToast]);
 
     return (
-        <ThemedBottomSheetModal snapPoints={["100%"]} ref={props.reference} {...props} title={title}>
-            <ThemedView stretch ghost style={styles.innerWrapper}>
+        <ThemedView stretch background>
+            <SiteNavigationButtons title={title} titleFontSize={40} handleBack={navigateBack} />
+            <PageContent safeBottom stretch ghost paddingTop={20}>
                 <EditableExercise />
                 <BottomToast customTime={1000} topCorrection={20} leftCorrection={-10} padding={20} titleKey="create_exercise_success_title" onRequestClose={closeSuccessMessage} open={showToast} />
                 <View>
@@ -103,7 +101,7 @@ export const EditableExerciseModal = (props: AddExerciseModalProps) => {
                         </HStack>
                     </ThemedPressable>
                 </View>
-            </ThemedView>
-        </ThemedBottomSheetModal>
+            </PageContent>
+        </ThemedView>
     );
 };

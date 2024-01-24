@@ -17,6 +17,10 @@ export type RoutesParamaters = {
         name: "tabs/settings";
         scrollIndex?: number;
     };
+    ["workouts/create/exercise/index"]: {
+        name: "workouts/create/exercise/index";
+        to?: keyof typeof Routes;
+    };
     ["tabs/workouts"]: {
         name: "tabs/workouts";
     };
@@ -73,6 +77,9 @@ export const Routes = {
     settings: {
         screen: "tabs/settings",
     },
+    "workouts/create/exercise": {
+        screen: "workouts/create/exercise/index",
+    },
     history: {
         screen: "workouts/workoutHistory/index",
     },
@@ -97,7 +104,7 @@ export const Routes = {
     "measurement/history": {
         screen: "measurement/history/index",
     },
-};
+} as const;
 
 export const navigationRef = createNavigationContainerRef<typeof Routes>();
 export function useNavigate() {
@@ -110,4 +117,14 @@ export function useNavigate() {
     }
 
     return navigate;
+}
+
+export function useNavigateBack() {
+    function navigateBack() {
+        if (navigationRef.isReady()) {
+            navigationRef.goBack();
+        }
+    }
+
+    return navigateBack;
 }

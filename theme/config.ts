@@ -14,6 +14,7 @@ const DarkThemeColors: ThemeColors = {
     primaryColor: "#222",
     warningColor: "#af7d00",
     successColor: "#006600",
+    cta: "#5544ff",
 };
 const LightThemeColors: ThemeColors = {
     backgroundColor: "#ddd",
@@ -29,6 +30,7 @@ const LightThemeColors: ThemeColors = {
     primaryColor: "#5544ff",
     warningColor: "#af7d00",
     successColor: "#00dd00",
+    cta: "#5544ff",
 };
 
 export const ThemeConfig: Record<ThemeKey, ThemeColors> = {

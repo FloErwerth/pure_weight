@@ -6,8 +6,6 @@ import { VStack } from "../../../../../Stack/VStack/VStack";
 import { Text } from "../../../../../Themed/ThemedText/Text";
 import * as Haptics from "expo-haptics";
 import { useTranslation } from "react-i18next";
-import { EditableExerciseModal } from "../../../../../EditableExerciseModal/EditableExerciseModal";
-import { useBottomSheetRef } from "../../../../../BottomSheetModal/ThemedBottomSheetModal";
 import { styles } from "./styles";
 import { ThemedMaterialCommunityIcons } from "../../../../../Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
 import { AppState, useAppDispatch, useAppSelector } from "../../../../../../store";
@@ -15,6 +13,7 @@ import { getExerciseMetadataFromWorkoutByIndex } from "../../../../../../store/r
 import { setEditedExercise } from "../../../../../../store/reducers/workout";
 import { ThemedView } from "../../../../../Themed/ThemedView/View";
 import { getTimeUnit, getWeightUnit } from "../../../../../../store/reducers/settings/settingsSelectors";
+import { useNavigate } from "../../../../../../hooks/navigate";
 
 interface ExerciseMetaDataDisplayProps {
     exerciseIndex: number;
@@ -86,19 +85,14 @@ export const WeightBasedSmallExerciseMetadataDisplay = ({ style, exerciseIndex }
 
 export const WeightBasedExerciseMetadataDisplay = ({ exerciseIndex }: ExerciseMetaDataDisplayProps) => {
     const dispatch = useAppDispatch();
-    const { ref: addExerciseRef, openBottomSheet: open } = useBottomSheetRef();
-
+    const navigate = useNavigate();
     const handleShowModal = useCallback(() => {
         dispatch(setEditedExercise({ index: exerciseIndex, isTrained: true }));
         void Haptics.selectionAsync();
-        open();
-    }, [dispatch, exerciseIndex, open]);
+        navigate("workouts/create/exercise", { to: "workouts/train/index" });
+    }, [dispatch, exerciseIndex, navigate]);
 
     const exerciseMetaData = useAppSelector((state: AppState) => getExerciseMetadataFromWorkoutByIndex(state, exerciseIndex));
-
-    const handleClose = useCallback(() => {
-        addExerciseRef.current?.close();
-    }, [addExerciseRef]);
 
     if (!exerciseMetaData) {
         return null;
@@ -115,7 +109,6 @@ export const WeightBasedExerciseMetadataDisplay = ({ exerciseIndex }: ExerciseMe
                     <ThemedMaterialCommunityIcons name="pencil" size={24} />
                 </Pressable>
             </HStack>
-            <EditableExerciseModal reference={addExerciseRef} onRequestClose={handleClose} />
         </>
     );
 };

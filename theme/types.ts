@@ -12,5 +12,6 @@ export type ThemeColors = {
     primaryColor: string;
     warningColor: string;
     successColor: string;
+    cta: string;
 };
 export type ThemeKey = "dark" | "light";

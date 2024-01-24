@@ -1,5 +1,5 @@
 import { TextInput } from "react-native";
-import { useCallback, useMemo, useRef } from "react";
+import React, { useCallback, useMemo, useRef } from "react";
 import { styles } from "./styles";
 import { ThemedTextInput } from "../Themed/ThemedTextInput/ThemedTextInput";
 import { useTranslation } from "react-i18next";
@@ -11,6 +11,8 @@ import { mutateEditedExercise } from "../../store/reducers/workout";
 import { ExerciseMetaData } from "../../store/reducers/workout/types";
 import { SlidingSwitch } from "../SlidingSwitch/SlidingSwitch";
 import { TimeBasedExercise } from "./Content/TimeBasedExercise";
+import { ThemedPressable } from "../Themed/Pressable/Pressable";
+import { Text } from "../Themed/ThemedText/Text";
 
 const useOptions = () => {
     const { t } = useTranslation();
@@ -64,6 +66,11 @@ export const EditableExercise = () => {
 
     return (
         <ThemedView stretch ghost>
+            <ThemedPressable round ghost style={{ alignSelf: "flex-end", marginTop: 10 }}>
+                <Text style={{ fontSize: 18 }} ghost cta>
+                    Aus Vorlage wählen
+                </Text>
+            </ThemedPressable>
             <ThemedTextInput
                 ghost
                 showClear

@@ -1,5 +1,4 @@
 import { AppState, useAppDispatch, useAppSelector } from "../../../../store";
-import { useBottomSheetRef } from "../../../BottomSheetModal/ThemedBottomSheetModal";
 import { useCallback } from "react";
 import { setEditedExercise } from "../../../../store/reducers/workout";
 import * as Haptics from "expo-haptics";
@@ -11,9 +10,9 @@ import { Text } from "../../../Themed/ThemedText/Text";
 import { trainStyles } from "../trainStyles";
 import { Pressable } from "react-native";
 import { ThemedMaterialCommunityIcons } from "../../../Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
-import { EditableExerciseModal } from "../../../EditableExerciseModal/EditableExerciseModal";
 import { WeightBasedSmallExerciseMetadataDisplay } from "./WeightBased/ExerciseMetaDataDisplay/WeightBasedExerciseMetadataDisplay";
 import { TimeBasedSmallExerciseDataDisplay } from "./TimeBased/ExerciseMetadataDisplay/TimeBasedExerciseMetadataDisplay";
+import { useNavigate } from "../../../../hooks/navigate";
 
 interface ExerciseMetadataDisplayProps {
     exerciseIndex: number;
@@ -21,18 +20,13 @@ interface ExerciseMetadataDisplayProps {
 
 export const ExerciseMetadataDisplay = ({ exerciseIndex }: ExerciseMetadataDisplayProps) => {
     const dispatch = useAppDispatch();
-    const { ref, openBottomSheet, closeBottomSheet } = useBottomSheetRef();
     const exerciseMetaData = useAppSelector((state: AppState) => getExerciseMetadataFromWorkoutByIndex(state, exerciseIndex));
-
+    const navigate = useNavigate();
     const handleShowModal = useCallback(() => {
         dispatch(setEditedExercise({ index: exerciseIndex, isTrained: true }));
         void Haptics.selectionAsync();
-        openBottomSheet();
-    }, [dispatch, exerciseIndex, openBottomSheet]);
-
-    const handleClose = useCallback(() => {
-        closeBottomSheet();
-    }, [closeBottomSheet]);
+        navigate("workouts/create/exercise", { to: "workouts/train/index" });
+    }, [dispatch, exerciseIndex, navigate]);
 
     if (!exerciseMetaData) {
         return null;
@@ -53,7 +47,6 @@ export const ExerciseMetadataDisplay = ({ exerciseIndex }: ExerciseMetadataDispl
                     <ThemedMaterialCommunityIcons name="pencil" size={24} />
                 </Pressable>
             </HStack>
-            <EditableExerciseModal reference={ref} onRequestClose={handleClose} />
         </>
     );
 };
