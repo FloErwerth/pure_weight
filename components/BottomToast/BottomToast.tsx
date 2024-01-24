@@ -48,7 +48,6 @@ export const BottomToast = ({ reference, customTime, titleKey, messageKey, onRed
     const resetTimer = useCallback(() => {
         animatedPercent.value = 100;
         setPercent(100);
-
         clearInterval(timer.current);
         timer.current = undefined;
     }, [animatedPercent]);
