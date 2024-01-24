@@ -59,6 +59,14 @@ export type EditedWorkout = {
     isNew: boolean;
 };
 
+export type StoredExercise = {
+    name: string;
+    type: ExerciseType;
+    reps: string;
+    sets: string;
+    pause?: TimeInput;
+};
+
 export type EditedExercise = {
     exercise: ExerciseMetaData;
     isTrained?: boolean;
@@ -88,6 +96,7 @@ export type TrainedWorkout = {
 };
 export type WorkoutState = {
     workouts: Workout[];
+    storedExercises: StoredExercise[];
     sorting: SortingType;
     deletedWorkout?: { workout: Workout; trainedWorkout?: TrainedWorkout };
     deletedExercise?: { exercise: ExerciseMetaData; index: number };
