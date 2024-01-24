@@ -13,5 +13,5 @@ export const useToast = () => {
         setShowToast(false);
     }, []);
 
-    return useMemo(() => ({ showToast, toastRef, openToast, closeToast }), [showToast, toastRef]);
+    return useMemo(() => ({ showToast, toastRef, openToast, closeToast }), [closeToast, openToast, showToast]);
 };

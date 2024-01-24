@@ -1,5 +1,5 @@
 import { Text } from "../../../components/Themed/ThemedText/Text";
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useMemo } from "react";
 import { useNavigate } from "../../../hooks/navigate";
 import { useAppDispatch, useAppSelector } from "../../../store";
 import { AddButton } from "../../../components/AddButton/AddButton";
@@ -37,6 +37,7 @@ import { BottomToast } from "../../../components/BottomToast/BottomToast";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ThemedPressable } from "../../../components/Themed/Pressable/Pressable";
 import { ThemedMaterialCommunityIcons } from "../../../components/Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
+import { useToast } from "../../../components/BottomToast/useToast";
 
 type MappedExercises = {
     onDelete: () => void;
@@ -58,7 +59,7 @@ export function Create() {
     const { ref: alertRef, openBottomSheet: openAlert, closeBottomSheet: closeAlert } = useBottomSheetRef();
     const { ref: addRef, openBottomSheet: openAdd, closeBottomSheet: closeAdd } = useBottomSheetRef();
     const { ref: colorPickerRef, openBottomSheet: openPicker } = useBottomSheetRef();
-    const [showToast, setShowToast] = useState(false);
+    const { toastRef, openToast, closeToast, showToast } = useToast();
 
     const handleSetWorkoutName = useCallback(
         (value?: string) => {
@@ -99,7 +100,11 @@ export function Create() {
                 const handleDelete = () => {
                     void Haptics.notificationAsync(NotificationFeedbackType.Success);
                     dispatch(deleteExerciseFromEditedWorkout(index));
-                    setShowToast(true);
+                    if (showToast && toastRef.current) {
+                        toastRef.current.restart();
+                    } else {
+                        openToast();
+                    }
                 };
 
                 const handleOnConfirmEdit = () => {
@@ -115,7 +120,7 @@ export function Create() {
                 return { onDelete: handleDelete, handleCancel, onEdit, exercise, index, handleOnConfirmEdit };
             }) ?? []
         );
-    }, [closeAdd, closeAlert, dispatch, editedWorkout?.workout.exercises, openAdd]);
+    }, [showToast, toastRef, closeAdd, closeAlert, dispatch, editedWorkout?.workout.exercises, openAdd]);
 
     const handleNavigateHome = useCallback(() => {
         handleCleanErrors();
@@ -174,7 +179,7 @@ export function Create() {
 
     const handleRecoverExercise = useCallback(() => {
         dispatch(recoverExercise());
-        setShowToast(false);
+        closeToast();
     }, [dispatch]);
 
     const confirmButtonConfig = useMemo(
@@ -208,11 +213,12 @@ export function Create() {
                         )}
                     </View>
                     <BottomToast
+                        reference={toastRef}
                         topCorrection={30}
                         leftCorrection={-20}
                         bottom={bottom}
                         padding={40}
-                        onRequestClose={() => setShowToast(false)}
+                        onRequestClose={closeToast}
                         open={showToast}
                         messageKey={"undo_message"}
                         titleKey={"exercise_deleted_title"}

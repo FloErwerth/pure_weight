@@ -18,6 +18,7 @@ import { ExerciseMetaData } from "../../store/reducers/workout/types";
 import { View } from "react-native";
 import { BottomToast } from "../BottomToast/BottomToast";
 import { CheckBox } from "../Themed/CheckBox/CheckBox";
+import { useToast } from "../BottomToast/useToast";
 
 const validateData = (data: Partial<ExerciseMetaData>) => {
     const errors: ErrorFields[] = [];
@@ -48,7 +49,7 @@ export const EditableExerciseModal = (props: AddExerciseModalProps) => {
     const title = useMemo(() => t(isEditingExercise ? "exercise_edit_title" : "create_exercise"), [isEditingExercise, t]);
     const dispatch = useAppDispatch();
     const editedExercise = useAppSelector(getEditedExercise);
-    const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+    const { showToast, openToast, closeToast } = useToast();
     const [addMoreExercises, setAddMoreExercises] = useState(false);
 
     useEffect(() => {
@@ -58,12 +59,12 @@ export const EditableExerciseModal = (props: AddExerciseModalProps) => {
     }, [isEditingExercise]);
 
     const openSuccessMessage = useCallback(() => {
-        setShowSuccessMessage(true);
+        openToast();
     }, []);
 
     const handleConfirm = useCallback(() => {
-        if (showSuccessMessage) {
-            setShowSuccessMessage(false);
+        if (showToast) {
+            closeToast();
         }
         if (editedExercise) {
             const possibleErrors = validateData(editedExercise.exercise);
@@ -83,22 +84,14 @@ export const EditableExerciseModal = (props: AddExerciseModalProps) => {
     }, [addMoreExercises, dispatch, editedExercise, openSuccessMessage, props, props.reference]);
 
     const closeSuccessMessage = useCallback(() => {
-        setShowSuccessMessage(false);
+        closeToast();
     }, []);
 
     return (
         <ThemedBottomSheetModal snapPoints={["100%"]} ref={props.reference} {...props} title={title}>
             <ThemedView stretch ghost style={styles.innerWrapper}>
                 <EditableExercise />
-                <BottomToast
-                    customTime={1000}
-                    topCorrection={20}
-                    leftCorrection={-10}
-                    padding={20}
-                    titleKey="create_exercise_success_title"
-                    onRequestClose={closeSuccessMessage}
-                    open={showSuccessMessage}
-                />
+                <BottomToast customTime={1000} topCorrection={20} leftCorrection={-10} padding={20} titleKey="create_exercise_success_title" onRequestClose={closeSuccessMessage} open={showToast} />
                 <View>
                     <CheckBox input customWrapperStyles={{ zIndex: -1 }} checked={addMoreExercises} onChecked={setAddMoreExercises} label={t("add_more_exercises")} />
                     <ThemedPressable ghost behind onPress={handleConfirm}>
