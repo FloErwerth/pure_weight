@@ -86,7 +86,7 @@ export const WeightBasedSmallExerciseMetadataDisplay = ({ style, exerciseIndex }
 
 export const WeightBasedExerciseMetadataDisplay = ({ exerciseIndex }: ExerciseMetaDataDisplayProps) => {
     const dispatch = useAppDispatch();
-    const [addExerciseRef, open] = useBottomSheetRef();
+    const { ref: addExerciseRef, openBottomSheet: open } = useBottomSheetRef();
 
     const handleShowModal = useCallback(() => {
         dispatch(setEditedExercise({ index: exerciseIndex, isTrained: true }));

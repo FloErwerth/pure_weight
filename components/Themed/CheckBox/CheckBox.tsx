@@ -27,7 +27,7 @@ export const CheckBox = ({ checked, onChecked, size = 20, label, helpText, disab
     const opacity = useRef(new Animated.Value(0));
     const checkBoxWrapperStyle = useMemo(() => ({ borderRadius: borderRadius < size ? size / 4 : borderRadius, width: size + 2, height: size + 2 }), [size]);
     const checkStyle = useMemo(() => ({ opacity: opacity.current }), [opacity]);
-    const [ref, open] = useBottomSheetRef();
+    const { ref, openBottomSheet } = useBottomSheetRef();
 
     useEffect(() => {
         Animated.timing(opacity.current, {
@@ -39,7 +39,7 @@ export const CheckBox = ({ checked, onChecked, size = 20, label, helpText, disab
 
     const handleCheck = useCallback(() => {
         onChecked?.(!checked);
-    }, [checked, onChecked, opacity]);
+    }, [checked, onChecked]);
 
     const outerWrapperStyles = useMemo(() => [styles.outerWrapper, customWrapperStyles], [customWrapperStyles]);
 
@@ -57,7 +57,7 @@ export const CheckBox = ({ checked, onChecked, size = 20, label, helpText, disab
                             </Animated.View>
                         </ThemedPressable>
                         {!disabled && helpText && (
-                            <Pressable disabled={disabled} onPress={open}>
+                            <Pressable disabled={disabled} onPress={openBottomSheet}>
                                 <ThemedMaterialCommunityIcons ghost name="help-circle-outline" size={size} />
                             </Pressable>
                         )}

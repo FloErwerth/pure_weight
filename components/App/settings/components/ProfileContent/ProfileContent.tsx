@@ -17,7 +17,7 @@ interface ProfileContentProps extends PropsWithChildren {
     quick?: boolean;
 }
 export const ProfileContent = ({ onPress, children, title, helpText, snapPoints, quick }: ProfileContentProps) => {
-    const [ref, open] = useBottomSheetRef();
+    const { ref, openBottomSheet: open } = useBottomSheetRef();
     return (
         <View>
             <ThemedPressable ghost={quick} onPress={onPress} style={styles.outerWrapper}>

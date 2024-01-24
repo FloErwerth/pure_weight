@@ -16,7 +16,6 @@ export const getReactNativeTheme = createSelector([getThemeKey], (themeKey) => {
             primary: "transparent",
             text: "transparent",
             notification: "transparent",
-            border: "transparent",
         },
     } satisfies Theme;
 });

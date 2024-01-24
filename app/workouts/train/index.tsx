@@ -47,11 +47,11 @@ export function Train() {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
     const confirmButtonOpacity = useRef(new Animated.Value(0.3)).current;
-    const [alertRef, openAlert, closeAlert] = useBottomSheetRef();
+    const { ref: alertRef, openBottomSheet: openAlert, closeBottomSheet: closeAlert } = useBottomSheetRef();
     const isDone = useAppSelector(getIsDoneWithTraining);
     const hasNoTrainingData = useAppSelector(getHasNoTrainingDataSaved);
     const carouselRef = useSnapToNextExercise();
-    const [ref, open] = useBottomSheetRef();
+    const { ref, openBottomSheet: open } = useBottomSheetRef();
 
     useEffect(() => {
         if (isDone) {

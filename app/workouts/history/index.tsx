@@ -72,7 +72,7 @@ export function WorkoutHistory() {
     const { past, future } = useScrollRanges(selectedDate);
     const markedDates = useMarkedDates(editedWorkout?.workout.workoutId);
     const workout = useAppSelector(getEditedWorkout);
-    const [ref, open, close] = useBottomSheetRef();
+    const { ref, openBottomSheet, closeBottomSheet } = useBottomSheetRef();
     const sectionListRef = useRef<FlatList>(null);
     const workoutsInMonth = useAppSelector((state: AppState) => getWorkoutsByMonth(state, selectedDate));
     const navigate = useNavigate();
@@ -106,9 +106,9 @@ export function WorkoutHistory() {
     const handleSelectDate = useCallback(
         (date: IsoDate) => {
             setSelectedDate(date);
-            close();
+            closeBottomSheet();
         },
-        [close],
+        [closeBottomSheet],
     );
 
     const mappedDateData = useMemo(() => {
@@ -181,7 +181,7 @@ export function WorkoutHistory() {
                     contentContainerStyle={styles.scrollView}
                     renderItem={renderItem}
                 />
-                <ThemedPressable style={styles.browseButtonWrapper} onPress={open}>
+                <ThemedPressable style={styles.browseButtonWrapper} onPress={openBottomSheet}>
                     <Text style={styles.browseButton}>{t("history_browse")}</Text>
                 </ThemedPressable>
                 <ThemedBottomSheetModal snapPoints={["55%"]} ref={ref}>

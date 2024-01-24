@@ -45,7 +45,7 @@ export const TimeBasedSetInput = ({ setIndex, exerciseIndex }: SetInputRowProps)
     const { isLatestSet, reps, isEditable, isConfirmed, duration, preparation } = data ?? {};
     const dispatch = useAppDispatch();
     const isActiveSet = useAppSelector((state: AppState) => getIsActiveSet(state, exerciseIndex, setIndex));
-    const [cancelHandleRef, openCancelHandle, close] = useBottomSheetRef();
+    const { ref: cancelHandleRef, openBottomSheet: openCancelHandle, closeBottomSheet: close } = useBottomSheetRef();
     const preparationMilliseconds = useMemo(() => getMillisecondsFromDuration(preparation), [preparation]);
     const hasPreparation = useMemo(() => Boolean(preparationMilliseconds > 0), [preparationMilliseconds]);
 

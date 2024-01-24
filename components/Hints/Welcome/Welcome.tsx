@@ -14,7 +14,7 @@ import { getIsFirstTimeRendered } from "../../../store/reducers/metadata/metadat
 export const Welcome = () => {
     const { mainColor, componentBackgroundColor } = useTheme();
     const isFirstTimeRendered = useAppSelector(getIsFirstTimeRendered);
-    const [ref] = useBottomSheetRef();
+    const { ref } = useBottomSheetRef();
     const dispatch = useAppDispatch();
     const handleConfirmInitialModal = useCallback(() => {
         dispatch(setFirstTimeRendered(false));

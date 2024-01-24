@@ -20,7 +20,7 @@ interface WeightBasedExerciseProps {
 }
 
 export const WeightBasedExercise = ({ exerciseIndex }: WeightBasedExerciseProps) => {
-    const [editNoteModalRef, open, close] = useBottomSheetRef();
+    const { ref: editNoteModalRef, openBottomSheet: open, closeBottomSheet: close } = useBottomSheetRef();
     const showEditNoteModalTitleStyle = useMemo(() => ({ padding: 10, paddingHorizontal: 15, alignSelf: "center" }) as const, []);
     const { mainColor } = useTheme();
     const setsArray = useAppSelector((state: AppState) => getSetsArray(state, exerciseIndex));

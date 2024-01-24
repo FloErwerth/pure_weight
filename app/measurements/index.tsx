@@ -1,6 +1,6 @@
 import { DEFAULT_PLUS, SiteNavigationButtons } from "../../components/SiteNavigationButtons/SiteNavigationButtons";
 import { useTranslation } from "react-i18next";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo } from "react";
 import { useAppDispatch, useAppSelector } from "../../store";
 import { PageContent } from "../../components/PageContent/PageContent";
 import { ThemedView } from "../../components/Themed/ThemedView/View";
@@ -11,15 +11,14 @@ import { deleteMeasurement, recoverMeasurement, setEditedMeasurement, setupNewMe
 import { getSortedMeasurements } from "../../store/reducers/measurements/measurementSelectors";
 import { MeasurementSorting } from "../../components/App/measurements/Sorting/MeasurementSorting";
 import { useNavigate } from "../../hooks/navigate";
-import { useToastRef } from "../../components/BottomToast/useToast";
+import { useToast } from "../../components/BottomToast/useToast";
 
 export function Measurements() {
     const { t } = useTranslation();
     const measurements = useAppSelector(getSortedMeasurements);
     const dispatch = useAppDispatch();
-    const [showToast, setShowToast] = useState(false);
     const navigate = useNavigate();
-    const toastRef = useToastRef();
+    const { toastRef, openToast, closeToast, showToast } = useToast();
 
     const handleAddNewMeasurement = useCallback(() => {
         dispatch(setupNewMeasurement());
@@ -41,15 +40,15 @@ export function Measurements() {
             if (showToast && toastRef.current) {
                 toastRef.current.restart();
             }
-            setShowToast(true);
+            openToast();
         },
-        [dispatch, showToast],
+        [dispatch, openToast, showToast, toastRef],
     );
 
     const handleRecoverMeasurement = useCallback(() => {
         dispatch(recoverMeasurement());
-        setShowToast(false);
-    }, [dispatch]);
+        closeToast();
+    }, [closeToast, dispatch]);
 
     const handleEditMeasuremnt = useCallback(
         (measurementId: number) => {
@@ -84,7 +83,7 @@ export function Measurements() {
             </PageContent>
             <BottomToast
                 reference={toastRef}
-                onRequestClose={() => setShowToast(false)}
+                onRequestClose={closeToast}
                 open={showToast}
                 messageKey={"measurement_deleted_undo"}
                 titleKey={"measurement_deleted_message"}

@@ -22,13 +22,13 @@ const refs: RefObject<BottomSheetModal>[] = [];
 export const useBottomSheetRef = () => {
     const ref = useRef<BottomSheetModal>(null);
     const [isOpen, setIsOpen] = useState(false);
-    const handleOpen = useCallback(() => {
+    const openBottomSheet = useCallback(() => {
         setIsOpen(true);
         Keyboard.dismiss();
         ref.current?.present();
     }, []);
 
-    const handleClose = useCallback(() => {
+    const closeBottomSheet = useCallback(() => {
         setIsOpen(false);
         ref.current?.close();
     }, []);
@@ -45,7 +45,7 @@ export const useBottomSheetRef = () => {
         };
     }, []);
 
-    return useMemo(() => [ref, handleOpen, handleClose, closeAll, isOpen] as const, [closeAll, handleClose, handleOpen, isOpen]);
+    return useMemo(() => ({ ref, openBottomSheet, closeBottomSheet, closeAll, isOpen }), [closeAll, closeBottomSheet, isOpen, openBottomSheet]);
 };
 
 const defaultSnapshots = ["50%", "50%", "100%"];

@@ -30,7 +30,7 @@ export const QuestionsAndAnswers = () => {
         navigate("workouts");
     }, [navigate]);
 
-    const [ref, open, , closeAll] = useBottomSheetRef();
+    const { ref, openBottomSheet: open, closeAll } = useBottomSheetRef();
     const [selectedQuesiton, setSelectedQuesiton] = useState<{ title: string; answer: JSX.Element; snapPoints?: SnapPoint[] } | undefined>();
     const language = useAppSelector(getLanguage);
     const measurementOptionMap = useMeasurementOptionMap();

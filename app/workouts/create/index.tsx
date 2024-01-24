@@ -55,9 +55,9 @@ export function Create() {
     const isEditedWorkout = useAppSelector(getIsEditedWorkout);
     const title = useMemo(() => (isEditedWorkout ? t("edit_workout") : t("create_workout")), [isEditedWorkout, t]);
     const dispatch = useAppDispatch();
-    const [alertRef, openAlert, closeAlert] = useBottomSheetRef();
-    const [addRef, openAdd, closeAdd] = useBottomSheetRef();
-    const [colorPickerRef, openPicker] = useBottomSheetRef();
+    const { ref: alertRef, openBottomSheet: openAlert, closeBottomSheet: closeAlert } = useBottomSheetRef();
+    const { ref: addRef, openBottomSheet: openAdd, closeBottomSheet: closeAdd } = useBottomSheetRef();
+    const { ref: colorPickerRef, openBottomSheet: openPicker } = useBottomSheetRef();
     const [showToast, setShowToast] = useState(false);
 
     const handleSetWorkoutName = useCallback(

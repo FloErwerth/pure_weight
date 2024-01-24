@@ -23,7 +23,7 @@ export const PreviousWorkout = ({ exerciseIndex, exerciseType }: PreviousTrainin
     const previousWorkout = useAppSelector((state: AppState) => getPreviousWorkout(state, state.settingsState.language, exerciseIndex));
     const { t } = useTranslation();
     const { textDisabled, mainColor, secondaryColor, inputFieldBackgroundColor } = useTheme();
-    const [ref, , close] = useBottomSheetRef();
+    const { ref, closeBottomSheet: close } = useBottomSheetRef();
     const activeSetIndex = useAppSelector((state: AppState) => getActiveSetIndex(state, exerciseIndex));
     const mappedData = useMemo(
         () =>

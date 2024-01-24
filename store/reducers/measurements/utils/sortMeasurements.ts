@@ -4,8 +4,13 @@ import { convertDate } from "../../../../utils/date";
 import { Temporal } from "@js-temporal/polyfill";
 
 const sortAfterDate = (a: Measurement, b: Measurement) => {
-    const latestDateA = a.data[a.data.length - 1].isoDate;
-    const latestDateB = b.data[b.data.length - 1].isoDate;
+    const latestDateA = a.data?.[a.data.length - 1]?.isoDate;
+    const latestDateB = b.data?.[b.data.length - 1]?.isoDate;
+
+    if (!latestDateA || !latestDateB) {
+        return 0;
+    }
+
     return Temporal.PlainDate.compare(convertDate.toTemporal(latestDateA), convertDate.toTemporal(latestDateB));
 };
 export const sortMeasurements = (measurements: Measurement[], sorting: SortingType) => {

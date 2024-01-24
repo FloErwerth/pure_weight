@@ -33,7 +33,7 @@ export const WorkoutHistoryEdit = ({
     const navigate = useNavigate();
     const { t } = useTranslation();
     const pageTitle = useMemo(() => t("workout_history_edit_title"), [t]);
-    const [ref, open] = useBottomSheetRef();
+    const { ref, openBottomSheet: open } = useBottomSheetRef();
     const dispatch = useAppDispatch();
 
     const handleNavigateToHistory = useCallback(() => {

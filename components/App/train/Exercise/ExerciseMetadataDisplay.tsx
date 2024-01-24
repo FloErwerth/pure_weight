@@ -21,18 +21,18 @@ interface ExerciseMetadataDisplayProps {
 
 export const ExerciseMetadataDisplay = ({ exerciseIndex }: ExerciseMetadataDisplayProps) => {
     const dispatch = useAppDispatch();
-    const [addExerciseRef, open] = useBottomSheetRef();
+    const { ref, openBottomSheet, closeBottomSheet } = useBottomSheetRef();
     const exerciseMetaData = useAppSelector((state: AppState) => getExerciseMetadataFromWorkoutByIndex(state, exerciseIndex));
 
     const handleShowModal = useCallback(() => {
         dispatch(setEditedExercise({ index: exerciseIndex, isTrained: true }));
         void Haptics.selectionAsync();
-        open();
-    }, [dispatch, exerciseIndex, open]);
+        openBottomSheet();
+    }, [dispatch, exerciseIndex, openBottomSheet]);
 
     const handleClose = useCallback(() => {
-        addExerciseRef.current?.close();
-    }, [addExerciseRef]);
+        closeBottomSheet();
+    }, [closeBottomSheet]);
 
     if (!exerciseMetaData) {
         return null;
@@ -53,7 +53,7 @@ export const ExerciseMetadataDisplay = ({ exerciseIndex }: ExerciseMetadataDispl
                     <ThemedMaterialCommunityIcons name="pencil" size={24} />
                 </Pressable>
             </HStack>
-            <EditableExerciseModal closeAfterEdit reference={addExerciseRef} onRequestClose={handleClose} />
+            <EditableExerciseModal reference={ref} onRequestClose={handleClose} />
         </>
     );
 };

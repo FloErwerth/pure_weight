@@ -103,7 +103,7 @@ const useHelpContent = (): Record<"save" | "pause" | "cancel", { title: string; 
 
 export const BackButtonModal = ({ title, snapPoints = ["25%"], reference, onPause, onCancel, onConfirm, workoutDone }: BackButtonModal) => {
     const { t } = useTranslation();
-    const [ref, open] = useBottomSheetRef();
+    const { ref, openBottomSheet } = useBottomSheetRef();
     const [helpConfigKey, setHelpConfigKey] = useState<"save" | "pause" | "cancel">("save");
     const helpContent = useHelpContent();
     const helpConfig = useMemo(() => helpContent[helpConfigKey], [helpConfigKey, helpContent]);
@@ -128,19 +128,19 @@ export const BackButtonModal = ({ title, snapPoints = ["25%"], reference, onPaus
     const pauseText = useMemo(() => t("workout_pause"), [t]);
 
     const handleOpenSaveHelp = useCallback(() => {
-        open();
+        openBottomSheet();
         setHelpConfigKey("save");
-    }, [open]);
+    }, [openBottomSheet]);
 
     const handleOpenPause = useCallback(() => {
-        open();
+        openBottomSheet();
         setHelpConfigKey("pause");
-    }, [open]);
+    }, [openBottomSheet]);
 
     const handleOpenCancelHelp = useCallback(() => {
-        open();
+        openBottomSheet();
         setHelpConfigKey("cancel");
-    }, [open]);
+    }, [openBottomSheet]);
 
     return (
         <ThemedBottomSheetModal snapPoints={snapPoints} ref={reference} title={title}>

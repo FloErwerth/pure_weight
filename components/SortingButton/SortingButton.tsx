@@ -18,7 +18,7 @@ type SortingButtonProps = {
 
 export const SortingButton = ({ iconName, title, mappedOptions, hide = false }: SortingButtonProps) => {
     const { t } = useTranslation();
-    const [ref, open, close] = useBottomSheetRef();
+    const { ref, openBottomSheet: open, closeBottomSheet: close } = useBottomSheetRef();
 
     const handleSelectedValue = useCallback(
         (selectCallback: () => void) => {

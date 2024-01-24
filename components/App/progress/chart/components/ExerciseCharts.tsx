@@ -150,9 +150,9 @@ export const ExerciseChart = ({ exerciseName, data, index }: ExerciseChartProps)
     const language = useAppSelector(getLanguage);
     const { t } = useTranslation();
     const { mainColor } = useTheme();
-    const [ref, open, close] = useBottomSheetRef();
+    const { ref, openBottomSheet, closeBottomSheet } = useBottomSheetRef();
     const chartTypeLabel = useChartTypeLabel(chartType, exerciseType);
-    const [helpRef, openHelp] = useBottomSheetRef();
+    const { ref: helpRef, openBottomSheet: openHelp } = useBottomSheetRef();
 
     const getDotContent = useCallback(
         ({ x, y, indexData }: { x: number; y: number; index: number; indexData: number }) => {
@@ -186,12 +186,12 @@ export const ExerciseChart = ({ exerciseName, data, index }: ExerciseChartProps)
     );
 
     const openSelectionModal = useCallback(() => {
-        open();
-    }, [open]);
+        openBottomSheet();
+    }, [openBottomSheet]);
 
     const closeSelectionModal = useCallback(() => {
-        close();
-    }, [close]);
+        closeBottomSheet();
+    }, [closeBottomSheet]);
 
     const getXLabel = useCallback(
         (xValue: string) => {

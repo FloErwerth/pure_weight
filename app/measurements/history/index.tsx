@@ -25,6 +25,7 @@ import { HStack } from "../../../components/Stack/HStack/HStack";
 import { AnswerText } from "../../../components/HelpQuestionAnswer/AnswerText";
 import { ThemedMaterialCommunityIcons } from "../../../components/Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
 import { BottomToast } from "../../../components/BottomToast/BottomToast";
+import { useToast } from "../../../components/BottomToast/useToast";
 
 const MAX_DATE = new Date(getDateTodayIso());
 
@@ -33,7 +34,7 @@ export const MeasurementHistory = () => {
     const editedMeasurement = useAppSelector(getEditedMeasurement);
     const { bottom } = useSafeAreaInsets();
 
-    const [ref, open, close] = useBottomSheetRef();
+    const { ref, openBottomSheet, closeBottomSheet } = useBottomSheetRef();
     const [editedDatapoint, setEditedDatapoint] = useState<(MeasurementDataPoint & { index: number }) | undefined>();
     const language = useAppSelector(getLanguage);
     const { t } = useTranslation();
@@ -44,8 +45,9 @@ export const MeasurementHistory = () => {
     const { mainColor } = useTheme();
     const themeKey = useAppSelector(getThemeKey);
     const measurementDates = useAppSelector(getDatesFromCurrentMeasurement);
-    const [warningRef, openWarning, closeWarning, __, showWarning] = useBottomSheetRef();
-    const [showToast, setShowToast] = useState(false);
+
+    const { toastRef, openToast, closeToast, showToast } = useToast();
+    const { ref: warningRef, openBottomSheet: openWarning, closeBottomSheet: closeWarning, isOpen: showWarning } = useBottomSheetRef();
 
     const handleEditMeasurementPoint = useCallback(
         (index: number) => {
@@ -55,10 +57,10 @@ export const MeasurementHistory = () => {
                     return;
                 }
                 setEditedDatapoint({ ...dataPoint, index });
-                open();
+                openBottomSheet();
             }
         },
-        [editedMeasurement?.measurement, open],
+        [editedMeasurement?.measurement, openBottomSheet],
     );
 
     const handleNavigateToMeasurements = useCallback(() => {
@@ -108,19 +110,23 @@ export const MeasurementHistory = () => {
             }
         }
         Keyboard.dismiss();
-        close();
-    }, [close, closeWarning, dispatch, editedDatapoint, editedMeasurement?.measurement?.data, showWarning]);
+        closeBottomSheet();
+    }, [closeBottomSheet, closeWarning, dispatch, editedDatapoint, editedMeasurement?.measurement?.data, showWarning]);
 
     const handleRecoverMeasurementDataPoint = useCallback(() => {
         dispatch(recoverMeasurementDataPoint());
-        setShowToast(false);
-    }, [dispatch]);
+        closeToast();
+    }, [closeToast, dispatch]);
 
     const handleDeleteDataPoint = useCallback(() => {
         dispatch(deleteMeasurementDataPoint({ index: editedDatapoint?.index }));
-        setShowToast(true);
-        close();
-    }, [close, dispatch, editedDatapoint?.index]);
+        if (showToast) {
+            toastRef.current?.restart();
+        } else {
+            openToast();
+        }
+        closeBottomSheet();
+    }, [closeBottomSheet, dispatch, editedDatapoint?.index, openToast, showToast, toastRef]);
 
     const handleCheckForDates = useCallback(() => {
         if (editedDatapoint?.isoDate === undefined) {
@@ -161,11 +167,11 @@ export const MeasurementHistory = () => {
     }, [editedMeasurement]);
 
     const handleToastClosed = useCallback(() => {
-        setShowToast(false);
+        closeToast();
         if (editedMeasurement?.measurement?.data.length === 0) {
             handleNavigateToMeasurements();
         }
-    }, [editedMeasurement?.measurement?.data.length, handleNavigateToMeasurements]);
+    }, [closeToast, editedMeasurement?.measurement?.data.length, handleNavigateToMeasurements]);
 
     if (editedMeasurement === undefined) {
         navigate("measurements");
@@ -185,6 +191,7 @@ export const MeasurementHistory = () => {
                     renderItem={renderItem}
                 />
                 <BottomToast
+                    reference={toastRef}
                     leftCorrection={-20}
                     bottom={bottom}
                     onRequestClose={handleToastClosed}

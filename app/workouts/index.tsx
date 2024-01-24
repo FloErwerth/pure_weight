@@ -18,7 +18,7 @@ import { getLanguage } from "../../store/reducers/settings/settingsSelectors";
 import { trainStyles } from "../../components/App/train/trainStyles";
 import { HStack } from "../../components/Stack/HStack/HStack";
 import { ThemedMaterialCommunityIcons } from "../../components/Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
-import { useToastRef } from "../../components/BottomToast/useToast";
+import { useToast } from "../../components/BottomToast/useToast";
 
 const usePauseWarningContent = () => {
     const language = useAppSelector(getLanguage);
@@ -42,14 +42,13 @@ const usePauseWarningContent = () => {
 export function Workouts() {
     const dispatch = useAppDispatch();
     const { t } = useTranslation();
-    const [showToast, setShowToast] = useState(false);
     const savedWorkouts = useAppSelector(getSortedWorkouts);
     const navigate = useNavigate();
     const trainedWorkout = useAppSelector(getTrainedWorkout);
-    const [ref, open, close] = useBottomSheetRef();
+    const { ref, openBottomSheet, closeBottomSheet } = useBottomSheetRef();
     const [newWorkoutIndex, setNewWorkoutIndex] = useState<number | undefined>(undefined);
     const isOngoingWorkout = useAppSelector((state: AppState) => getIsOngoingWorkout(state, newWorkoutIndex ?? -1));
-    const toastRef = useToastRef();
+    const { toastRef, openToast, closeToast, showToast } = useToast();
     const { resumeTrainingText, title, message, newTrainingText } = usePauseWarningContent();
 
     const handleCreateWorkout = useCallback(() => {
@@ -72,10 +71,11 @@ export function Workouts() {
             dispatch(removeWorkout(workoutId));
             if (showToast && toastRef.current) {
                 toastRef.current.restart();
+            } else {
+                openToast();
             }
-            setShowToast(true);
         },
-        [dispatch, showToast, toastRef],
+        [dispatch, openToast, showToast, toastRef],
     );
 
     const handleStartWorkout = useCallback(
@@ -96,30 +96,30 @@ export function Workouts() {
     const handleStartWorkoutCases = useCallback(
         (workoutId: number) => {
             if (trainedWorkout) {
-                open();
+                openBottomSheet();
                 setNewWorkoutIndex(workoutId);
                 return;
             }
             handleStartWorkout(workoutId);
         },
-        [handleStartWorkout, open, trainedWorkout],
+        [handleStartWorkout, openBottomSheet, trainedWorkout],
     );
 
     const handleConfirmResume = useCallback(() => {
         dispatch(resumeTrainedWorkout());
         navigate("train");
-        close();
-    }, [close, dispatch, navigate]);
+        closeBottomSheet();
+    }, [closeBottomSheet, dispatch, navigate]);
 
     const handleConfirmOverwrite = useCallback(() => {
         handleStartWorkout();
-        close();
-    }, [close, handleStartWorkout]);
+        closeBottomSheet();
+    }, [closeBottomSheet, handleStartWorkout]);
 
     const handleRecoverWorkout = useCallback(() => {
         dispatch(recoverWorkout());
-        setShowToast(false);
-    }, [dispatch]);
+        closeToast();
+    }, [closeToast, dispatch]);
 
     const mappedWorkouts = useMemo(
         () =>
@@ -130,10 +130,6 @@ export function Workouts() {
             )),
         [savedWorkouts, handleStartWorkoutCases, onDelete, onEdit],
     );
-
-    const closeToast = useCallback(() => {
-        setShowToast(false);
-    }, []);
 
     return (
         <ThemedView stretch background>
