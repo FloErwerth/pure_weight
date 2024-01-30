@@ -53,8 +53,6 @@ export const CreateExercise = () => {
         openSavedSuccess();
     }, [openSavedSuccess]);
 
-    console.log(showCheckboxed);
-
     const showCheckboxesAfterTimeout = useCallback(() => {
         setTimeout(() => {
             setShowCheckboxed(true);

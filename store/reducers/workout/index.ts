@@ -412,7 +412,6 @@ export const workoutReducer = createReducer<WorkoutState>({ workouts: [], sortin
                         if (!doneExercise.fallbackSets) {
                             doneExercise.fallbackSets = [...doneExercise.sets];
                         }
-                        console.log(doneExercise.sets[action.payload.setIndex]);
                         doneExercise.sets[action.payload.setIndex] = { ...doneExercise.sets[action.payload.setIndex], [action.payload.key]: action.payload.value };
                     }
                     doneWorkout.doneExercises[doneExerciseIndex] = doneExercise;
