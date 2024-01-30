@@ -86,7 +86,7 @@ export const WeightBasedExerciseMetadataDisplay = ({ exerciseId }: ExerciseMetaD
     const navigate = useNavigate();
 
     const handleShowModal = useCallback(() => {
-        dispatch(setEditedExercise({ isTrained: true, exerciseId }));
+        dispatch(setEditedExercise({ exerciseId }));
         void Haptics.selectionAsync();
         navigate("workouts/create/exercise");
     }, [dispatch, exerciseId, navigate]);

@@ -22,6 +22,7 @@ import { TemplateSelection } from "../../../../components/TemplateSelection/Temp
 import { Animated, View } from "react-native";
 import { AnswerText } from "../../../../components/HelpQuestionAnswer/AnswerText";
 import { getLanguage } from "../../../../store/reducers/settings/settingsSelectors";
+import Reanimated, { FadeIn, FadeOut, Layout } from "react-native-reanimated";
 
 export const CreateExercise = () => {
     const { t } = useTranslation();
@@ -29,7 +30,8 @@ export const CreateExercise = () => {
     const title = useMemo(() => t(isEditingExercise ? "exercise_edit_title" : "create_exercise"), [isEditingExercise, t]);
     const dispatch = useAppDispatch();
     const editedExercise = useAppSelector(getEditedExercise);
-    const { showToast, openToast, closeToast } = useToast();
+    const { showToast: showSavedSuccess, openToast: openSavedSuccess, closeToast: closeSavedSuccess } = useToast();
+    const { showToast: showApplySuccess, openToast: openApplySuccess, closeToast: closeApplySuccess } = useToast();
     const [showCheckboxed, setShowCheckboxed] = useState(true);
     const [addMoreExercises, setAddMoreExercises] = useState(false);
     const { ref: warningRef, openBottomSheet: openWarning, closeBottomSheet: closeWarning, isOpen: showWarning } = useBottomSheetRef();
@@ -42,35 +44,36 @@ export const CreateExercise = () => {
     const isFromTemplate = Boolean(editedExercise?.exercise.templateId);
 
     useEffect(() => {
-        if (!showToast) {
-            setTimeout(() => {
-                setShowCheckboxed(true);
-            }, 200);
-        }
-    }, [showToast]);
-
-    useEffect(() => {
         if (isEditingExercise) {
             setAddMoreExercises(false);
         }
     }, [isEditingExercise]);
 
     const openSuccessMessage = useCallback(() => {
-        openToast();
-    }, [openToast]);
+        openSavedSuccess();
+    }, [openSavedSuccess]);
+
+    console.log(showCheckboxed);
+
+    const showCheckboxesAfterTimeout = useCallback(() => {
+        setTimeout(() => {
+            setShowCheckboxed(true);
+        }, 2200);
+    }, []);
 
     const saveExercise = useCallback(() => {
         dispatch(saveEditedExercise());
         dispatch(updateTemplate());
         openSuccessMessage();
         setShowCheckboxed(false);
+        showCheckboxesAfterTimeout();
         void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
         if (addMoreExercises) {
             dispatch(createNewExercise());
         } else {
             navigateBack();
         }
-    }, [addMoreExercises, dispatch, editedExercise?.exercise.templateId, navigateBack, openSuccessMessage]);
+    }, [addMoreExercises, dispatch, navigateBack, openSuccessMessage, showCheckboxesAfterTimeout]);
 
     const saveTemplate = useCallback(() => {
         if (showWarning) {
@@ -89,8 +92,8 @@ export const CreateExercise = () => {
     }, [closeWarning, dispatch, saveExercise, showWarning]);
 
     const handleConfirm = useCallback(() => {
-        if (showToast) {
-            closeToast();
+        if (showSavedSuccess) {
+            closeSavedSuccess();
         }
         if (editedExercise) {
             if (saveAsTemplate) {
@@ -103,13 +106,20 @@ export const CreateExercise = () => {
             }
             saveExercise();
         }
-    }, [closeToast, editedExercise, isFromTemplate, openWarning, saveAsTemplate, saveExercise, saveTemplate, showToast]);
+    }, [closeSavedSuccess, editedExercise, isFromTemplate, openWarning, saveAsTemplate, saveExercise, saveTemplate, showSavedSuccess]);
 
-    const closeSuccessMessage = useCallback(() => {
-        closeToast();
-    }, [closeToast]);
+    const closeSavedSuccessMessage = useCallback(() => {
+        closeSavedSuccess();
+    }, [closeSavedSuccess]);
 
     const confirmButtonConfig = useMemo(() => ({ icon: { name: "content-copy", size: 24 } as const, disabled: !hasTemplates, opacity: new Animated.Value(hasTemplates ? 1 : 0) }), [hasTemplates]);
+
+    const handleApplyTemplate = useCallback(() => {
+        setShowCheckboxed(false);
+        showCheckboxesAfterTimeout();
+        closeBottomSheet();
+        openApplySuccess();
+    }, [closeBottomSheet, openApplySuccess, showCheckboxesAfterTimeout]);
 
     return (
         <ThemedView stretch background>
@@ -126,7 +136,7 @@ export const CreateExercise = () => {
                 <EditableExercise />
                 <View style={{ gap: 10 }}>
                     {showCheckboxed && (
-                        <>
+                        <Reanimated.View style={{ gap: 10 }} layout={Layout} entering={FadeIn} exiting={FadeOut}>
                             <CheckBox
                                 helpTextConfig={{ text: t("save_as_template_help"), snapPoints: ["35%"] }}
                                 secondary
@@ -136,9 +146,10 @@ export const CreateExercise = () => {
                                 label={t("save_as_template")}
                             />
                             <CheckBox secondary customWrapperStyles={{ zIndex: -1 }} checked={addMoreExercises} onChecked={setAddMoreExercises} label={t("add_more_exercises")} />
-                        </>
+                        </Reanimated.View>
                     )}
-                    <BottomToast customTime={1000} topCorrection={-10} leftCorrection={-20} titleKey="create_exercise_success_title" onRequestClose={closeSuccessMessage} open={showToast} />
+                    <BottomToast customTime={1000} leftCorrection={-20} titleKey="create_exercise_success_title" onRequestClose={closeSavedSuccessMessage} open={showSavedSuccess} />
+                    <BottomToast customTime={1000} leftCorrection={-20} titleKey="applied_template_success_title" onRequestClose={closeApplySuccess} open={showApplySuccess} />
                     <ThemedPressable ghost behind onPress={handleConfirm}>
                         <HStack secondary style={styles.button}>
                             <Text secondary style={styles.buttonText}>
@@ -162,7 +173,7 @@ export const CreateExercise = () => {
                     </ThemedPressable>
                 </PageContent>
             </ThemedBottomSheetModal>
-            <TemplateSelection onApplyTemplate={closeBottomSheet} reference={ref} />
+            <TemplateSelection onApplyTemplate={handleApplyTemplate} reference={ref} />
         </ThemedView>
     );
 };

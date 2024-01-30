@@ -46,6 +46,7 @@
   "weight_based_label": "Gewichtbasiert",
     "time_based_label": "Zeitbasiert",
     "with": "mit",
+  "applied_template_success_title": "Vorlage erfolgreich angewendet",
 
   "workout_save": "Workout speichern",
   "workout_pause": "Workout pausieren",

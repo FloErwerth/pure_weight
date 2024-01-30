@@ -65,6 +65,7 @@
   "weight_based_label": "Weight based",
     "time_based_label": "Time based",
   "with": "with",
+  "applied_template_success_title": "Template successfully applied",
 
   "workout_save": "Save workout",
   "workout_pause": "Pause workout",
