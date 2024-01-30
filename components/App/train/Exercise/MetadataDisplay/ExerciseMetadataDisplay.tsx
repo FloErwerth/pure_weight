@@ -24,10 +24,10 @@ export const ExerciseMetadataDisplay = ({ exerciseId }: ExerciseMetadataDisplayP
     const dispatch = useAppDispatch();
     const exerciseMetaData = useAppSelector((state: AppState) => getExerciseMetadataFromWorkoutById(state, exerciseId));
     const navigate = useNavigate();
-    const handleShowModal = useCallback(() => {
-        dispatch(setEditedExercise({ isTrained: true, exerciseId }));
+    const handleEditExercise = useCallback(() => {
+        dispatch(setEditedExercise({ exerciseId }));
         void Haptics.selectionAsync();
-        navigate("workouts/create/exercise", { to: "workouts/train/index" });
+        navigate("workouts/create/exercise");
     }, [dispatch, exerciseId, navigate]);
     const SmallExerciseDataDisplay = useTypeSpecificComponent(exerciseMetaData?.type, WeightBasedSmallExerciseMetadataDisplay, TimeBasedSmallExerciseDataDisplay);
 
@@ -40,9 +40,9 @@ export const ExerciseMetadataDisplay = ({ exerciseId }: ExerciseMetadataDisplayP
             <HStack style={styles.wrapper}>
                 <VStack>
                     <Text style={trainStyles.exerciseName}>{exerciseMetaData?.name}</Text>
-                    <SmallExerciseDataDisplay exerciseId={exerciseId} />
+                    <SmallExerciseDataDisplay exerciseMetaData={exerciseMetaData} />
                 </VStack>
-                <Pressable onPress={handleShowModal} style={styles.pressable}>
+                <Pressable onPress={handleEditExercise} style={styles.pressable}>
                     <ThemedMaterialCommunityIcons name="pencil" size={24} />
                 </Pressable>
             </HStack>

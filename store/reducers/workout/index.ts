@@ -30,7 +30,7 @@ export const mutateEditedExerciseTimeValue = createAction<
 >("exercise_edit_mutate_pause");
 
 export const setEditedWorkout = createAction<{ workoutId: WorkoutId }, "workout_set_edited_workout">("workout_set_edited_workout");
-export const setEditedExercise = createAction<{ exerciseId?: ExerciseId; isTrained?: boolean } | undefined, "workout_set_edited_exercise">("workout_set_edited_exercise");
+export const setEditedExercise = createAction<{ exerciseId: ExerciseId } | undefined, "workout_set_edited_exercise">("workout_set_edited_exercise");
 export const deleteExerciseFromEditedWorkout = createAction<number, "workout_delete_exercise_from_edited_workout">("workout_delete_exercise_from_edited_workout");
 export const saveEditedExercise = createAction("storeEditedExerciseInEditedWorkout");
 export const startWorkout = createAction<WorkoutId, "start_training">("start_training");
@@ -151,12 +151,11 @@ export const workoutReducer = createReducer<WorkoutState>({ workouts: [], sortin
             if (action.payload === undefined) {
                 state.editedWorkout = undefined;
             } else if (action.payload.exerciseId) {
-                const workout = action.payload.isTrained ? state.trainedWorkout?.workout : state.editedWorkout?.workout;
+                const workout = state.trainedWorkout?.workout ?? state.editedWorkout?.workout;
                 const exercise = workout?.exercises?.find((exercise) => exercise.exerciseId === action.payload?.exerciseId);
                 if (exercise) {
                     state.editedExercise = {
                         exercise,
-                        isTrained: action.payload.isTrained,
                     };
                 }
             }
@@ -234,9 +233,9 @@ export const workoutReducer = createReducer<WorkoutState>({ workouts: [], sortin
             }
         })
         .addCase(saveEditedExercise, (state) => {
-            const isTrained = Boolean(state.editedExercise?.isTrained);
             if (state.editedExercise) {
-                if (isTrained && state.trainedWorkout) {
+                //save in specific workout
+                if (state.trainedWorkout) {
                     const trainedWorkoutExerciseIndex = state.trainedWorkout.exerciseData.findIndex((data) => data.originalExerciseId === state.editedExercise?.exercise.exerciseId);
                     state.trainedWorkout.workout.exercises.splice(trainedWorkoutExerciseIndex, 1, state.editedExercise.exercise);
                     state.trainedWorkout.exerciseData[trainedWorkoutExerciseIndex].doneSets.map((data) => {
@@ -252,6 +251,14 @@ export const workoutReducer = createReducer<WorkoutState>({ workouts: [], sortin
                     } else {
                         state.editedWorkout.workout.exercises.push(state.editedExercise.exercise);
                     }
+                }
+
+                //save in general workouts
+                const id = state.trainedWorkout?.workout.workoutId ?? state.editedWorkout?.workout.workoutId;
+                const workoutIndex = state.workouts.findIndex((workout) => workout.workoutId === id);
+                if (workoutIndex !== -1) {
+                    const workoutExerciseIndex = state.workouts[workoutIndex].exercises.findIndex((exercise) => exercise.exerciseId === state.editedExercise?.exercise.exerciseId) ?? -1;
+                    state.workouts[workoutIndex]?.exercises.splice(workoutExerciseIndex, 1, state.editedExercise.exercise);
                 }
             }
         })
@@ -495,7 +502,7 @@ export const workoutReducer = createReducer<WorkoutState>({ workouts: [], sortin
             }
         })
         .addCase(updateTemplate, (state) => {
-            if (state.storedExerciseTemplates && state.editedExercise) {
+            if (state.storedExerciseTemplates && state.editedExercise && state.editedExercise.exercise.templateId) {
                 const exerciseMetaData = state.editedExercise.exercise;
                 const templateIndex = state.storedExerciseTemplates.findIndex((template) => template.templateId === exerciseMetaData.templateId);
                 if (templateIndex !== -1) {

@@ -1,5 +1,5 @@
 import { trainStyles } from "../../../trainStyles";
-import { Pressable, TextStyle } from "react-native";
+import { Pressable } from "react-native";
 import { useCallback, useMemo } from "react";
 import { HStack } from "../../../../../Stack/HStack/HStack";
 import { VStack } from "../../../../../Stack/VStack/VStack";
@@ -14,21 +14,18 @@ import { setEditedExercise } from "../../../../../../store/reducers/workout";
 import { ThemedView } from "../../../../../Themed/ThemedView/View";
 import { getTimeUnit, getWeightUnit } from "../../../../../../store/reducers/settings/settingsSelectors";
 import { useNavigate } from "../../../../../../hooks/navigate";
-import { ExerciseId } from "../../../../../../store/reducers/workout/types";
+import { ExerciseId, ExerciseMetaData } from "../../../../../../store/reducers/workout/types";
 
 interface ExerciseMetaDataDisplayProps {
     exerciseId: ExerciseId;
 }
 
 interface SmallMetadataDisplayProps {
-    style?: TextStyle;
-    exerciseId: ExerciseId;
+    exerciseMetaData: ExerciseMetaData;
 }
 
-export const WeightBasedSmallExerciseMetadataDisplay = ({ style, exerciseId }: SmallMetadataDisplayProps) => {
+export const WeightBasedSmallExerciseMetadataDisplay = ({ exerciseMetaData }: SmallMetadataDisplayProps) => {
     const { t } = useTranslation();
-    const textStyle = useMemo(() => [trainStyles.exerciseMetaText, style], [style]);
-    const exerciseMetaData = useAppSelector((state: AppState) => getExerciseMetadataFromWorkoutById(state, exerciseId));
     const isSingle = useMemo(() => parseFloat(exerciseMetaData?.sets ?? "0") === 1, [exerciseMetaData?.sets]);
     const showMinutes = parseFloat(exerciseMetaData?.pause?.minutes ?? "0") !== 0;
     const showSeconds = parseFloat(exerciseMetaData?.pause?.seconds ?? "0") !== 0;
@@ -45,15 +42,15 @@ export const WeightBasedSmallExerciseMetadataDisplay = ({ style, exerciseId }: S
     return (
         <ThemedView>
             <HStack>
-                <Text style={textStyle}>
+                <Text style={trainStyles.exerciseMetaText}>
                     {exerciseMetaData?.sets}&thinsp;{t(`training_header_sets_${isSingle ? "single" : "multi"}`)}
                 </Text>
-                <Text style={textStyle}>&thinsp;x&thinsp;</Text>
-                <Text style={textStyle}>
+                <Text style={trainStyles.exerciseMetaText}>&thinsp;x&thinsp;</Text>
+                <Text style={trainStyles.exerciseMetaText}>
                     {exerciseMetaData?.reps}&thinsp;{t("training_header_reps")}
                 </Text>
-                <Text style={textStyle}>&thinsp;{`${mit}`}&thinsp;</Text>
-                <Text style={textStyle}>
+                <Text style={trainStyles.exerciseMetaText}>&thinsp;{`${mit}`}&thinsp;</Text>
+                <Text style={trainStyles.exerciseMetaText}>
                     {exerciseMetaData?.weight}&thinsp;{weightUnit}
                 </Text>
             </HStack>
@@ -63,21 +60,21 @@ export const WeightBasedSmallExerciseMetadataDisplay = ({ style, exerciseId }: S
                         {showMinutes && (
                             <ThemedView>
                                 <HStack style={styles.smallGap}>
-                                    <Text style={textStyle}>{exerciseMetaData.pause?.minutes}</Text>
-                                    <Text style={textStyle}>{minutesUnit}</Text>
+                                    <Text style={trainStyles.exerciseMetaText}>{exerciseMetaData.pause?.minutes}</Text>
+                                    <Text style={trainStyles.exerciseMetaText}>{minutesUnit}</Text>
                                 </HStack>
                             </ThemedView>
                         )}
                         {showSeconds && (
                             <ThemedView>
                                 <HStack style={styles.smallGap}>
-                                    <Text style={textStyle}>{exerciseMetaData.pause?.seconds}</Text>
-                                    <Text style={textStyle}>{secondsUnit}</Text>
+                                    <Text style={trainStyles.exerciseMetaText}>{exerciseMetaData.pause?.seconds}</Text>
+                                    <Text style={trainStyles.exerciseMetaText}>{secondsUnit}</Text>
                                 </HStack>
                             </ThemedView>
                         )}
                     </HStack>
-                    <Text style={textStyle}> {t("pause_lower")}</Text>
+                    <Text style={trainStyles.exerciseMetaText}> {t("pause_lower")}</Text>
                 </HStack>
             )}
         </ThemedView>
@@ -105,7 +102,7 @@ export const WeightBasedExerciseMetadataDisplay = ({ exerciseId }: ExerciseMetaD
             <HStack style={styles.wrapper}>
                 <VStack>
                     <Text style={trainStyles.exerciseName}>{exerciseMetaData?.name}</Text>
-                    <WeightBasedSmallExerciseMetadataDisplay exerciseId={exerciseId} />
+                    <WeightBasedSmallExerciseMetadataDisplay exerciseMetaData={exerciseMetaData} />
                 </VStack>
                 <Pressable onPress={handleShowModal} style={styles.pressable}>
                     <ThemedMaterialCommunityIcons name="pencil" size={24} />

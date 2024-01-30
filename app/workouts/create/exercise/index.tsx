@@ -61,9 +61,7 @@ export const CreateExercise = () => {
 
     const saveExercise = useCallback(() => {
         dispatch(saveEditedExercise());
-        if (editedExercise?.exercise.templateId) {
-            dispatch(updateTemplate());
-        }
+        dispatch(updateTemplate());
         openSuccessMessage();
         setShowCheckboxed(false);
         void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
@@ -144,7 +142,7 @@ export const CreateExercise = () => {
                     <ThemedPressable ghost behind onPress={handleConfirm}>
                         <HStack secondary style={styles.button}>
                             <Text secondary style={styles.buttonText}>
-                                {t(isEditingExercise ? "edit_exercise" : "create_exercise")}
+                                {t(isEditingExercise ? "edit_exercise_long" : "create_exercise")}
                             </Text>
                             <ThemedMaterialCommunityIcons ghost name="pencil-plus-outline" size={20} />
                         </HStack>
