@@ -6,7 +6,7 @@ import { VStack } from "../../../../../Stack/VStack/VStack";
 import { Text } from "../../../../../Themed/ThemedText/Text";
 import * as Haptics from "expo-haptics";
 import { useTranslation } from "react-i18next";
-import { styles } from "./styles";
+import { styles } from "../styles";
 import { ThemedMaterialCommunityIcons } from "../../../../../Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
 import { AppState, useAppDispatch, useAppSelector } from "../../../../../../store";
 import { getExerciseMetadataFromWorkoutById } from "../../../../../../store/reducers/workout/workoutSelectors";

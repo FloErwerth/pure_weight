@@ -4,7 +4,7 @@ import { useMemo } from "react";
 import { HStack } from "../../../../../Stack/HStack/HStack";
 import { Text } from "../../../../../Themed/ThemedText/Text";
 import { useTranslation } from "react-i18next";
-import { styles } from "./styles";
+import { styles } from "../styles";
 import { AppState, useAppSelector } from "../../../../../../store";
 import { getExerciseMetadataFromWorkoutById } from "../../../../../../store/reducers/workout/workoutSelectors";
 import { ThemedView } from "../../../../../Themed/ThemedView/View";

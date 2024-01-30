@@ -269,7 +269,16 @@ export const mockState: AppState = {
                 workoutId: "workout-128901238902",
                 calendarColor: "#ff0000",
                 exercises: [
-                    { exerciseId: "exercise-1", type: "WEIGHT_BASED", name: "Bankdrücken", weight: "50", sets: "5", pause: { seconds: "3", minutes: "0" }, reps: "5" },
+                    {
+                        name: "Klimmzüge unterstützt",
+                        exerciseId: "exercise-1",
+                        templateId: "template-1",
+                        type: "WEIGHT_BASED",
+                        weight: "50",
+                        sets: "5",
+                        pause: { seconds: "3", minutes: "0" },
+                        reps: "5",
+                    },
                     {
                         exerciseId: "exercise-2",
                         type: "TIME_BASED",
