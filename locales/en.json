@@ -9,16 +9,23 @@
   "statistics": "Statistics",
   "number_entries": "Number of entries",
   "workout_no_done_workouts_hint": "No workouts have been completed yet",
-
+  "exercise": "Übung",
+  "exercise_lower": "übung",
   "train_title": "Workout",
-
+  "weight_based_label_variant":  "Weight based",
+  "time_based_label_variant":  "Time based",
   "history_cta": "Show history",
   "history_front": "History:",
   "history_latest_workout": "Latest Workout",
   "history_latest_workout_short": "latest",
   "history_browse": "Browse history",
   "preparation": "Preparation",
-
+  "save_as_template": "Save as template",
+  "save_as_template_help": "Save this workout as a template to use it when creating or editing a workout. \n\nA exercise that is trained will update the template that it was generated from automatically. \n\nThis can be turned off in the settings.",
+  "save_as_template_warning_text": "This exercise is already saved as a template. Do you want to overwrite the template or create a new one? \n\nOverwriting the template will update all exercises that are generated from this template",
+  "save_as_template_warning_title": "Template already exists",
+  "save_as_template_warning_overwrite": "Overwrite template",
+  "save_as_template_warning_create_new": "Create new template",
   "workout_history_empty": "No workouts have been completed yet",
   "workout_history_single": "One workout completed",
   "workout_history_plural": "workouts completed",
@@ -93,6 +100,11 @@
   "settings_entries_title": "Latest entries",
   "settings_workout_history_all": "Show all of my workouts",
   "settings_measurement_history_all": "Show all of my measurements",
+
+  "settings_auto_update_linked_exercises": "Auto update exercises",
+  "settings_auto_update_linked_exercises_text": "If activated, all exercises created with the same template will be automatically kept on the same level of progress. \n\nFor example, if you used bench press as a template in two different workouts, the progress in both workouts will be updated when you train bench press in one workout.",
+  "settings_auto_update_templates": "Update templates",
+  "settings_auto_update_templates_text": "If activated, a template will be automatically updated according to the latest changes to an exercise that uses the template. \n\nExample: You train bench press, which is created from a template, and you change the weight of the exercise, the weight of the template will also be adjusted.",
 
   "settings_unit_system_title": "Unit System",
   "settings_unit_system_helptext_text": "This setting makes you able to choose which unit system the app will use. \n\nThe metric system uses units like kilograms, centimeter and litre. \n\nThe imperial system uses units like pounds, inch and gallons. \n\nBy switching between the unit systems all values stored will be converted.",

@@ -9,25 +9,26 @@ import { useTranslation } from "react-i18next";
 import { styles } from "./styles";
 import { ThemedMaterialCommunityIcons } from "../../../../../Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
 import { AppState, useAppDispatch, useAppSelector } from "../../../../../../store";
-import { getExerciseMetadataFromWorkoutByIndex } from "../../../../../../store/reducers/workout/workoutSelectors";
+import { getExerciseMetadataFromWorkoutById } from "../../../../../../store/reducers/workout/workoutSelectors";
 import { setEditedExercise } from "../../../../../../store/reducers/workout";
 import { ThemedView } from "../../../../../Themed/ThemedView/View";
 import { getTimeUnit, getWeightUnit } from "../../../../../../store/reducers/settings/settingsSelectors";
 import { useNavigate } from "../../../../../../hooks/navigate";
+import { ExerciseId } from "../../../../../../store/reducers/workout/types";
 
 interface ExerciseMetaDataDisplayProps {
-    exerciseIndex: number;
+    exerciseId: ExerciseId;
 }
 
 interface SmallMetadataDisplayProps {
     style?: TextStyle;
-    exerciseIndex: number;
+    exerciseId: ExerciseId;
 }
 
-export const WeightBasedSmallExerciseMetadataDisplay = ({ style, exerciseIndex }: SmallMetadataDisplayProps) => {
+export const WeightBasedSmallExerciseMetadataDisplay = ({ style, exerciseId }: SmallMetadataDisplayProps) => {
     const { t } = useTranslation();
     const textStyle = useMemo(() => [trainStyles.exerciseMetaText, style], [style]);
-    const exerciseMetaData = useAppSelector((state: AppState) => getExerciseMetadataFromWorkoutByIndex(state, exerciseIndex));
+    const exerciseMetaData = useAppSelector((state: AppState) => getExerciseMetadataFromWorkoutById(state, exerciseId));
     const isSingle = useMemo(() => parseFloat(exerciseMetaData?.sets ?? "0") === 1, [exerciseMetaData?.sets]);
     const showMinutes = parseFloat(exerciseMetaData?.pause?.minutes ?? "0") !== 0;
     const showSeconds = parseFloat(exerciseMetaData?.pause?.seconds ?? "0") !== 0;
@@ -83,16 +84,17 @@ export const WeightBasedSmallExerciseMetadataDisplay = ({ style, exerciseIndex }
     );
 };
 
-export const WeightBasedExerciseMetadataDisplay = ({ exerciseIndex }: ExerciseMetaDataDisplayProps) => {
+export const WeightBasedExerciseMetadataDisplay = ({ exerciseId }: ExerciseMetaDataDisplayProps) => {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
-    const handleShowModal = useCallback(() => {
-        dispatch(setEditedExercise({ index: exerciseIndex, isTrained: true }));
-        void Haptics.selectionAsync();
-        navigate("workouts/create/exercise", { to: "workouts/train/index" });
-    }, [dispatch, exerciseIndex, navigate]);
 
-    const exerciseMetaData = useAppSelector((state: AppState) => getExerciseMetadataFromWorkoutByIndex(state, exerciseIndex));
+    const handleShowModal = useCallback(() => {
+        dispatch(setEditedExercise({ isTrained: true, exerciseId }));
+        void Haptics.selectionAsync();
+        navigate("workouts/create/exercise");
+    }, [dispatch, exerciseId, navigate]);
+
+    const exerciseMetaData = useAppSelector((state: AppState) => getExerciseMetadataFromWorkoutById(state, exerciseId));
 
     if (!exerciseMetaData) {
         return null;
@@ -103,7 +105,7 @@ export const WeightBasedExerciseMetadataDisplay = ({ exerciseIndex }: ExerciseMe
             <HStack style={styles.wrapper}>
                 <VStack>
                     <Text style={trainStyles.exerciseName}>{exerciseMetaData?.name}</Text>
-                    <WeightBasedSmallExerciseMetadataDisplay exerciseIndex={exerciseIndex} />
+                    <WeightBasedSmallExerciseMetadataDisplay exerciseId={exerciseId} />
                 </VStack>
                 <Pressable onPress={handleShowModal} style={styles.pressable}>
                     <ThemedMaterialCommunityIcons name="pencil" size={24} />

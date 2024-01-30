@@ -10,21 +10,21 @@ import { ThemedBottomSheetModal, useBottomSheetRef } from "../BottomSheetModal/T
 
 import { getActiveSetIndex, getPreviousWorkout } from "../../store/reducers/workout/workoutSelectors";
 import { ThemedPressable } from "../Themed/Pressable/Pressable";
-import { ExerciseType } from "../../store/reducers/workout/types";
+import { ExerciseId, ExerciseType } from "../../store/reducers/workout/types";
 import { styles } from "./styles";
 import { PreviousWorkoutHeader } from "./PreviousWorkoutHeader";
 import { getMillisecondsFromTimeInput, getTimeDisplayFromMilliseconds } from "../../utils/timeDisplay";
 
 interface PreviousTrainingProps {
-    exerciseIndex: number;
+    exerciseId: ExerciseId;
     exerciseType: ExerciseType;
 }
-export const PreviousWorkout = ({ exerciseIndex, exerciseType }: PreviousTrainingProps) => {
-    const previousWorkout = useAppSelector((state: AppState) => getPreviousWorkout(state, state.settingsState.language, exerciseIndex));
+export const PreviousWorkout = ({ exerciseId, exerciseType }: PreviousTrainingProps) => {
+    const previousWorkout = useAppSelector((state: AppState) => getPreviousWorkout(state, state.settingsState.language, exerciseId));
     const { t } = useTranslation();
     const { textDisabled, mainColor, secondaryColor, inputFieldBackgroundColor } = useTheme();
     const { ref, closeBottomSheet: close } = useBottomSheetRef();
-    const activeSetIndex = useAppSelector((state: AppState) => getActiveSetIndex(state, exerciseIndex));
+    const activeSetIndex = useAppSelector((state: AppState) => getActiveSetIndex(state, exerciseId));
     const mappedData = useMemo(
         () =>
             previousWorkout?.sets.map(({ weight, reps, duration }, index) => {

@@ -1,9 +1,10 @@
 import { createAction, createReducer } from "@reduxjs/toolkit/src";
-import { Measurement, MeasurementDataPoint } from "../../../components/App/measurements/types";
+import { Measurement, MeasurementDataPoint, MeasurementId } from "../../../components/App/measurements/types";
 import { SortingType } from "../../types";
 import { sortMeasurements } from "./utils/sortMeasurements";
 import { IsoDate } from "../../../types/date";
 import { sortMeasurementDataPoints } from "../../../utils/sortIsoDate";
+import { generateId } from "../../../utils/generateId";
 
 export type EditedMeasurement = { isNew: boolean; isEditing: boolean; measurement?: Measurement } | undefined;
 export type EditedMeasurementDataPoint = { indexInData: number; timestamp: number; value: string; editedMeasurement: EditedMeasurement };
@@ -23,7 +24,7 @@ export const setMeasurements = createAction<Measurement[], "measurement_set_meas
 export const setEditedMeasurement = createAction<EditedMeasurement, "measurement_set_inspected_measurement">("measurement_set_inspected_measurement");
 export const addMeasurement = createAction<{ measurement: Measurement; index?: number }, "measurement_add">("measurement_add");
 export const editMeasurement = createAction<{ measurement: Measurement; index: number }, "measurement_edit">("measurement_edit");
-export const deleteMeasurement = createAction<number, "measurement_delete">("measurement_delete");
+export const deleteMeasurement = createAction<MeasurementId, "measurement_delete">("measurement_delete");
 export const setMeasurementSorting = createAction<SortingType, "measurement_sort">("measurement_sort");
 export const mutateEditedMeasurement = createAction<{ key: keyof Measurement; value: Measurement[keyof Measurement] }, "mutate_measurement">("mutate_measurement");
 export const saveEditedMeasurement = createAction<{ isoDate: IsoDate; replaceIndex: number | undefined } | undefined, "save_inspected_measurement">("save_inspected_measurement");
@@ -57,7 +58,7 @@ export const measurementReducer = createReducer<MeasurementState>({ measurements
             }
         })
         .addCase(setupNewMeasurement, (state) => {
-            const newMeasurement: Measurement = { measurementId: Date.now(), name: "", data: [] };
+            const newMeasurement: Measurement = { measurementId: generateId("measurement"), name: "", data: [] };
             state.editedMeasurement = { isNew: true, isEditing: false, measurement: newMeasurement };
         })
         .addCase(saveMeasurementDataPoint, (state, action) => {

@@ -9,10 +9,11 @@ import { View } from "react-native";
 import { getWeightUnit } from "../../../../../store/reducers/settings/settingsSelectors";
 import { EditableExerciseInputRow } from "../../../../EditableExercise/EditableExerciseInputRow";
 import { useTranslation } from "react-i18next";
+import { ExerciseId, WorkoutId } from "../../../../../store/reducers/workout/types";
 
 type WeightBasedEditedExerciseProps = {
-    doneExerciseId: number;
-    doneWorkoutId: number;
+    doneExerciseId: ExerciseId;
+    doneWorkoutId: WorkoutId;
 };
 
 export const WeightBasedEditedExercise = ({ doneWorkoutId, doneExerciseId }: WeightBasedEditedExerciseProps) => {

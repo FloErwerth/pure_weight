@@ -52,7 +52,7 @@ export const RenderedMeasurement = ({ measurement }: MeasurementProps) => {
                     <Text style={styles.date}>{getSinceDate(latestMeasurements[measurement.measurementId], language)}</Text>
                 </View>
                 <ProgressDisplay type="Measurement" trend={trend} higherIsBetter={measurement.higherIsBetter} onPress={handleNavigateToChart} />
-                <HistoryDisplay id={measurement.measurementId} type="Measurement" handleNavigateToHistory={handleGoToHistory} />
+                <HistoryDisplay id={measurement.measurementId} type="measurement" handleNavigateToHistory={handleGoToHistory} />
             </ThemedView>
         </HStack>
     );

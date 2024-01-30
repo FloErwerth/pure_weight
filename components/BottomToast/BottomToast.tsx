@@ -23,6 +23,7 @@ interface BottomToastProps {
     leftCorrection?: number;
     topCorrection?: number;
     customTime?: number;
+    shadow?: boolean;
 }
 const deviceWidth = Dimensions.get("screen").width;
 
@@ -37,7 +38,7 @@ const useDeletionTime = (customTime?: number) => {
     return deletionTime;
 };
 
-export const BottomToast = ({ reference, customTime, titleKey, messageKey, onRedo, open, onRequestClose, bottom = 0, padding = 20, leftCorrection, topCorrection }: BottomToastProps) => {
+export const BottomToast = ({ shadow, reference, customTime, titleKey, messageKey, onRedo, open, onRequestClose, bottom = 0, padding = 20, leftCorrection, topCorrection }: BottomToastProps) => {
     const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
     const { t } = useTranslation();
     const [percent, setPercent] = useState(100);

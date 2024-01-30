@@ -17,6 +17,7 @@ interface ThemedPressableProps extends ComponentProps<typeof Pressable>, Compute
     center?: boolean;
     safeBottom?: boolean;
     hideBorder?: boolean;
+    cta?: boolean;
 }
 export const ThemedPressable = (props: ThemedPressableProps) => {
     const { errorColor } = useTheme();
@@ -46,7 +47,7 @@ export const ThemedPressable = (props: ThemedPressableProps) => {
             } as const,
             props.style,
         ],
-        [bottom, computedBackgroundColor, errorColor, props.behind, props.center, props.error, props.padding, props.round, props.safeBottom, props.stretch, props.style],
+        [bottom, computedBackgroundColor, errorColor, props.behind, props.center, props.error, props.hideBorder, props.padding, props.round, props.safeBottom, props.stretch, props.style],
     );
 
     return <Pressable ref={props.reference} {...props} onPress={handlePress} style={style}></Pressable>;

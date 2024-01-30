@@ -19,6 +19,7 @@ import { trainStyles } from "../../components/App/train/trainStyles";
 import { HStack } from "../../components/Stack/HStack/HStack";
 import { ThemedMaterialCommunityIcons } from "../../components/Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
 import { useToast } from "../../components/BottomToast/useToast";
+import { WorkoutId } from "../../store/reducers/workout/types";
 
 const usePauseWarningContent = () => {
     const language = useAppSelector(getLanguage);
@@ -46,8 +47,8 @@ export function Workouts() {
     const navigate = useNavigate();
     const trainedWorkout = useAppSelector(getTrainedWorkout);
     const { ref, openBottomSheet, closeBottomSheet } = useBottomSheetRef();
-    const [newWorkoutIndex, setNewWorkoutIndex] = useState<number | undefined>(undefined);
-    const isOngoingWorkout = useAppSelector((state: AppState) => getIsOngoingWorkout(state, newWorkoutIndex ?? -1));
+    const [newWorkoutIndex, setNewWorkoutIndex] = useState<WorkoutId | undefined>(undefined);
+    const isOngoingWorkout = useAppSelector((state: AppState) => getIsOngoingWorkout(state, newWorkoutIndex));
     const { toastRef, openToast, closeToast, showToast } = useToast();
     const { resumeTrainingText, title, message, newTrainingText } = usePauseWarningContent();
 
@@ -59,7 +60,7 @@ export function Workouts() {
     const confirmIcon = useMemo((): { name: "plus"; size: number } => ({ name: "plus", size: 40 }), []);
 
     const onEdit = useCallback(
-        (workoutId: number) => {
+        (workoutId: WorkoutId) => {
             dispatch(setEditedWorkout({ workoutId }));
             navigate("create");
         },
@@ -67,7 +68,7 @@ export function Workouts() {
     );
 
     const onDelete = useCallback(
-        (workoutId: number) => {
+        (workoutId: WorkoutId) => {
             dispatch(removeWorkout(workoutId));
             if (showToast && toastRef.current) {
                 toastRef.current.restart();
@@ -79,7 +80,7 @@ export function Workouts() {
     );
 
     const handleStartWorkout = useCallback(
-        (workoutId?: number) => {
+        (workoutId?: WorkoutId) => {
             if (workoutId === undefined && newWorkoutIndex !== undefined) {
                 dispatch(startWorkout(newWorkoutIndex));
             } else if (workoutId !== undefined) {
@@ -94,7 +95,7 @@ export function Workouts() {
     );
 
     const handleStartWorkoutCases = useCallback(
-        (workoutId: number) => {
+        (workoutId: WorkoutId) => {
             if (trainedWorkout) {
                 openBottomSheet();
                 setNewWorkoutIndex(workoutId);

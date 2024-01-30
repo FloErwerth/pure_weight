@@ -20,18 +20,19 @@ import { getDateTodayIso } from "../../../utils/date";
 import { ThemedPressable } from "../../../components/Themed/Pressable/Pressable";
 import { Text } from "../../../components/Themed/ThemedText/Text";
 import { saveEditedWorkout } from "../../../store/reducers/workout";
+import { WorkoutId } from "../../../store/reducers/workout/types";
 
 export type FlatListData = {
-    doneWorkoutId: number;
+    doneWorkoutId: WorkoutId;
     handleEdit?: () => void;
     name: string;
     date: IsoDate;
     marked: boolean;
 };
 
-const useMarkedDates = (index?: number) => {
+const useMarkedDates = (index?: WorkoutId) => {
     const { mainColor } = useTheme();
-    const timestamps = useAppSelector((state: AppState) => getSortedDoneWorkout(state, index ?? 0));
+    const timestamps = useAppSelector((state: AppState) => getSortedDoneWorkout(state, index));
     const color = useAppSelector(getWorkoutColor);
     return useMemo(
         () =>
@@ -55,8 +56,8 @@ function monthDiff(d1: Date, d2: Date) {
 
 const useScrollRanges = (selectedDate?: IsoDate) => {
     const editedWorkout = useAppSelector(getEditedWorkout);
-    const latestWorkoutDate = useAppSelector((state: AppState) => getLatestWorkoutDate(state, editedWorkout?.workout?.workoutId ?? 0));
-    const firstWorkoutDate = useAppSelector((state: AppState) => getFirstWorkoutDate(state, editedWorkout?.workout?.workoutId ?? 0));
+    const latestWorkoutDate = useAppSelector((state: AppState) => getLatestWorkoutDate(state, editedWorkout?.workout?.workoutId));
+    const firstWorkoutDate = useAppSelector((state: AppState) => getFirstWorkoutDate(state, editedWorkout?.workout?.workoutId));
     const dateToday = getDateTodayIso();
     const pastScrollRange = useMemo(() => monthDiff(new Date(firstWorkoutDate), new Date(selectedDate ?? dateToday)), [selectedDate, dateToday, firstWorkoutDate]);
     const futureScrollRange = useMemo(() => monthDiff(new Date(selectedDate ?? dateToday), new Date(latestWorkoutDate)), [selectedDate, dateToday, latestWorkoutDate]);
@@ -67,10 +68,10 @@ export function WorkoutHistory() {
     const { t } = useTranslation();
     const { mainColor, textDisabled } = useTheme();
     const editedWorkout = useAppSelector(getEditedWorkout);
-    const latestWorkoutDate = useAppSelector((state: AppState) => getLatestWorkoutDate(state, editedWorkout?.workout.workoutId ?? 0));
+    const latestWorkoutDate = useAppSelector((state: AppState) => getLatestWorkoutDate(state, editedWorkout?.workout.workoutId));
     const [selectedDate, setSelectedDate] = useState<IsoDate>(latestWorkoutDate);
     const { past, future } = useScrollRanges(selectedDate);
-    const markedDates = useMarkedDates(editedWorkout?.workout.workoutId);
+    const markedDates = useMarkedDates(editedWorkout?.workout?.workoutId);
     const workout = useAppSelector(getEditedWorkout);
     const { ref, openBottomSheet, closeBottomSheet } = useBottomSheetRef();
     const sectionListRef = useRef<FlatList>(null);
@@ -131,7 +132,7 @@ export function WorkoutHistory() {
         const { handleEdit, doneWorkoutId, date, marked } = item;
         return (
             <ThemedView ghost style={styles.workout}>
-                <WorkoutHistoryCard key={Math.random() * doneWorkoutId} marked={marked} date={date} doneWorkoutId={doneWorkoutId} onEdit={handleEdit} />
+                <WorkoutHistoryCard key={Math.random()} marked={marked} date={date} doneWorkoutId={doneWorkoutId} onEdit={handleEdit} />
             </ThemedView>
         );
     }, []);

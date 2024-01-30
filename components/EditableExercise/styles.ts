@@ -39,7 +39,6 @@ export const styles = StyleSheet.create({
     button: {
         justifyContent: "center",
         gap: 10,
-        marginTop: 10,
         padding: 12,
         borderRadius,
     },

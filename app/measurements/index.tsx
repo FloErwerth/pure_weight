@@ -12,6 +12,7 @@ import { getSortedMeasurements } from "../../store/reducers/measurements/measure
 import { MeasurementSorting } from "../../components/App/measurements/Sorting/MeasurementSorting";
 import { useNavigate } from "../../hooks/navigate";
 import { useToast } from "../../components/BottomToast/useToast";
+import { MeasurementId } from "../../components/App/measurements/types";
 
 export function Measurements() {
     const { t } = useTranslation();
@@ -26,7 +27,7 @@ export function Measurements() {
     }, [dispatch, navigate]);
 
     const handleAddExistingMeasurement = useCallback(
-        (measurementId: number) => {
+        (measurementId: MeasurementId) => {
             const measurement = measurements?.find((measurement) => measurement.measurementId === measurementId);
             dispatch(setEditedMeasurement({ isEditing: false, isNew: false, measurement }));
             navigate("measurement/create");
@@ -35,8 +36,8 @@ export function Measurements() {
     );
 
     const handleDeleteMeasurement = useCallback(
-        (index: number) => {
-            dispatch(deleteMeasurement(index));
+        (id: MeasurementId) => {
+            dispatch(deleteMeasurement(id));
             if (showToast && toastRef.current) {
                 toastRef.current.restart();
             }
@@ -51,7 +52,7 @@ export function Measurements() {
     }, [closeToast, dispatch]);
 
     const handleEditMeasuremnt = useCallback(
-        (measurementId: number) => {
+        (measurementId: MeasurementId) => {
             const measurement = measurements?.find((measurement) => measurement.measurementId === measurementId);
             dispatch(setEditedMeasurement({ isNew: false, isEditing: true, measurement }));
             navigate("measurement/create");

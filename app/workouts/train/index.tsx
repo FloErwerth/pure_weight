@@ -19,6 +19,8 @@ import { ICarouselInstance } from "react-native-reanimated-carousel";
 import { getSwitchToNextExercise } from "../../../store/reducers/settings/settingsSelectors";
 import { WorkoutSettings } from "../../../components/App/settings/Sections/workout";
 import { TrainedExercise } from "../../../components/App/train/Exercise/TrainedExercise";
+import { ExerciseId } from "../../../store/reducers/workout/types";
+import { CarouselRenderItemInfo } from "react-native-reanimated-carousel/lib/typescript/types";
 
 const useSnapToNextExercise = () => {
     const carouselRef = useRef<ICarouselInstance>(null);
@@ -43,7 +45,6 @@ export function Train() {
     const { bottom } = useSafeAreaInsets();
     const { t } = useTranslation();
     const workoutExercises = useAppSelector(getTrainedWorkoutExercises);
-    const trainedWorkout = useAppSelector(getTrainedWorkout);
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
     const confirmButtonOpacity = useRef(new Animated.Value(0.3)).current;
@@ -52,6 +53,7 @@ export function Train() {
     const hasNoTrainingData = useAppSelector(getHasNoTrainingDataSaved);
     const carouselRef = useSnapToNextExercise();
     const { ref, openBottomSheet: open } = useBottomSheetRef();
+    const trainedWorkout = useAppSelector(getTrainedWorkout);
 
     useEffect(() => {
         if (isDone) {
@@ -103,20 +105,20 @@ export function Train() {
     const buttonsStyle = useMemo(() => [trainStyles.buttons, { marginBottom: bottom }], [bottom]);
     const alertModalConfig = useMemo(() => ({ title: t(isDone ? "workout_quit_title" : "workout_early_quit_title") }), [isDone, t]);
 
-    const mappedExercises: { index: number }[] = useMemo(() => {
+    const mappedExercises: { exerciseId: ExerciseId }[] = useMemo(() => {
         if (!trainedWorkout) {
             handleNavigateToWorkouts();
-            return [] as { index: number }[];
+            return [] as { exerciseId: ExerciseId }[];
         }
         return (
-            workoutExercises?.map((_, index) => ({
-                index,
+            workoutExercises?.map(({ exerciseId }) => ({
+                exerciseId,
             })) ?? []
         );
     }, [handleNavigateToWorkouts, trainedWorkout, workoutExercises]);
 
-    const renderItem = useCallback(({ index }: { index: number }) => {
-        return <TrainedExercise exerciseIndex={index} />;
+    const renderItem = useCallback(({ item: { exerciseId } }: CarouselRenderItemInfo<{ exerciseId: ExerciseId }>) => {
+        return <TrainedExercise exerciseId={exerciseId} />;
     }, []);
 
     const handleSetActiveExerciseIndex = useCallback(

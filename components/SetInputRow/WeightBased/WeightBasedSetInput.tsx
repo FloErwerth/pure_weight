@@ -14,18 +14,19 @@ import { handleMutateSet, markSetAsDone, setIsActiveSet } from "../../../store/r
 import { getIsActiveSet, getIsLastSet, getSetData } from "../../../store/reducers/workout/workoutSelectors";
 import { ThemedPressable } from "../../Themed/Pressable/Pressable";
 import { emitter } from "../../../utils/event";
+import { ExerciseId } from "../../../store/reducers/workout/types";
 
 interface SetInputRowProps {
     setIndex: number;
-    exerciseIndex: number;
+    exerciseId: ExerciseId;
 }
 
-export const WeightBasedSetInput = ({ setIndex, exerciseIndex }: SetInputRowProps) => {
+export const WeightBasedSetInput = ({ setIndex, exerciseId }: SetInputRowProps) => {
     const { primaryColor, mainColor, secondaryBackgroundColor, componentBackgroundColor, inputFieldBackgroundColor, textDisabled } = useTheme();
-    const data = useAppSelector((state: AppState) => getSetData(state, setIndex))?.[exerciseIndex];
-    const isLastSetGetter = useAppSelector((state: AppState) => getIsLastSet(state, exerciseIndex));
+    const data = useAppSelector((state: AppState) => getSetData(state, setIndex, exerciseId));
+    const isLastSetGetter = useAppSelector((state: AppState) => getIsLastSet(state, exerciseId));
     const { isLatestSet, weight, reps, isEditable, isConfirmed } = data ?? {};
-    const isActiveSet = useAppSelector((state: AppState) => getIsActiveSet(state, exerciseIndex, setIndex));
+    const isActiveSet = useAppSelector((state: AppState) => getIsActiveSet(state, exerciseId, setIndex));
 
     const dispatch = useAppDispatch();
     const handleSetActive = useCallback(() => {

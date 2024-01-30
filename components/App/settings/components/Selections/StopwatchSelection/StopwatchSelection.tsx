@@ -8,6 +8,7 @@ import { getStartStopwatchOnDoneSet, getStartStopwatchOnLastSet, getStopwatchNot
 import { ProfileContent } from "../../ProfileContent/ProfileContent";
 import { CheckBox } from "../../../../../Themed/CheckBox/CheckBox";
 import { useRegisterForPushNotifications } from "../../../../../../hooks/useRegisterForPushNotifications";
+import { SnapPoint } from "../../../../../BottomSheetModal/ThemedBottomSheetModal";
 
 type StopwatchSelectionProps = {
     quick?: boolean;
@@ -48,32 +49,23 @@ export const StopwatchSelection = ({ quick }: StopwatchSelectionProps) => {
         }
     }, [notify, requestPermissions, dispatch]);
 
-    const doneSetHelpText = useMemo(() => ({ title: t("settings_stopwatch_done_set"), text: t("settings_stopwatch_done_set_helptext_text") }), [t]);
-    const lastDoneSetHelpText = useMemo(() => ({ title: t("settings_stopwatch_last_set"), text: t("settings_stopwatch_last_set_helptext_text") }), [t]);
-    const notificationHelptext = useMemo(() => ({ title: t("settings_stopwatch_notify"), text: t("settings_notification_help_text") }), [t]);
+    const doneSetHelpText = useMemo(() => ({ title: t("settings_stopwatch_done_set"), text: t("settings_stopwatch_done_set_helptext_text"), snapPoints: ["25%"] as SnapPoint[] }), [t]);
+    const lastDoneSetHelpText = useMemo(() => ({ title: t("settings_stopwatch_last_set"), text: t("settings_stopwatch_last_set_helptext_text"), snapPoints: ["25%"] as SnapPoint[] }), [t]);
+    const notificationHelptext = useMemo(() => ({ title: t("settings_stopwatch_notify"), text: t("settings_notification_help_text"), snapPoints: ["25%"] as SnapPoint[] }), [t]);
 
     return (
         <ProfileContent title={t("settings_stopwatch_title")}>
             <VStack ghost={quick} style={selectionStyles.vStack}>
+                <CheckBox input helpTextConfig={doneSetHelpText} label={t("settings_stopwatch_done_set")} size={26} checked={startStopwatchOnDoneSet} onChecked={handleSelectStartStopwatchOnDoneSet} />
                 <CheckBox
                     input
-                    snapPoints={["25%"]}
-                    helpText={doneSetHelpText}
-                    label={t("settings_stopwatch_done_set")}
-                    size={26}
-                    checked={startStopwatchOnDoneSet}
-                    onChecked={handleSelectStartStopwatchOnDoneSet}
-                />
-                <CheckBox
-                    input
-                    helpText={lastDoneSetHelpText}
-                    snapPoints={["25%"]}
+                    helpTextConfig={lastDoneSetHelpText}
                     label={t("settings_stopwatch_last_set")}
                     size={26}
                     checked={startStopwatchOnLastSet}
                     onChecked={handleSelectStartStopwatchOnLastSet}
                 />
-                <CheckBox input helpText={notificationHelptext} snapPoints={["25%"]} label={t("settings_stopwatch_notify")} size={26} checked={checked} onChecked={handleSelectNotification} />
+                <CheckBox input helpTextConfig={notificationHelptext} label={t("settings_stopwatch_notify")} size={26} checked={checked} onChecked={handleSelectNotification} />
             </VStack>
         </ProfileContent>
     );

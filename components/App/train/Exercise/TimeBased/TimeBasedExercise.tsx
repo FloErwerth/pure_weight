@@ -14,16 +14,17 @@ import { ExerciseMetadataDisplay } from "../ExerciseMetadataDisplay";
 import { TimeBasedTrainingHeader } from "../../TrainingHeader/TimeBased/TimeBasedTrainingHeader";
 import { TimeBasedSetInput } from "../../../../SetInputRow/TimeBased/TimeBasedSetInput";
 import { ThemedScrollView } from "../../../../Themed/ThemedScrollView/ThemedScrollView";
+import { ExerciseId } from "../../../../../store/reducers/workout/types";
 
 interface WeightBasedExerciseProps {
-    exerciseIndex: number;
+    exerciseId: ExerciseId;
 }
 
-export const TimeBasedExercise = ({ exerciseIndex }: WeightBasedExerciseProps) => {
+export const TimeBasedExercise = ({ exerciseId }: WeightBasedExerciseProps) => {
     const { ref: editNoteModalRef, openBottomSheet: open, closeBottomSheet: close } = useBottomSheetRef();
     const showEditNoteModalTitleStyle = useMemo(() => ({ padding: 10, paddingHorizontal: 15, alignSelf: "center" }) as const, []);
     const { mainColor } = useTheme();
-    const setsArray = useAppSelector((state: AppState) => getSetsArray(state, exerciseIndex));
+    const setsArray = useAppSelector((state: AppState) => getSetsArray(state, exerciseId));
 
     const id = useId();
     const hideNoteModal = useCallback(() => {
@@ -37,7 +38,7 @@ export const TimeBasedExercise = ({ exerciseIndex }: WeightBasedExerciseProps) =
     return (
         <ThemedView ghost stretch key={id} style={trainStyles.carouselWrapper}>
             <HStack background style={trainStyles.headerWrapper}>
-                <ExerciseMetadataDisplay exerciseIndex={exerciseIndex} />
+                <ExerciseMetadataDisplay exerciseId={exerciseId} />
                 <ThemedView style={trainStyles.noteButtonWrapper}>
                     <Pressable style={showEditNoteModalTitleStyle} onPress={showNoteModal}>
                         <MaterialCommunityIcons name="note-edit-outline" color={mainColor} size={24} />
@@ -48,10 +49,10 @@ export const TimeBasedExercise = ({ exerciseIndex }: WeightBasedExerciseProps) =
                 <ThemedView padding round>
                     <TimeBasedTrainingHeader />
                     {setsArray?.map((_, setIndex) => {
-                        return <TimeBasedSetInput key={exerciseIndex.toString().concat(setIndex.toString())} exerciseIndex={exerciseIndex} setIndex={setIndex} />;
+                        return <TimeBasedSetInput key={exerciseId.concat(setIndex.toString())} exerciseId={exerciseId} setIndex={setIndex} />;
                     })}
                 </ThemedView>
-                <PreviousWorkout exerciseType="TIME_BASED" exerciseIndex={exerciseIndex} />
+                <PreviousWorkout exerciseType="TIME_BASED" exerciseId={exerciseId} />
             </ThemedScrollView>
             <AddNoteModal reference={editNoteModalRef} onRequestClose={hideNoteModal} />
         </ThemedView>

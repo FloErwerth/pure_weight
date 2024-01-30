@@ -7,12 +7,12 @@ import { Text } from "../../../../Themed/ThemedText/Text";
 import { mutateDoneExercise } from "../../../../../store/reducers/workout";
 import { View } from "react-native";
 import { getTimeUnit } from "../../../../../store/reducers/settings/settingsSelectors";
-import { TimeInput } from "../../../../../store/reducers/workout/types";
+import { ExerciseId, TimeInput, WorkoutId } from "../../../../../store/reducers/workout/types";
 import { EditableExerciseInputRow } from "../../../../EditableExercise/EditableExerciseInputRow";
 
 type WeightBasedEditedExerciseProps = {
-    doneExerciseId: number;
-    doneWorkoutId: number;
+    doneExerciseId: ExerciseId;
+    doneWorkoutId: WorkoutId;
 };
 
 export const TimeBasedEditedExercise = ({ doneWorkoutId, doneExerciseId }: WeightBasedEditedExerciseProps) => {

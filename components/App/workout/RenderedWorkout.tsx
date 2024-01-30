@@ -12,9 +12,10 @@ import { ProgressDisplay } from "../../WorkoutCard/components/ProgressDisplay/Pr
 import { HistoryDisplay } from "../history/HistoryDisplay/HistoryDisplay";
 import { useTranslation } from "react-i18next";
 import { ThemedView } from "../../Themed/ThemedView/View";
+import { WorkoutId } from "../../../store/reducers/workout/types";
 
 type RenderedWorkoutProps = {
-    workoutId: number;
+    workoutId: WorkoutId;
 };
 export const RenderedWorkout = ({ workoutId }: RenderedWorkoutProps) => {
     const workout = useAppSelector((state: AppState) => getWorkoutByIndex(state, workoutId));
@@ -58,7 +59,7 @@ export const RenderedWorkout = ({ workoutId }: RenderedWorkoutProps) => {
             {showStats ? (
                 <View style={styles.innerTrainWrapper}>
                     <ProgressDisplay type="Workout" trend={trend} onPress={handleNavigateToProgress} />
-                    <HistoryDisplay type="Workout" id={workoutId} handleNavigateToHistory={handleNavigateToHistory} />
+                    <HistoryDisplay type="workout" id={workoutId} handleNavigateToHistory={handleNavigateToHistory} />
                 </View>
             ) : (
                 <ThemedView ghost>

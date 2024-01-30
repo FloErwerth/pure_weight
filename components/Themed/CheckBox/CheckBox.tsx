@@ -16,14 +16,14 @@ interface CheckBoxProps {
     onChecked: (checked: boolean) => void;
     size?: number;
     label: string;
-    helpText?: { title?: string; text: string };
+    helpTextConfig?: { title?: string; text: string; snapPoints?: SnapPoint[] };
     disabled?: boolean;
-    snapPoints?: SnapPoint[];
     customWrapperStyles?: ViewStyle;
     input?: boolean;
+    secondary?: boolean;
 }
 
-export const CheckBox = ({ checked, onChecked, size = 20, label, helpText, disabled, snapPoints, customWrapperStyles, input }: CheckBoxProps) => {
+export const CheckBox = ({ checked, onChecked, size = 20, label, helpTextConfig, disabled, customWrapperStyles, input, secondary }: CheckBoxProps) => {
     const opacity = useRef(new Animated.Value(0));
     const checkBoxWrapperStyle = useMemo(() => ({ borderRadius: borderRadius < size ? size / 4 : borderRadius, width: size + 2, height: size + 2 }), [size]);
     const checkStyle = useMemo(() => ({ opacity: opacity.current }), [opacity]);
@@ -46,7 +46,7 @@ export const CheckBox = ({ checked, onChecked, size = 20, label, helpText, disab
     return (
         <>
             <ThemedView style={outerWrapperStyles} ghost>
-                <HStack input={input} style={styles.wrapper}>
+                <HStack input={input} secondary={secondary} style={styles.wrapper}>
                     <Text ghost style={styles.text}>
                         {label}
                     </Text>
@@ -56,7 +56,7 @@ export const CheckBox = ({ checked, onChecked, size = 20, label, helpText, disab
                                 <ThemedMaterialCommunityIcons ghost name="check" size={size} />
                             </Animated.View>
                         </ThemedPressable>
-                        {!disabled && helpText && (
+                        {!disabled && helpTextConfig && (
                             <Pressable disabled={disabled} onPress={openBottomSheet}>
                                 <ThemedMaterialCommunityIcons ghost name="help-circle-outline" size={size} />
                             </Pressable>
@@ -64,9 +64,9 @@ export const CheckBox = ({ checked, onChecked, size = 20, label, helpText, disab
                     </HStack>
                 </HStack>
             </ThemedView>
-            <ThemedBottomSheetModal snapPoints={snapPoints} title={helpText?.title} ref={ref}>
+            <ThemedBottomSheetModal snapPoints={helpTextConfig?.snapPoints} title={helpTextConfig?.title} ref={ref}>
                 <HelpAnswer>
-                    <AnswerText>{helpText?.text}</AnswerText>
+                    <AnswerText>{helpTextConfig?.text}</AnswerText>
                 </HelpAnswer>
             </ThemedBottomSheetModal>
         </>

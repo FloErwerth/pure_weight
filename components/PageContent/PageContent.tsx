@@ -44,9 +44,11 @@ export const PageContent = (props: PageContentProps) => {
         [bottom, computedBackground, ignoreGap, ignorePadding, paddingTop, safeBottom, style],
     );
 
+    const scrollableWrapperStyles = useMemo(() => ({ backgroundColor: computedBackground }), [computedBackground]);
+
     if (scrollable) {
         return (
-            <ThemedScrollView stretch={stretch} background contentContainerStyle={wrapperStyles}>
+            <ThemedScrollView stretch={stretch} background style={scrollableWrapperStyles} contentContainerStyle={wrapperStyles}>
                 {titleConfig && (
                     <Text style={titleStyles} ghost>
                         {titleConfig.title}

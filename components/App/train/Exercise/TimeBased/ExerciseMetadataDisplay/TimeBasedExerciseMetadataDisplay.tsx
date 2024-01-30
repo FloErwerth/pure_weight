@@ -6,23 +6,20 @@ import { Text } from "../../../../../Themed/ThemedText/Text";
 import { useTranslation } from "react-i18next";
 import { styles } from "./styles";
 import { AppState, useAppSelector } from "../../../../../../store";
-import { getExerciseMetadataFromWorkoutByIndex } from "../../../../../../store/reducers/workout/workoutSelectors";
+import { getExerciseMetadataFromWorkoutById } from "../../../../../../store/reducers/workout/workoutSelectors";
 import { ThemedView } from "../../../../../Themed/ThemedView/View";
 import { getTimeUnit } from "../../../../../../store/reducers/settings/settingsSelectors";
-
-interface ExerciseMetaDataDisplayProps {
-    exerciseIndex: number;
-}
+import { ExerciseId } from "../../../../../../store/reducers/workout/types";
 
 interface SmallMetadataDisplayProps {
     style?: TextStyle;
-    exerciseIndex: number;
+    exerciseId: ExerciseId;
 }
 
-export const TimeBasedSmallExerciseDataDisplay = ({ style, exerciseIndex }: SmallMetadataDisplayProps) => {
+export const TimeBasedSmallExerciseDataDisplay = ({ style, exerciseId }: SmallMetadataDisplayProps) => {
     const { t } = useTranslation();
     const textStyle = useMemo(() => [trainStyles.exerciseMetaText, style], [style]);
-    const exerciseMetaData = useAppSelector((state: AppState) => getExerciseMetadataFromWorkoutByIndex(state, exerciseIndex));
+    const exerciseMetaData = useAppSelector((state: AppState) => getExerciseMetadataFromWorkoutById(state, exerciseId));
     const isSingle = useMemo(() => parseFloat(exerciseMetaData?.sets ?? "0") === 1, [exerciseMetaData?.sets]);
     const showDurationMinutes = parseFloat(exerciseMetaData?.duration?.minutes ?? "0") !== 0;
     const showDurationSeconds = parseFloat(exerciseMetaData?.duration?.seconds ?? "0") !== 0;

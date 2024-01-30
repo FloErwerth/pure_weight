@@ -1,12 +1,13 @@
 import { ThemedView } from "../../../../../Themed/ThemedView/View";
 import { selectionStyles } from "../../selectionStyles";
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import { useAppDispatch, useAppSelector } from "../../../../../../store";
 import { getKeepAwake } from "../../../../../../store/reducers/settings/settingsSelectors";
 import { setKeepAwake } from "../../../../../../store/reducers/settings";
 import { useTranslation } from "react-i18next";
 import { ProfileContent } from "../../ProfileContent/ProfileContent";
 import { CheckBox } from "../../../../../Themed/CheckBox/CheckBox";
+import { SnapPoint } from "../../../../../BottomSheetModal/ThemedBottomSheetModal";
 
 export const KeepAwakeSelection = () => {
     const { t } = useTranslation();
@@ -19,12 +20,12 @@ export const KeepAwakeSelection = () => {
         [dispatch],
     );
 
-    const helpText = { title: t("settings_keep_awake"), text: t("settings_keep_awake_helptext_text") };
+    const helpText = useMemo(() => ({ title: t("settings_keep_awake"), text: t("settings_keep_awake_helptext_text"), snapPoints: ["35%"] as SnapPoint[] }) as const, [t]);
 
     return (
         <ProfileContent title={t("settings_keep_awake_title")}>
             <ThemedView style={selectionStyles.vStack}>
-                <CheckBox input snapPoints={["35%"]} helpText={helpText} label={t("settings_keep_awake")} size={26} checked={awake} onChecked={(awake) => handleSelectAwake(awake)} />
+                <CheckBox input helpTextConfig={helpText} label={t("settings_keep_awake")} size={26} checked={awake} onChecked={(awake) => handleSelectAwake(awake)} />
             </ThemedView>
         </ProfileContent>
     );

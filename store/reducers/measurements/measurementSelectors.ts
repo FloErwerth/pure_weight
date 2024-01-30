@@ -3,7 +3,7 @@ import { AppState } from "../../index";
 import { getUnitSystem } from "../settings/settingsSelectors";
 import { getLastNEntries } from "../../../utils/getLastNEntries";
 import { UnitSystem } from "../settings/types";
-import { MeasurementType } from "../../../components/App/measurements/types";
+import { MeasurementId, MeasurementType } from "../../../components/App/measurements/types";
 import { measurementUnitMap } from "../../../utils/unitMap";
 import { sortMeasurements } from "./utils/sortMeasurements";
 import { IsoDate } from "../../../types/date";
@@ -18,7 +18,7 @@ export const getLatestMeasurements = createSelector([getMeasurements], (measurem
         (obj, { measurementId, data }) => {
             return { ...obj, [measurementId]: data[data.length - 1]?.isoDate ?? 0 };
         },
-        {} as Record<string, IsoDate>,
+        {} as Record<MeasurementId, IsoDate>,
     ),
 );
 
@@ -58,7 +58,7 @@ export const getMeasurementData = createSelector([getEditedMeasurement, getUnitS
     return undefined;
 });
 export const getMeasurementSorting = createSelector([getMeasurementsState], (state) => state.sorting);
-export const getMeasurmentProgress = createSelector([getMeasurements, (byIndex, index: number) => index], (measurements, index) => {
+export const getMeasurmentProgress = createSelector([getMeasurements, (byIndex, index: MeasurementId) => index], (measurements, index) => {
     const measurement = measurements.find((measurement) => measurement.measurementId === index);
     const data = measurement?.data.map((data) => data?.value);
     if (data && data.length >= 2) {
@@ -69,7 +69,7 @@ export const getMeasurmentProgress = createSelector([getMeasurements, (byIndex, 
 
     return undefined;
 });
-export const getNumberMeasurementEntries = createSelector([getMeasurements, (measurements, measurementId: number) => measurementId], (measurements, measurementId) => {
+export const getNumberMeasurementEntries = createSelector([getMeasurements, (measurements, measurementId: MeasurementId) => measurementId], (measurements, measurementId) => {
     const measurement = measurements.find((measurement) => measurement.measurementId === measurementId);
 
     return measurement?.data.length ?? 0;

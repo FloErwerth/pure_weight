@@ -18,7 +18,10 @@
   "history_latest_workout": "Aktuellstes Workout",
   "history_latest_workout_short": "aktuell",
   "history_browse": "Verlauf durchsuchen",
-
+  "weight_based_label_variant": "Gewichtsbasierte",
+  "time_based_label_variant": "Zeitbasierte",
+  "exercise": "Übung",
+  "exercise_lower": "übung",
   "exercise_name": "Name der Übung",
   "add_exercise": "Übung hinzufügen",
   "create_exercise": "Übung erstellen",
@@ -29,7 +32,12 @@
   "create_exercise_type_label": "Übungstyp",
   "create_exercise_WEIGHT_BASED": "Gewichtbasiert",
   "create_exercise_TIME_BASED": "Zeitbasiert",
-
+  "save_as_template": "Als Vorlage speichern",
+  "save_as_template_help": "Wenn aktiviert, wird die Übung als Vorlage gespeichert und kann beim Erstellen eines neuen Workouts ausgewählt werden. \n\nDie Werte einer Vorlage werden automatisch aktualisiert, wenn eine Übung trainiert wird, welche aus einer Vorlage generiert wurde. \n\nDies kann in den Einstellungen deaktiviert werden.",
+  "save_as_template_warning_text": "Diese Übung wurde bereits als Vorlage erstellt. Möchtest Du die vorhandene Vorlage überschreiben oder eine neue Vorlage erstellen? \n\nDas Überschreiben einer Vorlage führt dazu, dass alle Übungen, die auf dieser Vorlage basieren, ebenfalls aktualisiert werden.",
+  "save_as_template_warning_title": "Vorlage existiert bereits",
+  "save_as_template_warning_overwrite": "Vorlage überschreiben",
+  "save_as_template_warning_create_new": "Neue Vorlage erstellen",
   "edit_workout": "Workout bearbeiten",
   "create_workout": "Workout erstellen",
   "workout_name": "Name des Workouts",
@@ -75,6 +83,11 @@
   "settings_keep_awake_helptext_text": "Diese Einstellung erlaubt es Dir den Ruhezustand des Bildschirms zu steuern. \n\nWenn ausgewählt bleibt der Bildschirm während der Nutzung der App aktiviert.",
   "settings_unit_system_title": "Einheiten-System",
   "settings_unit_system_helptext_text": "Diese Einstellung erlaubt es Dir das Einheiten-System für die App einzustellen. \n\nDas metrische System umfasst Einheiten wie Kilogramm, Zentimeter und Liter. \n\nDas angloamerikanische System umfasst Einheiten wie Pfund, Inch und Gallonen. \n\nWechselst Du zwischen den Einheiten-Systemen, werden alle gespeicherten Werte umgerechnet",
+  "settings_auto_update_linked_exercises": "Übungen autom. aktualisieren",
+  "settings_auto_update_linked_exercises_text": "Wenn aktiviert, werden alle Übungen, die mit der gleichen Vorlage erstellt wurden, automatisch auf dem gleichen Stand des Fortschritts gehalten. \n\nWenn Du zum Beispiel Bankdrücken als Vorlage in zwei verschiedenen Workouts verwendet hast, wird der Fortschritt in beiden Workouts aktualisiert, wenn Du in einem Workout Bankdrücken trainierst.",
+  "settings_auto_update_templates": "Vorlagen autom. aktualisieren",
+  "settings_auto_update_templates_text": "Wenn aktiviert, wird eine Vorlage automatisch entsprechend den letzten Änderungen an einer Übung, welches die Vorlage benutzt, angepasst. \n\nBeispiel: Du trainierst Bankdrücken, was aus einer Vorlage erstellt wird und Du änderst das Gewicht der Übung, so wird das Gewicht des Templates ebenfalls angepasst.",
+
 
   "stopwatch_pause_notification_title": "Deine Pause ist vorbei",
   "stopwatch_pause_notification_text": "Es ist Zeit dein Training fortzusetzen",

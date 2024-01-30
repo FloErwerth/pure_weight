@@ -10,10 +10,11 @@ import { getDoneExercises } from "../../store/reducers/workout/workoutSelectors"
 import { View } from "react-native";
 import { useMemo } from "react";
 import { useTheme } from "../../theme/context";
+import { WorkoutId } from "../../store/reducers/workout/types";
 
 type WorkoutHistoryCardProps = {
     date: IsoDate;
-    doneWorkoutId: number;
+    doneWorkoutId: WorkoutId;
     onEdit?: () => void;
     marked: boolean;
 };
@@ -22,7 +23,6 @@ export const WorkoutHistoryCard = ({ date, doneWorkoutId, onEdit, marked }: Work
     const { inputFieldBackgroundColor, secondaryInputFieldBackgroundColor } = useTheme();
     const language = useAppSelector(getLanguage);
     const doneExercises = useAppSelector((state: AppState) => getDoneExercises(state, doneWorkoutId));
-    const key = useMemo(() => Math.random() * doneWorkoutId, [doneWorkoutId]);
     const filteredExercises = useMemo(() => doneExercises?.filter((exercise) => exercise.sets.length > 0), [doneExercises]);
 
     const wrapperStyles = useMemo(
@@ -31,14 +31,14 @@ export const WorkoutHistoryCard = ({ date, doneWorkoutId, onEdit, marked }: Work
     );
 
     return (
-        <ThemedPressable style={wrapperStyles} onPress={onEdit} key={key} round padding>
+        <ThemedPressable style={wrapperStyles} onPress={onEdit} key={doneWorkoutId} round padding>
             <Text style={styles.date} ghost>
                 {getLocaleDate(date, language, { dateStyle: "long" })}
             </Text>
             <View style={styles.doneExercisesWrapper}>
                 <View>
                     {filteredExercises?.map((exercise) => (
-                        <HStack ghost key={key.toString().concat(exercise.name)}>
+                        <HStack ghost key={doneWorkoutId.toString().concat(exercise.name)}>
                             <Text ghost>{exercise.name}</Text>
                         </HStack>
                     ))}

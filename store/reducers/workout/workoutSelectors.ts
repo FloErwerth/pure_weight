@@ -5,7 +5,7 @@ import { getDateTodayIso, getLocaleDate, getMonth } from "../../../utils/date";
 import { IsoDate } from "../../../types/date";
 import { PALETTE } from "../../../utils/colorPalette";
 import { getLastNEntries } from "../../../utils/getLastNEntries";
-import { ExerciseSets, ExerciseType } from "./types";
+import { ExerciseId, ExerciseSets, ExerciseType, WorkoutId } from "./types";
 import { Temporal } from "@js-temporal/polyfill";
 import { getSinceDate } from "../../../utils/timeAgo";
 import { sortWorkouts } from "./sortWorkouts";
@@ -14,23 +14,25 @@ export const getWorkoutState = ({ workoutState }: AppState) => workoutState;
 export const getTrainedWorkout = createSelector([getWorkoutState], (state) => state.trainedWorkout);
 export const getWorkoutSorting = createSelector([getWorkoutState], (state) => state.sorting);
 export const getWorkouts = createSelector([getWorkoutState], (state) => state.workouts);
+export const getSavedTemplates = createSelector([getWorkoutState], (state) => state.storedExerciseTemplates);
+export const getHasTemplates = createSelector([getSavedTemplates], (templates) => (templates?.length ?? 0) > 0);
 export const getTrainedWorkoutExercises = createSelector([getTrainedWorkout, getWorkouts], (trainedWorkout, workouts) => {
     if (trainedWorkout === undefined) {
         return [];
     }
     return workouts.find((workout) => workout.workoutId === trainedWorkout.workout.workoutId)?.exercises;
 });
-export const getExerciseByIndex = createSelector([getTrainedWorkout, (workout, index: number) => index], (workout, index) => {
-    return workout?.workout.exercises?.[index];
+export const getExerciseById = createSelector([getTrainedWorkout, (workout, exerciseId: ExerciseId) => exerciseId], (workout, exerciseId) => {
+    return workout?.workout.exercises?.find((exercise) => exercise.exerciseId === exerciseId);
 });
 export const getEditedWorkout = createSelector([getWorkoutState], (state) => state.editedWorkout);
 export const getIsEditedWorkout = createSelector([getEditedWorkout], (editedWorkout) => !editedWorkout?.isNew);
 export const getEditedExercise = createSelector([getWorkoutState], (state) => state.editedExercise);
 export const getIsExistingEditedExercise = createSelector([getEditedExercise], (editedExercise) => editedExercise?.index !== undefined);
 export const getNumberSavedWorkouts = createSelector([getWorkouts], (workouts) => workouts.length);
-export const getSortedDoneWorkout = createSelector([getWorkouts, (workouts, index: number) => index], (workouts, index) => {
+export const getSortedDoneWorkout = createSelector([getWorkouts, (workouts, workoutId?: WorkoutId) => workoutId], (workouts, workoutId) => {
     return workouts
-        .find((workout) => workout.workoutId === index)
+        .find((workout) => workout.workoutId === workoutId)
         ?.doneWorkouts.map(({ isoDate }) => isoDate)
         .sort(Temporal.PlainDate.compare);
 });
@@ -45,16 +47,16 @@ export const getLatestWorkoutDateDisplay = createSelector([getSortedDoneWorkout,
 export const getFirstWorkoutDate = createSelector([getSortedDoneWorkout], (dates) => {
     return dates?.[0] ?? ("1970-01-01" as IsoDate);
 });
-export const getWorkoutByIndex = createSelector([getWorkouts, (workouts, index: number) => index], (workouts, index) => {
-    return workouts.find((workout) => workout.workoutId === index);
+export const getWorkoutByIndex = createSelector([getWorkouts, (workouts, workoutId: WorkoutId) => workoutId], (workouts, workoutId) => {
+    return workouts.find((workout) => workout.workoutId === workoutId);
 });
 export const getSortedWorkouts = createSelector([getWorkouts, getWorkoutSorting], (workouts, sorting) => {
     return sortWorkouts(workouts, sorting);
 });
 export const getEditedWorkoutName = createSelector([getEditedWorkout], (editedWorkout) => editedWorkout?.workout?.name);
-export const getExercisesFromIndex = createSelector([getTrainedWorkout, getWorkouts, (workouts, exerciseIndex: number) => exerciseIndex], (trainedWorkout, workouts, exerciseIndex) => {
+export const getExercisesFromIndex = createSelector([getTrainedWorkout, getWorkouts, (workouts, exerciseId: ExerciseId) => exerciseId], (trainedWorkout, workouts, exerciseId) => {
     if (trainedWorkout) {
-        return workouts.find((workout) => workout.workoutId === trainedWorkout.workout.workoutId)?.exercises[exerciseIndex];
+        return workouts.find((workout) => workout.workoutId === trainedWorkout.workout.workoutId)?.exercises.find((exercise) => exercise.exerciseId === exerciseId);
     }
 });
 
@@ -75,7 +77,7 @@ export const getTrainingDayData = createSelector([getEditedWorkout], (editedWork
         return undefined;
     }
 
-    const sortedData: Map<number, SortedData> = new Map();
+    const sortedData: Map<ExerciseId, SortedData> = new Map();
     const slicedDoneWorkouts = getLastNEntries(workout?.doneWorkouts, 100);
 
     slicedDoneWorkouts?.forEach(({ isoDate, doneExercises }) => {
@@ -118,41 +120,42 @@ export const getWorkoutsByMonth = createSelector([getEditedWorkout, (editedWorko
 
     return workout?.doneWorkouts?.filter(({ isoDate }) => getMonth(isoDate) === getMonth((searchedDate as IsoDate) ?? getDateTodayIso()));
 });
-export const getHasHistory = createSelector([getWorkouts, (workouts, workoutId: number) => workoutId], (workouts, workoutId) => {
+export const getHasHistory = createSelector([getWorkouts, (workouts, workoutId: WorkoutId) => workoutId], (workouts, workoutId) => {
     const doneWorkouts = workouts?.find((workout) => workout?.workoutId === workoutId)?.doneWorkouts;
     if (doneWorkouts === undefined) {
         return false;
     }
     return doneWorkouts.length > 0;
 });
-export const getNumberWorkoutHistoryEntries = createSelector([getWorkouts, (workouts, workoutIndex: number) => workoutIndex], (workouts, workoutIndex) => {
-    const workout = workouts.find((workout) => workout.workoutId === workoutIndex);
+export const getNumberWorkoutHistoryEntries = createSelector([getWorkouts, (workouts, workoutId: WorkoutId) => workoutId], (workouts, workoutId) => {
+    const workout = workouts.find((workout) => workout.workoutId === workoutId);
     return workout?.doneWorkouts?.length;
 });
-export const getPreviousWorkout = createSelector([getTrainedWorkout, getLanguage, (trainedWorkout, language, exerciseIndex: number) => exerciseIndex], (trainedWorkout, language, exerciseIndex) => {
+export const getPreviousWorkout = createSelector([getTrainedWorkout, getLanguage, (trainedWorkout, language, exerciseId: ExerciseId) => exerciseId], (trainedWorkout, language, exerciseId) => {
     const doneWorkouts = trainedWorkout?.workout?.doneWorkouts;
     if (!doneWorkouts || doneWorkouts?.length === 0) {
         return undefined;
     }
 
-    const foundEntries = new Map<string, { date: string; sets: ExerciseSets; note?: string; type: ExerciseType }>();
+    const foundEntries = new Map<ExerciseId, { date: string; sets: ExerciseSets; note?: string; type: ExerciseType; name: string }>();
     for (let workoutIndex = doneWorkouts?.length - 1; workoutIndex >= 0; workoutIndex--) {
         doneWorkouts?.[workoutIndex].doneExercises?.forEach((exercise) => {
-            if (!foundEntries.get(exercise.name)) {
-                foundEntries.set(exercise.name, {
+            if (!foundEntries.get(exercise.doneExerciseId)) {
+                foundEntries.set(exercise.doneExerciseId, {
                     type: exercise.type,
                     date: getLocaleDate(doneWorkouts?.[workoutIndex].isoDate, language, { dateStyle: "medium" }),
                     sets: exercise.sets,
                     note: exercise.note,
+                    name: exercise.name,
                 });
             }
         });
     }
-    return foundEntries.get(trainedWorkout?.workout?.exercises[exerciseIndex].name);
+    return foundEntries.get(exerciseId);
 });
-export const getIsLastSet = createSelector([getTrainedWorkout, (trainedWorkout, exerciseIndex: number) => exerciseIndex], (trainedWorkout, exerciseIndex) => {
+export const getIsLastSet = createSelector([getTrainedWorkout, (trainedWorkout, exerciseId: ExerciseId) => exerciseId], (trainedWorkout, exerciseId) => {
     return (setIndex: number) => {
-        const exercise = trainedWorkout?.workout?.exercises[exerciseIndex];
+        const exercise = trainedWorkout?.workout?.exercises.find((exercise) => exercise.exerciseId === exerciseId);
         if (!exercise) {
             return false;
         }
@@ -170,8 +173,8 @@ const getSumOfSets = (type: ExerciseType, sets?: ExerciseSets) => {
     }
     return sets?.reduce((sum, set) => sum + parseFloat(set?.reps ?? "0") * parseFloat(set?.weight ?? "0"), 0);
 };
-export const getOverallTrainingTrend = createSelector([getWorkouts, (workouts, index: number) => index, getLatestWorkoutDate], (workouts, index, latestWorkoutDate) => {
-    const workout = workouts.find((workout) => workout.workoutId === index);
+export const getOverallTrainingTrend = createSelector([getWorkouts, (workouts, workoutId: WorkoutId) => workoutId, getLatestWorkoutDate], (workouts, workoutId, latestWorkoutDate) => {
+    const workout = workouts.find((workout) => workout.workoutId === workoutId);
     if (!workout?.doneWorkouts || workout?.doneWorkouts?.length < 2 || workout?.doneWorkouts.some(({ doneExercises }) => !doneExercises)) {
         return undefined;
     }
@@ -243,25 +246,24 @@ export const getHasNoTrainingDataSaved = createSelector([getTrainedWorkout], (tr
     return trainedWorkout?.exerciseData.some((data) => data.doneSets.some((set) => set.confirmed));
 });
 export const getNote = createSelector([getTrainedWorkout], (trainedWorkout) => trainedWorkout?.exerciseData?.[trainedWorkout?.activeExerciseIndex]?.note);
-export const getExerciseMetadataFromWorkoutByIndex = createSelector([getTrainedWorkout, (trainedWorkout, exerciseIndex?: number) => exerciseIndex], (trainedWorkout, exerciseIndex) => {
-    if (exerciseIndex === undefined) {
+export const getExerciseMetadataFromWorkoutById = createSelector([getTrainedWorkout, (trainedWorkout, exerciseId?: ExerciseId) => exerciseId], (trainedWorkout, exerciseId) => {
+    if (exerciseId === undefined) {
         return undefined;
     }
-    return trainedWorkout?.workout.exercises[exerciseIndex];
+    return trainedWorkout?.workout.exercises.find((exercise) => exercise.exerciseId === exerciseId);
 });
-export const getActiveSetIndex = createSelector([getTrainedWorkout, (trainedWorkout, exerciseIndex: number) => exerciseIndex], (trainedWorkout, exerciesIndex) => {
-    return trainedWorkout?.exerciseData[exerciesIndex].activeSetIndex;
+export const getActiveSetIndex = createSelector([getTrainedWorkout, (trainedWorkout, exerciseId: ExerciseId) => exerciseId], (trainedWorkout, exerciseId) => {
+    return trainedWorkout?.exerciseData.find((exercise) => exercise.originalExerciseId === exerciseId)?.activeSetIndex;
 });
 
 export const getIsActiveSet = createSelector(
-    [(state: AppState) => state, (state, exerciseIndex: number) => exerciseIndex, (state, exerciseIndex, setIndex: number) => setIndex],
-    (state, activeExerciseIndex, setIndex) => {
-        return setIndex === getActiveSetIndex(state, activeExerciseIndex);
+    [(state: AppState) => state, (state, exerciseId: ExerciseId) => exerciseId, (state, exerciseId, setIndex: number) => setIndex],
+    (state, exerciseId, setIndex) => {
+        return setIndex === getActiveSetIndex(state, exerciseId);
     },
 );
-export const getExerciseData = createSelector([getTrainedWorkout], (trainedWorkout) => trainedWorkout?.exerciseData);
-export const getSetData = createSelector([getExerciseData, (exerciseData, setIndex: number) => setIndex, getTrainedWorkout], (exerciseData, setIndex, trainedWorkout) => {
-    return exerciseData?.map((exerciseData, exerciseIndex) => {
+export const getSetData = createSelector([(setIndex: number) => setIndex, (train, setIndex, exerciseId: ExerciseId) => exerciseId, getTrainedWorkout], (setIndex, exerciseId, trainedWorkout) => {
+    const exerciseData = trainedWorkout?.exerciseData?.map((exerciseData) => {
         const hasData = Boolean(exerciseData?.doneSets[setIndex]);
         const isConfirmed = Boolean(exerciseData?.doneSets[setIndex]?.confirmed);
         const workout = trainedWorkout?.workout;
@@ -269,41 +271,45 @@ export const getSetData = createSelector([getExerciseData, (exerciseData, setInd
         const isEditingLatestSet = exerciseData?.latestSetIndex === exerciseData?.activeSetIndex;
         const isEditable = isConfirmed || hasData || setIndex === exerciseData?.activeSetIndex;
         const isEditedOtherSet = isEditingLatestSet && setIndex === exerciseData?.activeSetIndex;
+        const exerciseIndex = workout?.exercises.findIndex((exercise) => exercise.exerciseId === exerciseId);
         return {
-            weight: exerciseData?.doneSets[setIndex]?.weight ?? workout?.exercises[exerciseIndex].weight,
-            reps: exerciseData?.doneSets[setIndex]?.reps ?? workout?.exercises[exerciseIndex].reps,
-            duration: workout?.exercises[exerciseIndex].duration,
-            preparation: workout?.exercises[exerciseIndex].preparation,
+            weight: exerciseData?.doneSets[setIndex]?.weight ?? workout?.exercises[exerciseIndex ?? -1].weight,
+            reps: exerciseData?.doneSets[setIndex]?.reps ?? workout?.exercises[exerciseIndex ?? -1].reps,
+            duration: workout?.exercises[exerciseIndex ?? -1].duration,
+            preparation: workout?.exercises[exerciseIndex ?? -1].preparation,
             isEditable: isEditable || isEditedOtherSet || exerciseData.latestSetIndex === setIndex,
             isConfirmed,
             hasData,
             isLatestSet,
+            exerciseId,
         };
     });
+
+    return exerciseData?.find((data) => data?.exerciseId === exerciseId);
 });
 
-export const getIsOngoingWorkout = createSelector([getTrainedWorkout, (trainedWorkout, workoutIndex: number) => workoutIndex], (trainedWorkout, workoutIndex) => {
-    return trainedWorkout && trainedWorkout?.workout.workoutId === workoutIndex;
+export const getIsOngoingWorkout = createSelector([getTrainedWorkout, (trainedWorkout, workoutId?: WorkoutId) => workoutId], (trainedWorkout, workoutId) => {
+    return trainedWorkout && trainedWorkout?.workout.workoutId === workoutId;
 });
 
-export const getDoneWorkoutById = createSelector([getEditedWorkout, (editedWorkout, doneWorkoutIndex: number) => doneWorkoutIndex], (editedWorkout, doneWorkoutIndex) => {
+export const getDoneWorkoutById = createSelector([getEditedWorkout, (editedWorkout, doneWorkoutIndex: WorkoutId) => doneWorkoutIndex], (editedWorkout, doneWorkoutIndex) => {
     return editedWorkout?.workout?.doneWorkouts.find((doneWorkout) => doneWorkout.doneWorkoutId === doneWorkoutIndex);
 });
 
-export const getDoneExercises = createSelector([getEditedWorkout, (workout, doneWorkoutIndex: number) => doneWorkoutIndex], (editedWorkout, doneWorkoutIndex) => {
+export const getDoneExercises = createSelector([getEditedWorkout, (workout, doneWorkoutIndex: WorkoutId) => doneWorkoutIndex], (editedWorkout, doneWorkoutIndex) => {
     const doneWorkout = editedWorkout?.workout?.doneWorkouts.find((doneWorkout) => doneWorkout.doneWorkoutId === doneWorkoutIndex);
     return doneWorkout?.doneExercises ?? [];
 });
 
 export const getDoneExerciseById = createSelector(
-    [getEditedWorkout, (workout, doneWorkoutId: number) => doneWorkoutId, (workout, doneWorkoutId, doneExerciseId) => doneExerciseId],
+    [getEditedWorkout, (workout, doneWorkoutId: WorkoutId) => doneWorkoutId, (workout, doneWorkoutId, doneExerciseId) => doneExerciseId],
     (editedWorkout, doneWorkoutId, doneExerciseId) => {
         const doneWorkout = editedWorkout?.workout?.doneWorkouts.find((doneWorkout) => doneWorkout.doneWorkoutId === doneWorkoutId);
         return doneWorkout?.doneExercises?.find((doneExercise) => doneExercise.doneExerciseId === doneExerciseId);
     },
 );
 
-export const getAnyHasFallbackSets = createSelector([getEditedWorkout, (editedWorkout, doneWorkoutIndex: number) => doneWorkoutIndex], (editedWorkout, doneWorkoutIndex) => {
+export const getAnyHasFallbackSets = createSelector([getEditedWorkout, (editedWorkout, doneWorkoutIndex: WorkoutId) => doneWorkoutIndex], (editedWorkout, doneWorkoutIndex) => {
     const doneWorkout = editedWorkout?.workout?.doneWorkouts.find((doneWorkout) => doneWorkout.doneWorkoutId === doneWorkoutIndex);
     const hasFallbackSets = Boolean(doneWorkout?.doneExercises?.some((exercise) => exercise.fallbackSets));
     const setsAreEqual = Boolean(

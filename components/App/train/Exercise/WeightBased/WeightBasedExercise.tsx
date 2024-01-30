@@ -14,16 +14,17 @@ import { useBottomSheetRef } from "../../../../BottomSheetModal/ThemedBottomShee
 import { getSetsArray } from "../../../../../store/reducers/workout/workoutSelectors";
 import { WeightBasedSetInput } from "../../../../SetInputRow/WeightBased/WeightBasedSetInput";
 import { ThemedScrollView } from "../../../../Themed/ThemedScrollView/ThemedScrollView";
+import { ExerciseId } from "../../../../../store/reducers/workout/types";
 
 interface WeightBasedExerciseProps {
-    exerciseIndex: number;
+    exerciseId: ExerciseId;
 }
 
-export const WeightBasedExercise = ({ exerciseIndex }: WeightBasedExerciseProps) => {
+export const WeightBasedExercise = ({ exerciseId }: WeightBasedExerciseProps) => {
     const { ref: editNoteModalRef, openBottomSheet: open, closeBottomSheet: close } = useBottomSheetRef();
     const showEditNoteModalTitleStyle = useMemo(() => ({ padding: 10, paddingHorizontal: 15, alignSelf: "center" }) as const, []);
     const { mainColor } = useTheme();
-    const setsArray = useAppSelector((state: AppState) => getSetsArray(state, exerciseIndex));
+    const setsArray = useAppSelector((state: AppState) => getSetsArray(state, exerciseId));
 
     const id = useId();
     const hideNoteModal = useCallback(() => {
@@ -37,7 +38,7 @@ export const WeightBasedExercise = ({ exerciseIndex }: WeightBasedExerciseProps)
     return (
         <ThemedView stretch ghost key={id} style={trainStyles.carouselWrapper}>
             <HStack background style={trainStyles.headerWrapper}>
-                <WeightBasedExerciseMetadataDisplay exerciseIndex={exerciseIndex} />
+                <WeightBasedExerciseMetadataDisplay exerciseId={exerciseId} />
                 <ThemedView style={trainStyles.noteButtonWrapper}>
                     <Pressable style={showEditNoteModalTitleStyle} onPress={showNoteModal}>
                         <MaterialCommunityIcons name="note-edit-outline" color={mainColor} size={24} />
@@ -48,10 +49,10 @@ export const WeightBasedExercise = ({ exerciseIndex }: WeightBasedExerciseProps)
                 <ThemedView round padding>
                     <WeightBasedTrainingHeader />
                     {setsArray?.map((_, setIndex) => {
-                        return <WeightBasedSetInput key={exerciseIndex.toString().concat(setIndex.toString())} exerciseIndex={exerciseIndex} setIndex={setIndex} />;
+                        return <WeightBasedSetInput key={exerciseId.toString().concat(setIndex.toString())} exerciseId={exerciseId} setIndex={setIndex} />;
                     })}
                 </ThemedView>
-                <PreviousWorkout exerciseType="WEIGHT_BASED" exerciseIndex={exerciseIndex} />
+                <PreviousWorkout exerciseType="WEIGHT_BASED" exerciseId={exerciseId} />
             </ThemedScrollView>
             <AddNoteModal reference={editNoteModalRef} onRequestClose={hideNoteModal} />
         </ThemedView>

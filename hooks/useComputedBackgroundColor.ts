@@ -8,9 +8,10 @@ export interface ComputedBackgroundColorProps {
     background?: boolean;
     link?: boolean;
     hint?: boolean;
+    cta?: boolean;
 }
 export const useComputedBackgroundColor = (props: ComputedBackgroundColorProps) => {
-    const { successColor, componentBackgroundColor, secondaryBackgroundColor, backgroundColor, inputFieldBackgroundColor } = useTheme();
+    const { cta, successColor, componentBackgroundColor, secondaryBackgroundColor, backgroundColor, inputFieldBackgroundColor } = useTheme();
 
     return useMemo(() => {
         if (props.background) {
@@ -18,6 +19,9 @@ export const useComputedBackgroundColor = (props: ComputedBackgroundColorProps) 
         }
         if (props.ghost || props.link) {
             return "transparent";
+        }
+        if (props.cta) {
+            return cta;
         }
         if (props.secondary) {
             return secondaryBackgroundColor;

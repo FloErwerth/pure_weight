@@ -23,11 +23,11 @@ import {
     createNewExercise,
     deleteExerciseFromEditedWorkout,
     recoverExercise,
+    saveEditedExercise,
     saveEditedWorkout,
     setEditedExercise,
     setEditedWorkoutName,
     sortExercisesOnDragEnd,
-    storeEditedExercise,
 } from "../../../store/reducers/workout";
 
 import { getEditedWorkout, getIsEditedWorkout } from "../../../store/reducers/workout/workoutSelectors";
@@ -88,8 +88,7 @@ export function Create() {
                     void Haptics.selectionAsync();
                     dispatch(
                         setEditedExercise({
-                            exercise,
-                            index,
+                            exerciseId: exercise.exerciseId,
                         }),
                     );
                     navigate("workouts/create/exercise", { to: "workouts/create" });
@@ -106,7 +105,7 @@ export function Create() {
                 };
 
                 const handleOnConfirmEdit = () => {
-                    dispatch(storeEditedExercise());
+                    dispatch(saveEditedExercise());
                     dispatch(setEditedExercise(undefined));
                 };
 

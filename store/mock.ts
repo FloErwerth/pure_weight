@@ -1,4 +1,5 @@
 import { AppState } from "./index";
+import { generateId } from "../utils/generateId";
 
 export const mockState: AppState = {
     metadataState: {
@@ -9,7 +10,7 @@ export const mockState: AppState = {
         sorting: "A_Z",
         measurements: [
             {
-                measurementId: 1,
+                measurementId: generateId("measurement"),
                 name: "Körpergewicht",
                 type: "weight",
                 data: [
@@ -32,7 +33,7 @@ export const mockState: AppState = {
                 higherIsBetter: true,
             },
             {
-                measurementId: 2,
+                measurementId: generateId("measurement"),
                 name: "Körperfettanteil",
                 type: "percent",
                 data: [
@@ -60,25 +61,34 @@ export const mockState: AppState = {
         sorting: "A_Z",
         workouts: [
             {
-                workoutId: 128901238901,
+                workoutId: "workout-128901238901",
                 name: "Real Back",
                 calendarColor: "#ffff00",
                 exercises: [
-                    { exerciseId: 1, type: "WEIGHT_BASED", name: "Klimmzüge unterstützt", weight: "25", sets: "5", pause: { seconds: "0", minutes: "3" }, reps: "5" },
-                    { exerciseId: 2, type: "WEIGHT_BASED", name: "Rudern Seilzug", weight: "50", sets: "4", pause: { seconds: "0", minutes: "2" }, reps: "8" },
-                    { exerciseId: 3, type: "WEIGHT_BASED", name: "Hintere Schulter Seil", weight: "50", sets: "4", pause: { seconds: "0", minutes: "2" }, reps: "8" },
-                    { exerciseId: 4, type: "WEIGHT_BASED", name: "Bizeps Sz", weight: "10", sets: "4", pause: { seconds: "0", minutes: "2" }, reps: "8" },
+                    {
+                        exerciseId: "exercise-1",
+                        templateId: "template-1",
+                        type: "WEIGHT_BASED",
+                        name: "Klimmzüge unterstützt",
+                        weight: "25",
+                        sets: "5",
+                        pause: { seconds: "0", minutes: "3" },
+                        reps: "5",
+                    },
+                    { exerciseId: "exercise-2", type: "WEIGHT_BASED", name: "Rudern Seilzug", weight: "50", sets: "4", pause: { seconds: "0", minutes: "2" }, reps: "8" },
+                    { exerciseId: "exercise-3", type: "WEIGHT_BASED", name: "Hintere Schulter Seil", weight: "50", sets: "4", pause: { seconds: "0", minutes: "2" }, reps: "8" },
+                    { exerciseId: "exercise-4", type: "WEIGHT_BASED", name: "Bizeps Sz", weight: "10", sets: "4", pause: { seconds: "0", minutes: "2" }, reps: "8" },
                 ],
                 doneWorkouts: [
                     {
-                        doneWorkoutId: 1,
+                        doneWorkoutId: "workout-1",
                         isoDate: "2023-11-12",
                         duration: "120",
                         doneExercises: [
                             {
-                                originalExerciseId: 1,
+                                originalExerciseId: "exercise-1",
                                 type: "WEIGHT_BASED",
-                                doneExerciseId: 1,
+                                doneExerciseId: "exercise-1",
                                 name: "Klimmzüge unterstützt",
                                 sets: [
                                     { weight: "50", reps: "5" },
@@ -89,9 +99,9 @@ export const mockState: AppState = {
                                 note: "Das war ein guter Satz",
                             },
                             {
-                                originalExerciseId: 2,
+                                originalExerciseId: "exercise-2",
                                 type: "WEIGHT_BASED",
-                                doneExerciseId: 2,
+                                doneExerciseId: "exercise-2",
                                 name: "Rudern",
                                 sets: [
                                     { weight: "50", reps: "5" },
@@ -101,9 +111,9 @@ export const mockState: AppState = {
                                 note: "Das war ein guter Satz",
                             },
                             {
-                                originalExerciseId: 3,
+                                originalExerciseId: "exercise-3",
                                 type: "WEIGHT_BASED",
-                                doneExerciseId: 3,
+                                doneExerciseId: "exercise-3",
                                 name: "Bizeps",
                                 sets: [
                                     { weight: "50", reps: "5" },
@@ -116,14 +126,14 @@ export const mockState: AppState = {
                         ],
                     },
                     {
-                        doneWorkoutId: 2,
+                        doneWorkoutId: "workout-2",
                         isoDate: "2023-11-12",
                         duration: "120",
                         doneExercises: [
                             {
-                                originalExerciseId: 1,
+                                originalExerciseId: "exercise-1",
                                 type: "WEIGHT_BASED",
-                                doneExerciseId: 1,
+                                doneExerciseId: "exercise-1",
                                 name: "Klimmzüge unterstützt",
                                 sets: [{ weight: "50", reps: "5" }],
                                 note: "Das war ein guter Satz",
@@ -131,14 +141,14 @@ export const mockState: AppState = {
                         ],
                     },
                     {
-                        doneWorkoutId: 3,
+                        doneWorkoutId: "workout-3",
                         isoDate: "2023-12-01",
                         duration: "120",
                         doneExercises: [
                             {
-                                originalExerciseId: 1,
+                                originalExerciseId: "exercise-1",
                                 type: "WEIGHT_BASED",
-                                doneExerciseId: 1,
+                                doneExerciseId: "exercise-1",
                                 name: "Seilzüge",
                                 sets: [{ weight: "50", reps: "5" }],
                                 note: "Das war ein guter Satz",
@@ -146,14 +156,14 @@ export const mockState: AppState = {
                         ],
                     },
                     {
-                        doneWorkoutId: 4,
+                        doneWorkoutId: "workout-4",
                         isoDate: "2023-12-01",
                         duration: "120",
                         doneExercises: [
                             {
-                                originalExerciseId: 1,
+                                originalExerciseId: "exercise-1",
                                 type: "WEIGHT_BASED",
-                                doneExerciseId: 1,
+                                doneExerciseId: "exercise-1",
                                 name: "Klimmzüge",
                                 sets: [{ weight: "50", reps: "5" }],
                                 note: "Das war ein guter Satz",
@@ -161,63 +171,63 @@ export const mockState: AppState = {
                         ],
                     },
                     {
-                        doneWorkoutId: 5,
+                        doneWorkoutId: "workout-5",
                         isoDate: "2023-12-01",
                         duration: "120",
                         doneExercises: [
                             {
-                                originalExerciseId: 1,
+                                originalExerciseId: "exercise-1",
                                 type: "WEIGHT_BASED",
-                                doneExerciseId: 1,
+                                doneExerciseId: "exercise-1",
                                 name: "Klimmzüge unterstützt",
                                 sets: [{ weight: "50", reps: "5" }],
                             },
                         ],
                     },
                     {
-                        doneWorkoutId: 6,
+                        doneWorkoutId: "workout-6",
                         isoDate: "2023-12-01",
                         duration: "120",
                         doneExercises: [
                             {
-                                originalExerciseId: 1,
+                                originalExerciseId: "exercise-1",
                                 type: "WEIGHT_BASED",
-                                doneExerciseId: 1,
+                                doneExerciseId: "exercise-1",
                                 name: "Klimmzüge unterstützt",
                                 sets: [{ weight: "50", reps: "5" }],
                             },
                         ],
                     },
                     {
-                        doneWorkoutId: 7,
+                        doneWorkoutId: "workout-7",
                         isoDate: "2023-12-01",
                         duration: "120",
                         doneExercises: [
                             {
-                                originalExerciseId: 1,
+                                originalExerciseId: "exercise-1",
                                 type: "WEIGHT_BASED",
-                                doneExerciseId: 1,
+                                doneExerciseId: "exercise-1",
                                 name: "Klimmzüge unterstützt",
                                 sets: [{ weight: "50", reps: "5" }],
                             },
                         ],
                     },
                     {
-                        doneWorkoutId: 8,
+                        doneWorkoutId: "workout-8",
                         isoDate: "2023-12-07",
                         duration: "120",
                         doneExercises: [
                             {
-                                originalExerciseId: 1,
+                                originalExerciseId: "exercise-1",
                                 type: "WEIGHT_BASED",
-                                doneExerciseId: 1,
+                                doneExerciseId: "exercise-1",
                                 name: "Klimmzüge unterstützt",
                                 sets: [{ weight: "10", reps: "5" }],
                             },
                             {
-                                originalExerciseId: 2,
+                                originalExerciseId: "exercise-2",
                                 type: "WEIGHT_BASED",
-                                doneExerciseId: 2,
+                                doneExerciseId: "exercise-2",
                                 name: "Rudern Seilzug",
                                 sets: [
                                     { weight: "45", reps: "4" },
@@ -228,21 +238,21 @@ export const mockState: AppState = {
                         ],
                     },
                     {
-                        doneWorkoutId: 9,
+                        doneWorkoutId: "workout-9",
                         isoDate: "2023-12-31",
                         duration: "120",
                         doneExercises: [
                             {
-                                originalExerciseId: 1,
+                                originalExerciseId: "exercise-1",
                                 type: "WEIGHT_BASED",
-                                doneExerciseId: 1,
+                                doneExerciseId: "exercise-1",
                                 name: "Klimmzüge unterstützt",
                                 sets: [{ weight: "25", reps: "5" }],
                             },
                             {
-                                originalExerciseId: 2,
+                                originalExerciseId: "exercise-2",
                                 type: "WEIGHT_BASED",
-                                doneExerciseId: 2,
+                                doneExerciseId: "exercise-2",
                                 name: "Rudern Seilzug",
                                 sets: [
                                     { weight: "50", reps: "5" },
@@ -256,12 +266,12 @@ export const mockState: AppState = {
             },
             {
                 name: "Weight and Time Based",
-                workoutId: 231390123891,
+                workoutId: "workout-128901238902",
                 calendarColor: "#ff0000",
                 exercises: [
-                    { exerciseId: 5, type: "WEIGHT_BASED", name: "Bankdrücken", weight: "50", sets: "5", pause: { seconds: "3", minutes: "0" }, reps: "5" },
+                    { exerciseId: "exercise-1", type: "WEIGHT_BASED", name: "Bankdrücken", weight: "50", sets: "5", pause: { seconds: "3", minutes: "0" }, reps: "5" },
                     {
-                        exerciseId: 6,
+                        exerciseId: "exercise-2",
                         type: "TIME_BASED",
                         weight: "0",
                         reps: "0",
@@ -274,34 +284,69 @@ export const mockState: AppState = {
                 ],
                 doneWorkouts: [
                     {
-                        doneWorkoutId: 1,
+                        doneWorkoutId: "workout-1",
                         isoDate: "2023-12-01",
                         duration: "120",
                         doneExercises: [
                             {
-                                originalExerciseId: 6,
+                                originalExerciseId: "exercise-6",
                                 type: "TIME_BASED",
-                                doneExerciseId: 1,
+                                doneExerciseId: "exercise-1",
                                 name: "Planks",
                                 sets: [{ duration: { seconds: "56", minutes: "0" } }, { duration: { seconds: "56", minutes: "0" } }, { duration: { seconds: "56", minutes: "0" } }],
                             },
                         ],
                     },
                     {
-                        doneWorkoutId: 2,
+                        doneWorkoutId: "workout-2",
                         isoDate: "2023-12-01",
                         duration: "120",
                         doneExercises: [
                             {
-                                originalExerciseId: 6,
+                                originalExerciseId: "exercise-6",
                                 type: "TIME_BASED",
-                                doneExerciseId: 1,
+                                doneExerciseId: "exercise-1",
                                 name: "Planks",
                                 sets: [{ duration: { seconds: "55", minutes: "0" } }, { duration: { seconds: "56", minutes: "0" } }, { duration: { seconds: "56", minutes: "0" } }],
                             },
                         ],
                     },
                 ],
+            },
+        ],
+        storedExerciseTemplates: [
+            {
+                templateId: "template-1",
+                exerciseMetaData: {
+                    type: "WEIGHT_BASED",
+                    name: "Klimmzüge unterstützt",
+                    weight: "25",
+                    sets: "5",
+                    pause: { seconds: "0", minutes: "3" },
+                    reps: "5",
+                },
+            },
+            {
+                templateId: "template-2",
+                exerciseMetaData: {
+                    type: "WEIGHT_BASED",
+                    name: "Rudern",
+                    weight: "25",
+                    sets: "5",
+                    pause: { seconds: "0", minutes: "3" },
+                    reps: "5",
+                },
+            },
+            {
+                templateId: "template-3",
+                exerciseMetaData: {
+                    type: "TIME_BASED",
+                    name: "Planks",
+                    sets: "5",
+                    weight: "",
+                    pause: { seconds: "0", minutes: "3" },
+                    duration: { seconds: "0", minutes: "3" },
+                },
             },
         ],
     },

@@ -1,4 +1,4 @@
-import { SwitchToNextExerciseSelection } from "../../components/Selections/SwitchToNextExerciseSelection/SwitchToNextExerciseSelection";
+import { ExercisesSelection } from "../../components/Selections/SwitchToNextExerciseSelection/ExercisesSelection";
 import { StopwatchSelection } from "../../components/Selections/StopwatchSelection/StopwatchSelection";
 
 type WorkoutSettingsProps = {
@@ -8,7 +8,7 @@ export const WorkoutSettings = ({ quick }: WorkoutSettingsProps) => {
     return (
         <>
             <StopwatchSelection quick={quick} />
-            <SwitchToNextExerciseSelection quick={quick} />
+            <ExercisesSelection quick={quick} />
         </>
     );
 };

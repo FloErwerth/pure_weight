@@ -15,7 +15,7 @@ import { ThemedPressable } from "../../Themed/Pressable/Pressable";
 import { emitter } from "../../../utils/event";
 import { useTimeDisplay } from "../../../hooks/useTimeDisplay";
 import { useStopwatch } from "../../../hooks/useStopwatch";
-import { TimeInput } from "../../../store/reducers/workout/types";
+import { ExerciseId, TimeInput } from "../../../store/reducers/workout/types";
 import { ThemedView } from "../../Themed/ThemedView/View";
 import { AnimatedView } from "../../Themed/AnimatedView/AnimatedView";
 import { ThemedBottomSheetModal, useBottomSheetRef } from "../../BottomSheetModal/ThemedBottomSheetModal";
@@ -25,7 +25,7 @@ import { getTimeInputFromMilliseconds } from "../../../utils/timeDisplay";
 
 interface SetInputRowProps {
     setIndex: number;
-    exerciseIndex: number;
+    exerciseId: ExerciseId;
 }
 
 const getMillisecondsFromDuration = (duration?: TimeInput) => {
@@ -38,13 +38,13 @@ const getMillisecondsFromDuration = (duration?: TimeInput) => {
     return 0;
 };
 
-export const TimeBasedSetInput = ({ setIndex, exerciseIndex }: SetInputRowProps) => {
+export const TimeBasedSetInput = ({ setIndex, exerciseId }: SetInputRowProps) => {
     const { mainColor, primaryColor, secondaryBackgroundColor, componentBackgroundColor, inputFieldBackgroundColor, textDisabled } = useTheme();
-    const data = useAppSelector((state: AppState) => getSetData(state, setIndex))?.[exerciseIndex];
-    const isLastSetGetter = useAppSelector((state: AppState) => getIsLastSet(state, exerciseIndex));
+    const data = useAppSelector((state: AppState) => getSetData(state, setIndex, exerciseId));
+    const isLastSetGetter = useAppSelector((state: AppState) => getIsLastSet(state, exerciseId));
     const { isLatestSet, reps, isEditable, isConfirmed, duration, preparation } = data ?? {};
     const dispatch = useAppDispatch();
-    const isActiveSet = useAppSelector((state: AppState) => getIsActiveSet(state, exerciseIndex, setIndex));
+    const isActiveSet = useAppSelector((state: AppState) => getIsActiveSet(state, exerciseId, setIndex));
     const { ref: cancelHandleRef, openBottomSheet: openCancelHandle, closeBottomSheet: close } = useBottomSheetRef();
     const preparationMilliseconds = useMemo(() => getMillisecondsFromDuration(preparation), [preparation]);
     const hasPreparation = useMemo(() => Boolean(preparationMilliseconds > 0), [preparationMilliseconds]);
