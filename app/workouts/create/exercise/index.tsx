@@ -70,7 +70,7 @@ export const CreateExercise = () => {
         } else {
             navigateBack();
         }
-    }, [addMoreExercises, dispatch, editedExercise?.exercise.templateId, navigateBack, openSuccessMessage]);
+    }, [addMoreExercises, dispatch, navigateBack, openSuccessMessage]);
 
     const saveTemplate = useCallback(() => {
         if (showWarning) {
@@ -94,16 +94,12 @@ export const CreateExercise = () => {
         }
         if (editedExercise) {
             if (saveAsTemplate) {
-                if (isFromTemplate) {
-                    openWarning();
-                    return;
-                }
                 saveTemplate();
                 return;
             }
             saveExercise();
         }
-    }, [closeToast, editedExercise, isFromTemplate, openWarning, saveAsTemplate, saveExercise, saveTemplate, showToast]);
+    }, [closeToast, editedExercise, saveAsTemplate, saveExercise, saveTemplate, showToast]);
 
     const closeSuccessMessage = useCallback(() => {
         closeToast();
@@ -127,14 +123,16 @@ export const CreateExercise = () => {
                 <View style={{ gap: 10 }}>
                     {showCheckboxed && (
                         <>
-                            <CheckBox
-                                helpTextConfig={{ text: t("save_as_template_help"), snapPoints: ["35%"] }}
-                                secondary
-                                customWrapperStyles={{ zIndex: -1 }}
-                                checked={saveAsTemplate}
-                                onChecked={setSaveAsTemplate}
-                                label={t("save_as_template")}
-                            />
+                            {!isFromTemplate && (
+                                <CheckBox
+                                    helpTextConfig={{ text: t("save_as_template_help"), snapPoints: ["35%"] }}
+                                    secondary
+                                    customWrapperStyles={{ zIndex: -1 }}
+                                    checked={saveAsTemplate}
+                                    onChecked={setSaveAsTemplate}
+                                    label={t("save_as_template")}
+                                />
+                            )}
                             <CheckBox secondary customWrapperStyles={{ zIndex: -1 }} checked={addMoreExercises} onChecked={setAddMoreExercises} label={t("add_more_exercises")} />
                         </>
                     )}
