@@ -19,6 +19,9 @@ export const styles = StyleSheet.create({
     titleWrapper: {
         marginBottom: 10,
     },
+    wrapper: {
+        gap: 10,
+    },
 });
 
 export const createStyles = StyleSheet.create({

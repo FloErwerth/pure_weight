@@ -13,6 +13,8 @@ import { MeasurementSorting } from "../../components/App/measurements/Sorting/Me
 import { useNavigate } from "../../hooks/navigate";
 import { useToast } from "../../components/BottomToast/useToast";
 import { MeasurementId } from "../../components/App/measurements/types";
+import { View } from "react-native";
+import { styles } from "../../components/App/measurements/styles";
 
 export function Measurements() {
     const { t } = useTranslation();
@@ -80,7 +82,7 @@ export function Measurements() {
             <SiteNavigationButtons titleFontSize={40} title={t("measurements")} handleConfirm={handleAddNewMeasurement} handleConfirmIcon={DEFAULT_PLUS} />
             <MeasurementSorting />
             <PageContent background ignoreGap paddingTop={20} scrollable>
-                {mappedMeasurements}
+                <View style={styles.wrapper}>{mappedMeasurements}</View>
             </PageContent>
             <BottomToast
                 reference={toastRef}

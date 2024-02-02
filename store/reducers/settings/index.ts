@@ -21,7 +21,6 @@ export const setTheme = createAction<ThemeKey, "theme_set">("theme_set");
 export const setUnitSystem = createAction<UnitSystem, "set_unit_system">("set_unit_system");
 export const setDeletionTimeMs = createAction<number, "set_deletion_time">("set_deletion_time");
 export const setSearchManual = createAction<string | undefined, "set_search_manual">("set_search_manual");
-export const setAutoUpdateTemplates = createAction<boolean, "setAutoUpdateTemplates">("setAutoUpdateTemplates");
 export const mutateStopwatchSettings = createAction<{ key: keyof StopwatchSettings; value: StopwatchSettings[keyof StopwatchSettings] }, "set_stopwatch_settings">("set_stopwatch_settings");
 export const setSwitchToNextExercise = createAction<Partial<boolean>, "set_switch_to_next_exercise">("set_switch_to_next_exercise");
 

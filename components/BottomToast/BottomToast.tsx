@@ -113,7 +113,7 @@ export const BottomToast = ({ reference, customTime, titleKey, messageKey, onRed
             }) satisfies ViewStyle,
         [bottom, leftCorrection, padding, topCorrection],
     );
-    const animatedWrapperStyle = useAnimatedStyle(() => ({ opacity: animatedOpacity.value }), [animatedOpacity, wrapperStyle]);
+    const animatedWrapperStyle = useAnimatedStyle(() => ({ opacity: animatedOpacity.value, pointerEvents: open ? "auto" : "none" }), [open, animatedOpacity, wrapperStyle]);
 
     return (
         <ReAnimated.View style={animatedWrapperStyle}>

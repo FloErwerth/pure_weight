@@ -32,7 +32,5 @@ export const styles = StyleSheet.create({
     wrapper: {
         borderRadius,
         gap: 10,
-        marginBottom: 10,
-        padding: 10,
     },
 });

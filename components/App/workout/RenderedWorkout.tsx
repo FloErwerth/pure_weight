@@ -38,7 +38,7 @@ export const RenderedWorkout = ({ workoutId }: RenderedWorkoutProps) => {
     }, [dispatch, workoutId, navigate]);
 
     return (
-        <View style={styles.outerTrainWrapper}>
+        <ThemedView padding ghost style={styles.outerTrainWrapper}>
             <HStack style={styles.outerTrainWrapper}>
                 <View>
                     <HStack style={styles.innerTrainWrapper}>
@@ -68,6 +68,6 @@ export const RenderedWorkout = ({ workoutId }: RenderedWorkoutProps) => {
                     </Text>
                 </ThemedView>
             )}
-        </View>
+        </ThemedView>
     );
 };

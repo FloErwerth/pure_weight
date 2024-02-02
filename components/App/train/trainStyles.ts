@@ -12,6 +12,9 @@ export const trainStyles = StyleSheet.create({
         fontSize: 20,
         paddingTop: 1,
     },
+    workoutWrapper: {
+        gap: 10,
+    },
     confirmOverwriteWrapper: {
         padding: 10,
         gap: 10,

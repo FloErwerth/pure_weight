@@ -32,7 +32,7 @@ export const CreateExercise = () => {
     const editedExercise = useAppSelector(getEditedExercise);
     const { showToast: showSavedSuccess, openToast: openSavedSuccess, closeToast: closeSavedSuccess } = useToast();
     const { showToast: showApplySuccess, openToast: openApplySuccess, closeToast: closeApplySuccess } = useToast();
-    const [showCheckboxed, setShowCheckboxed] = useState(true);
+    const [showCheckboxes, setShowCheckboxes] = useState(true);
     const [addMoreExercises, setAddMoreExercises] = useState(false);
     const { ref: warningRef, openBottomSheet: openWarning, closeBottomSheet: closeWarning, isOpen: showWarning } = useBottomSheetRef();
     const [saveAsTemplate, setSaveAsTemplate] = useState(false);
@@ -55,7 +55,7 @@ export const CreateExercise = () => {
 
     const showCheckboxesAfterTimeout = useCallback(() => {
         setTimeout(() => {
-            setShowCheckboxed(true);
+            setShowCheckboxes(true);
         }, 2200);
     }, []);
 
@@ -63,7 +63,7 @@ export const CreateExercise = () => {
         dispatch(saveEditedExercise());
         dispatch(updateTemplate());
         openSuccessMessage();
-        setShowCheckboxed(false);
+        setShowCheckboxes(false);
         showCheckboxesAfterTimeout();
         void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
         if (addMoreExercises) {
@@ -110,10 +110,17 @@ export const CreateExercise = () => {
         closeSavedSuccess();
     }, [closeSavedSuccess]);
 
-    const confirmButtonConfig = useMemo(() => ({ icon: { name: "content-copy", size: 24 } as const, disabled: !hasTemplates, opacity: new Animated.Value(hasTemplates ? 1 : 0) }), [hasTemplates]);
+    const confirmButtonConfig = useMemo(
+        () => ({
+            icon: { name: "content-copy", size: 24 } as const,
+            disabled: !hasTemplates,
+            opacity: new Animated.Value(hasTemplates ? 1 : 0),
+        }),
+        [hasTemplates],
+    );
 
     const handleApplyTemplate = useCallback(() => {
-        setShowCheckboxed(false);
+        setShowCheckboxes(false);
         showCheckboxesAfterTimeout();
         closeBottomSheet();
         openApplySuccess();
@@ -133,7 +140,7 @@ export const CreateExercise = () => {
             <PageContent safeBottom stretch ghost paddingTop={20}>
                 <EditableExercise />
                 <View style={{ gap: 10 }}>
-                    {showCheckboxed && (
+                    {showCheckboxes && (
                         <Reanimated.View style={{ gap: 10 }} layout={Layout} entering={FadeIn} exiting={FadeOut}>
                             <CheckBox
                                 helpTextConfig={{ text: t("save_as_template_help"), snapPoints: ["35%"] }}
@@ -143,11 +150,29 @@ export const CreateExercise = () => {
                                 onChecked={setSaveAsTemplate}
                                 label={t("save_as_template")}
                             />
-                            <CheckBox secondary customWrapperStyles={{ zIndex: -1 }} checked={addMoreExercises} onChecked={setAddMoreExercises} label={t("add_more_exercises")} />
+                            <CheckBox
+                                secondary
+                                customWrapperStyles={{ zIndex: -1 }}
+                                checked={addMoreExercises}
+                                onChecked={setAddMoreExercises}
+                                label={t("add_more_exercises")}
+                            />
                         </Reanimated.View>
                     )}
-                    <BottomToast customTime={1000} leftCorrection={-20} titleKey="create_exercise_success_title" onRequestClose={closeSavedSuccessMessage} open={showSavedSuccess} />
-                    <BottomToast customTime={1000} leftCorrection={-20} titleKey="applied_template_success_title" onRequestClose={closeApplySuccess} open={showApplySuccess} />
+                    <BottomToast
+                        customTime={1000}
+                        leftCorrection={-20}
+                        titleKey="create_exercise_success_title"
+                        onRequestClose={closeSavedSuccessMessage}
+                        open={showSavedSuccess}
+                    />
+                    <BottomToast
+                        customTime={1000}
+                        leftCorrection={-20}
+                        titleKey="applied_template_success_title"
+                        onRequestClose={closeApplySuccess}
+                        open={showApplySuccess}
+                    />
                     <ThemedPressable ghost behind onPress={handleConfirm}>
                         <HStack secondary style={styles.button}>
                             <Text secondary style={styles.buttonText}>

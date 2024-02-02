@@ -44,6 +44,13 @@
   "create_exercise_type_label": "Exercise type",
   "create_exercise_WEIGHT_BASED": "Weight based",
   "create_exercise_TIME_BASED": "Time based",
+  "template_deleted_success": "Template successfully deleted",
+  "template_redo": "Recover Template",
+  "edit_template": "Edit Template",
+  "edit_template_adjust_exercises_title": "Adjust exercises",
+  "edit_template_adjust_exercises_text": "All exercises, that are generated from this template, will be adjusted to the changes made to the template. \n\nThis affects also exercises in a paused workout, which are not marked as done.",
+  "edit_template_created_at": "Created at",
+  "edit_template_updated_at": "Updated at",
 
   "create_exercise": "Create exercise",
   "edit_exercise_long": "Confirm changes",
@@ -53,7 +60,8 @@
   "add_exercise": "Add new exercise",
   "alert_delete_title": "Delete exercise?",
   "create_exercise_success_title": "Exercise successfully created",
-
+  "template_section_title": "Templates",
+  "help_section_title": "Help",
   "workout_deleted_title": "Workout successfully deleted",
   "exercise_deleted_title": "Exercise successfully deleted",
   "undo_message": "Undo the deletion",

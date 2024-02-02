@@ -22,7 +22,8 @@ interface SetInputRowProps {
 }
 
 export const WeightBasedSetInput = ({ setIndex, exerciseId }: SetInputRowProps) => {
-    const { primaryColor, mainColor, secondaryBackgroundColor, componentBackgroundColor, inputFieldBackgroundColor, textDisabled } = useTheme();
+    const { primaryColor, mainColor, secondaryBackgroundColor, componentBackgroundColor, inputFieldBackgroundColor, textDisabled } =
+        useTheme();
     const data = useAppSelector((state: AppState) => getSetData(state, setIndex, exerciseId));
     const isLastSetGetter = useAppSelector((state: AppState) => getIsLastSet(state, exerciseId));
     const { isLatestSet, weight, reps, isEditable, isConfirmed } = data ?? {};
@@ -107,10 +108,22 @@ export const WeightBasedSetInput = ({ setIndex, exerciseId }: SetInputRowProps) 
     }, [isEditable, mainColor, textDisabled]);
 
     const textNumberStyles = useMemo(() => [styles.textNumber, { color: computedColor }], [computedColor]);
-    const textInputStyles = useMemo(() => [styles.textInput, { backgroundColor: computedTextfieldBackgroundColor, color: computedColor }], [computedTextfieldBackgroundColor, computedColor]);
-    const buttonStyles = useMemo(() => [styles.button, { backgroundColor: computedButtonBackgroundColor }], [computedButtonBackgroundColor]);
-    const iconStyle = useMemo(() => ({ color: isConfirmed ? "green" : isActiveSet ? primaryColor : textDisabled }), [isConfirmed, isActiveSet, primaryColor, textDisabled]);
-    const playStyle = useMemo(() => ({ color: isConfirmed || isActiveSet || isLatestSet ? mainColor : textDisabled }), [isConfirmed, mainColor, isActiveSet, textDisabled]);
+    const textInputStyles = useMemo(
+        () => [styles.textInput, { backgroundColor: computedTextfieldBackgroundColor, color: computedColor }],
+        [computedTextfieldBackgroundColor, computedColor],
+    );
+    const buttonStyles = useMemo(
+        () => [styles.button, { backgroundColor: computedButtonBackgroundColor }],
+        [computedButtonBackgroundColor],
+    );
+    const iconStyle = useMemo(
+        () => ({ color: isConfirmed ? "green" : isActiveSet ? primaryColor : textDisabled }),
+        [isConfirmed, isActiveSet, primaryColor, textDisabled],
+    );
+    const playStyle = useMemo(
+        () => ({ color: isConfirmed || isActiveSet || isLatestSet ? mainColor : textDisabled }),
+        [isConfirmed, isActiveSet, isLatestSet, mainColor, textDisabled],
+    );
 
     const confirmIcon = useMemo(() => {
         if (isActiveSet) {
@@ -123,7 +136,7 @@ export const WeightBasedSetInput = ({ setIndex, exerciseId }: SetInputRowProps) 
             return "arrow-left-bold";
         }
         return "check";
-    }, [isActiveSet, isConfirmed]);
+    }, [isActiveSet, isConfirmed, isLatestSet]);
 
     return (
         <HStack style={[styles.vStack, activeStackStyles]}>
@@ -140,10 +153,26 @@ export const WeightBasedSetInput = ({ setIndex, exerciseId }: SetInputRowProps) 
             </Center>
             <HStack ghost stretch style={styles.inputStack}>
                 <Center style={styles.center}>
-                    <ThemedTextInput editable={isEditable} returnKeyType="done" style={textInputStyles} value={weight} onChangeText={handleSetWeight} textAlign="center" inputMode="decimal" />
+                    <ThemedTextInput
+                        editable={isEditable}
+                        returnKeyType="done"
+                        style={textInputStyles}
+                        value={weight}
+                        onChangeText={handleSetWeight}
+                        textAlign="center"
+                        inputMode="decimal"
+                    />
                 </Center>
                 <Center style={styles.center}>
-                    <ThemedTextInput editable={isEditable} returnKeyType="done" style={textInputStyles} value={reps} onChangeText={handleSetReps} textAlign="center" inputMode="decimal" />
+                    <ThemedTextInput
+                        editable={isEditable}
+                        returnKeyType="done"
+                        style={textInputStyles}
+                        value={reps}
+                        onChangeText={handleSetReps}
+                        textAlign="center"
+                        inputMode="decimal"
+                    />
                 </Center>
                 <Center style={styles.center}>
                     <ThemedPressable disabled={!isEditable} style={buttonStyles} onPress={handleToggle}>

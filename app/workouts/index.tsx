@@ -20,6 +20,7 @@ import { HStack } from "../../components/Stack/HStack/HStack";
 import { ThemedMaterialCommunityIcons } from "../../components/Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
 import { useToast } from "../../components/BottomToast/useToast";
 import { WorkoutId } from "../../store/reducers/workout/types";
+import { View } from "react-native";
 
 const usePauseWarningContent = () => {
     const language = useAppSelector(getLanguage);
@@ -137,7 +138,7 @@ export function Workouts() {
             <SiteNavigationButtons titleFontSize={40} title={t("workouts")} handleConfirmIcon={confirmIcon} handleConfirm={handleCreateWorkout} />
             <WorkoutSorting />
             <PageContent background ignoreGap stretch paddingTop={20}>
-                {mappedWorkouts}
+                <View style={trainStyles.workoutWrapper}>{mappedWorkouts}</View>
             </PageContent>
             <BottomToast reference={toastRef} bottom={5} onRequestClose={closeToast} open={showToast} messageKey={"undo_message"} titleKey={"workout_deleted_title"} onRedo={handleRecoverWorkout} />
             <ThemedBottomSheetModal snapPoints={["40%"]} title={title} ref={ref}>

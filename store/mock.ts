@@ -58,16 +58,17 @@ export const mockState: AppState = {
         deletionTimeMs: 5000,
     },
     workoutState: {
-        sorting: "A_Z",
+        templateSorting: "A_Z",
+        workoutSorting: "A_Z",
         workouts: [
             {
                 workoutId: "workout-128901238901",
-                name: "Real Back",
+                name: "Rücken 1",
                 calendarColor: "#ffff00",
                 exercises: [
                     {
                         exerciseId: "exercise-1",
-                        templateId: "template-1",
+                        templateId: "template-1506758705953",
                         type: "WEIGHT_BASED",
                         name: "Klimmzüge unterstützt",
                         weight: "25",
@@ -75,9 +76,33 @@ export const mockState: AppState = {
                         pause: { seconds: "0", minutes: "3" },
                         reps: "5",
                     },
-                    { exerciseId: "exercise-2", type: "WEIGHT_BASED", name: "Rudern Seilzug", weight: "50", sets: "4", pause: { seconds: "0", minutes: "2" }, reps: "8" },
-                    { exerciseId: "exercise-3", type: "WEIGHT_BASED", name: "Hintere Schulter Seil", weight: "50", sets: "4", pause: { seconds: "0", minutes: "2" }, reps: "8" },
-                    { exerciseId: "exercise-4", type: "WEIGHT_BASED", name: "Bizeps Sz", weight: "10", sets: "4", pause: { seconds: "0", minutes: "2" }, reps: "8" },
+                    {
+                        exerciseId: "exercise-2",
+                        type: "WEIGHT_BASED",
+                        name: "Rudern Seilzug",
+                        weight: "50",
+                        sets: "4",
+                        pause: { seconds: "0", minutes: "2" },
+                        reps: "8",
+                    },
+                    {
+                        exerciseId: "exercise-3",
+                        type: "WEIGHT_BASED",
+                        name: "Hintere Schulter Seil",
+                        weight: "50",
+                        sets: "4",
+                        pause: { seconds: "0", minutes: "2" },
+                        reps: "8",
+                    },
+                    {
+                        exerciseId: "exercise-4",
+                        type: "WEIGHT_BASED",
+                        name: "Bizeps Sz",
+                        weight: "10",
+                        sets: "4",
+                        pause: { seconds: "0", minutes: "2" },
+                        reps: "8",
+                    },
                 ],
                 doneWorkouts: [
                     {
@@ -272,7 +297,7 @@ export const mockState: AppState = {
                     {
                         name: "Klimmzüge unterstützt",
                         exerciseId: "exercise-1",
-                        templateId: "template-1",
+                        templateId: "template-1506758705953",
                         type: "WEIGHT_BASED",
                         weight: "50",
                         sets: "5",
@@ -302,7 +327,11 @@ export const mockState: AppState = {
                                 type: "TIME_BASED",
                                 doneExerciseId: "exercise-1",
                                 name: "Planks",
-                                sets: [{ duration: { seconds: "56", minutes: "0" } }, { duration: { seconds: "56", minutes: "0" } }, { duration: { seconds: "56", minutes: "0" } }],
+                                sets: [
+                                    { duration: { seconds: "56", minutes: "0" } },
+                                    { duration: { seconds: "56", minutes: "0" } },
+                                    { duration: { seconds: "56", minutes: "0" } },
+                                ],
                             },
                         ],
                     },
@@ -316,7 +345,11 @@ export const mockState: AppState = {
                                 type: "TIME_BASED",
                                 doneExerciseId: "exercise-1",
                                 name: "Planks",
-                                sets: [{ duration: { seconds: "55", minutes: "0" } }, { duration: { seconds: "56", minutes: "0" } }, { duration: { seconds: "56", minutes: "0" } }],
+                                sets: [
+                                    { duration: { seconds: "55", minutes: "0" } },
+                                    { duration: { seconds: "56", minutes: "0" } },
+                                    { duration: { seconds: "56", minutes: "0" } },
+                                ],
                             },
                         ],
                     },
@@ -326,6 +359,7 @@ export const mockState: AppState = {
         storedExerciseTemplates: [
             {
                 templateId: "template-1",
+                creationTimestamp: 1636758705953,
                 exerciseMetaData: {
                     type: "WEIGHT_BASED",
                     name: "Klimmzüge unterstützt",
@@ -337,6 +371,7 @@ export const mockState: AppState = {
             },
             {
                 templateId: "template-2",
+                creationTimestamp: 1506758705953,
                 exerciseMetaData: {
                     type: "WEIGHT_BASED",
                     name: "Rudern",
@@ -348,6 +383,7 @@ export const mockState: AppState = {
             },
             {
                 templateId: "template-3",
+                creationTimestamp: 1706769805955,
                 exerciseMetaData: {
                     type: "TIME_BASED",
                     name: "Planks",
@@ -369,7 +405,8 @@ export const emptyState = {
         measurements: [],
     },
     workoutState: {
-        sorting: "LONGEST_AGO",
+        templateSorting: "MOST_RECENT",
+        workoutSorting: "LONGEST_AGO",
         workouts: [],
     },
     metadataState: {

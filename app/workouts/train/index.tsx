@@ -12,9 +12,22 @@ import { StopwatchPopover } from "../../../components/StopwatchPopover/Stopwatch
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Carousel from "react-native-reanimated-carousel/src/Carousel";
 import { ThemedBottomSheetModal, useBottomSheetRef } from "../../../components/BottomSheetModal/ThemedBottomSheetModal";
-import { mutateActiveExerciseInTrainedWorkout, pauseTrainedWorkout, resetTrainedWorkout, saveCurrentWorkout, setActiveExerciseIndex } from "../../../store/reducers/workout";
+import {
+    mutateActiveExerciseInTrainedWorkout,
+    pauseTrainedWorkout,
+    resetTrainedWorkout,
+    saveCurrentWorkout,
+    setActiveExerciseIndex,
+} from "../../../store/reducers/workout";
 
-import { getCanSnap, getExerciseDone, getHasNoTrainingDataSaved, getIsDoneWithTraining, getTrainedWorkout, getTrainedWorkoutExercises } from "../../../store/reducers/workout/workoutSelectors";
+import {
+    getCanSnap,
+    getExerciseDone,
+    getHasNoTrainingDataSaved,
+    getIsDoneWithTraining,
+    getTrainedWorkout,
+    getTrainedWorkoutExercises,
+} from "../../../store/reducers/workout/workoutSelectors";
 import { ICarouselInstance } from "react-native-reanimated-carousel";
 import { getSwitchToNextExercise } from "../../../store/reducers/settings/settingsSelectors";
 import { WorkoutSettings } from "../../../components/App/settings/Sections/workout";
@@ -108,7 +121,6 @@ export function Train() {
     const mappedExercises: { exerciseId: ExerciseId }[] = useMemo(() => {
         if (!trainedWorkout) {
             handleNavigateToWorkouts();
-            return [] as { exerciseId: ExerciseId }[];
         }
         return (
             workoutExercises?.map(({ exerciseId }) => ({

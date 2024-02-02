@@ -12,7 +12,7 @@ import ReAnimated, { FadeIn, FadeOut } from "react-native-reanimated";
 import { getThemeKey } from "../../store/reducers/settings/settingsSelectors";
 
 interface SwipeableProps extends PropsWithChildren {
-    onClick: () => void;
+    onClick?: () => void;
     onEdit?: () => void;
     onDelete?: () => void;
 }
@@ -174,7 +174,7 @@ export const Swipeable = ({ onEdit, onDelete, onClick, children }: SwipeableProp
             styles.iconContainer,
             {
                 opacity: outerIconOpacity,
-                height: containerMeasures.height,
+                height: containerMeasures.height + 10,
                 width: containerMeasures.width,
                 backgroundColor: interpolatedBackgroundColor,
             },
@@ -186,7 +186,7 @@ export const Swipeable = ({ onEdit, onDelete, onClick, children }: SwipeableProp
         () => [
             styles.innerIconContainer,
             {
-                height: containerMeasures.height,
+                height: containerMeasures.height + 10,
                 right: interpolatedIconPosition,
             },
         ],
@@ -197,7 +197,7 @@ export const Swipeable = ({ onEdit, onDelete, onClick, children }: SwipeableProp
         if (active) {
             return;
         }
-        onClick();
+        onClick?.();
     }, [onClick, active]);
 
     return (

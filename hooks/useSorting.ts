@@ -1,12 +1,11 @@
 import { useTranslation } from "react-i18next";
-import { useAppDispatch, useAppSelector } from "../store";
-import { getWorkoutSorting } from "../store/reducers/workout/workoutSelectors";
+import { AppState, useAppDispatch, useAppSelector } from "../store";
 import { useComposedTranslation } from "./useComposedTranslation";
 import { Sortingtypes } from "../store/types";
 import { useMemo } from "react";
-import { setWorkoutSorting } from "../store/reducers/workout";
+import { setTemplateSorting, setWorkoutSorting } from "../store/reducers/workout";
 import { setMeasurementSorting } from "../store/reducers/measurements";
-import { getMeasurementSorting } from "../store/reducers/measurements/measurementSelectors";
+import { getSortingType } from "../store/reducers/workout/workoutSelectors";
 
 const SortIconMap = {
     ["A_Z"]: "sort-alphabetical-ascending",
@@ -16,18 +15,21 @@ const SortIconMap = {
 } as const;
 
 type SortingConfig = {
-    type: "Workout" | "Measurement";
+    type: "Workout" | "Measurement" | "ExerciseTemplate";
 };
 
 export const useSorting = ({ type }: SortingConfig) => {
     const { t } = useTranslation();
-    const currentSorting = useAppSelector(type === "Measurement" ? getMeasurementSorting : getWorkoutSorting);
+    const currentSorting = useAppSelector((state: AppState) => getSortingType(state, type));
     const dispatch = useAppDispatch();
     const title = useComposedTranslation("sorting_label", `sorting_${currentSorting}`);
 
     const sortDispatchFunction = useMemo(() => {
         if (type === "Measurement") {
             return setMeasurementSorting;
+        }
+        if (type === "ExerciseTemplate") {
+            return setTemplateSorting;
         }
         return setWorkoutSorting;
     }, [type]);
@@ -48,5 +50,5 @@ export const useSorting = ({ type }: SortingConfig) => {
         [dispatch, sortDispatchFunction, t],
     );
 
-    return useMemo(() => ({ iconName: SortIconMap[currentSorting], title, mappedSorting }) as const, [currentSorting, mappedSorting, title]);
+    return useMemo(() => ({ iconName: SortIconMap[currentSorting ?? "A_Z"], title, mappedSorting }) as const, [currentSorting, mappedSorting, title]);
 };

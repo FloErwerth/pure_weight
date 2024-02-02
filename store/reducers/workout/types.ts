@@ -51,6 +51,8 @@ export type ExerciseSets = ExerciseData[];
 
 export type ExerciseTemplate = {
     templateId: TemplateId;
+    creationTimestamp: number;
+    updated?: boolean;
     exerciseMetaData: Omit<ExerciseMetaData, "exerciseId">;
 };
 
@@ -88,7 +90,8 @@ export type TrainedWorkout = {
     }[];
     paused: boolean;
     exerciseData: {
-        originalExerciseId: ExerciseId;
+        exerciseId: ExerciseId;
+        templateId?: TemplateId;
         exerciseType: ExerciseType;
         setIndex: number;
         latestSetIndex: number;
@@ -102,10 +105,13 @@ export type TrainedWorkout = {
 export type WorkoutState = {
     workouts: Workout[];
     storedExerciseTemplates?: ExerciseTemplate[];
-    sorting: SortingType;
+    workoutSorting: SortingType;
+    templateSorting: SortingType;
     deletedWorkout?: { workout: Workout; trainedWorkout?: TrainedWorkout };
     deletedExercise?: { exercise: ExerciseMetaData; index: number };
     editedWorkout?: EditedWorkout;
     trainedWorkout?: TrainedWorkout;
     editedExercise?: EditedExercise;
+    editedExerciseTemplate?: ExerciseTemplate;
+    deletedExerciseTemplate?: ExerciseTemplate;
 };

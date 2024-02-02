@@ -11,6 +11,7 @@ import { WorkoutSettings } from "../../components/App/settings/Sections/workout"
 import { Fragment, useEffect, useMemo, useRef } from "react";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RoutesParamaters } from "../../hooks/navigate";
+import { TemplateSection } from "../../components/App/settings/Sections/templates/TemplatesSection";
 
 const isProduction = process.env["EXPO_PUBLIC_IS_PRODUCTION"] === "true";
 
@@ -38,6 +39,7 @@ export function Settings({ route: { params } }: NativeStackScreenProps<RoutesPar
                 <Display />
             </PageContent>,
             <HelpSection key="HELP SETTINGS" />,
+            <TemplateSection key="TEMPLATE SETTINGS" />,
             <Fragment key="DEVELOPMENT">
                 {!isProduction && (
                     <PageContent background paddingTop={30}>

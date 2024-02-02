@@ -45,7 +45,7 @@ export const RenderedMeasurement = ({ measurement }: MeasurementProps) => {
     );
 
     return (
-        <HStack round style={styles.pressableWrapper}>
+        <HStack padding round style={styles.pressableWrapper}>
             <ThemedView style={styles.vStack}>
                 <View style={styles.titleWrapper}>
                     <Text style={styles.text}>{measurement.name}</Text>

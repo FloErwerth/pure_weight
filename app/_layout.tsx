@@ -31,6 +31,8 @@ import { setLanguage, setTheme } from "../store/reducers/settings";
 import { WorkoutHistoryEdit } from "./workouts/history/edit";
 import { getReactNativeTheme } from "../store/reducers/settings/settingsSelectors";
 import { CreateExercise } from "./workouts/create/exercise";
+import { ExerciseTemplatesPage } from "./settings/templates";
+import { EditableTemplatePage } from "./settings/templates/edit";
 
 const Stack = createNativeStackNavigator<RoutesParamaters>();
 
@@ -77,6 +79,8 @@ const ThemedApp = () => {
                                     <Stack.Screen component={CreateMeasurement} options={{ headerShown: false }} name="measurement/create/index" />
                                     <Stack.Screen component={MeasurementHistory} options={{ headerShown: false }} name="measurement/history/index" />
                                     <Stack.Screen component={CreateExercise} options={{ headerShown: false }} name="workouts/create/exercise/index" />
+                                    <Stack.Screen component={ExerciseTemplatesPage} options={{ headerShown: false }} name="settings/templates/index" />
+                                    <Stack.Screen component={EditableTemplatePage} options={{ headerShown: false }} name="settings/templates/edit/index" />
                                 </Stack.Navigator>
                             </SafeAreaView>
                         </BottomSheetModalProvider>

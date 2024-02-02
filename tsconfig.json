@@ -9,5 +9,5 @@
     "**/*.ts",
     "**/*.tsx"
   ],
-  "exclude": ["dist","node_modules", ".expo"]
+  "exclude": ["dist","node_modules", ".expo", "**/node_modules/**"]
 }

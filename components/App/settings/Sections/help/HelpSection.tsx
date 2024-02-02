@@ -3,9 +3,9 @@ import { PageContent } from "../../../../PageContent/PageContent";
 import { ProfileContent } from "../../components/ProfileContent/ProfileContent";
 import { useTranslation } from "react-i18next";
 
-const helpTitleConfig = { title: "Help", size: 30 } as const;
 export const HelpSection = () => {
     const { t } = useTranslation();
+    const helpTitleConfig = { title: t("help_section_title"), size: 30 } as const;
     return (
         <PageContent titleConfig={helpTitleConfig} background paddingTop={30}>
             <ProfileContent>

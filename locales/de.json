@@ -46,6 +46,8 @@
   "weight_based_label": "Gewichtbasiert",
     "time_based_label": "Zeitbasiert",
     "with": "mit",
+  "template_section_title": "Vorlagen",
+  "help_section_title": "Hilfe",
   "applied_template_success_title": "Vorlage erfolgreich angewendet",
 
   "workout_save": "Workout speichern",
@@ -108,8 +110,8 @@
   "settings_deletion_time_helptext_text": "Nachdem Du etwas gelöscht hast, erscheint am unteren Bildschirmrand ein Hinweis, dass etwas gelöscht wurde. \n\nDie Einstellung ermöglicht es Dir die Zeit zu bestimmen, wie lange dieser Hinweis angezeigt wird.",
 
   "settings_switch_to_next_exercise_title": "Zur nächsten Übung wechseln",
-    "settings_switch_to_next_exercise_true": "Autom. wechseln",
-    "settings_switch_to_next_exercise_false": "Nicht wechseln",
+  "settings_switch_to_next_exercise_true": "Autom. wechseln",
+  "settings_switch_to_next_exercise_false": "Nicht wechseln",
   "settings_exercises_title": "Übungen",
   "settings_switch_exercises_helptext": "Wenn aktiviert, wird nach beendeter Übung automatisch zur nächsten Übung gewechselt",
 
@@ -123,6 +125,9 @@
   "workout_history_plural": "Workouts abgeschlossen",
   "workout_history_edit_title": "Vorher. Workout bearbeiten",
 
+  "template_deleted_success": "Vorlage erfolgreich gelöscht",
+  "template_redo": "Vorlage wiederherstellen",
+
   "workout_history_edit_warning_title": "Änderungen nicht gespeichert",
   "workout_history_edit_warning_message": "Du hast Änderungen an diesem Workout vorgenommen, die noch nicht gespeichert wurden. \n\nMöchtest Du die Änderungen speichern?",
   "workout_history_edit_discard_action": "Änderungen verwerfen",
@@ -131,8 +136,11 @@
   "measurement_history_empty": "Noch keine Messungen vorhanden",
   "measurement_history_single": "Eine Messung gespeichert",
   "measurement_history_plural": "Messungen gespeichert",
-
-
+  "edit_template": "Vorlage bearbeiten",
+  "edit_template_adjust_exercises_title": "Übungen anpassen",
+  "edit_template_adjust_exercises_text": "Alle Übungen, die auf dieser Vorlage basieren, werden ebenfalls aktualisiert. \n\nDies betrifft auch Übungen in einem pausierten Workout, welche noch nicht als fertig markiert wurden.",
+  "edit_template_created_at": "Erstellt am",
+  "edit_template_updated_at": "Aktualisiert am",
   "alert_delete_message": "Dies kann nicht rückgängig gemacht werden",
 
   "workout_early_quit_title": "Das Workout frühzeitig beenden?",

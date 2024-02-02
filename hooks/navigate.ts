@@ -58,11 +58,23 @@ export type RoutesParamaters = {
     ["tabs"]: {
         name: "tabs";
     };
+    ["settings/templates/index"]: {
+        name: "settings/templates/index";
+    };
+    ["settings/templates/edit/index"]: {
+        name: "settings/templates/edit/index";
+    };
 };
 
 export const Routes = {
     workouts: {
         screen: "tabs/workouts",
+    },
+    "settings/templates/index": {
+        screen: "settings/templates/index",
+    },
+    "settings/templates/edit/index": {
+        screen: "settings/templates/edit/index",
     },
     train: {
         screen: "workouts/train/index",
