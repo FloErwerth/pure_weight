@@ -5,8 +5,15 @@ import { SiteNavigationButtons } from "../../components/SiteNavigationButtons/Si
 import { useTranslation } from "react-i18next";
 import { ThemedView } from "../../components/Themed/ThemedView/View";
 import { getIsOngoingWorkout, getSortedWorkouts, getTrainedWorkout } from "../../store/reducers/workout/workoutSelectors";
-import { createNewWorkout, recoverWorkout, removeWorkout, resumeTrainedWorkout, setEditedWorkout, startWorkout } from "../../store/reducers/workout";
-import { WorkoutSorting } from "../../components/App/train/WorkoutSorting/WorkoutSorting";
+import {
+    createNewWorkout,
+    recoverWorkout,
+    removeWorkout,
+    resumeTrainedWorkout,
+    setEditedWorkout,
+    startWorkout,
+} from "../../store/reducers/workout";
+import { Sorting } from "../../components/Sorting/Sorting";
 import { RenderedWorkout } from "../../components/App/workout/RenderedWorkout";
 import { PageContent } from "../../components/PageContent/PageContent";
 import { Swipeable } from "../../components/WorkoutCard/Swipeable";
@@ -21,6 +28,8 @@ import { ThemedMaterialCommunityIcons } from "../../components/Themed/ThemedMate
 import { useToast } from "../../components/BottomToast/useToast";
 import { WorkoutId } from "../../store/reducers/workout/types";
 import { View } from "react-native";
+import { ExpandableSearchbar } from "../../components/Searchbar/ExpandableSearchbar";
+import { noop } from "lodash";
 
 const usePauseWarningContent = () => {
     const language = useAppSelector(getLanguage);
@@ -126,7 +135,11 @@ export function Workouts() {
     const mappedWorkouts = useMemo(
         () =>
             savedWorkouts.map(({ name, workoutId }) => (
-                <Swipeable key={name.concat(workoutId?.toString())} onClick={() => handleStartWorkoutCases(workoutId)} onDelete={() => onDelete(workoutId)} onEdit={() => onEdit(workoutId)}>
+                <Swipeable
+                    key={name.concat(workoutId?.toString())}
+                    onClick={() => handleStartWorkoutCases(workoutId)}
+                    onDelete={() => onDelete(workoutId)}
+                    onEdit={() => onEdit(workoutId)}>
                     <RenderedWorkout workoutId={workoutId} />
                 </Swipeable>
             )),
@@ -135,12 +148,28 @@ export function Workouts() {
 
     return (
         <ThemedView stretch background>
-            <SiteNavigationButtons titleFontSize={40} title={t("workouts")} handleConfirmIcon={confirmIcon} handleConfirm={handleCreateWorkout} />
-            <WorkoutSorting />
-            <PageContent background ignoreGap stretch paddingTop={20}>
+            <SiteNavigationButtons
+                titleFontSize={40}
+                title={t("workouts")}
+                handleConfirmIcon={confirmIcon}
+                handleConfirm={handleCreateWorkout}
+            />
+            <PageContent keyboardShouldPersistTaps="handled" scrollable={mappedWorkouts.length > 2} background ignoreGap stretch>
+                <HStack ghost style={trainStyles.searchAndFilterBar}>
+                    <Sorting />
+                    <ExpandableSearchbar handleSetSearchManual={noop} />
+                </HStack>
                 <View style={trainStyles.workoutWrapper}>{mappedWorkouts}</View>
             </PageContent>
-            <BottomToast reference={toastRef} bottom={5} onRequestClose={closeToast} open={showToast} messageKey={"undo_message"} titleKey={"workout_deleted_title"} onRedo={handleRecoverWorkout} />
+            <BottomToast
+                reference={toastRef}
+                bottom={5}
+                onRequestClose={closeToast}
+                open={showToast}
+                messageKey={"undo_message"}
+                titleKey={"workout_deleted_title"}
+                onRedo={handleRecoverWorkout}
+            />
             <ThemedBottomSheetModal snapPoints={["40%"]} title={title} ref={ref}>
                 <PageContent paddingTop={20} stretch ghost>
                     <Text style={trainStyles.button} ghost stretch>

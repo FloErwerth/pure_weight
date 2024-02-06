@@ -8,12 +8,18 @@ import { HStack } from "../Stack/HStack/HStack";
 import { ThemedMaterialCommunityIcons } from "../Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
+import { View } from "react-native";
 
 type SortingButtonProps = {
     iconName: ComponentProps<typeof MaterialCommunityIcons>["name"];
     title: string;
     hide?: boolean;
-    mappedOptions: Array<{ iconName: ComponentProps<typeof MaterialCommunityIcons>["name"]; value: string; label: string; selectCallback: () => void }>;
+    mappedOptions: Array<{
+        iconName: ComponentProps<typeof MaterialCommunityIcons>["name"];
+        value: string;
+        label: string;
+        selectCallback: () => void;
+    }>;
 };
 
 export const SortingButton = ({ iconName, title, mappedOptions, hide = false }: SortingButtonProps) => {
@@ -33,7 +39,7 @@ export const SortingButton = ({ iconName, title, mappedOptions, hide = false }: 
     }
 
     return (
-        <>
+        <View>
             <ThemedPressable ghost style={styles.wrapper} onPress={open}>
                 <HStack ghost style={styles.optionStack}>
                     <ThemedMaterialCommunityIcons ghost name={iconName} size={20} />
@@ -56,6 +62,6 @@ export const SortingButton = ({ iconName, title, mappedOptions, hide = false }: 
                     ))}
                 </ThemedView>
             </ThemedBottomSheetModal>
-        </>
+        </View>
     );
 };

@@ -8,6 +8,11 @@ export const trainStyles = StyleSheet.create({
     flexOneView: {
         flex: 1,
     },
+    searchAndFilterBar: {
+        paddingBottom: 10,
+        justifyContent: "space-between",
+        alignItems: "center",
+    },
     button: {
         fontSize: 20,
         paddingTop: 1,

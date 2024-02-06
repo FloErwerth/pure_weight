@@ -20,7 +20,7 @@ export const StopwatchPopover = () => {
     const iconOpacity = useRef(new Animated.Value(1)).current;
     const [showPopover, setShowPopover] = useState(false);
     const [buttonPos, setButtonPos] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
-    const top = useRef(new Animated.Value(200)).current;
+    const top = useRef(new Animated.Value(100)).current;
     const { timerStarted, reset, remainingTime, stopTimer, startTimer } = useStopwatch(pauseTime);
     const buttonRef = useRef<View>(null);
     const { inputFieldBackgroundColor } = useTheme();
@@ -32,7 +32,7 @@ export const StopwatchPopover = () => {
         } else {
             startTimer();
         }
-    }, [timerStarted]);
+    }, [startTimer, stopTimer, timerStarted]);
 
     const handleDoneSetCallback = useCallback(() => {
         if (startOnDoneSet && !timerStarted) {
