@@ -202,15 +202,17 @@
   "alert_create_workout_discard_content": "Wenn Du die Erstellung deines Workouts abbrichst geht der bisherige Fortschritt verloren.",
 
   "progress_placeholder": "Messdaten oder Daten von Einheiten hinzufügen, um Graphen anzeigen zu können",
-
+  "settings_update_templates_title": "Vorlagen autom. aktualisieren",
+  "settings_update_templates_helptext": "Wenn aktiviert, wird eine Vorlage automatisch entsprechend den letzten Änderungen an einer Übung, welches die Vorlage benutzt, angepasst. \n\nBeispiel: Du trainierst Bankdrücken, was aus einer Vorlage erstellt wird und Du änderst das Gewicht der Übung, so wird das Gewicht des Templates ebenfalls angepasst.",
   "progress_increased": "gestiegen",
   "progress_decreased": "gefallen",
-  "progress_text_1": "Deine Leistung ist um ",
+  "progress_text_1": "Deine Leistung bei",
   "progress_text_even": "Deine Leistung hat sich nicht geändert",
   "progress_text_hint_workout": "Tippe, um Details zu jeder Einheit zu sehen",
   "progress_text_hint_measurement": "Tippe, um Details zu jeder Messung zu sehen",
   "workout_new": "Neues Workout starten",
 
+  "add_more_exercises_help": "Wenn aktiviert, wirst Du nach der Erstellung einer Übung nicht automatisch zum Workout zurückgeleitet",
   "measurements": "Messungen",
   "measurement": "Messung",
   "measurement_create": "Messung erstellen",

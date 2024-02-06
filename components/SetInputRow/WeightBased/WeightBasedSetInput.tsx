@@ -64,17 +64,12 @@ export const WeightBasedSetInput = ({ setIndex, exerciseId }: SetInputRowProps) 
                 dispatch(handleMutateSet({ setIndex, key: "weight", value: weight, type: "WEIGHT_BASED" }));
                 dispatch(handleMutateSet({ setIndex, key: "reps", value: reps, type: "WEIGHT_BASED" }));
                 dispatch(markSetAsDone({ setIndex }));
-
-                if (isLastSetGetter(setIndex)) {
-                    emitter.emit("workoutLastSet");
-                } else {
-                    emitter.emit("workoutDoneSet");
-                }
+                emitter.emit("workoutDoneSet");
             }
         } else {
             handleSetActive();
         }
-    }, [isActiveSet, weight, reps, dispatch, setIndex, isLastSetGetter, handleSetActive]);
+    }, [isActiveSet, weight, reps, dispatch, setIndex, handleSetActive]);
 
     const activeStackStyles = useMemo(() => {
         return { backgroundColor: isActiveSet ? inputFieldBackgroundColor : "transparent" };

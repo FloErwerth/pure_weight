@@ -1,5 +1,4 @@
 import { createNavigationContainerRef, ParamListBase } from "@react-navigation/native";
-import { MeasurementId } from "../components/App/measurements/types";
 import { WorkoutId } from "../store/reducers/workout/types";
 
 export type RoutesParamaters = {
@@ -26,9 +25,6 @@ export type RoutesParamaters = {
     ["tabs/workouts"]: {
         name: "tabs/workouts";
     };
-    ["tabs/measurements"]: {
-        name: "tabs/measurements";
-    };
     ["settings/workout/index"]: {
         name: "settings/workout/index";
     };
@@ -44,10 +40,6 @@ export type RoutesParamaters = {
     ["measurement/create/index"]: {
         name: "measurement/create/index";
     };
-    ["measurement/history/index"]: {
-        name: "measurement/history/index";
-        measurementId: MeasurementId;
-    };
     ["workouts/workoutHistory/index"]: {
         name: "workouts/workoutHistory/index";
     };
@@ -58,23 +50,11 @@ export type RoutesParamaters = {
     ["tabs"]: {
         name: "tabs";
     };
-    ["settings/templates/index"]: {
-        name: "settings/templates/index";
-    };
-    ["settings/templates/edit/index"]: {
-        name: "settings/templates/edit/index";
-    };
 };
 
 export const Routes = {
     workouts: {
         screen: "tabs/workouts",
-    },
-    "settings/templates/index": {
-        screen: "settings/templates/index",
-    },
-    "settings/templates/edit/index": {
-        screen: "settings/templates/edit/index",
     },
     train: {
         screen: "workouts/train/index",
@@ -100,23 +80,11 @@ export const Routes = {
     "workouts/history/edit/index": {
         screen: "workouts/history/edit/index",
     },
-    measurements: {
-        screen: "tabs/measurements",
-    },
     "settings/manual": {
         screen: "settings/manual/index",
     },
     entries: {
         screen: "settings/statistics/entries/index",
-    },
-    "measurement/progress": {
-        screen: "measurement/progress/index",
-    },
-    "measurement/create": {
-        screen: "measurement/create/index",
-    },
-    "measurement/history": {
-        screen: "measurement/history/index",
     },
 } as const;
 

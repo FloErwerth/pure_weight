@@ -5,7 +5,6 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Workouts } from "../workouts";
-import { Measurements } from "../measurements";
 import { Settings } from "../settings";
 import { useTheme } from "../../theme/context";
 import { RoutesParamaters } from "../../hooks/navigate";
@@ -20,8 +19,7 @@ export function TabsWrapper() {
             <Tabs.Navigator
                 screenOptions={{
                     tabBarStyle: { backgroundColor: componentBackgroundColor, borderTopWidth: 0, paddingTop: 5, height: 80, zIndex: 1 },
-                }}
-            >
+                }}>
                 <Tabs.Screen
                     component={Workouts}
                     options={{
@@ -34,17 +32,6 @@ export function TabsWrapper() {
                         tabBarInactiveTintColor: secondaryColor,
                     }}
                     name="tabs/workouts"
-                />
-                <Tabs.Screen
-                    component={Measurements}
-                    options={{
-                        headerShown: false,
-                        tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} Icon={"ruler"} />,
-                        tabBarLabelStyle: { fontSize: 13 },
-                        tabBarButton: TabBarButton,
-                        tabBarLabel: ({ focused }) => <TabBarLabel focused={focused} title={t("measurements")} />,
-                    }}
-                    name="tabs/measurements"
                 />
                 <Tabs.Screen
                     component={Settings}

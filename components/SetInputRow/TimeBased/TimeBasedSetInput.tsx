@@ -10,7 +10,7 @@ import { useTheme } from "../../../theme/context";
 import { AppState, useAppDispatch, useAppSelector } from "../../../store";
 import * as Haptics from "expo-haptics";
 import { handleMutateSet, markSetAsDone, setIsActiveSet } from "../../../store/reducers/workout";
-import { getIsActiveSet, getIsLastSet, getSetData } from "../../../store/reducers/workout/workoutSelectors";
+import { getIsActiveSet, getSetData } from "../../../store/reducers/workout/workoutSelectors";
 import { ThemedPressable } from "../../Themed/Pressable/Pressable";
 import { emitter } from "../../../utils/event";
 import { useTimeDisplay } from "../../../hooks/useTimeDisplay";
@@ -39,9 +39,9 @@ const getMillisecondsFromDuration = (duration?: TimeInput) => {
 };
 
 export const TimeBasedSetInput = ({ setIndex, exerciseId }: SetInputRowProps) => {
-    const { mainColor, primaryColor, secondaryBackgroundColor, componentBackgroundColor, inputFieldBackgroundColor, textDisabled } = useTheme();
+    const { mainColor, primaryColor, secondaryBackgroundColor, componentBackgroundColor, inputFieldBackgroundColor, textDisabled } =
+        useTheme();
     const data = useAppSelector((state: AppState) => getSetData(state, setIndex, exerciseId));
-    const isLastSetGetter = useAppSelector((state: AppState) => getIsLastSet(state, exerciseId));
     const { isLatestSet, reps, isEditable, isConfirmed, duration, preparation } = data ?? {};
     const dispatch = useAppDispatch();
     const isActiveSet = useAppSelector((state: AppState) => getIsActiveSet(state, exerciseId, setIndex));
@@ -62,23 +62,26 @@ export const TimeBasedSetInput = ({ setIndex, exerciseId }: SetInputRowProps) =>
             if (reps && savedDuration > 0) {
                 void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
                 dispatch(markSetAsDone({ setIndex }));
-                dispatch(handleMutateSet({ setIndex, key: "duration", value: getTimeInputFromMilliseconds(savedDuration), type: "TIME_BASED" }));
-
-                if (isLastSetGetter(setIndex)) {
-                    emitter.emit("workoutLastSet");
-                } else {
-                    emitter.emit("workoutDoneSet");
-                }
+                dispatch(
+                    handleMutateSet({ setIndex, key: "duration", value: getTimeInputFromMilliseconds(savedDuration), type: "TIME_BASED" }),
+                );
+                emitter.emit("workoutDoneSet");
             }
         },
-        [close, duration, reps, dispatch, setIndex, isLastSetGetter],
+        [close, duration, reps, dispatch, setIndex],
     );
 
-    const { timerStarted, remainingTime, startTimer, reset, stopTimer } = useStopwatch(getMillisecondsFromDuration(duration) + getMillisecondsFromDuration(preparation), {
-        onTimerDone: handleSetDone,
-    });
+    const { timerStarted, remainingTime, startTimer, reset, stopTimer } = useStopwatch(
+        getMillisecondsFromDuration(duration) + getMillisecondsFromDuration(preparation),
+        {
+            onTimerDone: handleSetDone,
+        },
+    );
 
-    const isInPreparation = useMemo(() => Boolean(hasPreparation && remainingTime > getMillisecondsFromDuration(duration)), [duration, hasPreparation, remainingTime]);
+    const isInPreparation = useMemo(
+        () => Boolean(hasPreparation && remainingTime > getMillisecondsFromDuration(duration)),
+        [duration, hasPreparation, remainingTime],
+    );
     const overallTimeDisplay = useTimeDisplay(isInPreparation ? remainingTime - getMillisecondsFromDuration(duration) : remainingTime);
 
     const handleReset = useCallback(() => {
@@ -130,9 +133,18 @@ export const TimeBasedSetInput = ({ setIndex, exerciseId }: SetInputRowProps) =>
     }, [isEditable, mainColor, textDisabled]);
 
     const textNumberStyles = useMemo(() => [styles.textNumber, { color: setNumberColor }], [textColor]);
-    const textInputStyles = useMemo(() => [styles.textInput, { backgroundColor: computedTextfieldBackgroundColor, color: textColor }], [computedTextfieldBackgroundColor, textColor]);
-    const buttonStyles = useMemo(() => [styles.button, { backgroundColor: computedButtonBackgroundColor }], [computedButtonBackgroundColor]);
-    const playStyle = useMemo(() => ({ color: isConfirmed || isActiveSet || isLatestSet ? mainColor : textDisabled }), [isConfirmed, mainColor, isActiveSet, textDisabled]);
+    const textInputStyles = useMemo(
+        () => [styles.textInput, { backgroundColor: computedTextfieldBackgroundColor, color: textColor }],
+        [computedTextfieldBackgroundColor, textColor],
+    );
+    const buttonStyles = useMemo(
+        () => [styles.button, { backgroundColor: computedButtonBackgroundColor }],
+        [computedButtonBackgroundColor],
+    );
+    const playStyle = useMemo(
+        () => ({ color: isConfirmed || isActiveSet || isLatestSet ? mainColor : textDisabled }),
+        [isConfirmed, isActiveSet, isLatestSet, mainColor, textDisabled],
+    );
     const preparationLeft = useRef(new Animated.Value(24)).current;
     const durationLeft = useRef(new Animated.Value(-20)).current;
     const preparationOpacity = useRef(new Animated.Value(1)).current;
@@ -228,10 +240,14 @@ export const TimeBasedSetInput = ({ setIndex, exerciseId }: SetInputRowProps) =>
     }, [isInPreparation]);
 
     const animatedPreparationStyles = useMemo(
-        () => ({ opacity: hasPreparation ? preparationOpacity : 0, top: 0, position: "absolute", width: 50, left: preparationLeft }) as const,
+        () =>
+            ({ opacity: hasPreparation ? preparationOpacity : 0, top: 0, position: "absolute", width: 50, left: preparationLeft }) as const,
         [hasPreparation, preparationLeft, preparationOpacity],
     );
-    const animatedDurationStyles = useMemo(() => ({ opacity: durationOpacity, top: 0, position: "absolute", width: 50, left: durationLeft }) as const, [durationLeft, durationOpacity]);
+    const animatedDurationStyles = useMemo(
+        () => ({ opacity: durationOpacity, top: 0, position: "absolute", width: 50, left: durationLeft }) as const,
+        [durationLeft, durationOpacity],
+    );
 
     const preparationTextStyles = useMemo(
         () =>
@@ -270,7 +286,10 @@ export const TimeBasedSetInput = ({ setIndex, exerciseId }: SetInputRowProps) =>
         }
     }, [isActiveSet, timerStarted, handleReset, isInPreparation, reset, stopTimer, openCancelHandle, startTimer]);
 
-    const iconStyle = useMemo(() => ({ color: isConfirmed ? "green" : isActiveSet ? primaryColor : textDisabled }), [isConfirmed, isActiveSet, primaryColor, textDisabled]);
+    const iconStyle = useMemo(
+        () => ({ color: isConfirmed ? "green" : isActiveSet ? primaryColor : textDisabled }),
+        [isConfirmed, isActiveSet, primaryColor, textDisabled],
+    );
 
     return (
         <HStack style={[styles.vStack, activeStackStyles]}>

@@ -2,7 +2,6 @@ import { MetadataAction, setDevelopmentState, setGenerallAppState } from "../red
 import { emptyState, mockState } from "../mock";
 import { setSettingsState } from "../reducers/settings";
 import { setWorkoutState } from "../reducers/workout";
-import { setMeasurementState } from "../reducers/measurements";
 import { Action, Middleware } from "redux";
 import { AppState } from "../index";
 
@@ -14,7 +13,6 @@ export const stateMiddleware: Middleware<Record<string, never>, AppState> = (sto
         const selectedState = typedAction.type === "metadata_set_mock_state" ? mockState : emptyState;
         dispatch(setSettingsState(selectedState.settingsState));
         dispatch(setWorkoutState(selectedState.workoutState));
-        dispatch(setMeasurementState(selectedState.measurmentState));
         dispatch(setGenerallAppState(selectedState.metadataState));
         dispatch(setDevelopmentState(typedAction.type === "metadata_set_mock_state" ? "mock" : "empty"));
     }

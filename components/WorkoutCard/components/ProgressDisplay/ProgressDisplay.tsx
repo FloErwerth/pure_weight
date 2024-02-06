@@ -21,7 +21,13 @@ export interface ProgressDisplayProps {
     type: "Workout" | "Measurement";
 }
 
-const useText = (type: "Workout" | "Measurement", even: boolean, isPositiveTrend: boolean = true, processedPercent: number, trend?: Trend) => {
+const useText = (
+    type: "Workout" | "Measurement",
+    even: boolean,
+    isPositiveTrend: boolean = true,
+    processedPercent: number,
+    trend?: Trend,
+) => {
     const language = useAppSelector(getLanguage);
     const { t } = useTranslation();
 
@@ -30,9 +36,9 @@ const useText = (type: "Workout" | "Measurement", even: boolean, isPositiveTrend
             return `${t("progress_text_even")}`;
         }
         if (language === "en") {
-            return `${t("progress_text_1").concat(trend?.name ?? "", " ", t(isPositiveTrend ? "progress_increased" : "progress_decreased"))} by ${processedPercent} %`;
+            return `Your performance at ${trend?.name} ${t(isPositiveTrend ? "increased" : "decreased")} by ${processedPercent}%`;
         }
-        return `${t("progress_text_1")} ${processedPercent}% ${t(isPositiveTrend ? "progress_increased" : "progress_decreased")}`;
+        return `Deine Leistung bei ${trend?.name} ist um ${processedPercent}% ${t(isPositiveTrend ? "gestiegen" : "gefallen")}`;
     }, [even, language, t, processedPercent, isPositiveTrend, trend?.name]);
 
     const measurementText = useMemo(() => {

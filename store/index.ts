@@ -9,7 +9,6 @@ import { WorkoutAction } from "./reducers/workout";
 import { SettingsAction } from "./reducers/settings";
 import { MetadataAction } from "./reducers/metadata";
 import { ErrorActions } from "./reducers/errors";
-import { MeasurementActions } from "./reducers/measurements";
 import { weightMiddleware } from "./middleware/weightUnitMiddleware";
 
 const persistConfig = {
@@ -38,5 +37,5 @@ export const persistor = persistStore(store);
 export const useAppDispatch = () => store.dispatch;
 export const useAppSelector = useSelector;
 
-export type AppActions = WorkoutAction | SettingsAction | MetadataAction | ErrorActions | MeasurementActions;
+export type AppActions = WorkoutAction | SettingsAction | MetadataAction | ErrorActions;
 export type AppState = ReturnType<typeof reducers>;

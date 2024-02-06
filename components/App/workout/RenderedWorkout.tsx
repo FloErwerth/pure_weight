@@ -5,7 +5,13 @@ import { Text } from "../../Themed/ThemedText/Text";
 import { ColorIndicator } from "../../ColorIndicator/ColorIndicator";
 import React, { useCallback } from "react";
 import { AppState, useAppDispatch, useAppSelector } from "../../../store";
-import { getHasHistory, getIsOngoingWorkout, getLatestWorkoutDateDisplay, getOverallTrainingTrend, getWorkoutByIndex } from "../../../store/reducers/workout/workoutSelectors";
+import {
+    getHasHistory,
+    getIsOngoingWorkout,
+    getLatestWorkoutDateDisplay,
+    getOverallTrainingTrend,
+    getWorkoutByIndex,
+} from "../../../store/reducers/workout/workoutSelectors";
 import { useNavigate } from "../../../hooks/navigate";
 import { View } from "react-native";
 import { ProgressDisplay } from "../../WorkoutCard/components/ProgressDisplay/ProgressDisplay";

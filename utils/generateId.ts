@@ -1,9 +1,8 @@
-import { ExerciseId, ExerciseIdType, TemplateId, TemplateIdType, WorkoutId, WorkoutIdType } from "../store/reducers/workout/types";
-import { MeasurementId, MeasurementIdType } from "../components/App/measurements/types";
+import { ExerciseId, ExerciseIdType, WorkoutId, WorkoutIdType } from "../store/reducers/workout/types";
 
-export function generateId<Type extends TemplateIdType | ExerciseIdType | WorkoutIdType | MeasurementIdType>(type: Type) {
+export function generateId<Type extends ExerciseIdType | WorkoutIdType>(type: Type) {
     return `${type}-${Date.now()}` as const;
 }
-export const extractMillisecondsFromId = (id: ExerciseId | TemplateId | WorkoutId | MeasurementId) => {
+export const extractMillisecondsFromId = (id: ExerciseId | WorkoutId) => {
     return parseInt(id.split("-")[1]);
 };

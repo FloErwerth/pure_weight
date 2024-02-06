@@ -3,15 +3,16 @@ import { Language, UnitSystem } from "./types";
 import { ThemeKey } from "../../../theme/types";
 import { activateKeepAwakeAsync, deactivateKeepAwake } from "expo-keep-awake";
 
-export type StopwatchSettings = { startOnDoneSet: boolean; startOnLastSet: boolean; notifications: { allowed: false } | { allowed: true; notify: boolean } };
+export type StopwatchSettings = {
+    startOnDoneSet: boolean;
+    notifications: { allowed: false } | { allowed: true; notify: boolean };
+};
 export type SettingsState = {
     language: Language;
-    theme: ThemeKey;
+    theme: ThemeKey | "system";
     unitSystem: UnitSystem;
     keepAwake: boolean;
     stopwatchSettings: StopwatchSettings;
-    deletionTimeMs: number;
-    switchToNextExercise: boolean;
     searchManual?: string;
 };
 export const setSettingsState = createAction<SettingsState, "settings_set_state">("settings_set_state");
@@ -21,10 +22,17 @@ export const setTheme = createAction<ThemeKey, "theme_set">("theme_set");
 export const setUnitSystem = createAction<UnitSystem, "set_unit_system">("set_unit_system");
 export const setDeletionTimeMs = createAction<number, "set_deletion_time">("set_deletion_time");
 export const setSearchManual = createAction<string | undefined, "set_search_manual">("set_search_manual");
-export const mutateStopwatchSettings = createAction<{ key: keyof StopwatchSettings; value: StopwatchSettings[keyof StopwatchSettings] }, "set_stopwatch_settings">("set_stopwatch_settings");
-export const setSwitchToNextExercise = createAction<Partial<boolean>, "set_switch_to_next_exercise">("set_switch_to_next_exercise");
+export const mutateStopwatchSettings = createAction<
+    { key: keyof StopwatchSettings; value: StopwatchSettings[keyof StopwatchSettings] },
+    "set_stopwatch_settings"
+>("set_stopwatch_settings");
 
-export type SettingsAction = typeof setSettingsState.type | typeof setLanguage.type | typeof setTheme.type | typeof setUnitSystem.type | typeof setKeepAwake.type;
+export type SettingsAction =
+    | typeof setSettingsState.type
+    | typeof setLanguage.type
+    | typeof setTheme.type
+    | typeof setUnitSystem.type
+    | typeof setKeepAwake.type;
 
 export const settingsRecuder = createReducer<SettingsState>(
     {
@@ -32,9 +40,7 @@ export const settingsRecuder = createReducer<SettingsState>(
         language: "en",
         unitSystem: "metric",
         keepAwake: true,
-        stopwatchSettings: { startOnDoneSet: false, startOnLastSet: false, notifications: { allowed: true, notify: true } },
-        deletionTimeMs: 5000,
-        switchToNextExercise: true,
+        stopwatchSettings: { startOnDoneSet: false, notifications: { allowed: true, notify: true } },
     },
     (builder) => {
         builder
@@ -44,14 +50,8 @@ export const settingsRecuder = createReducer<SettingsState>(
             .addCase(setSearchManual, (state, action) => {
                 state.searchManual = action.payload;
             })
-            .addCase(setSwitchToNextExercise, (state, action) => {
-                state.switchToNextExercise = action.payload;
-            })
             .addCase(mutateStopwatchSettings, (state, action) => {
                 state.stopwatchSettings = { ...state.stopwatchSettings, [action.payload.key]: action.payload.value };
-            })
-            .addCase(setDeletionTimeMs, (state, action) => {
-                state.deletionTimeMs = action.payload;
             })
             .addCase(setKeepAwake, (state, action) => {
                 if (action.payload) {

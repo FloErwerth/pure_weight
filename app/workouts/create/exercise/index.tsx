@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useAppDispatch, useAppSelector } from "../../../../store";
 import { getEditedExercise, getHasTemplates, getIsExistingEditedExercise } from "../../../../store/reducers/workout/workoutSelectors";
 import { useToast } from "../../../../components/BottomToast/useToast";
-import { createNewExercise, saveEditedExercise, saveExerciseAsTemplate, updateTemplate } from "../../../../store/reducers/workout";
+import { createNewExercise, saveEditedExercise, saveExerciseAsTemplate } from "../../../../store/reducers/workout";
 import { ThemedView } from "../../../../components/Themed/ThemedView/View";
 import { styles } from "../../../../components/EditableExercise/styles";
 import { Text } from "../../../../components/Themed/ThemedText/Text";
@@ -61,7 +61,6 @@ export const CreateExercise = () => {
 
     const saveExercise = useCallback(() => {
         dispatch(saveEditedExercise());
-        dispatch(updateTemplate());
         openSuccessMessage();
         setShowCheckboxes(false);
         showCheckboxesAfterTimeout();
@@ -73,21 +72,16 @@ export const CreateExercise = () => {
         }
     }, [addMoreExercises, dispatch, navigateBack, openSuccessMessage, showCheckboxesAfterTimeout]);
 
-    const saveTemplate = useCallback(() => {
-        if (showWarning) {
-            closeWarning();
-        }
-        dispatch(saveExerciseAsTemplate({ overwrite: false }));
-        saveExercise();
-    }, [closeWarning, dispatch, saveExercise, showWarning]);
-
-    const overwriteTemplate = useCallback(() => {
-        if (showWarning) {
-            closeWarning();
-        }
-        dispatch(saveExerciseAsTemplate({ overwrite: true }));
-        saveExercise();
-    }, [closeWarning, dispatch, saveExercise, showWarning]);
+    const saveTemplate = useCallback(
+        (createNewTemplate: boolean) => {
+            if (showWarning) {
+                closeWarning();
+            }
+            dispatch(saveExerciseAsTemplate({ createNewTemplate }));
+            saveExercise();
+        },
+        [closeWarning, dispatch, saveExercise, showWarning],
+    );
 
     const handleConfirm = useCallback(() => {
         if (showSavedSuccess) {
@@ -99,7 +93,7 @@ export const CreateExercise = () => {
                     openWarning();
                     return;
                 }
-                saveTemplate();
+                saveTemplate(false);
                 return;
             }
             saveExercise();
@@ -126,6 +120,23 @@ export const CreateExercise = () => {
         openApplySuccess();
     }, [closeBottomSheet, openApplySuccess, showCheckboxesAfterTimeout]);
 
+    const saveAsTemplateHelptextConfig = useMemo(
+        () => ({ title: t("save_as_template"), text: t("save_as_template_help"), snapPoints: ["45%"] as SnapPoint[] }),
+        [t],
+    );
+    const addMoreExercisesHelptextConfig = useMemo(
+        () => ({ title: t("add_more_exercises"), text: t("add_more_exercises_help"), snapPoints: ["35%"] as SnapPoint[] }),
+        [t],
+    );
+
+    const overwriteTemplate = useCallback(() => {
+        saveTemplate(false);
+    }, [saveTemplate]);
+
+    const createNewTemplate = useCallback(() => {
+        saveTemplate(true);
+    }, [saveTemplate]);
+
     return (
         <ThemedView stretch background>
             <SiteNavigationButtons
@@ -143,7 +154,7 @@ export const CreateExercise = () => {
                     {showCheckboxes && (
                         <Reanimated.View style={{ gap: 10 }} layout={Layout} entering={FadeIn} exiting={FadeOut}>
                             <CheckBox
-                                helpTextConfig={{ text: t("save_as_template_help"), snapPoints: ["35%"] }}
+                                helpTextConfig={saveAsTemplateHelptextConfig}
                                 secondary
                                 customWrapperStyles={{ zIndex: -1 }}
                                 checked={saveAsTemplate}
@@ -156,18 +167,19 @@ export const CreateExercise = () => {
                                 checked={addMoreExercises}
                                 onChecked={setAddMoreExercises}
                                 label={t("add_more_exercises")}
+                                helpTextConfig={addMoreExercisesHelptextConfig}
                             />
                         </Reanimated.View>
                     )}
                     <BottomToast
-                        customTime={1000}
+                        time={1000}
                         leftCorrection={-20}
                         titleKey="create_exercise_success_title"
                         onRequestClose={closeSavedSuccessMessage}
                         open={showSavedSuccess}
                     />
                     <BottomToast
-                        customTime={1000}
+                        time={1000}
                         leftCorrection={-20}
                         titleKey="applied_template_success_title"
                         onRequestClose={closeApplySuccess}
@@ -191,7 +203,7 @@ export const CreateExercise = () => {
                     <ThemedPressable round padding onPress={overwriteTemplate}>
                         <Text>{t("save_as_template_warning_overwrite")}</Text>
                     </ThemedPressable>
-                    <ThemedPressable round padding onPress={saveTemplate}>
+                    <ThemedPressable round padding onPress={createNewTemplate}>
                         <Text>{t("save_as_template_warning_create_new")}</Text>
                     </ThemedPressable>
                 </PageContent>

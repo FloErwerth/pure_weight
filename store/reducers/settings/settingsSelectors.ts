@@ -2,11 +2,18 @@ import { AppState } from "../../index";
 import { createSelector } from "@reduxjs/toolkit";
 import { Theme } from "@react-navigation/native";
 import { ThemeConfig } from "../../../theme/config";
+import { Appearance } from "react-native";
+import { ThemeKey } from "../../../theme/types";
 
 export const getSettingsState = ({ settingsState }: AppState) => settingsState;
-export const getThemeKey = createSelector([getSettingsState], (settings) => settings.theme);
-export const getReactNativeTheme = createSelector([getThemeKey], (themeKey) => {
-    const themeConfig = ThemeConfig[themeKey];
+const getThemeKey = (themeKey: ThemeKey | "system") => {
+    const colorScheme = Appearance.getColorScheme();
+    const mappedColorScheme: ThemeKey = !colorScheme ? "dark" : colorScheme;
+    return themeKey === "system" ? mappedColorScheme : themeKey;
+};
+export const getThemeKeyFromStore = createSelector([getSettingsState], (settings) => getThemeKey(settings.theme));
+export const getReactNativeTheme = createSelector([getThemeKeyFromStore], (themeKey) => {
+    const themeConfig = ThemeConfig[getThemeKey(themeKey)];
     return {
         dark: themeKey === "dark",
         colors: {
@@ -24,9 +31,6 @@ export const getUnitSystem = createSelector([getSettingsState], (settings) => se
 export const getStopwatchSettings = createSelector([getSettingsState], (settings) => settings.stopwatchSettings);
 export const getStartStopwatchOnDoneSet = createSelector([getStopwatchSettings], (settings) => Boolean(settings?.startOnDoneSet));
 export const getStopwatchNotify = createSelector([getStopwatchSettings], (settings) => settings?.notifications);
-export const getStartStopwatchOnLastSet = createSelector([getStopwatchSettings], (settings) => Boolean(settings?.startOnLastSet));
-export const getDeletionTime = createSelector([getSettingsState], (settings) => settings.deletionTimeMs);
-export const getSwitchToNextExercise = createSelector([getSettingsState], (settings) => settings.switchToNextExercise);
 export const getSearchManual = createSelector([getSettingsState], (settings) => settings.searchManual);
 export const getKeepAwake = createSelector([getSettingsState], (settings) => settings.keepAwake);
 const languageUnitSystemWeightUnitMap = {

@@ -1,7 +1,14 @@
 import { styles } from "./styles";
 import { createContext, PropsWithChildren, useCallback, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { Gesture, GestureDetector, GestureStateChangeEvent, GestureUpdateEvent, PanGestureChangeEventPayload, PanGestureHandlerEventPayload } from "react-native-gesture-handler";
+import {
+    Gesture,
+    GestureDetector,
+    GestureStateChangeEvent,
+    GestureUpdateEvent,
+    PanGestureChangeEventPayload,
+    PanGestureHandlerEventPayload,
+} from "react-native-gesture-handler";
 import { Animated, Dimensions, Pressable, View } from "react-native";
 import { ThemedView } from "../Themed/ThemedView/View";
 import { useTheme } from "../../theme/context";
@@ -9,7 +16,7 @@ import * as Haptics from "expo-haptics";
 import { useAppSelector } from "../../store";
 import ReAnimated, { FadeIn, FadeOut } from "react-native-reanimated";
 
-import { getThemeKey } from "../../store/reducers/settings/settingsSelectors";
+import { getThemeKeyFromStore } from "../../store/reducers/settings/settingsSelectors";
 
 interface SwipeableProps extends PropsWithChildren {
     onClick?: () => void;
@@ -36,7 +43,7 @@ const useWorkoutGesturePan = ({ onEdit, onDelete }: { onEdit?: () => void; onDel
     };
 
     const offsetX = useRef(new Animated.Value(0)).current;
-    const theme = useAppSelector(getThemeKey);
+    const theme = useAppSelector(getThemeKeyFromStore);
 
     const outputRange = useMemo(() => {
         if (theme === "dark") {
@@ -150,7 +157,7 @@ export const Swipeable = ({ onEdit, onDelete, onClick, children }: SwipeableProp
     const viewRef = useRef<View>(null);
     const { mainColor } = useTheme();
     const [containerMeasures, setContainerMeasures] = useState<{ width: number; height: number }>({ width: 200, height: 120 });
-    const theme = useAppSelector(getThemeKey);
+    const theme = useAppSelector(getThemeKeyFromStore);
     const computedColor = theme === "dark" ? mainColor : "white";
 
     const containerMeasurement = useCallback(() => {
@@ -168,7 +175,10 @@ export const Swipeable = ({ onEdit, onDelete, onClick, children }: SwipeableProp
     }, [offsetX]);
 
     const animatedWrapperStyles = useMemo(() => [styles.animatedWrapper, { transform: [{ translateX: offsetX }] }], [offsetX]);
-    const outerIconOpacity = useMemo(() => offsetX.interpolate({ inputRange: [-1, 0, 1], outputRange: [1, 0, 1], extrapolate: "clamp" }), [offsetX]);
+    const outerIconOpacity = useMemo(
+        () => offsetX.interpolate({ inputRange: [-1, 0, 1], outputRange: [1, 0, 1], extrapolate: "clamp" }),
+        [offsetX],
+    );
     const outerIconWrapperStyles = useMemo(
         () => [
             styles.iconContainer,
@@ -213,7 +223,9 @@ export const Swipeable = ({ onEdit, onDelete, onClick, children }: SwipeableProp
                         <Animated.View style={outerIconWrapperStyles}>
                             <Animated.View style={innerIconWrapperStyles}>
                                 {onEdit && <MaterialCommunityIcons style={styles.editIcon} color={computedColor} name="pencil" size={30} />}
-                                {onDelete && <MaterialCommunityIcons style={styles.deleteIcon} color={computedColor} name="delete" size={32} />}
+                                {onDelete && (
+                                    <MaterialCommunityIcons style={styles.deleteIcon} color={computedColor} name="delete" size={32} />
+                                )}
                             </Animated.View>
                         </Animated.View>
                     </View>

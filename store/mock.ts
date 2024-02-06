@@ -1,61 +1,16 @@
 import { AppState } from "./index";
-import { generateId } from "../utils/generateId";
 
 export const mockState: AppState = {
     metadataState: {
         appInstallDate: "2023-09-01",
         isFirstTimeRendered: false,
     },
-    measurmentState: {
-        sorting: "A_Z",
-        measurements: [
-            {
-                measurementId: generateId("measurement"),
-                name: "Körpergewicht",
-                type: "weight",
-                data: [
-                    { isoDate: "2023-12-01", value: "70" },
-                    { isoDate: "2023-12-02", value: "70" },
-                    { isoDate: "2023-12-03", value: "70" },
-                    { isoDate: "2023-12-04", value: "72" },
-                    { isoDate: "2023-12-05", value: "73" },
-                    { isoDate: "2023-12-06", value: "75" },
-                    { isoDate: "2023-12-07", value: "74" },
-                    { isoDate: "2023-12-08", value: "74" },
-                    { isoDate: "2023-12-09", value: "74" },
-                    { isoDate: "2023-12-10", value: "74" },
-                    { isoDate: "2023-12-11", value: "74" },
-                    { isoDate: "2023-12-12", value: "74" },
-                    { isoDate: "2023-12-13", value: "74" },
-                    { isoDate: "2023-12-14", value: "74" },
-                    { isoDate: "2023-12-15", value: "74" },
-                ],
-                higherIsBetter: true,
-            },
-            {
-                measurementId: generateId("measurement"),
-                name: "Körperfettanteil",
-                type: "percent",
-                data: [
-                    { isoDate: "2023-12-01", value: "15" },
-                    { isoDate: "2023-12-02", value: "15" },
-                    { isoDate: "2023-12-03", value: "15" },
-                    { isoDate: "2023-12-04", value: "16" },
-                    { isoDate: "2023-12-05", value: "14" },
-                    { isoDate: "2023-12-06", value: "13" },
-                    { isoDate: "2023-12-07", value: "12" },
-                ],
-            },
-        ],
-    },
     settingsState: {
-        switchToNextExercise: true,
-        stopwatchSettings: { startOnDoneSet: false, startOnLastSet: false, notifications: { allowed: false } },
+        stopwatchSettings: { startOnDoneSet: false, notifications: { allowed: false } },
         keepAwake: true,
-        theme: "dark",
+        theme: "system",
         language: "en",
         unitSystem: "metric",
-        deletionTimeMs: 5000,
     },
     workoutState: {
         templateSorting: "A_Z",
@@ -68,7 +23,7 @@ export const mockState: AppState = {
                 exercises: [
                     {
                         exerciseId: "exercise-1",
-                        templateId: "template-1506758705953",
+                        templateId: "template-1",
                         type: "WEIGHT_BASED",
                         name: "Klimmzüge unterstützt",
                         weight: "25",
@@ -297,7 +252,7 @@ export const mockState: AppState = {
                     {
                         name: "Klimmzüge unterstützt",
                         exerciseId: "exercise-1",
-                        templateId: "template-1506758705953",
+                        templateId: "template-1",
                         type: "WEIGHT_BASED",
                         weight: "50",
                         sets: "5",
@@ -360,6 +315,7 @@ export const mockState: AppState = {
             {
                 templateId: "template-1",
                 creationTimestamp: 1636758705953,
+                updated: false,
                 exerciseMetaData: {
                     type: "WEIGHT_BASED",
                     name: "Klimmzüge unterstützt",
@@ -372,6 +328,8 @@ export const mockState: AppState = {
             {
                 templateId: "template-2",
                 creationTimestamp: 1506758705953,
+                updated: false,
+
                 exerciseMetaData: {
                     type: "WEIGHT_BASED",
                     name: "Rudern",
@@ -384,6 +342,7 @@ export const mockState: AppState = {
             {
                 templateId: "template-3",
                 creationTimestamp: 1706769805955,
+                updated: false,
                 exerciseMetaData: {
                     type: "TIME_BASED",
                     name: "Planks",
@@ -400,10 +359,6 @@ export const mockState: AppState = {
     },
 };
 export const emptyState = {
-    measurmentState: {
-        sorting: "A_Z",
-        measurements: [],
-    },
     workoutState: {
         templateSorting: "MOST_RECENT",
         workoutSorting: "LONGEST_AGO",
@@ -417,12 +372,10 @@ export const emptyState = {
         errors: [],
     },
     settingsState: {
-        switchToNextExercise: true,
-        stopwatchSettings: { startOnDoneSet: true, startOnLastSet: true, notifications: { allowed: false } },
+        stopwatchSettings: { startOnDoneSet: true, notifications: { allowed: false } },
         keepAwake: true,
         language: "en",
-        theme: "light",
+        theme: "system",
         unitSystem: "metric",
-        deletionTimeMs: 5000,
     },
 } satisfies AppState;

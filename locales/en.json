@@ -202,6 +202,8 @@
   "progress_avg_weight_hint": "Shows the average reps per day",
   "progress_avg_dur": "Ø Duration",
   "progress_avg_dur_hint": "Shows the average duration per exercise",
+  "settings_update_templates_title": "Update templates autom.",
+  "settings_update_templates_helptext": "If activated, a template will be automatically updated according to the latest changes to an exercise that uses the template. \n\nExample: You train bench press, which is created from a template, and you change the weight of the exercise, the weight of the template will also be adjusted.",
 
   "progress_placeholder": "Add workout or measurement data to display graphs",
   "progress_increased": "increased",
@@ -210,6 +212,7 @@
   "progress_text_even": "Your performance did not change",
   "progress_text_2": " by ",
   "workout_new": "Start new workout",
+  "add_more_exercises_help": "If activated, you will not be automatically redirected to the workout after creating an exercise",
 
   "measurements": "Measurements",
   "measurement": "Measurement",

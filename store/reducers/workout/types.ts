@@ -52,7 +52,7 @@ export type ExerciseSets = ExerciseData[];
 export type ExerciseTemplate = {
     templateId: TemplateId;
     creationTimestamp: number;
-    updated?: boolean;
+    updated: boolean;
     exerciseMetaData: Omit<ExerciseMetaData, "exerciseId">;
 };
 

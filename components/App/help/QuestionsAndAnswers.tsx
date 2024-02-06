@@ -2,7 +2,7 @@ import { useAppDispatch, useAppSelector } from "../../../store";
 import { useNavigate } from "../../../hooks/navigate";
 import { useCallback, useMemo, useState } from "react";
 import { SnapPoint, ThemedBottomSheetModal, useBottomSheetRef } from "../../BottomSheetModal/ThemedBottomSheetModal";
-import { getLanguage, getSearchManual, getThemeKey } from "../../../store/reducers/settings/settingsSelectors";
+import { getLanguage, getSearchManual, getThemeKeyFromStore } from "../../../store/reducers/settings/settingsSelectors";
 import { createNewWorkout } from "../../../store/reducers/workout";
 import { HelpQuestion } from "../../HelpQuestionAnswer/HelpQuestion";
 import { ThemedView } from "../../Themed/ThemedView/View";
@@ -15,14 +15,11 @@ import { getWorkoutsQuestions } from "./questions/workouts";
 import { getExercisesQuestions } from "./questions/exercises";
 import { getTrainingsQuestions } from "./questions/trainings";
 import { QuestionAnswerArray, SECTIONS } from "./types";
-import { getMeasurementQuestions } from "./questions/measurments";
-import { setupNewMeasurement } from "../../../store/reducers/measurements";
-import { useMeasurementOptionMap } from "../../../app/measurements/create";
 
 export const QuestionsAndAnswers = () => {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
-    const theme = useAppSelector(getThemeKey);
+    const theme = useAppSelector(getThemeKeyFromStore);
     const searchedManual = useAppSelector(getSearchManual);
     const { bottom } = useSafeAreaInsets();
 
@@ -31,9 +28,10 @@ export const QuestionsAndAnswers = () => {
     }, [navigate]);
 
     const { ref, openBottomSheet: open, closeAll } = useBottomSheetRef();
-    const [selectedQuesiton, setSelectedQuesiton] = useState<{ title: string; answer: JSX.Element; snapPoints?: SnapPoint[] } | undefined>();
+    const [selectedQuesiton, setSelectedQuesiton] = useState<
+        { title: string; answer: JSX.Element; snapPoints?: SnapPoint[] } | undefined
+    >();
     const language = useAppSelector(getLanguage);
-    const measurementOptionMap = useMeasurementOptionMap();
     const setupNewWorkout = useCallback(() => {
         closeAll();
         navigate("create");
@@ -47,26 +45,15 @@ export const QuestionsAndAnswers = () => {
         [navigate],
     );
 
-    const navigateToMesurements = useCallback(() => {
-        navigate("measurements");
-    }, [navigate]);
-
     const sectionTitleMap = useMemo(
         () => ({
             [SECTIONS.WORKOUTS]: "Workouts",
             [SECTIONS.EXERCISES]: language === "de" ? "Übungen" : "Exercises",
             [SECTIONS.TRAININGS]: language === "de" ? "Während des Trainings" : "During the training",
-            [SECTIONS.MEASUREMENTS]: language === "de" ? "Messungen" : "Measurements",
             [SECTIONS.MISCELLANEOUS]: language === "de" ? "Sonstiges" : "Miscellaneous",
         }),
         [language],
     );
-
-    const createNewMeasurement = useCallback(() => {
-        closeAll();
-        navigate("measurement/create");
-        dispatch(setupNewMeasurement());
-    }, [closeAll, dispatch, navigate]);
 
     const colorOfBackground = useMemo(() => {
         if (theme === "dark") {
@@ -85,11 +72,17 @@ export const QuestionsAndAnswers = () => {
         return {
             [SECTIONS.WORKOUTS]: getWorkoutsQuestions(language, handleNavigateToWorkouts, handleSelectFromAnswer, setupNewWorkout),
             [SECTIONS.EXERCISES]: getExercisesQuestions(language, handleSelectFromAnswer),
-            [SECTIONS.TRAININGS]: getTrainingsQuestions(language, setupNewWorkout, handleNavigateToWorkouts, handleSelectFromAnswer, colorOfBackground, navigateToSettings),
-            [SECTIONS.MEASUREMENTS]: getMeasurementQuestions(language, navigateToMesurements, handleSelectFromAnswer, createNewMeasurement, measurementOptionMap),
+            [SECTIONS.TRAININGS]: getTrainingsQuestions(
+                language,
+                setupNewWorkout,
+                handleNavigateToWorkouts,
+                handleSelectFromAnswer,
+                colorOfBackground,
+                navigateToSettings,
+            ),
             [SECTIONS.MISCELLANEOUS]: getMiscellaneousQuestions(navigateToSettings, language),
         };
-    }, [colorOfBackground, createNewMeasurement, handleNavigateToWorkouts, language, measurementOptionMap, navigateToMesurements, navigateToSettings, open, setupNewWorkout]);
+    }, [colorOfBackground, handleNavigateToWorkouts, language, navigateToSettings, open, setupNewWorkout]);
 
     const handleSetSelectedQuestion = useCallback(
         (section: SECTIONS, index: number) => {
@@ -104,7 +97,12 @@ export const QuestionsAndAnswers = () => {
         return Object.entries(data).map(([section, data]) => ({
             sectionTitle: sectionTitleMap[section as unknown as SECTIONS],
             handleSelectQuestion: (index: number) => handleSetSelectedQuestion(section as unknown as SECTIONS, index),
-            data: data.map(({ title, answer, snapPoints }) => ({ title, answer, snapPoints, shown: !searchedManual || title.toLowerCase().includes(searchedManual.toLowerCase()) })),
+            data: data.map(({ title, answer, snapPoints }) => ({
+                title,
+                answer,
+                snapPoints,
+                shown: !searchedManual || title.toLowerCase().includes(searchedManual.toLowerCase()),
+            })),
         }));
     }, [data, handleSetSelectedQuestion, searchedManual, sectionTitleMap]);
 
@@ -116,8 +114,7 @@ export const QuestionsAndAnswers = () => {
                 showsVerticalScrollIndicator={false}
                 contentInset={{ bottom }}
                 ghost
-                contentContainerStyle={{ gap: 20 }}
-            >
+                contentContainerStyle={{ gap: 20 }}>
                 {mappedAndFilteredData.map(({ sectionTitle, handleSelectQuestion, data }) => {
                     if (data.every(({ shown }) => !shown)) {
                         return null;
@@ -129,7 +126,13 @@ export const QuestionsAndAnswers = () => {
                             </Text>
                             <ThemedView round style={{ padding: 10, paddingBottom: 0 }}>
                                 {data.map(({ title, shown }, index) => (
-                                    <HelpQuestion key={title.concat(index.toString())} shown={shown} question={title} title={title} onPress={() => handleSelectQuestion(index)} />
+                                    <HelpQuestion
+                                        key={title.concat(index.toString())}
+                                        shown={shown}
+                                        question={title}
+                                        title={title}
+                                        onPress={() => handleSelectQuestion(index)}
+                                    />
                                 ))}
                             </ThemedView>
                         </View>

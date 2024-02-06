@@ -24,7 +24,7 @@ export const StopwatchPopover = () => {
     const { timerStarted, reset, remainingTime, stopTimer, startTimer } = useStopwatch(pauseTime);
     const buttonRef = useRef<View>(null);
     const { inputFieldBackgroundColor } = useTheme();
-    const { startOnDoneSet, startOnLastSet } = useAppSelector(getStopwatchSettings);
+    const { startOnDoneSet } = useAppSelector(getStopwatchSettings);
 
     const toggleTimer = useCallback(() => {
         if (timerStarted) {
@@ -40,21 +40,13 @@ export const StopwatchPopover = () => {
         }
     }, [startOnDoneSet, timerStarted, toggleTimer]);
 
-    const handleLastSetCallback = useCallback(() => {
-        if (startOnLastSet && !timerStarted) {
-            toggleTimer();
-        }
-    }, [startOnLastSet, timerStarted, toggleTimer]);
-
     useEffect(() => {
         emitter.addListener("workoutDoneSet", handleDoneSetCallback);
-        emitter.addListener("workoutLastSet", handleLastSetCallback);
 
         return () => {
             emitter.removeListener("workoutDoneSet", handleDoneSetCallback);
-            emitter.removeListener("workoutLastSet", handleLastSetCallback);
         };
-    }, [handleDoneSetCallback, handleLastSetCallback]);
+    }, [handleDoneSetCallback]);
 
     const togglePopover = useCallback(() => {
         setShowPopover(!showPopover);
@@ -143,7 +135,9 @@ export const StopwatchPopover = () => {
             </AnimatedView>
 
             <ThemedPressable padding round secondary onLayout={getButtonPos} reference={buttonRef} onPress={togglePopover}>
-                <AnimatedView ghost style={{ opacity: iconOpacity, position: "absolute", left: 10, top: 10, alignItems: "center", width: "100%" }}>
+                <AnimatedView
+                    ghost
+                    style={{ opacity: iconOpacity, position: "absolute", left: 10, top: 10, alignItems: "center", width: "100%" }}>
                     <ThemedMaterialCommunityIcons secondary name="timer-outline" size={35} />
                 </AnimatedView>
                 <AnimatedView secondary style={{ opacity, width: 100 }}>

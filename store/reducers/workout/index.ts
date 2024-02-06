@@ -7,7 +7,6 @@ import {
     ExerciseData,
     ExerciseId,
     ExerciseMetaData,
-    ExerciseTemplate,
     ExerciseType,
     TemplateId,
     TimeInput,
@@ -30,10 +29,6 @@ export const mutateEditedExercise = createAction<
     },
     "exercise_edit_mutate"
 >("exercise_edit_mutate");
-export const saveEditedExerciseTemplate = createAction<boolean>("saveEditedExerciseTemplate");
-export const deleteExerciseTemplate = createAction<TemplateId>("deleteExerciseTemplate");
-export const recoverExerciseTemplate = createAction("restoreDeletedExerciseTemplate");
-export const setTemplateSorting = createAction<SortingType, "setTemplateSorting">("setTemplateSorting");
 
 export const mutateActiveExerciseInTrainedWorkout = createAction<
     {
@@ -109,17 +104,8 @@ export const discardChangesToDoneExercises = createAction<{
     doneWorkoutId: WorkoutId;
 }>("discardChangesToDoneExercises");
 export const deleteFallbackSets = createAction<{ doneWorkoutId: WorkoutId }>("deleteFallbackSets");
-export const saveExerciseAsTemplate = createAction<{ overwrite?: boolean }>("save_exercise_as_template");
+export const saveExerciseAsTemplate = createAction<{ createNewTemplate: boolean }>("save_exercise_as_template");
 export const applyTemplateToEditedExercise = createAction<{ templateId: TemplateId }>("applyTemplateToEditedExercise");
-export const updateTemplate = createAction("updateTemplate");
-export const setEditedExerciseTemplate = createAction<ExerciseTemplate, "setEditedExerciseTemplate">("setEditedExerciseTemplate");
-export const mutateEditedExerciseTemplate = createAction<
-    {
-        key: keyof ExerciseTemplate["exerciseMetaData"];
-        value: ExerciseTemplate["exerciseMetaData"][keyof ExerciseTemplate["exerciseMetaData"]];
-    },
-    "mutateEditedExerciseTemplate"
->("mutateEditedExerciseTemplate");
 
 export type WorkoutAction =
     | typeof setEditedWorkout.type
@@ -587,165 +573,6 @@ export const workoutReducer = createReducer<WorkoutState>(
                         };
                     });
                 }
-            })
-            .addCase(saveExerciseAsTemplate, (state, action) => {
-                if (state.editedExercise) {
-                    if (!state.storedExerciseTemplates) {
-                        state.storedExerciseTemplates = [];
-                    }
-                    if (action.payload?.overwrite) {
-                        const template = state.storedExerciseTemplates.find(
-                            (template) => template.templateId === state.editedExercise?.exercise.templateId,
-                        );
-                        if (template) {
-                            state.storedExerciseTemplates.splice(
-                                state.storedExerciseTemplates.findIndex(
-                                    (template) => template.templateId === state.editedExercise?.exercise.templateId,
-                                ),
-                                1,
-                                {
-                                    templateId: template.templateId,
-                                    creationTimestamp: Date.now(),
-                                    exerciseMetaData: state.editedExercise.exercise,
-                                },
-                            );
-                        } else {
-                            state.storedExerciseTemplates!.push({
-                                templateId: generateId("template"),
-                                creationTimestamp: Date.now(),
-                                exerciseMetaData: state.editedExercise.exercise,
-                            });
-                        }
-                    } else {
-                        state.storedExerciseTemplates!.push({
-                            templateId: generateId("template"),
-                            creationTimestamp: Date.now(),
-                            exerciseMetaData: state.editedExercise.exercise,
-                        });
-                    }
-                }
-            })
-            .addCase(applyTemplateToEditedExercise, (state, action) => {
-                if (state.editedExercise && state.storedExerciseTemplates) {
-                    const template = state.storedExerciseTemplates.find((template) => template.templateId === action.payload.templateId);
-                    if (template) {
-                        state.editedExercise.exercise = {
-                            ...template.exerciseMetaData,
-                            exerciseId: state.editedExercise.exercise.exerciseId,
-                            templateId: action.payload.templateId,
-                        };
-                    }
-                }
-            })
-            .addCase(updateTemplate, (state) => {
-                if (state.storedExerciseTemplates && state.editedExercise && state.editedExercise.exercise.templateId) {
-                    const exerciseMetaData = state.editedExercise.exercise;
-                    const templateIndex = state.storedExerciseTemplates.findIndex(
-                        (template) => template.templateId === exerciseMetaData.templateId,
-                    );
-                    if (templateIndex !== -1) {
-                        state.storedExerciseTemplates[templateIndex] = {
-                            templateId: state.storedExerciseTemplates[templateIndex].templateId,
-                            creationTimestamp: Date.now(),
-                            updated: true,
-                            exerciseMetaData,
-                        };
-                    }
-                }
-            })
-            .addCase(saveEditedExerciseTemplate, (state, action) => {
-                if (!state.storedExerciseTemplates) {
-                    return;
-                }
-                if (state.editedExerciseTemplate) {
-                    const templateIndex = state.storedExerciseTemplates?.findIndex(
-                        (template) => template.templateId === state.editedExerciseTemplate?.templateId,
-                    );
-                    if (templateIndex !== -1) {
-                        const newTemplate = {
-                            templateId: generateId("template"),
-                            creationTimestamp: Date.now(),
-                            updated: state.storedExerciseTemplates[templateIndex].updated === undefined,
-                            exerciseMetaData: state.editedExerciseTemplate.exerciseMetaData,
-                        };
-
-                        if (action.payload) {
-                            state.workouts = state.workouts.map((workout) => {
-                                return {
-                                    ...workout,
-                                    exercises: workout.exercises.map((exercise) => {
-                                        if (exercise.templateId === state.editedExerciseTemplate?.templateId) {
-                                            return {
-                                                ...exercise,
-                                                templateId: newTemplate.templateId,
-                                                ...newTemplate.exerciseMetaData,
-                                            };
-                                        }
-                                        return exercise;
-                                    }),
-                                };
-                            });
-                            if (state.trainedWorkout?.workout?.exercises) {
-                                state.trainedWorkout.workout.exercises = state.trainedWorkout.workout.exercises.map((exercise) => {
-                                    if (exercise.templateId === state.editedExerciseTemplate?.templateId) {
-                                        return {
-                                            ...exercise,
-                                            templateId: newTemplate.templateId,
-                                            ...newTemplate.exerciseMetaData,
-                                        };
-                                    }
-                                    return exercise;
-                                });
-                                state.trainedWorkout.exerciseData = state.trainedWorkout.exerciseData.map((exercise) => {
-                                    if (exercise.templateId === state.editedExerciseTemplate?.templateId) {
-                                        return {
-                                            ...exercise,
-                                            templateId: newTemplate.templateId,
-                                            ...state.editedExerciseTemplate?.exerciseMetaData,
-                                        };
-                                    }
-                                    return exercise;
-                                });
-                            }
-                        }
-                        state.storedExerciseTemplates[templateIndex] = newTemplate;
-                        state.editedExerciseTemplate = undefined;
-                    }
-                }
-            })
-            .addCase(setEditedExerciseTemplate, (state, action) => {
-                state.editedExerciseTemplate = action.payload;
-            })
-            .addCase(mutateEditedExerciseTemplate, (state, action) => {
-                if (!state.editedExerciseTemplate) {
-                    return;
-                }
-                state.editedExerciseTemplate = {
-                    templateId: state.editedExerciseTemplate.templateId,
-                    creationTimestamp: state.editedExerciseTemplate.creationTimestamp,
-                    exerciseMetaData: {
-                        ...state.editedExerciseTemplate.exerciseMetaData,
-                        [action.payload.key]: action.payload.value,
-                    },
-                };
-            })
-            .addCase(deleteExerciseTemplate, (state, action) => {
-                if (state.storedExerciseTemplates) {
-                    const templateIndex = state.storedExerciseTemplates.findIndex((template) => template.templateId === action.payload);
-                    state.deletedExerciseTemplate = state.storedExerciseTemplates[templateIndex];
-                    state.storedExerciseTemplates = state.storedExerciseTemplates.filter(
-                        (template) => template.templateId !== action.payload,
-                    );
-                }
-            })
-            .addCase(recoverExerciseTemplate, (state) => {
-                if (state.deletedExerciseTemplate) {
-                    state.storedExerciseTemplates?.push(state.deletedExerciseTemplate);
-                    state.deletedExerciseTemplate = undefined;
-                }
-            })
-            .addCase(setTemplateSorting, (state, action) => {
-                state.templateSorting = action.payload;
             });
     },
 );

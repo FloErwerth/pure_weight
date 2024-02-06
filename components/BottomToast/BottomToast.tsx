@@ -8,8 +8,6 @@ import { HStack } from "../Stack/HStack/HStack";
 import { ThemedMaterialCommunityIcons } from "../Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
 import { RefObject, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ThemedPressable } from "../Themed/Pressable/Pressable";
-import { useAppSelector } from "../../store";
-import { getDeletionTime } from "../../store/reducers/settings/settingsSelectors";
 
 interface BottomToastProps {
     reference?: RefObject<{ restart: () => void }>;
@@ -22,29 +20,31 @@ interface BottomToastProps {
     padding?: number;
     leftCorrection?: number;
     topCorrection?: number;
-    customTime?: number;
+    time?: number;
 }
 const deviceWidth = Dimensions.get("screen").width;
 
 const TIME_STEP = 10;
 const ANIM_TIME = 300;
 
-const useDeletionTime = (customTime?: number) => {
-    const deletionTime = useAppSelector(getDeletionTime);
-
-    if (customTime) {
-        return customTime;
-    }
-    return deletionTime;
-};
-
-export const BottomToast = ({ reference, customTime, titleKey, messageKey, onRedo, open, onRequestClose, bottom = 0, padding = 20, leftCorrection, topCorrection }: BottomToastProps) => {
+export const BottomToast = ({
+    reference,
+    time = 5000,
+    titleKey,
+    messageKey,
+    onRedo,
+    open,
+    onRequestClose,
+    bottom = 0,
+    padding = 20,
+    leftCorrection,
+    topCorrection,
+}: BottomToastProps) => {
     const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
     const { t } = useTranslation();
     const [percent, setPercent] = useState(100);
     const animatedPercent = useSharedValue(100);
     const animatedOpacity = useSharedValue(0);
-    const time = useDeletionTime(customTime);
     const timePercentage = useMemo(() => (TIME_STEP / time) * 100, [time]);
 
     const resetTimer = useCallback(() => {
@@ -94,7 +94,10 @@ export const BottomToast = ({ reference, customTime, titleKey, messageKey, onRed
         animatedPercent.value = withTiming(percent, { duration: TIME_STEP });
     }, [animatedPercent, handleRequestClose, percent]);
 
-    const progressBarStyle = useAnimatedStyle(() => ({ backgroundColor: "#666", width: `${animatedPercent.value}%`, height: 5, borderRadius: 5, overflow: "hidden" }) as const, [animatedPercent]);
+    const progressBarStyle = useAnimatedStyle(
+        () => ({ backgroundColor: "#666", width: `${animatedPercent.value}%`, height: 5, borderRadius: 5, overflow: "hidden" }) as const,
+        [animatedPercent],
+    );
 
     const wrapperStyle = useMemo(
         () =>
@@ -113,7 +116,10 @@ export const BottomToast = ({ reference, customTime, titleKey, messageKey, onRed
             }) satisfies ViewStyle,
         [bottom, leftCorrection, padding, topCorrection],
     );
-    const animatedWrapperStyle = useAnimatedStyle(() => ({ opacity: animatedOpacity.value, pointerEvents: open ? "auto" : "none" }), [open, animatedOpacity, wrapperStyle]);
+    const animatedWrapperStyle = useAnimatedStyle(
+        () => ({ opacity: animatedOpacity.value, pointerEvents: open ? "auto" : "none" }),
+        [open, animatedOpacity, wrapperStyle],
+    );
 
     return (
         <ReAnimated.View style={animatedWrapperStyle}>

@@ -12,47 +12,18 @@ import { StopwatchPopover } from "../../../components/StopwatchPopover/Stopwatch
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Carousel from "react-native-reanimated-carousel/src/Carousel";
 import { ThemedBottomSheetModal, useBottomSheetRef } from "../../../components/BottomSheetModal/ThemedBottomSheetModal";
-import {
-    mutateActiveExerciseInTrainedWorkout,
-    pauseTrainedWorkout,
-    resetTrainedWorkout,
-    saveCurrentWorkout,
-    setActiveExerciseIndex,
-} from "../../../store/reducers/workout";
+import { pauseTrainedWorkout, resetTrainedWorkout, saveCurrentWorkout, setActiveExerciseIndex } from "../../../store/reducers/workout";
 
 import {
-    getCanSnap,
-    getExerciseDone,
     getHasNoTrainingDataSaved,
     getIsDoneWithTraining,
     getTrainedWorkout,
     getTrainedWorkoutExercises,
 } from "../../../store/reducers/workout/workoutSelectors";
-import { ICarouselInstance } from "react-native-reanimated-carousel";
-import { getSwitchToNextExercise } from "../../../store/reducers/settings/settingsSelectors";
 import { WorkoutSettings } from "../../../components/App/settings/Sections/workout";
 import { TrainedExercise } from "../../../components/App/train/Exercise/TrainedExercise";
 import { ExerciseId } from "../../../store/reducers/workout/types";
 import { CarouselRenderItemInfo } from "react-native-reanimated-carousel/lib/typescript/types";
-
-const useSnapToNextExercise = () => {
-    const carouselRef = useRef<ICarouselInstance>(null);
-    const isExerciseDone = useAppSelector(getExerciseDone);
-    const canSnap = useAppSelector(getCanSnap);
-    const shouldSwitch = useAppSelector(getSwitchToNextExercise);
-    const dispatch = useAppDispatch();
-
-    useEffect(() => {
-        if (shouldSwitch && isExerciseDone && canSnap) {
-            setTimeout(() => {
-                carouselRef.current?.next({ animated: true });
-            }, 100);
-            dispatch(mutateActiveExerciseInTrainedWorkout({ key: "canSnap", value: false }));
-        }
-    }, [isExerciseDone]);
-
-    return carouselRef;
-};
 
 export function Train() {
     const { bottom } = useSafeAreaInsets();
@@ -64,7 +35,6 @@ export function Train() {
     const { ref: alertRef, openBottomSheet: openAlert, closeBottomSheet: closeAlert } = useBottomSheetRef();
     const isDone = useAppSelector(getIsDoneWithTraining);
     const hasNoTrainingData = useAppSelector(getHasNoTrainingDataSaved);
-    const carouselRef = useSnapToNextExercise();
     const { ref, openBottomSheet: open } = useBottomSheetRef();
     const trainedWorkout = useAppSelector(getTrainedWorkout);
 
@@ -162,7 +132,6 @@ export function Train() {
             </ThemedView>
             <ThemedView background stretch>
                 <Carousel
-                    ref={carouselRef}
                     onSnapToItem={handleSetActiveExerciseIndex}
                     scrollAnimationDuration={300}
                     width={Dimensions.get("screen").width}
@@ -184,7 +153,7 @@ export function Train() {
                 onPause={handlePauseWorkout}
                 onCancel={handleCancelWorkout}
             />
-            <ThemedBottomSheetModal title={quickSettingsTitle} snapPoints={["60%"]} ref={ref}>
+            <ThemedBottomSheetModal title={quickSettingsTitle} snapPoints={["70%"]} ref={ref}>
                 <ThemedView style={trainStyles.quickSettingsWrapper} ghost>
                     <WorkoutSettings quick={true} />
                 </ThemedView>

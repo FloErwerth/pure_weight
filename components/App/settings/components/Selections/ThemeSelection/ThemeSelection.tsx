@@ -5,7 +5,7 @@ import { useCallback, useState } from "react";
 import { ThemeKey } from "../../../../../../theme/types";
 import { setTheme } from "../../../../../../store/reducers/settings";
 
-import { getThemeKey } from "../../../../../../store/reducers/settings/settingsSelectors";
+import { getThemeKeyFromStore } from "../../../../../../store/reducers/settings/settingsSelectors";
 import { Icon, SelectableSetting } from "../../../SelectableSetting/SelectableSetting";
 import { ThemedView } from "../../../../../Themed/ThemedView/View";
 import { selectionStyles } from "../../selectionStyles";
@@ -29,7 +29,7 @@ export const ThemeSelection = () => {
     const { t } = useTranslation();
     const [usesDeviceTheme, setUsesDeviceTheme] = useState(false);
     const dispatch = useAppDispatch();
-    const theme = useAppSelector(getThemeKey);
+    const theme = useAppSelector(getThemeKeyFromStore);
 
     const handleSelectLanguage = useCallback(
         (themeKey: ThemeKey | "device") => {
@@ -47,9 +47,24 @@ export const ThemeSelection = () => {
     return (
         <ProfileContent title={t("settings_theme")}>
             <ThemedView style={selectionStyles.vStack}>
-                <SelectableSetting prependedExtraContent={light} selected={!usesDeviceTheme && theme === "light"} onSelect={() => handleSelectLanguage("light")} titleKey="theme_light" />
-                <SelectableSetting prependedExtraContent={dark} selected={!usesDeviceTheme && theme === "dark"} onSelect={() => handleSelectLanguage("dark")} titleKey="theme_dark" />
-                <SelectableSetting prependedExtraContent={device} selected={usesDeviceTheme} onSelect={() => handleSelectLanguage("device")} titleKey="theme_device" />
+                <SelectableSetting
+                    prependedExtraContent={light}
+                    selected={!usesDeviceTheme && theme === "light"}
+                    onSelect={() => handleSelectLanguage("light")}
+                    titleKey="theme_light"
+                />
+                <SelectableSetting
+                    prependedExtraContent={dark}
+                    selected={!usesDeviceTheme && theme === "dark"}
+                    onSelect={() => handleSelectLanguage("dark")}
+                    titleKey="theme_dark"
+                />
+                <SelectableSetting
+                    prependedExtraContent={device}
+                    selected={usesDeviceTheme}
+                    onSelect={() => handleSelectLanguage("device")}
+                    titleKey="theme_device"
+                />
             </ThemedView>
         </ProfileContent>
     );
