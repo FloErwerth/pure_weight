@@ -23,7 +23,6 @@ export const mockState: AppState = {
                 exercises: [
                     {
                         exerciseId: "exercise-1",
-                        templateId: "template-1",
                         type: "WEIGHT_BASED",
                         name: "Klimmzüge unterstützt",
                         weight: "25",
@@ -252,7 +251,6 @@ export const mockState: AppState = {
                     {
                         name: "Klimmzüge unterstützt",
                         exerciseId: "exercise-1",
-                        templateId: "template-1",
                         type: "WEIGHT_BASED",
                         weight: "50",
                         sets: "5",
@@ -309,48 +307,6 @@ export const mockState: AppState = {
                         ],
                     },
                 ],
-            },
-        ],
-        storedExerciseTemplates: [
-            {
-                templateId: "template-1",
-                creationTimestamp: 1636758705953,
-                updated: false,
-                exerciseMetaData: {
-                    type: "WEIGHT_BASED",
-                    name: "Klimmzüge unterstützt",
-                    weight: "25",
-                    sets: "5",
-                    pause: { seconds: "0", minutes: "3" },
-                    reps: "5",
-                },
-            },
-            {
-                templateId: "template-2",
-                creationTimestamp: 1506758705953,
-                updated: false,
-
-                exerciseMetaData: {
-                    type: "WEIGHT_BASED",
-                    name: "Rudern",
-                    weight: "25",
-                    sets: "5",
-                    pause: { seconds: "0", minutes: "3" },
-                    reps: "5",
-                },
-            },
-            {
-                templateId: "template-3",
-                creationTimestamp: 1706769805955,
-                updated: false,
-                exerciseMetaData: {
-                    type: "TIME_BASED",
-                    name: "Planks",
-                    sets: "5",
-                    weight: "",
-                    pause: { seconds: "0", minutes: "3" },
-                    duration: { seconds: "0", minutes: "3" },
-                },
             },
         ],
     },

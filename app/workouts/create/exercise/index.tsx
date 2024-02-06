@@ -1,9 +1,9 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useAppDispatch, useAppSelector } from "../../../../store";
-import { getEditedExercise, getHasTemplates, getIsExistingEditedExercise } from "../../../../store/reducers/workout/workoutSelectors";
+import { getEditedExercise, getIsExistingEditedExercise } from "../../../../store/reducers/workout/workoutSelectors";
 import { useToast } from "../../../../components/BottomToast/useToast";
-import { createNewExercise, saveEditedExercise, saveExerciseAsTemplate } from "../../../../store/reducers/workout";
+import { createNewExercise, saveEditedExercise } from "../../../../store/reducers/workout";
 import { ThemedView } from "../../../../components/Themed/ThemedView/View";
 import { styles } from "../../../../components/EditableExercise/styles";
 import { Text } from "../../../../components/Themed/ThemedText/Text";
@@ -17,11 +17,8 @@ import * as Haptics from "expo-haptics";
 import { SiteNavigationButtons } from "../../../../components/SiteNavigationButtons/SiteNavigationButtons";
 import { PageContent } from "../../../../components/PageContent/PageContent";
 import { useNavigateBack } from "../../../../hooks/navigate";
-import { SnapPoint, ThemedBottomSheetModal, useBottomSheetRef } from "../../../../components/BottomSheetModal/ThemedBottomSheetModal";
-import { TemplateSelection } from "../../../../components/TemplateSelection/TemplateSelection";
-import { Animated, View } from "react-native";
-import { AnswerText } from "../../../../components/HelpQuestionAnswer/AnswerText";
-import { getLanguage } from "../../../../store/reducers/settings/settingsSelectors";
+import { SnapPoint } from "../../../../components/BottomSheetModal/ThemedBottomSheetModal";
+import { View } from "react-native";
 import Reanimated, { FadeIn, FadeOut, Layout } from "react-native-reanimated";
 
 export const CreateExercise = () => {
@@ -31,17 +28,9 @@ export const CreateExercise = () => {
     const dispatch = useAppDispatch();
     const editedExercise = useAppSelector(getEditedExercise);
     const { showToast: showSavedSuccess, openToast: openSavedSuccess, closeToast: closeSavedSuccess } = useToast();
-    const { showToast: showApplySuccess, openToast: openApplySuccess, closeToast: closeApplySuccess } = useToast();
     const [showCheckboxes, setShowCheckboxes] = useState(true);
     const [addMoreExercises, setAddMoreExercises] = useState(false);
-    const { ref: warningRef, openBottomSheet: openWarning, closeBottomSheet: closeWarning, isOpen: showWarning } = useBottomSheetRef();
-    const [saveAsTemplate, setSaveAsTemplate] = useState(false);
     const navigateBack = useNavigateBack();
-    const { ref, openBottomSheet, closeBottomSheet } = useBottomSheetRef();
-    const hasTemplates = useAppSelector(getHasTemplates);
-    const language = useAppSelector(getLanguage);
-    const warningSnapPoints: SnapPoint[] = useMemo(() => [language === "en" ? "55%" : "60%"], [language]);
-    const isFromTemplate = Boolean(editedExercise?.exercise.templateId);
 
     useEffect(() => {
         if (isEditingExercise) {
@@ -72,95 +61,32 @@ export const CreateExercise = () => {
         }
     }, [addMoreExercises, dispatch, navigateBack, openSuccessMessage, showCheckboxesAfterTimeout]);
 
-    const saveTemplate = useCallback(
-        (createNewTemplate: boolean) => {
-            if (showWarning) {
-                closeWarning();
-            }
-            dispatch(saveExerciseAsTemplate({ createNewTemplate }));
-            saveExercise();
-        },
-        [closeWarning, dispatch, saveExercise, showWarning],
-    );
-
     const handleConfirm = useCallback(() => {
         if (showSavedSuccess) {
             closeSavedSuccess();
         }
         if (editedExercise) {
-            if (saveAsTemplate) {
-                if (isFromTemplate) {
-                    openWarning();
-                    return;
-                }
-                saveTemplate(false);
-                return;
-            }
             saveExercise();
         }
-    }, [closeSavedSuccess, editedExercise, isFromTemplate, openWarning, saveAsTemplate, saveExercise, saveTemplate, showSavedSuccess]);
+    }, [closeSavedSuccess, editedExercise, saveExercise, showSavedSuccess]);
 
     const closeSavedSuccessMessage = useCallback(() => {
         closeSavedSuccess();
     }, [closeSavedSuccess]);
 
-    const confirmButtonConfig = useMemo(
-        () => ({
-            icon: { name: "content-copy", size: 24 } as const,
-            disabled: !hasTemplates,
-            opacity: new Animated.Value(hasTemplates ? 1 : 0),
-        }),
-        [hasTemplates],
-    );
-
-    const handleApplyTemplate = useCallback(() => {
-        setShowCheckboxes(false);
-        showCheckboxesAfterTimeout();
-        closeBottomSheet();
-        openApplySuccess();
-    }, [closeBottomSheet, openApplySuccess, showCheckboxesAfterTimeout]);
-
-    const saveAsTemplateHelptextConfig = useMemo(
-        () => ({ title: t("save_as_template"), text: t("save_as_template_help"), snapPoints: ["45%"] as SnapPoint[] }),
-        [t],
-    );
     const addMoreExercisesHelptextConfig = useMemo(
         () => ({ title: t("add_more_exercises"), text: t("add_more_exercises_help"), snapPoints: ["35%"] as SnapPoint[] }),
         [t],
     );
 
-    const overwriteTemplate = useCallback(() => {
-        saveTemplate(false);
-    }, [saveTemplate]);
-
-    const createNewTemplate = useCallback(() => {
-        saveTemplate(true);
-    }, [saveTemplate]);
-
     return (
         <ThemedView stretch background>
-            <SiteNavigationButtons
-                title={title}
-                titleFontSize={40}
-                handleBack={navigateBack}
-                handleConfirmIcon={confirmButtonConfig.icon}
-                handleConfirmOpacity={confirmButtonConfig.opacity}
-                confirmButtonDisabled={confirmButtonConfig.disabled}
-                handleConfirm={openBottomSheet}
-            />
+            <SiteNavigationButtons title={title} titleFontSize={40} handleBack={navigateBack} />
             <PageContent safeBottom stretch ghost paddingTop={20}>
                 <EditableExercise />
                 <View style={{ gap: 10 }}>
                     {showCheckboxes && (
                         <Reanimated.View style={{ gap: 10 }} layout={Layout} entering={FadeIn} exiting={FadeOut}>
-                            <CheckBox
-                                helpTextConfig={saveAsTemplateHelptextConfig}
-                                secondary
-                                customWrapperStyles={{ zIndex: -1 }}
-                                checked={saveAsTemplate}
-                                onChecked={setSaveAsTemplate}
-                                label={t("save_as_template")}
-                            />
                             <CheckBox
                                 secondary
                                 customWrapperStyles={{ zIndex: -1 }}
@@ -178,13 +104,6 @@ export const CreateExercise = () => {
                         onRequestClose={closeSavedSuccessMessage}
                         open={showSavedSuccess}
                     />
-                    <BottomToast
-                        time={1000}
-                        leftCorrection={-20}
-                        titleKey="applied_template_success_title"
-                        onRequestClose={closeApplySuccess}
-                        open={showApplySuccess}
-                    />
                     <ThemedPressable ghost behind onPress={handleConfirm}>
                         <HStack secondary style={styles.button}>
                             <Text secondary style={styles.buttonText}>
@@ -195,20 +114,6 @@ export const CreateExercise = () => {
                     </ThemedPressable>
                 </View>
             </PageContent>
-            <ThemedBottomSheetModal snapPoints={warningSnapPoints} title={t("save_as_template_warning_title")} ref={warningRef}>
-                <PageContent paddingTop={20} stretch ghost>
-                    <ThemedView ghost stretch>
-                        <AnswerText>{t("save_as_template_warning_text")}</AnswerText>
-                    </ThemedView>
-                    <ThemedPressable round padding onPress={overwriteTemplate}>
-                        <Text>{t("save_as_template_warning_overwrite")}</Text>
-                    </ThemedPressable>
-                    <ThemedPressable round padding onPress={createNewTemplate}>
-                        <Text>{t("save_as_template_warning_create_new")}</Text>
-                    </ThemedPressable>
-                </PageContent>
-            </ThemedBottomSheetModal>
-            <TemplateSelection onApplyTemplate={handleApplyTemplate} reference={ref} />
         </ThemedView>
     );
 };

@@ -8,7 +8,6 @@ import {
     ExerciseId,
     ExerciseMetaData,
     ExerciseType,
-    TemplateId,
     TimeInput,
     TrainedWorkout,
     Workout,
@@ -104,8 +103,6 @@ export const discardChangesToDoneExercises = createAction<{
     doneWorkoutId: WorkoutId;
 }>("discardChangesToDoneExercises");
 export const deleteFallbackSets = createAction<{ doneWorkoutId: WorkoutId }>("deleteFallbackSets");
-export const saveExerciseAsTemplate = createAction<{ createNewTemplate: boolean }>("save_exercise_as_template");
-export const applyTemplateToEditedExercise = createAction<{ templateId: TemplateId }>("applyTemplateToEditedExercise");
 
 export type WorkoutAction =
     | typeof setEditedWorkout.type
@@ -471,7 +468,6 @@ export const workoutReducer = createReducer<WorkoutState>(
                                 const prefilledMetaData: TrainedWorkout["exerciseData"][number] = {
                                     exerciseType: "WEIGHT_BASED",
                                     exerciseId: metaData?.exerciseId ?? 0,
-                                    templateId: metaData?.templateId,
                                     name: metaData?.name ?? "",
                                     activeSetIndex: 0,
                                     latestSetIndex: 0,

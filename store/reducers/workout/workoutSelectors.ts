@@ -14,8 +14,6 @@ export const getWorkoutState = ({ workoutState }: AppState) => workoutState;
 export const getTrainedWorkout = createSelector([getWorkoutState], (state) => state.trainedWorkout);
 export const getWorkoutSorting = createSelector([getWorkoutState], (state) => state.workoutSorting);
 export const getWorkouts = createSelector([getWorkoutState], (state) => state.workouts);
-export const getSavedTemplates = createSelector([getWorkoutState], (state) => state.storedExerciseTemplates);
-export const getHasTemplates = createSelector([getSavedTemplates], (templates) => (templates?.length ?? 0) > 0);
 export const getTrainedWorkoutExercises = createSelector([getTrainedWorkout, getWorkouts], (trainedWorkout, workouts) => {
     if (trainedWorkout === undefined) {
         return [];

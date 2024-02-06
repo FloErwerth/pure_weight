@@ -1,10 +1,8 @@
 import { SortingType } from "../../types";
 import { IsoDate } from "../../../types/date";
 
-export type TemplateIdType = "template";
 export type ExerciseIdType = "exercise";
 export type WorkoutIdType = "workout";
-export type TemplateId = `${TemplateIdType}-${number}`;
 export type ExerciseId = `${ExerciseIdType}-${number}`;
 export type WorkoutId = `${WorkoutIdType}-${number}`;
 
@@ -49,13 +47,6 @@ export type TimeInput = {
 
 export type ExerciseSets = ExerciseData[];
 
-export type ExerciseTemplate = {
-    templateId: TemplateId;
-    creationTimestamp: number;
-    updated: boolean;
-    exerciseMetaData: Omit<ExerciseMetaData, "exerciseId">;
-};
-
 export type ExerciseMetaData = {
     exerciseId: ExerciseId;
     type: ExerciseType;
@@ -66,7 +57,6 @@ export type ExerciseMetaData = {
     pause?: TimeInput;
     duration?: TimeInput;
     preparation?: TimeInput;
-    templateId?: TemplateId;
 };
 
 export type EditedWorkout = {
@@ -91,7 +81,6 @@ export type TrainedWorkout = {
     paused: boolean;
     exerciseData: {
         exerciseId: ExerciseId;
-        templateId?: TemplateId;
         exerciseType: ExerciseType;
         setIndex: number;
         latestSetIndex: number;
@@ -104,7 +93,6 @@ export type TrainedWorkout = {
 };
 export type WorkoutState = {
     workouts: Workout[];
-    storedExerciseTemplates?: ExerciseTemplate[];
     workoutSorting: SortingType;
     templateSorting: SortingType;
     deletedWorkout?: { workout: Workout; trainedWorkout?: TrainedWorkout };
@@ -112,6 +100,4 @@ export type WorkoutState = {
     editedWorkout?: EditedWorkout;
     trainedWorkout?: TrainedWorkout;
     editedExercise?: EditedExercise;
-    editedExerciseTemplate?: ExerciseTemplate;
-    deletedExerciseTemplate?: ExerciseTemplate;
 };
