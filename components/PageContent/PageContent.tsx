@@ -16,7 +16,6 @@ interface PageContentProps extends PropsWithChildren, ComputedBackgroundColorPro
     safeBottom?: boolean;
     ignoreGap?: boolean;
     ignorePadding?: boolean;
-    keyboardShouldPersistTaps?: "always" | "never" | "handled";
 }
 export const PageContent = (props: PageContentProps) => {
     const { bottom } = useSafeAreaInsets();
@@ -49,12 +48,7 @@ export const PageContent = (props: PageContentProps) => {
 
     if (scrollable) {
         return (
-            <ThemedScrollView
-                keyboardShouldPersistTaps={props.keyboardShouldPersistTaps}
-                stretch={stretch}
-                background
-                style={scrollableWrapperStyles}
-                contentContainerStyle={wrapperStyles}>
+            <ThemedScrollView stretch={stretch} background style={scrollableWrapperStyles} contentContainerStyle={wrapperStyles}>
                 {titleConfig && (
                     <Text style={titleStyles} ghost>
                         {titleConfig.title}

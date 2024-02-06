@@ -39,14 +39,12 @@ export const ExpandableSearchbar = ({ handleSetSearchManual }: SearchbarProps) =
     );
 
     const handleHideInput = useCallback(() => {
-        //hide
         positionLeft.value = withTiming(TEXT_INPUT_VALUES.start.left, { duration: 200 });
         animatedWidth.value = withTiming(TEXT_INPUT_VALUES.start.width, { duration: 200 });
         animatedOpacity.value = withTiming(TEXT_INPUT_VALUES.start.opacity, { duration: 200 });
     }, [animatedOpacity, animatedWidth, positionLeft]);
 
     const handleShowInput = useCallback(() => {
-        //show
         positionLeft.value = withTiming(TEXT_INPUT_VALUES.end.left, { duration: 200 });
         animatedWidth.value = withTiming(TEXT_INPUT_VALUES.end.width, { duration: 200 });
         animatedOpacity.value = withTiming(TEXT_INPUT_VALUES.end.opacity, { duration: 200 });

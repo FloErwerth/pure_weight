@@ -84,6 +84,7 @@ export const handleMutateSet = createAction<
     },
     "handle_mutate_set"
 >("handle_mutate_set");
+export const setSearchedWorkout = createAction<string | undefined, "set_searched_workout">("set_searched_workout");
 
 export const markSetAsDone = createAction<{ setIndex: number }, "mark_set_as_done">("mark_set_as_done");
 export const setIsActiveSet = createAction<{ setIndex: number }, "set_is_active_set">("set_is_active_set");
@@ -569,6 +570,9 @@ export const workoutReducer = createReducer<WorkoutState>(
                         };
                     });
                 }
+            })
+            .addCase(setSearchedWorkout, (state, action) => {
+                state.searchedWorkout = action.payload;
             });
     },
 );

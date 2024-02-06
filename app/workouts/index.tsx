@@ -4,13 +4,19 @@ import { AppState, useAppDispatch, useAppSelector } from "../../store";
 import { SiteNavigationButtons } from "../../components/SiteNavigationButtons/SiteNavigationButtons";
 import { useTranslation } from "react-i18next";
 import { ThemedView } from "../../components/Themed/ThemedView/View";
-import { getIsOngoingWorkout, getSortedWorkouts, getTrainedWorkout } from "../../store/reducers/workout/workoutSelectors";
+import {
+    getIsOngoingWorkout,
+    getSearchedWorkout,
+    getSortedWorkouts,
+    getTrainedWorkout,
+} from "../../store/reducers/workout/workoutSelectors";
 import {
     createNewWorkout,
     recoverWorkout,
     removeWorkout,
     resumeTrainedWorkout,
     setEditedWorkout,
+    setSearchedWorkout,
     startWorkout,
 } from "../../store/reducers/workout";
 import { Sorting } from "../../components/Sorting/Sorting";
@@ -29,7 +35,6 @@ import { useToast } from "../../components/BottomToast/useToast";
 import { WorkoutId } from "../../store/reducers/workout/types";
 import { View } from "react-native";
 import { ExpandableSearchbar } from "../../components/Searchbar/ExpandableSearchbar";
-import { noop } from "lodash";
 
 const usePauseWarningContent = () => {
     const language = useAppSelector(getLanguage);
@@ -54,6 +59,20 @@ export function Workouts() {
     const dispatch = useAppDispatch();
     const { t } = useTranslation();
     const savedWorkouts = useAppSelector(getSortedWorkouts);
+    const workoutFilter = useAppSelector(getSearchedWorkout);
+
+    const filteredWorkouts = useMemo(
+        () =>
+            savedWorkouts.filter((workout) => {
+                if (!workoutFilter) {
+                    return true;
+                }
+
+                return workout.name.toLowerCase().includes(workoutFilter?.toLowerCase());
+            }),
+        [savedWorkouts, workoutFilter],
+    );
+
     const navigate = useNavigate();
     const trainedWorkout = useAppSelector(getTrainedWorkout);
     const { ref, openBottomSheet, closeBottomSheet } = useBottomSheetRef();
@@ -134,7 +153,7 @@ export function Workouts() {
 
     const mappedWorkouts = useMemo(
         () =>
-            savedWorkouts.map(({ name, workoutId }) => (
+            filteredWorkouts.map(({ name, workoutId }) => (
                 <Swipeable
                     key={name.concat(workoutId?.toString())}
                     onClick={() => handleStartWorkoutCases(workoutId)}
@@ -143,7 +162,14 @@ export function Workouts() {
                     <RenderedWorkout workoutId={workoutId} />
                 </Swipeable>
             )),
-        [savedWorkouts, handleStartWorkoutCases, onDelete, onEdit],
+        [filteredWorkouts, handleStartWorkoutCases, onDelete, onEdit],
+    );
+
+    const handleSetSearchedWorkouts = useCallback(
+        (searchString?: string) => {
+            dispatch(setSearchedWorkout(searchString));
+        },
+        [dispatch],
     );
 
     return (
@@ -154,11 +180,13 @@ export function Workouts() {
                 handleConfirmIcon={confirmIcon}
                 handleConfirm={handleCreateWorkout}
             />
-            <PageContent keyboardShouldPersistTaps="handled" scrollable={mappedWorkouts.length > 2} background ignoreGap stretch>
+            <PageContent ghost>
                 <HStack ghost style={trainStyles.searchAndFilterBar}>
                     <Sorting />
-                    <ExpandableSearchbar handleSetSearchManual={noop} />
+                    <ExpandableSearchbar handleSetSearchManual={handleSetSearchedWorkouts} />
                 </HStack>
+            </PageContent>
+            <PageContent scrollable={mappedWorkouts.length > 2} background ignoreGap stretch>
                 <View style={trainStyles.workoutWrapper}>{mappedWorkouts}</View>
             </PageContent>
             <BottomToast

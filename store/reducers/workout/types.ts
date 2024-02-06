@@ -100,4 +100,5 @@ export type WorkoutState = {
     editedWorkout?: EditedWorkout;
     trainedWorkout?: TrainedWorkout;
     editedExercise?: EditedExercise;
+    searchedWorkout?: string;
 };
