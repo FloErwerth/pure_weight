@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useRef } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Text } from "../Themed/ThemedText/Text";
 import { styles } from "./styles";
 import { HStack } from "../Stack/HStack/HStack";
@@ -6,7 +6,7 @@ import { ThemedPressable } from "../Themed/Pressable/Pressable";
 import { borderRadius } from "../../theme/border";
 import { ThemedTextInput } from "../Themed/ThemedTextInput/ThemedTextInput";
 import { ThemedView } from "../Themed/ThemedView/View";
-import { TextInput } from "react-native";
+import { TextInput, View } from "react-native";
 import { TimeInputRowProps } from "./types";
 import { useTranslation } from "react-i18next";
 
@@ -14,6 +14,16 @@ export const TimeInputRow = ({ value, setValue, i18key, errorKey }: TimeInputRow
     const secondsRef = useRef<TextInput>(null);
     const minutesRef = useRef<TextInput>(null);
     const { t } = useTranslation();
+    const [containerWidth, setContainerWidth] = useState(0);
+    const containerRef = useRef<View>(null);
+
+    useEffect(() => {
+        if (containerRef.current) {
+            containerRef.current.measure((_x, _y, width) => {
+                setContainerWidth(width);
+            });
+        }
+    }, [containerRef]);
 
     const secondsSuffix = useMemo(() => t("seconds"), [t]);
     const minutesSuffix = useMemo(() => t("minutes"), [t]);
@@ -32,8 +42,24 @@ export const TimeInputRow = ({ value, setValue, i18key, errorKey }: TimeInputRow
         [setValue],
     );
 
+    const minutesSuffixStyles = useMemo(() => {
+        return {
+            position: "absolute",
+            width: containerWidth,
+            left: Math.min(containerWidth / 2 - 40, containerWidth / 4 + (value?.minutes?.length ?? 0) * 5 + 2),
+        } as const;
+    }, [containerWidth, value]);
+
+    const secondsSuffixStyles = useMemo(() => {
+        return {
+            position: "absolute",
+            width: containerWidth,
+            left: Math.min(containerWidth / 2 - 40, containerWidth / 4 + (value?.seconds?.length ?? 0) * 5 + 2),
+        } as const;
+    }, [containerWidth, value]);
+
     return (
-        <ThemedView ghost>
+        <ThemedView reference={containerRef} ghost>
             <Text style={styles.label} ghost>
                 {t(i18key ?? "")}
             </Text>
@@ -41,29 +67,35 @@ export const TimeInputRow = ({ value, setValue, i18key, errorKey }: TimeInputRow
                 <ThemedPressable ghost stretch onPress={() => minutesRef.current?.focus()}>
                     <HStack style={{ borderRadius, alignItems: "center", justifyContent: "center" }}>
                         <ThemedTextInput
+                            style={{ paddingHorizontal: 35 }}
                             reference={minutesRef}
-                            ghost
                             errorKey={errorKey}
                             inputMode="decimal"
+                            stretch
+                            ghost
                             textAlign="center"
                             onChangeText={handleChangeMinutes}
-                            value={value?.minutes ?? "0"}
-                        ></ThemedTextInput>
-                        <Text ghost>{minutesSuffix}</Text>
+                            value={value?.minutes ?? "0"}></ThemedTextInput>
+                        <Text style={minutesSuffixStyles} ghost>
+                            {minutesSuffix}
+                        </Text>
                     </HStack>
                 </ThemedPressable>
                 <ThemedPressable stretch ghost onPress={() => secondsRef.current?.focus()}>
                     <HStack style={{ borderRadius, alignItems: "center", justifyContent: "center" }}>
                         <ThemedTextInput
+                            style={{ paddingHorizontal: 35 }}
                             reference={secondsRef}
                             ghost
+                            stretch
                             errorKey={errorKey}
                             inputMode="decimal"
                             textAlign="center"
                             onChangeText={handleChangeSeconds}
-                            value={value?.seconds ?? "0"}
-                        ></ThemedTextInput>
-                        <Text ghost>{secondsSuffix}</Text>
+                            value={value?.seconds ?? "0"}></ThemedTextInput>
+                        <Text style={secondsSuffixStyles} ghost>
+                            {secondsSuffix}
+                        </Text>
                     </HStack>
                 </ThemedPressable>
             </HStack>

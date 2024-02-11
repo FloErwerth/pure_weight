@@ -8,7 +8,6 @@ import { mutateDoneExercise } from "../../../../../store/reducers/workout";
 import { View } from "react-native";
 import { getWeightUnit } from "../../../../../store/reducers/settings/settingsSelectors";
 import { EditableExerciseInputRow } from "../../../../EditableExercise/EditableExerciseInputRow";
-import { useTranslation } from "react-i18next";
 import { ExerciseId, WorkoutId } from "../../../../../store/reducers/workout/types";
 
 type WeightBasedEditedExerciseProps = {
@@ -21,12 +20,19 @@ export const WeightBasedEditedExercise = ({ doneWorkoutId, doneExerciseId }: Wei
     const dispatch = useAppDispatch();
     const id = useId();
     const weightUnit = useAppSelector(getWeightUnit);
-    const { t } = useTranslation();
 
     const handleSetWeight = useCallback(
         (setIndex: number, newWeight?: string) => {
             if (doneExercise?.doneExerciseId) {
-                dispatch(mutateDoneExercise({ doneExerciseId: doneExercise?.doneExerciseId, doneWorkoutId, setIndex, key: "weight", value: newWeight }));
+                dispatch(
+                    mutateDoneExercise({
+                        doneExerciseId: doneExercise?.doneExerciseId,
+                        doneWorkoutId,
+                        setIndex,
+                        key: "weight",
+                        value: newWeight,
+                    }),
+                );
             }
         },
         [dispatch, doneExercise?.doneExerciseId, doneWorkoutId],
@@ -35,7 +41,15 @@ export const WeightBasedEditedExercise = ({ doneWorkoutId, doneExerciseId }: Wei
     const handleSetReps = useCallback(
         (setIndex: number, newReps?: string) => {
             if (doneExercise?.doneExerciseId) {
-                dispatch(mutateDoneExercise({ doneExerciseId: doneExercise?.doneExerciseId, doneWorkoutId, setIndex, key: "reps", value: newReps }));
+                dispatch(
+                    mutateDoneExercise({
+                        doneExerciseId: doneExercise?.doneExerciseId,
+                        doneWorkoutId,
+                        setIndex,
+                        key: "reps",
+                        value: newReps,
+                    }),
+                );
             }
         },
         [dispatch, doneExercise?.doneExerciseId, doneWorkoutId],
@@ -52,8 +66,13 @@ export const WeightBasedEditedExercise = ({ doneWorkoutId, doneExerciseId }: Wei
                     <Text ghost style={styles.setIndex}>
                         {index + 1}
                     </Text>
-                    <EditableExerciseInputRow stretch suffix={weightUnit} value={weight} setValue={(value) => handleSetWeight(index, value)} />
-                    <EditableExerciseInputRow stretch suffix={t("reps_lower")} value={reps} setValue={(value) => handleSetReps(index, value)} />
+                    <EditableExerciseInputRow
+                        stretch
+                        suffix={weightUnit}
+                        value={weight}
+                        setValue={(value) => handleSetWeight(index, value)}
+                    />
+                    <EditableExerciseInputRow stretch suffix="x" value={reps} setValue={(value) => handleSetReps(index, value)} />
                 </HStack>
             ))}
         </View>
