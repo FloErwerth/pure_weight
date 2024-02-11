@@ -20,7 +20,6 @@ export const setKeepAwake = createAction<boolean, "settings_keep_awake">("settin
 export const setLanguage = createAction<Language, "settings_set_language">("settings_set_language");
 export const setTheme = createAction<ThemeKey, "theme_set">("theme_set");
 export const setUnitSystem = createAction<UnitSystem, "set_unit_system">("set_unit_system");
-export const setDeletionTimeMs = createAction<number, "set_deletion_time">("set_deletion_time");
 export const setSearchManual = createAction<string | undefined, "set_search_manual">("set_search_manual");
 export const mutateStopwatchSettings = createAction<
     { key: keyof StopwatchSettings; value: StopwatchSettings[keyof StopwatchSettings] },

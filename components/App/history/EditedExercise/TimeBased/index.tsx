@@ -24,7 +24,15 @@ export const TimeBasedEditedExercise = ({ doneWorkoutId, doneExerciseId }: Weigh
     const handleSetDuration = useCallback(
         (setIndex: number, timeInputKey: "minutes" | "seconds", duration?: TimeInput, value?: string) => {
             if (doneExercise?.doneExerciseId) {
-                dispatch(mutateDoneExercise({ doneExerciseId: doneExercise?.doneExerciseId, doneWorkoutId, setIndex, key: "duration", value: { ...duration, [timeInputKey]: value } }));
+                dispatch(
+                    mutateDoneExercise({
+                        doneExerciseId: doneExercise?.doneExerciseId,
+                        doneWorkoutId,
+                        setIndex,
+                        key: "duration",
+                        value: { ...duration, [timeInputKey]: value },
+                    }),
+                );
             }
         },
         [dispatch, doneExercise?.doneExerciseId, doneWorkoutId],
@@ -41,8 +49,18 @@ export const TimeBasedEditedExercise = ({ doneWorkoutId, doneExerciseId }: Weigh
                     <Text ghost center style={styles.setIndex}>
                         {index + 1}
                     </Text>
-                    <EditableExerciseInputRow stretch suffix={timeUnit.minutesUnit} setValue={(minutes) => handleSetDuration(index, "minutes", duration, minutes)} value={duration?.minutes} />
-                    <EditableExerciseInputRow stretch suffix={timeUnit.secondsUnit} setValue={(seconds) => handleSetDuration(index, "seconds", duration, seconds)} value={duration?.seconds} />
+                    <EditableExerciseInputRow
+                        type="TIME_BASED"
+                        stretch
+                        setValue={({ value }) => handleSetDuration(index, "minutes", duration, value)}
+                        value={duration}
+                    />
+                    <EditableExerciseInputRow
+                        type="TIME_BASED"
+                        stretch
+                        setValue={({ value }) => handleSetDuration(index, "seconds", duration, value)}
+                        value={duration}
+                    />
                 </HStack>
             ))}
         </View>

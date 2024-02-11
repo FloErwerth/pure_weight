@@ -1,10 +1,11 @@
 import { SortingButton } from "../SortingButton/SortingButton";
 import { useSorting } from "../../hooks/useSorting";
-import { useAppSelector } from "../../store";
-import { getWorkouts } from "../../store/reducers/workout/workoutSelectors";
 
-export const Sorting = () => {
+type SortingProps = {
+    hide?: boolean;
+};
+
+export const Sorting = ({ hide }: SortingProps) => {
     const { title, iconName, mappedSorting } = useSorting();
-    const numberOfWorkouts = useAppSelector(getWorkouts).length;
-    return <SortingButton hide={numberOfWorkouts <= 1} iconName={iconName} title={title} mappedOptions={mappedSorting} />;
+    return <SortingButton hide={hide} iconName={iconName} title={title} mappedOptions={mappedSorting} />;
 };

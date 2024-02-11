@@ -21,6 +21,7 @@ interface CheckBoxProps {
     customWrapperStyles?: ViewStyle;
     input?: boolean;
     secondary?: boolean;
+    ghost?: boolean;
 }
 
 export const CheckBox = ({
@@ -33,6 +34,7 @@ export const CheckBox = ({
     customWrapperStyles,
     input,
     secondary,
+    ghost,
 }: CheckBoxProps) => {
     const opacity = useRef(new Animated.Value(0));
     const checkBoxWrapperStyle = useMemo(
@@ -59,7 +61,7 @@ export const CheckBox = ({
     return (
         <>
             <ThemedView style={outerWrapperStyles} ghost>
-                <HStack input={input} secondary={secondary} style={styles.wrapper}>
+                <HStack input={input} ghost={ghost} secondary={secondary} style={styles.wrapper}>
                     <Text ghost style={styles.text}>
                         {label}
                     </Text>

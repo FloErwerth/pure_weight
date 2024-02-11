@@ -9,6 +9,7 @@ import {
     getSearchedWorkout,
     getSortedWorkouts,
     getTrainedWorkout,
+    getWorkouts,
 } from "../../store/reducers/workout/workoutSelectors";
 import {
     createNewWorkout,
@@ -72,6 +73,7 @@ export function Workouts() {
             }),
         [savedWorkouts, workoutFilter],
     );
+    const numberOfWorkouts = useAppSelector(getWorkouts).length;
 
     const navigate = useNavigate();
     const trainedWorkout = useAppSelector(getTrainedWorkout);
@@ -181,10 +183,12 @@ export function Workouts() {
                 handleConfirm={handleCreateWorkout}
             />
             <PageContent ghost>
-                <HStack ghost style={trainStyles.searchAndFilterBar}>
-                    <Sorting />
-                    <ExpandableSearchbar handleSetSearchManual={handleSetSearchedWorkouts} />
-                </HStack>
+                {numberOfWorkouts > 1 && (
+                    <HStack ghost style={trainStyles.searchAndFilterBar}>
+                        <Sorting />
+                        <ExpandableSearchbar handleSetSearchManual={handleSetSearchedWorkouts} />
+                    </HStack>
+                )}
             </PageContent>
             <PageContent scrollable={mappedWorkouts.length > 2} background ignoreGap stretch>
                 <View style={trainStyles.workoutWrapper}>{mappedWorkouts}</View>

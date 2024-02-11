@@ -37,6 +37,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ThemedPressable } from "../../../components/Themed/Pressable/Pressable";
 import { ThemedMaterialCommunityIcons } from "../../../components/Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
 import { useToast } from "../../../components/BottomToast/useToast";
+import { CreateExercise } from "./exercise";
 
 type MappedExercises = {
     onDelete: () => void;
@@ -58,6 +59,7 @@ export function Create() {
     const { ref: alertRef, openBottomSheet: openAlert, closeBottomSheet: closeAlert } = useBottomSheetRef();
     const { ref: colorPickerRef, openBottomSheet: openPicker } = useBottomSheetRef();
     const { toastRef, openToast, closeToast, showToast } = useToast();
+    const { ref: createRef, openBottomSheet: openCreate, closeBottomSheet: closeCreate } = useBottomSheetRef();
 
     const handleSetWorkoutName = useCallback(
         (value?: string) => {
@@ -68,7 +70,7 @@ export function Create() {
 
     const handleAddExercise = useCallback(() => {
         dispatch(createNewExercise());
-        navigate("workouts/create/exercise");
+        openCreate();
     }, [dispatch, navigate]);
 
     const handleCleanErrors = useCallback(() => {
@@ -163,8 +165,7 @@ export function Create() {
                         onClick={onEdit}
                         key={exercise.name.concat(index.toString())}
                         Icon1={{ icon: "delete", onPress: onDelete }}
-                        Icon2={(editedWorkout?.workout.exercises?.length ?? 0) > 1 ? { icon: "drag", onLongPress: drag } : undefined}
-                    >
+                        Icon2={(editedWorkout?.workout.exercises?.length ?? 0) > 1 ? { icon: "drag", onLongPress: drag } : undefined}>
                         <Text style={styles.text}>{exercise.name}</Text>
                     </PressableRowWithIconSlots>
                 </View>
@@ -178,12 +179,23 @@ export function Create() {
     }, [dispatch]);
 
     const confirmButtonConfig = useMemo(
-        () => ({ localeKey: isEditedWorkout ? "alert_edit_workout_confirm_cancel" : "alert_create_workout_confirm_cancel", onPress: handleDeleteWorkout }) as const,
+        () =>
+            ({
+                localeKey: isEditedWorkout ? "alert_edit_workout_confirm_cancel" : "alert_create_workout_confirm_cancel",
+                onPress: handleDeleteWorkout,
+            }) as const,
         [handleDeleteWorkout, isEditedWorkout],
     );
 
-    const alertContent = useMemo(() => t(isEditedWorkout ? "alert_edit_workout_discard_content" : "alert_create_workout_discard_content"), [t, isEditedWorkout]);
-    const alertTitle = useMemo(() => t(isEditedWorkout ? "alert_edit_workout_discard_title" : "alert_create_workout_discard_title"), [t, isEditedWorkout]);
+    const alertContent = useMemo(
+        () => t(isEditedWorkout ? "alert_edit_workout_discard_content" : "alert_create_workout_discard_content"),
+        [t, isEditedWorkout],
+    );
+
+    const alertTitle = useMemo(
+        () => t(isEditedWorkout ? "alert_edit_workout_discard_title" : "alert_create_workout_discard_title"),
+        [t, isEditedWorkout],
+    );
 
     return (
         <ThemedView stretch>
@@ -191,7 +203,13 @@ export function Create() {
                 <SiteNavigationButtons handleBack={handleBackButton} handleConfirm={handleSaveWorkout} titleFontSize={30} title={title} />
                 <PageContent background safeBottom stretch style={styles.contentWrapper}>
                     <HStack style={styles.nameColorStack} ghost>
-                        <ThemedTextInput style={styles.workoutNameInput} showClear value={editedWorkout?.workout.name} onChangeText={handleSetWorkoutName} placeholder={t("workout_name")} />
+                        <ThemedTextInput
+                            style={styles.workoutNameInput}
+                            showClear
+                            value={editedWorkout?.workout.name}
+                            onChangeText={handleSetWorkoutName}
+                            placeholder={t("workout_name")}
+                        />
                         <ColorPickerButton openPicker={openPicker} />
                     </HStack>
                     <View style={styles.listContainer}>
@@ -238,6 +256,9 @@ export function Create() {
                 </PageContent>
             </ThemedBottomSheetModal>
             <ColorPickerModal reference={colorPickerRef} />
+            <ThemedBottomSheetModal snapPoints={["100%"]} ref={createRef}>
+                <CreateExercise />
+            </ThemedBottomSheetModal>
         </ThemedView>
     );
 }

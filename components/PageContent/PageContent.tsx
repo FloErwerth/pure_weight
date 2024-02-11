@@ -1,15 +1,14 @@
 import { PropsWithChildren, useMemo } from "react";
 import { ThemedView } from "../Themed/ThemedView/View";
 import { styles } from "./styles";
-import { StyleProp, ViewStyle } from "react-native";
+import { ScrollViewProps, StyleProp, ViewProps, ViewStyle } from "react-native";
 import { ThemedScrollView } from "../Themed/ThemedScrollView/ThemedScrollView";
 import { Text } from "../Themed/ThemedText/Text";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ComputedBackgroundColorProps, useComputedBackgroundColor } from "../../hooks/useComputedBackgroundColor";
 
-interface PageContentProps extends PropsWithChildren, ComputedBackgroundColorProps {
+interface BasePageContentProps extends PropsWithChildren, ComputedBackgroundColorProps {
     style?: StyleProp<ViewStyle>;
-    scrollable?: boolean;
     titleConfig?: { title: string; size: 24 | 30 };
     stretch?: boolean;
     paddingTop?: number;
@@ -17,6 +16,10 @@ interface PageContentProps extends PropsWithChildren, ComputedBackgroundColorPro
     ignoreGap?: boolean;
     ignorePadding?: boolean;
 }
+type ScrollablePageContentProps = { scrollable: true } & BasePageContentProps & ScrollViewProps;
+type NonScrollablePageContentProps = { scrollable?: false } & BasePageContentProps & ViewProps;
+
+type PageContentProps = ScrollablePageContentProps | NonScrollablePageContentProps;
 export const PageContent = (props: PageContentProps) => {
     const { bottom } = useSafeAreaInsets();
     const { children, style, scrollable, titleConfig, stretch, paddingTop, safeBottom, ignoreGap = false, ignorePadding = false } = props;
@@ -48,7 +51,12 @@ export const PageContent = (props: PageContentProps) => {
 
     if (scrollable) {
         return (
-            <ThemedScrollView stretch={stretch} background style={scrollableWrapperStyles} contentContainerStyle={wrapperStyles}>
+            <ThemedScrollView
+                keyboardShouldPersistTaps={props.keyboardShouldPersistTaps}
+                stretch={stretch}
+                background
+                style={scrollableWrapperStyles}
+                contentContainerStyle={wrapperStyles}>
                 {titleConfig && (
                     <Text style={titleStyles} ghost>
                         {titleConfig.title}

@@ -8,7 +8,6 @@ import { mutateEditedExercise, mutateEditedExerciseTimeValue } from "../../../st
 
 import { getEditedExercise } from "../../../store/reducers/workout/workoutSelectors";
 import { getWeightUnit } from "../../../store/reducers/settings/settingsSelectors";
-import { TimeInputRow } from "../TimeInputRow";
 import { TimeInput } from "../../../store/reducers/workout/types";
 
 export const WeightBasedExercise = () => {
@@ -39,7 +38,12 @@ export const WeightBasedExercise = () => {
 
     const handleSetPause = useCallback(
         (value: { timeInputKey: keyof TimeInput; value: string }) => {
-            dispatch(mutateEditedExerciseTimeValue({ key: "pause", value: { ...editedExercise?.exercise?.pause, [value.timeInputKey]: value.value } }));
+            dispatch(
+                mutateEditedExerciseTimeValue({
+                    key: "pause",
+                    value: { ...editedExercise?.exercise?.pause, [value.timeInputKey]: value.value },
+                }),
+            );
         },
         [dispatch, editedExercise?.exercise?.pause],
     );
@@ -47,11 +51,35 @@ export const WeightBasedExercise = () => {
     return (
         <ThemedView ghost stretch style={styles.inputWrapper}>
             <HStack style={styles.inputWrapper} ghost>
-                <EditableExerciseInputRow suffix={weightUnit} stretch i18key="weight" setValue={handleSetWeight} errorKey={"create_weight"} value={editedExercise?.exercise?.weight} />
-                <EditableExerciseInputRow stretch i18key="sets" setValue={handleSetSets} errorKey={"create_sets"} value={editedExercise?.exercise.sets} />
-                <EditableExerciseInputRow stretch i18key="reps" setValue={handleSetReps} errorKey={"create_reps"} value={editedExercise?.exercise.reps} />
+                <EditableExerciseInputRow
+                    type="WEIGHT_BASED"
+                    suffix={weightUnit}
+                    stretch
+                    i18key="weight"
+                    setValue={handleSetWeight}
+                    errorKey={"create_weight"}
+                    value={editedExercise?.exercise?.weight}
+                />
+                <EditableExerciseInputRow
+                    type="WEIGHT_BASED"
+                    stretch
+                    i18key="sets"
+                    setValue={handleSetSets}
+                    errorKey={"create_sets"}
+                    suffix="x"
+                    value={editedExercise?.exercise.sets}
+                />
+                <EditableExerciseInputRow
+                    type="WEIGHT_BASED"
+                    stretch
+                    i18key="reps"
+                    setValue={handleSetReps}
+                    errorKey={"create_reps"}
+                    suffix="x"
+                    value={editedExercise?.exercise.reps}
+                />
             </HStack>
-            <TimeInputRow i18key="pause" setValue={handleSetPause} value={editedExercise?.exercise?.pause} />
+            <EditableExerciseInputRow type="TIME_BASED" i18key="pause" setValue={handleSetPause} value={editedExercise?.exercise?.pause} />
         </ThemedView>
     );
 };

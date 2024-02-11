@@ -9,8 +9,9 @@ import { Routes, useNavigate } from "../../../../hooks/navigate";
 interface SettingsSectionProps extends PropsWithChildren {
     title: string;
     page: keyof typeof Routes;
+    input?: boolean;
 }
-export const SettingsNavigator = ({ title, page }: SettingsSectionProps) => {
+export const SettingsNavigator = ({ title, page, input }: SettingsSectionProps) => {
     const navigate = useNavigate();
 
     const onPress = useCallback(() => {
@@ -18,9 +19,9 @@ export const SettingsNavigator = ({ title, page }: SettingsSectionProps) => {
     }, [navigate, page]);
 
     return (
-        <ThemedPressable input onPress={onPress} style={styles.outerWrapper}>
-            <HStack input style={styles.innerWrapper}>
-                <Text input style={styles.title}>
+        <ThemedPressable input={input} onPress={onPress} style={styles.outerWrapper}>
+            <HStack input={input} style={styles.innerWrapper}>
+                <Text input={input} style={styles.title}>
                     {title}
                 </Text>
                 <ThemedMaterialCommunityIcons ghost name="arrow-right" size={23} />
