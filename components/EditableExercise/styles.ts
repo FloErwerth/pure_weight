@@ -26,6 +26,7 @@ export const styles = StyleSheet.create({
     },
     input: {
         paddingVertical: 10,
+        paddingHorizontal: 5,
         borderRadius,
         borderWidth: 1,
     },
@@ -34,9 +35,6 @@ export const styles = StyleSheet.create({
         zIndex: -1,
         gap: 5,
         width: Dimensions.get("screen").width - 40,
-    },
-    inputStack: {
-        justifyContent: "center",
     },
     button: {
         justifyContent: "center",

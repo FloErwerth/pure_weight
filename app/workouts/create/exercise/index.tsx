@@ -14,6 +14,7 @@ import { ThemedPressable } from "../../../../components/Themed/Pressable/Pressab
 import { HStack } from "../../../../components/Stack/HStack/HStack";
 import { ThemedMaterialCommunityIcons } from "../../../../components/Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
 import * as Haptics from "expo-haptics";
+import { SiteNavigationButtons } from "../../../../components/SiteNavigationButtons/SiteNavigationButtons";
 import { PageContent } from "../../../../components/PageContent/PageContent";
 import { useNavigateBack } from "../../../../hooks/navigate";
 import { SnapPoint } from "../../../../components/BottomSheetModal/ThemedBottomSheetModal";
@@ -23,6 +24,7 @@ import Reanimated, { FadeIn, FadeOut, Layout } from "react-native-reanimated";
 export const CreateExercise = () => {
     const { t } = useTranslation();
     const isEditingExercise = useAppSelector(getIsExistingEditedExercise);
+    const title = useMemo(() => t(isEditingExercise ? "exercise_edit_title" : "create_exercise"), [isEditingExercise, t]);
     const dispatch = useAppDispatch();
     const editedExercise = useAppSelector(getEditedExercise);
     const { showToast: showSavedSuccess, openToast: openSavedSuccess, closeToast: closeSavedSuccess } = useToast();
@@ -78,7 +80,8 @@ export const CreateExercise = () => {
     );
 
     return (
-        <ThemedView stretch ghost>
+        <ThemedView stretch background>
+            <SiteNavigationButtons title={title} titleFontSize={40} handleBack={navigateBack} />
             <PageContent safeBottom stretch ghost paddingTop={20}>
                 <EditableExercise />
                 <View style={{ gap: 10 }}>

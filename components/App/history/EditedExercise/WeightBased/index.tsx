@@ -26,15 +26,7 @@ export const WeightBasedEditedExercise = ({ doneWorkoutId, doneExerciseId }: Wei
     const handleSetWeight = useCallback(
         (setIndex: number, newWeight?: string) => {
             if (doneExercise?.doneExerciseId) {
-                dispatch(
-                    mutateDoneExercise({
-                        doneExerciseId: doneExercise?.doneExerciseId,
-                        doneWorkoutId,
-                        setIndex,
-                        key: "weight",
-                        value: newWeight,
-                    }),
-                );
+                dispatch(mutateDoneExercise({ doneExerciseId: doneExercise?.doneExerciseId, doneWorkoutId, setIndex, key: "weight", value: newWeight }));
             }
         },
         [dispatch, doneExercise?.doneExerciseId, doneWorkoutId],
@@ -43,15 +35,7 @@ export const WeightBasedEditedExercise = ({ doneWorkoutId, doneExerciseId }: Wei
     const handleSetReps = useCallback(
         (setIndex: number, newReps?: string) => {
             if (doneExercise?.doneExerciseId) {
-                dispatch(
-                    mutateDoneExercise({
-                        doneExerciseId: doneExercise?.doneExerciseId,
-                        doneWorkoutId,
-                        setIndex,
-                        key: "reps",
-                        value: newReps,
-                    }),
-                );
+                dispatch(mutateDoneExercise({ doneExerciseId: doneExercise?.doneExerciseId, doneWorkoutId, setIndex, key: "reps", value: newReps }));
             }
         },
         [dispatch, doneExercise?.doneExerciseId, doneWorkoutId],
@@ -68,20 +52,8 @@ export const WeightBasedEditedExercise = ({ doneWorkoutId, doneExerciseId }: Wei
                     <Text ghost style={styles.setIndex}>
                         {index + 1}
                     </Text>
-                    <EditableExerciseInputRow
-                        type="WEIGHT_BASED"
-                        stretch
-                        suffix={weightUnit}
-                        value={weight}
-                        setValue={(value) => handleSetWeight(index, value)}
-                    />
-                    <EditableExerciseInputRow
-                        type="WEIGHT_BASED"
-                        stretch
-                        suffix={t("reps_lower")}
-                        value={reps}
-                        setValue={(value) => handleSetReps(index, value)}
-                    />
+                    <EditableExerciseInputRow stretch suffix={weightUnit} value={weight} setValue={(value) => handleSetWeight(index, value)} />
+                    <EditableExerciseInputRow stretch suffix={t("reps_lower")} value={reps} setValue={(value) => handleSetReps(index, value)} />
                 </HStack>
             ))}
         </View>
