@@ -12,8 +12,7 @@ import { Fragment, useEffect, useMemo, useRef } from "react";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RoutesParamaters } from "../../hooks/navigate";
 
-const isProduction = process.env["EXPO_PUBLIC_IS_PRODUCTION"] === "true";
-
+const isDev = process.env["EXPO_PUBLIC_APP_VARIANT"] === "development";
 export function Settings({ route: { params } }: NativeStackScreenProps<RoutesParamaters, "tabs/settings">) {
     const { t } = useTranslation();
     const ref = useRef<FlatList>(null);
@@ -39,7 +38,7 @@ export function Settings({ route: { params } }: NativeStackScreenProps<RoutesPar
             </PageContent>,
             <HelpSection key="HELP SETTINGS" />,
             <Fragment key="DEVELOPMENT">
-                {!isProduction && (
+                {isDev && (
                     <PageContent background paddingTop={30}>
                         <DevelopmentSelection />
                     </PageContent>
@@ -52,7 +51,11 @@ export function Settings({ route: { params } }: NativeStackScreenProps<RoutesPar
     return (
         <ThemedView stretch background>
             <SiteNavigationButtons titleFontSize={40} title={t("settings")} />
-            <FlatList ref={ref} data={settingsPages} contentContainerStyle={{ paddingBottom: 20 }} renderItem={({ item: Item }) => Item}></FlatList>
+            <FlatList
+                ref={ref}
+                data={settingsPages}
+                contentContainerStyle={{ paddingBottom: 20 }}
+                renderItem={({ item: Item }) => Item}></FlatList>
         </ThemedView>
     );
 }

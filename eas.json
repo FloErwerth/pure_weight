@@ -5,16 +5,9 @@
   "build": {
     "development": {
       "developmentClient": true,
-      "distribution": "internal",
-      "env": {
-        "EXPO_PUBLIC_IS_PRODUCTION":"false"
-      }
+      "distribution": "internal"
     },
-    "production": {
-      "env": {
-        "EXPO_PUBLIC_IS_PRODUCTION": "true"
-      }
-    }
+    "production": {}
   },
   "submit": {
     "production": {
