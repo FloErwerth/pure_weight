@@ -66,13 +66,13 @@ export const CheckBox = ({
                         {label}
                     </Text>
                     <HStack ghost style={{ gap: 10 }}>
-                        <ThemedPressable input={!input} style={checkBoxWrapperStyle} onPress={handleCheck}>
+                        <ThemedPressable disabled={disabled} input={!disabled && !input} style={checkBoxWrapperStyle} onPress={handleCheck}>
                             <Animated.View style={checkStyle}>
-                                <ThemedMaterialCommunityIcons ghost name="check" size={size} />
+                                <ThemedMaterialCommunityIcons disabled={disabled} ghost name="check" size={size} />
                             </Animated.View>
                         </ThemedPressable>
-                        {!disabled && helpTextConfig && (
-                            <Pressable disabled={disabled} onPress={openBottomSheet}>
+                        {helpTextConfig && (
+                            <Pressable onPress={openBottomSheet}>
                                 <ThemedMaterialCommunityIcons ghost name="help-circle-outline" size={size} />
                             </Pressable>
                         )}

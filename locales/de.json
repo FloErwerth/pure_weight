@@ -180,7 +180,7 @@
 
   "create_workout_delete_progress": "Workout löschen",
   "create_workout_save_progress": "Workout speichern",
-
+  "settings_stopwatch_done_set_helptext_text_disabled": "\n\nHinweis: Diese Option ist deaktiviert, da Du für deine Übung keine Pause machen möchtest",
   "theme_device": "Geräteeinstellung verwenden",
   "progress_cumulative": "Kumulativ",
   "progress_modal_title": "Auswahl der Diagramm-Art",

@@ -1,4 +1,3 @@
-import { VStack } from "../../../../../Stack/VStack/VStack";
 import { useTranslation } from "react-i18next";
 import { useCallback, useMemo } from "react";
 import { useAppDispatch, useAppSelector } from "../../../../../../store";
@@ -10,7 +9,10 @@ import AmericanFlag from "../../../../../../media/icons/UsaFlag.svg";
 import { getLanguage } from "../../../../../../store/reducers/settings/settingsSelectors";
 import { SelectableSetting, SvgType } from "../../../SelectableSetting/SelectableSetting";
 import { selectionStyles } from "../../selectionStyles";
-import { ProfileContent } from "../../ProfileContent/ProfileContent";
+import { ThemedBottomSheetModal, useBottomSheetRef } from "../../../../../BottomSheetModal/ThemedBottomSheetModal";
+import { SettingsNavigator } from "../../../SettingsNavigator/SettingsNavigator";
+import { ThemedView } from "../../../../../Themed/ThemedView/View";
+import { PageContent } from "../../../../../PageContent/PageContent";
 
 const germanSvg: SvgType = {
     Svg: GermanFlag,
@@ -24,7 +26,7 @@ const americanSvg: SvgType = {
 
 export const LanguageSelection = () => {
     const { t, i18n } = useTranslation();
-
+    const { ref, openBottomSheet, closeBottomSheet } = useBottomSheetRef();
     const dispatch = useAppDispatch();
     const lang = useAppSelector(getLanguage);
     const isGerman = useMemo(() => lang === "de", [lang]);
@@ -34,16 +36,32 @@ export const LanguageSelection = () => {
             void Haptics.impactAsync(ImpactFeedbackStyle.Light);
             i18n.changeLanguage(language);
             dispatch(setLanguage(language));
+            closeBottomSheet();
         },
-        [dispatch, i18n],
+        [closeBottomSheet, dispatch, i18n],
     );
 
     return (
-        <ProfileContent title={t("settings_language")}>
-            <VStack style={selectionStyles.vStack}>
-                <SelectableSetting prependedExtraContent={germanSvg} selected={isGerman} onSelect={() => handleSelectLanguage("de")} titleKey="settings_language_german" />
-                <SelectableSetting prependedExtraContent={americanSvg} selected={!isGerman} onSelect={() => handleSelectLanguage("en")} titleKey="settings_language_english" />
-            </VStack>
-        </ProfileContent>
+        <>
+            <ThemedView round style={selectionStyles.vStack}>
+                <SettingsNavigator title={t("settings_language")} onPress={openBottomSheet} />
+            </ThemedView>
+            <ThemedBottomSheetModal title={t("settings_language")} ref={ref} snapPoints={["30%"]}>
+                <PageContent ghost paddingTop={20}>
+                    <SelectableSetting
+                        prependedExtraContent={germanSvg}
+                        selected={isGerman}
+                        onSelect={() => handleSelectLanguage("de")}
+                        titleKey="settings_language_german"
+                    />
+                    <SelectableSetting
+                        prependedExtraContent={americanSvg}
+                        selected={!isGerman}
+                        onSelect={() => handleSelectLanguage("en")}
+                        titleKey="settings_language_english"
+                    />
+                </PageContent>
+            </ThemedBottomSheetModal>
+        </>
     );
 };

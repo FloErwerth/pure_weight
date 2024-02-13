@@ -14,16 +14,15 @@ interface ProfileContentProps extends PropsWithChildren {
     onPress?: () => void;
     helpText?: { title?: string; text: string; iconSize?: number };
     snapPoints?: SnapPoint[];
-    quick?: boolean;
 }
-export const ProfileContent = ({ onPress, children, title, helpText, snapPoints, quick }: ProfileContentProps) => {
+export const ProfileContent = ({ onPress, children, title, helpText, snapPoints }: ProfileContentProps) => {
     const { ref, openBottomSheet: open } = useBottomSheetRef();
     return (
         <View>
-            <ThemedPressable ghost={quick} onPress={onPress} style={styles.outerWrapper}>
+            <ThemedPressable onPress={onPress}>
                 <View style={styles.innerWrapperChildren}>
                     <HStack style={styles.stack}>
-                        {title ? <Text style={styles.title}>{title}</Text> : <View />}
+                        {title && <Text style={styles.title}>{title}</Text>}
                         {helpText && (
                             <Pressable onPress={open}>
                                 <ThemedMaterialCommunityIcons ghost name="help-circle-outline" size={helpText.iconSize ?? 24} />

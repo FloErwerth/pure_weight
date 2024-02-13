@@ -117,6 +117,8 @@ export function Train() {
 
     const quickSettingsTitle = useMemo(() => t("workout_quick_settings_title"), [t]);
 
+    const quickSettingsConfig = useMemo(() => ({ disableStopwatch: true }), []);
+
     return (
         <ThemedView background style={trainStyles.wrapper} stretch>
             <ThemedView background style={trainStyles.navigationWrapper}>
@@ -153,9 +155,9 @@ export function Train() {
                 onPause={handlePauseWorkout}
                 onCancel={handleCancelWorkout}
             />
-            <ThemedBottomSheetModal title={quickSettingsTitle} snapPoints={["70%"]} ref={ref}>
+            <ThemedBottomSheetModal title={quickSettingsTitle} snapPoints={["40%"]} ref={ref}>
                 <ThemedView style={trainStyles.quickSettingsWrapper} ghost>
-                    <WorkoutSettings quick={true} />
+                    <WorkoutSettings quickSettings={quickSettingsConfig} />
                 </ThemedView>
             </ThemedBottomSheetModal>
         </ThemedView>

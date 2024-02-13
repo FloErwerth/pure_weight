@@ -20,7 +20,6 @@ export const styles = StyleSheet.create({
         marginBottom: 10,
     },
     outerWrapper: {
-        padding: 10,
         borderRadius,
         alignSelf: "stretch",
     },

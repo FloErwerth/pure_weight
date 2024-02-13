@@ -9,11 +9,12 @@ import { ProfileContent } from "../../ProfileContent/ProfileContent";
 import { CheckBox } from "../../../../../Themed/CheckBox/CheckBox";
 import { useRegisterForPushNotifications } from "../../../../../../hooks/useRegisterForPushNotifications";
 import { SnapPoint } from "../../../../../BottomSheetModal/ThemedBottomSheetModal";
+import { WorkoutQuickSettings } from "../../../Sections/workout";
 
 type StopwatchSelectionProps = {
-    quick?: boolean;
+    quickSettings?: WorkoutQuickSettings;
 };
-export const StopwatchSelection = ({ quick }: StopwatchSelectionProps) => {
+export const StopwatchSelection = ({ quickSettings }: StopwatchSelectionProps) => {
     const { t } = useTranslation();
     const startStopwatchOnDoneSet = useAppSelector(getStartStopwatchOnDoneSet);
     const notify = useAppSelector(getStopwatchNotify);
@@ -47,11 +48,14 @@ export const StopwatchSelection = ({ quick }: StopwatchSelectionProps) => {
     const doneSetHelpText = useMemo(
         () => ({
             title: t("settings_stopwatch_done_set"),
-            text: t("settings_stopwatch_done_set_helptext_text"),
-            snapPoints: ["25%"] as SnapPoint[],
+            text: `${t("settings_stopwatch_done_set_helptext_text")} ${
+                quickSettings?.disableStopwatch ? t("settings_stopwatch_last_set_helptext_text_disabled") : ""
+            }`,
+            snapPoints: [quickSettings?.disableStopwatch ? "35%" : "25%"] as SnapPoint[],
         }),
-        [t],
+        [quickSettings?.disableStopwatch, t],
     );
+
     const notificationHelptext = useMemo(
         () => ({ title: t("settings_stopwatch_notify"), text: t("settings_notification_help_text"), snapPoints: ["25%"] as SnapPoint[] }),
         [t],
@@ -59,12 +63,13 @@ export const StopwatchSelection = ({ quick }: StopwatchSelectionProps) => {
 
     return (
         <ProfileContent title={t("settings_stopwatch_title")}>
-            <VStack ghost={quick} style={selectionStyles.vStack}>
+            <VStack ghost={!!quickSettings} style={selectionStyles.vStack}>
                 <CheckBox
                     input
                     helpTextConfig={doneSetHelpText}
                     label={t("settings_stopwatch_done_set")}
                     size={26}
+                    disabled={quickSettings?.disableStopwatch}
                     checked={startStopwatchOnDoneSet}
                     onChecked={handleSelectStartStopwatchOnDoneSet}
                 />

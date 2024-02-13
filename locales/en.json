@@ -182,6 +182,7 @@
   "show_note_title": "Edit note",
   "edit_note_done": "Save note",
   "close_note": "Close note",
+  "settings_stopwatch_last_set_helptext_text_disabled":  "\n\nNote: This option is disabled, because you did not set up a pause for your exercise",
   "previous_training_title": "Your previous training",
   "previous_training_title_with_date": "Your workout from ",
   "previous_training_note_title": "Your notes from ",

@@ -1,12 +1,17 @@
 import { StopwatchSelection } from "../../components/Selections/StopwatchSelection/StopwatchSelection";
 
-type WorkoutSettingsProps = {
-    quick?: boolean;
+export type WorkoutQuickSettings = {
+    disableStopwatch?: boolean;
 };
-export const WorkoutSettings = ({ quick }: WorkoutSettingsProps) => {
+
+type WorkoutSettingsProps = {
+    quickSettings?: WorkoutQuickSettings;
+};
+
+export const WorkoutSettings = ({ quickSettings }: WorkoutSettingsProps) => {
     return (
         <>
-            <StopwatchSelection quick={quick} />
+            <StopwatchSelection quickSettings={quickSettings} />
         </>
     );
 };
