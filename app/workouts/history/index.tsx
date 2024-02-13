@@ -13,7 +13,14 @@ import { IsoDate } from "../../../types/date";
 import { Dimensions, FlatList } from "react-native";
 import { RenderedDay } from "../../../components/App/history/RenderedDay/RenderedDay";
 import { DayProps } from "react-native-calendars/src/calendar/day";
-import { getEditedWorkout, getFirstWorkoutDate, getLatestWorkoutDate, getSortedDoneWorkout, getWorkoutColor, getWorkoutsByMonth } from "../../../store/reducers/workout/workoutSelectors";
+import {
+    getEditedWorkout,
+    getFirstWorkoutDate,
+    getLatestWorkoutDate,
+    getSortedDoneWorkout,
+    getWorkoutColor,
+    getWorkoutsByMonth,
+} from "../../../store/reducers/workout/workoutSelectors";
 import { noop } from "lodash";
 import { WorkoutHistoryCard } from "../../../components/WorkoutHistoryCard/WorkoutHistoryCard";
 import { getDateTodayIso } from "../../../utils/date";
@@ -59,8 +66,14 @@ const useScrollRanges = (selectedDate?: IsoDate) => {
     const latestWorkoutDate = useAppSelector((state: AppState) => getLatestWorkoutDate(state, editedWorkout?.workout?.workoutId));
     const firstWorkoutDate = useAppSelector((state: AppState) => getFirstWorkoutDate(state, editedWorkout?.workout?.workoutId));
     const dateToday = getDateTodayIso();
-    const pastScrollRange = useMemo(() => monthDiff(new Date(firstWorkoutDate), new Date(selectedDate ?? dateToday)), [selectedDate, dateToday, firstWorkoutDate]);
-    const futureScrollRange = useMemo(() => monthDiff(new Date(selectedDate ?? dateToday), new Date(latestWorkoutDate)), [selectedDate, dateToday, latestWorkoutDate]);
+    const pastScrollRange = useMemo(
+        () => monthDiff(new Date(firstWorkoutDate), new Date(selectedDate ?? dateToday)),
+        [selectedDate, dateToday, firstWorkoutDate],
+    );
+    const futureScrollRange = useMemo(
+        () => monthDiff(new Date(selectedDate ?? dateToday), new Date(latestWorkoutDate)),
+        [selectedDate, dateToday, latestWorkoutDate],
+    );
     return useMemo(() => ({ past: pastScrollRange, future: futureScrollRange }), [pastScrollRange, futureScrollRange]);
 };
 
@@ -147,8 +160,11 @@ export function WorkoutHistory() {
             const isoDate = date?.dateString as IsoDate;
             const scrollCallback = () => {
                 if ((sectionListRef.current?.props.data as Array<FlatListData>)?.findIndex) {
-                    const possibleIndexToScrollTo = (sectionListRef.current?.props.data as Array<FlatListData>).findIndex((data: FlatListData) => data.date === isoDate);
-                    const indexToScrollTo = possibleIndexToScrollTo !== undefined && possibleIndexToScrollTo !== -1 ? possibleIndexToScrollTo : 0;
+                    const possibleIndexToScrollTo = (sectionListRef.current?.props.data as Array<FlatListData>).findIndex(
+                        (data: FlatListData) => data.date === isoDate,
+                    );
+                    const indexToScrollTo =
+                        possibleIndexToScrollTo !== undefined && possibleIndexToScrollTo !== -1 ? possibleIndexToScrollTo : 0;
                     sectionListRef.current?.scrollToIndex({
                         index: indexToScrollTo,
                         viewOffset: Dimensions.get("window").height * 0.28,
@@ -164,7 +180,15 @@ export function WorkoutHistory() {
 
             const color = markedDates?.[isoDate];
             const isLatest = isoDate === latestWorkoutDate;
-            return <RenderedDay latestDay={isLatest} selected={selectedDate === isoDate} handleSelectDate={handleDayPress} day={day} color={color} />;
+            return (
+                <RenderedDay
+                    latestDay={isLatest}
+                    selected={selectedDate === isoDate}
+                    handleSelectDate={handleDayPress}
+                    day={day}
+                    color={color}
+                />
+            );
         },
         [handleSelectDate, latestWorkoutDate, markedDates, selectedDate],
     );
@@ -185,7 +209,7 @@ export function WorkoutHistory() {
                 <ThemedPressable style={styles.browseButtonWrapper} onPress={openBottomSheet}>
                     <Text style={styles.browseButton}>{t("history_browse")}</Text>
                 </ThemedPressable>
-                <ThemedBottomSheetModal snapPoints={["55%"]} ref={ref}>
+                <ThemedBottomSheetModal ref={ref}>
                     <CalendarList
                         onScrollToIndexFailed={noop}
                         current={selectedDate ?? latestWorkoutDate}

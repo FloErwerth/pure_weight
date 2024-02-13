@@ -202,7 +202,7 @@ export function Workouts() {
                 titleKey={"workout_deleted_title"}
                 onRedo={handleRecoverWorkout}
             />
-            <ThemedBottomSheetModal snapPoints={["40%"]} title={title} ref={ref}>
+            <ThemedBottomSheetModal title={title} ref={ref}>
                 <PageContent paddingTop={20} stretch ghost>
                     <Text style={trainStyles.button} ghost stretch>
                         {message}

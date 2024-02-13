@@ -321,7 +321,7 @@ export const TimeBasedSetInput = ({ setIndex, exerciseId }: SetInputRowProps) =>
                     </ThemedPressable>
                 </HStack>
             </HStack>
-            <ThemedBottomSheetModal snapPoints={["35%"]} title="Timer not done" ref={cancelHandleRef}>
+            <ThemedBottomSheetModal title="Timer not done" ref={cancelHandleRef}>
                 <PageContent stretch ghost paddingTop={20}>
                     <Text ghost stretch>
                         The timer is not done. Do you want to save the current progress or do you want to restart the set?

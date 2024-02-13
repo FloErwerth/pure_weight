@@ -1,7 +1,7 @@
 import { useAppDispatch, useAppSelector } from "../../../store";
 import { useNavigate } from "../../../hooks/navigate";
 import { useCallback, useMemo, useState } from "react";
-import { SnapPoint, ThemedBottomSheetModal, useBottomSheetRef } from "../../BottomSheetModal/ThemedBottomSheetModal";
+import { ThemedBottomSheetModal, useBottomSheetRef } from "../../BottomSheetModal/ThemedBottomSheetModal";
 import { getLanguage, getSearchManual, getThemeKeyFromStore } from "../../../store/reducers/settings/settingsSelectors";
 import { createNewWorkout } from "../../../store/reducers/workout";
 import { HelpQuestion } from "../../HelpQuestionAnswer/HelpQuestion";
@@ -28,9 +28,7 @@ export const QuestionsAndAnswers = () => {
     }, [navigate]);
 
     const { ref, openBottomSheet: open, closeAll } = useBottomSheetRef();
-    const [selectedQuesiton, setSelectedQuesiton] = useState<
-        { title: string; answer: JSX.Element; snapPoints?: SnapPoint[] } | undefined
-    >();
+    const [selectedQuesiton, setSelectedQuesiton] = useState<{ title: string; answer: JSX.Element } | undefined>();
     const language = useAppSelector(getLanguage);
     const setupNewWorkout = useCallback(() => {
         closeAll();
@@ -65,7 +63,7 @@ export const QuestionsAndAnswers = () => {
     const data = useMemo((): Record<SECTIONS, QuestionAnswerArray> => {
         const handleSelectFromAnswer = (section: SECTIONS, index: number) => {
             const selectedData = data[section][index];
-            setSelectedQuesiton({ title: selectedData.title, answer: selectedData.answer, snapPoints: selectedData.snapPoints });
+            setSelectedQuesiton({ title: selectedData.title, answer: selectedData.answer });
             open();
         };
 
@@ -87,7 +85,7 @@ export const QuestionsAndAnswers = () => {
     const handleSetSelectedQuestion = useCallback(
         (section: SECTIONS, index: number) => {
             const selectedData = data[section][index];
-            setSelectedQuesiton({ title: selectedData.title, answer: selectedData.answer, snapPoints: selectedData.snapPoints });
+            setSelectedQuesiton({ title: selectedData.title, answer: selectedData.answer });
             open();
         },
         [data, open],
@@ -97,10 +95,9 @@ export const QuestionsAndAnswers = () => {
         return Object.entries(data).map(([section, data]) => ({
             sectionTitle: sectionTitleMap[section as unknown as SECTIONS],
             handleSelectQuestion: (index: number) => handleSetSelectedQuestion(section as unknown as SECTIONS, index),
-            data: data.map(({ title, answer, snapPoints }) => ({
+            data: data.map(({ title, answer }) => ({
                 title,
                 answer,
-                snapPoints,
                 shown: !searchedManual || title.toLowerCase().includes(searchedManual.toLowerCase()),
             })),
         }));
@@ -139,7 +136,7 @@ export const QuestionsAndAnswers = () => {
                     );
                 })}
             </ThemedScrollView>
-            <ThemedBottomSheetModal ref={ref} title={selectedQuesiton?.title} snapPoints={selectedQuesiton?.snapPoints}>
+            <ThemedBottomSheetModal ref={ref} title={selectedQuesiton?.title}>
                 {selectedQuesiton?.answer}
             </ThemedBottomSheetModal>
         </ThemedView>

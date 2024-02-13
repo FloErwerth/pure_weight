@@ -236,7 +236,7 @@ export const MeasurementHistory = () => {
                 />
             </PageContent>
 
-            <ThemedBottomSheetModal snapPoints={["70%"]} title={title} ref={ref}>
+            <ThemedBottomSheetModal title={title} ref={ref}>
                 <PageContent safeBottom ghost stretch paddingTop={20}>
                     <EditableExerciseInputRow
                         placeholder="0"
@@ -264,7 +264,7 @@ export const MeasurementHistory = () => {
                     </HStack>
                 </PageContent>
             </ThemedBottomSheetModal>
-            <ThemedBottomSheetModal snapPoints={["40%"]} ref={warningRef} title={t("measurement_warning_title")}>
+            <ThemedBottomSheetModal ref={warningRef} title={t("measurement_warning_title")}>
                 <PageContent safeBottom stretch ghost>
                     <HStack stretch ghost style={createStyles.warningWrapper}>
                         <AnswerText>{t(`measurement_warning_text`)}</AnswerText>

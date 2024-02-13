@@ -8,7 +8,9 @@ import { Icon, SelectableSetting } from "../../../SelectableSetting/SelectableSe
 import { UnitSystem } from "../../../../../../store/reducers/settings/types";
 import { ThemedView } from "../../../../../Themed/ThemedView/View";
 import { selectionStyles } from "../../selectionStyles";
-import { ProfileContent } from "../../ProfileContent/ProfileContent";
+import { SettingsNavigator } from "../../../SettingsNavigator/SettingsNavigator";
+import { ThemedBottomSheetModal, useBottomSheetRef } from "../../../../../BottomSheetModal/ThemedBottomSheetModal";
+import { PageContent } from "../../../../../PageContent/PageContent";
 
 const kgIcon: Icon = {
     name: "weight-kilogram",
@@ -23,6 +25,7 @@ export const UnitSystemSection = () => {
     const { t } = useTranslation();
     const dispatch = useAppDispatch();
     const unitSystem = useAppSelector(getUnitSystem);
+    const { ref, openBottomSheet } = useBottomSheetRef();
 
     const handleSelectWeightUnit = useCallback(
         (unit: UnitSystem) => {
@@ -32,18 +35,32 @@ export const UnitSystemSection = () => {
     );
 
     return (
-        <ProfileContent
-            title={t("settings_unit_system_title")}
-            helpText={{
-                title: t("settings_unit_system_title"),
-                text: t("settings_unit_system_helptext_text"),
-            }}
-            snapPoints={["60%"]}
-        >
-            <ThemedView style={selectionStyles.vStack}>
-                <SelectableSetting prependedExtraContent={kgIcon} selected={unitSystem === "metric"} onSelect={() => handleSelectWeightUnit("metric")} titleKey="unit_system_metric" />
-                <SelectableSetting prependedExtraContent={poundIcon} selected={unitSystem === "imperial"} onSelect={() => handleSelectWeightUnit("imperial")} titleKey="unit_system_imperial" />
-            </ThemedView>
-        </ProfileContent>
+        <>
+            <SettingsNavigator
+                onPress={openBottomSheet}
+                title={t("settings_unit_system_title")}
+                helpText={{
+                    title: t("settings_unit_system_title"),
+                    text: t("settings_unit_system_helptext_text"),
+                }}></SettingsNavigator>
+            <ThemedBottomSheetModal title={t("settings_unit_system_title")} ref={ref}>
+                <PageContent ghost paddingTop={20}>
+                    <ThemedView ghost style={selectionStyles.vStack}>
+                        <SelectableSetting
+                            prependedExtraContent={kgIcon}
+                            selected={unitSystem === "metric"}
+                            onSelect={() => handleSelectWeightUnit("metric")}
+                            titleKey="unit_system_metric"
+                        />
+                        <SelectableSetting
+                            prependedExtraContent={poundIcon}
+                            selected={unitSystem === "imperial"}
+                            onSelect={() => handleSelectWeightUnit("imperial")}
+                            titleKey="unit_system_imperial"
+                        />
+                    </ThemedView>
+                </PageContent>
+            </ThemedBottomSheetModal>
+        </>
     );
 };

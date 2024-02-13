@@ -26,7 +26,7 @@ const americanSvg: SvgType = {
 
 export const LanguageSelection = () => {
     const { t, i18n } = useTranslation();
-    const { ref, openBottomSheet, closeBottomSheet } = useBottomSheetRef();
+    const { ref, openBottomSheet } = useBottomSheetRef();
     const dispatch = useAppDispatch();
     const lang = useAppSelector(getLanguage);
     const isGerman = useMemo(() => lang === "de", [lang]);
@@ -36,9 +36,8 @@ export const LanguageSelection = () => {
             void Haptics.impactAsync(ImpactFeedbackStyle.Light);
             i18n.changeLanguage(language);
             dispatch(setLanguage(language));
-            closeBottomSheet();
         },
-        [closeBottomSheet, dispatch, i18n],
+        [dispatch, i18n],
     );
 
     return (
@@ -46,7 +45,7 @@ export const LanguageSelection = () => {
             <ThemedView round style={selectionStyles.vStack}>
                 <SettingsNavigator title={t("settings_language")} onPress={openBottomSheet} />
             </ThemedView>
-            <ThemedBottomSheetModal title={t("settings_language")} ref={ref} snapPoints={["30%"]}>
+            <ThemedBottomSheetModal title={t("settings_language")} ref={ref}>
                 <PageContent ghost paddingTop={20}>
                     <SelectableSetting
                         prependedExtraContent={germanSvg}

@@ -2,7 +2,7 @@ import React, { forwardRef, PropsWithChildren, RefObject, useCallback, useEffect
 import { Keyboard, ViewStyle } from "react-native";
 import { Text } from "../Themed/ThemedText/Text";
 import { styles } from "./styles";
-import { BottomSheetBackdrop, BottomSheetBackdropProps, BottomSheetModal } from "@gorhom/bottom-sheet";
+import { BottomSheetBackdrop, BottomSheetBackdropProps, BottomSheetModal, BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import { useTheme } from "../../theme/context";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ThemedView } from "../Themed/ThemedView/View";
@@ -14,7 +14,6 @@ export interface ThemedBottomSheetModalProps extends PropsWithChildren {
     hideIndicator?: boolean;
     style?: ViewStyle;
     onRequestClose?: () => void;
-    snapPoints?: SnapPoint[];
     allowSwipeDownToClose?: boolean;
 }
 
@@ -45,36 +44,39 @@ export const useBottomSheetRef = () => {
         };
     }, []);
 
-    return useMemo(() => ({ ref, openBottomSheet, closeBottomSheet, closeAll, isOpen }), [closeAll, closeBottomSheet, isOpen, openBottomSheet]);
+    return useMemo(
+        () => ({ ref, openBottomSheet, closeBottomSheet, closeAll, isOpen }),
+        [closeAll, closeBottomSheet, isOpen, openBottomSheet],
+    );
 };
 
-const defaultSnapshots = ["50%", "50%", "100%"];
-const renderBackdrop = (props: BottomSheetBackdropProps) => <BottomSheetBackdrop opacity={0.8} appearsOnIndex={0} disappearsOnIndex={-1} {...props} />;
+const renderBackdrop = (props: BottomSheetBackdropProps) => (
+    <BottomSheetBackdrop opacity={0.8} appearsOnIndex={0} disappearsOnIndex={-1} {...props} />
+);
 
 // eslint-disable-next-line react/display-name
 export const ThemedBottomSheetModal = forwardRef<BottomSheetModal, ThemedBottomSheetModalProps>(
-    ({ hideIndicator, snapPoints, customContentStyle, children, title, onRequestClose, allowSwipeDownToClose = true }, ref) => {
+    ({ hideIndicator, customContentStyle, children, title, onRequestClose, allowSwipeDownToClose = true }, ref) => {
         const { mainColor, inputFieldBackgroundColor } = useTheme();
         const { top, bottom } = useSafeAreaInsets();
-        const defaultStyle = useMemo(() => [customContentStyle, styles.defaultContentStyle, { backgroundColor: inputFieldBackgroundColor }], [customContentStyle, inputFieldBackgroundColor]);
+        const defaultStyle = useMemo(
+            () => [customContentStyle, styles.defaultContentStyle, { backgroundColor: inputFieldBackgroundColor }],
+            [customContentStyle, inputFieldBackgroundColor],
+        );
 
-        const combinedSnapshots = useMemo(() => {
-            if (!snapPoints) {
-                return defaultSnapshots;
-            }
-            return [snapPoints[0], ...snapPoints];
-        }, [snapPoints]);
-
-        const customIndicator = useMemo(() => ({ backgroundColor: allowSwipeDownToClose && !hideIndicator ? mainColor : "transparent" }), [allowSwipeDownToClose, hideIndicator, mainColor]);
-        const contentStyle = useMemo(() => ({ paddingBottom: bottom }), [bottom]);
-        const titleWrapperStyle = useMemo(() => [styles.wrapper, {}], [inputFieldBackgroundColor]);
+        const customIndicator = useMemo(
+            () => ({ backgroundColor: allowSwipeDownToClose && !hideIndicator ? mainColor : "transparent" }),
+            [allowSwipeDownToClose, hideIndicator, mainColor],
+        );
+        const contentStyle = useMemo(() => ({ paddingBottom: bottom * 2 }), [bottom]);
+        const titleWrapperStyle = useMemo(() => [styles.wrapper, {}], []);
 
         return (
             <BottomSheetModal
                 enablePanDownToClose={allowSwipeDownToClose}
-                index={1}
+                index={0}
                 handleIndicatorStyle={customIndicator}
-                enableDynamicSizing={false}
+                enableDynamicSizing
                 backdropComponent={renderBackdrop}
                 backgroundStyle={defaultStyle}
                 enableDismissOnClose={allowSwipeDownToClose}
@@ -82,19 +84,19 @@ export const ThemedBottomSheetModal = forwardRef<BottomSheetModal, ThemedBottomS
                 ref={ref}
                 stackBehavior="push"
                 topInset={top}
-                keyboardBehavior="extend"
-                snapPoints={combinedSnapshots}
-            >
-                <ThemedView ghost style={titleWrapperStyle}>
-                    {title && (
-                        <Text input style={styles.title}>
-                            {title}
-                        </Text>
-                    )}
-                </ThemedView>
-                <ThemedView ghost stretch style={contentStyle}>
-                    {children}
-                </ThemedView>
+                keyboardBehavior="extend">
+                <BottomSheetScrollView scrollEnabled={false}>
+                    <ThemedView ghost style={titleWrapperStyle}>
+                        {title && (
+                            <Text input style={styles.title}>
+                                {title}
+                            </Text>
+                        )}
+                    </ThemedView>
+                    <ThemedView ghost stretch style={contentStyle}>
+                        {children}
+                    </ThemedView>
+                </BottomSheetScrollView>
             </BottomSheetModal>
         );
     },

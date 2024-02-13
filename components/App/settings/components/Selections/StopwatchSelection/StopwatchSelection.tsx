@@ -1,15 +1,16 @@
 import { useTranslation } from "react-i18next";
 import { useAppDispatch, useAppSelector } from "../../../../../../store";
 import React, { useCallback, useMemo } from "react";
-import { VStack } from "../../../../../Stack/VStack/VStack";
 import { selectionStyles } from "../../selectionStyles";
 import { mutateStopwatchSettings } from "../../../../../../store/reducers/settings";
 import { getStartStopwatchOnDoneSet, getStopwatchNotify } from "../../../../../../store/reducers/settings/settingsSelectors";
-import { ProfileContent } from "../../ProfileContent/ProfileContent";
 import { CheckBox } from "../../../../../Themed/CheckBox/CheckBox";
 import { useRegisterForPushNotifications } from "../../../../../../hooks/useRegisterForPushNotifications";
-import { SnapPoint } from "../../../../../BottomSheetModal/ThemedBottomSheetModal";
+import { SnapPoint, ThemedBottomSheetModal, useBottomSheetRef } from "../../../../../BottomSheetModal/ThemedBottomSheetModal";
 import { WorkoutQuickSettings } from "../../../Sections/workout";
+import { SettingsNavigator } from "../../../SettingsNavigator/SettingsNavigator";
+import { ThemedView } from "../../../../../Themed/ThemedView/View";
+import { PageContent } from "../../../../../PageContent/PageContent";
 
 type StopwatchSelectionProps = {
     quickSettings?: WorkoutQuickSettings;
@@ -18,6 +19,7 @@ export const StopwatchSelection = ({ quickSettings }: StopwatchSelectionProps) =
     const { t } = useTranslation();
     const startStopwatchOnDoneSet = useAppSelector(getStartStopwatchOnDoneSet);
     const notify = useAppSelector(getStopwatchNotify);
+    const { ref, openBottomSheet } = useBottomSheetRef();
 
     const dispatch = useAppDispatch();
     const requestPermissions = useRegisterForPushNotifications();
@@ -62,26 +64,27 @@ export const StopwatchSelection = ({ quickSettings }: StopwatchSelectionProps) =
     );
 
     return (
-        <ProfileContent title={t("settings_stopwatch_title")}>
-            <VStack ghost={!!quickSettings} style={selectionStyles.vStack}>
-                <CheckBox
-                    input
-                    helpTextConfig={doneSetHelpText}
-                    label={t("settings_stopwatch_done_set")}
-                    size={26}
-                    disabled={quickSettings?.disableStopwatch}
-                    checked={startStopwatchOnDoneSet}
-                    onChecked={handleSelectStartStopwatchOnDoneSet}
-                />
-                <CheckBox
-                    input
-                    helpTextConfig={notificationHelptext}
-                    label={t("settings_stopwatch_notify")}
-                    size={26}
-                    checked={checked}
-                    onChecked={handleSelectNotification}
-                />
-            </VStack>
-        </ProfileContent>
+        <ThemedView ghost>
+            <SettingsNavigator onPress={openBottomSheet} title={t("settings_stopwatch_title")}></SettingsNavigator>
+            <ThemedBottomSheetModal title={t("settings_stopwatch_title")} ref={ref}>
+                <PageContent paddingTop={20} ghost style={selectionStyles.vStack}>
+                    <CheckBox
+                        helpTextConfig={doneSetHelpText}
+                        label={t("settings_stopwatch_done_set")}
+                        size={26}
+                        disabled={quickSettings?.disableStopwatch}
+                        checked={startStopwatchOnDoneSet}
+                        onChecked={handleSelectStartStopwatchOnDoneSet}
+                    />
+                    <CheckBox
+                        helpTextConfig={notificationHelptext}
+                        label={t("settings_stopwatch_notify")}
+                        size={26}
+                        checked={checked}
+                        onChecked={handleSelectNotification}
+                    />
+                </PageContent>
+            </ThemedBottomSheetModal>
+        </ThemedView>
     );
 };

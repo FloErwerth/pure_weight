@@ -7,7 +7,7 @@ import { styles } from "./styles";
 import { ThemedView } from "../ThemedView/View";
 import { borderRadius } from "../../../theme/border";
 import { Animated, Pressable, ViewStyle } from "react-native";
-import { SnapPoint, ThemedBottomSheetModal, useBottomSheetRef } from "../../BottomSheetModal/ThemedBottomSheetModal";
+import { ThemedBottomSheetModal, useBottomSheetRef } from "../../BottomSheetModal/ThemedBottomSheetModal";
 import { HelpAnswer } from "../../HelpQuestionAnswer/HelpQuestion";
 import { AnswerText } from "../../HelpQuestionAnswer/AnswerText";
 
@@ -16,7 +16,7 @@ interface CheckBoxProps {
     onChecked: (checked: boolean) => void;
     size?: number;
     label: string;
-    helpTextConfig?: { title?: string; text: string; snapPoints?: SnapPoint[] };
+    helpTextConfig?: { title?: string; text: string };
     disabled?: boolean;
     customWrapperStyles?: ViewStyle;
     input?: boolean;
@@ -79,7 +79,7 @@ export const CheckBox = ({
                     </HStack>
                 </HStack>
             </ThemedView>
-            <ThemedBottomSheetModal snapPoints={helpTextConfig?.snapPoints} title={helpTextConfig?.title} ref={ref}>
+            <ThemedBottomSheetModal title={helpTextConfig?.title} ref={ref}>
                 <HelpAnswer>
                     <AnswerText>{helpTextConfig?.text}</AnswerText>
                 </HelpAnswer>

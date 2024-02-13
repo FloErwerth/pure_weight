@@ -48,7 +48,7 @@ export const SortingButton = ({ iconName, title, mappedOptions, hide = false }: 
                     </Text>
                 </HStack>
             </ThemedPressable>
-            <ThemedBottomSheetModal title={t("sorting_modal_title")} ref={ref} snapPoints={["50%"]}>
+            <ThemedBottomSheetModal title={t("sorting_modal_title")} ref={ref}>
                 <ThemedView ghost style={styles.optionWrapper}>
                     {mappedOptions.map(({ iconName, value, label, selectCallback }) => (
                         <ThemedPressable key={value} onPress={() => handleSelectedValue(selectCallback)} style={styles.option}>

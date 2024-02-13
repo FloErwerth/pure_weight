@@ -59,8 +59,14 @@ export const ColorPickerModal = ({ reference }: ColorPickerWithModalProps) => {
     );
 
     return (
-        <ThemedBottomSheetModal hideIndicator key="COLORMODAL" snapPoints={["60%"]} ref={reference}>
-            <ColorPicker thumbShape="circle" boundedThumb={true} thumbAnimationDuration={100} style={styles.picker} value={color} onChange={handlePickColor}>
+        <ThemedBottomSheetModal hideIndicator key="COLORMODAL" ref={reference}>
+            <ColorPicker
+                thumbShape="circle"
+                boundedThumb={true}
+                thumbAnimationDuration={100}
+                style={styles.picker}
+                value={color}
+                onChange={handlePickColor}>
                 <Preview hideText hideInitialColor style={styles.indicator} />
                 <Panel3 thumbSize={30} />
                 <Swatches style={styles.swatches} colors={palette} />

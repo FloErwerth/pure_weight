@@ -163,8 +163,7 @@ export function Create() {
                         onClick={onEdit}
                         key={exercise.name.concat(index.toString())}
                         Icon1={{ icon: "delete", onPress: onDelete }}
-                        Icon2={(editedWorkout?.workout.exercises?.length ?? 0) > 1 ? { icon: "drag", onLongPress: drag } : undefined}
-                    >
+                        Icon2={(editedWorkout?.workout.exercises?.length ?? 0) > 1 ? { icon: "drag", onLongPress: drag } : undefined}>
                         <Text style={styles.text}>{exercise.name}</Text>
                     </PressableRowWithIconSlots>
                 </View>
@@ -178,12 +177,22 @@ export function Create() {
     }, [dispatch]);
 
     const confirmButtonConfig = useMemo(
-        () => ({ localeKey: isEditedWorkout ? "alert_edit_workout_confirm_cancel" : "alert_create_workout_confirm_cancel", onPress: handleDeleteWorkout }) as const,
+        () =>
+            ({
+                localeKey: isEditedWorkout ? "alert_edit_workout_confirm_cancel" : "alert_create_workout_confirm_cancel",
+                onPress: handleDeleteWorkout,
+            }) as const,
         [handleDeleteWorkout, isEditedWorkout],
     );
 
-    const alertContent = useMemo(() => t(isEditedWorkout ? "alert_edit_workout_discard_content" : "alert_create_workout_discard_content"), [t, isEditedWorkout]);
-    const alertTitle = useMemo(() => t(isEditedWorkout ? "alert_edit_workout_discard_title" : "alert_create_workout_discard_title"), [t, isEditedWorkout]);
+    const alertContent = useMemo(
+        () => t(isEditedWorkout ? "alert_edit_workout_discard_content" : "alert_create_workout_discard_content"),
+        [t, isEditedWorkout],
+    );
+    const alertTitle = useMemo(
+        () => t(isEditedWorkout ? "alert_edit_workout_discard_title" : "alert_create_workout_discard_title"),
+        [t, isEditedWorkout],
+    );
 
     return (
         <ThemedView stretch>
@@ -191,7 +200,13 @@ export function Create() {
                 <SiteNavigationButtons handleBack={handleBackButton} handleConfirm={handleSaveWorkout} titleFontSize={30} title={title} />
                 <PageContent background safeBottom stretch style={styles.contentWrapper}>
                     <HStack style={styles.nameColorStack} ghost>
-                        <ThemedTextInput style={styles.workoutNameInput} showClear value={editedWorkout?.workout.name} onChangeText={handleSetWorkoutName} placeholder={t("workout_name")} />
+                        <ThemedTextInput
+                            style={styles.workoutNameInput}
+                            showClear
+                            value={editedWorkout?.workout.name}
+                            onChangeText={handleSetWorkoutName}
+                            placeholder={t("workout_name")}
+                        />
                         <ColorPickerButton openPicker={openPicker} />
                     </HStack>
                     <View style={styles.listContainer}>
@@ -222,7 +237,7 @@ export function Create() {
                     <AddButton onPress={handleAddExercise} />
                 </PageContent>
             </ThemedView>
-            <ThemedBottomSheetModal snapPoints={["40%"]} title={alertTitle} ref={alertRef}>
+            <ThemedBottomSheetModal title={alertTitle} ref={alertRef}>
                 <PageContent stretch paddingTop={20} ghost>
                     <Text style={{ fontSize: 20 }} stretch ghost>
                         {alertContent}

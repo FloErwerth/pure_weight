@@ -111,7 +111,7 @@ export const PreviousWorkout = ({ exerciseId, exerciseType }: PreviousTrainingPr
                     </>
                 )}
             </ThemedView>
-            <ThemedBottomSheetModal snapPoints={["100%"]} title={t("previous_training_note_title").concat(date)} onRequestClose={handleCloseNote} ref={ref}>
+            <ThemedBottomSheetModal title={t("previous_training_note_title").concat(date)} onRequestClose={handleCloseNote} ref={ref}>
                 <ThemedView ghost stretch style={{ margin: 20 }}>
                     <Text ghost stretch style={{ fontSize: 20 }}>
                         {note}

@@ -4,7 +4,7 @@ import { Text } from "../../../../Themed/ThemedText/Text";
 import { PropsWithChildren } from "react";
 import { styles } from "./styles";
 import { HelpAnswer } from "../../../../HelpQuestionAnswer/HelpQuestion";
-import { SnapPoint, ThemedBottomSheetModal, useBottomSheetRef } from "../../../../BottomSheetModal/ThemedBottomSheetModal";
+import { ThemedBottomSheetModal, useBottomSheetRef } from "../../../../BottomSheetModal/ThemedBottomSheetModal";
 import { ThemedMaterialCommunityIcons } from "../../../../Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
 import { HStack } from "../../../../Stack/HStack/HStack";
 import { AnswerText } from "../../../../HelpQuestionAnswer/AnswerText";
@@ -13,9 +13,8 @@ interface ProfileContentProps extends PropsWithChildren {
     title?: string;
     onPress?: () => void;
     helpText?: { title?: string; text: string; iconSize?: number };
-    snapPoints?: SnapPoint[];
 }
-export const ProfileContent = ({ onPress, children, title, helpText, snapPoints }: ProfileContentProps) => {
+export const ProfileContent = ({ onPress, children, title, helpText }: ProfileContentProps) => {
     const { ref, openBottomSheet: open } = useBottomSheetRef();
     return (
         <View>
@@ -32,7 +31,7 @@ export const ProfileContent = ({ onPress, children, title, helpText, snapPoints 
                     {children}
                 </View>
             </ThemedPressable>
-            <ThemedBottomSheetModal snapPoints={snapPoints} title={helpText?.title} ref={ref}>
+            <ThemedBottomSheetModal title={helpText?.title} ref={ref}>
                 <HelpAnswer>
                     <AnswerText>{helpText?.text}</AnswerText>
                 </HelpAnswer>

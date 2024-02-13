@@ -25,7 +25,9 @@ export const AddNoteModal = ({ reference, onRequestClose }: EditNoteModalProps) 
 
     const handleInput = useCallback(
         (e: NativeSyntheticEvent<TextInputTextInputEventData>) => {
-            const newText = e.nativeEvent.text ? e.nativeEvent.previousText.concat(e.nativeEvent.text) : e.nativeEvent.previousText.slice(0, -1);
+            const newText = e.nativeEvent.text
+                ? e.nativeEvent.previousText.concat(e.nativeEvent.text)
+                : e.nativeEvent.previousText.slice(0, -1);
             dispatch(saveNote(newText));
         },
         [dispatch],
@@ -37,7 +39,7 @@ export const AddNoteModal = ({ reference, onRequestClose }: EditNoteModalProps) 
     }, [onRequestClose]);
 
     return (
-        <ThemedBottomSheetModal snapPoints={["100%"]} ref={reference} title={t("edit_note_title")}>
+        <ThemedBottomSheetModal ref={reference} title={t("edit_note_title")}>
             <ThemedView stretch style={styles.wrapper}>
                 <ThemedTextInput
                     ghost

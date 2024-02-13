@@ -148,14 +148,13 @@ export function Train() {
             </HStack>
             <BackButtonModal
                 workoutDone={isDone}
-                snapPoints={["40%"]}
                 reference={alertRef}
                 title={alertModalConfig.title}
                 onConfirm={handleNotDoneConfirm}
                 onPause={handlePauseWorkout}
                 onCancel={handleCancelWorkout}
             />
-            <ThemedBottomSheetModal title={quickSettingsTitle} snapPoints={["40%"]} ref={ref}>
+            <ThemedBottomSheetModal title={quickSettingsTitle} ref={ref}>
                 <ThemedView style={trainStyles.quickSettingsWrapper} ghost>
                     <WorkoutSettings quickSettings={quickSettingsConfig} />
                 </ThemedView>

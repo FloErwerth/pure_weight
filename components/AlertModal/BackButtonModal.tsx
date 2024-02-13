@@ -1,5 +1,5 @@
 import { ReactNode, RefObject, useCallback, useMemo, useState } from "react";
-import { SnapPoint, ThemedBottomSheetModal, useBottomSheetRef } from "../BottomSheetModal/ThemedBottomSheetModal";
+import { ThemedBottomSheetModal, useBottomSheetRef } from "../BottomSheetModal/ThemedBottomSheetModal";
 import * as Haptics from "expo-haptics";
 import { useTranslation } from "react-i18next";
 import { Text } from "../Themed/ThemedText/Text";
@@ -17,14 +17,13 @@ interface BackButtonModal {
     onConfirm: () => void;
     onCancel: () => void;
     onPause: () => void;
-    snapPoints?: SnapPoint[];
     title?: string;
     isVisible?: boolean;
     reference: RefObject<BottomSheetModal>;
     workoutDone?: boolean;
 }
 
-const useHelpContent = (): Record<"save" | "pause" | "cancel", { title: string; content: ReactNode; snapPoints: SnapPoint[] }> => {
+const useHelpContent = (): Record<"save" | "pause" | "cancel", { title: string; content: ReactNode }> => {
     const { t } = useTranslation();
     const language = useAppSelector(getLanguage);
 
@@ -84,24 +83,21 @@ const useHelpContent = (): Record<"save" | "pause" | "cancel", { title: string; 
             save: {
                 title: t("workout_save"),
                 content: saveContent,
-                snapPoints: ["35%"],
             },
             pause: {
                 title: t("workout_pause"),
                 content: pauseContent,
-                snapPoints: ["32%"],
             },
             cancel: {
                 title: t("workout_cancel"),
                 content: cancelContent,
-                snapPoints: ["35%"],
             },
         }),
         [cancelContent, pauseContent, saveContent, t],
     );
 };
 
-export const BackButtonModal = ({ title, snapPoints = ["25%"], reference, onPause, onCancel, onConfirm, workoutDone }: BackButtonModal) => {
+export const BackButtonModal = ({ title, reference, onPause, onCancel, onConfirm, workoutDone }: BackButtonModal) => {
     const { t } = useTranslation();
     const { ref, openBottomSheet } = useBottomSheetRef();
     const [helpConfigKey, setHelpConfigKey] = useState<"save" | "pause" | "cancel">("save");
@@ -143,7 +139,7 @@ export const BackButtonModal = ({ title, snapPoints = ["25%"], reference, onPaus
     }, [openBottomSheet]);
 
     return (
-        <ThemedBottomSheetModal snapPoints={snapPoints} ref={reference} title={title}>
+        <ThemedBottomSheetModal ref={reference} title={title}>
             <PageContent paddingTop={20} ghost>
                 <HStack style={{ gap: 10 }} ghost>
                     <ThemedPressable stretch secondary padding round onPress={handleConfirmButton}>
@@ -187,7 +183,7 @@ export const BackButtonModal = ({ title, snapPoints = ["25%"], reference, onPaus
                     </ThemedPressable>
                 </HStack>
             </PageContent>
-            <ThemedBottomSheetModal title={helpConfig.title} snapPoints={helpConfig.snapPoints} ref={ref}>
+            <ThemedBottomSheetModal title={helpConfig.title} ref={ref}>
                 <PageContent ghost paddingTop={20}>
                     {helpConfig.content}
                 </PageContent>
