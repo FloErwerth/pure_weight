@@ -1,4 +1,5 @@
 import { AppState } from "./index";
+import { generateId } from "../utils/generateId";
 
 export const mockState: AppState = {
     metadataState: {
@@ -11,6 +12,48 @@ export const mockState: AppState = {
         theme: "system",
         language: "en",
         unitSystem: "metric",
+    },
+    measurementState: {
+        sorting: "A_Z",
+        measurements: [
+            {
+                measurementId: generateId("measurement"),
+                name: "Körpergewicht",
+                type: "weight",
+                data: [
+                    { isoDate: "2023-12-01", value: "70" },
+                    { isoDate: "2023-12-02", value: "70" },
+                    { isoDate: "2023-12-03", value: "70" },
+                    { isoDate: "2023-12-04", value: "72" },
+                    { isoDate: "2023-12-05", value: "73" },
+                    { isoDate: "2023-12-06", value: "75" },
+                    { isoDate: "2023-12-07", value: "74" },
+                    { isoDate: "2023-12-08", value: "74" },
+                    { isoDate: "2023-12-09", value: "74" },
+                    { isoDate: "2023-12-10", value: "74" },
+                    { isoDate: "2023-12-11", value: "74" },
+                    { isoDate: "2023-12-12", value: "74" },
+                    { isoDate: "2023-12-13", value: "74" },
+                    { isoDate: "2023-12-14", value: "74" },
+                    { isoDate: "2023-12-15", value: "74" },
+                ],
+                higherIsBetter: true,
+            },
+            {
+                measurementId: generateId("measurement"),
+                name: "Körperfettanteil",
+                type: "percent",
+                data: [
+                    { isoDate: "2023-12-01", value: "15" },
+                    { isoDate: "2023-12-02", value: "15" },
+                    { isoDate: "2023-12-03", value: "15" },
+                    { isoDate: "2023-12-04", value: "16" },
+                    { isoDate: "2023-12-05", value: "14" },
+                    { isoDate: "2023-12-06", value: "13" },
+                    { isoDate: "2023-12-07", value: "12" },
+                ],
+            },
+        ],
     },
     workoutState: {
         templateSorting: "A_Z",
@@ -314,11 +357,16 @@ export const mockState: AppState = {
         errors: [],
     },
 };
+
 export const emptyState = {
     workoutState: {
         templateSorting: "MOST_RECENT",
         workoutSorting: "LONGEST_AGO",
         workouts: [],
+    },
+    measurementState: {
+        sorting: "A_Z",
+        measurements: [],
     },
     metadataState: {
         appInstallDate: "2023-11-11",

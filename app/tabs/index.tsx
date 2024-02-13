@@ -8,6 +8,7 @@ import { Workouts } from "../workouts";
 import { Settings } from "../settings";
 import { useTheme } from "../../theme/context";
 import { RoutesParamaters } from "../../hooks/navigate";
+import { Measurements } from "../measurements";
 
 const Tabs = createBottomTabNavigator<RoutesParamaters>();
 
@@ -32,6 +33,17 @@ export function TabsWrapper() {
                         tabBarInactiveTintColor: secondaryColor,
                     }}
                     name="tabs/workouts"
+                />
+                <Tabs.Screen
+                    component={Measurements}
+                    options={{
+                        headerShown: false,
+                        tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} Icon={"ruler"} />,
+                        tabBarLabelStyle: { fontSize: 13 },
+                        tabBarButton: TabBarButton,
+                        tabBarLabel: ({ focused }) => <TabBarLabel focused={focused} title={t("measurements")} />,
+                    }}
+                    name="tabs/measurements"
                 />
                 <Tabs.Screen
                     component={Settings}

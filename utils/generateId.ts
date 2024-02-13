@@ -1,8 +1,6 @@
-import { ExerciseId, ExerciseIdType, WorkoutId, WorkoutIdType } from "../store/reducers/workout/types";
+import { ExerciseIdType, WorkoutIdType } from "../store/reducers/workout/types";
+import { MeasurementIdType } from "../components/App/measurements/types";
 
-export function generateId<Type extends ExerciseIdType | WorkoutIdType>(type: Type) {
+export function generateId<Type extends ExerciseIdType | WorkoutIdType | MeasurementIdType>(type: Type) {
     return `${type}-${Date.now()}` as const;
 }
-export const extractMillisecondsFromId = (id: ExerciseId | WorkoutId) => {
-    return parseInt(id.split("-")[1]);
-};

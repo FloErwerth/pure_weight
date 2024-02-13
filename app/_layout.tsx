@@ -28,6 +28,9 @@ import { setLanguage, setTheme } from "../store/reducers/settings";
 import { WorkoutHistoryEdit } from "./workouts/history/edit";
 import { getReactNativeTheme } from "../store/reducers/settings/settingsSelectors";
 import { CreateExercise } from "./workouts/create/exercise";
+import { MeasurementHistory } from "./measurements/history";
+import { CreateMeasurement } from "./measurements/create";
+import { MeasurementProgress } from "./measurements/progress";
 
 const Stack = createNativeStackNavigator<RoutesParamaters>();
 
@@ -67,6 +70,21 @@ const ThemedApp = () => {
                                         component={Train}
                                         options={{ gestureEnabled: false, headerShown: false }}
                                         name="workouts/train/index"
+                                    />
+                                    <Stack.Screen
+                                        component={MeasurementProgress}
+                                        options={{ headerShown: false }}
+                                        name="measurement/progress/index"
+                                    />
+                                    <Stack.Screen
+                                        component={CreateMeasurement}
+                                        options={{ headerShown: false }}
+                                        name="measurement/create/index"
+                                    />
+                                    <Stack.Screen
+                                        component={MeasurementHistory}
+                                        options={{ headerShown: false }}
+                                        name="measurement/history/index"
                                     />
                                     <Stack.Screen
                                         component={Create}

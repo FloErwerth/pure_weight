@@ -5,17 +5,25 @@ import { styles } from "./styles";
 import { HStack } from "../../../Stack/HStack/HStack";
 import { ThemedMaterialCommunityIcons } from "../../../Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
 import { AppState, useAppSelector } from "../../../../store";
-import { getNumberWorkoutHistoryEntries } from "../../../../store/reducers/workout/workoutSelectors";
 import { useTranslation } from "react-i18next";
 import { WorkoutId, WorkoutIdType } from "../../../../store/reducers/workout/types";
+import { MeasurementId, MeasurementIdType } from "../../measurements/types";
+import { getNumberWorkoutHistoryEntries } from "../../../../store/reducers/workout/workoutSelectors";
+import { getNumberMeasurementEntries } from "../../../../store/reducers/measurements/measurementSelectors";
 
 interface HistoryDisplayProps {
-    type: WorkoutIdType;
-    id: WorkoutId;
+    type: WorkoutIdType | MeasurementIdType;
+    id: WorkoutId | MeasurementId;
     handleNavigateToHistory: () => void;
 }
 
-const useHistoryText = (numberHistoryEntries?: number, type: WorkoutIdType = "workout") => {
+const useHistoryEntries = (type: WorkoutIdType | MeasurementIdType, id: WorkoutId | MeasurementId) => {
+    const workoutHistoryEntries = useAppSelector((state: AppState) => getNumberWorkoutHistoryEntries(state, id as WorkoutId));
+    const measurementHistoryEntries = useAppSelector((state: AppState) => getNumberMeasurementEntries(state, id as MeasurementId));
+    return type === "workout" ? workoutHistoryEntries : measurementHistoryEntries;
+};
+
+const useHistoryText = (numberHistoryEntries?: number, type: WorkoutIdType | MeasurementIdType = "workout") => {
     const { t } = useTranslation();
     if (!numberHistoryEntries || numberHistoryEntries === 0) {
         return type === "workout" ? t("workout_history_empty") : t("measurement_history_empty");
@@ -29,7 +37,7 @@ const useHistoryText = (numberHistoryEntries?: number, type: WorkoutIdType = "wo
 };
 
 export const HistoryDisplay = ({ type, id, handleNavigateToHistory }: HistoryDisplayProps) => {
-    const numberOfEntries = useAppSelector((state: AppState) => getNumberWorkoutHistoryEntries(state, id as WorkoutId));
+    const numberOfEntries = useHistoryEntries(type, id);
     const historyText = useHistoryText(numberOfEntries, type);
     return (
         <ThemedPressable style={styles.wrapper} secondary onPress={handleNavigateToHistory}>

@@ -9,6 +9,7 @@ import { ExerciseId, ExerciseSets, ExerciseType, WorkoutId } from "./types";
 import { Temporal } from "@js-temporal/polyfill";
 import { getSinceDate } from "../../../utils/timeAgo";
 import { sortWorkouts } from "./sortWorkouts";
+import { getMeasurementSorting } from "../measurements/measurementSelectors";
 
 export const getWorkoutState = ({ workoutState }: AppState) => workoutState;
 export const getTrainedWorkout = createSelector([getWorkoutState], (state) => state.trainedWorkout);
@@ -21,6 +22,20 @@ export const getTrainedWorkoutExercises = createSelector([getTrainedWorkout, get
     }
     return workouts.find((workout) => workout.workoutId === trainedWorkout.workout.workoutId)?.exercises;
 });
+
+export const getSortingType = createSelector(
+    [(state: AppState) => state, (state, type: "Workout" | "Measurement") => type],
+    (state, type) => {
+        if (type === "Measurement") {
+            return getMeasurementSorting(state);
+        }
+
+        if (type === "Workout") {
+            return getWorkoutSorting(state);
+        }
+    },
+);
+
 export const getExerciseById = createSelector([getTrainedWorkout, (_, exerciseId: ExerciseId) => exerciseId], (workout, exerciseId) => {
     return workout?.workout.exercises?.find((exercise) => exercise.exerciseId === exerciseId);
 });

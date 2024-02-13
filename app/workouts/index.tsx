@@ -182,14 +182,14 @@ export function Workouts() {
                 handleConfirmIcon={confirmIcon}
                 handleConfirm={handleCreateWorkout}
             />
-            <PageContent ghost>
-                {numberOfWorkouts > 1 && (
+            {numberOfWorkouts > 1 && (
+                <PageContent ghost>
                     <HStack ghost style={trainStyles.searchAndFilterBar}>
-                        <Sorting />
+                        <Sorting type="Workout" />
                         <ExpandableSearchbar handleSetSearchManual={handleSetSearchedWorkouts} />
                     </HStack>
-                )}
-            </PageContent>
+                </PageContent>
+            )}
             <PageContent scrollable={mappedWorkouts.length > 2} background ignoreGap stretch>
                 <View style={trainStyles.workoutWrapper}>{mappedWorkouts}</View>
             </PageContent>

@@ -1,5 +1,6 @@
 import { createNavigationContainerRef, ParamListBase } from "@react-navigation/native";
 import { WorkoutId } from "../store/reducers/workout/types";
+import { MeasurementId } from "../components/App/measurements/types";
 
 export type RoutesParamaters = {
     ["workouts/train/index"]: {
@@ -50,11 +51,36 @@ export type RoutesParamaters = {
     ["tabs"]: {
         name: "tabs";
     };
+    ["tabs/measurements"]: {
+        name: "tabs/measurements";
+    };
+    ["measurement/progress/index"]: {
+        name: "measurement/progress/index";
+    };
+    ["measurement/create/index"]: {
+        name: "measurement/create/index";
+    };
+    ["measurement/history/index"]: {
+        name: "measurement/history/index";
+        measurementId: MeasurementId;
+    };
 };
 
 export const Routes = {
     workouts: {
         screen: "tabs/workouts",
+    },
+    measurements: {
+        name: "tabs/measurements",
+    },
+    "measurement/progress": {
+        screen: "measurement/progress/index",
+    },
+    "measurement/create": {
+        screen: "measurement/create/index",
+    },
+    "measurement/history": {
+        screen: "measurement/history/index",
     },
     train: {
         screen: "workouts/train/index",

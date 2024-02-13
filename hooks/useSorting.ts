@@ -1,10 +1,11 @@
 import { useTranslation } from "react-i18next";
-import { useAppDispatch, useAppSelector } from "../store";
+import { AppState, useAppDispatch, useAppSelector } from "../store";
 import { useComposedTranslation } from "./useComposedTranslation";
 import { Sortingtypes } from "../store/types";
 import { useMemo } from "react";
 import { setWorkoutSorting } from "../store/reducers/workout";
-import { getWorkoutSorting } from "../store/reducers/workout/workoutSelectors";
+import { setMeasurementSorting } from "../store/reducers/measurements";
+import { getSortingType } from "../store/reducers/workout/workoutSelectors";
 
 const SortIconMap = {
     ["A_Z"]: "sort-alphabetical-ascending",
@@ -13,11 +14,22 @@ const SortIconMap = {
     ["LONGEST_AGO"]: "sort-calendar-descending",
 } as const;
 
-export const useSorting = () => {
+type SortingConfig = {
+    type: "Workout" | "Measurement";
+};
+
+export const useSorting = ({ type }: SortingConfig) => {
     const { t } = useTranslation();
-    const currentSorting = useAppSelector(getWorkoutSorting);
+    const currentSorting = useAppSelector((state: AppState) => getSortingType(state, type));
     const dispatch = useAppDispatch();
     const title = useComposedTranslation("sorting_label", `sorting_${currentSorting}`);
+
+    const sortDispatchFunction = useMemo(() => {
+        if (type === "Measurement") {
+            return setMeasurementSorting;
+        }
+        return setWorkoutSorting;
+    }, [type]);
 
     const mappedSorting = useMemo(
         () =>
@@ -28,11 +40,11 @@ export const useSorting = () => {
                         label: t(`sorting_${sorting}`),
                         iconName: SortIconMap[sorting],
                         selectCallback: () => {
-                            dispatch(setWorkoutSorting(sorting));
+                            dispatch(sortDispatchFunction(sorting));
                         },
                     }) as const,
             ),
-        [dispatch, t],
+        [dispatch, sortDispatchFunction, t],
     );
 
     return useMemo(
