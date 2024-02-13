@@ -8,8 +8,9 @@ import { setTheme } from "../../../../../../store/reducers/settings";
 import { getThemeKeyFromStore } from "../../../../../../store/reducers/settings/settingsSelectors";
 import { Icon, SelectableSetting } from "../../../SelectableSetting/SelectableSetting";
 import { ThemedView } from "../../../../../Themed/ThemedView/View";
-import { selectionStyles } from "../../selectionStyles";
-import { ProfileContent } from "../../ProfileContent/ProfileContent";
+import { ThemedBottomSheetModal, useBottomSheetRef } from "../../../../../BottomSheetModal/ThemedBottomSheetModal";
+import { SettingsNavigator } from "../../../SettingsNavigator/SettingsNavigator";
+import { PageContent } from "../../../../../PageContent/PageContent";
 
 const dark: Icon = {
     name: "weather-night",
@@ -30,6 +31,7 @@ export const ThemeSelection = () => {
     const [usesDeviceTheme, setUsesDeviceTheme] = useState(false);
     const dispatch = useAppDispatch();
     const theme = useAppSelector(getThemeKeyFromStore);
+    const { ref, openBottomSheet } = useBottomSheetRef();
 
     const handleSelectLanguage = useCallback(
         (themeKey: ThemeKey | "device") => {
@@ -45,27 +47,31 @@ export const ThemeSelection = () => {
     );
 
     return (
-        <ProfileContent title={t("settings_theme")}>
-            <ThemedView style={selectionStyles.vStack}>
-                <SelectableSetting
-                    prependedExtraContent={light}
-                    selected={!usesDeviceTheme && theme === "light"}
-                    onSelect={() => handleSelectLanguage("light")}
-                    titleKey="theme_light"
-                />
-                <SelectableSetting
-                    prependedExtraContent={dark}
-                    selected={!usesDeviceTheme && theme === "dark"}
-                    onSelect={() => handleSelectLanguage("dark")}
-                    titleKey="theme_dark"
-                />
-                <SelectableSetting
-                    prependedExtraContent={device}
-                    selected={usesDeviceTheme}
-                    onSelect={() => handleSelectLanguage("device")}
-                    titleKey="theme_device"
-                />
-            </ThemedView>
-        </ProfileContent>
+        <ThemedView ghost>
+            <SettingsNavigator title={t("settings_theme")} onPress={openBottomSheet} />
+
+            <ThemedBottomSheetModal ref={ref} title={t("settings_theme")}>
+                <PageContent paddingTop={20} ghost>
+                    <SelectableSetting
+                        prependedExtraContent={light}
+                        selected={!usesDeviceTheme && theme === "light"}
+                        onSelect={() => handleSelectLanguage("light")}
+                        titleKey="theme_light"
+                    />
+                    <SelectableSetting
+                        prependedExtraContent={dark}
+                        selected={!usesDeviceTheme && theme === "dark"}
+                        onSelect={() => handleSelectLanguage("dark")}
+                        titleKey="theme_dark"
+                    />
+                    <SelectableSetting
+                        prependedExtraContent={device}
+                        selected={usesDeviceTheme}
+                        onSelect={() => handleSelectLanguage("device")}
+                        titleKey="theme_device"
+                    />
+                </PageContent>
+            </ThemedBottomSheetModal>
+        </ThemedView>
     );
 };

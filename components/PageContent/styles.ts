@@ -4,6 +4,6 @@ export const styles = StyleSheet.create({
     wrapper: {
         paddingHorizontal: 20,
         alignSelf: "stretch",
-        gap: 10,
+        gap: 5,
     },
 });
