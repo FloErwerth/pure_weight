@@ -96,9 +96,8 @@
   "stopwatch_pause_notification_text": "Es ist Zeit dein Training fortzusetzen",
 
   "settings_stopwatch_title": "Stoppuhr",
-  "settings_stopwatch_done_set": "Nach jedem Satz starten",
-  "settings_stopwatch_last_set": "Nach letztem Satz starten",
-  "settings_stopwatch_notify": "Nachricht, wenn Pause vorbei",
+  "settings_stopwatch_done_set": "Stoppuhr nach einem Satz starten",
+  "settings_stopwatch_notify": "Benachrichtigungen aktivieren",
   "settings_notification_help_text": "Wenn aktiviert, wird eine Nachricht angezeigt, wenn die Pause vorbei ist",
   "settings_stopwatch_done_set_helptext_text": "Nachdem du einen Satz beendet hast, startet die Stoppuhr automatisch",
   "settings_stopwatch_last_set_helptext_text": "Nachdem du den letzten Satz beendet hast, startet die Stoppuhr automatisch",
