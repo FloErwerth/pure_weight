@@ -27,8 +27,10 @@ export const Manual = () => {
     return (
         <ThemedView background stretch>
             <SiteNavigationButtons handleBack={handleNavigateToSettings} titleFontSize={40} title={t("settings_help_content")} />
-            <PageContent stretch ghost>
+            <PageContent ghost paddingTop={10}>
                 <Searchbar handleSetSearchManual={handleSetSearchManual} />
+            </PageContent>
+            <PageContent paddingTop={20} stretch ghost>
                 <QuestionsAndAnswers />
             </PageContent>
         </ThemedView>

@@ -66,7 +66,13 @@ export const ExpandableSearchbar = ({ handleSetSearchManual }: SearchbarProps) =
         <ThemedView style={{ paddingVertical: 5 }} ghost round>
             <HStack ghost>
                 <Animated.View style={animatedInputStyles}>
-                    <ThemedTextInput reference={ref} showClear onChangeText={handleSetSearchManual} placeholder={placeholder} />
+                    <ThemedTextInput
+                        onBlur={handleToggleSearch}
+                        reference={ref}
+                        showClear
+                        onChangeText={handleSetSearchManual}
+                        placeholder={placeholder}
+                    />
                 </Animated.View>
                 <Pressable onPress={handleToggleSearch}>
                     <ThemedMaterialCommunityIcons name="magnify" ghost size={30} />

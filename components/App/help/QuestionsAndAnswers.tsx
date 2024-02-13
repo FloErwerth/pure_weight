@@ -121,17 +121,15 @@ export const QuestionsAndAnswers = () => {
                             <Text ghost style={{ marginBottom: 10, fontSize: 30 }}>
                                 {sectionTitle}
                             </Text>
-                            <ThemedView round style={{ padding: 10, paddingBottom: 0 }}>
-                                {data.map(({ title, shown }, index) => (
-                                    <HelpQuestion
-                                        key={title.concat(index.toString())}
-                                        shown={shown}
-                                        question={title}
-                                        title={title}
-                                        onPress={() => handleSelectQuestion(index)}
-                                    />
-                                ))}
-                            </ThemedView>
+                            {data.map(({ title, shown }, index) => (
+                                <HelpQuestion
+                                    key={title.concat(index.toString())}
+                                    shown={shown}
+                                    question={title}
+                                    title={title}
+                                    onPress={() => handleSelectQuestion(index)}
+                                />
+                            ))}
                         </View>
                     );
                 })}
