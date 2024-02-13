@@ -122,7 +122,7 @@ export type WorkoutAction =
     | typeof markSetAsDone.type
     | typeof mutateEditedExerciseTimeValue.type;
 
-export const emptyExercise: ExerciseMetaData = {
+export const generateNewExercise = (): ExerciseMetaData => ({
     exerciseId: generateId("exercise"),
     name: "",
     type: "WEIGHT_BASED",
@@ -141,7 +141,7 @@ export const emptyExercise: ExerciseMetaData = {
         seconds: "0",
         minutes: "0",
     },
-};
+});
 
 export const workoutReducer = createReducer<WorkoutState>(
     {
@@ -279,7 +279,7 @@ export const workoutReducer = createReducer<WorkoutState>(
                 state.workouts = action.payload;
             })
             .addCase(createNewExercise, (state) => {
-                state.editedExercise = { exercise: emptyExercise };
+                state.editedExercise = { exercise: generateNewExercise() };
             })
             .addCase(setEditedWorkout, (state, action) => {
                 const storedWorkout = state.workouts.find((workout) => workout.workoutId === action.payload?.workoutId);
@@ -292,7 +292,6 @@ export const workoutReducer = createReducer<WorkoutState>(
             })
             .addCase(saveEditedExercise, (state) => {
                 if (state.editedExercise) {
-                    //save in specific workout
                     if (state.trainedWorkout) {
                         const trainedWorkoutExerciseIndex = state.trainedWorkout.exerciseData.findIndex(
                             (data) => data.exerciseId === state.editedExercise?.exercise.exerciseId,
@@ -308,7 +307,8 @@ export const workoutReducer = createReducer<WorkoutState>(
                             }
                             return data;
                         });
-                    } else if (state.editedWorkout) {
+                    }
+                    if (state.editedWorkout) {
                         const exerciseIndex = state.editedWorkout.workout.exercises.findIndex(
                             (exercise) => exercise.exerciseId === state.editedExercise?.exercise.exerciseId,
                         );
