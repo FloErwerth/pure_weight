@@ -10,7 +10,7 @@ import { ThemedMaterialCommunityIcons } from "../Themed/ThemedMaterialCommunityI
 import { ThemedPressable } from "../Themed/Pressable/Pressable";
 
 interface SiteNavigationButtonsProps {
-    handleBack?: () => void;
+    backButtonAction?: () => void;
     handleConfirm?: () => void;
     handleConfirmOpacity?: Animated.Value;
     handleConfirmIcon?: { name: "check" | "plus" | "cog" | "content-save-outline" | "content-copy"; size: number };
@@ -23,7 +23,7 @@ interface SiteNavigationButtonsProps {
 }
 export const DEFAULT_PLUS = { name: "plus", size: 40 } as const;
 export const SiteNavigationButtons = ({
-    handleBack,
+    backButtonAction,
     title,
     titleFontSize = 30,
     handleConfirm,
@@ -34,16 +34,19 @@ export const SiteNavigationButtons = ({
     handleConfirmOpacity,
     handleQuicksettings,
 }: SiteNavigationButtonsProps) => {
-    const titleStyles = useMemo(() => ({ ...styles.title, fontSize: titleFontSize, paddingVertical: titleFontSize <= 40 ? (40 - titleFontSize) / 2 : 0 }), [titleFontSize]);
+    const titleStyles = useMemo(
+        () => ({ ...styles.title, fontSize: titleFontSize, paddingVertical: titleFontSize <= 40 ? (40 - titleFontSize) / 2 : 0 }),
+        [titleFontSize],
+    );
 
-    const titleWrapperStyles = useMemo(() => [{ paddingLeft: !handleBack ? 20 : 10 }, styles.titleWrapper], [handleBack]);
+    const titleWrapperStyles = useMemo(() => [{ paddingLeft: !backButtonAction ? 20 : 10 }, styles.titleWrapper], [backButtonAction]);
 
     const { mainColor } = useTheme();
 
     const handleBackButton = useCallback(() => {
         void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-        handleBack?.();
-    }, [handleBack]);
+        backButtonAction?.();
+    }, [backButtonAction]);
 
     const handleConfirmButton = useCallback(() => {
         if (handleConfirmIcon) {
@@ -60,7 +63,7 @@ export const SiteNavigationButtons = ({
     return (
         <HStack background style={styles.headerWrapper}>
             <HStack background style={titleWrapperStyles}>
-                {handleBack && (
+                {backButtonAction && (
                     <Pressable disabled={closeButtonDisabled} onPress={handleBackButton}>
                         <MaterialCommunityIcons color={mainColor} size={Math.min(28, titleFontSize)} name="arrow-left" />
                     </Pressable>

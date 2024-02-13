@@ -125,7 +125,7 @@ export function Train() {
                 <SiteNavigationButtons
                     confirmButtonDisabled={!isDone}
                     handleConfirmOpacity={confirmButtonOpacity}
-                    handleBack={handleCloseButton}
+                    backButtonAction={handleCloseButton}
                     handleConfirm={handleDone}
                     title={t("train_title")}
                     titleFontSize={40}

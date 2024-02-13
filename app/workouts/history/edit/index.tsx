@@ -86,8 +86,19 @@ export const WorkoutHistoryEdit = ({
 
     return (
         <ThemedView stretch background>
-            <SiteNavigationButtons title={pageTitle} handleBack={handleBackButton} handleConfirmIcon={saveButtonConfig} handleConfirm={handleNavigateToHistory} />
-            <FlatList showsVerticalScrollIndicator={false} horizontal={false} contentInset={{ bottom }} data={doneWorkout?.doneExercises} renderItem={renderedExercise} />
+            <SiteNavigationButtons
+                title={pageTitle}
+                backButtonAction={handleBackButton}
+                handleConfirmIcon={saveButtonConfig}
+                handleConfirm={handleNavigateToHistory}
+            />
+            <FlatList
+                showsVerticalScrollIndicator={false}
+                horizontal={false}
+                contentInset={{ bottom }}
+                data={doneWorkout?.doneExercises}
+                renderItem={renderedExercise}
+            />
             <ThemedBottomSheetModal title={warningTitle} ref={ref}>
                 <PageContent paddingTop={20} ghost>
                     <AnswerText>{warningContent}</AnswerText>

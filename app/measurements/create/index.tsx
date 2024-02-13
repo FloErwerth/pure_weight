@@ -178,7 +178,7 @@ export const CreateMeasurement = () => {
     const helpText = useMemo(() => ({ title: t("measurement_higher_is_better"), text: t("measurement_higher_is_better_help") }), [t]);
     return (
         <ThemedView background stretch round>
-            <SiteNavigationButtons handleBack={navigateBack} titleFontSize={40} title={pageTitle} />
+            <SiteNavigationButtons backButtonAction={navigateBack} titleFontSize={40} title={pageTitle} />
             <PageContent ghost paddingTop={20} stretch>
                 {!isAddingData && (
                     <ThemedTextInput

@@ -197,7 +197,12 @@ export function Create() {
     return (
         <ThemedView stretch>
             <ThemedView background style={styles.innerWrapper}>
-                <SiteNavigationButtons handleBack={handleBackButton} handleConfirm={handleSaveWorkout} titleFontSize={30} title={title} />
+                <SiteNavigationButtons
+                    backButtonAction={handleBackButton}
+                    handleConfirm={handleSaveWorkout}
+                    titleFontSize={30}
+                    title={title}
+                />
                 <PageContent background safeBottom stretch style={styles.contentWrapper}>
                     <HStack style={styles.nameColorStack} ghost>
                         <ThemedTextInput

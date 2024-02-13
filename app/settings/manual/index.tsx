@@ -1,6 +1,5 @@
 import { SiteNavigationButtons } from "../../../components/SiteNavigationButtons/SiteNavigationButtons";
 import { PageContent } from "../../../components/PageContent/PageContent";
-import { useNavigate } from "../../../hooks/navigate";
 import { useCallback } from "react";
 import { ThemedView } from "../../../components/Themed/ThemedView/View";
 import { QuestionsAndAnswers } from "../../../components/App/help/QuestionsAndAnswers";
@@ -8,13 +7,11 @@ import { useTranslation } from "react-i18next";
 import { useAppDispatch } from "../../../store";
 import { setSearchManual } from "../../../store/reducers/settings";
 import { Searchbar } from "../../../components/Searchbar/Searchbar";
+import { useNavigateBack } from "../../../hooks/navigate";
 
 export const Manual = () => {
-    const navigate = useNavigate();
     const dispatch = useAppDispatch();
-    const handleNavigateToSettings = useCallback(() => {
-        navigate("settings");
-    }, [navigate]);
+    const navigateBack = useNavigateBack();
     const { t } = useTranslation();
 
     const handleSetSearchManual = useCallback(
@@ -26,7 +23,7 @@ export const Manual = () => {
 
     return (
         <ThemedView background stretch>
-            <SiteNavigationButtons handleBack={handleNavigateToSettings} titleFontSize={40} title={t("settings_help_content")} />
+            <SiteNavigationButtons backButtonAction={navigateBack} titleFontSize={40} title={t("settings_help_content")} />
             <PageContent ghost paddingTop={10}>
                 <Searchbar handleSetSearchManual={handleSetSearchManual} />
             </PageContent>

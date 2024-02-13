@@ -18,7 +18,7 @@ export function WorkoutProgress() {
 
     return (
         <ThemedView background stretch>
-            <SiteNavigationButtons handleBack={handleNavigateToWorkouts} title={trainingDayName} />
+            <SiteNavigationButtons backButtonAction={handleNavigateToWorkouts} title={trainingDayName} />
             <PageContent background>
                 <ExerciseCharts />
             </PageContent>

@@ -54,6 +54,7 @@ const renderBackdrop = (props: BottomSheetBackdropProps) => (
     <BottomSheetBackdrop opacity={0.8} appearsOnIndex={0} disappearsOnIndex={-1} {...props} />
 );
 
+const animationConfig = { duration: 225 } as const;
 // eslint-disable-next-line react/display-name
 export const ThemedBottomSheetModal = forwardRef<BottomSheetModal, ThemedBottomSheetModalProps>(
     ({ hideIndicator, customContentStyle, children, title, onRequestClose, allowSwipeDownToClose = true }, ref) => {
@@ -82,6 +83,7 @@ export const ThemedBottomSheetModal = forwardRef<BottomSheetModal, ThemedBottomS
                 enableDismissOnClose={allowSwipeDownToClose}
                 onDismiss={onRequestClose}
                 ref={ref}
+                animationConfigs={animationConfig}
                 stackBehavior="push"
                 topInset={top}
                 keyboardBehavior="extend">

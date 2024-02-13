@@ -7,7 +7,7 @@ import { trunicateToNthSignificantDigit } from "../../../utils/number";
 import { Text } from "../../../components/Themed/ThemedText/Text";
 import { getMeasurementData } from "../../../store/reducers/measurements/measurementSelectors";
 import { SiteNavigationButtons } from "../../../components/SiteNavigationButtons/SiteNavigationButtons";
-import { useNavigate } from "../../../hooks/navigate";
+import { useNavigateBack } from "../../../hooks/navigate";
 import { PageContent } from "../../../components/PageContent/PageContent";
 import { IsoDate } from "../../../types/date";
 import { getLocaleDate } from "../../../utils/date";
@@ -17,16 +17,18 @@ import Chart from "../../../components/Chart/Chart";
 export const MeasurementProgress = () => {
     const { mainColor } = useTheme();
     const data = useAppSelector(getMeasurementData);
-    const navigate = useNavigate();
+    const navigateBack = useNavigateBack();
     const language = useAppSelector(getLanguage);
     const navigateToMeasurement = useCallback(() => {
-        navigate("measurements");
-    }, [navigate]);
+        navigateBack();
+    }, [navigateBack]);
 
     const getDotContent = useCallback(
         ({ x, y, indexData }: { x: number; y: number; index: number; indexData: number }) => {
             return (
-                <ThemedView key={x + y} style={{ position: "absolute", top: y - 25, left: x - 20, flex: 1, padding: 3, borderRadius, alignItems: "center" }}>
+                <ThemedView
+                    key={x + y}
+                    style={{ position: "absolute", top: y - 25, left: x - 20, flex: 1, padding: 3, borderRadius, alignItems: "center" }}>
                     <Text style={{ fontSize: 12, color: mainColor }}>
                         {trunicateToNthSignificantDigit(indexData, false, 1)} {data?.unit}
                     </Text>
@@ -44,16 +46,23 @@ export const MeasurementProgress = () => {
     );
 
     if (!data) {
-        navigate("measurements");
+        navigateBack();
         return null;
     }
 
     return (
         <ThemedView background stretch round>
-            <SiteNavigationButtons handleBack={navigateToMeasurement} title={data.name} />
+            <SiteNavigationButtons backButtonAction={navigateToMeasurement} title={data.name} />
             <PageContent background paddingTop={20}>
                 <ThemedView style={{ padding: 10 }} round>
-                    <Chart transparent lineChartStyles={{ left: -30, top: 20, borderRadius }} getXLabel={getXLabel} getYLabel={() => ""} data={data} getDotContent={getDotContent} />
+                    <Chart
+                        transparent
+                        lineChartStyles={{ left: -30, top: 20, borderRadius }}
+                        getXLabel={getXLabel}
+                        getYLabel={() => ""}
+                        data={data}
+                        getDotContent={getDotContent}
+                    />
                 </ThemedView>
             </PageContent>
         </ThemedView>

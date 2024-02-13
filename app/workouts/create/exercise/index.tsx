@@ -81,7 +81,7 @@ export const CreateExercise = () => {
 
     return (
         <ThemedView stretch background>
-            <SiteNavigationButtons title={title} titleFontSize={40} handleBack={navigateBack} />
+            <SiteNavigationButtons title={title} titleFontSize={40} backButtonAction={navigateBack} />
             <PageContent safeBottom stretch ghost paddingTop={20}>
                 <EditableExercise />
                 <View style={{ gap: 10 }}>

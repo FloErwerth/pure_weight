@@ -1,7 +1,7 @@
 import { ThemedView } from "../../../components/Themed/ThemedView/View";
 import { SiteNavigationButtons } from "../../../components/SiteNavigationButtons/SiteNavigationButtons";
 import React, { useCallback, useMemo, useState } from "react";
-import { useNavigate } from "../../../hooks/navigate";
+import { useNavigateBack } from "../../../hooks/navigate";
 import { useAppDispatch, useAppSelector } from "../../../store";
 import {
     getDatesFromCurrentMeasurement,
@@ -39,7 +39,7 @@ import { useToast } from "../../../components/BottomToast/useToast";
 const MAX_DATE = new Date(getDateTodayIso());
 
 export const MeasurementHistory = () => {
-    const navigate = useNavigate();
+    const navigateBack = useNavigateBack();
     const editedMeasurement = useAppSelector(getEditedMeasurement);
     const { bottom } = useSafeAreaInsets();
 
@@ -74,8 +74,8 @@ export const MeasurementHistory = () => {
 
     const handleNavigateToMeasurements = useCallback(() => {
         dispatch(saveEditedMeasurement());
-        navigate("measurements");
-    }, [dispatch, navigate]);
+        navigateBack();
+    }, [dispatch, navigateBack]);
 
     const renderItem: ListRenderItem<MeasurementDataPoint> = useCallback(
         ({ item, index }) => {
@@ -209,13 +209,13 @@ export const MeasurementHistory = () => {
     }, [closeToast, editedMeasurement?.measurement?.data.length, handleNavigateToMeasurements]);
 
     if (editedMeasurement === undefined) {
-        navigate("measurements");
+        navigateBack();
         return null;
     }
 
     return (
         <ThemedView background stretch>
-            <SiteNavigationButtons handleBack={handleNavigateToMeasurements} title={editedMeasurement.measurement?.name} />
+            <SiteNavigationButtons backButtonAction={handleNavigateToMeasurements} title={editedMeasurement.measurement?.name} />
             <PageContent stretch ghost paddingTop={20}>
                 <FlatList
                     contentInset={flatlistConfig.contentInset}
