@@ -88,6 +88,7 @@ export const WorkoutHistoryEdit = ({
         <ThemedView stretch background>
             <SiteNavigationButtons
                 title={pageTitle}
+                titleFontSize={25}
                 backButtonAction={handleBackButton}
                 handleConfirmIcon={saveButtonConfig}
                 handleConfirm={handleNavigateToHistory}

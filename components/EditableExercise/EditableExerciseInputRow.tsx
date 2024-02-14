@@ -31,7 +31,8 @@ export const EditableExerciseInputRow = ({
 
     const handleSetValue = useCallback(
         (val: string) => {
-            setValue(val);
+            const parsedValue = val ? parseFloat(val) : 0;
+            setValue(parsedValue.toString());
         },
         [setValue],
     );
@@ -70,6 +71,7 @@ export const EditableExerciseInputRow = ({
                     style={inputStyles}
                     onChangeText={handleSetValue}
                     value={value}
+                    maxLength={7}
                     placeholder={placeholder}></ThemedTextInput>
                 {suffix && (
                     <ThemedView style={suffixContainerStyles} ghost>
