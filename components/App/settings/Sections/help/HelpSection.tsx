@@ -14,7 +14,7 @@ export const HelpSection = () => {
     }, [navigate]);
 
     return (
-        <PageContent titleConfig={helpTitleConfig} background paddingTop={30}>
+        <PageContent titleConfig={helpTitleConfig} background>
             <SettingsNavigator onPress={handleNavigateToManual} title={t("settings_help_content")} />
         </PageContent>
     );

@@ -62,21 +62,21 @@ export const CheckBox = ({
         <>
             <ThemedView style={outerWrapperStyles} ghost>
                 <HStack input={input} ghost={ghost} secondary={secondary} style={styles.wrapper}>
-                    <Text ghost style={styles.text}>
-                        {label}
-                    </Text>
-                    <HStack ghost style={{ gap: 10 }}>
-                        <ThemedPressable disabled={disabled} input={!disabled && !input} style={checkBoxWrapperStyle} onPress={handleCheck}>
-                            <Animated.View style={checkStyle}>
-                                <ThemedMaterialCommunityIcons disabled={disabled} ghost name="check" size={size} />
-                            </Animated.View>
-                        </ThemedPressable>
+                    <HStack ghost style={{ gap: 5, alignItems: "center" }}>
+                        <Text ghost style={styles.text}>
+                            {label}
+                        </Text>
                         {helpTextConfig && (
                             <Pressable onPress={openBottomSheet}>
                                 <ThemedMaterialCommunityIcons ghost name="help-circle-outline" size={size} />
                             </Pressable>
                         )}
                     </HStack>
+                    <ThemedPressable disabled={disabled} input={!disabled && !input} style={checkBoxWrapperStyle} onPress={handleCheck}>
+                        <Animated.View style={checkStyle}>
+                            <ThemedMaterialCommunityIcons disabled={disabled} ghost name="check" size={size} />
+                        </Animated.View>
+                    </ThemedPressable>
                 </HStack>
             </ThemedView>
             <ThemedBottomSheetModal title={helpTextConfig?.title} ref={ref}>

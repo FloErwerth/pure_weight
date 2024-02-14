@@ -3,19 +3,27 @@ import { useTranslation } from "react-i18next";
 import { PageContent } from "../../components/PageContent/PageContent";
 import { DevelopmentSelection } from "../../components/App/settings/components/Selections/DevelopmentSelection/DevelopmentSelection";
 import { ThemedView } from "../../components/Themed/ThemedView/View";
-import { FlatList } from "react-native";
+import { FlatList, StyleSheet } from "react-native";
 import { Display } from "../../components/App/settings/Sections/display";
 import { GeneralSettings } from "../../components/App/settings/Sections/generalSettings";
 import { HelpSection } from "../../components/App/settings/Sections/help/HelpSection";
 import { WorkoutSettings } from "../../components/App/settings/Sections/workout";
-import { Fragment, useEffect, useMemo, useRef } from "react";
+import { Fragment, useCallback, useEffect, useMemo, useRef } from "react";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RoutesParamaters } from "../../hooks/navigate";
+
+const styles = StyleSheet.create({
+    contentWrapper: {
+        gap: 20,
+    },
+});
 
 const isDev = process.env["EXPO_PUBLIC_APP_VARIANT"] === "development";
 export function Settings({ route: { params } }: NativeStackScreenProps<RoutesParamaters, "tabs/settings">) {
     const { t } = useTranslation();
     const ref = useRef<FlatList>(null);
+
+    const getTitleConfig = useCallback((titleKey: string) => ({ title: t(titleKey), size: 30 }) as const, [t]);
 
     useEffect(() => {
         setTimeout(() => {
@@ -27,34 +35,34 @@ export function Settings({ route: { params } }: NativeStackScreenProps<RoutesPar
 
     const settingsPages = useMemo(
         () => [
-            <PageContent key="GENERAL SETTINGS" background paddingTop={10} titleConfig={{ title: t("general"), size: 30 }}>
+            <PageContent key="GENERAL SETTINGS" background titleConfig={getTitleConfig("general")}>
                 <GeneralSettings />
             </PageContent>,
-            <PageContent key="WORKOUT SETTINGS" background paddingTop={10} titleConfig={{ title: t("workout"), size: 30 }}>
+            <PageContent key="WORKOUT SETTINGS" background titleConfig={getTitleConfig("workout")}>
                 <WorkoutSettings />
             </PageContent>,
-            <PageContent key="DISPLAY SETTINGS" background paddingTop={30} titleConfig={{ title: t("display"), size: 30 }}>
+            <PageContent key="DISPLAY SETTINGS" background titleConfig={getTitleConfig("display")}>
                 <Display />
             </PageContent>,
             <HelpSection key="HELP SETTINGS" />,
             <Fragment key="DEVELOPMENT">
                 {isDev && (
-                    <PageContent background paddingTop={30}>
+                    <PageContent background>
                         <DevelopmentSelection />
                     </PageContent>
                 )}
             </Fragment>,
         ],
-        [t],
+        [getTitleConfig],
     );
 
     return (
         <ThemedView stretch background>
-            <SiteNavigationButtons titleFontSize={40} title={t("settings")} />
+            <SiteNavigationButtons title={t("settings")} />
             <FlatList
                 ref={ref}
                 data={settingsPages}
-                contentContainerStyle={{ paddingBottom: 20 }}
+                contentContainerStyle={styles.contentWrapper}
                 renderItem={({ item: Item }) => Item}></FlatList>
         </ThemedView>
     );
