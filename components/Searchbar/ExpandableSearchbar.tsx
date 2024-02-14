@@ -30,7 +30,6 @@ export const ExpandableSearchbar = ({ handleSetSearchManual }: SearchbarProps) =
     const animatedWidth = useSharedValue(TEXT_INPUT_VALUES.start.width);
     const animatedOpacity = useSharedValue(TEXT_INPUT_VALUES.start.opacity);
     const ref = useRef<TextInput>(null);
-
     useEffect(() => {}, [animatedOpacity, animatedWidth, positionLeft, showInput]);
 
     const animatedInputStyles = useAnimatedStyle(
@@ -62,12 +61,18 @@ export const ExpandableSearchbar = ({ handleSetSearchManual }: SearchbarProps) =
         }
     }, [handleShowInput, handleHideInput, showInput]);
 
+    const handleBlur = useCallback(() => {
+        if (showInput) {
+            handleToggleSearch();
+        }
+    }, [showInput, handleToggleSearch]);
+
     return (
         <ThemedView style={{ paddingVertical: 5 }} ghost round>
             <HStack ghost>
                 <Animated.View style={animatedInputStyles}>
                     <ThemedTextInput
-                        onBlur={handleToggleSearch}
+                        onBlur={handleBlur}
                         reference={ref}
                         showClear
                         onChangeText={handleSetSearchManual}
