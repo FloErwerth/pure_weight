@@ -31,8 +31,7 @@ export const EditableExerciseInputRow = ({
 
     const handleSetValue = useCallback(
         (val: string) => {
-            const parsedValue = val ? parseFloat(val) : "";
-            setValue(parsedValue.toString());
+            setValue(val);
         },
         [setValue],
     );

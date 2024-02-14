@@ -30,8 +30,12 @@ export const TimeInputRow = ({ value, setValue, i18key, errorKey }: TimeInputRow
 
     const handleChangeSeconds = useCallback(
         (seconds: string) => {
-            const secondsNumber = seconds ? Math.min(parseInt(seconds, 10), 59).toString() : "";
-            setValue({ timeInputKey: "seconds", value: secondsNumber });
+            const secondsNumber = parseFloat(seconds);
+            let validatedValue = seconds;
+            if (secondsNumber > 59) {
+                validatedValue = "59";
+            }
+            setValue({ timeInputKey: "seconds", value: validatedValue });
         },
         [setValue],
     );
@@ -78,7 +82,7 @@ export const TimeInputRow = ({ value, setValue, i18key, errorKey }: TimeInputRow
                             placeholder="0"
                             textAlign="center"
                             onChangeText={handleChangeMinutes}
-                            maxLength={2}
+                            maxLength={4}
                             value={value?.minutes}></ThemedTextInput>
                         <Text style={minutesSuffixStyles} ghost>
                             {minutesSuffix}
@@ -97,7 +101,7 @@ export const TimeInputRow = ({ value, setValue, i18key, errorKey }: TimeInputRow
                             inputMode="decimal"
                             textAlign="center"
                             onChangeText={handleChangeSeconds}
-                            maxLength={2}
+                            maxLength={4}
                             value={value?.seconds}></ThemedTextInput>
                         <Text style={secondsSuffixStyles} ghost>
                             {secondsSuffix}
