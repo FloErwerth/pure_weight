@@ -25,7 +25,7 @@ export const DEFAULT_PLUS = { name: "plus", size: 40 } as const;
 export const SiteNavigationButtons = ({
     backButtonAction,
     title,
-    titleFontSize = 30,
+    titleFontSize = 40,
     handleConfirm,
     confirmButtonDisabled = false,
     closeButtonDisabled = false,

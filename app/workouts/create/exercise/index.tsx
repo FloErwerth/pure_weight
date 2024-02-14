@@ -81,15 +81,15 @@ export const CreateExercise = () => {
 
     return (
         <ThemedView stretch background>
-            <SiteNavigationButtons title={title} titleFontSize={40} backButtonAction={navigateBack} />
+            <SiteNavigationButtons title={title} backButtonAction={navigateBack} />
             <PageContent safeBottom stretch ghost paddingTop={20}>
                 <EditableExercise />
-                <View style={{ gap: 10 }}>
+                <View style={styles.gap}>
                     {showCheckboxes && (
-                        <Reanimated.View style={{ gap: 10 }} layout={Layout} entering={FadeIn} exiting={FadeOut}>
+                        <Reanimated.View style={styles.gap} layout={Layout} entering={FadeIn} exiting={FadeOut}>
                             <CheckBox
                                 secondary
-                                customWrapperStyles={{ zIndex: -1 }}
+                                customWrapperStyles={styles.zIndex}
                                 checked={addMoreExercises}
                                 onChecked={setAddMoreExercises}
                                 label={t("add_more_exercises")}

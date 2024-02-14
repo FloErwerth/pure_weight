@@ -27,8 +27,9 @@ export const styles = StyleSheet.create({
         alignSelf: "stretch",
     },
     colorButton: {
-        width: 45,
-        height: 45,
+        width: 35,
+        height: 35,
+        marginRight: 10,
         borderRadius: 30,
         alignSelf: "center",
     },
@@ -83,6 +84,7 @@ export const styles = StyleSheet.create({
     listContainer: {
         borderRadius,
         flex: 1,
+        marginTop: 20,
     },
     list: {
         elevation: 2,

@@ -53,8 +53,12 @@ export const EditableExerciseInputRow = ({
         } as const;
     }, [containerWidth, value]);
 
+    const handleFocusInput = useCallback(() => {
+        textInputRef.current?.focus();
+    }, [textInputRef]);
+
     return (
-        <ThemedPressable reference={containerRef} onPress={() => textInputRef.current?.focus()} behind ghost stretch={stretch}>
+        <ThemedPressable reference={containerRef} onPress={handleFocusInput} behind ghost stretch={stretch}>
             {i18key && (
                 <Text behind style={styles.label} ghost>
                     {t(i18key ?? "")}
