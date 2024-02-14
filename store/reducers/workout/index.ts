@@ -126,20 +126,20 @@ export const generateNewExercise = (): ExerciseMetaData => ({
     exerciseId: generateId("exercise"),
     name: "",
     type: "WEIGHT_BASED",
-    sets: "0",
-    reps: "0",
-    weight: "0",
+    sets: "",
+    reps: "",
+    weight: "",
     duration: {
-        seconds: "0",
-        minutes: "0",
+        seconds: "",
+        minutes: "",
     },
     pause: {
-        seconds: "0",
-        minutes: "0",
+        seconds: "",
+        minutes: "",
     },
     preparation: {
-        seconds: "0",
-        minutes: "0",
+        seconds: "",
+        minutes: "",
     },
 });
 

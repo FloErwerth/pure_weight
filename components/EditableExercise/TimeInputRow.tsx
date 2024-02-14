@@ -30,16 +30,16 @@ export const TimeInputRow = ({ value, setValue, i18key, errorKey }: TimeInputRow
 
     const handleChangeSeconds = useCallback(
         (seconds: string) => {
-            const secondsNumber = seconds ? parseInt(seconds, 10) : 0;
-            setValue({ timeInputKey: "seconds", value: Math.min(secondsNumber, 59).toString() });
+            const secondsNumber = seconds ? Math.min(parseInt(seconds, 10), 59).toString() : "";
+            setValue({ timeInputKey: "seconds", value: secondsNumber });
         },
         [setValue],
     );
 
     const handleChangeMinutes = useCallback(
         (minutes: string) => {
-            const minutesNumber = minutes ? parseInt(minutes, 10) : 0;
-            setValue({ timeInputKey: "minutes", value: Math.min(minutesNumber, 59).toString() });
+            const minutesNumber = minutes ? Math.min(parseInt(minutes, 10), 59).toString() : "";
+            setValue({ timeInputKey: "minutes", value: minutesNumber });
         },
         [setValue],
     );
@@ -48,7 +48,7 @@ export const TimeInputRow = ({ value, setValue, i18key, errorKey }: TimeInputRow
         return {
             position: "absolute",
             width: containerWidth,
-            left: Math.min(containerWidth / 2 - 40, containerWidth / 4 + (value?.minutes?.length ?? 0) * 5 + 2),
+            left: Math.min(containerWidth / 2 - 40, containerWidth / 4 + -1 + (value?.minutes?.length || 1) * 5),
         } as const;
     }, [containerWidth, value]);
 
@@ -56,7 +56,7 @@ export const TimeInputRow = ({ value, setValue, i18key, errorKey }: TimeInputRow
         return {
             position: "absolute",
             width: containerWidth,
-            left: Math.min(containerWidth / 2 - 40, containerWidth / 4 + (value?.seconds?.length ?? 0) * 5 + 2),
+            left: Math.min(containerWidth / 2 - 40, containerWidth / 4 + -1 + (value?.seconds?.length || 1) * 5),
         } as const;
     }, [containerWidth, value]);
 
@@ -75,10 +75,11 @@ export const TimeInputRow = ({ value, setValue, i18key, errorKey }: TimeInputRow
                             inputMode="decimal"
                             stretch
                             ghost
+                            placeholder="0"
                             textAlign="center"
                             onChangeText={handleChangeMinutes}
                             maxLength={2}
-                            value={value?.minutes ?? "0"}></ThemedTextInput>
+                            value={value?.minutes}></ThemedTextInput>
                         <Text style={minutesSuffixStyles} ghost>
                             {minutesSuffix}
                         </Text>
@@ -91,12 +92,13 @@ export const TimeInputRow = ({ value, setValue, i18key, errorKey }: TimeInputRow
                             reference={secondsRef}
                             ghost
                             stretch
+                            placeholder="0"
                             errorKey={errorKey}
                             inputMode="decimal"
                             textAlign="center"
                             onChangeText={handleChangeSeconds}
                             maxLength={2}
-                            value={value?.seconds ?? "0"}></ThemedTextInput>
+                            value={value?.seconds}></ThemedTextInput>
                         <Text style={secondsSuffixStyles} ghost>
                             {secondsSuffix}
                         </Text>

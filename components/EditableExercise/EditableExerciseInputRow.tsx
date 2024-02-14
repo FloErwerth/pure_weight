@@ -13,13 +13,13 @@ import { TextInput, View } from "react-native";
 import { EditableExerciseInputRowProps } from "./types";
 
 export const EditableExerciseInputRow = ({
-    value,
+    value = "",
     setValue,
     errorKey,
     i18key,
     stretch,
     suffix,
-    placeholder,
+    placeholder = "0",
 }: EditableExerciseInputRowProps) => {
     const { t } = useTranslation();
     const { errorColor } = useTheme();
@@ -31,7 +31,7 @@ export const EditableExerciseInputRow = ({
 
     const handleSetValue = useCallback(
         (val: string) => {
-            const parsedValue = val ? parseFloat(val) : 0;
+            const parsedValue = val ? parseFloat(val) : "";
             setValue(parsedValue.toString());
         },
         [setValue],
@@ -49,7 +49,7 @@ export const EditableExerciseInputRow = ({
         return {
             position: "absolute",
             width: containerWidth,
-            left: Math.min(containerWidth - 20, containerWidth / 2 + (value?.length ?? 0) * 5),
+            left: Math.min(containerWidth - 20, containerWidth / 2 + (value?.length || 1) * 5),
         } as const;
     }, [containerWidth, value]);
 
