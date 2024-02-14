@@ -39,6 +39,7 @@ const ThemedApp = () => {
     const { i18n } = useTranslation();
     const isFirstTimeRendered = useAppSelector(getIsFirstTimeRendered);
     const reactNativeTheme = useAppSelector(getReactNativeTheme);
+
     if (isFirstTimeRendered) {
         DeviceInfo.getFirstInstallTime().then((installTime) => {
             const date = new Date(installTime ?? 0).toISOString().split("T")[0];
@@ -127,7 +128,7 @@ const ThemedApp = () => {
     );
 };
 
-export default function index() {
+export default function Root() {
     const App = () => {
         return (
             <Provider store={store}>

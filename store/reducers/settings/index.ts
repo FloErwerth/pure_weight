@@ -14,6 +14,7 @@ export type SettingsState = {
     keepAwake: boolean;
     stopwatchSettings: StopwatchSettings;
     searchManual?: string;
+    switchToNextExercise: boolean;
 };
 export const setSettingsState = createAction<SettingsState, "settings_set_state">("settings_set_state");
 export const setKeepAwake = createAction<boolean, "settings_keep_awake">("settings_keep_awake");
@@ -21,6 +22,7 @@ export const setLanguage = createAction<Language, "settings_set_language">("sett
 export const setTheme = createAction<ThemeKey, "theme_set">("theme_set");
 export const setUnitSystem = createAction<UnitSystem, "set_unit_system">("set_unit_system");
 export const setSearchManual = createAction<string | undefined, "set_search_manual">("set_search_manual");
+export const setSwitchToNextExercise = createAction<boolean, "set_switch_to_next_exercise">("set_switch_to_next_exercise");
 export const mutateStopwatchSettings = createAction<
     { key: keyof StopwatchSettings; value: StopwatchSettings[keyof StopwatchSettings] },
     "set_stopwatch_settings"
@@ -39,6 +41,7 @@ export const settingsRecuder = createReducer<SettingsState>(
         language: "en",
         unitSystem: "metric",
         keepAwake: true,
+        switchToNextExercise: false,
         stopwatchSettings: { startOnDoneSet: false, notifications: { allowed: true, notify: true } },
     },
     (builder) => {
@@ -68,6 +71,9 @@ export const settingsRecuder = createReducer<SettingsState>(
             })
             .addCase(setUnitSystem, (state, action) => {
                 state.unitSystem = action.payload;
+            })
+            .addCase(setSwitchToNextExercise, (state, action) => {
+                state.switchToNextExercise = action.payload;
             });
     },
 );

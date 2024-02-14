@@ -6,16 +6,12 @@ import { mutateStopwatchSettings } from "../../../../../../store/reducers/settin
 import { getStartStopwatchOnDoneSet, getStopwatchNotify } from "../../../../../../store/reducers/settings/settingsSelectors";
 import { CheckBox } from "../../../../../Themed/CheckBox/CheckBox";
 import { useRegisterForPushNotifications } from "../../../../../../hooks/useRegisterForPushNotifications";
-import { SnapPoint, ThemedBottomSheetModal, useBottomSheetRef } from "../../../../../BottomSheetModal/ThemedBottomSheetModal";
-import { WorkoutQuickSettings } from "../../../Sections/workout";
+import { ThemedBottomSheetModal, useBottomSheetRef } from "../../../../../BottomSheetModal/ThemedBottomSheetModal";
 import { SettingsNavigator } from "../../../SettingsNavigator/SettingsNavigator";
 import { ThemedView } from "../../../../../Themed/ThemedView/View";
 import { PageContent } from "../../../../../PageContent/PageContent";
 
-type StopwatchSelectionProps = {
-    quickSettings?: WorkoutQuickSettings;
-};
-export const StopwatchSelection = ({ quickSettings }: StopwatchSelectionProps) => {
+export const StopwatchSelection = () => {
     const { t } = useTranslation();
     const startStopwatchOnDoneSet = useAppSelector(getStartStopwatchOnDoneSet);
     const notify = useAppSelector(getStopwatchNotify);
@@ -50,16 +46,13 @@ export const StopwatchSelection = ({ quickSettings }: StopwatchSelectionProps) =
     const doneSetHelpText = useMemo(
         () => ({
             title: t("settings_stopwatch_done_set"),
-            text: `${t("settings_stopwatch_done_set_helptext_text")} ${
-                quickSettings?.disableStopwatch ? t("settings_stopwatch_last_set_helptext_text_disabled") : ""
-            }`,
-            snapPoints: [quickSettings?.disableStopwatch ? "35%" : "25%"] as SnapPoint[],
+            text: t("settings_stopwatch_done_set_helptext_text"),
         }),
-        [quickSettings?.disableStopwatch, t],
+        [t],
     );
 
     const notificationHelptext = useMemo(
-        () => ({ title: t("settings_stopwatch_notify"), text: t("settings_notification_help_text"), snapPoints: ["25%"] as SnapPoint[] }),
+        () => ({ title: t("settings_stopwatch_notify"), text: t("settings_notification_help_text") }),
         [t],
     );
 
@@ -72,7 +65,6 @@ export const StopwatchSelection = ({ quickSettings }: StopwatchSelectionProps) =
                         helpTextConfig={doneSetHelpText}
                         label={t("settings_stopwatch_done_set")}
                         size={26}
-                        disabled={quickSettings?.disableStopwatch}
                         checked={startStopwatchOnDoneSet}
                         onChecked={handleSelectStartStopwatchOnDoneSet}
                     />

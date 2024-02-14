@@ -15,6 +15,7 @@ export interface ThemedBottomSheetModalProps extends PropsWithChildren {
     style?: ViewStyle;
     onRequestClose?: () => void;
     allowSwipeDownToClose?: boolean;
+    snapPoints?: SnapPoint[];
 }
 
 const refs: RefObject<BottomSheetModal>[] = [];
@@ -57,7 +58,7 @@ const renderBackdrop = (props: BottomSheetBackdropProps) => (
 const animationConfig = { duration: 225 } as const;
 // eslint-disable-next-line react/display-name
 export const ThemedBottomSheetModal = forwardRef<BottomSheetModal, ThemedBottomSheetModalProps>(
-    ({ hideIndicator, customContentStyle, children, title, onRequestClose, allowSwipeDownToClose = true }, ref) => {
+    ({ hideIndicator, customContentStyle, snapPoints, children, title, onRequestClose, allowSwipeDownToClose = true }, ref) => {
         const { mainColor, inputFieldBackgroundColor } = useTheme();
         const { top, bottom } = useSafeAreaInsets();
         const defaultStyle = useMemo(
@@ -71,11 +72,12 @@ export const ThemedBottomSheetModal = forwardRef<BottomSheetModal, ThemedBottomS
         );
         const contentStyle = useMemo(() => ({ paddingBottom: bottom * 2 }), [bottom]);
         const titleWrapperStyle = useMemo(() => [styles.wrapper, {}], []);
+        const contentContainerStyle = useMemo(() => ({ flex: snapPoints ? 1 : 0 }), [snapPoints]);
 
         return (
             <BottomSheetModal
                 enablePanDownToClose={allowSwipeDownToClose}
-                index={0}
+                index={snapPoints ? 1 : 0}
                 handleIndicatorStyle={customIndicator}
                 enableDynamicSizing
                 backdropComponent={renderBackdrop}
@@ -86,8 +88,9 @@ export const ThemedBottomSheetModal = forwardRef<BottomSheetModal, ThemedBottomS
                 animationConfigs={animationConfig}
                 stackBehavior="push"
                 topInset={top}
+                snapPoints={snapPoints}
                 keyboardBehavior="extend">
-                <BottomSheetScrollView scrollEnabled={false}>
+                <BottomSheetScrollView contentContainerStyle={contentContainerStyle} scrollEnabled={false}>
                     <ThemedView ghost style={titleWrapperStyle}>
                         {title && (
                             <Text input style={styles.title}>

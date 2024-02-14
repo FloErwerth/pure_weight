@@ -39,7 +39,7 @@ export const AddNoteModal = ({ reference, onRequestClose }: EditNoteModalProps) 
     }, [onRequestClose]);
 
     return (
-        <ThemedBottomSheetModal ref={reference} title={t("edit_note_title")}>
+        <ThemedBottomSheetModal snapPoints={["100%"]} ref={reference} title={t("edit_note_title")}>
             <ThemedView stretch style={styles.wrapper}>
                 <ThemedTextInput
                     ghost

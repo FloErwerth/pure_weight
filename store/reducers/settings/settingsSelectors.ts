@@ -33,6 +33,7 @@ export const getStartStopwatchOnDoneSet = createSelector([getStopwatchSettings],
 export const getStopwatchNotify = createSelector([getStopwatchSettings], (settings) => settings?.notifications);
 export const getSearchManual = createSelector([getSettingsState], (settings) => settings.searchManual);
 export const getKeepAwake = createSelector([getSettingsState], (settings) => settings.keepAwake);
+export const getSwitchToNextExercise = createSelector([getSettingsState], (settings) => settings.switchToNextExercise);
 const languageUnitSystemWeightUnitMap = {
     en: {
         metric: "kg",

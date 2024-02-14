@@ -260,6 +260,26 @@ export const getOverallTrainingTrend = createSelector(
     },
 );
 
+export const getExerciseDone = createSelector([getTrainedWorkout], (trainedWorkout) => {
+    const exerciseIndex = trainedWorkout?.activeExerciseIndex;
+    if (exerciseIndex === undefined || !trainedWorkout || trainedWorkout?.exerciseData.length === 0) {
+        return false;
+    }
+    const sets = parseFloat(trainedWorkout?.workout?.exercises[exerciseIndex].sets ?? "-1");
+    return (
+        trainedWorkout.exerciseData[exerciseIndex].doneSets.length === sets &&
+        trainedWorkout.exerciseData[exerciseIndex].doneSets.every(({ confirmed }) => Boolean(confirmed))
+    );
+});
+
+export const getCanSnap = createSelector([getTrainedWorkout], (trainedWorkout) => {
+    const exerciseIndex = trainedWorkout?.activeExerciseIndex;
+    if (exerciseIndex === undefined || !trainedWorkout || trainedWorkout?.exerciseData.length === 0) {
+        return false;
+    }
+    return trainedWorkout.exerciseData[exerciseIndex].canSnap;
+});
+
 export const getPauseTime = createSelector([getTrainedWorkout], (trainedWorkout) => {
     const exerciseIndex = trainedWorkout?.activeExerciseIndex;
     if (exerciseIndex === undefined) {
@@ -269,7 +289,7 @@ export const getPauseTime = createSelector([getTrainedWorkout], (trainedWorkout)
     if (pause === undefined) {
         return -404;
     }
-    return (parseFloat(pause.minutes ?? "0") * 60 + parseFloat(pause.seconds ?? "0")) * 1000;
+    return (parseFloat(pause.minutes || "0") * 60 + parseFloat(pause.seconds || "0")) * 1000;
 });
 
 export const getIsDoneWithTraining = createSelector([getTrainedWorkout], (trainedWorkout) => {

@@ -17,7 +17,10 @@ export const useStopwatch = (totalDuration: number, config: StopwatchConfig = { 
     const [remainingTime, setRemainingTime] = useState<number>(totalDuration);
     const [timerStarted, setTimerStarted] = useState(false);
     const { t } = useTranslation();
-    const showNotification = useScheduleNotification({ title: t("stopwatch_pause_notification_title"), body: t("stopwatch_pause_notification_text") });
+    const showNotification = useScheduleNotification({
+        title: t("stopwatch_pause_notification_title"),
+        body: t("stopwatch_pause_notification_text"),
+    });
 
     const stopTimer = useCallback(() => {
         BackgroundTimer.clearInterval(id);
@@ -69,6 +72,6 @@ export const useStopwatch = (totalDuration: number, config: StopwatchConfig = { 
             pauseTimer,
             reset,
         }),
-        [timerStarted, remainingTime, reset],
+        [timerStarted, remainingTime, startTimer, stopTimer, pauseTimer, reset],
     );
 };
