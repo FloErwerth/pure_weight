@@ -14,6 +14,7 @@ import { RoutesParamaters } from "../../hooks/navigate";
 
 const styles = StyleSheet.create({
     contentWrapper: {
+        paddingVertical: 20,
         gap: 20,
     },
 });
