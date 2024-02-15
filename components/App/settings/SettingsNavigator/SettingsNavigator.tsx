@@ -8,7 +8,6 @@ import { ThemedBottomSheetModal, useBottomSheetRef } from "../../../BottomSheetM
 import { Pressable } from "react-native";
 import { HelpAnswer } from "../../../HelpQuestionAnswer/HelpQuestion";
 import { AnswerText } from "../../../HelpQuestionAnswer/AnswerText";
-import { ThemedView } from "../../../Themed/ThemedView/View";
 
 interface SettingsSectionProps extends PropsWithChildren {
     title: string;
@@ -22,7 +21,7 @@ export const SettingsNavigator = ({ title, input, onPress, helpText }: SettingsS
     return (
         <>
             <HStack ghost stretch>
-                <ThemedView stretch input={input} style={styles.outerWrapper}>
+                <ThemedPressable padding onPress={onPress} stretch input={input} style={styles.outerWrapper}>
                     <HStack input={input} style={styles.innerWrapper}>
                         <HStack stretch>
                             <Text input={input} style={styles.title}>
@@ -34,11 +33,9 @@ export const SettingsNavigator = ({ title, input, onPress, helpText }: SettingsS
                                 </Pressable>
                             )}
                         </HStack>
-                        <ThemedPressable stretch onPress={onPress} style={{ alignItems: "flex-end" }}>
-                            <ThemedMaterialCommunityIcons ghost name="arrow-right" size={23} />
-                        </ThemedPressable>
+                        <ThemedMaterialCommunityIcons ghost name="arrow-right" size={23} />
                     </HStack>
-                </ThemedView>
+                </ThemedPressable>
             </HStack>
             <ThemedBottomSheetModal title={helpText?.title} ref={ref}>
                 <HelpAnswer>

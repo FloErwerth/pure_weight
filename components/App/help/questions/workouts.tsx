@@ -113,8 +113,8 @@ export const getWorkoutsQuestions = (
                         <ThemedView ghost stretch style={{ gap: 20 }}>
                             <AnswerText>
                                 Um ein Workout zu löschen, navigiere zu den{" "}
-                                <InlinePressable handlePress={handleNavigateToWorkouts}>Workouts</InlinePressable> und wische dann das
-                                gewünschte Workout nach links. {"\n\n"}
+                                <InlinePressable handlePress={handleNavigateToWorkouts}>Workouts</InlinePressable> und wische das gewünschte
+                                Workout nach links. <NewLine />
                                 Dieses Workout wird nun gelöscht. Ein gelöschtes Workout kann nicht wiederhergestellt werden, nachdem{" "}
                                 <InlinePressable handlePress={() => handleSelectFromAnswer(SECTIONS.MISCELLANEOUS, 0)}>
                                     das Zeitfenster
@@ -128,8 +128,8 @@ export const getWorkoutsQuestions = (
                         <ThemedView ghost stretch style={{ gap: 20 }}>
                             <AnswerText>
                                 To delete a workout, navigate to the{" "}
-                                <InlinePressable handlePress={handleNavigateToWorkouts}>Workouts</InlinePressable> and then swipe the
-                                desired workout to the left. {"\n\n"}
+                                <InlinePressable handlePress={handleNavigateToWorkouts}>workouts</InlinePressable> and swipe the desired
+                                workout to the left. <NewLine />
                                 This workout will now be deleted. A deleted workout cannot be restored after{" "}
                                 <InlinePressable handlePress={() => handleSelectFromAnswer(SECTIONS.MISCELLANEOUS, 0)}>
                                     the time window
@@ -270,14 +270,11 @@ export const getWorkoutsQuestions = (
                                 Die Historie zeigt Statistiken zu allen Workouts eines Monats an. <NewLine />
                                 Bei Klick auf &quot;Verlauf durchsuchen&quot; kannst Du die Historie nach einem bestimmten Monat
                                 durchsuchen. <NewLine />
-                                Es öffnet sich ein Kalender, in dem die absolvierten Workouts mit deiner{" "}
-                                <InlinePressable handlePress={() => handleSelectFromAnswer(SECTIONS.WORKOUTS, 0)}>
-                                    Workout-Farbe
-                                </InlinePressable>{" "}
-                                markiert sind. Die markierten Tage können angeklickt werden. Der aktuell ausgewählte Tag wird komplett mit
-                                deiner Farbe ausgefüllt. Ein auswählbarer Tag mit einem kleinen Punkt. <NewLine />
-                                Bei Klick auf einen auswählbares Workout wird der Kalender geschlossen und Du wirst zum ausgewählten Workout
-                                geleitet.
+                                Es öffnet sich ein Kalender, in dem die absolvierten Workouts mit deiner Workout-Farbe markiert sind. Die
+                                markierten Tage können angeklickt werden. Der aktuell ausgewählte Tag wird komplett mit deiner Farbe
+                                ausgefüllt. Ein auswählbarer Tag mit einem kleinen Punkt. <NewLine />
+                                Bei Klick auf einen auswählbares Workout wird der Kalender geschlossen und Du wirst zum Monat des
+                                ausgewählten Workout geleitet.
                             </AnswerText>
                         </ThemedView>
                     </HelpAnswer>
@@ -291,14 +288,11 @@ export const getWorkoutsQuestions = (
                                 <NewLine />
                                 The history shows statistics for all workouts of a month. <NewLine />
                                 When you click on &quot;Browse history&quot; you can browse the history for a specific month. <NewLine />A
-                                calendar opens in which the completed workouts are marked with your{" "}
-                                <InlinePressable handlePress={() => handleSelectFromAnswer(SECTIONS.WORKOUTS, 0)}>
-                                    workout color
-                                </InlinePressable>
-                                . The marked days can be clicked. The currently selected day is completely filled with your color. A
-                                selectable day with a small dot. <NewLine />
-                                When you click on a selectable workout, the calendar will close and you will be taken to the selected
-                                workout.
+                                calendar opens in which the completed workouts are marked with your workout color. The marked days can be
+                                clicked. The currently selected day is completely filled with your color. A selectable day with a small dot.{" "}
+                                <NewLine />
+                                If you click on a selectable workout, the calendar will close and you will be taken to the month of the
+                                selected workout.
                             </AnswerText>
                         </ThemedView>
                     </HelpAnswer>

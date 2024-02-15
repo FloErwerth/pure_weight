@@ -34,7 +34,7 @@ export const LanguageSelection = () => {
     const handleSelectLanguage = useCallback(
         (language: "en" | "de") => {
             void Haptics.impactAsync(ImpactFeedbackStyle.Light);
-            i18n.changeLanguage(language);
+            void i18n.changeLanguage(language);
             dispatch(setLanguage(language));
         },
         [dispatch, i18n],

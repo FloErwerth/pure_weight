@@ -15,6 +15,9 @@ import { getWorkoutsQuestions } from "./questions/workouts";
 import { getExercisesQuestions } from "./questions/exercises";
 import { getTrainingsQuestions } from "./questions/trainings";
 import { QuestionAnswerArray, SECTIONS } from "./types";
+import { getMeasurementQuestions } from "./questions/measurements";
+import { setupNewMeasurement } from "../../../store/reducers/measurements";
+import { useMeasurementOptionMap } from "../../../app/measurements/create";
 
 export const QuestionsAndAnswers = () => {
     const dispatch = useAppDispatch();
@@ -22,6 +25,7 @@ export const QuestionsAndAnswers = () => {
     const theme = useAppSelector(getThemeKeyFromStore);
     const searchedManual = useAppSelector(getSearchManual);
     const { bottom } = useSafeAreaInsets();
+    const measurementOptionMap = useMeasurementOptionMap();
 
     const handleNavigateToWorkouts = useCallback(() => {
         navigate("workouts");
@@ -48,6 +52,7 @@ export const QuestionsAndAnswers = () => {
             [SECTIONS.WORKOUTS]: "Workouts",
             [SECTIONS.EXERCISES]: language === "de" ? "Übungen" : "Exercises",
             [SECTIONS.TRAININGS]: language === "de" ? "Während des Trainings" : "During the training",
+            [SECTIONS.MEASUREMENTS]: language === "de" ? "Messungen" : "Measurements",
             [SECTIONS.MISCELLANEOUS]: language === "de" ? "Sonstiges" : "Miscellaneous",
         }),
         [language],
@@ -59,6 +64,16 @@ export const QuestionsAndAnswers = () => {
         }
         return language === "de" ? "hellen" : "light";
     }, [language, theme]);
+
+    const navigateToMesurements = useCallback(() => {
+        navigate("measurements");
+    }, [navigate]);
+
+    const createNewMeasurement = useCallback(() => {
+        closeAll();
+        navigate("measurement/create");
+        dispatch(setupNewMeasurement());
+    }, [closeAll, dispatch, navigate]);
 
     const data = useMemo((): Record<SECTIONS, QuestionAnswerArray> => {
         const handleSelectFromAnswer = (section: SECTIONS, index: number) => {
@@ -78,9 +93,26 @@ export const QuestionsAndAnswers = () => {
                 colorOfBackground,
                 navigateToSettings,
             ),
+            [SECTIONS.MEASUREMENTS]: getMeasurementQuestions(
+                language,
+                navigateToMesurements,
+                handleSelectFromAnswer,
+                createNewMeasurement,
+                measurementOptionMap,
+            ),
             [SECTIONS.MISCELLANEOUS]: getMiscellaneousQuestions(navigateToSettings, language),
         };
-    }, [colorOfBackground, handleNavigateToWorkouts, language, navigateToSettings, open, setupNewWorkout]);
+    }, [
+        colorOfBackground,
+        createNewMeasurement,
+        handleNavigateToWorkouts,
+        language,
+        measurementOptionMap,
+        navigateToMesurements,
+        navigateToSettings,
+        open,
+        setupNewWorkout,
+    ]);
 
     const handleSetSelectedQuestion = useCallback(
         (section: SECTIONS, index: number) => {

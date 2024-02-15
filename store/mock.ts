@@ -12,6 +12,8 @@ export const mockState: AppState = {
         theme: "system",
         language: "en",
         unitSystem: "metric",
+        switchToNextExercise: false,
+        searchManual: "",
     },
     measurementState: {
         sorting: "A_Z",
@@ -179,7 +181,7 @@ export const mockState: AppState = {
                     },
                     {
                         doneWorkoutId: "workout-4",
-                        isoDate: "2023-12-01",
+                        isoDate: "2023-12-02",
                         duration: "120",
                         doneExercises: [
                             {
@@ -194,7 +196,7 @@ export const mockState: AppState = {
                     },
                     {
                         doneWorkoutId: "workout-5",
-                        isoDate: "2023-12-01",
+                        isoDate: "2023-12-03",
                         duration: "120",
                         doneExercises: [
                             {
@@ -208,7 +210,7 @@ export const mockState: AppState = {
                     },
                     {
                         doneWorkoutId: "workout-6",
-                        isoDate: "2023-12-01",
+                        isoDate: "2023-12-04",
                         duration: "120",
                         doneExercises: [
                             {
@@ -222,7 +224,7 @@ export const mockState: AppState = {
                     },
                     {
                         doneWorkoutId: "workout-7",
-                        isoDate: "2023-12-01",
+                        isoDate: "2023-12-05",
                         duration: "120",
                         doneExercises: [
                             {
@@ -381,5 +383,7 @@ export const emptyState = {
         language: "en",
         theme: "system",
         unitSystem: "metric",
+        switchToNextExercise: false,
+        searchManual: "",
     },
 } satisfies AppState;

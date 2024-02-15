@@ -71,7 +71,7 @@ export const Routes = {
         screen: "tabs/workouts",
     },
     measurements: {
-        name: "tabs/measurements",
+        screen: "tabs/measurements",
     },
     "measurement/progress": {
         screen: "measurement/progress/index",

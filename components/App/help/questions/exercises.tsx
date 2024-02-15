@@ -19,15 +19,18 @@ export const getExercisesQuestions = (
                     <HelpAnswer>
                         <ThemedView ghost stretch style={{ gap: 20 }}>
                             <AnswerText>
-                                Um eine Übung zu bearbeiten, musst Du zuerst ein{" "}
-                                <InlinePressable handlePress={() => handleSelectFromAnswer(SECTIONS.WORKOUTS, 2)}>
-                                    Workout bearbeiten
+                                Um eine Übung zu erstellen, musst Du zuerst ein{" "}
+                                <InlinePressable handlePress={() => handleSelectFromAnswer(SECTIONS.WORKOUTS, 0)}>
+                                    Workout erstellen
                                 </InlinePressable>
                                 . <NewLine />
                                 Anschließend kannst Du eine Übung hinzufügen, indem Du auf &quot;Übung hinzufügen&quot; am unteren Ende
                                 deines Bildschirms drückst. <NewLine />
-                                Es öffnet sich der Dialog zum Erstellen einer Übung. Trage nun die Daten für deine neue Übung ein.{" "}
-                                <NewLine />
+                                Es öffnet sich der Dialog zum Erstellen einer Übung. Wähle die{" "}
+                                <InlinePressable handlePress={() => handleSelectFromAnswer(SECTIONS.EXERCISES, 4)}>
+                                    Art der Übung
+                                </InlinePressable>{" "}
+                                aus und trage deine gewünschten Werte ein. <NewLine />
                                 Wenn Du damit fertig bist, drücke auf &quot;Übung erstellen&quot;. Nun wird die neue Übung im Workout
                                 angezeigt.
                             </AnswerText>
@@ -37,23 +40,25 @@ export const getExercisesQuestions = (
                     <HelpAnswer>
                         <ThemedView ghost stretch style={{ gap: 20 }}>
                             <AnswerText>
-                                To edit an exercise, you have to edit an{" "}
-                                <InlinePressable handlePress={() => handleSelectFromAnswer(SECTIONS.WORKOUTS, 2)}>
-                                    existing workout
+                                To create an exercise, you have to{" "}
+                                <InlinePressable handlePress={() => handleSelectFromAnswer(SECTIONS.WORKOUTS, 0)}>
+                                    create a workout
                                 </InlinePressable>{" "}
                                 first. <NewLine />
-                                In the opened workout you can then add an exercise by pressing &quot;Add exercise&quot; at the bottom of
-                                your screen. <NewLine />
-                                The dialog for creating an exercise will open. Now enter the data for your new exercise. <NewLine />
-                                When you are done, click on &quot;Create exercise&quot;. The new exercise will now be displayed in the
-                                workout.
+                                Then you can add an exercise by pressing &quot;Add exercise&quot; at the bottom of your screen. <NewLine />
+                                The dialog for creating an exercise will open. Choose the{" "}
+                                <InlinePressable handlePress={() => handleSelectFromAnswer(SECTIONS.EXERCISES, 4)}>
+                                    type of exercise
+                                </InlinePressable>{" "}
+                                and enter your desired values. <NewLine />
+                                When you are done, press &quot;Create exercise&quot;. Now the new exercise will be displayed in the workout.
                             </AnswerText>
                         </ThemedView>
                     </HelpAnswer>
                 ),
         },
         {
-            title: language === "de" ? "Bearbeitung einer Übung" : "Editing of an exercise",
+            title: language === "de" ? "Bearbeitung einer Übung" : "Editing an exercise",
             answer:
                 language === "de" ? (
                     <HelpAnswer>
@@ -92,13 +97,13 @@ export const getExercisesQuestions = (
                 ),
         },
         {
-            title: language === "de" ? "Löschung einer Übung" : "Deletion of an exercise",
+            title: language === "de" ? "Löschung einer Übung" : "Deleting an exercise",
             answer:
                 language === "de" ? (
                     <HelpAnswer>
                         <ThemedView ghost stretch style={{ gap: 20 }}>
                             <AnswerText>
-                                Um eine Übung zu bearbeiten, musst Du zuerst ein{" "}
+                                Um eine Übung zu löschen, musst Du zuerst ein{" "}
                                 <InlinePressable handlePress={() => handleSelectFromAnswer(SECTIONS.WORKOUTS, 2)}>
                                     Workout bearbeiten
                                 </InlinePressable>
@@ -177,6 +182,44 @@ export const getExercisesQuestions = (
                                 <ThemedMaterialCommunityIcons name="drag" size={24} ghost /> symbol next to the{" "}
                                 <ThemedMaterialCommunityIcons name="trash-can-outline" size={24} ghost /> symbol of an exercise and then
                                 dragging it to the desired position. <NewLine />
+                            </AnswerText>
+                        </ThemedView>
+                    </HelpAnswer>
+                ),
+        },
+        {
+            title: language === "de" ? "Arten von Übungen" : "Exercise types",
+            answer:
+                language === "de" ? (
+                    <HelpAnswer>
+                        <ThemedView ghost stretch style={{ gap: 20 }}>
+                            <AnswerText>
+                                Es gibt zwei Art von Übungen: <NewLine />
+                                1. Gewichtsbasierte Übungen <NewLine numberOfLines={1} />
+                                2. Zeitbasierte Übungen <NewLine />
+                                Gewichtsbasierte Übungen sind klassische Übungen aus dem Fitnessstudio (z.B. Bankdrücken). Werte können
+                                sein: Gewicht, Sätze, Wiederholungen und optional eine Pause.
+                                <NewLine />
+                                Zeitbasierte Übungen können viele Formen annehmen (z.B. Laufen oder Radfahren). Zeitbasierte Übungen können
+                                folgende Werte annehmen: Sätze, eine Vorbereitungszeit, die Dauer und die Pause. <NewLine />
+                                Die Vorbereitungszeit ist die Zeit, welche vor dem eigentlichen Start der Übung benötigt wird, um sich auf
+                                die Übung vorzubereiten (z.B. das Hinlegen bei Planks).
+                            </AnswerText>
+                        </ThemedView>
+                    </HelpAnswer>
+                ) : (
+                    <HelpAnswer>
+                        <ThemedView ghost stretch style={{ gap: 20 }}>
+                            <AnswerText>
+                                There are two types of exercises: <NewLine />
+                                1. Weight-based exercises <NewLine numberOfLines={1} />
+                                2. Time-based exercises <NewLine />
+                                Weight-based exercises are classic exercises from the gym (e.g. bench press). Values can be: weight, sets,
+                                repetitions and optionally a break. <NewLine />
+                                Time-based exercises can take many forms (e.g. running or cycling). Time-based exercises can take the
+                                following values: sets, a preparation time, the duration and the break. <NewLine />
+                                The preparation time is the time needed before the actual start of the exercise to prepare for the exercise
+                                (e.g. lying down for planks).
                             </AnswerText>
                         </ThemedView>
                     </HelpAnswer>

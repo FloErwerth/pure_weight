@@ -41,19 +41,22 @@ const ThemedApp = () => {
     const reactNativeTheme = useAppSelector(getReactNativeTheme);
 
     if (isFirstTimeRendered) {
+        dispatch(setEmptyState());
         DeviceInfo.getFirstInstallTime().then((installTime) => {
             const date = new Date(installTime ?? 0).toISOString().split("T")[0];
             dispatch(setAppInstallDate(date as IsoDate));
         });
-        dispatch(setEmptyState());
+
         const lang = (NativeModules.SettingsManager.settings.AppleLocale as string).split("_")[0];
-        if (lang === "de") {
+
+        if (lang === "de" || lang === "en") {
+            void i18n.changeLanguage(lang);
+            dispatch(setLanguage(lang));
+        } else {
             void i18n.changeLanguage("de");
             dispatch(setLanguage("de"));
-        } else {
-            void i18n.changeLanguage("en");
-            dispatch(setLanguage("en"));
         }
+
         const theme = Appearance.getColorScheme();
         dispatch(setTheme(theme === "dark" ? "dark" : "light"));
     }

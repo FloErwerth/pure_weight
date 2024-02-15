@@ -31,8 +31,8 @@ interface SetInputRowProps {
 const getMillisecondsFromDuration = (duration?: TimeInput) => {
     if (duration) {
         const { minutes, seconds } = duration;
-        const minutesInt = parseInt(minutes ?? "0");
-        const secondsInt = parseInt(seconds ?? "0");
+        const minutesInt = parseInt(minutes || "0");
+        const secondsInt = parseInt(seconds || "0");
         return (minutesInt * 60 + secondsInt) * 1000;
     }
     return 0;

@@ -90,7 +90,7 @@ export const ThemedBottomSheetModal = forwardRef<BottomSheetModal, ThemedBottomS
                 topInset={top}
                 snapPoints={snapPoints}
                 keyboardBehavior="extend">
-                <BottomSheetScrollView contentContainerStyle={contentContainerStyle} scrollEnabled={false}>
+                <BottomSheetScrollView contentContainerStyle={contentContainerStyle}>
                     <ThemedView ghost style={titleWrapperStyle}>
                         {title && (
                             <Text input style={styles.title}>

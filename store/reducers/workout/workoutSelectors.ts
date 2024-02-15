@@ -401,10 +401,15 @@ export const getAnyHasFallbackSets = createSelector(
         const hasFallbackSets = Boolean(doneWorkout?.doneExercises?.some((exercise) => exercise.fallbackSets));
         const setsAreEqual = Boolean(
             doneWorkout?.doneExercises?.every((exercise) =>
-                exercise.sets.every(
-                    (set, index) =>
-                        exercise.fallbackSets?.[index].reps === set.reps && exercise.fallbackSets?.[index].weight === set.weight,
-                ),
+                exercise.sets.every((set, index) => {
+                    if (exercise.type === "TIME_BASED") {
+                        return (
+                            exercise.fallbackSets?.[index].duration?.seconds === set.duration?.seconds &&
+                            exercise.fallbackSets?.[index].duration?.minutes === set.duration?.minutes
+                        );
+                    }
+                    return exercise.fallbackSets?.[index].reps === set.reps && exercise.fallbackSets?.[index].weight === set.weight;
+                }),
             ),
         );
         return hasFallbackSets && !setsAreEqual;

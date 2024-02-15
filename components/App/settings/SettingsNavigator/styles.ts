@@ -15,7 +15,6 @@ export const styles = StyleSheet.create({
         paddingHorizontal: 5,
     },
     outerWrapper: {
-        padding: 10,
         borderRadius,
         alignSelf: "stretch",
     },
