@@ -17,7 +17,7 @@ export const getWorkoutsQuestions = (
 ): QuestionAnswerArray => {
     return [
         {
-            title: language === "de" ? "Erstellung eines Workouts" : "Creation of a workout",
+            title: language === "de" ? "Ein Workout erstellen" : "Creating a workout",
             answer:
                 language === "de" ? (
                     <HelpAnswer>
@@ -75,7 +75,7 @@ export const getWorkoutsQuestions = (
                 ),
         },
         {
-            title: language === "de" ? "Bearbeitung eines Workouts" : "Editing of a workout",
+            title: language === "de" ? "Bearbeitung eines Workouts" : "Editing a workout",
             answer:
                 language === "de" ? (
                     <HelpAnswer>
@@ -97,8 +97,8 @@ export const getWorkoutsQuestions = (
                                 To edit a workout, you first need an existing{" "}
                                 <InlinePressable handlePress={() => handleSelectFromAnswer(SECTIONS.WORKOUTS, 0)}>workout</InlinePressable>.
                                 <NewLine />
-                                Navigate to the <InlinePressable handlePress={handleNavigateToWorkouts}>workouts</InlinePressable> and then
-                                swipe the desired workout to the right. <NewLine />
+                                Navigate to the <InlinePressable handlePress={handleNavigateToWorkouts}>workouts</InlinePressable> and swipe
+                                the desired workout to the right. <NewLine />
                                 You will now be navigated to the workout editing and can edit the workout as desired.
                             </AnswerText>
                         </ThemedView>
@@ -106,7 +106,7 @@ export const getWorkoutsQuestions = (
                 ),
         },
         {
-            title: language === "de" ? "Löschung eines Workouts" : "Deletion of a workout",
+            title: language === "de" ? "Löschung eines Workouts" : "Deleting a workout",
             answer:
                 language === "de" ? (
                     <HelpAnswer>
@@ -156,7 +156,7 @@ export const getWorkoutsQuestions = (
                                 Vor kürzester Zeit <NewLine />
                                 Um die Sortierung zu ändern, klicke auf den Sortierungs-Button unterhalb des Titels der Workout Übersicht.{" "}
                                 <NewLine />
-                                Es öffnet sich nun ein Dialog, in dem die Sortierung ausgewählt werden kann. <NewLine />
+                                Es öffnet sich nun ein Dialog, in dem die Sortierung ausgewählt werden kann.
                             </AnswerText>
                         </ThemedView>
                     </HelpAnswer>
@@ -171,8 +171,8 @@ export const getWorkoutsQuestions = (
                                 Alphabetically descending <NewLine numberOfLines={1} />
                                 Longest ago <NewLine numberOfLines={1} />
                                 Most recently <NewLine />
-                                To change the sorting, click on the sorting button below the title of the workout overview. <NewLine />
-                                A dialog will now open in which the sorting can be selected. <NewLine />
+                                To change the sorting, click on the sorting button below the title of the workout overview. <NewLine />A
+                                dialog will now open in which the sorting can be selected.
                             </AnswerText>
                         </ThemedView>
                     </HelpAnswer>
@@ -185,8 +185,9 @@ export const getWorkoutsQuestions = (
                     <HelpAnswer>
                         <ThemedView ghost stretch style={{ gap: 20 }}>
                             <AnswerText>
-                                Innerhalb der Kachel eines erstellten Workouts befindet sich eine Anzeige zu deiner Performance im Workout.{" "}
-                                <NewLine />
+                                Innerhalb der Kachel eines{" "}
+                                <InlinePressable handlePress={handleNavigateToWorkouts}>erstellten Workouts</InlinePressable> befindet sich
+                                eine Anzeige zu deiner Performance im Workout. <NewLine />
                                 Diese wird nur angezeigt, wenn Du das Workout bereits mindestens zweimal durchgeführt hast und es mindestens
                                 eine Übung innerhalb des Workouts gibt, welches Du mindestens zweimal abgeschlossen hast. <NewLine />
                                 Die Anzeige zeigt an, wie sich deine Leistung vom letzten zum aktuellen Workout verändert hat. <NewLine />
@@ -202,9 +203,9 @@ export const getWorkoutsQuestions = (
                     <HelpAnswer>
                         <ThemedView ghost stretch style={{ gap: 20 }}>
                             <AnswerText>
-                                Inside the tile of a created{" "}
-                                <InlinePressable handlePress={handleNavigateToWorkouts}>workout</InlinePressable> there is a display of your
-                                performance of a workout. <NewLine />
+                                Inside the tile of a{" "}
+                                <InlinePressable handlePress={handleNavigateToWorkouts}>created workout</InlinePressable> there is a display
+                                of your performance of that workout. <NewLine />
                                 This is only displayed if you have already performed the workout at least twice and there is at least one
                                 exercise within the workout that you have completed twice. <NewLine />
                                 The display shows how your performance has changed from the last to the current workout. <NewLine />
@@ -298,6 +299,44 @@ export const getWorkoutsQuestions = (
                                 selectable day with a small dot. <NewLine />
                                 When you click on a selectable workout, the calendar will close and you will be taken to the selected
                                 workout.
+                            </AnswerText>
+                        </ThemedView>
+                    </HelpAnswer>
+                ),
+        },
+        {
+            title: language === "de" ? "Bearbeiten von abgeschlossenen Workouts" : "Editing completed workouts",
+            answer:
+                language === "de" ? (
+                    <HelpAnswer>
+                        <ThemedView ghost stretch style={{ gap: 20 }}>
+                            <AnswerText>
+                                Um ein abgeschlossenes Workout zu bearbeiten, navigiere zur Historie und drücke auf das gewünschte Workout.
+                                Du wirst nun zur Bearbeitungsansicht weitergeleitet. <NewLine />
+                                Hier siehst du eine Auflistung der absolvierten Sätze pro Übung. <NewLine />
+                                Falls deine Übung eine gewichtsbasierte Übung ist Du kannst hier das Gewicht und die Wiederholungszahl
+                                ändern. Andernfalls kannst Du die Dauer deiner Übung ändern. <NewLine />
+                                Wenn Du mit der Bearbeitung fertig bist klicke auf das{" "}
+                                <ThemedMaterialCommunityIcons name="content-save-outline" size={24} ghost /> Symbol oben rechts. Wenn Du die
+                                Bearbeitung abbrechen möchtest navigiere auf die vorherige Seite zurück. <NewLine />
+                                Es wird nun ein Dialog angezeigt bei dem Du entscheiden möchtest was mit deinen eingebenen Daten passiert.
+                                Du kannst die Änderungen speichern oder verwerfen.
+                            </AnswerText>
+                        </ThemedView>
+                    </HelpAnswer>
+                ) : (
+                    <HelpAnswer>
+                        <ThemedView ghost stretch style={{ gap: 20 }}>
+                            <AnswerText>
+                                To edit a completed workout, navigate to the history and press the desired workout. You will now be taken to
+                                the editing view. <NewLine />
+                                Here you will see a list of the completed sets per exercise. <NewLine />
+                                If your exercise is a weight-based exercise, you can change the weight and the number of repetitions here.
+                                Otherwise, you can change the duration of your exercise. <NewLine />
+                                When you are finished editing, click on the{" "}
+                                <ThemedMaterialCommunityIcons name="content-save-outline" size={24} ghost /> symbol in the top right. If you
+                                want to cancel the editing, navigate back to the previous page. <NewLine />A dialog will now be displayed
+                                asking you what to do with your entered data. You can save or discard the changes.
                             </AnswerText>
                         </ThemedView>
                     </HelpAnswer>
