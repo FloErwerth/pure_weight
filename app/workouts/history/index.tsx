@@ -18,7 +18,6 @@ import {
     getFirstWorkoutDate,
     getLatestWorkoutDate,
     getSortedDoneWorkout,
-    getWorkoutColor,
     getWorkoutsByMonth,
 } from "../../../store/reducers/workout/workoutSelectors";
 import { noop } from "lodash";
@@ -35,22 +34,6 @@ export type FlatListData = {
     name: string;
     date: IsoDate;
     marked: boolean;
-};
-
-const useMarkedDates = (index?: WorkoutId) => {
-    const { mainColor } = useTheme();
-    const timestamps = useAppSelector((state: AppState) => getSortedDoneWorkout(state, index));
-    const color = useAppSelector(getWorkoutColor);
-    return useMemo(
-        () =>
-            timestamps?.reduce(
-                (markedDates, date) => {
-                    return { ...markedDates, [date]: color ?? mainColor };
-                },
-                {} as Record<IsoDate, string>,
-            ),
-        [color, timestamps, mainColor],
-    );
 };
 
 function monthDiff(d1: Date, d2: Date) {
@@ -84,7 +67,7 @@ export function WorkoutHistory() {
     const latestWorkoutDate = useAppSelector((state: AppState) => getLatestWorkoutDate(state, editedWorkout?.workout.workoutId));
     const [selectedDate, setSelectedDate] = useState<IsoDate>(latestWorkoutDate);
     const { past, future } = useScrollRanges(selectedDate);
-    const markedDates = useMarkedDates(editedWorkout?.workout?.workoutId);
+    const doneWorkoutDates = useAppSelector((state: AppState) => getSortedDoneWorkout(state, editedWorkout?.workout?.workoutId));
     const workout = useAppSelector(getEditedWorkout);
     const { ref, openBottomSheet, closeBottomSheet } = useBottomSheetRef();
     const sectionListRef = useRef<FlatList>(null);
@@ -178,7 +161,7 @@ export function WorkoutHistory() {
                 setTimeout(scrollCallback, 200);
             };
 
-            const color = markedDates?.[isoDate];
+            const selectable = doneWorkoutDates?.find((date) => date === isoDate) !== undefined;
             const isLatest = isoDate === latestWorkoutDate;
             return (
                 <RenderedDay
@@ -186,11 +169,11 @@ export function WorkoutHistory() {
                     selected={selectedDate === isoDate}
                     handleSelectDate={handleDayPress}
                     day={day}
-                    color={color}
+                    selectable={selectable}
                 />
             );
         },
-        [handleSelectDate, latestWorkoutDate, markedDates, selectedDate],
+        [doneWorkoutDates, handleSelectDate, latestWorkoutDate, selectedDate],
     );
 
     return (

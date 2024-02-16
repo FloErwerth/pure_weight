@@ -14,7 +14,6 @@ import {
     WorkoutId,
     WorkoutState,
 } from "./types";
-import { getRandomColorFromPalette } from "../../../utils/colorPalette";
 import { getDateTodayIso } from "../../../utils/date";
 import { getMillisecondsFromTimeInput, getMinutesSecondsFromMilliseconds } from "../../../utils/timeDisplay";
 import { generateId } from "../../../utils/generateId";
@@ -88,7 +87,6 @@ export const setSearchedWorkout = createAction<string | undefined, "set_searched
 
 export const markSetAsDone = createAction<{ setIndex: number }, "mark_set_as_done">("mark_set_as_done");
 export const setIsActiveSet = createAction<{ setIndex: number }, "set_is_active_set">("set_is_active_set");
-export const setColor = createAction<string, "set_color">("set_color");
 export const pauseTrainedWorkout = createAction("pause_trained_workout");
 export const resumeTrainedWorkout = createAction("resume_trained_workout");
 export const cleanupDurationValues = createAction("cleanup_duration_values");
@@ -184,11 +182,6 @@ export const workoutReducer = createReducer<WorkoutState>(
                     };
                 }
             })
-            .addCase(setColor, (state, action) => {
-                if (state.editedWorkout) {
-                    state.editedWorkout.workout.calendarColor = action.payload;
-                }
-            })
             .addCase(recoverExercise, (state) => {
                 const workout = state.editedWorkout?.workout;
                 if (state.deletedExercise !== undefined && workout) {
@@ -271,7 +264,6 @@ export const workoutReducer = createReducer<WorkoutState>(
                         name: "",
                         exercises: [],
                         doneWorkouts: [],
-                        calendarColor: getRandomColorFromPalette(),
                     },
                 };
             })

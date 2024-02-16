@@ -7,8 +7,8 @@ import { Text } from "../ThemedText/Text";
 import Animated, { FadeIn, FadeOut, Layout } from "react-native-reanimated";
 import { useTheme } from "../../../theme/context";
 import { AppState, useAppSelector } from "../../../store";
-import { ErrorFields } from "../../../store/reducers/errors";
 import { getErrorByKey } from "../../../store/reducers/errors/errorSelectors";
+import { ErrorFields } from "../../../store/reducers/errors/errorFields";
 
 interface ThemedDropdownProps<T extends readonly string[]> {
     isSelectable?: boolean;
@@ -44,11 +44,19 @@ function Item<T extends string>({ value, onSelectItem }: ItemProps<T>) {
     );
 }
 
-export function ThemedDropdown<T extends readonly string[]>({ secondary, isSelectable, errorKey, options, onSelectItem, placeholder, value }: ThemedDropdownProps<T>) {
+export function ThemedDropdown<T extends readonly string[]>({
+    secondary,
+    isSelectable,
+    errorKey,
+    options,
+    onSelectItem,
+    placeholder,
+    value,
+}: ThemedDropdownProps<T>) {
     const [open, setOpen] = useState(false);
     const containerRef = useRef<View>(null);
     const [containerMeasures, setContainerMeasures] = useState<{ width: number; height: number }>({ width: 100, height: 50 });
-    const error = useAppSelector((state: AppState) => getErrorByKey(state)(errorKey));
+    const error = useAppSelector((state: AppState) => getErrorByKey(state, errorKey));
     const { componentBackgroundColor } = useTheme();
     const togglePicker = useCallback(() => {
         setOpen((open) => !open);
@@ -68,7 +76,10 @@ export function ThemedDropdown<T extends readonly string[]>({ secondary, isSelec
         }
     }, [open]);
 
-    const dropdownStyles = useMemo(() => [styles.dropdown, { width: containerMeasures.width, top: containerMeasures.height }], [containerMeasures]);
+    const dropdownStyles = useMemo(
+        () => [styles.dropdown, { width: containerMeasures.width, top: containerMeasures.height }],
+        [containerMeasures],
+    );
 
     const handleSelectItem = useCallback(
         (value: T[number]) => {
@@ -89,8 +100,7 @@ export function ThemedDropdown<T extends readonly string[]>({ secondary, isSelec
                     onLayout={measureContainer}
                     style={styles.selectedItemWrapper}
                     onPress={togglePicker}
-                    stretch
-                >
+                    stretch>
                     <Text ghost disabled={!isSelectable} error={error} style={styles.selectedItem}>
                         {value || placeholder}
                     </Text>

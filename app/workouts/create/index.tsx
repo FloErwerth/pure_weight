@@ -16,7 +16,7 @@ import { PageContent } from "../../../components/PageContent/PageContent";
 import { ThemedView } from "../../../components/Themed/ThemedView/View";
 import { ThemedBottomSheetModal, useBottomSheetRef } from "../../../components/BottomSheetModal/ThemedBottomSheetModal";
 import { HStack } from "../../../components/Stack/HStack/HStack";
-import { ColorPickerButton, ColorPickerModal } from "../../../components/ColorPickerWithModal/ColorPickerWithModal";
+import { ColorPickerModal } from "../../../components/ColorPickerWithModal/ColorPickerWithModal";
 import { ThemedTextInput } from "../../../components/Themed/ThemedTextInput/ThemedTextInput";
 import { cleanErrors, setError } from "../../../store/reducers/errors";
 import {
@@ -47,7 +47,27 @@ type MappedExercises = {
     handleOnConfirmEdit: (exercise: ExerciseMetaData) => void;
 };
 type RenderedItem = { index: number; exercise: ExerciseMetaData; onEdit: () => void; onDelete: () => void };
-export function Create() {
+
+const useValidateWorkout = () => {
+    const dispatch = useAppDispatch();
+    const editedWorkout = useAppSelector(getEditedWorkout);
+
+    return useCallback(() => {
+        let isValid = true;
+        if (!editedWorkout?.workout.name || editedWorkout.workout.exercises.length === 0) {
+            isValid = false;
+            if (!editedWorkout?.workout.name) {
+                dispatch(setError(["create_workout_name"]));
+            }
+            if (editedWorkout?.workout.exercises.length === 0) {
+                dispatch(setError(["create_exercises_empty"]));
+            }
+        }
+        return isValid;
+    }, [dispatch, editedWorkout?.workout.exercises.length, editedWorkout?.workout.name]);
+};
+
+export const Create = () => {
     const navigate = useNavigate();
     const { bottom } = useSafeAreaInsets();
     const { t } = useTranslation();
@@ -58,6 +78,7 @@ export function Create() {
     const { ref: alertRef, openBottomSheet: openAlert, closeBottomSheet: closeAlert } = useBottomSheetRef();
     const { ref: colorPickerRef, openBottomSheet: openPicker } = useBottomSheetRef();
     const { toastRef, openToast, closeToast, showToast } = useToast();
+    const isValidWorkout = useValidateWorkout();
 
     const handleSetWorkoutName = useCallback(
         (value?: string) => {
@@ -124,20 +145,14 @@ export function Create() {
     }, [handleCleanErrors, navigate]);
 
     const handleSaveWorkout = useCallback(() => {
-        if (!editedWorkout?.workout?.name || editedWorkout.workout.exercises.length === 0) {
-            if (!editedWorkout?.workout.name) {
-                dispatch(setError(["workout_name"]));
-            }
-            if (editedWorkout?.workout.exercises.length === 0) {
-                dispatch(setError(["create_exercises_empty"]));
-            }
+        if (!isValidWorkout()) {
             return;
         }
         if (editedWorkout) {
             dispatch(saveEditedWorkout());
         }
         handleNavigateHome();
-    }, [editedWorkout, handleNavigateHome, dispatch]);
+    }, [isValidWorkout, editedWorkout, handleNavigateHome, dispatch]);
 
     const handleBackButton = useCallback(() => {
         if (editedWorkout?.workout.exercises.length !== 0 || editedWorkout.workout.name.length !== 0) {
@@ -204,16 +219,15 @@ export function Create() {
                     title={title}
                 />
                 <PageContent background safeBottom stretch style={styles.contentWrapper}>
-                    <HStack style={styles.nameColorStack} ghost>
-                        <ThemedTextInput
-                            style={styles.workoutNameInput}
-                            showClear
-                            value={editedWorkout?.workout.name}
-                            onChangeText={handleSetWorkoutName}
-                            placeholder={t("workout_name")}
-                        />
-                        <ColorPickerButton openPicker={openPicker} />
-                    </HStack>
+                    <ThemedTextInput
+                        style={styles.workoutNameInput}
+                        errorKey={"create_workout_name"}
+                        errorTextPosition="BOTTOM"
+                        showClear
+                        value={editedWorkout?.workout.name}
+                        onChangeText={handleSetWorkoutName}
+                        placeholder={t("workout_name")}
+                    />
                     <View style={styles.listContainer}>
                         {mappedExercises?.length > 0 && (
                             <DraggableFlatList
@@ -239,7 +253,7 @@ export function Create() {
                         titleKey={"exercise_deleted_title"}
                         onRedo={handleRecoverExercise}
                     />
-                    <AddButton onPress={handleAddExercise} />
+                    <AddButton errorKey="create_exercises_empty" onPress={handleAddExercise} />
                 </PageContent>
             </ThemedView>
             <ThemedBottomSheetModal title={alertTitle} ref={alertRef}>
@@ -260,4 +274,4 @@ export function Create() {
             <ColorPickerModal reference={colorPickerRef} />
         </ThemedView>
     );
-}
+};

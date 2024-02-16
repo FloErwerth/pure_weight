@@ -1,18 +1,7 @@
 import { createAction, createReducer } from "@reduxjs/toolkit/src";
+import { ErrorFields } from "./errorFields";
 
 export type ErrorState = { errors: ErrorFields[] };
-
-export type ErrorFields =
-    | "create_name"
-    | "create_weight"
-    | "create_sets"
-    | "create_reps"
-    | "workout_name"
-    | "create_exercises_empty"
-    | "measurement_name"
-    | "measurement_type"
-    | "measurement_value"
-    | "create_timePerSet";
 
 export const setError = createAction<ErrorFields[], "error_set">("error_set");
 export const cleanError = createAction<ErrorFields[], "error_clean">("error_clean");

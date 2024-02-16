@@ -1,13 +1,10 @@
-import { Dimensions, StyleSheet } from "react-native";
+import { StyleSheet } from "react-native";
 import { borderRadius } from "../../../theme/border";
 
 export const styles = StyleSheet.create({
-    nameColorStack: {
-        gap: 10,
-        justifyContent: "space-between",
-        alignContent: "center",
+    workoutNameInput: {
+        fontSize: 26,
     },
-    workoutNameInput: { width: Dimensions.get("window").width * 0.75, fontSize: 26 },
     swatches: { marginTop: 10 },
     padding: {
         padding: 10,

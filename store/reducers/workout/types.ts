@@ -8,7 +8,6 @@ export type WorkoutId = `${WorkoutIdType}-${number}`;
 
 export type Workout = {
     name: string;
-    calendarColor: string;
     exercises: ExerciseMetaData[];
     doneWorkouts: DoneWorkouts;
     workoutId: WorkoutId;

@@ -23,7 +23,7 @@ export const EditableExerciseInputRow = ({
 }: EditableExerciseInputRowProps) => {
     const { t } = useTranslation();
     const { errorColor } = useTheme();
-    const hasError = useAppSelector((state: AppState) => getErrorByKey(state)(errorKey));
+    const hasError = useAppSelector((state: AppState) => getErrorByKey(state, errorKey));
     const inputStyles = useMemo(() => [{ borderColor: hasError ? errorColor : "transparent" }, styles.input], [errorColor, hasError]);
     const textInputRef = useRef<TextInput>(null);
     const [containerWidth, setContainerWidth] = useState(0);

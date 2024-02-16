@@ -3,7 +3,6 @@ import { AppState } from "../../index";
 import { getLanguage } from "../settings/settingsSelectors";
 import { getDateTodayIso, getLocaleDate, getMonth } from "../../../utils/date";
 import { IsoDate } from "../../../types/date";
-import { PALETTE } from "../../../utils/colorPalette";
 import { getLastNEntries } from "../../../utils/getLastNEntries";
 import { ExerciseId, ExerciseSets, ExerciseType, WorkoutId } from "./types";
 import { Temporal } from "@js-temporal/polyfill";
@@ -54,7 +53,6 @@ export const getSortedDoneWorkout = createSelector([getWorkouts, (_, workoutId?:
         ?.doneWorkouts.map(({ isoDate }) => isoDate)
         .sort(Temporal.PlainDate.compare);
 });
-export const getWorkoutColor = createSelector([getEditedWorkout], (editedWorkout) => editedWorkout?.workout?.calendarColor);
 
 export const getLatestWorkoutDate = createSelector([getSortedDoneWorkout], (isoDates) => {
     return isoDates?.[isoDates?.length - 1] ?? ("1970-01-01" as IsoDate);
@@ -123,10 +121,6 @@ export const getTrainingDayData = createSelector([getEditedWorkout], (editedWork
     return Array.from(sortedData.values()).filter(({ data }) => data.length > 1);
 });
 
-export const getColor = createSelector([getEditedWorkout], (editedWorkout) => ({
-    color: editedWorkout?.workout?.calendarColor ?? PALETTE[Math.floor(PALETTE.length * Math.random())],
-    palette: PALETTE,
-}));
 export const getWorkoutsByMonth = createSelector(
     [getEditedWorkout, (_, selectedDate?: string) => selectedDate ?? getDateTodayIso()],
     (editedWorkout, searchedDate) => {

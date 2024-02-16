@@ -1,4 +1,9 @@
 {
+  "error_create_workout_name": "A name for your workout is required",
+  "error_create_exercises_empty": "At least one exercise is required",
+
+
+
   "workouts": "Workouts",
   "workout": "Workout",
   "progress": "Progress",

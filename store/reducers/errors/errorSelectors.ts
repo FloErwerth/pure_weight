@@ -1,9 +1,8 @@
 import { AppState } from "../../index";
 import { createSelector } from "@reduxjs/toolkit";
-import { ErrorFields } from "./index";
+import { ErrorFields } from "./errorFields";
 
 export const getErrors = (state: AppState) => state.errorState.errors;
-export const getErrorByKey = createSelector(
-    [getErrors],
-    (state) => (errorField?: ErrorFields | undefined) => Boolean(errorField && state.includes(errorField)),
+export const getErrorByKey = createSelector([getErrors, (_, errorKey?: ErrorFields) => errorKey], (state, errorKey) =>
+    Boolean(errorKey && state.includes(errorKey)),
 );

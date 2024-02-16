@@ -1,4 +1,4 @@
-import { Animated, NativeSyntheticEvent, TextInput, TextInputFocusEventData, TextInputProps } from "react-native";
+import { Animated, NativeSyntheticEvent, TextInput, TextInputFocusEventData, TextInputProps, View } from "react-native";
 import * as React from "react";
 import { RefObject, useCallback, useMemo, useRef } from "react";
 import { AppState, useAppDispatch, useAppSelector } from "../../../store";
@@ -6,8 +6,10 @@ import { useTheme } from "../../../theme/context";
 import { BottomSheetTextInput } from "@gorhom/bottom-sheet";
 import { ComputedBackgroundColorProps, useComputedBackgroundColor } from "../../../hooks/useComputedBackgroundColor";
 import { styles } from "./styles";
-import { cleanError, ErrorFields } from "../../../store/reducers/errors";
+import { cleanError } from "../../../store/reducers/errors";
 import { getErrorByKey } from "../../../store/reducers/errors/errorSelectors";
+import { ErrorFields } from "../../../store/reducers/errors/errorFields";
+import { ErrorText, ErrorTextPosition } from "../../ErrorText/ErrorText";
 
 interface ThemedTextInputProps extends TextInputProps, ComputedBackgroundColorProps {
     reference?: RefObject<TextInput>;
@@ -18,24 +20,25 @@ interface ThemedTextInputProps extends TextInputProps, ComputedBackgroundColorPr
     suffix?: string;
     showClear?: boolean;
     height?: number;
+    errorTextPosition?: ErrorTextPosition;
 }
 
 export const ThemedTextInput = (props: ThemedTextInputProps) => {
     const backgroundColor = useComputedBackgroundColor(props);
     const { editable = true } = props;
-    const getHasError = useAppSelector((state: AppState) => getErrorByKey(state)(props.errorKey));
+    const hasError = useAppSelector((state: AppState) => getErrorByKey(state, props.errorKey));
     const { mainColor, textDisabled, errorColor, secondaryColor } = useTheme();
     const dispatch = useAppDispatch();
     const opacity = useRef(new Animated.Value(0)).current;
 
     const handleTextInput = useCallback(
         (value: string) => {
-            if (getHasError && props.errorKey) {
+            if (hasError && props.errorKey) {
                 dispatch(cleanError([props.errorKey]));
             }
             props.onChangeText?.(value);
         },
-        [getHasError, props, dispatch],
+        [hasError, props, dispatch],
     );
 
     const handleFocus = useCallback(
@@ -67,14 +70,14 @@ export const ThemedTextInput = (props: ThemedTextInputProps) => {
     );
 
     const placeholderColor = useMemo(() => {
-        if (getHasError) {
+        if (hasError) {
             return errorColor;
         }
         if (!editable) {
             return textDisabled;
         }
         return secondaryColor;
-    }, [editable, errorColor, getHasError, secondaryColor, textDisabled]);
+    }, [editable, errorColor, hasError, secondaryColor, textDisabled]);
 
     const textInputStyle = useMemo(() => {
         const baseStyle = [
@@ -86,15 +89,15 @@ export const ThemedTextInput = (props: ThemedTextInputProps) => {
             styles.base,
             props.style,
         ];
-        if (!getHasError) {
+        if (!hasError) {
             return baseStyle;
         }
         const errorStyle = { color: errorColor, borderWidth: props.hideErrorBorder ? 0 : 1, borderColor: errorColor };
         return [errorStyle, baseStyle];
-    }, [backgroundColor, editable, errorColor, getHasError, mainColor, props.hideErrorBorder, props.stretch, props.style, textDisabled]);
+    }, [backgroundColor, editable, errorColor, hasError, mainColor, props.hideErrorBorder, props.stretch, props.style, textDisabled]);
 
     return (
-        <>
+        <View>
             {props.bottomSheet ? (
                 <BottomSheetTextInput
                     {...props}
@@ -119,6 +122,7 @@ export const ThemedTextInput = (props: ThemedTextInputProps) => {
                     placeholderTextColor={placeholderColor}
                 />
             )}
-        </>
+            {hasError && <ErrorText position={props.errorTextPosition} errorKey={props.errorKey} />}
+        </View>
     );
 };

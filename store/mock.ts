@@ -64,7 +64,6 @@ export const mockState: AppState = {
             {
                 workoutId: "workout-128901238901",
                 name: "Rücken 1",
-                calendarColor: "#ffff00",
                 exercises: [
                     {
                         exerciseId: "exercise-1",
@@ -291,7 +290,6 @@ export const mockState: AppState = {
             {
                 name: "Weight and Time Based",
                 workoutId: "workout-128901238902",
-                calendarColor: "#ff0000",
                 exercises: [
                     {
                         name: "Klimmzüge unterstützt",
