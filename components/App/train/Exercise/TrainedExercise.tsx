@@ -51,11 +51,18 @@ export const TrainedExercise = ({ exerciseId }: TrainedExerciseProps) => {
                     </Pressable>
                 </ThemedView>
             </HStack>
-            <ThemedScrollView ghost keyboardShouldPersistTaps="handled" contentContainerStyle={trainStyles.innerWrapper}>
+            <ThemedScrollView
+                showsVerticalScrollIndicator={false}
+                bounces={false}
+                ghost
+                keyboardShouldPersistTaps="handled"
+                contentContainerStyle={trainStyles.innerWrapper}>
                 <ThemedView round padding>
                     <TrainingHeader />
                     {setsArray?.map((_, setIndex) => {
-                        return <SetInput key={exerciseId.toString().concat(setIndex.toString())} exerciseId={exerciseId} setIndex={setIndex} />;
+                        return (
+                            <SetInput key={exerciseId.toString().concat(setIndex.toString())} exerciseId={exerciseId} setIndex={setIndex} />
+                        );
                     })}
                 </ThemedView>
                 <PreviousWorkout exerciseType={exercise?.type ?? "WEIGHT_BASED"} exerciseId={exerciseId} />
