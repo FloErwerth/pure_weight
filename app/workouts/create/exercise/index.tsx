@@ -214,7 +214,7 @@ export const CreateExercise = () => {
                     <ThemedPressable ghost behind onPress={handleConfirm}>
                         <HStack secondary style={styles.button}>
                             <Text secondary style={styles.buttonText}>
-                                {t(isEditingExercise ? "edit_exercise_long" : "create_exercise")}
+                                {t(isEditingExercise ? "edit_exercise" : "create_exercise")}
                             </Text>
                             <ThemedMaterialCommunityIcons ghost name="pencil-plus-outline" size={20} />
                         </HStack>
