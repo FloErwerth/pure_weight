@@ -97,7 +97,7 @@ export function Measurements() {
                 <Swipeable
                     onEdit={() => handleEditMeasuremnt(measurement.measurementId)}
                     onDelete={() => handleDeleteMeasurement(measurement.measurementId)}
-                    key={`${measurement.name}-pressable`}
+                    key={measurement.measurementId}
                     onClick={() => handleAddExistingMeasurement(measurement.measurementId)}>
                     <RenderedMeasurement measurement={measurement} />
                 </Swipeable>

@@ -1,5 +1,4 @@
 import { AppState } from "./index";
-import { generateId } from "../utils/generateId";
 
 export const mockState: AppState = {
     metadataState: {
@@ -19,7 +18,7 @@ export const mockState: AppState = {
         sorting: "A_Z",
         measurements: [
             {
-                measurementId: generateId("measurement"),
+                measurementId: "measurement-1",
                 name: "Körpergewicht",
                 type: "weight",
                 data: [
@@ -42,7 +41,7 @@ export const mockState: AppState = {
                 higherIsBetter: true,
             },
             {
-                measurementId: generateId("measurement"),
+                measurementId: "measurement-2",
                 name: "Körperfettanteil",
                 type: "percent",
                 data: [
