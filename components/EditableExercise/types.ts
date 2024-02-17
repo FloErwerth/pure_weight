@@ -11,6 +11,7 @@ export interface EditableExerciseInputRowProps {
     placeholder?: string;
     helpTextConfig?: { text: string; title: string };
     maxLength?: number;
+    bottomSheet?: boolean;
 }
 
 export interface TimeInputRowProps {

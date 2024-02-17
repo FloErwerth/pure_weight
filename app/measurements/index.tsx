@@ -107,12 +107,7 @@ export function Measurements() {
 
     return (
         <ThemedView stretch background>
-            <SiteNavigationButtons
-                titleFontSize={40}
-                title={t("measurements")}
-                handleConfirm={handleAddNewMeasurement}
-                handleConfirmIcon={DEFAULT_PLUS}
-            />
+            <SiteNavigationButtons title={t("measurements")} handleConfirm={handleAddNewMeasurement} handleConfirmIcon={DEFAULT_PLUS} />
             {measurements.length > 1 && (
                 <PageContent ghost>
                     <HStack ghost style={trainStyles.searchAndFilterBar}>

@@ -240,6 +240,7 @@ export const MeasurementHistory = () => {
                 <PageContent safeBottom ghost stretch paddingTop={20}>
                     <EditableExerciseInputRow
                         placeholder="0"
+                        bottomSheet
                         suffix={unit}
                         setValue={handleSetDatapointValue}
                         value={editedDatapoint?.value}></EditableExerciseInputRow>

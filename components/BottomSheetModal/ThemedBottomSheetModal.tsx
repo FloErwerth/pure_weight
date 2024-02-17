@@ -77,7 +77,7 @@ export const ThemedBottomSheetModal = forwardRef<BottomSheetModal, ThemedBottomS
         return (
             <BottomSheetModal
                 enablePanDownToClose={allowSwipeDownToClose}
-                index={snapPoints ? 1 : 0}
+                index={0}
                 handleIndicatorStyle={customIndicator}
                 enableDynamicSizing
                 backdropComponent={renderBackdrop}

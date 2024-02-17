@@ -1,6 +1,5 @@
 import { styles } from "../styles";
 import { EditableExerciseInputRow } from "../EditableExerciseInputRow";
-import { ThemedView } from "../../Themed/ThemedView/View";
 import { useAppDispatch, useAppSelector } from "../../../store";
 import { useCallback, useMemo } from "react";
 import { mutateEditedExercise, mutateEditedExerciseTimeValue } from "../../../store/reducers/workout";
@@ -10,6 +9,7 @@ import { TimeInputRow } from "../TimeInputRow";
 import { TimeInput } from "../../../store/reducers/workout/types";
 import { useTranslation } from "react-i18next";
 import { ErrorTextConfig } from "../../../store/reducers/errors/types";
+import { PageContent } from "../../PageContent/PageContent";
 
 export const TimeBasedExercise = () => {
     const editedExercise = useAppSelector(getEditedExercise);
@@ -76,7 +76,7 @@ export const TimeBasedExercise = () => {
     );
 
     return (
-        <ThemedView ghost stretch style={styles.inputWrapper}>
+        <PageContent ignorePadding scrollable ghost style={styles.inputWrapper}>
             <EditableExerciseInputRow
                 i18key="sets"
                 suffix="x"
@@ -97,6 +97,6 @@ export const TimeBasedExercise = () => {
                 value={editedExercise?.exercise?.preparation}
             />
             <TimeInputRow i18key="pause" setValue={handleSetPause} value={editedExercise?.exercise?.pause} />
-        </ThemedView>
+        </PageContent>
     );
 };

@@ -2,10 +2,10 @@ import { PropsWithChildren, useMemo } from "react";
 import { ThemedView } from "../Themed/ThemedView/View";
 import { styles } from "./styles";
 import { ScrollViewProps, StyleProp, ViewProps, ViewStyle } from "react-native";
-import { ThemedScrollView } from "../Themed/ThemedScrollView/ThemedScrollView";
 import { Text } from "../Themed/ThemedText/Text";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ComputedBackgroundColorProps, useComputedBackgroundColor } from "../../hooks/useComputedBackgroundColor";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 interface BasePageContentProps extends PropsWithChildren, ComputedBackgroundColorProps {
     style?: StyleProp<ViewStyle>;
@@ -41,6 +41,7 @@ export const PageContent = (props: PageContentProps) => {
                 paddingBottom: safeBottom ? bottom : undefined,
                 backgroundColor: computedBackground,
                 paddingHorizontal: ignorePadding ? 0 : 20,
+                flex: stretch ? 1 : undefined,
             },
             style,
         ],
@@ -51,11 +52,11 @@ export const PageContent = (props: PageContentProps) => {
 
     if (scrollable) {
         return (
-            <ThemedScrollView
+            <KeyboardAwareScrollView
+                horizontal={false}
                 keyboardShouldPersistTaps={props.keyboardShouldPersistTaps}
-                stretch={stretch}
-                background
                 style={scrollableWrapperStyles}
+                keyboardOpeningTime={25}
                 contentContainerStyle={wrapperStyles}>
                 {titleConfig && (
                     <Text style={titleStyles} ghost>
@@ -63,7 +64,7 @@ export const PageContent = (props: PageContentProps) => {
                     </Text>
                 )}
                 {children}
-            </ThemedScrollView>
+            </KeyboardAwareScrollView>
         );
     }
 

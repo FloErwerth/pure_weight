@@ -8,8 +8,6 @@ import { useTranslation } from "react-i18next";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { WeightBasedEditedExercise } from "../../../../components/App/history/EditedExercise/WeightBased";
 import { Text } from "../../../../components/Themed/ThemedText/Text";
-import { FlatList } from "react-native";
-import { DoneExerciseData } from "../../../../store/reducers/workout/types";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ThemedBottomSheetModal, useBottomSheetRef } from "../../../../components/BottomSheetModal/ThemedBottomSheetModal";
 import { ThemedPressable } from "../../../../components/Themed/Pressable/Pressable";
@@ -19,6 +17,8 @@ import { AnswerText } from "../../../../components/HelpQuestionAnswer/AnswerText
 import { HStack } from "../../../../components/Stack/HStack/HStack";
 import { ThemedMaterialCommunityIcons } from "../../../../components/Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
 import { TimeBasedEditedExercise } from "../../../../components/App/history/EditedExercise/TimeBased";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { View } from "react-native";
 
 const saveButtonConfig = { name: "content-save-outline", size: 34 } as const;
 
@@ -57,28 +57,6 @@ export const WorkoutHistoryEdit = ({
         handleNavigateToHistory();
     }, [handleNavigateToHistory, hasFallbackSet, open]);
 
-    const renderedExercise = useCallback(
-        ({ item }: { item: DoneExerciseData | undefined }) => {
-            if (item === undefined || item.sets.length === 0) {
-                return null;
-            }
-
-            return (
-                <ThemedView input round style={{ padding: 10, margin: 10 }}>
-                    <Text style={{ fontSize: 20, marginBottom: 10 }} ghost>
-                        {item?.name}
-                    </Text>
-                    {item?.type === "WEIGHT_BASED" ? (
-                        <WeightBasedEditedExercise doneExerciseId={item.doneExerciseId} doneWorkoutId={doneWorkoutId} />
-                    ) : (
-                        <TimeBasedEditedExercise doneExerciseId={item.doneExerciseId} doneWorkoutId={doneWorkoutId} />
-                    )}
-                </ThemedView>
-            );
-        },
-        [doneWorkoutId],
-    );
-
     const warningTitle = useMemo(() => t("workout_history_edit_warning_title"), [t]);
     const warningContent = useMemo(() => t("workout_history_edit_warning_message"), [t]);
     const saveActionText = useMemo(() => t("workout_history_edit_save_action"), [t]);
@@ -88,18 +66,26 @@ export const WorkoutHistoryEdit = ({
         <ThemedView stretch background>
             <SiteNavigationButtons
                 title={pageTitle}
-                titleFontSize={25}
+                titleFontSize={20}
                 backButtonAction={handleBackButton}
                 handleConfirmIcon={saveButtonConfig}
                 handleConfirm={handleNavigateToHistory}
             />
-            <FlatList
-                showsVerticalScrollIndicator={false}
-                horizontal={false}
-                contentInset={{ bottom }}
-                data={doneWorkout?.doneExercises}
-                renderItem={renderedExercise}
-            />
+            <KeyboardAwareScrollView extraScrollHeight={20} keyboardOpeningTime={20}>
+                {doneWorkout?.doneExercises?.map((item) => (
+                    <ThemedView input round style={{ padding: 10, margin: 10 }}>
+                        <Text style={{ fontSize: 20, marginBottom: 10 }} ghost>
+                            {item?.name}
+                        </Text>
+                        {item?.type === "WEIGHT_BASED" ? (
+                            <WeightBasedEditedExercise doneExerciseId={item.doneExerciseId} doneWorkoutId={doneWorkoutId} />
+                        ) : (
+                            <TimeBasedEditedExercise doneExerciseId={item.doneExerciseId} doneWorkoutId={doneWorkoutId} />
+                        )}
+                    </ThemedView>
+                ))}
+                <View style={{ height: bottom }} />
+            </KeyboardAwareScrollView>
             <ThemedBottomSheetModal title={warningTitle} ref={ref}>
                 <PageContent paddingTop={20} ghost>
                     <AnswerText>{warningContent}</AnswerText>

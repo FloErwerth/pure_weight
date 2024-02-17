@@ -25,7 +25,7 @@ export const DEFAULT_PLUS = { name: "plus", size: 40 } as const;
 export const SiteNavigationButtons = ({
     backButtonAction,
     title,
-    titleFontSize = 40,
+    titleFontSize = 30,
     handleConfirm,
     confirmButtonDisabled = false,
     closeButtonDisabled = false,
@@ -65,7 +65,7 @@ export const SiteNavigationButtons = ({
             <HStack background style={titleWrapperStyles}>
                 {backButtonAction && (
                     <Pressable disabled={closeButtonDisabled} onPress={handleBackButton}>
-                        <MaterialCommunityIcons color={mainColor} size={Math.min(28, titleFontSize)} name="arrow-left" />
+                        <MaterialCommunityIcons color={mainColor} size={30} name="arrow-left" />
                     </Pressable>
                 )}
                 <Text background numberOfLines={1} style={titleStyles}>
@@ -76,7 +76,7 @@ export const SiteNavigationButtons = ({
                 {handleQuicksettings && (
                     <HStack ghost>
                         <ThemedPressable ghost onPress={handleQuicksettings}>
-                            <ThemedMaterialCommunityIcons ghost size={Math.min(28, titleFontSize)} name="cog" />
+                            <ThemedMaterialCommunityIcons ghost size={30} name="cog" />
                         </ThemedPressable>
                     </HStack>
                 )}

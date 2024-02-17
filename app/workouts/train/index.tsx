@@ -148,7 +148,6 @@ export function Train() {
                     backButtonAction={handleCloseButton}
                     handleConfirm={handleDone}
                     title={t("train_title")}
-                    titleFontSize={40}
                     handleQuicksettings={open}
                 />
             </ThemedView>

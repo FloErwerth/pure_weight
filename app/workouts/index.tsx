@@ -176,12 +176,7 @@ export function Workouts() {
 
     return (
         <ThemedView stretch background>
-            <SiteNavigationButtons
-                titleFontSize={40}
-                title={t("workouts")}
-                handleConfirmIcon={confirmIcon}
-                handleConfirm={handleCreateWorkout}
-            />
+            <SiteNavigationButtons title={t("workouts")} handleConfirmIcon={confirmIcon} handleConfirm={handleCreateWorkout} />
             {numberOfWorkouts > 1 && (
                 <PageContent ghost>
                     <HStack ghost style={trainStyles.searchAndFilterBar}>
@@ -190,7 +185,7 @@ export function Workouts() {
                     </HStack>
                 </PageContent>
             )}
-            <PageContent scrollable={mappedWorkouts.length > 2} background ignoreGap stretch>
+            <PageContent scrollable background ignoreGap stretch>
                 <View style={trainStyles.workoutWrapper}>{mappedWorkouts}</View>
             </PageContent>
             <BottomToast

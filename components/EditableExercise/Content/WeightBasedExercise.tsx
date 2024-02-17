@@ -1,7 +1,6 @@
 import { styles } from "../styles";
 import { HStack } from "../../Stack/HStack/HStack";
 import { EditableExerciseInputRow } from "../EditableExerciseInputRow";
-import { ThemedView } from "../../Themed/ThemedView/View";
 import { useAppDispatch, useAppSelector } from "../../../store";
 import { useCallback, useMemo } from "react";
 import { mutateEditedExercise, mutateEditedExerciseTimeValue } from "../../../store/reducers/workout";
@@ -15,6 +14,7 @@ import { Text } from "../../Themed/ThemedText/Text";
 import { View } from "react-native";
 import { useTranslation } from "react-i18next";
 import { ErrorFields, ErrorTextConfig } from "../../../store/reducers/errors/types";
+import { PageContent } from "../../PageContent/PageContent";
 
 const weightBasedErrorKeys: ErrorFields[] = ["create_exercise_sets", "create_exercise_reps", "create_exercise_weight"];
 const capitalizeFirstLetter = (string: string) => string.charAt(0).toUpperCase() + string.slice(1);
@@ -103,7 +103,7 @@ export const WeightBasedExercise = () => {
     );
 
     return (
-        <ThemedView ghost stretch style={styles.inputWrapper}>
+        <PageContent scrollable ignorePadding ghost stretch style={styles.inputWrapper}>
             <View>
                 <HStack style={styles.inputWrapper} ghost>
                     <EditableExerciseInputRow
@@ -141,6 +141,6 @@ export const WeightBasedExercise = () => {
                 )}
             </View>
             <TimeInputRow i18key="pause" setValue={handleSetPause} value={editedExercise?.exercise?.pause} />
-        </ThemedView>
+        </PageContent>
     );
 };
