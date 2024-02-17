@@ -8,6 +8,7 @@ Build Number 27
 ## Features
 
 ## Planned Features
++ Support for weight in time based exercises
 
 ## Change Log
 `0.7.6`:
@@ -23,4 +24,7 @@ Build Number 27
 + Made page titles smaller
 
 `0.7.7`:
++ Small validation fix for creating exercises
+
+`0.7.8`:
 + Small validation fix for creating exercises
