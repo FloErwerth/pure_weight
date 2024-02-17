@@ -2,13 +2,14 @@
 
 Pure Weight is a simple weight tracking application. It only supports Ios devices at the moment, but its planed to include Android devices aswell.
 
-App Version 0.7.5
+App Version 0.7.6
+Build Number 26
 
 ## Features
 
 ## Planned Features
 
-### Change Log
+## Change Log
 `0.7.6`:
 + Added validation for creating workouts and exercises.
 + Added Validation for measurements

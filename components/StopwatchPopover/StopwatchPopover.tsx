@@ -35,8 +35,9 @@ export const StopwatchPopover = () => {
     }, [startTimer, stopTimer, timerStarted]);
 
     const handleDoneSetCallback = useCallback(() => {
-        if (startOnDoneSet && !timerStarted) {
-            toggleTimer();
+        if (startOnDoneSet) {
+            reset();
+            startTimer();
         }
     }, [startOnDoneSet, timerStarted, toggleTimer]);
 
