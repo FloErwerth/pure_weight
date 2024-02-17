@@ -116,9 +116,6 @@ export const PreviousWorkout = ({ exerciseId, exerciseType }: PreviousTrainingPr
                     <Text ghost stretch style={{ fontSize: 20 }}>
                         {note}
                     </Text>
-                    <ThemedPressable onPress={close} padding center round>
-                        <Text style={{ fontSize: 20 }}>{t("close_note")}</Text>
-                    </ThemedPressable>
                 </ThemedView>
             </ThemedBottomSheetModal>
         </View>
