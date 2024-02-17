@@ -57,7 +57,6 @@ export function ThemedDropdown<T extends readonly string[]>({
     const containerRef = useRef<View>(null);
     const [containerMeasures, setContainerMeasures] = useState<{ width: number; height: number }>({ width: 100, height: 50 });
     const error = useAppSelector((state: AppState) => getErrorByKey(state, errorKey));
-    const { componentBackgroundColor } = useTheme();
     const togglePicker = useCallback(() => {
         setOpen((open) => !open);
     }, []);
