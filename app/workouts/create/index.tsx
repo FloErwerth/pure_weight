@@ -36,6 +36,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ThemedPressable } from "../../../components/Themed/Pressable/Pressable";
 import { ThemedMaterialCommunityIcons } from "../../../components/Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
 import { useToast } from "../../../components/BottomToast/useToast";
+import { AnswerText } from "../../../components/HelpQuestionAnswer/AnswerText";
 
 type MappedExercises = {
     onDelete: () => void;
@@ -76,7 +77,7 @@ export const Create = () => {
     const dispatch = useAppDispatch();
     const { ref: alertRef, openBottomSheet: openAlert, closeBottomSheet: closeAlert } = useBottomSheetRef();
     const { toastRef, openToast, closeToast, showToast } = useToast();
-    const isValidWorkout = useValidateWorkout();
+    const getIsValidWorkout = useValidateWorkout();
 
     const handleSetWorkoutName = useCallback(
         (value?: string) => {
@@ -143,14 +144,14 @@ export const Create = () => {
     }, [handleCleanErrors, navigate]);
 
     const handleSaveWorkout = useCallback(() => {
-        if (!isValidWorkout()) {
+        if (!getIsValidWorkout()) {
             return;
         }
         if (editedWorkout) {
             dispatch(saveEditedWorkout());
         }
         handleNavigateHome();
-    }, [isValidWorkout, editedWorkout, handleNavigateHome, dispatch]);
+    }, [getIsValidWorkout, editedWorkout, handleNavigateHome, dispatch]);
 
     const handleBackButton = useCallback(() => {
         if (editedWorkout?.workout.exercises.length !== 0 || editedWorkout.workout.name.length !== 0) {
@@ -192,7 +193,7 @@ export const Create = () => {
     const confirmButtonConfig = useMemo(
         () =>
             ({
-                localeKey: isEditedWorkout ? "alert_edit_workout_confirm_cancel" : "alert_create_workout_confirm_cancel",
+                localeKey: isEditedWorkout ? "alert_edit_confirm_cancel" : "alert_create_confirm_cancel",
                 onPress: handleDeleteWorkout,
             }) as const,
         [handleDeleteWorkout, isEditedWorkout],
@@ -202,10 +203,7 @@ export const Create = () => {
         () => t(isEditedWorkout ? "alert_edit_workout_discard_content" : "alert_create_workout_discard_content"),
         [t, isEditedWorkout],
     );
-    const alertTitle = useMemo(
-        () => t(isEditedWorkout ? "alert_edit_workout_discard_title" : "alert_create_workout_discard_title"),
-        [t, isEditedWorkout],
-    );
+    const alertTitle = useMemo(() => t(isEditedWorkout ? "alert_edit_discard_title" : "alert_create_discard_title"), [t, isEditedWorkout]);
 
     return (
         <ThemedView stretch>
@@ -254,11 +252,11 @@ export const Create = () => {
                 </PageContent>
             </ThemedView>
             <ThemedBottomSheetModal title={alertTitle} ref={alertRef}>
-                <PageContent stretch paddingTop={20} ghost>
-                    <Text style={{ fontSize: 20 }} stretch ghost>
-                        {alertContent}
-                    </Text>
-                    <ThemedView ghost style={{ gap: 10, marginBottom: 20 }}>
+                <PageContent stretch ghost>
+                    <AnswerText>{alertContent}</AnswerText>
+                </PageContent>
+                <PageContent ghost paddingTop={30}>
+                    <ThemedView ghost style={{ gap: 10 }}>
                         <ThemedPressable round padding secondary onPress={confirmButtonConfig.onPress}>
                             <HStack ghost style={{ alignItems: "center", gap: 10 }}>
                                 <ThemedMaterialCommunityIcons ghost name={"delete"} size={24} />

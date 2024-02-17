@@ -7,7 +7,9 @@ type WorkoutErrorFields =
     | "create_exercise_weight"
     | "create_exercise_duration";
 
-export type ErrorFields = WorkoutErrorFields;
+type MeasurementErrorFields = "create_measurement_name" | "create_measurement_value" | "create_measurement_type";
+
+export type ErrorFields = WorkoutErrorFields | MeasurementErrorFields;
 
 export type ErrorTextConfig = {
     errorKey?: ErrorFields;

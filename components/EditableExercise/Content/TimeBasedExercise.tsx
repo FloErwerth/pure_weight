@@ -65,14 +65,14 @@ export const TimeBasedExercise = () => {
         () => ({
             sets: {
                 errorKey: "create_exercise_sets",
-                errorText: "Sets are required",
+                errorText: t("error_create_exercise_sets"),
             },
             duration: {
                 errorKey: "create_exercise_duration",
-                errorText: "Duration is required",
+                errorText: t("error_create_exercise_duration"),
             },
         }),
-        [],
+        [t],
     );
 
     return (

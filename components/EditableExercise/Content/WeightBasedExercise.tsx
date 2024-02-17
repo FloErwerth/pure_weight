@@ -27,11 +27,11 @@ const useWeightBasedErrors = () => {
 
     return useMemo(() => {
         if (weightBasedErrors.length === 3) {
-            return t("create_exercise_weight_reps_sets");
+            return t("error_create_exercise_weight_reps_sets");
         }
         if (weightBasedErrors.length === 2) {
-            const firstError = t(`error_${weightBasedErrors[0]}`);
-            const secondError = t(`error_${weightBasedErrors[1]}`);
+            const firstError = t(`error_${weightBasedErrors[0]}_single`);
+            const secondError = t(`error_${weightBasedErrors[1]}_single`);
             const errors = [firstError, secondError].sort((a, b) => a.localeCompare(b)).reverse();
             if (language === "en") {
                 return `${capitalizeFirstLetter(errors[0])} and ${errors[1]} are required`;
@@ -40,12 +40,7 @@ const useWeightBasedErrors = () => {
             }
         }
         if (weightBasedErrors.length === 1) {
-            const isWeight = weightBasedErrors[0] === "create_exercise_weight";
-            const error = t(`error_${weightBasedErrors[0]}`);
-            if (language === "en") {
-                return `${capitalizeFirstLetter(error)} ${isWeight ? "is" : "are"} required`;
-            }
-            return `${capitalizeFirstLetter(error)} ${isWeight ? "ist" : "sind"} erforderlich`;
+            return t(`error_${weightBasedErrors[0]}`);
         }
     }, [weightBasedErrors, language, t]);
 };

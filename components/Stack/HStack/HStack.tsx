@@ -8,12 +8,21 @@ export function HStack(props: StackProps) {
     const backgroundColor = useComputedBackgroundColor(props);
 
     const style = useMemo(
-        () => [styles.innerWrapper, { backgroundColor, alignItems: props?.center ? "center" : "flex-start", padding: props.padding ? 10 : 0 } as const],
-        [backgroundColor, props?.center, props.padding],
+        () => [
+            styles.innerWrapper,
+            {
+                gap: props.gap ? 10 : 0,
+                backgroundColor,
+                alignItems: props?.center ? "center" : "flex-start",
+                padding: props.padding ? 10 : 0,
+            } as const,
+            props.style,
+        ],
+        [backgroundColor, props?.center, props.gap, props.padding, props.style],
     );
 
     return (
-        <ThemedView {...props} style={[style, props.style]}>
+        <ThemedView {...props} style={style}>
             {props.children}
         </ThemedView>
     );

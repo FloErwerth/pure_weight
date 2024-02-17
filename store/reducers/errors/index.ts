@@ -1,5 +1,5 @@
 import { createAction, createReducer } from "@reduxjs/toolkit/src";
-import { ErrorFields } from "./errorFields";
+import { ErrorFields } from "./types";
 
 export type ErrorState = { errors: ErrorFields[] };
 
@@ -16,7 +16,6 @@ export const errorsReducer = createReducer<ErrorState>({ errors: [] }, (builder)
             state.errors.push(...notIncludedErrors);
         })
         .addCase(cleanError, (state, action) => {
-            console.log(action.payload);
             state.errors = state.errors.filter((key) => !action.payload.includes(key));
         })
         .addCase(cleanErrors, (state) => {

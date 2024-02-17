@@ -55,6 +55,7 @@ export const TimeInputRow = ({ value, setValue, i18key, helpTextConfig, errorTex
                     errorTextConfig={secondInputErrorTextConfig}
                     suffix={secondsSuffix}
                     stretch
+                    i18key=" "
                     value={value?.seconds}
                     setValue={handleChangeSeconds}
                     maxLength={4}

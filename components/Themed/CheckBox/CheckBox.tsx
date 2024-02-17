@@ -16,7 +16,7 @@ interface CheckBoxProps {
     onChecked: (checked: boolean) => void;
     size?: number;
     label: string;
-    helpTextConfig?: { title?: string; text: string };
+    helpTextConfig?: { title?: string; text: string; iconSize?: number };
     disabled?: boolean;
     customWrapperStyles?: ViewStyle;
     input?: boolean;
@@ -68,7 +68,7 @@ export const CheckBox = ({
                         </Text>
                         {helpTextConfig && (
                             <Pressable onPress={openBottomSheet}>
-                                <ThemedMaterialCommunityIcons ghost name="help-circle-outline" size={size} />
+                                <ThemedMaterialCommunityIcons ghost name="help-circle-outline" size={helpTextConfig.iconSize || 20} />
                             </Pressable>
                         )}
                     </HStack>

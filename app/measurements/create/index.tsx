@@ -26,6 +26,8 @@ import { PageContent } from "../../../components/PageContent/PageContent";
 import { useNavigateBack } from "../../../hooks/navigate";
 import { convertDate, getDateTodayIso } from "../../../utils/date";
 import { EditableExerciseInputRow } from "../../../components/EditableExercise/EditableExerciseInputRow";
+import { setError } from "../../../store/reducers/errors";
+import { ErrorFields } from "../../../store/reducers/errors/types";
 
 export const useMeasurementOptions = () => {
     const unitSystem = useAppSelector(getUnitSystem);
@@ -54,6 +56,29 @@ const getTypeByUnit = (unit: string) => {
 
 const MAX_DATE = new Date(getDateTodayIso());
 
+const useIsValidMeasurement = () => {
+    const editedMeasurement = useAppSelector(getEditedMeasurement);
+    const dispatch = useAppDispatch();
+
+    return useCallback(() => {
+        const errors: ErrorFields[] = [];
+        if (!editedMeasurement?.measurement?.name) {
+            errors.push("create_measurement_name");
+        }
+        if (!editedMeasurement?.measurement?.type) {
+            errors.push("create_measurement_type");
+        }
+        if (!editedMeasurement?.measurement?.value || editedMeasurement?.measurement?.value === "0") {
+            errors.push("create_measurement_value");
+        }
+        if (errors.length > 0) {
+            dispatch(setError(errors));
+            return false;
+        }
+        return true;
+    }, [editedMeasurement]);
+};
+
 export const CreateMeasurement = () => {
     const themeKey = useAppSelector(getThemeKeyFromStore);
     const language = useAppSelector(getLanguage);
@@ -72,6 +97,7 @@ export const CreateMeasurement = () => {
     const isEditing = editedMeasurement?.isEditing;
     const isAddingData = !editedMeasurement?.isEditing && !editedMeasurement?.isNew;
     const unitSystem = useAppSelector(getUnitSystem);
+    const getIsValidMeasurement = useIsValidMeasurement();
 
     const value = useMemo(() => {
         const value = editedMeasurement?.measurement?.value;
@@ -162,6 +188,10 @@ export const CreateMeasurement = () => {
     }, [editedMeasurement?.isEditing, isAddingData, t]);
 
     const handleSaveMeasurement = useCallback(() => {
+        console.log(getIsValidMeasurement());
+        if (!getIsValidMeasurement()) {
+            return;
+        }
         const sameDateIndex = dates?.findIndex((searchDate) => searchDate === convertDate.toIsoDate(date));
         if (!isEditing && !showWarning && sameDateIndex !== -1) {
             setShowWarnining(true);
@@ -173,17 +203,17 @@ export const CreateMeasurement = () => {
 
         setShowWarnining(false);
         navigateBack();
-    }, [dates, isEditing, showWarning, dispatch, date, navigateBack]);
+    }, [dates, isEditing, showWarning, dispatch, date, navigateBack, getIsValidMeasurement]);
 
     const helpText = useMemo(() => ({ title: t("measurement_higher_is_better"), text: t("measurement_higher_is_better_help") }), [t]);
     return (
         <ThemedView background stretch round>
-            <SiteNavigationButtons backButtonAction={navigateBack} titleFontSize={40} title={pageTitle} />
-            <PageContent ghost paddingTop={20} stretch>
+            <SiteNavigationButtons backButtonAction={navigateBack} titleFontSize={30} title={pageTitle} />
+            <PageContent ghost stretch style={{ gap: 20 }}>
                 {!isAddingData && (
                     <ThemedTextInput
                         maxLength={20}
-                        errorKey="measurement_name"
+                        errorKey="create_measurement_name"
                         style={createStyles.textInput}
                         onChangeText={handleSetMeasurementName}
                         value={editedMeasurement?.measurement?.name}
@@ -192,7 +222,7 @@ export const CreateMeasurement = () => {
                     />
                 )}
                 {!isEditing && (
-                    <HStack ghost style={{ alignSelf: "stretch", gap: 10 }}>
+                    <HStack ghost style={{ gap: 5 }}>
                         <EditableExerciseInputRow
                             placeholder="0"
                             stretch
@@ -204,7 +234,7 @@ export const CreateMeasurement = () => {
                             <ThemedDropdown
                                 isSelectable={editedMeasurement?.isNew}
                                 options={measurementOptions}
-                                errorKey="measurement_type"
+                                errorKey="create_measurement_type"
                                 value={dropdownValue}
                                 placeholder={t("measurement_unit")}
                                 onSelectItem={handleSetMeasurementType}
@@ -217,7 +247,7 @@ export const CreateMeasurement = () => {
                         label={t("measurement_higher_is_better")}
                         helpTextConfig={helpText}
                         checked={Boolean(editedMeasurement?.measurement?.higherIsBetter)}
-                        size={26}
+                        size={20}
                         onChecked={handleSelectHigherIsBetter}
                     />
                 )}

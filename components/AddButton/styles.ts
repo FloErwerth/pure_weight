@@ -6,6 +6,7 @@ export const styles = StyleSheet.create({
         borderWidth: 1,
         justifyContent: "center",
         borderRadius,
+        marginTop: 5,
         padding: 15,
     },
     stack: {

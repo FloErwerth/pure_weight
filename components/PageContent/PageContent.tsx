@@ -35,7 +35,6 @@ export const PageContent = (props: PageContentProps) => {
     const wrapperStyles = useMemo(
         () => [
             styles.wrapper,
-            style,
             {
                 gap: ignoreGap ? 0 : styles.wrapper.gap,
                 paddingTop,
@@ -43,6 +42,7 @@ export const PageContent = (props: PageContentProps) => {
                 backgroundColor: computedBackground,
                 paddingHorizontal: ignorePadding ? 0 : 20,
             },
+            style,
         ],
         [bottom, computedBackground, ignoreGap, ignorePadding, paddingTop, safeBottom, style],
     );

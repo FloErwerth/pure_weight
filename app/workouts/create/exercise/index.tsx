@@ -17,11 +17,14 @@ import * as Haptics from "expo-haptics";
 import { SiteNavigationButtons } from "../../../../components/SiteNavigationButtons/SiteNavigationButtons";
 import { PageContent } from "../../../../components/PageContent/PageContent";
 import { useNavigateBack } from "../../../../hooks/navigate";
-import { SnapPoint } from "../../../../components/BottomSheetModal/ThemedBottomSheetModal";
+import { ThemedBottomSheetModal, useBottomSheetRef } from "../../../../components/BottomSheetModal/ThemedBottomSheetModal";
 import { View } from "react-native";
 import Reanimated, { FadeIn, FadeOut, Layout } from "react-native-reanimated";
 import { cleanError, setError } from "../../../../store/reducers/errors";
 import { ErrorFields } from "../../../../store/reducers/errors/types";
+import { AnswerText } from "../../../../components/HelpQuestionAnswer/AnswerText";
+
+const getIsZeroOrNullish = (values: Array<string | undefined>) => values.some((value) => !value || value === "0");
 
 const useValidateExercise = () => {
     const dispatch = useAppDispatch();
@@ -38,34 +41,45 @@ const useValidateExercise = () => {
     return useCallback(() => {
         const exercise = editedExercise?.exercise;
         const errors: ErrorFields[] = [];
-        if (!exercise?.sets || exercise.sets === "0") {
+        if (getIsZeroOrNullish([exercise?.sets])) {
             errors.push("create_exercise_sets");
         }
         if (!exercise?.name) {
             errors.push("create_exercise_name");
         }
         if (exercise?.type === "WEIGHT_BASED") {
-            if (!exercise.reps || exercise.reps === "0") {
+            if (getIsZeroOrNullish([exercise?.reps])) {
                 errors.push("create_exercise_reps");
             }
-            if (!exercise.weight || exercise.weight === "0") {
+            if (getIsZeroOrNullish([exercise?.weight])) {
                 errors.push("create_exercise_weight");
             }
         }
         if (exercise?.type === "TIME_BASED") {
-            if (!exercise.name) {
-                errors.push("create_exercise_name");
-            }
-            if (
-                (!exercise.duration?.minutes && !exercise.duration?.seconds) ||
-                (exercise.duration?.minutes === "0" && exercise.duration?.seconds === "0")
-            ) {
+            if (getIsZeroOrNullish([exercise?.duration?.minutes, exercise?.duration?.seconds])) {
                 errors.push("create_exercise_duration");
             }
         }
         dispatch(setError(errors));
         return errors.length === 0;
     }, [dispatch, editedExercise?.exercise]);
+};
+
+const useGetHasValuesInExercise = () => {
+    const editedExercise = useAppSelector(getEditedExercise);
+    return useMemo(() => {
+        if (editedExercise?.exercise.name) {
+            return true;
+        }
+        if (editedExercise?.exercise.type === "TIME_BASED") {
+            return !getIsZeroOrNullish([
+                editedExercise?.exercise.duration?.minutes,
+                editedExercise?.exercise.duration?.seconds,
+                editedExercise?.exercise.sets,
+            ]);
+        }
+        return !getIsZeroOrNullish([editedExercise?.exercise.sets, editedExercise?.exercise.reps, editedExercise?.exercise.weight]);
+    }, [editedExercise?.exercise]);
 };
 
 export const CreateExercise = () => {
@@ -77,8 +91,10 @@ export const CreateExercise = () => {
     const { showToast: showSavedSuccess, openToast: openSavedSuccess, closeToast: closeSavedSuccess } = useToast();
     const [showCheckboxes, setShowCheckboxes] = useState(true);
     const [addMoreExercises, setAddMoreExercises] = useState(false);
+    const { ref, openBottomSheet } = useBottomSheetRef();
     const navigateBack = useNavigateBack();
     const validateExercise = useValidateExercise();
+    const hasValuesInExercise = useGetHasValuesInExercise();
 
     useEffect(() => {
         if (isEditingExercise) {
@@ -125,14 +141,52 @@ export const CreateExercise = () => {
         closeSavedSuccess();
     }, [closeSavedSuccess]);
 
-    const addMoreExercisesHelptextConfig = useMemo(
-        () => ({ title: t("add_more_exercises"), text: t("add_more_exercises_help"), snapPoints: ["35%"] as SnapPoint[] }),
-        [t],
+    const addMoreExercisesHelptextConfig = useMemo(() => ({ title: t("add_more_exercises"), text: t("add_more_exercises_help") }), [t]);
+
+    const alertContent = useMemo(
+        () => t(isEditingExercise ? "alert_edit_exercise_discard_content" : "alert_create_exercise_discard_content"),
+        [isEditingExercise, t],
     );
+
+    const alertTitle = useMemo(
+        () => t(isEditingExercise ? "alert_edit_discard_title" : "alert_create_discard_title"),
+        [isEditingExercise, t],
+    );
+
+    const discardButtonText = useMemo(
+        () => t(isEditingExercise ? "alert_edit_confirm_cancel" : "alert_create_confirm_cancel"),
+        [isEditingExercise, t],
+    );
+
+    const clearExerciseErrors = useCallback(() => {
+        dispatch(
+            cleanError([
+                "create_exercise_name",
+                "create_exercise_sets",
+                "create_exercise_reps",
+                "create_exercise_weight",
+                "create_exercise_duration",
+            ]),
+        );
+    }, [dispatch]);
+
+    const handleNavigateBack = useCallback(() => {
+        if (hasValuesInExercise) {
+            openBottomSheet();
+            return;
+        }
+        clearExerciseErrors();
+        navigateBack();
+    }, [clearExerciseErrors, hasValuesInExercise, navigateBack, openBottomSheet]);
+
+    const handleDiscardExercise = useCallback(() => {
+        clearExerciseErrors();
+        navigateBack();
+    }, [clearExerciseErrors, navigateBack]);
 
     return (
         <ThemedView stretch background>
-            <SiteNavigationButtons title={title} backButtonAction={navigateBack} />
+            <SiteNavigationButtons title={title} backButtonAction={handleNavigateBack} />
             <PageContent safeBottom stretch ghost paddingTop={20}>
                 <EditableExercise />
                 <View style={styles.gap}>
@@ -165,6 +219,21 @@ export const CreateExercise = () => {
                     </ThemedPressable>
                 </View>
             </PageContent>
+            <ThemedBottomSheetModal title={alertTitle} ref={ref}>
+                <PageContent stretch ghost>
+                    <AnswerText>{alertContent}</AnswerText>
+                </PageContent>
+                <PageContent ghost paddingTop={30}>
+                    <ThemedView ghost style={{ gap: 10 }}>
+                        <ThemedPressable round padding secondary onPress={handleDiscardExercise}>
+                            <HStack ghost style={{ alignItems: "center", gap: 10 }}>
+                                <ThemedMaterialCommunityIcons ghost name="delete" size={24} />
+                                <Text ghost>{discardButtonText}</Text>
+                            </HStack>
+                        </ThemedPressable>
+                    </ThemedView>
+                </PageContent>
+            </ThemedBottomSheetModal>
         </ThemedView>
     );
 };

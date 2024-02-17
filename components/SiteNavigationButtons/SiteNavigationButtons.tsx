@@ -83,7 +83,12 @@ export const SiteNavigationButtons = ({
                 <Animated.View style={{ opacity: handleConfirmOpacity !== undefined ? handleConfirmOpacity : 1 }}>
                     {handleConfirm && (
                         <Pressable ref={confirmButtonRef} disabled={confirmButtonDisabled} onPress={handleConfirmButton}>
-                            <MaterialCommunityIcons color={mainColor} size={handleConfirmIcon?.size} name={handleConfirmIcon?.name} />
+                            <ThemedMaterialCommunityIcons
+                                ghost
+                                disabled={confirmButtonDisabled}
+                                size={handleConfirmIcon?.size}
+                                name={handleConfirmIcon?.name}
+                            />
                         </Pressable>
                     )}
                 </Animated.View>

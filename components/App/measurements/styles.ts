@@ -43,9 +43,8 @@ export const createStyles = StyleSheet.create({
         justifyContent: "space-between",
     },
     textInput: {
-        fontSize: 20,
+        fontSize: 26,
         borderRadius,
-        padding: 10,
     },
     text: {
         fontSize: 20,

@@ -67,14 +67,16 @@ export const EditableExerciseInputRow = ({
 
     return (
         <ThemedPressable reference={containerRef} onPress={handleFocusInput} behind ghost stretch={stretch}>
-            <HStack ghost style={styles.labelWrapper}>
-                <Text behind style={styles.label} ghost>
-                    {t(i18key ?? " ")}
-                </Text>
-                <View style={styles.label}></View>
-                {helpTextConfig && <HelpText helpTextConfig={helpTextConfig} />}
-            </HStack>
-            <HStack round center style={{ justifyContent: "center", marginBottom: 3 }}>
+            {(Boolean(i18key) || helpTextConfig) && (
+                <HStack ghost style={styles.labelWrapper}>
+                    <Text behind style={styles.label} ghost>
+                        {t(i18key ?? " ")}
+                    </Text>
+                    <View style={styles.label}></View>
+                    {helpTextConfig && <HelpText helpTextConfig={helpTextConfig} />}
+                </HStack>
+            )}
+            <HStack round center style={{ justifyContent: "center" }}>
                 <ThemedTextInput
                     ghost
                     stretch
@@ -92,7 +94,7 @@ export const EditableExerciseInputRow = ({
                     </ThemedView>
                 )}
             </HStack>
-            {!errorTextConfig?.hideError && (hasError ? <ErrorText>{errorTextConfig?.errorText}</ErrorText> : <Text ghost />)}
+            {!errorTextConfig?.hideError && hasError && <ErrorText>{errorTextConfig?.errorText}</ErrorText>}
         </ThemedPressable>
     );
 };

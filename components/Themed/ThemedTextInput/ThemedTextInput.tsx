@@ -10,7 +10,6 @@ import { cleanError } from "../../../store/reducers/errors";
 import { getErrorByKey } from "../../../store/reducers/errors/errorSelectors";
 import { ErrorText } from "../../ErrorText/ErrorText";
 import { ErrorFields } from "../../../store/reducers/errors/types";
-import { Text } from "../ThemedText/Text";
 
 interface ThemedTextInputProps extends TextInputProps, ComputedBackgroundColorProps {
     reference?: RefObject<TextInput>;
@@ -122,7 +121,7 @@ export const ThemedTextInput = (props: ThemedTextInputProps) => {
                     placeholderTextColor={placeholderColor}
                 />
             )}
-            {hasError && props?.errorKey ? <ErrorText errorKey={props.errorKey} /> : <Text ghost />}
+            {hasError && props?.errorKey && <ErrorText errorKey={props.errorKey} />}
         </>
     );
 };
