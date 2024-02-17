@@ -16,7 +16,6 @@ import { PageContent } from "../../../components/PageContent/PageContent";
 import { ThemedView } from "../../../components/Themed/ThemedView/View";
 import { ThemedBottomSheetModal, useBottomSheetRef } from "../../../components/BottomSheetModal/ThemedBottomSheetModal";
 import { HStack } from "../../../components/Stack/HStack/HStack";
-import { ColorPickerModal } from "../../../components/ColorPickerWithModal/ColorPickerWithModal";
 import { ThemedTextInput } from "../../../components/Themed/ThemedTextInput/ThemedTextInput";
 import { cleanErrors, setError } from "../../../store/reducers/errors";
 import {
@@ -76,7 +75,6 @@ export const Create = () => {
     const title = useMemo(() => (isEditedWorkout ? t("edit_workout") : t("create_workout")), [isEditedWorkout, t]);
     const dispatch = useAppDispatch();
     const { ref: alertRef, openBottomSheet: openAlert, closeBottomSheet: closeAlert } = useBottomSheetRef();
-    const { ref: colorPickerRef, openBottomSheet: openPicker } = useBottomSheetRef();
     const { toastRef, openToast, closeToast, showToast } = useToast();
     const isValidWorkout = useValidateWorkout();
 
@@ -221,8 +219,7 @@ export const Create = () => {
                 <PageContent background safeBottom stretch style={styles.contentWrapper}>
                     <ThemedTextInput
                         style={styles.workoutNameInput}
-                        errorKey={"create_workout_name"}
-                        errorTextPosition="BOTTOM"
+                        errorKey="create_workout_name"
                         showClear
                         value={editedWorkout?.workout.name}
                         onChangeText={handleSetWorkoutName}
@@ -253,7 +250,7 @@ export const Create = () => {
                         titleKey={"exercise_deleted_title"}
                         onRedo={handleRecoverExercise}
                     />
-                    <AddButton errorKey="create_exercises_empty" onPress={handleAddExercise} />
+                    <AddButton onPress={handleAddExercise} />
                 </PageContent>
             </ThemedView>
             <ThemedBottomSheetModal title={alertTitle} ref={alertRef}>
@@ -271,7 +268,6 @@ export const Create = () => {
                     </ThemedView>
                 </PageContent>
             </ThemedBottomSheetModal>
-            <ColorPickerModal reference={colorPickerRef} />
         </ThemedView>
     );
 };

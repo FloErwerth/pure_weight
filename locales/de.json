@@ -1,7 +1,11 @@
 {
-  "error_create_workout_name": "Bitte gib einen Namen für dein Workout ein",
-  "error_create_exercises_empty": "Bitte füge mindestens eine Übung zu deinem Workout hinzu",
-
+  "error_create_workout_name": "Ein Name für das Workout ist erforderlich",
+  "error_create_exercises_empty": "Es muss mindestens eine Übung hinzugefügt werden",
+  "error_create_exercise_name": "Ein Name für die Übung ist erforderlich",
+  "error_create_exercise_weight": "gewicht",
+  "error_create_exercise_sets": "sets",
+  "error_create_exercise_reps": "wiederholungen",
+  "error_create_exercise_weight_reps_sets": "Alle Angaben sind erforderlich",
 
   "workouts": "Workouts",
   "workout": "Workout",
@@ -16,6 +20,7 @@
 
 
   "preparation": "Vorbereitung",
+  "preparation_help_text": "Die Vorbereitung dient als Zeitfenster, um dich auf deine eigentliche Übung vorzubereiten. \n\nDies ist zum Beispiel bei Planks nützlich.",
   "train_title": "Workout",
   "history_cta": "Verlauf anzeigen",
   "history_front": "Verlauf:",

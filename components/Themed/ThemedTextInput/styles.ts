@@ -15,7 +15,6 @@ export const styles = StyleSheet.create({
         backgroundColor: "rgba(0,0,0,0.1)",
     },
     base: {
-        position: "relative",
         fontSize: 20,
         padding: 10,
         zIndex: 1,

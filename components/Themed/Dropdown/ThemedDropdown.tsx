@@ -8,7 +8,7 @@ import Animated, { FadeIn, FadeOut, Layout } from "react-native-reanimated";
 import { useTheme } from "../../../theme/context";
 import { AppState, useAppSelector } from "../../../store";
 import { getErrorByKey } from "../../../store/reducers/errors/errorSelectors";
-import { ErrorFields } from "../../../store/reducers/errors/errorFields";
+import { ErrorFields } from "../../../store/reducers/errors/types";
 
 interface ThemedDropdownProps<T extends readonly string[]> {
     isSelectable?: boolean;

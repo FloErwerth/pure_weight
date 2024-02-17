@@ -1,32 +1,19 @@
 import { Text } from "../Themed/ThemedText/Text";
-import Animated, { FadeIn, FadeOut, Layout } from "react-native-reanimated";
-import { ErrorFields } from "../../store/reducers/errors/errorFields";
 import { useTranslation } from "react-i18next";
 import { useMemo } from "react";
-
-export type ErrorTextPosition = "TOP" | "BOTTOM";
+import { ErrorFields } from "../../store/reducers/errors/types";
 
 type ErrorTextProps = {
-    position?: ErrorTextPosition;
     errorKey?: ErrorFields;
+    children?: string;
 };
-export const ErrorText = ({ errorKey, position = "TOP" }: ErrorTextProps) => {
+export const ErrorText = ({ errorKey, children }: ErrorTextProps) => {
     const { t } = useTranslation();
-
-    const errorText = useMemo(() => t(`error_${errorKey ?? ""}`), [errorKey, t]);
-
-    const wrapperStyle = useMemo(() => {
-        if (position === "TOP") {
-            return { marginBottom: 5 };
-        }
-        return { marginTop: 5 };
-    }, [position]);
+    const internalErrorText = useMemo(() => children || t(`error_${errorKey ?? ""}`), [children, errorKey, t]);
 
     return (
-        <Animated.View style={wrapperStyle} layout={Layout} entering={FadeIn} exiting={FadeOut}>
-            <Text ghost error>
-                {errorText}
-            </Text>
-        </Animated.View>
+        <Text ghost error>
+            {internalErrorText}
+        </Text>
     );
 };

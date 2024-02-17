@@ -19,6 +19,10 @@ export const styles = StyleSheet.create({
     },
     label: {
         padding: 5,
+        fontSize: 20,
+    },
+    labelWrapper: {
+        justifyContent: "space-between",
     },
     headerWrapper: {
         margin: 10,
@@ -63,6 +67,10 @@ export const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: "transparent",
         padding: 10,
+        paddingBottom: 0,
         borderRadius,
+    },
+    titleWrapper: {
+        marginBottom: 15,
     },
 });

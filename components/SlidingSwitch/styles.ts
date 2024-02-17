@@ -4,6 +4,7 @@ import { borderRadius } from "../../theme/border";
 export const styles = StyleSheet.create({
     wrapper: {
         paddingVertical: 5,
+        marginBottom: 15,
         borderRadius,
     },
     background: {

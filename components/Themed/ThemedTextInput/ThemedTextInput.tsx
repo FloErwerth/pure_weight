@@ -1,4 +1,4 @@
-import { Animated, NativeSyntheticEvent, TextInput, TextInputFocusEventData, TextInputProps, View } from "react-native";
+import { Animated, NativeSyntheticEvent, TextInput, TextInputFocusEventData, TextInputProps } from "react-native";
 import * as React from "react";
 import { RefObject, useCallback, useMemo, useRef } from "react";
 import { AppState, useAppDispatch, useAppSelector } from "../../../store";
@@ -8,33 +8,33 @@ import { ComputedBackgroundColorProps, useComputedBackgroundColor } from "../../
 import { styles } from "./styles";
 import { cleanError } from "../../../store/reducers/errors";
 import { getErrorByKey } from "../../../store/reducers/errors/errorSelectors";
-import { ErrorFields } from "../../../store/reducers/errors/errorFields";
-import { ErrorText, ErrorTextPosition } from "../../ErrorText/ErrorText";
+import { ErrorText } from "../../ErrorText/ErrorText";
+import { ErrorFields } from "../../../store/reducers/errors/types";
+import { Text } from "../ThemedText/Text";
 
 interface ThemedTextInputProps extends TextInputProps, ComputedBackgroundColorProps {
     reference?: RefObject<TextInput>;
-    errorKey?: ErrorFields;
     hideErrorBorder?: boolean;
     stretch?: boolean;
     bottomSheet?: boolean;
     suffix?: string;
     showClear?: boolean;
     height?: number;
-    errorTextPosition?: ErrorTextPosition;
+    errorKey?: ErrorFields;
 }
 
 export const ThemedTextInput = (props: ThemedTextInputProps) => {
     const backgroundColor = useComputedBackgroundColor(props);
     const { editable = true } = props;
-    const hasError = useAppSelector((state: AppState) => getErrorByKey(state, props.errorKey));
+    const hasError = useAppSelector((state: AppState) => getErrorByKey(state, props?.errorKey));
     const { mainColor, textDisabled, errorColor, secondaryColor } = useTheme();
     const dispatch = useAppDispatch();
     const opacity = useRef(new Animated.Value(0)).current;
 
     const handleTextInput = useCallback(
         (value: string) => {
-            if (hasError && props.errorKey) {
-                dispatch(cleanError([props.errorKey]));
+            if (hasError && props?.errorKey) {
+                dispatch(cleanError([props?.errorKey]));
             }
             props.onChangeText?.(value);
         },
@@ -97,7 +97,7 @@ export const ThemedTextInput = (props: ThemedTextInputProps) => {
     }, [backgroundColor, editable, errorColor, hasError, mainColor, props.hideErrorBorder, props.stretch, props.style, textDisabled]);
 
     return (
-        <View>
+        <>
             {props.bottomSheet ? (
                 <BottomSheetTextInput
                     {...props}
@@ -122,7 +122,7 @@ export const ThemedTextInput = (props: ThemedTextInputProps) => {
                     placeholderTextColor={placeholderColor}
                 />
             )}
-            {hasError && <ErrorText position={props.errorTextPosition} errorKey={props.errorKey} />}
-        </View>
+            {hasError && props?.errorKey ? <ErrorText errorKey={props.errorKey} /> : <Text ghost />}
+        </>
     );
 };

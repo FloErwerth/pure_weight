@@ -20,6 +20,53 @@ import { useNavigateBack } from "../../../../hooks/navigate";
 import { SnapPoint } from "../../../../components/BottomSheetModal/ThemedBottomSheetModal";
 import { View } from "react-native";
 import Reanimated, { FadeIn, FadeOut, Layout } from "react-native-reanimated";
+import { cleanError, setError } from "../../../../store/reducers/errors";
+import { ErrorFields } from "../../../../store/reducers/errors/types";
+
+const useValidateExercise = () => {
+    const dispatch = useAppDispatch();
+    const editedExercise = useAppSelector(getEditedExercise);
+
+    useEffect(() => {
+        if (editedExercise?.exercise.type === "TIME_BASED") {
+            dispatch(cleanError(["create_exercise_sets", "create_exercise_reps", "create_exercise_weight"]));
+        } else {
+            dispatch(cleanError(["create_exercise_sets", "create_exercise_duration"]));
+        }
+    }, [editedExercise?.exercise.type]);
+
+    return useCallback(() => {
+        const exercise = editedExercise?.exercise;
+        const errors: ErrorFields[] = [];
+        if (!exercise?.sets || exercise.sets === "0") {
+            errors.push("create_exercise_sets");
+        }
+        if (!exercise?.name) {
+            errors.push("create_exercise_name");
+        }
+        if (exercise?.type === "WEIGHT_BASED") {
+            if (!exercise.reps || exercise.reps === "0") {
+                errors.push("create_exercise_reps");
+            }
+            if (!exercise.weight || exercise.weight === "0") {
+                errors.push("create_exercise_weight");
+            }
+        }
+        if (exercise?.type === "TIME_BASED") {
+            if (!exercise.name) {
+                errors.push("create_exercise_name");
+            }
+            if (
+                (!exercise.duration?.minutes && !exercise.duration?.seconds) ||
+                (exercise.duration?.minutes === "0" && exercise.duration?.seconds === "0")
+            ) {
+                errors.push("create_exercise_duration");
+            }
+        }
+        dispatch(setError(errors));
+        return errors.length === 0;
+    }, [dispatch, editedExercise?.exercise]);
+};
 
 export const CreateExercise = () => {
     const { t } = useTranslation();
@@ -31,6 +78,7 @@ export const CreateExercise = () => {
     const [showCheckboxes, setShowCheckboxes] = useState(true);
     const [addMoreExercises, setAddMoreExercises] = useState(false);
     const navigateBack = useNavigateBack();
+    const validateExercise = useValidateExercise();
 
     useEffect(() => {
         if (isEditingExercise) {
@@ -49,6 +97,9 @@ export const CreateExercise = () => {
     }, []);
 
     const saveExercise = useCallback(() => {
+        if (!validateExercise()) {
+            return;
+        }
         dispatch(saveEditedExercise());
         openSuccessMessage();
         setShowCheckboxes(false);
@@ -59,7 +110,7 @@ export const CreateExercise = () => {
         } else {
             navigateBack();
         }
-    }, [addMoreExercises, dispatch, navigateBack, openSuccessMessage, showCheckboxesAfterTimeout]);
+    }, [addMoreExercises, dispatch, navigateBack, openSuccessMessage, showCheckboxesAfterTimeout, validateExercise]);
 
     const handleConfirm = useCallback(() => {
         if (showSavedSuccess) {

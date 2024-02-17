@@ -1,8 +1,11 @@
 {
   "error_create_workout_name": "A name for your workout is required",
   "error_create_exercises_empty": "At least one exercise is required",
-
-
+  "error_create_exercise_name": "A name for your exercise is required",
+  "error_create_exercise_weight": "weight",
+  "error_create_exercise_reps": "reps",
+  "error_create_exercise_sets": "sets",
+  "error_create_exercise_weight_reps_sets": "All information is required",
 
   "workouts": "Workouts",
   "workout": "Workout",
@@ -25,6 +28,9 @@
   "history_latest_workout_short": "latest",
   "history_browse": "Browse history",
   "preparation": "Preparation",
+  "preparation_help_text": "The preparation is a time window to prepare for your actual exercise. \n\nThis is useful for planks, for example.",
+
+
   "save_as_template": "Save as template",
   "save_as_template_help": "Save this workout as a template to use it when creating or editing a workout. \n\nA exercise that is trained will update the template that it was generated from automatically. \n\nThis can be turned off in the settings.",
   "save_as_template_warning_text": "This exercise is already saved as a template. Do you want to overwrite the template or create a new one? \n\nOverwriting the template will update all exercises that are generated from this template",

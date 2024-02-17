@@ -1,4 +1,4 @@
-import { TextInput } from "react-native";
+import { TextInput, View } from "react-native";
 import React, { useCallback, useMemo, useRef } from "react";
 import { styles } from "./styles";
 import { ThemedTextInput } from "../Themed/ThemedTextInput/ThemedTextInput";
@@ -11,6 +11,7 @@ import { mutateEditedExercise } from "../../store/reducers/workout";
 import { ExerciseMetaData } from "../../store/reducers/workout/types";
 import { SlidingSwitch } from "../SlidingSwitch/SlidingSwitch";
 import { TimeBasedExercise } from "./Content/TimeBasedExercise";
+import { cleanError } from "../../store/reducers/errors";
 
 const useOptions = () => {
     const { t } = useTranslation();
@@ -57,23 +58,26 @@ export const EditableExercise = () => {
 
     const handleChangeName = useCallback(
         (value: string) => {
+            dispatch(cleanError(["create_exercise_name"]));
             handleChange("name", value);
         },
-        [handleChange],
+        [dispatch, handleChange],
     );
 
     return (
         <ThemedView stretch ghost>
-            <ThemedTextInput
-                ghost
-                showClear
-                errorKey="create_name"
-                placeholder={t("exercise_name")}
-                reference={inputRef}
-                value={editedExercise?.exercise.name}
-                onChangeText={handleChangeName}
-                style={styles.title}
-            />
+            <View style={styles.titleWrapper}>
+                <ThemedTextInput
+                    ghost
+                    showClear
+                    errorKey="create_exercise_name"
+                    placeholder={t("exercise_name")}
+                    reference={inputRef}
+                    value={editedExercise?.exercise.name}
+                    onChangeText={handleChangeName}
+                    style={styles.title}
+                />
+            </View>
             <SlidingSwitch initialIndex={initialIndex} options={options} onSelectValue={handleSelectExerciseType} />
         </ThemedView>
     );
