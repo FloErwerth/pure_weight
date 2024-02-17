@@ -30,4 +30,4 @@ Build Number 27
 + Small validation fix for creating exercises
 
 `0.7.9`:
-+ Fixed a wording on a butten
++ Fixed a wording on a button
