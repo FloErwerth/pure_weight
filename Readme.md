@@ -28,3 +28,6 @@ Build Number 27
 
 `0.7.8`:
 + Small validation fix for creating exercises
+
+`0.7.9`:
++ Fixed a wording on a butten
