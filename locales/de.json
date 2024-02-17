@@ -10,6 +10,9 @@
   "error_create_exercise_weight": "Gewicht ist erforderlich",
   "error_create_exercise_reps": "Wiederholungen sind erforderlich",
   "error_create_exercise_sets": "Sätze sind erforderlich",
+  "error_create_measurement_name": "Ein Name für die Messung ist erforderlich",
+  "error_create_measurement_type": "Eine Einheit ist erforderlich",
+  "error_create_measurement_value": "Ein Wert ist erforderlich",
 
   "workouts": "Workouts",
   "workout": "Workout",

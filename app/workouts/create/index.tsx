@@ -208,13 +208,8 @@ export const Create = () => {
     return (
         <ThemedView stretch>
             <ThemedView background style={styles.innerWrapper}>
-                <SiteNavigationButtons
-                    backButtonAction={handleBackButton}
-                    handleConfirm={handleSaveWorkout}
-                    titleFontSize={30}
-                    title={title}
-                />
-                <PageContent background safeBottom stretch style={styles.contentWrapper}>
+                <SiteNavigationButtons backButtonAction={handleBackButton} handleConfirm={handleSaveWorkout} title={title} />
+                <PageContent ghost safeBottom stretch style={styles.contentWrapper}>
                     <ThemedTextInput
                         style={styles.workoutNameInput}
                         errorKey="create_workout_name"

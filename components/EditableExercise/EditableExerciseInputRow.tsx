@@ -25,6 +25,7 @@ export const EditableExerciseInputRow = ({
     placeholder = "0",
     helpTextConfig,
     maxLength,
+    bottomSheet,
 }: EditableExerciseInputRowProps) => {
     const { t } = useTranslation();
     const { errorColor } = useTheme();
@@ -79,6 +80,7 @@ export const EditableExerciseInputRow = ({
             <HStack round center style={{ justifyContent: "center" }}>
                 <ThemedTextInput
                     ghost
+                    bottomSheet={bottomSheet}
                     stretch
                     reference={textInputRef}
                     inputMode="decimal"
@@ -94,7 +96,9 @@ export const EditableExerciseInputRow = ({
                     </ThemedView>
                 )}
             </HStack>
-            {!errorTextConfig?.hideError && hasError && <ErrorText>{errorTextConfig?.errorText}</ErrorText>}
+            {!errorTextConfig?.hideError && hasError && (
+                <ErrorText errorKey={errorTextConfig?.errorKey}>{errorTextConfig?.errorText}</ErrorText>
+            )}
         </ThemedPressable>
     );
 };

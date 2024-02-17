@@ -75,8 +75,6 @@ export const styles = StyleSheet.create({
     },
     contentWrapper: {
         justifyContent: "center",
-        paddingTop: 20,
-        gap: 10,
     },
     listContainer: {
         borderRadius,

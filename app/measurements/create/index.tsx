@@ -26,8 +26,9 @@ import { PageContent } from "../../../components/PageContent/PageContent";
 import { useNavigateBack } from "../../../hooks/navigate";
 import { convertDate, getDateTodayIso } from "../../../utils/date";
 import { EditableExerciseInputRow } from "../../../components/EditableExercise/EditableExerciseInputRow";
-import { setError } from "../../../store/reducers/errors";
+import { cleanError, setError } from "../../../store/reducers/errors";
 import { ErrorFields } from "../../../store/reducers/errors/types";
+import { View } from "react-native";
 
 export const useMeasurementOptions = () => {
     const unitSystem = useAppSelector(getUnitSystem);
@@ -83,7 +84,7 @@ export const CreateMeasurement = () => {
     const themeKey = useAppSelector(getThemeKeyFromStore);
     const language = useAppSelector(getLanguage);
     const dates = useAppSelector(getDatesFromCurrentMeasurement);
-    const [showWarning, setShowWarnining] = useState(false);
+    const [showDateWarning, setShowWarnining] = useState(false);
     const [date, setDate] = useState(MAX_DATE);
     const dispatch = useAppDispatch();
     const { mainColor, warningColor } = useTheme();
@@ -120,6 +121,7 @@ export const CreateMeasurement = () => {
 
     const handleSetMeasurementName = useCallback(
         (name: string) => {
+            dispatch(cleanError(["create_measurement_name"]));
             dispatch(mutateEditedMeasurement({ key: "name", value: name }));
         },
         [dispatch],
@@ -134,6 +136,7 @@ export const CreateMeasurement = () => {
 
     const handleSetMeasurementType = useCallback(
         (type: string) => {
+            dispatch(cleanError(["create_measurement_type"]));
             dispatch(mutateEditedMeasurement({ key: "type", value: getTypeByUnit(type) }));
         },
         [dispatch],
@@ -141,6 +144,7 @@ export const CreateMeasurement = () => {
 
     const handleSetMeasurementValue = useCallback(
         (value: string) => {
+            dispatch(cleanError(["create_measurement_value"]));
             dispatch(mutateEditedMeasurement({ key: "value", value: value ?? "0" }));
         },
         [dispatch],
@@ -153,11 +157,11 @@ export const CreateMeasurement = () => {
         if (!editedMeasurement?.isNew) {
             return t("measurement_add");
         }
-        if (showWarning) {
+        if (showDateWarning) {
             return t("measurement_warning_confirm");
         }
         return t("measurement_create");
-    }, [editedMeasurement?.isEditing, editedMeasurement?.isNew, showWarning, t]);
+    }, [editedMeasurement?.isEditing, editedMeasurement?.isNew, showDateWarning, t]);
 
     const buttonIcon = useMemo(() => {
         if (editedMeasurement?.isEditing) {
@@ -188,12 +192,11 @@ export const CreateMeasurement = () => {
     }, [editedMeasurement?.isEditing, isAddingData, t]);
 
     const handleSaveMeasurement = useCallback(() => {
-        console.log(getIsValidMeasurement());
         if (!getIsValidMeasurement()) {
             return;
         }
         const sameDateIndex = dates?.findIndex((searchDate) => searchDate === convertDate.toIsoDate(date));
-        if (!isEditing && !showWarning && sameDateIndex !== -1) {
+        if (!isEditing && !showDateWarning && sameDateIndex !== -1) {
             setShowWarnining(true);
             return;
         }
@@ -203,32 +206,41 @@ export const CreateMeasurement = () => {
 
         setShowWarnining(false);
         navigateBack();
-    }, [dates, isEditing, showWarning, dispatch, date, navigateBack, getIsValidMeasurement]);
+    }, [dates, isEditing, showDateWarning, dispatch, date, navigateBack, getIsValidMeasurement]);
 
     const helpText = useMemo(() => ({ title: t("measurement_higher_is_better"), text: t("measurement_higher_is_better_help") }), [t]);
+
+    const handleNavigateBack = useCallback(() => {
+        navigateBack();
+        cleanError(["create_measurement_name", "create_measurement_type", "create_measurement_value"]);
+    }, [navigateBack]);
+
     return (
         <ThemedView background stretch round>
-            <SiteNavigationButtons backButtonAction={navigateBack} titleFontSize={30} title={pageTitle} />
-            <PageContent ghost stretch style={{ gap: 20 }}>
+            <SiteNavigationButtons backButtonAction={handleNavigateBack} title={pageTitle} />
+            <PageContent ghost stretch paddingTop={20} style={{ gap: 10 }}>
                 {!isAddingData && (
-                    <ThemedTextInput
-                        maxLength={20}
-                        errorKey="create_measurement_name"
-                        style={createStyles.textInput}
-                        onChangeText={handleSetMeasurementName}
-                        value={editedMeasurement?.measurement?.name}
-                        clearButtonMode="while-editing"
-                        placeholder={t("measurement_placeholder")}
-                    />
+                    <View>
+                        <ThemedTextInput
+                            maxLength={20}
+                            errorKey="create_measurement_name"
+                            style={createStyles.textInput}
+                            onChangeText={handleSetMeasurementName}
+                            value={editedMeasurement?.measurement?.name}
+                            clearButtonMode="while-editing"
+                            placeholder={t("measurement_placeholder")}
+                        />
+                    </View>
                 )}
                 {!isEditing && (
                     <HStack ghost style={{ gap: 5 }}>
                         <EditableExerciseInputRow
                             placeholder="0"
                             stretch
+                            errorTextConfig={{ errorKey: "create_measurement_value" }}
                             suffix={valueSuffix}
                             setValue={handleSetMeasurementValue}
-                            value={value}
+                            value={editedMeasurement?.measurement?.value}
                         />
                         {!isAddingData && (
                             <ThemedDropdown
@@ -266,7 +278,7 @@ export const CreateMeasurement = () => {
                 )}
             </PageContent>
             <PageContent safeBottom ghost>
-                {showWarning && (
+                {showDateWarning && (
                     <HStack ghost style={createStyles.warningWrapper}>
                         <ThemedMaterialCommunityIcons ghost name="alert-circle-outline" size={20} color={warningColor} />
                         <Text ghost warning style={createStyles.warningText}>

@@ -9,8 +9,8 @@ export const mockState: AppState = {
     settingsState: {
         stopwatchSettings: { startOnDoneSet: false, notifications: { allowed: false } },
         keepAwake: true,
-        theme: "system",
-        language: "en",
+        theme: "dark",
+        language: "de",
         unitSystem: "metric",
         switchToNextExercise: false,
         searchManual: "",
@@ -370,7 +370,7 @@ export const emptyState = {
     },
     metadataState: {
         appInstallDate: "2023-11-11",
-        isFirstTimeRendered: false,
+        isFirstTimeRendered: true,
     },
     errorState: {
         errors: [],
@@ -378,7 +378,7 @@ export const emptyState = {
     settingsState: {
         stopwatchSettings: { startOnDoneSet: true, notifications: { allowed: false } },
         keepAwake: true,
-        language: "en",
+        language: "de",
         theme: "system",
         unitSystem: "metric",
         switchToNextExercise: false,

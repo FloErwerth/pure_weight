@@ -15,6 +15,5 @@ export const useTheme = () => {
 
 export const ThemeProvider = ({ children }: PropsWithChildren) => {
     const theme = useAppSelector(getThemeKeyFromStore);
-
     return <themeContext.Provider value={theme}>{children}</themeContext.Provider>;
 };

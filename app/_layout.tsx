@@ -18,7 +18,7 @@ import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { WorkoutHistory } from "./workouts/history";
 import DeviceInfo from "react-native-device-info";
 import { IsoDate } from "../types/date";
-import { setAppInstallDate, setEmptyState } from "../store/reducers/metadata";
+import { setAppInstallDate, setEmptyState, setFirstTimeRendered } from "../store/reducers/metadata";
 import { getIsFirstTimeRendered } from "../store/reducers/metadata/metadataSelectors";
 import { GeneralSettings } from "../components/App/settings/Sections/generalSettings";
 import { Manual } from "./settings/manual";
@@ -31,10 +31,13 @@ import { CreateExercise } from "./workouts/create/exercise";
 import { MeasurementHistory } from "./measurements/history";
 import { CreateMeasurement } from "./measurements/create";
 import { MeasurementProgress } from "./measurements/progress";
+import { useInitIntl } from "../locales/i18next";
 
 const Stack = createNativeStackNavigator<RoutesParamaters>();
 
 const ThemedApp = () => {
+    useInitIntl();
+
     const dispatch = useAppDispatch();
     const { i18n } = useTranslation();
     const isFirstTimeRendered = useAppSelector(getIsFirstTimeRendered);
@@ -42,13 +45,13 @@ const ThemedApp = () => {
 
     if (isFirstTimeRendered) {
         dispatch(setEmptyState());
+
         DeviceInfo.getFirstInstallTime().then((installTime) => {
             const date = new Date(installTime ?? 0).toISOString().split("T")[0];
             dispatch(setAppInstallDate(date as IsoDate));
         });
 
         const lang = (NativeModules.SettingsManager.settings.AppleLocale as string).split("_")[0];
-
         if (lang === "de" || lang === "en") {
             void i18n.changeLanguage(lang);
             dispatch(setLanguage(lang));
@@ -59,6 +62,7 @@ const ThemedApp = () => {
 
         const theme = Appearance.getColorScheme();
         dispatch(setTheme(theme === "dark" ? "dark" : "light"));
+        dispatch(setFirstTimeRendered(false));
     }
 
     return (

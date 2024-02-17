@@ -10,6 +10,10 @@
   "error_create_exercise_weight": "Weight is required",
   "error_create_exercise_reps": "Reps are required",
   "error_create_exercise_sets": "Sets are required",
+  "error_create_measurement_name": "A name for your measurement is required",
+  "error_create_measurement_type": "A unit is required",
+  "error_create_measurement_value": "A value is required",
+
 
 
   "workouts": "Workouts",

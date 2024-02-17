@@ -9,6 +9,7 @@ import { useTheme } from "../../../theme/context";
 import { AppState, useAppSelector } from "../../../store";
 import { getErrorByKey } from "../../../store/reducers/errors/errorSelectors";
 import { ErrorFields } from "../../../store/reducers/errors/types";
+import { ErrorText } from "../../ErrorText/ErrorText";
 
 interface ThemedDropdownProps<T extends readonly string[]> {
     isSelectable?: boolean;
@@ -98,12 +99,12 @@ export function ThemedDropdown<T extends readonly string[]>({
                     reference={containerRef}
                     onLayout={measureContainer}
                     style={styles.selectedItemWrapper}
-                    onPress={togglePicker}
-                    stretch>
+                    onPress={togglePicker}>
                     <Text ghost disabled={!isSelectable} error={error} style={styles.selectedItem}>
                         {value || placeholder}
                     </Text>
                 </ThemedPressable>
+                {error && <ErrorText errorKey="create_measurement_type" />}
                 {open && (
                     <Animated.View style={dropdownStyles} layout={Layout} entering={FadeIn.duration(200)} exiting={FadeOut.duration(200)}>
                         <ThemedView round input>
@@ -117,7 +118,6 @@ export function ThemedDropdown<T extends readonly string[]>({
                     </Animated.View>
                 )}
             </ThemedView>
-
             {open && <ThemedPressable ghost style={styles.hiddenLayer} onPress={togglePicker}></ThemedPressable>}
         </>
     );
