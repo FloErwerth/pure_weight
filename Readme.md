@@ -21,3 +21,6 @@ Build Number 26
 + Fixed bug where language is not persisted resulting in englisch after closing and opening the app again
 + Made various sections scrollable and keyboard aware
 + Made page titles smaller
+
+`0.7.7`:
++ Small validation fix for creating exercises

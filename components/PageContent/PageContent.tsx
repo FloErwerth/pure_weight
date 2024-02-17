@@ -56,7 +56,7 @@ export const PageContent = (props: PageContentProps) => {
                 horizontal={false}
                 keyboardShouldPersistTaps={props.keyboardShouldPersistTaps}
                 style={scrollableWrapperStyles}
-                keyboardOpeningTime={25}
+                keyboardOpeningTime={100}
                 contentContainerStyle={wrapperStyles}>
                 {titleConfig && (
                     <Text style={titleStyles} ghost>

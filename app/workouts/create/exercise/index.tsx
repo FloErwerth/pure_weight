@@ -56,7 +56,9 @@ const useValidateExercise = () => {
             }
         }
         if (exercise?.type === "TIME_BASED") {
-            if (getIsZeroOrNullish([exercise?.duration?.minutes, exercise?.duration?.seconds])) {
+            const hasNoMinutes = getIsZeroOrNullish([editedExercise?.exercise?.duration?.minutes]);
+            const hasNoSeconds = getIsZeroOrNullish([editedExercise?.exercise?.duration?.minutes]);
+            if (hasNoMinutes && hasNoSeconds) {
                 errors.push("create_exercise_duration");
             }
         }
