@@ -36,6 +36,7 @@ import { useToast } from "../../components/BottomToast/useToast";
 import { WorkoutId } from "../../store/reducers/workout/types";
 import { View } from "react-native";
 import { ExpandableSearchbar } from "../../components/Searchbar/ExpandableSearchbar";
+import { AnswerText } from "../../components/HelpQuestionAnswer/AnswerText";
 
 const usePauseWarningContent = () => {
     const language = useAppSelector(getLanguage);
@@ -78,10 +79,12 @@ export function Workouts() {
     const navigate = useNavigate();
     const trainedWorkout = useAppSelector(getTrainedWorkout);
     const { ref, openBottomSheet, closeBottomSheet } = useBottomSheetRef();
+    const { ref: deleteWarningRef, openBottomSheet: openDeleteWarning, closeBottomSheet: closeDeleteWarning } = useBottomSheetRef();
     const [newWorkoutIndex, setNewWorkoutIndex] = useState<WorkoutId | undefined>(undefined);
     const isOngoingWorkout = useAppSelector((state: AppState) => getIsOngoingWorkout(state, newWorkoutIndex));
     const { toastRef, openToast, closeToast, showToast } = useToast();
     const { resumeTrainingText, title, message, newTrainingText } = usePauseWarningContent();
+    const [deletedWorkoutId, setDeletedWorkoutId] = useState<WorkoutId | undefined>(undefined);
 
     const handleCreateWorkout = useCallback(() => {
         dispatch(createNewWorkout());
@@ -98,16 +101,24 @@ export function Workouts() {
         [dispatch, navigate],
     );
 
-    const onDelete = useCallback(
-        (workoutId: WorkoutId) => {
-            dispatch(removeWorkout(workoutId));
+    const confirmWorkoutDeletion = useCallback(() => {
+        if (deletedWorkoutId) {
+            dispatch(removeWorkout(deletedWorkoutId));
+            closeDeleteWarning();
             if (showToast && toastRef.current) {
                 toastRef.current.restart();
             } else {
                 openToast();
             }
+        }
+    }, [deletedWorkoutId, dispatch, openToast, showToast, toastRef]);
+
+    const onDelete = useCallback(
+        (workoutId: WorkoutId) => {
+            setDeletedWorkoutId(workoutId);
+            openDeleteWarning();
         },
-        [dispatch, openToast, showToast, toastRef],
+        [openDeleteWarning],
     );
 
     const handleStartWorkout = useCallback(
@@ -217,6 +228,19 @@ export function Workouts() {
                             <ThemedMaterialCommunityIcons ghost name="restart" size={24} />
                             <Text center ghost style={trainStyles.button}>
                                 {newTrainingText}
+                            </Text>
+                        </HStack>
+                    </ThemedPressable>
+                </PageContent>
+            </ThemedBottomSheetModal>
+            <ThemedBottomSheetModal title={t("alert_delete_workout_title")} ref={deleteWarningRef}>
+                <PageContent paddingTop={20} stretch ghost>
+                    <AnswerText>{t("alert_delete_workout_content")}</AnswerText>
+                    <ThemedPressable style={trainStyles.deleteButtonWrapper} round onPress={confirmWorkoutDeletion}>
+                        <HStack style={trainStyles.confirmOverwriteWrapper} round center>
+                            <ThemedMaterialCommunityIcons ghost name="delete" size={24} />
+                            <Text center ghost style={trainStyles.button}>
+                                {t("alert_workout_delete_confirm")}
                             </Text>
                         </HStack>
                     </ThemedPressable>

@@ -72,6 +72,10 @@
   "edit_template_created_at": "Created at",
   "edit_template_updated_at": "Updated at",
 
+  "alert_delete_workout_title": "Delete Workout",
+  "alert_delete_workout_content": "Do you really want to delete this workout? \n\nThis action cannot be undone.",
+  "alert_workout_delete_confirm": "Confirm deletion",
+
   "create_exercise": "Create exercise",
   "edit_exercise_long": "Confirm changes",
   "edit_exercise": "Confirm",

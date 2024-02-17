@@ -206,7 +206,9 @@
   "progress_avg_dur": "Ø Dauer",
   "progress_avg_dur_hint": "Zeigt die durchschnittliche Dauer eines Satzes an",
 
-
+  "alert_delete_workout_title": "Workout löschen",
+  "alert_delete_workout_content": "Möchtest Du das Workout wirklich löschen? \n\nAlle Daten zu diesem Workout gehen verloren.",
+  "alert_workout_delete_confirm": "Löschen bestätigen",
   "alert_create_confirm_cancel": "Erstellung trotzdem abbrechen",
   "alert_edit_confirm_cancel": "Bearbeitung trotzdem abbrechen",
   "alert_create_workout_continue": "Dialog schließen",

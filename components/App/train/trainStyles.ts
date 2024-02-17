@@ -13,6 +13,9 @@ export const trainStyles = StyleSheet.create({
         justifyContent: "space-between",
         alignItems: "center",
     },
+    deleteButtonWrapper: {
+        marginTop: 20,
+    },
     button: {
         fontSize: 20,
         paddingTop: 1,
