@@ -111,7 +111,7 @@ export function Workouts() {
                 openToast();
             }
         }
-    }, [deletedWorkoutId, dispatch, openToast, showToast, toastRef]);
+    }, [closeDeleteWarning, deletedWorkoutId, dispatch, openToast, showToast, toastRef]);
 
     const onDelete = useCallback(
         (workoutId: WorkoutId) => {
