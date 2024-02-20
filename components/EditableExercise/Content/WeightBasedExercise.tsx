@@ -3,12 +3,11 @@ import { HStack } from "../../Stack/HStack/HStack";
 import { EditableExerciseInputRow } from "../EditableExerciseInputRow";
 import { useAppDispatch, useAppSelector } from "../../../store";
 import { useCallback, useMemo } from "react";
-import { mutateEditedExercise, mutateEditedExerciseTimeValue } from "../../../store/reducers/workout";
+import { mutateEditedExercise } from "../../../store/reducers/workout";
 
 import { getEditedExercise } from "../../../store/reducers/workout/workoutSelectors";
 import { getLanguage, getWeightUnit } from "../../../store/reducers/settings/settingsSelectors";
 import { TimeInputRow } from "../TimeInputRow";
-import { TimeInput } from "../../../store/reducers/workout/types";
 import { getErrors } from "../../../store/reducers/errors/errorSelectors";
 import { Text } from "../../Themed/ThemedText/Text";
 import { View } from "react-native";
@@ -72,16 +71,27 @@ export const WeightBasedExercise = () => {
         [dispatch],
     );
 
-    const handleSetPause = useCallback(
-        (value: { timeInputKey: keyof TimeInput; value: string }) => {
+    const handleSetPauseMinutes = useCallback(
+        (value?: string) => {
             dispatch(
-                mutateEditedExerciseTimeValue({
-                    key: "pause",
-                    value: { ...editedExercise?.exercise?.pause, [value.timeInputKey]: value.value },
+                mutateEditedExercise({
+                    key: "pauseMinutes",
+                    value,
                 }),
             );
         },
-        [dispatch, editedExercise?.exercise?.pause],
+        [dispatch],
+    );
+    const handleSetPauseSeconds = useCallback(
+        (value?: string) => {
+            dispatch(
+                mutateEditedExercise({
+                    key: "pauseMinutes",
+                    value,
+                }),
+            );
+        },
+        [dispatch],
     );
 
     const errorTextConfigs: Record<"sets" | "reps" | "weight", ErrorTextConfig> = useMemo(
@@ -140,7 +150,13 @@ export const WeightBasedExercise = () => {
                     </Text>
                 )}
             </View>
-            <TimeInputRow i18key="pause" setValue={handleSetPause} value={editedExercise?.exercise?.pause} />
+            <TimeInputRow
+                i18key="pause"
+                setMinutes={handleSetPauseMinutes}
+                setSeconds={handleSetPauseSeconds}
+                minutes={editedExercise?.exercise?.pauseMinutes}
+                seconds={editedExercise?.exercise?.pauseSeconds}
+            />
         </PageContent>
     );
 };

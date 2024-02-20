@@ -14,8 +14,8 @@ interface SmallMetadataDisplayProps {
 
 export const TimeBasedSmallExerciseDataDisplay = ({ exerciseMetaData }: SmallMetadataDisplayProps) => {
     const { t } = useTranslation();
-    const showPauseMinutes = parseFloat(exerciseMetaData?.pause?.minutes ?? "0") !== 0;
-    const showPauseSecnds = parseFloat(exerciseMetaData?.pause?.seconds ?? "0") !== 0;
+    const showPauseMinutes = parseFloat(exerciseMetaData?.pauseMinutes ?? "0") !== 0;
+    const showPauseSecnds = parseFloat(exerciseMetaData?.pauseSeconds ?? "0") !== 0;
     const { secondsUnit, minutesUnit } = useAppSelector(getTimeUnit);
     const showPause = showPauseMinutes || showPauseSecnds;
     if (!exerciseMetaData) {
@@ -31,7 +31,7 @@ export const TimeBasedSmallExerciseDataDisplay = ({ exerciseMetaData }: SmallMet
                             {showPauseMinutes && (
                                 <ThemedView>
                                     <HStack style={styles.smallGap}>
-                                        <Text style={trainStyles.exerciseMetaText}>{exerciseMetaData.pause?.minutes}</Text>
+                                        <Text style={trainStyles.exerciseMetaText}>{exerciseMetaData?.pauseMinutes}</Text>
                                         <Text style={trainStyles.exerciseMetaText}>{minutesUnit}</Text>
                                     </HStack>
                                 </ThemedView>
@@ -39,7 +39,7 @@ export const TimeBasedSmallExerciseDataDisplay = ({ exerciseMetaData }: SmallMet
                             {showPauseSecnds && (
                                 <ThemedView>
                                     <HStack style={styles.smallGap}>
-                                        <Text style={trainStyles.exerciseMetaText}>{exerciseMetaData.pause?.seconds}</Text>
+                                        <Text style={trainStyles.exerciseMetaText}>{exerciseMetaData?.pauseSeconds}</Text>
                                         <Text style={trainStyles.exerciseMetaText}>{secondsUnit}</Text>
                                     </HStack>
                                 </ThemedView>

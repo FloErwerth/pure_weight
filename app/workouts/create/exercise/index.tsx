@@ -56,8 +56,8 @@ const useValidateExercise = () => {
             }
         }
         if (exercise?.type === "TIME_BASED") {
-            const hasNoMinutes = getIsZeroOrNullish([editedExercise?.exercise?.duration?.minutes]);
-            const hasNoSeconds = getIsZeroOrNullish([editedExercise?.exercise?.duration?.seconds]);
+            const hasNoMinutes = getIsZeroOrNullish([editedExercise?.exercise?.durationMinutes]);
+            const hasNoSeconds = getIsZeroOrNullish([editedExercise?.exercise?.durationSeconds]);
             if (hasNoMinutes && hasNoSeconds) {
                 errors.push("create_exercise_duration");
             }
@@ -75,8 +75,8 @@ const useGetHasValuesInExercise = () => {
         }
         if (editedExercise?.exercise.type === "TIME_BASED") {
             return !getIsZeroOrNullish([
-                editedExercise?.exercise.duration?.minutes,
-                editedExercise?.exercise.duration?.seconds,
+                editedExercise?.exercise.durationMinutes,
+                editedExercise?.exercise.durationSeconds,
                 editedExercise?.exercise.sets,
             ]);
         }

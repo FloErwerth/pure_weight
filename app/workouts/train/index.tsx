@@ -32,9 +32,9 @@ import { TrainedExercise } from "../../../components/App/train/Exercise/TrainedE
 import { ExerciseId } from "../../../store/reducers/workout/types";
 import { CarouselRenderItemInfo, ICarouselInstance } from "react-native-reanimated-carousel/lib/typescript/types";
 import { getSwitchToNextExercise } from "../../../store/reducers/settings/settingsSelectors";
-import { WorkoutSettings } from "../../../components/App/settings/Sections/workout";
+import { WorkoutSettings } from "../../../components/App/settings/Sections/workout/index";
 
-export function Train() {
+export const Train = () => {
     const { bottom } = useSafeAreaInsets();
     const { t } = useTranslation();
     const workoutExercises = useAppSelector(getTrainedWorkoutExercises);
@@ -181,4 +181,4 @@ export function Train() {
             </ThemedBottomSheetModal>
         </ThemedView>
     );
-}
+};

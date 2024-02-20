@@ -27,7 +27,7 @@ export const PreviousWorkout = ({ exerciseId, exerciseType }: PreviousTrainingPr
     const activeSetIndex = useAppSelector((state: AppState) => getActiveSetIndex(state, exerciseId));
     const mappedData = useMemo(
         () =>
-            previousWorkout?.sets.map(({ weight, reps, duration }, index) => {
+            previousWorkout?.sets.map(({ weight, reps, durationMinutes, durationSeconds }, index) => {
                 const highlight = activeSetIndex === index;
                 const filled = activeSetIndex !== undefined && activeSetIndex > index;
                 const highlightWrapperStyles = { backgroundColor: highlight ? inputFieldBackgroundColor : "transparent" };
@@ -41,7 +41,7 @@ export const PreviousWorkout = ({ exerciseId, exerciseType }: PreviousTrainingPr
                             <HStack ghost stretch style={styles.setOuterWrapper}>
                                 <ThemedView ghost round stretch style={styles.setWrapper}>
                                     <Text ghost style={[{ color: computedColor }, styles.set]}>
-                                        {getTimeDisplayFromMilliseconds(getMillisecondsFromTimeInput(duration))}
+                                        {getTimeDisplayFromMilliseconds(getMillisecondsFromTimeInput(durationMinutes, durationSeconds))}
                                     </Text>
                                 </ThemedView>
                             </HStack>

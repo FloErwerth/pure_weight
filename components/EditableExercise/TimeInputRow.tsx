@@ -7,7 +7,16 @@ import { useTranslation } from "react-i18next";
 import { EditableExerciseInputRow } from "./EditableExerciseInputRow";
 import { ErrorTextConfig } from "../../store/reducers/errors/types";
 
-export const TimeInputRow = ({ value, setValue, i18key, helpTextConfig, errorTextConfig }: TimeInputRowProps) => {
+export const TimeInputRow = ({
+    seconds,
+    minutes,
+    setMinutes,
+    setSeconds,
+    i18key,
+    helpTextConfig,
+    errorTextConfig,
+    stretch,
+}: TimeInputRowProps) => {
     const { t } = useTranslation();
 
     const secondsSuffix = useMemo(() => t("seconds"), [t]);
@@ -20,17 +29,17 @@ export const TimeInputRow = ({ value, setValue, i18key, helpTextConfig, errorTex
             if (secondsNumber > 59) {
                 validatedValue = "59";
             }
-            setValue({ timeInputKey: "seconds", value: validatedValue });
+            setSeconds(validatedValue);
         },
-        [setValue],
+        [setSeconds],
     );
 
     const handleChangeMinutes = useCallback(
         (minutes: string) => {
             const minutesNumber = minutes ? Math.min(parseInt(minutes, 10), 59).toString() : "";
-            setValue({ timeInputKey: "minutes", value: minutesNumber });
+            setMinutes(minutesNumber);
         },
-        [setValue],
+        [setMinutes],
     );
 
     const secondInputErrorTextConfig: ErrorTextConfig = useMemo(
@@ -39,14 +48,14 @@ export const TimeInputRow = ({ value, setValue, i18key, helpTextConfig, errorTex
     );
 
     return (
-        <ThemedView style={{ alignSelf: "stretch" }} ghost>
-            <HStack ghost style={styles.gap}>
+        <ThemedView stretch={stretch} ghost>
+            <HStack stretch={stretch} ghost style={styles.gap}>
                 <EditableExerciseInputRow
                     errorTextConfig={errorTextConfig}
                     suffix={minutesSuffix}
-                    stretch
+                    stretch={stretch}
                     i18key={i18key}
-                    value={value?.minutes}
+                    value={minutes}
                     setValue={handleChangeMinutes}
                     maxLength={4}
                     placeholder="0"
@@ -54,9 +63,9 @@ export const TimeInputRow = ({ value, setValue, i18key, helpTextConfig, errorTex
                 <EditableExerciseInputRow
                     errorTextConfig={secondInputErrorTextConfig}
                     suffix={secondsSuffix}
-                    stretch
+                    stretch={stretch}
                     i18key=" "
-                    value={value?.seconds}
+                    value={seconds}
                     setValue={handleChangeSeconds}
                     maxLength={4}
                     placeholder="0"

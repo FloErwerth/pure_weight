@@ -2,33 +2,44 @@ import { Keyboard, View } from "react-native";
 import { styles } from "./styles";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useCallback, useMemo } from "react";
-import { HStack } from "../../Stack/HStack/HStack";
-import { Center } from "../../Center/Center";
-import { Text } from "../../Themed/ThemedText/Text";
-import { borderRadius } from "../../../theme/border";
-import { ThemedTextInput } from "../../Themed/ThemedTextInput/ThemedTextInput";
-import { useTheme } from "../../../theme/context";
-import { AppState, useAppDispatch, useAppSelector } from "../../../store";
+import { HStack } from "../Stack/HStack/HStack";
+import { Center } from "../Center/Center";
+import { Text } from "../Themed/ThemedText/Text";
+import { borderRadius } from "../../theme/border";
+import { ThemedTextInput } from "../Themed/ThemedTextInput/ThemedTextInput";
+import { useTheme } from "../../theme/context";
+import { AppState, useAppDispatch, useAppSelector } from "../../store";
 import * as Haptics from "expo-haptics";
-import { handleMutateSet, markSetAsDone, setIsActiveSet } from "../../../store/reducers/workout";
-import { getIsActiveSet, getSetData } from "../../../store/reducers/workout/workoutSelectors";
-import { ThemedPressable } from "../../Themed/Pressable/Pressable";
-import { emitter } from "../../../utils/event";
-import { ExerciseId } from "../../../store/reducers/workout/types";
+import { handleMutateSet, markSetAsDone, setIsActiveSet } from "../../store/reducers/workout";
+import { getExerciseById, getIsActiveSet, getSetData } from "../../store/reducers/workout/workoutSelectors";
+import { ThemedPressable } from "../Themed/Pressable/Pressable";
+import { ExerciseId } from "../../store/reducers/workout/types";
+import { getUpdatePrefilledWorkoutValues } from "../../store/reducers/settings/settingsSelectors";
 
 interface SetInputRowProps {
     setIndex: number;
     exerciseId: ExerciseId;
 }
 
-export const WeightBasedSetInput = ({ setIndex, exerciseId }: SetInputRowProps) => {
-    const { primaryColor, mainColor, secondaryBackgroundColor, componentBackgroundColor, inputFieldBackgroundColor, textDisabled } =
-        useTheme();
-    const data = useAppSelector((state: AppState) => getSetData(state, setIndex, exerciseId));
-    const { isLatestSet, weight, reps, isEditable, isConfirmed } = data ?? {};
-    const isActiveSet = useAppSelector((state: AppState) => getIsActiveSet(state, exerciseId, setIndex));
+export const SetInput = ({ setIndex, exerciseId }: SetInputRowProps) => {
+    const {
+        primaryColor,
+        secondaryColor,
+        mainColor,
+        secondaryBackgroundColor,
+        componentBackgroundColor,
+        inputFieldBackgroundColor,
+        textDisabled,
+    } = useTheme();
 
+    const data = useAppSelector((state: AppState) => getSetData(state, setIndex, exerciseId));
+
+    const exercise = useAppSelector((state: AppState) => getExerciseById(state, exerciseId));
+    const { isLatestSet, weight, reps, isEditable, isConfirmed, durationSeconds, durationMinutes } = data ?? {};
+    const isActiveSet = useAppSelector((state: AppState) => getIsActiveSet(state, exerciseId, setIndex));
+    const wantsUpdatePrefilledValues = useAppSelector(getUpdatePrefilledWorkoutValues);
     const dispatch = useAppDispatch();
+
     const handleSetActive = useCallback(() => {
         if (!isActiveSet) {
             dispatch(setIsActiveSet({ setIndex }));
@@ -36,39 +47,73 @@ export const WeightBasedSetInput = ({ setIndex, exerciseId }: SetInputRowProps) 
     }, [dispatch, isActiveSet, setIndex]);
 
     const handleSetWeight = useCallback(
-        (newWeight?: string) => {
-            dispatch(handleMutateSet({ setIndex, key: "weight", value: newWeight, type: "WEIGHT_BASED" }));
+        (value?: string) => {
+            dispatch(
+                handleMutateSet({
+                    setIndex,
+                    key: "weight",
+                    value,
+                    updatePrefilledValues: wantsUpdatePrefilledValues && isLatestSet,
+                }),
+            );
             if (!isActiveSet) {
                 handleSetActive();
             }
         },
-        [dispatch, handleSetActive, isActiveSet, setIndex],
+        [dispatch, handleSetActive, isActiveSet, isLatestSet, setIndex, wantsUpdatePrefilledValues],
     );
 
     const handleSetReps = useCallback(
-        (newReps?: string) => {
-            dispatch(handleMutateSet({ setIndex, key: "reps", value: newReps, type: "WEIGHT_BASED" }));
-            if (!isActiveSet) {
-                dispatch(setIsActiveSet({ setIndex }));
-            }
+        (value?: string) => {
+            dispatch(
+                handleMutateSet({
+                    setIndex,
+                    key: "reps",
+                    value,
+                    updatePrefilledValues: wantsUpdatePrefilledValues && isLatestSet,
+                }),
+            );
         },
-        [dispatch, isActiveSet, setIndex],
+        [dispatch, isLatestSet, setIndex, wantsUpdatePrefilledValues],
     );
 
-    const handleToggle = useCallback(() => {
+    const handleSetSeconds = useCallback(
+        (value?: string) => {
+            dispatch(
+                handleMutateSet({
+                    setIndex,
+                    key: "durationSeconds",
+                    value,
+                    updatePrefilledValues: wantsUpdatePrefilledValues && isLatestSet,
+                }),
+            );
+        },
+        [dispatch, isLatestSet, setIndex, wantsUpdatePrefilledValues],
+    );
+
+    const handleSetMinutes = useCallback(
+        (value?: string) => {
+            dispatch(
+                handleMutateSet({
+                    setIndex,
+                    key: "durationMinutes",
+                    value,
+                    updatePrefilledValues: wantsUpdatePrefilledValues && isLatestSet,
+                }),
+            );
+        },
+        [dispatch, isLatestSet, setIndex, wantsUpdatePrefilledValues],
+    );
+
+    const handleSetDone = useCallback(() => {
         if (isActiveSet) {
             Keyboard.dismiss();
-            if (weight && reps) {
-                void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-                dispatch(handleMutateSet({ setIndex, key: "weight", value: weight, type: "WEIGHT_BASED" }));
-                dispatch(handleMutateSet({ setIndex, key: "reps", value: reps, type: "WEIGHT_BASED" }));
-                dispatch(markSetAsDone({ setIndex }));
-                emitter.emit("workoutDoneSet");
-            }
+            void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+            dispatch(markSetAsDone({ setIndex }));
         } else {
             handleSetActive();
         }
-    }, [isActiveSet, weight, reps, dispatch, setIndex, handleSetActive]);
+    }, [isActiveSet, dispatch, setIndex, handleSetActive]);
 
     const activeStackStyles = useMemo(() => {
         return { backgroundColor: isActiveSet ? inputFieldBackgroundColor : "transparent" };
@@ -96,10 +141,13 @@ export const WeightBasedSetInput = ({ setIndex, exerciseId }: SetInputRowProps) 
 
     const computedColor = useMemo(() => {
         if (!isEditable) {
+            if (isConfirmed) {
+                return secondaryColor;
+            }
             return textDisabled;
         }
         return mainColor;
-    }, [isEditable, mainColor, textDisabled]);
+    }, [isConfirmed, isEditable, mainColor, secondaryColor, textDisabled]);
 
     const textNumberStyles = useMemo(() => [styles.textNumber, { color: computedColor }], [computedColor]);
     const textInputStyles = useMemo(
@@ -151,8 +199,8 @@ export const WeightBasedSetInput = ({ setIndex, exerciseId }: SetInputRowProps) 
                         editable={isEditable}
                         returnKeyType="done"
                         style={textInputStyles}
-                        value={weight}
-                        onChangeText={handleSetWeight}
+                        value={exercise?.type === "WEIGHT_BASED" ? weight : durationMinutes}
+                        onChangeText={exercise?.type === "WEIGHT_BASED" ? handleSetWeight : handleSetMinutes}
                         textAlign="center"
                         inputMode="decimal"
                     />
@@ -162,14 +210,14 @@ export const WeightBasedSetInput = ({ setIndex, exerciseId }: SetInputRowProps) 
                         editable={isEditable}
                         returnKeyType="done"
                         style={textInputStyles}
-                        value={reps}
-                        onChangeText={handleSetReps}
+                        value={exercise?.type === "WEIGHT_BASED" ? reps : durationSeconds}
+                        onChangeText={exercise?.type === "WEIGHT_BASED" ? handleSetReps : handleSetSeconds}
                         textAlign="center"
                         inputMode="decimal"
                     />
                 </Center>
                 <Center style={styles.center}>
-                    <ThemedPressable disabled={!isEditable} style={buttonStyles} onPress={handleToggle}>
+                    <ThemedPressable style={buttonStyles} onPress={handleSetDone}>
                         <MaterialCommunityIcons size={24} style={playStyle} name={confirmIcon} />
                     </ThemedPressable>
                 </Center>

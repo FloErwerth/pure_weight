@@ -2,18 +2,7 @@ import { createAction, createReducer } from "@reduxjs/toolkit/src";
 import { SortingType } from "../../types";
 import { Temporal } from "@js-temporal/polyfill";
 import { sortWorkouts } from "./sortWorkouts";
-import {
-    DoneExerciseData,
-    ExerciseData,
-    ExerciseId,
-    ExerciseMetaData,
-    ExerciseType,
-    TimeInput,
-    TrainedWorkout,
-    Workout,
-    WorkoutId,
-    WorkoutState,
-} from "./types";
+import { DoneExerciseData, ExerciseData, ExerciseId, ExerciseMetaData, TrainedWorkout, Workout, WorkoutId, WorkoutState } from "./types";
 import { getDateTodayIso } from "../../../utils/date";
 import { getMillisecondsFromTimeInput, getMinutesSecondsFromMilliseconds } from "../../../utils/timeDisplay";
 import { generateId } from "../../../utils/generateId";
@@ -35,13 +24,6 @@ export const mutateActiveExerciseInTrainedWorkout = createAction<
     },
     "exercise_edit_mutate_active_exercise"
 >("exercise_edit_mutate_active_exercise");
-export const mutateEditedExerciseTimeValue = createAction<
-    {
-        key: "pause" | "duration" | "preparation";
-        value: TimeInput;
-    },
-    "exercise_edit_mutate_pause"
->("exercise_edit_mutate_pause");
 
 export const setEditedWorkout = createAction<
     {
@@ -78,8 +60,8 @@ export const handleMutateSet = createAction<
     {
         setIndex: number;
         key: keyof ExerciseData;
-        value?: ExerciseData[keyof ExerciseData];
-        type: ExerciseType;
+        value?: string;
+        updatePrefilledValues?: boolean;
     },
     "handle_mutate_set"
 >("handle_mutate_set");
@@ -117,8 +99,7 @@ export type WorkoutAction =
     | typeof saveEditedWorkout.type
     | typeof setEditedWorkoutName.type
     | typeof handleMutateSet.type
-    | typeof markSetAsDone.type
-    | typeof mutateEditedExerciseTimeValue.type;
+    | typeof markSetAsDone.type;
 
 export const generateNewExercise = (): ExerciseMetaData => ({
     exerciseId: generateId("exercise"),
@@ -127,18 +108,10 @@ export const generateNewExercise = (): ExerciseMetaData => ({
     sets: "",
     reps: "",
     weight: "",
-    duration: {
-        seconds: "",
-        minutes: "",
-    },
-    pause: {
-        seconds: "",
-        minutes: "",
-    },
-    preparation: {
-        seconds: "",
-        minutes: "",
-    },
+    durationMinutes: "",
+    durationSeconds: "",
+    pauseMinutes: "",
+    pauseSeconds: "",
 });
 
 export const workoutReducer = createReducer<WorkoutState>(
@@ -204,13 +177,24 @@ export const workoutReducer = createReducer<WorkoutState>(
             .addCase(handleMutateSet, (state, action) => {
                 const trainedWorkout = state.trainedWorkout;
                 if (trainedWorkout) {
-                    const doneSet = trainedWorkout.exerciseData[trainedWorkout.activeExerciseIndex].doneSets[action.payload.setIndex];
                     const exercise = trainedWorkout.exerciseData[trainedWorkout.activeExerciseIndex];
-                    exercise.exerciseType = action.payload.type;
+
+                    if (
+                        action.payload.updatePrefilledValues &&
+                        (action.payload.key === "weight" ||
+                            action.payload.key === "reps" ||
+                            action.payload.key === "durationMinutes" ||
+                            action.payload.key === "durationSeconds")
+                    ) {
+                        trainedWorkout.workout.exercises[trainedWorkout.activeExerciseIndex][action.payload.key] = action.payload
+                            .value as string;
+                    }
+
                     exercise.doneSets[action.payload.setIndex] = {
-                        ...doneSet,
+                        ...exercise.doneSets[action.payload.setIndex],
                         [action.payload.key]: action.payload.value,
                     };
+
                     trainedWorkout.exerciseData[trainedWorkout.activeExerciseIndex] = exercise;
                 }
             })
@@ -349,18 +333,7 @@ export const workoutReducer = createReducer<WorkoutState>(
                     };
                 }
             })
-            .addCase(mutateEditedExerciseTimeValue, (state, action) => {
-                if (state.editedExercise) {
-                    state.editedExercise = {
-                        index: state.editedExercise.index,
-                        exercise: {
-                            ...state.editedExercise.exercise,
-                            [action.payload.key]: action.payload.value,
-                        },
-                        isTrained: state.editedExercise.isTrained,
-                    };
-                }
-            })
+
             .addCase(recoverWorkout, (state) => {
                 if (state.deletedWorkout?.workout) {
                     if (state.deletedWorkout.trainedWorkout) {
@@ -404,10 +377,10 @@ export const workoutReducer = createReducer<WorkoutState>(
                     const duration = endTimestamp - beginTimestamp - pausedDuration;
                     const doneExercises: DoneExerciseData[] = workout.exerciseData.map((data) => ({
                         doneExerciseId: generateId("exercise"),
+                        type: data.exerciseType,
                         name: data.name,
                         sets: data.doneSets,
                         note: data.note,
-                        type: data.exerciseType,
                         originalExerciseId: data.exerciseId,
                     }));
                     state.workouts
@@ -459,8 +432,8 @@ export const workoutReducer = createReducer<WorkoutState>(
                             .map((_, exerciseIndex) => {
                                 const metaData = workout?.exercises[exerciseIndex];
                                 const prefilledMetaData: TrainedWorkout["exerciseData"][number] = {
-                                    exerciseType: "WEIGHT_BASED",
                                     exerciseId: metaData?.exerciseId ?? 0,
+                                    exerciseType: metaData?.type ?? "WEIGHT_BASED",
                                     name: metaData?.name ?? "",
                                     activeSetIndex: 0,
                                     latestSetIndex: 0,
@@ -540,24 +513,22 @@ export const workoutReducer = createReducer<WorkoutState>(
                         return {
                             ...doneWorkout,
                             doneExercises: doneWorkout.doneExercises?.map((exercise) => {
-                                if (exercise.type === "TIME_BASED") {
-                                    return {
-                                        ...exercise,
-                                        sets: exercise.sets.map((set) => {
-                                            const durationInNumbers = getMinutesSecondsFromMilliseconds(
-                                                getMillisecondsFromTimeInput(set.duration),
-                                            );
+                                return {
+                                    ...exercise,
+                                    sets: exercise.sets.map((set) => {
+                                        const validatedDuration = getMinutesSecondsFromMilliseconds(
+                                            getMillisecondsFromTimeInput(set.durationMinutes, set.durationSeconds),
+                                        );
+                                        if (set.durationMinutes === "" && set.durationSeconds === "") {
                                             return {
                                                 ...set,
-                                                duration: {
-                                                    minutes: durationInNumbers.minutes.toString(),
-                                                    seconds: durationInNumbers.seconds.toString(),
-                                                },
-                                            };
-                                        }),
-                                    } satisfies DoneExerciseData;
-                                }
-                                return exercise;
+                                                durationMinutes: validatedDuration.minutes.toString(),
+                                                durationSeconds: validatedDuration.seconds.toString(),
+                                            } satisfies ExerciseData;
+                                        }
+                                        return set;
+                                    }),
+                                };
                             }),
                         };
                     });

@@ -189,7 +189,7 @@ export const getIsLastSet = createSelector([getTrainedWorkout, (_, exerciseId: E
 const getSumOfSets = (type: ExerciseType, sets?: ExerciseSets) => {
     if (type === "TIME_BASED") {
         return sets?.reduce(
-            (sum, set) => sum + parseFloat(set?.duration?.seconds ?? "0") * 1000 + parseFloat(set?.duration?.minutes ?? "0") * 60 * 1000,
+            (sum, set) => sum + parseFloat(set?.durationMinutes ?? "0") * 1000 + parseFloat(set?.durationSeconds ?? "0") * 60 * 1000,
             0,
         );
     }
@@ -279,11 +279,11 @@ export const getPauseTime = createSelector([getTrainedWorkout], (trainedWorkout)
     if (exerciseIndex === undefined) {
         return -404;
     }
-    const pause = trainedWorkout?.workout?.exercises[exerciseIndex].pause;
-    if (pause === undefined) {
+    const exercise = trainedWorkout?.workout?.exercises[exerciseIndex];
+    if (exercise === undefined || exercise?.pauseMinutes === undefined || exercise?.pauseSeconds === undefined) {
         return -404;
     }
-    return (parseFloat(pause.minutes || "0") * 60 + parseFloat(pause.seconds || "0")) * 1000;
+    return (parseFloat(exercise.pauseMinutes || "0") * 60 + parseFloat(exercise.pauseSeconds || "0")) * 1000;
 });
 
 export const getIsDoneWithTraining = createSelector([getTrainedWorkout], (trainedWorkout) => {
@@ -336,16 +336,15 @@ export const getSetData = createSelector(
             const isConfirmed = Boolean(exerciseData?.doneSets[setIndex]?.confirmed);
             const workout = trainedWorkout?.workout;
             const isLatestSet = setIndex === exerciseData?.latestSetIndex;
-            const isEditingLatestSet = exerciseData?.latestSetIndex === exerciseData?.activeSetIndex;
-            const isEditable = isConfirmed || hasData || setIndex === exerciseData?.activeSetIndex;
-            const isEditedOtherSet = isEditingLatestSet && setIndex === exerciseData?.activeSetIndex;
             const exerciseIndex = workout?.exercises.findIndex((exercise) => exercise.exerciseId === exerciseId);
             return {
                 weight: exerciseData?.doneSets[setIndex]?.weight ?? workout?.exercises[exerciseIndex ?? -1]?.weight,
                 reps: exerciseData?.doneSets[setIndex]?.reps ?? workout?.exercises[exerciseIndex ?? -1]?.reps,
-                duration: workout?.exercises[exerciseIndex ?? -1]?.duration,
-                preparation: workout?.exercises[exerciseIndex ?? -1]?.preparation,
-                isEditable: isEditable || isEditedOtherSet || exerciseData.latestSetIndex === setIndex,
+                durationMinutes:
+                    exerciseData?.doneSets[setIndex]?.durationMinutes ?? workout?.exercises[exerciseIndex ?? -1]?.durationMinutes,
+                durationSeconds:
+                    exerciseData?.doneSets[setIndex]?.durationSeconds ?? workout?.exercises[exerciseIndex ?? -1]?.durationSeconds,
+                isEditable: setIndex === exerciseData?.activeSetIndex,
                 isConfirmed,
                 hasData,
                 isLatestSet,
@@ -398,8 +397,8 @@ export const getAnyHasFallbackSets = createSelector(
                 exercise.sets.every((set, index) => {
                     if (exercise.type === "TIME_BASED") {
                         return (
-                            exercise.fallbackSets?.[index].duration?.seconds === set.duration?.seconds &&
-                            exercise.fallbackSets?.[index].duration?.minutes === set.duration?.minutes
+                            exercise.fallbackSets?.[index]?.durationSeconds === set?.durationSeconds &&
+                            exercise.fallbackSets?.[index]?.durationMinutes === set?.durationMinutes
                         );
                     }
                     return exercise.fallbackSets?.[index].reps === set.reps && exercise.fallbackSets?.[index].weight === set.weight;

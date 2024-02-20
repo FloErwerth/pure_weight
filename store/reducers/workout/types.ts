@@ -18,7 +18,8 @@ export type ExerciseType = "WEIGHT_BASED" | "TIME_BASED";
 export type ExerciseData = {
     weight?: string;
     reps?: string;
-    duration?: TimeInput;
+    durationMinutes?: string;
+    durationSeconds?: string;
     confirmed?: boolean;
 };
 
@@ -39,11 +40,6 @@ export type DoneExerciseData = {
     note?: string;
 };
 
-export type TimeInput = {
-    seconds?: string;
-    minutes?: string;
-};
-
 export type ExerciseSets = ExerciseData[];
 
 export type ExerciseMetaData = {
@@ -53,9 +49,10 @@ export type ExerciseMetaData = {
     weight: string;
     sets: string;
     reps?: string;
-    pause?: TimeInput;
-    duration?: TimeInput;
-    preparation?: TimeInput;
+    pauseMinutes?: string;
+    pauseSeconds?: string;
+    durationMinutes?: string;
+    durationSeconds?: string;
 };
 
 export type EditedWorkout = {
@@ -90,6 +87,7 @@ export type TrainedWorkout = {
         canSnap: boolean;
     }[];
 };
+
 export type WorkoutState = {
     workouts: Workout[];
     workoutSorting: SortingType;

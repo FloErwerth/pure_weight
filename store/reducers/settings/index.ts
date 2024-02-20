@@ -15,6 +15,7 @@ export type SettingsState = {
     stopwatchSettings: StopwatchSettings;
     searchManual?: string;
     switchToNextExercise: boolean;
+    updatePrefilledWorkoutValues: boolean;
 };
 export const setSettingsState = createAction<SettingsState, "settings_set_state">("settings_set_state");
 export const setKeepAwake = createAction<boolean, "settings_keep_awake">("settings_keep_awake");
@@ -22,6 +23,7 @@ export const setLanguage = createAction<Language, "settings_set_language">("sett
 export const setTheme = createAction<ThemeKey, "theme_set">("theme_set");
 export const setUnitSystem = createAction<UnitSystem, "set_unit_system">("set_unit_system");
 export const setSearchManual = createAction<string | undefined, "set_search_manual">("set_search_manual");
+export const setUpdatePrefilledWorkoutValues = createAction<boolean, "set_update_data_automatically">("set_update_data_automatically");
 export const setSwitchToNextExercise = createAction<boolean, "set_switch_to_next_exercise">("set_switch_to_next_exercise");
 export const mutateStopwatchSettings = createAction<
     { key: keyof StopwatchSettings; value: StopwatchSettings[keyof StopwatchSettings] },
@@ -43,6 +45,7 @@ export const settingsRecuder = createReducer<SettingsState>(
         keepAwake: true,
         switchToNextExercise: false,
         stopwatchSettings: { startOnDoneSet: false, notifications: { allowed: true, notify: true } },
+        updatePrefilledWorkoutValues: true,
     },
     (builder) => {
         builder
@@ -62,6 +65,9 @@ export const settingsRecuder = createReducer<SettingsState>(
                     void deactivateKeepAwake();
                 }
                 state.keepAwake = action.payload;
+            })
+            .addCase(setUpdatePrefilledWorkoutValues, (state, action) => {
+                state.updatePrefilledWorkoutValues = action.payload;
             })
             .addCase(setLanguage, (state, action) => {
                 state.language = action.payload;

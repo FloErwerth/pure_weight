@@ -7,7 +7,7 @@ import { Text } from "../../../../Themed/ThemedText/Text";
 import { mutateDoneExercise } from "../../../../../store/reducers/workout";
 import { View } from "react-native";
 import { getTimeUnit } from "../../../../../store/reducers/settings/settingsSelectors";
-import { ExerciseId, TimeInput, WorkoutId } from "../../../../../store/reducers/workout/types";
+import { ExerciseId, WorkoutId } from "../../../../../store/reducers/workout/types";
 import { EditableExerciseInputRow } from "../../../../EditableExercise/EditableExerciseInputRow";
 
 type WeightBasedEditedExerciseProps = {
@@ -22,9 +22,17 @@ export const TimeBasedEditedExercise = ({ doneWorkoutId, doneExerciseId }: Weigh
     const timeUnit = useAppSelector(getTimeUnit);
 
     const handleSetDuration = useCallback(
-        (setIndex: number, timeInputKey: "minutes" | "seconds", duration?: TimeInput, value?: string) => {
+        (setIndex: number, timeInputKey: "durationMinutes" | "durationSeconds", value?: string) => {
             if (doneExercise?.doneExerciseId) {
-                dispatch(mutateDoneExercise({ doneExerciseId: doneExercise?.doneExerciseId, doneWorkoutId, setIndex, key: "duration", value: { ...duration, [timeInputKey]: value } }));
+                dispatch(
+                    mutateDoneExercise({
+                        doneExerciseId: doneExercise?.doneExerciseId,
+                        doneWorkoutId,
+                        setIndex,
+                        key: timeInputKey,
+                        value,
+                    }),
+                );
             }
         },
         [dispatch, doneExercise?.doneExerciseId, doneWorkoutId],
@@ -36,13 +44,23 @@ export const TimeBasedEditedExercise = ({ doneWorkoutId, doneExerciseId }: Weigh
 
     return (
         <View>
-            {doneExercise.sets?.map(({ duration }, index) => (
+            {doneExercise.sets?.map(({ durationMinutes, durationSeconds }, index) => (
                 <HStack key={id + index} ghost style={styles.inputStack}>
                     <Text ghost center style={styles.setIndex}>
                         {index + 1}
                     </Text>
-                    <EditableExerciseInputRow stretch suffix={timeUnit.minutesUnit} setValue={(minutes) => handleSetDuration(index, "minutes", duration, minutes)} value={duration?.minutes} />
-                    <EditableExerciseInputRow stretch suffix={timeUnit.secondsUnit} setValue={(seconds) => handleSetDuration(index, "seconds", duration, seconds)} value={duration?.seconds} />
+                    <EditableExerciseInputRow
+                        stretch
+                        suffix={timeUnit.minutesUnit}
+                        setValue={(minutes) => handleSetDuration(index, "durationMinutes", minutes)}
+                        value={durationMinutes}
+                    />
+                    <EditableExerciseInputRow
+                        stretch
+                        suffix={timeUnit.secondsUnit}
+                        setValue={(seconds) => handleSetDuration(index, "durationSeconds", seconds)}
+                        value={durationSeconds}
+                    />
                 </HStack>
             ))}
         </View>

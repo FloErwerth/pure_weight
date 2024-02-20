@@ -31,3 +31,8 @@ Build Number 27
 
 `0.7.9`:
 + Fixed a wording on a button
+
+`0.7.10`:
++ Added a setting to update prefilled workout weight and reps to the weight and reps of the current set
++ Added rewind and fast forward buttons for the stopwatch
++ Simplified time based inputs

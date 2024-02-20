@@ -16,6 +16,7 @@ export interface ThemedBottomSheetModalProps extends PropsWithChildren {
     onRequestClose?: () => void;
     allowSwipeDownToClose?: boolean;
     snapPoints?: SnapPoint[];
+    animationDuration?: number;
 }
 
 const refs: RefObject<BottomSheetModal>[] = [];
@@ -55,16 +56,20 @@ const renderBackdrop = (props: BottomSheetBackdropProps) => (
     <BottomSheetBackdrop opacity={0.8} appearsOnIndex={0} disappearsOnIndex={-1} {...props} />
 );
 
-const animationConfig = { duration: 225 } as const;
 // eslint-disable-next-line react/display-name
 export const ThemedBottomSheetModal = forwardRef<BottomSheetModal, ThemedBottomSheetModalProps>(
-    ({ hideIndicator, customContentStyle, snapPoints, children, title, onRequestClose, allowSwipeDownToClose = true }, ref) => {
+    (
+        { hideIndicator, customContentStyle, animationDuration, snapPoints, children, title, onRequestClose, allowSwipeDownToClose = true },
+        ref,
+    ) => {
         const { mainColor, inputFieldBackgroundColor } = useTheme();
         const { top, bottom } = useSafeAreaInsets();
         const defaultStyle = useMemo(
             () => [customContentStyle, styles.defaultContentStyle, { backgroundColor: inputFieldBackgroundColor }],
             [customContentStyle, inputFieldBackgroundColor],
         );
+
+        const animationConfig = useMemo(() => ({ duration: animationDuration || 225 }), [animationDuration]);
 
         const customIndicator = useMemo(
             () => ({ backgroundColor: allowSwipeDownToClose && !hideIndicator ? mainColor : "transparent" }),

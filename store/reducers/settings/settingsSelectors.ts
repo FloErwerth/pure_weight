@@ -12,6 +12,7 @@ const getThemeKey = (themeKey: ThemeKey | "system") => {
     return themeKey === "system" ? mappedColorScheme : themeKey;
 };
 export const getThemeKeyFromStore = createSelector([getSettingsState], (settings) => getThemeKey(settings.theme));
+export const getUpdatePrefilledWorkoutValues = createSelector([getSettingsState], (settings) => settings.updatePrefilledWorkoutValues);
 export const getReactNativeTheme = createSelector([getThemeKeyFromStore], (themeKey) => {
     const themeConfig = ThemeConfig[getThemeKey(themeKey)];
     return {

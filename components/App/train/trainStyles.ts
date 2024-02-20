@@ -16,6 +16,7 @@ export const trainStyles = StyleSheet.create({
     deleteButtonWrapper: {
         marginTop: 20,
     },
+    showEditNoteModalStyle: { padding: 10, paddingHorizontal: 15, alignSelf: "center" },
     button: {
         fontSize: 20,
         paddingTop: 1,

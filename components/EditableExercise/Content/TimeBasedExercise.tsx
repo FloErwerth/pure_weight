@@ -2,11 +2,10 @@ import { styles } from "../styles";
 import { EditableExerciseInputRow } from "../EditableExerciseInputRow";
 import { useAppDispatch, useAppSelector } from "../../../store";
 import { useCallback, useMemo } from "react";
-import { mutateEditedExercise, mutateEditedExerciseTimeValue } from "../../../store/reducers/workout";
+import { mutateEditedExercise } from "../../../store/reducers/workout";
 
 import { getEditedExercise } from "../../../store/reducers/workout/workoutSelectors";
 import { TimeInputRow } from "../TimeInputRow";
-import { TimeInput } from "../../../store/reducers/workout/types";
 import { useTranslation } from "react-i18next";
 import { ErrorTextConfig } from "../../../store/reducers/errors/types";
 import { PageContent } from "../../PageContent/PageContent";
@@ -23,43 +22,53 @@ export const TimeBasedExercise = () => {
         [dispatch],
     );
 
-    const handleSetPause = useCallback(
-        (value: { timeInputKey: keyof TimeInput; value: string }) => {
+    const handleSetPauseMinutes = useCallback(
+        (value?: string) => {
             dispatch(
-                mutateEditedExerciseTimeValue({
-                    key: "pause",
-                    value: { ...editedExercise?.exercise?.pause, [value.timeInputKey]: value.value },
+                mutateEditedExercise({
+                    key: "pauseMinutes",
+                    value,
                 }),
             );
         },
-        [dispatch, editedExercise?.exercise?.pause],
+        [dispatch],
     );
 
-    const handleSetDuration = useCallback(
-        (value: { timeInputKey: keyof TimeInput; value: string }) => {
+    const handleSetPauseSeconds = useCallback(
+        (value?: string) => {
             dispatch(
-                mutateEditedExerciseTimeValue({
-                    key: "duration",
-                    value: { ...editedExercise?.exercise?.duration, [value.timeInputKey]: value.value },
+                mutateEditedExercise({
+                    key: "pauseSeconds",
+                    value,
                 }),
             );
         },
-        [dispatch, editedExercise?.exercise?.duration],
+        [dispatch],
     );
 
-    const handleSetPreperation = useCallback(
-        (value: { timeInputKey: keyof TimeInput; value: string }) => {
+    const handleSetDurationMinutes = useCallback(
+        (value?: string) => {
             dispatch(
-                mutateEditedExerciseTimeValue({
-                    key: "preparation",
-                    value: { ...editedExercise?.exercise?.preparation, [value.timeInputKey]: value.value },
+                mutateEditedExercise({
+                    key: "durationMinutes",
+                    value,
                 }),
             );
         },
-        [dispatch, editedExercise?.exercise?.preparation],
+        [dispatch],
     );
 
-    const helpTextConfigPreparation = useMemo(() => ({ text: t("preparation_help_text"), title: t("preparation") }), [t]);
+    const handleSetDurationSeconds = useCallback(
+        (value?: string) => {
+            dispatch(
+                mutateEditedExercise({
+                    key: "durationSeconds",
+                    value,
+                }),
+            );
+        },
+        [dispatch],
+    );
 
     const errorTextConfigs: Record<string, ErrorTextConfig> = useMemo(
         () => ({
@@ -86,17 +95,19 @@ export const TimeBasedExercise = () => {
             />
             <TimeInputRow
                 i18key="duration"
-                setValue={handleSetDuration}
+                setMinutes={handleSetDurationMinutes}
+                setSeconds={handleSetDurationSeconds}
+                minutes={editedExercise?.exercise?.durationMinutes}
+                seconds={editedExercise?.exercise?.durationSeconds}
                 errorTextConfig={errorTextConfigs.duration}
-                value={editedExercise?.exercise?.duration}
             />
             <TimeInputRow
-                i18key="preparation"
-                helpTextConfig={helpTextConfigPreparation}
-                setValue={handleSetPreperation}
-                value={editedExercise?.exercise?.preparation}
+                i18key="pause"
+                setMinutes={handleSetPauseMinutes}
+                setSeconds={handleSetPauseSeconds}
+                minutes={editedExercise?.exercise?.pauseMinutes}
+                seconds={editedExercise?.exercise?.pauseSeconds}
             />
-            <TimeInputRow i18key="pause" setValue={handleSetPause} value={editedExercise?.exercise?.pause} />
         </PageContent>
     );
 };

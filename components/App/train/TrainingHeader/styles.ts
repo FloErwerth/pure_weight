@@ -15,7 +15,7 @@ export const styles = StyleSheet.create({
     },
     durationInput: {
         fontSize: 16,
-        flex: 4,
+        flex: 1.9,
         textAlign: "center",
     },
     inputStack: { flex: 1, gap: 12 },

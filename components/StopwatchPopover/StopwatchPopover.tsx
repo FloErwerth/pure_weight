@@ -1,5 +1,5 @@
 import { useAppSelector } from "../../store";
-import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Animated, Dimensions, Easing, Pressable, View } from "react-native";
 import { useTheme } from "../../theme/context";
 import { HStack } from "../Stack/HStack/HStack";
@@ -21,7 +21,7 @@ export const StopwatchPopover = () => {
     const [showPopover, setShowPopover] = useState(false);
     const [buttonPos, setButtonPos] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
     const top = useRef(new Animated.Value(100)).current;
-    const { timerStarted, reset, remainingTime, stopTimer, startTimer } = useStopwatch(pauseTime);
+    const { timerStarted, reset, remainingTime, stopTimer, startTimer, rewind15Seconds, fastForward15Seconds } = useStopwatch(pauseTime);
     const buttonRef = useRef<View>(null);
     const { inputFieldBackgroundColor } = useTheme();
     const { startOnDoneSet } = useAppSelector(getStopwatchSettings);
@@ -34,16 +34,21 @@ export const StopwatchPopover = () => {
         }
     }, [startTimer, stopTimer, timerStarted]);
 
-    const handleDoneSetCallback = useCallback(() => {
-        if (startOnDoneSet) {
-            reset();
-            startTimer();
-        }
-    }, [startOnDoneSet, timerStarted, toggleTimer]);
+    const handleDoneSetCallback = useCallback(
+        (isLatestSet?: boolean) => {
+            if (isLatestSet !== undefined && !isLatestSet) {
+                return;
+            }
+            if (startOnDoneSet) {
+                reset();
+                startTimer();
+            }
+        },
+        [reset, startOnDoneSet, startTimer],
+    );
 
     useEffect(() => {
         emitter.addListener("workoutDoneSet", handleDoneSetCallback);
-
         return () => {
             emitter.removeListener("workoutDoneSet", handleDoneSetCallback);
         };
@@ -59,12 +64,12 @@ export const StopwatchPopover = () => {
         });
     }, []);
 
-    useLayoutEffect(() => {
+    useEffect(() => {
         if (showPopover) {
             getButtonPos();
             Animated.parallel([
                 Animated.timing(top, {
-                    toValue: buttonPos.y - Dimensions.get("screen").height - 50,
+                    toValue: buttonPos.y - Dimensions.get("screen").height - 75,
                     useNativeDriver: false,
                     easing: Easing.inOut(Easing.ease),
                     duration: 400,
@@ -138,10 +143,22 @@ export const StopwatchPopover = () => {
                     pointerEvents: showPopover ? "auto" : "none",
                 }}
             />
+
             <ThemedView ghost>
                 <AnimatedView style={[styles.wrapper, animatedViewStyles]}>
-                    <HStack input style={styles.hStack}>
+                    <HStack ghost style={styles.hStack}>
+                        <ThemedPressable style={styles.timeButton} disabled={remainingTime <= 15000} ghost center onPress={rewind15Seconds}>
+                            <ThemedMaterialCommunityIcons disabled={remainingTime <= 15000} ghost name="rewind-15" size={40} />
+                        </ThemedPressable>
                         <StopwatchDisplay textSize={50} remainingTime={remainingTime} />
+                        <ThemedPressable
+                            style={styles.timeButton}
+                            disabled={remainingTime === pauseTime}
+                            ghost
+                            center
+                            onPress={fastForward15Seconds}>
+                            <ThemedMaterialCommunityIcons disabled={remainingTime === pauseTime} ghost name="fast-forward-15" size={40} />
+                        </ThemedPressable>
                     </HStack>
                     <HStack input style={styles.buttons}>
                         <Pressable onPress={toggleTimer}>
@@ -156,11 +173,11 @@ export const StopwatchPopover = () => {
                 <ThemedPressable padding round secondary onLayout={getButtonPos} reference={buttonRef} onPress={togglePopover}>
                     <AnimatedView
                         ghost
-                        style={{ opacity: iconOpacity, position: "absolute", left: 10, top: 10, alignItems: "center", width: "100%" }}>
+                        style={{ opacity: iconOpacity, position: "absolute", left: 10, top: 7, alignItems: "center", width: "100%" }}>
                         <ThemedMaterialCommunityIcons secondary name="timer-outline" size={35} />
                     </AnimatedView>
                     <AnimatedView secondary style={{ opacity, width: 100 }}>
-                        <StopwatchDisplay textSize={35} remainingTime={remainingTime} />
+                        <StopwatchDisplay textSize={25} remainingTime={remainingTime} />
                     </AnimatedView>
                 </ThemedPressable>
             </ThemedView>

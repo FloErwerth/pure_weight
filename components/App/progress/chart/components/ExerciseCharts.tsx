@@ -67,7 +67,7 @@ const getCumulativeExerciseData = (data: { sets: ExerciseSets }[], type: Exercis
             return [
                 ...vals,
                 sets
-                    .map((set) => parseFloat(set?.duration?.minutes ?? "0") * 60 * 1000 + parseFloat(set?.duration?.seconds ?? "0") * 1000)
+                    .map((set) => parseFloat(set?.durationMinutes ?? "0") * 60 * 1000 + parseFloat(set?.durationSeconds ?? "0") * 1000)
                     .reduce((cumulative, entry) => cumulative + entry, 0),
             ];
         }
@@ -103,10 +103,7 @@ const getAverageDurationPerExercise = (data: { sets: ExerciseSets }[]) => {
             parseFloat(
                 (
                     setValues
-                        .map(
-                            (set) =>
-                                parseFloat(set?.duration?.minutes ?? "0") * 60 * 1000 + parseFloat(set?.duration?.seconds ?? "0") * 1000,
-                        )
+                        .map((set) => parseFloat(set?.durationMinutes ?? "0") * 60 * 1000 + parseFloat(set?.durationSeconds ?? "0") * 1000)
                         .reduce((cumulative, entry) => cumulative + entry, 0) / setValues.length
                 ).toString(),
             ),

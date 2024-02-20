@@ -88,6 +88,7 @@
   "unit_weight_kg_short": "kg",
   "unit_weight_pounds": "Pfund",
   "unit_weight_pounds_short": "pfd",
+  "timer_not_done": "Übung noch nicht beendet",
 
   "settings_language_german": "Deutsch",
   "settings_language_english": "English",
@@ -102,11 +103,8 @@
   "settings_keep_awake_helptext_text": "Diese Einstellung erlaubt es Dir den Ruhezustand des Bildschirms zu steuern. \n\nWenn ausgewählt bleibt der Bildschirm während der Nutzung der App aktiviert.",
   "settings_unit_system_title": "Einheiten-System",
   "settings_unit_system_helptext_text": "Diese Einstellung erlaubt es Dir das Einheiten-System für die App einzustellen. \n\nDas metrische System umfasst Einheiten wie Kilogramm, Zentimeter und Liter. \n\nDas angloamerikanische System umfasst Einheiten wie Pfund, Inch und Gallonen. \n\nWechselst Du zwischen den Einheiten-Systemen, werden alle gespeicherten Werte umgerechnet",
-  "settings_auto_update_linked_exercises": "Übungen autom. aktualisieren",
-  "settings_auto_update_linked_exercises_text": "Wenn aktiviert, werden alle Übungen, die mit der gleichen Vorlage erstellt wurden, automatisch auf dem gleichen Stand des Fortschritts gehalten. \n\nWenn Du zum Beispiel Bankdrücken als Vorlage in zwei verschiedenen Workouts verwendet hast, wird der Fortschritt in beiden Workouts aktualisiert, wenn Du in einem Workout Bankdrücken trainierst.",
-  "settings_auto_update_templates": "Vorlagen autom. aktualisieren",
-  "settings_auto_update_templates_text": "Wenn aktiviert, wird eine Vorlage automatisch entsprechend den letzten Änderungen an einer Übung, welches die Vorlage benutzt, angepasst. \n\nBeispiel: Du trainierst Bankdrücken, was aus einer Vorlage erstellt wird und Du änderst das Gewicht der Übung, so wird das Gewicht des Templates ebenfalls angepasst.",
-
+  "settings_update_workout_automatically_title": "Workout autom. aktualisieren",
+  "settings_update_workout_automatically_helptext": "Aktiviert die automatische Synchronisierung der voreingetragenene Gewichte und Wiederholungen des nächsten Satzes in deinem Workout. \n\nBeispiel: Du trainierst Bankdrücken und erhöhst dein Gewicht von 50 auf 55kg. Das vorausgefüllte Gewicht beim nächsten Satz wird dann 55kg sein.",
 
   "stopwatch_pause_notification_title": "Deine Pause ist vorbei",
   "stopwatch_pause_notification_text": "Es ist Zeit dein Training fortzusetzen",

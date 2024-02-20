@@ -14,8 +14,8 @@ interface SmallMetadataDisplayProps {
 
 export const WeightBasedSmallExerciseMetadataDisplay = ({ exerciseMetaData }: SmallMetadataDisplayProps) => {
     const { t } = useTranslation();
-    const showMinutes = parseFloat(exerciseMetaData?.pause?.minutes ?? "0") !== 0;
-    const showSeconds = parseFloat(exerciseMetaData?.pause?.seconds ?? "0") !== 0;
+    const showMinutes = parseFloat(exerciseMetaData?.pauseMinutes ?? "0") !== 0;
+    const showSeconds = parseFloat(exerciseMetaData?.pauseSeconds ?? "0") !== 0;
     const { secondsUnit, minutesUnit } = useAppSelector(getTimeUnit);
     const showPause = showMinutes || showSeconds;
 
@@ -31,7 +31,7 @@ export const WeightBasedSmallExerciseMetadataDisplay = ({ exerciseMetaData }: Sm
                         {showMinutes && (
                             <ThemedView>
                                 <HStack style={styles.smallGap}>
-                                    <Text style={trainStyles.exerciseMetaText}>{exerciseMetaData.pause?.minutes}</Text>
+                                    <Text style={trainStyles.exerciseMetaText}>{exerciseMetaData.pauseMinutes}</Text>
                                     <Text style={trainStyles.exerciseMetaText}>{minutesUnit}</Text>
                                 </HStack>
                             </ThemedView>
@@ -39,7 +39,7 @@ export const WeightBasedSmallExerciseMetadataDisplay = ({ exerciseMetaData }: Sm
                         {showSeconds && (
                             <ThemedView>
                                 <HStack style={styles.smallGap}>
-                                    <Text style={trainStyles.exerciseMetaText}>{exerciseMetaData.pause?.seconds}</Text>
+                                    <Text style={trainStyles.exerciseMetaText}>{exerciseMetaData.pauseSeconds}</Text>
                                     <Text style={trainStyles.exerciseMetaText}>{secondsUnit}</Text>
                                 </HStack>
                             </ThemedView>

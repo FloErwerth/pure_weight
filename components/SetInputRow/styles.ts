@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import { borderRadius } from "../../../theme/border";
+import { borderRadius } from "../../theme/border";
 
 export const styles = StyleSheet.create({
     vStack: {
@@ -9,22 +9,15 @@ export const styles = StyleSheet.create({
         marginHorizontal: 5,
         marginVertical: 3,
     },
-    inputStack: { justifyContent: "space-between", gap: 10, height: 50 },
+    inputStack: { gap: 10 },
+    center: { flex: 1, height: 50 },
     numberCenter: { flex: 0.2, height: 50 },
     textNumber: { padding: 10, fontSize: 16 },
     textInput: {
-        margin: 5,
+        padding: 10,
         alignSelf: "stretch",
-        justifyContent: "center",
+        borderRadius,
         fontSize: 16,
-        height: 40,
-    },
-    controlsWrapper: {
-        gap: 5,
-        height: 50,
-        marginRight: 10,
-        alignContent: "center",
-        justifyContent: "center",
     },
     button: { width: 40, padding: 7, borderRadius, alignSelf: "center" },
     set: {

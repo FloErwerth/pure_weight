@@ -124,6 +124,7 @@
   "unit_weight_pounds_short": "lbs",
   "unit_system_metric": "Metric",
   "unit_system_imperial": "Imperial",
+  "timer_not_done": "Exercise not done",
 
   "settings_language_german": "Deutsch",
   "settings_language_english": "English",
@@ -145,6 +146,10 @@
   "settings_keep_awake_title": "Idle state",
   "settings_keep_awake": "Keep display awake",
   "settings_keep_awake_helptext_text": "This setting makes you able to set the idle state of your display. \n\nIf selected, the display will be active during the usage of the app.",
+
+  "settings_update_workout_automatically_title": "Update workout automatically",
+  "settings_update_workout_automatically_helptext_text": "Enables the automatic synchronization of the prefilled weights and reps of the next set in your workout. \n\nExample: You train bench press and increase your weight from 50 to 55kg. The pre-filled weight in the next set will then be 55kg.",
+
 
   "stopwatch_pause_notification_title": "Your pause is over",
   "stopwatch_pause_notification_text": "It is time to get back to the training",

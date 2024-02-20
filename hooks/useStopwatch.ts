@@ -17,6 +17,7 @@ export const useStopwatch = (totalDuration: number, config: StopwatchConfig = { 
     const [remainingTime, setRemainingTime] = useState<number>(totalDuration);
     const [timerStarted, setTimerStarted] = useState(false);
     const { t } = useTranslation();
+
     const showNotification = useScheduleNotification({
         title: t("stopwatch_pause_notification_title"),
         body: t("stopwatch_pause_notification_text"),
@@ -35,6 +36,24 @@ export const useStopwatch = (totalDuration: number, config: StopwatchConfig = { 
         stopTimer();
         setRemainingTime(totalDuration);
     }, [totalDuration, stopTimer]);
+
+    const rewind15Seconds = useCallback(() => {
+        setRemainingTime((remainingTime) => {
+            if (remainingTime <= 15000) {
+                return remainingTime;
+            }
+            return remainingTime - 15000;
+        });
+    }, []);
+
+    const fastForward15Seconds = useCallback(() => {
+        setRemainingTime((remainingTime) => {
+            if (remainingTime >= totalDuration - 15000) {
+                return totalDuration;
+            }
+            return remainingTime + 15000;
+        });
+    }, [totalDuration]);
 
     const update = useCallback(() => {
         setRemainingTime((remainingTime) => {
@@ -71,7 +90,9 @@ export const useStopwatch = (totalDuration: number, config: StopwatchConfig = { 
             stopTimer,
             pauseTimer,
             reset,
+            rewind15Seconds,
+            fastForward15Seconds,
         }),
-        [timerStarted, remainingTime, startTimer, stopTimer, pauseTimer, reset],
+        [timerStarted, remainingTime, startTimer, stopTimer, pauseTimer, reset, rewind15Seconds, fastForward15Seconds],
     );
 };

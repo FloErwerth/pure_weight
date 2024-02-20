@@ -1,4 +1,3 @@
-import { TimeInput } from "../../store/reducers/workout/types";
 import { ErrorTextConfig } from "../../store/reducers/errors/types";
 
 export interface EditableExerciseInputRowProps {
@@ -15,8 +14,10 @@ export interface EditableExerciseInputRowProps {
 }
 
 export interface TimeInputRowProps {
-    value?: TimeInput;
-    setValue: (value: { timeInputKey: keyof TimeInput; value: string }) => void;
+    seconds?: string;
+    minutes?: string;
+    setMinutes: (minutes: string) => void;
+    setSeconds: (seconds: string) => void;
     i18key?: string;
     stretch?: boolean;
     suffix?: string;

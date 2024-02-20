@@ -24,12 +24,18 @@ export const ExerciseMetadataDisplay = ({ exerciseId }: ExerciseMetadataDisplayP
     const dispatch = useAppDispatch();
     const exerciseMetaData = useAppSelector((state: AppState) => getExerciseMetadataFromWorkoutById(state, exerciseId));
     const navigate = useNavigate();
+
     const handleEditExercise = useCallback(() => {
         dispatch(setEditedExercise({ exerciseId }));
         void Haptics.selectionAsync();
         navigate("workouts/create/exercise");
     }, [dispatch, exerciseId, navigate]);
-    const SmallExerciseDataDisplay = useTypeSpecificComponent(exerciseMetaData?.type, WeightBasedSmallExerciseMetadataDisplay, TimeBasedSmallExerciseDataDisplay);
+
+    const SmallExerciseDataDisplay = useTypeSpecificComponent(
+        exerciseMetaData?.type,
+        WeightBasedSmallExerciseMetadataDisplay,
+        TimeBasedSmallExerciseDataDisplay,
+    );
 
     if (!exerciseMetaData) {
         return null;

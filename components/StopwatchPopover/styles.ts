@@ -15,6 +15,10 @@ export const styles = StyleSheet.create({
         marginBottom: 20,
         justifyContent: "space-evenly",
     },
+    timeButton: {
+        width: 50,
+        justifyContent: "center",
+    },
     buttons: { gap: 20, justifyContent: "center" },
 });
 

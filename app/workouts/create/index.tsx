@@ -224,7 +224,7 @@ export const Create = () => {
                                 scrollsToTop
                                 removeClippedSubviews
                                 keyboardShouldPersistTaps="handled"
-                                keyExtractor={(item) => `${item.index}${item.exercise.name}${item.exercise.pause}`}
+                                keyExtractor={(item) => `${item?.exercise?.exerciseId}`}
                                 data={mappedExercises}
                                 onDragEnd={handleOnDragEnd}
                                 renderItem={renderItem}
