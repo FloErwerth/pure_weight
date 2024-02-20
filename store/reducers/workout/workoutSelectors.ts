@@ -151,8 +151,8 @@ export const getPreviousWorkout = createSelector(
         const foundEntries = new Map<ExerciseId, { date: string; sets: ExerciseSets; note?: string; type: ExerciseType; name: string }>();
         for (let workoutIndex = doneWorkouts?.length - 1; workoutIndex >= 0; workoutIndex--) {
             doneWorkouts?.[workoutIndex].doneExercises?.forEach((exercise) => {
-                if (!foundEntries.get(exercise.doneExerciseId)) {
-                    foundEntries.set(exercise.doneExerciseId, {
+                if (!foundEntries.get(exercise.originalExerciseId)) {
+                    foundEntries.set(exercise.originalExerciseId, {
                         type: exercise.type,
                         date: getLocaleDate(doneWorkouts?.[workoutIndex].isoDate, language, {
                             dateStyle: "medium",
@@ -164,6 +164,7 @@ export const getPreviousWorkout = createSelector(
                 }
             });
         }
+        console.log(foundEntries.get(exerciseId));
         return foundEntries.get(exerciseId);
     },
 );
@@ -213,7 +214,7 @@ export const getOverallTrainingTrend = createSelector(
 
                 doneExercises?.forEach(({ originalExerciseId, sets, type }) => {
                     const exerciseName = workout.exercises.find(({ exerciseId }) => exerciseId === originalExerciseId)?.name;
-                    const fittingExerciseBefore = workoutBefore?.doneExercises?.findLast(
+                    const fittingExerciseBefore = workoutBefore?.doneExercises?.find(
                         ({ originalExerciseId: id }) => originalExerciseId === id,
                     );
                     if (fittingExerciseBefore) {
@@ -229,6 +230,7 @@ export const getOverallTrainingTrend = createSelector(
                 });
             }
         });
+
         return foundCompareables.reduce(
             (bestImprovement, { current, before }) => {
                 if (before.sum !== 0) {

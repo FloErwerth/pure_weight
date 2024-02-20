@@ -39,3 +39,4 @@ Build Number 27
 + Changed create exercise to add exercise
 + Only show warning for exiting workout edit if there are unsaved changes
 + Only show warning for exiting exercise edit if there are unsaved changes
++ Added automatic recalculation for too large time inputs (seconds)

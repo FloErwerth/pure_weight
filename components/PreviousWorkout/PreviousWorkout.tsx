@@ -21,6 +21,7 @@ interface PreviousTrainingProps {
 }
 export const PreviousWorkout = ({ exerciseId, exerciseType }: PreviousTrainingProps) => {
     const previousWorkout = useAppSelector((state: AppState) => getPreviousWorkout(state, state.settingsState.language, exerciseId));
+
     const { t } = useTranslation();
     const { textDisabled, mainColor, secondaryColor, inputFieldBackgroundColor } = useTheme();
     const { ref } = useBottomSheetRef();

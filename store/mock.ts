@@ -321,9 +321,9 @@ export const mockState: AppState = {
                         duration: "120",
                         doneExercises: [
                             {
-                                originalExerciseId: "exercise-6",
-                                type: "TIME_BASED",
+                                originalExerciseId: "exercise-2",
                                 doneExerciseId: "exercise-1",
+                                type: "TIME_BASED",
                                 name: "Planks",
                                 sets: [
                                     { durationMinutes: "0", durationSeconds: "56" },
@@ -339,7 +339,7 @@ export const mockState: AppState = {
                         duration: "120",
                         doneExercises: [
                             {
-                                originalExerciseId: "exercise-6",
+                                originalExerciseId: "exercise-2",
                                 type: "TIME_BASED",
                                 doneExerciseId: "exercise-1",
                                 name: "Planks",
