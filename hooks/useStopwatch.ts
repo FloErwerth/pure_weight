@@ -14,7 +14,6 @@ export const useStopwatch = (totalDuration: number, config?: StopwatchConfig) =>
 
     const update = useCallback(() => {
         setRemainingTime((remainingTime) => {
-            console.log(remainingTime);
             if (remainingTime <= 0) {
                 if (config?.onTimerDone) {
                     config.onTimerDone(remainingTime);

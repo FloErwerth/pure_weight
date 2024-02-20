@@ -164,7 +164,6 @@ export const getPreviousWorkout = createSelector(
                 }
             });
         }
-        console.log(foundEntries.get(exerciseId));
         return foundEntries.get(exerciseId);
     },
 );
