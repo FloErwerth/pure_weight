@@ -5,6 +5,7 @@ export interface EditableExerciseInputRowProps {
     setValue: (value: string) => void;
     errorTextConfig?: ErrorTextConfig;
     i18key?: string;
+    background?: boolean;
     stretch?: boolean;
     suffix?: string;
     placeholder?: string;

@@ -1,5 +1,5 @@
 import { Text } from "../../../components/Themed/ThemedText/Text";
-import React, { useCallback, useMemo } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import { useNavigate } from "../../../hooks/navigate";
 import { useAppDispatch, useAppSelector } from "../../../store";
 import { AddButton } from "../../../components/AddButton/AddButton";
@@ -78,6 +78,8 @@ export const Create = () => {
     const { ref: alertRef, openBottomSheet: openAlert, closeBottomSheet: closeAlert } = useBottomSheetRef();
     const { toastRef, openToast, closeToast, showToast } = useToast();
     const getIsValidWorkout = useValidateWorkout();
+    const { ref: deleteWarningRef, openBottomSheet: openDeleteWarning, closeBottomSheet: closeDeleteWarning } = useBottomSheetRef();
+    const [deletedExerciseIndex, setDeletedExerciseIndex] = useState<number | undefined>(undefined);
     const wasEdited = useMemo(
         () => editedWorkout?.stringifiedWorkout !== JSON.stringify(editedWorkout?.workout),
         [editedWorkout?.stringifiedWorkout, editedWorkout?.workout],
@@ -119,13 +121,8 @@ export const Create = () => {
                 };
 
                 const handleDelete = () => {
-                    void Haptics.notificationAsync(NotificationFeedbackType.Success);
-                    dispatch(deleteExerciseFromEditedWorkout(index));
-                    if (showToast && toastRef.current) {
-                        toastRef.current.restart();
-                    } else {
-                        openToast();
-                    }
+                    openDeleteWarning();
+                    setDeletedExerciseIndex(index);
                 };
 
                 const handleOnConfirmEdit = () => {
@@ -140,7 +137,7 @@ export const Create = () => {
                 return { onDelete: handleDelete, handleCancel, onEdit, exercise, index, handleOnConfirmEdit };
             }) ?? []
         );
-    }, [editedWorkout?.workout.exercises, dispatch, navigate, showToast, toastRef, openToast, closeAlert]);
+    }, [editedWorkout?.workout.exercises, dispatch, navigate, openDeleteWarning, closeAlert]);
 
     const handleNavigateHome = useCallback(() => {
         handleCleanErrors();
@@ -163,7 +160,7 @@ export const Create = () => {
         } else {
             handleNavigateHome();
         }
-    }, [editedWorkout?.workout.exercises.length, editedWorkout?.workout.name, handleNavigateHome, openAlert]);
+    }, [handleNavigateHome, openAlert, wasEdited]);
 
     const handleOnDragEnd = useCallback(
         ({ data }: { data: MappedExercises[] }) => {
@@ -209,6 +206,23 @@ export const Create = () => {
     );
     const alertTitle = useMemo(() => t(isEditedWorkout ? "alert_edit_discard_title" : "alert_create_discard_title"), [t, isEditedWorkout]);
 
+    const deleteTitle = useMemo(() => t("alert_delete_exercise_title"), [t]);
+    const deleteContent = useMemo(() => t("alert_delete_exercise_content"), [t]);
+    const deleteConfirm = useMemo(() => t("alert_delete_exercise_confirm"), [t]);
+
+    const handleConfirmDeletion = useCallback(() => {
+        closeDeleteWarning();
+        if (deletedExerciseIndex !== undefined) {
+            void Haptics.notificationAsync(NotificationFeedbackType.Success);
+            dispatch(deleteExerciseFromEditedWorkout(deletedExerciseIndex));
+            if (showToast && toastRef.current) {
+                toastRef.current.restart();
+            } else {
+                openToast();
+            }
+        }
+    }, [closeDeleteWarning, deletedExerciseIndex, dispatch, openToast, showToast, toastRef]);
+
     return (
         <ThemedView stretch>
             <ThemedView background style={styles.innerWrapper}>
@@ -250,6 +264,7 @@ export const Create = () => {
                     <AddButton onPress={handleAddExercise} />
                 </PageContent>
             </ThemedView>
+
             <ThemedBottomSheetModal title={alertTitle} ref={alertRef}>
                 <PageContent stretch ghost>
                     <AnswerText>{alertContent}</AnswerText>
@@ -260,6 +275,22 @@ export const Create = () => {
                             <HStack ghost style={{ alignItems: "center", gap: 10 }}>
                                 <ThemedMaterialCommunityIcons ghost name={"delete"} size={24} />
                                 <Text ghost>{t(confirmButtonConfig.localeKey)}</Text>
+                            </HStack>
+                        </ThemedPressable>
+                    </ThemedView>
+                </PageContent>
+            </ThemedBottomSheetModal>
+
+            <ThemedBottomSheetModal title={deleteTitle} ref={deleteWarningRef}>
+                <PageContent stretch ghost>
+                    <AnswerText>{deleteContent}</AnswerText>
+                </PageContent>
+                <PageContent ghost paddingTop={30}>
+                    <ThemedView ghost style={{ gap: 10 }}>
+                        <ThemedPressable round padding secondary onPress={handleConfirmDeletion}>
+                            <HStack ghost style={{ alignItems: "center", gap: 10 }}>
+                                <ThemedMaterialCommunityIcons ghost name={"delete"} size={24} />
+                                <Text ghost>{deleteConfirm}</Text>
                             </HStack>
                         </ThemedPressable>
                     </ThemedView>

@@ -43,7 +43,8 @@
   "create_exercise": "Übung hinzufügen",
   "edit_exercise": "Änderungen bestätigen",
   "exercise_edit_title": "Übung bearbeiten",
-  "alert_delete_title": "Übung löschen?",
+
+
   "create_missing_data_text": "Es sind keine Übungen zum Anzeigen vorhanden",
   "create_exercise_type_label": "Übungstyp",
   "create_exercise_WEIGHT_BASED": "Gewichtbasiert",
@@ -142,7 +143,7 @@
   "template_redo": "Vorlage wiederherstellen",
 
   "workout_history_edit_warning_title": "Änderungen nicht gespeichert",
-  "workout_history_edit_warning_message": "Du hast Änderungen an diesem Workout vorgenommen, die noch nicht gespeichert wurden. \n\nMöchtest Du die Änderungen speichern?",
+  "workout_history_edit_warning_message": "Du hast Änderungen an diesem Workout vorgenommen, die noch nicht gespeichert wurden",
   "workout_history_edit_discard_action": "Änderungen verwerfen",
   "workout_history_edit_save_action": "Änderungen speichern",
 
@@ -204,9 +205,25 @@
   "progress_avg_dur": "Ø Dauer",
   "progress_avg_dur_hint": "Zeigt die durchschnittliche Dauer eines Satzes an",
 
+  "alert_delete_exercise_title": "Übung löschen",
+  "alert_delete_exercise_content": "Das Löschen der Übung hat zufolge, dass alle Daten zu dieser Übung verloren gehen",
+  "alert_delete_exercise_confirm": "Übung trotzdem löschen",
+
   "alert_delete_workout_title": "Workout löschen",
-  "alert_delete_workout_content": "Möchtest Du das Workout wirklich löschen? \n\nAlle Daten zu diesem Workout gehen verloren.",
-  "alert_workout_delete_confirm": "Löschen bestätigen",
+  "alert_delete_workout_content": "Das Löschen des Workouts hat zufolge, dass alle Fortschritte zu diesem Workout verloren gehen. Dies betrifft auch alle Übungen, die in diesem Workout hinterlegt sind",
+  "alert_workout_delete_confirm": "Wörkout trotzdem löschen",
+
+  "alert_create_measurement_discard_content": "Wenn Du die Erstellung deiner Messung abbrichst gehen die bisherigen Eingaben verloren.",
+  "alert_edit_measurement_discard_content": "Wenn Du die Bearbeitung deiner Messung abbricht gehen die bisherigen Änderungen verloren.",
+
+  "alert_add_measurement_data_title": "Messpunkt nicht gespeichert",
+  "alert_add_measurement_data_content": "Der hinzugefügte Messpunkt wurde noch nicht gespeichert. Bei Bestätigung wird der Messpunkt verworfen.",
+  "alert_add_measurement_data_confirm": "Messpunkt verwerfen",
+
+  "alert_delete_measurement_title": "Messung löschen",
+  "alert_delete_measurement_content": "Das Löschen der Messung hat zufolge, dass alle Daten zu dieser Messung verloren gehen. Dies betrifft auch die erfassten Messungen zu dieser Messung",
+  "alert_delete_measurement_confirm": "Messung trotzdem löschen",
+
   "alert_create_confirm_cancel": "Erstellung trotzdem abbrechen",
   "alert_edit_confirm_cancel": "Bearbeitung trotzdem abbrechen",
   "alert_create_workout_continue": "Dialog schließen",
@@ -217,6 +234,10 @@
   "alert_create_exercise_discard_title": "Erstellung abbrechen",
   "alert_create_exercise_discard_content": "Wenn Du das Hinzufügen der Übung abbrichst gehen die bisherigen Änderungen verloren.",
   "alert_edit_exercise_discard_content": "Wenn Du die Bearbeitung der Übung abbrichst gehen die bisherigen Änderungen verloren.",
+
+  "alert_measurement_date_title": "Datum bereits vorhanden",
+  "alert_measurement_date_confirm": "Überschreiben bestätigen",
+  "alert_measurement_date_content": "Es ist bereits eine Messung am angegebenen Datum vorhanden. \n\nBitte bestätige, dass Du die Messung überschreiben möchtest. Die vorherige Messung wird dabei gelöscht.",
 
   "progress_placeholder": "Messdaten oder Daten von Einheiten hinzufügen, um Graphen anzeigen zu können",
   "settings_update_templates_title": "Vorlagen autom. aktualisieren",
@@ -236,9 +257,7 @@
   "measurement_page_title": "Neue Messung",
   "measurement_add": "Messung speichern",
   "measurement_delete": "Messung löschen",
-  "measurement_warning_title": "Datum bereits vorhanden",
-  "measurement_warning_confirm": "Überschreiben bestätigen",
-  "measurement_warning_text": "Es ist bereits eine Messung am angegebenen Datum vorhanden. Bitte bestätige, dass Du die Messung überschreiben möchtest. Die vorherige Messung wird dabei gelöscht.",
+
   "measurement_placeholder": "Name der Messung",
   "measurement_unit": "Einheit",
   "measurement_latest": "Letzte Messung:",

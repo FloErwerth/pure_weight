@@ -1,50 +1,47 @@
-import { Pressable, View } from "react-native";
+import { Pressable } from "react-native";
 import { Text } from "../../../Themed/ThemedText/Text";
 import { useMemo } from "react";
 import { styles } from "./styles";
 import { useTheme } from "../../../../theme/context";
-import { ColorIndicator } from "../../../ColorIndicator/ColorIndicator";
 
 interface RenderedDayProps {
     day: string;
     handleSelectDate: () => void;
     selected: boolean;
+    marked?: boolean;
     latestDay?: boolean;
     selectable?: boolean;
 }
 
-const useMarkedDayStyles = (selected: boolean, selectable?: boolean) => {
-    const { secondaryColor, mainColor, textDisabled } = useTheme();
-
+const useMarkedDayStyles = (selected: boolean, selectable?: boolean, marked?: boolean) => {
+    const { mainColor, textDisabled } = useTheme();
     const viewStyle = useMemo(() => {
-        if (selectable === undefined) {
-            return [styles.dateWrapper];
-        }
-        return [styles.dateWrapper, { backgroundColor: selected ? mainColor : textDisabled }];
-    }, [mainColor, selectable, selected, textDisabled]);
+        return [
+            styles.dateWrapper,
+            {
+                backgroundColor: selected ? mainColor : marked ? textDisabled : "transparent",
+            },
+        ];
+    }, [mainColor, marked, selected, textDisabled]);
 
     const textStyle = useMemo(() => {
         return {
-            color: selected ? mainColor : secondaryColor,
-            fontSize: selected ? 18 : 16,
+            color: selected ? textDisabled : selectable ? mainColor : textDisabled,
             fontWeight: selected ? "bold" : "normal",
         } as const;
-    }, [selected, mainColor, secondaryColor]);
+    }, [selected, textDisabled, selectable, mainColor]);
+
     return useMemo(() => ({ viewStyle, textStyle }), [textStyle, viewStyle]);
 };
 
-export const RenderedDay = ({ day, handleSelectDate, selected, latestDay, selectable }: RenderedDayProps) => {
-    const { viewStyle, textStyle } = useMarkedDayStyles(selected);
-    const showDot = Boolean(selectable && !selected);
+export const RenderedDay = ({ day, handleSelectDate, selected, selectable, marked }: RenderedDayProps) => {
+    const { viewStyle, textStyle } = useMarkedDayStyles(selected, selectable, marked);
 
     return (
-        <Pressable disabled={!selectable} onPress={handleSelectDate}>
-            <View style={viewStyle}>
-                <Text style={textStyle} ghost>
-                    {day}
-                </Text>
-                {showDot && <ColorIndicator width={latestDay ? 8 : 4} height={4} />}
-            </View>
+        <Pressable style={viewStyle} disabled={!selectable} onPress={handleSelectDate}>
+            <Text style={textStyle} ghost>
+                {day}
+            </Text>
         </Pressable>
     );
 };

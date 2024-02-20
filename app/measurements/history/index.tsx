@@ -14,8 +14,8 @@ import { FlatList, Keyboard, ListRenderItem } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { MeasurementDataPoint } from "../../../components/App/measurements/types";
 import { ThemedBottomSheetModal, useBottomSheetRef } from "../../../components/BottomSheetModal/ThemedBottomSheetModal";
-import { convertDate, getDateTodayIso, getLocaleDate } from "../../../utils/date";
-import { getLanguage, getThemeKeyFromStore, getUnitSystem } from "../../../store/reducers/settings/settingsSelectors";
+import { getDateTodayIso, getLocaleDate } from "../../../utils/date";
+import { getLanguage, getUnitSystem } from "../../../store/reducers/settings/settingsSelectors";
 import { useTranslation } from "react-i18next";
 import { EditableExerciseInputRow } from "../../../components/EditableExercise/EditableExerciseInputRow";
 import { ThemedPressable } from "../../../components/Themed/Pressable/Pressable";
@@ -27,16 +27,13 @@ import {
     saveMeasurementDataPoint,
 } from "../../../store/reducers/measurements";
 import { createStyles } from "../../../components/App/measurements/styles";
-import DateTimePicker from "@react-native-community/datetimepicker";
-import { getAppInstallDate } from "../../../store/reducers/metadata/metadataSelectors";
-import { useTheme } from "../../../theme/context";
 import { HStack } from "../../../components/Stack/HStack/HStack";
 import { AnswerText } from "../../../components/HelpQuestionAnswer/AnswerText";
 import { ThemedMaterialCommunityIcons } from "../../../components/Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
 import { BottomToast } from "../../../components/BottomToast/BottomToast";
 import { useToast } from "../../../components/BottomToast/useToast";
-
-const MAX_DATE = new Date(getDateTodayIso());
+import { DateConfig, DatePicker } from "../../../components/DatePicker/DatePicker";
+import { IsoDate } from "../../../types/date";
 
 export const MeasurementHistory = () => {
     const navigateBack = useNavigateBack();
@@ -44,15 +41,11 @@ export const MeasurementHistory = () => {
     const { bottom } = useSafeAreaInsets();
 
     const { ref, openBottomSheet, closeBottomSheet } = useBottomSheetRef();
-    const [editedDatapoint, setEditedDatapoint] = useState<(MeasurementDataPoint & { index: number }) | undefined>();
+    const [editedDatapoint, setEditedDatapoint] = useState<(MeasurementDataPoint & { index: number; oldDate: IsoDate }) | undefined>();
     const language = useAppSelector(getLanguage);
     const { t } = useTranslation();
     const unitSystem = useAppSelector(getUnitSystem);
     const dispatch = useAppDispatch();
-    const installDate = useAppSelector(getAppInstallDate);
-    const minimiumDate = useMemo(() => new Date(installDate ?? "2023-01-01"), [installDate]);
-    const { mainColor } = useTheme();
-    const themeKey = useAppSelector(getThemeKeyFromStore);
     const measurementDates = useAppSelector(getDatesFromCurrentMeasurement);
 
     const { toastRef, openToast, closeToast, showToast } = useToast();
@@ -65,7 +58,7 @@ export const MeasurementHistory = () => {
                 if (dataPoint?.isoDate === undefined || dataPoint?.value === undefined) {
                     return;
                 }
-                setEditedDatapoint({ ...dataPoint, index });
+                setEditedDatapoint({ ...dataPoint, index, oldDate: dataPoint.isoDate });
                 openBottomSheet();
             }
         },
@@ -106,11 +99,11 @@ export const MeasurementHistory = () => {
 
     const title = useMemo(
         () =>
-            editedDatapoint?.isoDate &&
-            `${editedMeasurement?.measurement?.name} ${t("on")} ${getLocaleDate(editedDatapoint?.isoDate, language, {
+            editedDatapoint?.oldDate &&
+            `${editedMeasurement?.measurement?.name} ${t("on")} ${getLocaleDate(editedDatapoint?.oldDate, language, {
                 dateStyle: "medium",
             })}`,
-        [editedDatapoint?.isoDate, editedMeasurement?.measurement?.name, language, t],
+        [editedDatapoint?.oldDate, editedMeasurement?.measurement?.name, language, t],
     );
 
     const unit = useMemo(() => {
@@ -172,23 +165,29 @@ export const MeasurementHistory = () => {
     const handleSetDatapointValue = useCallback(
         (value?: string) => {
             if (editedDatapoint === undefined) return;
-            setEditedDatapoint({ isoDate: editedDatapoint.isoDate, value: value ?? "0", index: editedDatapoint.index });
+            setEditedDatapoint({
+                oldDate: editedDatapoint.oldDate,
+                isoDate: editedDatapoint.isoDate,
+                value: value ?? "0",
+                index: editedDatapoint.index,
+            });
         },
         [editedDatapoint],
     );
 
     const handleSetDatapointDate = useCallback(
-        (_: unknown, selectedDate?: Date) => {
+        (selectedDate?: IsoDate) => {
             if (selectedDate === undefined || editedDatapoint?.index === undefined) {
                 return;
             }
             setEditedDatapoint({
-                isoDate: convertDate.toIsoDate(selectedDate),
+                oldDate: editedDatapoint.oldDate,
+                isoDate: selectedDate,
                 value: editedDatapoint?.value ?? "0",
                 index: editedDatapoint.index,
             });
         },
-        [editedDatapoint?.index, editedDatapoint?.value],
+        [editedDatapoint?.index, editedDatapoint?.oldDate, editedDatapoint?.value],
     );
 
     const mappedData = useMemo(() => {
@@ -207,6 +206,14 @@ export const MeasurementHistory = () => {
             handleNavigateToMeasurements();
         }
     }, [closeToast, editedMeasurement?.measurement?.data.length, handleNavigateToMeasurements]);
+
+    const dateConfig = useMemo(
+        () =>
+            measurementDates?.map(
+                (date, index) => ({ date, marked: true, latest: index === measurementDates?.length - 1 }) satisfies DateConfig,
+            ),
+        [measurementDates],
+    );
 
     if (editedMeasurement === undefined) {
         navigateBack();
@@ -237,24 +244,28 @@ export const MeasurementHistory = () => {
             </PageContent>
 
             <ThemedBottomSheetModal title={title} ref={ref}>
-                <PageContent safeBottom ghost stretch paddingTop={20}>
+                <PageContent ghost stretch paddingTop={20}>
                     <EditableExerciseInputRow
                         placeholder="0"
-                        bottomSheet
+                        background
+                        stretch
                         suffix={unit}
                         setValue={handleSetDatapointValue}
-                        value={editedDatapoint?.value}></EditableExerciseInputRow>
-                    <DateTimePicker
-                        display="inline"
-                        maximumDate={MAX_DATE}
-                        minimumDate={minimiumDate}
-                        locale={language}
-                        accentColor={mainColor}
-                        themeVariant={themeKey}
-                        style={createStyles.calendar}
-                        onChange={handleSetDatapointDate}
-                        value={convertDate.toDate(editedDatapoint?.isoDate ?? getDateTodayIso())}
+                        value={editedDatapoint?.value}
                     />
+                    <ThemedView round padding background style={{ gap: 20, marginBottom: 20 }}>
+                        <Text style={{ fontSize: 20 }} ghost>
+                            Neues Datum der Messung:
+                        </Text>
+                        <DatePicker
+                            handleSelectDate={handleSetDatapointDate}
+                            selectedDate={editedDatapoint?.isoDate ?? getDateTodayIso()}
+                            dateConfig={dateConfig}
+                            allSelectable
+                        />
+                    </ThemedView>
+                </PageContent>
+                <PageContent ghost>
                     <HStack ghost style={createStyles.actionWrapper}>
                         <ThemedPressable stretch center padding round onPress={handleCheckForDates}>
                             <Text>{t("measurement_add")}</Text>

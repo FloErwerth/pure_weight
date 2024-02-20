@@ -52,7 +52,7 @@
   "workout_history_edit_title": "Edit previous workout",
 
   "workout_history_edit_warning_title": "Changes not saved",
-  "workout_history_edit_warning_message": "The changes made to the workout are not saved at the moment. \n\nDo you want to save the changes?",
+  "workout_history_edit_warning_message": "The changes made to the workout are not saved at the moment",
   "workout_history_edit_discard_action": "Discard changes",
   "workout_history_edit_save_action": "Save changes",
 
@@ -72,9 +72,13 @@
   "edit_template_created_at": "Created at",
   "edit_template_updated_at": "Updated at",
 
+  "alert_delete_exercise_title": "Delete exercise",
+  "alert_delete_exercise_content": "Deleting this exercise will result of losing all data from this exercise",
+  "alert_delete_exercise_confirm": "Delete exercise anyways",
+
   "alert_delete_workout_title": "Delete Workout",
-  "alert_delete_workout_content": "Do you really want to delete this workout? \n\nThis action cannot be undone.",
-  "alert_workout_delete_confirm": "Confirm deletion",
+  "alert_delete_workout_content": "Deleting this workout will result of losing all data from this workout. This affects also all exercises in this workout",
+  "alert_workout_delete_confirm": "Delete workout anyways",
 
   "create_exercise": "Add exercise",
   "edit_exercise_long": "Confirm changes",
@@ -82,7 +86,8 @@
   "exercise_name": "Exercise name",
   "exercise_edit_title": "Edit exercise",
   "add_exercise": "Add new exercise",
-  "alert_delete_title": "Delete exercise?",
+
+
   "create_exercise_success_title": "Exercise successfully added",
   "template_section_title": "Templates",
   "help_section_title": "Help",
@@ -191,6 +196,14 @@
   "alert_create_exercise_discard_content": "If you cancel the adding the exercise the changes so far will be lost.",
   "alert_edit_exercise_discard_content": "If you cancel the exercise edit the changes so far will be lost.",
 
+  "alert_delete_measurement_title": "Delete measurement",
+  "alert_delete_measurement_content": "Deleting this measurement will result of losing all data from this measurement. This also includes all measurement data points of this measusrement",
+  "alert_delete_measurement_confirm": "Delete measurement anyway",
+
+  "alert_measurement_date_content": "There already is an measurement on the given date. \n\nPlease confirm that you want to overwrite the entry. The previous measurement will be lost.",
+  "alert_measurement_date_title": "Date already exists",
+  "alert_measurement_date_confirm": "Confirm overwrite",
+
   "workout_early_quit_title": "Quit workout early?",
   "workout_quit_title": "Your workout is complete",
   "add_more_exercises": "Add more exercises",
@@ -248,11 +261,8 @@
   "measurements": "Measurements",
   "measurement": "Measurement",
   "measurement_edit_confirm": "Confirm edits",
-  "measurement_warning_text": "There already is an entry on the given date. Please confirm that you want to overwrite the entry. The old measurement will be lost.",
   "measurement_create": "Create measurement",
   "measurement_page_title": "New Measurement",
-  "measurement_warning_title": "Date already exists",
-  "measurement_warning_confirm": "Confirm overwrite",
   "measurement_add": "Save measurement",
   "measurement_delete": "Delete measurement",
   "measurement_placeholder": "Measurement name",

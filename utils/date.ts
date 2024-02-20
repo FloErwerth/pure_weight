@@ -3,24 +3,18 @@ import { isoDateDecoder } from "../decoders/date";
 import { IsoDate } from "../types/date";
 import * as Locale from "expo-localization";
 
-export const getDateToday = () => {
-    return Temporal.Now.plainDateISO();
-};
 export const getDateTodayIso = (): IsoDate => {
     const now = Temporal.Now.plainDateISO().toString();
     return isoDateDecoder.parse(now);
 };
-export const getTitle = (date?: IsoDate, language?: "en" | "de") => {
-    if (!date) {
-        return "";
-    }
-    return Temporal.PlainDate.from(date).toLocaleString(language ?? Locale.locale, {
-        day: "2-digit",
-        month: "long",
-        year: undefined,
-    });
-};
 
+export function getMonthDiff(d1: Date, d2: Date) {
+    let months;
+    months = (d2.getFullYear() - d1.getFullYear()) * 12;
+    months -= d1.getMonth();
+    months += d2.getMonth();
+    return months <= 0 ? 0 : months;
+}
 export const getIsoDate = (timestamp: number | string) => {
     const convertedTimestamp = typeof timestamp === "string" ? parseInt(timestamp) : timestamp;
     return Temporal.Instant.fromEpochMilliseconds(convertedTimestamp).toString().split("T")[0] as IsoDate;

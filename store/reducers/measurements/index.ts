@@ -6,7 +6,9 @@ import { IsoDate } from "../../../types/date";
 import { sortMeasurementDataPoints } from "../../../utils/sortIsoDate";
 import { generateId } from "../../../utils/generateId";
 
-export type EditedMeasurement = { isNew: boolean; isEditing: boolean; measurement?: Measurement } | undefined;
+export type EditedMeasurement =
+    | { isNew: boolean; stringifiedMeasurement?: string; isEditing: boolean; measurement?: Measurement }
+    | undefined;
 export type EditedMeasurementDataPoint = { indexInData: number; timestamp: number; value: string; editedMeasurement: EditedMeasurement };
 
 export type MeasurementState = {
@@ -71,12 +73,22 @@ export const measurementReducer = createReducer<MeasurementState>({ measurements
             const measurement = action.payload.measurement;
             if (measurement) {
                 measurement.value = measurement.data[measurement.data.length - 1]?.value ?? "";
-                state.editedMeasurement = { isNew: false, isEditing: action.payload.isEditing, measurement };
+                state.editedMeasurement = {
+                    isNew: false,
+                    stringifiedMeasurement: JSON.stringify(measurement),
+                    isEditing: action.payload.isEditing,
+                    measurement,
+                };
             }
         })
         .addCase(setupNewMeasurement, (state) => {
             const newMeasurement: Measurement = { measurementId: generateId("measurement"), name: "", data: [] };
-            state.editedMeasurement = { isNew: true, isEditing: false, measurement: newMeasurement };
+            state.editedMeasurement = {
+                isNew: true,
+                isEditing: false,
+                stringifiedMeasurement: JSON.stringify(newMeasurement),
+                measurement: newMeasurement,
+            };
         })
         .addCase(saveMeasurementDataPoint, (state, action) => {
             const editedMeasurement = state.editedMeasurement;

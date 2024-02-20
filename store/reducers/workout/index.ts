@@ -335,7 +335,6 @@ export const workoutReducer = createReducer<WorkoutState>(
                     };
                 }
             })
-
             .addCase(recoverWorkout, (state) => {
                 if (state.deletedWorkout?.workout) {
                     if (state.deletedWorkout.trainedWorkout) {
@@ -348,7 +347,7 @@ export const workoutReducer = createReducer<WorkoutState>(
                 if (state.editedWorkout?.workout) {
                     const editedWorkout = state.editedWorkout;
                     state.editedWorkout = {
-                        isNew: state.editedWorkout.isNew ?? false,
+                        ...editedWorkout,
                         workout: { ...editedWorkout.workout, exercises: action.payload },
                     };
                 }

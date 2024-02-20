@@ -45,10 +45,13 @@ export const PageContent = (props: PageContentProps) => {
             },
             style,
         ],
-        [bottom, computedBackground, ignoreGap, ignorePadding, paddingTop, safeBottom, style],
+        [bottom, computedBackground, ignoreGap, ignorePadding, paddingTop, safeBottom, stretch, style],
     );
 
-    const scrollableWrapperStyles = useMemo(() => ({ backgroundColor: computedBackground }), [computedBackground]);
+    const scrollableWrapperStyles = useMemo(
+        () => ({ backgroundColor: computedBackground, flex: stretch ? 1 : 0 }),
+        [computedBackground, stretch],
+    );
 
     if (scrollable) {
         return (

@@ -1,6 +1,6 @@
 import { DEFAULT_PLUS, SiteNavigationButtons } from "../../components/SiteNavigationButtons/SiteNavigationButtons";
 import { useTranslation } from "react-i18next";
-import React, { useCallback, useMemo } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../store";
 import { PageContent } from "../../components/PageContent/PageContent";
 import { ThemedView } from "../../components/Themed/ThemedView/View";
@@ -24,6 +24,11 @@ import { HStack } from "../../components/Stack/HStack/HStack";
 import { trainStyles } from "../../components/App/train/trainStyles";
 import { Sorting } from "../../components/Sorting/Sorting";
 import { ExpandableSearchbar } from "../../components/Searchbar/ExpandableSearchbar";
+import { ThemedBottomSheetModal, useBottomSheetRef } from "../../components/BottomSheetModal/ThemedBottomSheetModal";
+import { AnswerText } from "../../components/HelpQuestionAnswer/AnswerText";
+import { ThemedPressable } from "../../components/Themed/Pressable/Pressable";
+import { ThemedMaterialCommunityIcons } from "../../components/Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
+import { Text } from "../../components/Themed/ThemedText/Text";
 
 export function Measurements() {
     const { t } = useTranslation();
@@ -32,7 +37,8 @@ export function Measurements() {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
     const { toastRef, openToast, closeToast, showToast } = useToast();
-
+    const [deletedMeasurementId, setDeletedMeasurementId] = useState<MeasurementId | null>(null);
+    const { ref: deleteWarningRef, openBottomSheet: openDeleteWarning } = useBottomSheetRef();
     const filteredMeasurements = useMemo(
         () =>
             measurements.filter((measurement) => {
@@ -66,16 +72,15 @@ export function Measurements() {
         [dispatch, measurements, navigate],
     );
 
-    const handleDeleteMeasurement = useCallback(
-        (id: MeasurementId) => {
-            dispatch(deleteMeasurement(id));
+    const handleDeleteMeasurement = useCallback(() => {
+        if (deletedMeasurementId) {
+            dispatch(deleteMeasurement(deletedMeasurementId));
             if (showToast && toastRef.current) {
                 toastRef.current.restart();
             }
             openToast();
-        },
-        [dispatch, openToast, showToast, toastRef],
-    );
+        }
+    }, [deletedMeasurementId, dispatch, openToast, showToast, toastRef]);
 
     const handleRecoverMeasurement = useCallback(() => {
         dispatch(recoverMeasurement());
@@ -96,13 +101,16 @@ export function Measurements() {
             filteredMeasurements?.map((measurement) => (
                 <Swipeable
                     onEdit={() => handleEditMeasuremnt(measurement.measurementId)}
-                    onDelete={() => handleDeleteMeasurement(measurement.measurementId)}
+                    onDelete={() => {
+                        setDeletedMeasurementId(measurement.measurementId);
+                        openDeleteWarning();
+                    }}
                     key={measurement.measurementId}
                     onClick={() => handleAddExistingMeasurement(measurement.measurementId)}>
                     <RenderedMeasurement measurement={measurement} />
                 </Swipeable>
             )),
-        [filteredMeasurements, handleAddExistingMeasurement, handleDeleteMeasurement, handleEditMeasuremnt],
+        [filteredMeasurements, handleAddExistingMeasurement, handleEditMeasuremnt, openDeleteWarning],
     );
 
     return (
@@ -128,6 +136,19 @@ export function Measurements() {
                 onRedo={handleRecoverMeasurement}
                 bottom={10}
             />
+            <ThemedBottomSheetModal title={t("alert_delete_measurement_title")} ref={deleteWarningRef}>
+                <PageContent paddingTop={20} stretch ghost>
+                    <AnswerText>{t("alert_delete_measurement_content")}</AnswerText>
+                    <ThemedPressable style={trainStyles.deleteButtonWrapper} round onPress={handleDeleteMeasurement}>
+                        <HStack style={trainStyles.confirmOverwriteWrapper} round center>
+                            <ThemedMaterialCommunityIcons ghost name="delete" size={24} />
+                            <Text center ghost style={trainStyles.button}>
+                                {t("alert_delete_measurement_confirm")}
+                            </Text>
+                        </HStack>
+                    </ThemedPressable>
+                </PageContent>
+            </ThemedBottomSheetModal>
         </ThemedView>
     );
 }

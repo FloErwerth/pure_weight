@@ -37,3 +37,5 @@ Build Number 27
 + Added rewind and fast forward buttons for the stopwatch
 + Simplified time based inputs
 + Changed create exercise to add exercise
++ Only show warning for exiting workout edit if there are unsaved changes
++ Only show warning for exiting exercise edit if there are unsaved changes

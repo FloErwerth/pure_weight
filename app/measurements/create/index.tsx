@@ -1,16 +1,13 @@
 import { useAppDispatch, useAppSelector } from "../../../store";
-import { getLanguage, getThemeKeyFromStore, getUnitSystem } from "../../../store/reducers/settings/settingsSelectors";
+import { getUnitSystem } from "../../../store/reducers/settings/settingsSelectors";
 import {
     getDatesFromCurrentMeasurement,
     getEditedMeasurement,
     getUnitByType,
 } from "../../../store/reducers/measurements/measurementSelectors";
-import { useCallback, useMemo, useState } from "react";
-import { useTheme } from "../../../theme/context";
+import React, { useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { getAppInstallDate } from "../../../store/reducers/metadata/metadataSelectors";
 import { mutateEditedMeasurement, saveEditedMeasurement } from "../../../store/reducers/measurements";
-import DateTimePicker from "@react-native-community/datetimepicker";
 import { ThemedTextInput } from "../../../components/Themed/ThemedTextInput/ThemedTextInput";
 import { HStack } from "../../../components/Stack/HStack/HStack";
 import { ThemedDropdown } from "../../../components/Themed/Dropdown/ThemedDropdown";
@@ -29,6 +26,10 @@ import { EditableExerciseInputRow } from "../../../components/EditableExercise/E
 import { cleanError, setError } from "../../../store/reducers/errors";
 import { ErrorFields } from "../../../store/reducers/errors/types";
 import { View } from "react-native";
+import { ThemedBottomSheetModal, useBottomSheetRef } from "../../../components/BottomSheetModal/ThemedBottomSheetModal";
+import { AnswerText } from "../../../components/HelpQuestionAnswer/AnswerText";
+import { ThemedPressable } from "../../../components/Themed/Pressable/Pressable";
+import { DateConfig, DatePicker } from "../../../components/DatePicker/DatePicker";
 
 export const useMeasurementOptions = () => {
     const unitSystem = useAppSelector(getUnitSystem);
@@ -77,44 +78,29 @@ const useIsValidMeasurement = () => {
             return false;
         }
         return true;
-    }, [editedMeasurement]);
+    }, [dispatch, editedMeasurement?.measurement?.name, editedMeasurement?.measurement?.type, editedMeasurement?.measurement?.value]);
 };
 
 export const CreateMeasurement = () => {
-    const themeKey = useAppSelector(getThemeKeyFromStore);
-    const language = useAppSelector(getLanguage);
     const dates = useAppSelector(getDatesFromCurrentMeasurement);
-    const [showDateWarning, setShowWarnining] = useState(false);
     const [date, setDate] = useState(MAX_DATE);
     const dispatch = useAppDispatch();
-    const { mainColor, warningColor } = useTheme();
     const { t } = useTranslation();
     const dropdownValue = useDropdownValue();
     const measurementOptions = useMeasurementOptions();
     const editedMeasurement = useAppSelector(getEditedMeasurement);
-    const installDate = useAppSelector(getAppInstallDate);
-    const minimiumDate = useMemo(() => new Date(installDate ?? "2023-01-01"), [installDate]);
     const navigateBack = useNavigateBack();
     const isEditing = editedMeasurement?.isEditing;
     const isAddingData = !editedMeasurement?.isEditing && !editedMeasurement?.isNew;
     const unitSystem = useAppSelector(getUnitSystem);
     const getIsValidMeasurement = useIsValidMeasurement();
+    const { ref: discardWarningRef, openBottomSheet: openDiscardWarning } = useBottomSheetRef();
+    const { ref: dateWarningRef, openBottomSheet: openDateWarning } = useBottomSheetRef();
 
-    const value = useMemo(() => {
-        const value = editedMeasurement?.measurement?.value;
-        const data = editedMeasurement?.measurement?.data;
-
-        if (!value || data?.length === 0) {
-            return undefined;
-        }
-        if (value) {
-            return value;
-        }
-        if (data) {
-            return data[data.length - 1]?.value;
-        }
-    }, [editedMeasurement?.measurement?.data, editedMeasurement?.measurement?.value]);
-
+    const wasEdited = useMemo(
+        () => Boolean(editedMeasurement?.stringifiedMeasurement !== JSON.stringify(editedMeasurement?.measurement)),
+        [editedMeasurement?.stringifiedMeasurement, editedMeasurement?.measurement],
+    );
     const valueSuffix = useMemo(() => {
         return isAddingData ? getUnitByType(unitSystem, editedMeasurement?.measurement?.type) : "";
     }, [isAddingData, unitSystem, editedMeasurement?.measurement?.type]);
@@ -157,11 +143,8 @@ export const CreateMeasurement = () => {
         if (!editedMeasurement?.isNew) {
             return t("measurement_add");
         }
-        if (showDateWarning) {
-            return t("measurement_warning_confirm");
-        }
         return t("measurement_create");
-    }, [editedMeasurement?.isEditing, editedMeasurement?.isNew, showDateWarning, t]);
+    }, [editedMeasurement?.isEditing, editedMeasurement?.isNew, t]);
 
     const buttonIcon = useMemo(() => {
         if (editedMeasurement?.isEditing) {
@@ -192,21 +175,24 @@ export const CreateMeasurement = () => {
     }, [editedMeasurement?.isEditing, isAddingData, t]);
 
     const handleSaveMeasurement = useCallback(() => {
+        const sameDateIndex = dates?.findIndex((searchDate) => searchDate === convertDate.toIsoDate(date));
+        dispatch(
+            saveEditedMeasurement({ isoDate: convertDate.toIsoDate(date), replaceIndex: sameDateIndex !== -1 ? sameDateIndex : undefined }),
+        );
+        navigateBack();
+    }, [date, dates, dispatch, navigateBack]);
+
+    const handleCheckMeasurement = useCallback(() => {
         if (!getIsValidMeasurement()) {
             return;
         }
         const sameDateIndex = dates?.findIndex((searchDate) => searchDate === convertDate.toIsoDate(date));
-        if (!isEditing && !showDateWarning && sameDateIndex !== -1) {
-            setShowWarnining(true);
+        if (!isEditing && sameDateIndex !== -1) {
+            openDateWarning();
             return;
         }
-        dispatch(
-            saveEditedMeasurement({ isoDate: convertDate.toIsoDate(date), replaceIndex: sameDateIndex !== -1 ? sameDateIndex : undefined }),
-        );
-
-        setShowWarnining(false);
-        navigateBack();
-    }, [dates, isEditing, showDateWarning, dispatch, date, navigateBack, getIsValidMeasurement]);
+        handleSaveMeasurement();
+    }, [getIsValidMeasurement, dates, isEditing, handleSaveMeasurement, date, openDateWarning]);
 
     const helpText = useMemo(() => ({ title: t("measurement_higher_is_better"), text: t("measurement_higher_is_better_help") }), [t]);
 
@@ -215,79 +201,145 @@ export const CreateMeasurement = () => {
         cleanError(["create_measurement_name", "create_measurement_type", "create_measurement_value"]);
     }, [navigateBack]);
 
+    const handleBackButtonPress = useCallback(() => {
+        if (wasEdited) {
+            openDiscardWarning();
+            return;
+        }
+        handleNavigateBack();
+    }, [handleNavigateBack, openDiscardWarning, wasEdited]);
+
+    const discardWarningTitle = useMemo(
+        () => t(isAddingData ? "alert_add_measurement_data_title" : !isEditing ? "alert_create_discard_title" : "alert_edit_discard_title"),
+        [isAddingData, isEditing, t],
+    );
+
+    const discardWarningContent = useMemo(
+        () =>
+            t(
+                isAddingData
+                    ? "alert_add_measurement_data_content"
+                    : !isEditing
+                      ? "alert_create_measurement_discard_content"
+                      : "alert_edit_measurement_discard_content",
+            ),
+        [isAddingData, isEditing, t],
+    );
+
+    const discardWarningConfirm = useMemo(
+        () =>
+            t(
+                isAddingData
+                    ? "alert_add_measurement_data_confirm"
+                    : !isEditing
+                      ? "alert_create_confirm_cancel"
+                      : "alert_edit_confirm_cancel",
+            ),
+        [isAddingData, isEditing, t],
+    );
+
+    const dateWarningTitle = useMemo(() => t("alert_measurement_date_title"), [t]);
+    const dateWarningContent = useMemo(() => t("alert_measurement_date_content"), [t]);
+    const dateWarniningOverwriteConfirm = useMemo(() => t("alert_measurement_date_confirm"), [t]);
+
+    const dateConfig = useMemo(
+        () => dates?.map((date, index) => ({ date, marked: true, latest: index === dates?.length - 1 }) satisfies DateConfig),
+        [dates],
+    );
+
     return (
         <ThemedView background stretch round>
-            <SiteNavigationButtons backButtonAction={handleNavigateBack} title={pageTitle} />
-            <PageContent ghost stretch paddingTop={20} style={{ gap: 10 }}>
-                {!isAddingData && (
-                    <View>
-                        <ThemedTextInput
-                            maxLength={20}
-                            errorKey="create_measurement_name"
-                            style={createStyles.textInput}
-                            onChangeText={handleSetMeasurementName}
-                            value={editedMeasurement?.measurement?.name}
-                            clearButtonMode="while-editing"
-                            placeholder={t("measurement_placeholder")}
-                        />
-                    </View>
-                )}
-                {!isEditing && (
-                    <HStack ghost style={{ gap: 5 }}>
-                        <EditableExerciseInputRow
-                            placeholder="0"
-                            stretch
-                            errorTextConfig={{ errorKey: "create_measurement_value" }}
-                            suffix={valueSuffix}
-                            setValue={handleSetMeasurementValue}
-                            value={editedMeasurement?.measurement?.value}
-                        />
-                        {!isAddingData && (
-                            <ThemedDropdown
-                                isSelectable={editedMeasurement?.isNew}
-                                options={measurementOptions}
-                                errorKey="create_measurement_type"
-                                value={dropdownValue}
-                                placeholder={t("measurement_unit")}
-                                onSelectItem={handleSetMeasurementType}
+            <SiteNavigationButtons backButtonAction={handleBackButtonPress} title={pageTitle} />
+            <ThemedView ghost stretch>
+                <PageContent ghost paddingTop={20}>
+                    {!isAddingData && (
+                        <View>
+                            <ThemedTextInput
+                                maxLength={20}
+                                errorKey="create_measurement_name"
+                                style={createStyles.textInput}
+                                onChangeText={handleSetMeasurementName}
+                                value={editedMeasurement?.measurement?.name}
+                                clearButtonMode="while-editing"
+                                placeholder={t("measurement_placeholder")}
                             />
-                        )}
-                    </HStack>
-                )}
-                {!isAddingData && (
-                    <CheckBox
-                        label={t("measurement_higher_is_better")}
-                        helpTextConfig={helpText}
-                        checked={Boolean(editedMeasurement?.measurement?.higherIsBetter)}
-                        size={20}
-                        onChecked={handleSelectHigherIsBetter}
-                    />
-                )}
+                        </View>
+                    )}
+                    {!isEditing && (
+                        <HStack ghost style={{ gap: 5 }}>
+                            <EditableExerciseInputRow
+                                placeholder="0"
+                                stretch
+                                errorTextConfig={{ errorKey: "create_measurement_value" }}
+                                suffix={valueSuffix}
+                                setValue={handleSetMeasurementValue}
+                                value={editedMeasurement?.measurement?.value}
+                            />
+                            {!isAddingData && (
+                                <ThemedDropdown
+                                    isSelectable={editedMeasurement?.isNew}
+                                    options={measurementOptions}
+                                    errorKey="create_measurement_type"
+                                    value={dropdownValue}
+                                    placeholder={t("measurement_unit")}
+                                    onSelectItem={handleSetMeasurementType}
+                                />
+                            )}
+                        </HStack>
+                    )}
+                    {!isAddingData && (
+                        <CheckBox
+                            label={t("measurement_higher_is_better")}
+                            helpTextConfig={helpText}
+                            checked={Boolean(editedMeasurement?.measurement?.higherIsBetter)}
+                            size={20}
+                            onChecked={handleSelectHigherIsBetter}
+                        />
+                    )}
+                </PageContent>
                 {!isEditing && (
-                    <DateTimePicker
-                        display="inline"
-                        maximumDate={MAX_DATE}
-                        minimumDate={minimiumDate}
-                        locale={language}
-                        accentColor={mainColor}
-                        themeVariant={themeKey}
-                        style={createStyles.calendar}
-                        onChange={handleDateChange}
-                        value={date}
+                    <DatePicker
+                        handleSelectDate={handleDateChange}
+                        selectedDate={convertDate.toIsoDate(date)}
+                        dateConfig={dateConfig}
+                        allSelectable
                     />
                 )}
+            </ThemedView>
+
+            <PageContent ghost safeBottom>
+                <AddButton onPress={handleCheckMeasurement} title={measurementButtonText} icon={buttonIcon} />
             </PageContent>
-            <PageContent safeBottom ghost>
-                {showDateWarning && (
-                    <HStack ghost style={createStyles.warningWrapper}>
-                        <ThemedMaterialCommunityIcons ghost name="alert-circle-outline" size={20} color={warningColor} />
-                        <Text ghost warning style={createStyles.warningText}>
-                            {t(`measurement_warning_text`)}
-                        </Text>
-                    </HStack>
-                )}
-                <AddButton onPress={handleSaveMeasurement} title={measurementButtonText} icon={buttonIcon} />
-            </PageContent>
+
+            <ThemedBottomSheetModal ref={dateWarningRef} title={dateWarningTitle}>
+                <PageContent stretch ghost>
+                    <AnswerText>{dateWarningContent}</AnswerText>
+                </PageContent>
+                <PageContent ghost paddingTop={30}>
+                    <ThemedPressable padding round onPress={handleSaveMeasurement}>
+                        <HStack style={{ alignItems: "center", gap: 10 }}>
+                            <ThemedMaterialCommunityIcons name="table-check" size={24} />
+                            <Text>{dateWarniningOverwriteConfirm}</Text>
+                        </HStack>
+                    </ThemedPressable>
+                </PageContent>
+            </ThemedBottomSheetModal>
+
+            <ThemedBottomSheetModal title={discardWarningTitle} ref={discardWarningRef}>
+                <PageContent stretch ghost>
+                    <AnswerText>{discardWarningContent}</AnswerText>
+                </PageContent>
+                <PageContent ghost paddingTop={30}>
+                    <ThemedView ghost style={{ gap: 10 }}>
+                        <ThemedPressable round padding secondary onPress={handleNavigateBack}>
+                            <HStack ghost style={{ alignItems: "center", gap: 10 }}>
+                                <ThemedMaterialCommunityIcons ghost name="check" size={24} />
+                                <Text ghost>{discardWarningConfirm}</Text>
+                            </HStack>
+                        </ThemedPressable>
+                    </ThemedView>
+                </PageContent>
+            </ThemedBottomSheetModal>
         </ThemedView>
     );
 };

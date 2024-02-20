@@ -37,6 +37,10 @@ export const styles = StyleSheet.create({
         borderRadius,
         borderWidth: 1,
     },
+    suffixContainer: {
+        zIndex: 1,
+        position: "absolute",
+    },
     inputWrapper: {
         marginTop: 10,
         zIndex: -1,

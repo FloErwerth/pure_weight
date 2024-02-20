@@ -33,6 +33,7 @@ export const createStyles = StyleSheet.create({
     },
     actionWrapper: {
         gap: 10,
+        marginTop: 20,
         justifyContent: "center",
     },
     warningConfirmWrapper: {

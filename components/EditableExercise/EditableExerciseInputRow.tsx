@@ -5,7 +5,6 @@ import { useTranslation } from "react-i18next";
 import { AppState, useAppDispatch, useAppSelector } from "../../store";
 import { Text } from "../Themed/ThemedText/Text";
 import { useTheme } from "../../theme/context";
-import { ThemedView } from "../Themed/ThemedView/View";
 import { HStack } from "../Stack/HStack/HStack";
 import { getErrorByKey } from "../../store/reducers/errors/errorSelectors";
 import { ThemedPressable } from "../Themed/Pressable/Pressable";
@@ -21,6 +20,7 @@ export const EditableExerciseInputRow = ({
     errorTextConfig,
     i18key,
     stretch,
+    background,
     suffix,
     placeholder = "0",
     helpTextConfig,
@@ -55,11 +55,13 @@ export const EditableExerciseInputRow = ({
     }, [containerRef]);
 
     const suffixContainerStyles = useMemo(() => {
-        return {
-            position: "absolute",
-            width: containerWidth,
-            left: Math.min(containerWidth - 20, containerWidth / 2 + (value?.length || 1) * 6.5),
-        } as const;
+        return [
+            {
+                width: containerWidth,
+                left: Math.min(containerWidth - 20, containerWidth / 2 + (value?.length || 1) * 6.5),
+            },
+            styles.suffixContainer,
+        ];
     }, [containerWidth, value]);
 
     const handleFocusInput = useCallback(() => {
@@ -79,7 +81,8 @@ export const EditableExerciseInputRow = ({
             )}
             <HStack round ghost center style={{ justifyContent: "center" }}>
                 <ThemedTextInput
-                    input
+                    input={!background}
+                    background={background}
                     bottomSheet={bottomSheet}
                     stretch
                     reference={textInputRef}
@@ -91,9 +94,9 @@ export const EditableExerciseInputRow = ({
                     maxLength={maxLength}
                     placeholder={placeholder}></ThemedTextInput>
                 {suffix && (
-                    <ThemedView style={suffixContainerStyles} ghost>
-                        <Text ghost>{suffix}</Text>
-                    </ThemedView>
+                    <Text ghost style={suffixContainerStyles}>
+                        {suffix}
+                    </Text>
                 )}
             </HStack>
             {!errorTextConfig?.hideError && hasError && (

@@ -5,28 +5,23 @@ import { useNavigate } from "../../../hooks/navigate";
 import { AppState, useAppDispatch, useAppSelector } from "../../../store";
 import { PageContent } from "../../../components/PageContent/PageContent";
 import { ThemedView } from "../../../components/Themed/ThemedView/View";
-import { useTheme } from "../../../theme/context";
-import { CalendarList, DateData } from "react-native-calendars";
 import { ThemedBottomSheetModal, useBottomSheetRef } from "../../../components/BottomSheetModal/ThemedBottomSheetModal";
 import { styles } from "../../../components/App/history/styles";
 import { IsoDate } from "../../../types/date";
-import { Dimensions, FlatList } from "react-native";
-import { RenderedDay } from "../../../components/App/history/RenderedDay/RenderedDay";
-import { DayProps } from "react-native-calendars/src/calendar/day";
+import { FlatList } from "react-native";
 import {
     getEditedWorkout,
-    getFirstWorkoutDate,
     getLatestWorkoutDate,
     getSortedDoneWorkout,
     getWorkoutsByMonth,
 } from "../../../store/reducers/workout/workoutSelectors";
 import { noop } from "lodash";
 import { WorkoutHistoryCard } from "../../../components/WorkoutHistoryCard/WorkoutHistoryCard";
-import { getDateTodayIso } from "../../../utils/date";
 import { ThemedPressable } from "../../../components/Themed/Pressable/Pressable";
 import { Text } from "../../../components/Themed/ThemedText/Text";
 import { saveEditedWorkout } from "../../../store/reducers/workout";
 import { WorkoutId } from "../../../store/reducers/workout/types";
+import { DatePicker } from "../../../components/DatePicker/DatePicker";
 
 export type FlatListData = {
     doneWorkoutId: WorkoutId;
@@ -36,37 +31,11 @@ export type FlatListData = {
     marked: boolean;
 };
 
-function monthDiff(d1: Date, d2: Date) {
-    let months;
-    months = (d2.getFullYear() - d1.getFullYear()) * 12;
-    months -= d1.getMonth();
-    months += d2.getMonth();
-    return months <= 0 ? 0 : months;
-}
-
-const useScrollRanges = (selectedDate?: IsoDate) => {
-    const editedWorkout = useAppSelector(getEditedWorkout);
-    const latestWorkoutDate = useAppSelector((state: AppState) => getLatestWorkoutDate(state, editedWorkout?.workout?.workoutId));
-    const firstWorkoutDate = useAppSelector((state: AppState) => getFirstWorkoutDate(state, editedWorkout?.workout?.workoutId));
-    const dateToday = getDateTodayIso();
-    const pastScrollRange = useMemo(
-        () => monthDiff(new Date(firstWorkoutDate), new Date(selectedDate ?? dateToday)),
-        [selectedDate, dateToday, firstWorkoutDate],
-    );
-    const futureScrollRange = useMemo(
-        () => monthDiff(new Date(selectedDate ?? dateToday), new Date(latestWorkoutDate)),
-        [selectedDate, dateToday, latestWorkoutDate],
-    );
-    return useMemo(() => ({ past: pastScrollRange, future: futureScrollRange }), [pastScrollRange, futureScrollRange]);
-};
-
 export function WorkoutHistory() {
     const { t } = useTranslation();
-    const { mainColor, textDisabled } = useTheme();
     const editedWorkout = useAppSelector(getEditedWorkout);
     const latestWorkoutDate = useAppSelector((state: AppState) => getLatestWorkoutDate(state, editedWorkout?.workout.workoutId));
     const [selectedDate, setSelectedDate] = useState<IsoDate>(latestWorkoutDate);
-    const { past, future } = useScrollRanges(selectedDate);
     const doneWorkoutDates = useAppSelector((state: AppState) => getSortedDoneWorkout(state, editedWorkout?.workout?.workoutId));
     const workout = useAppSelector(getEditedWorkout);
     const { ref, openBottomSheet, closeBottomSheet } = useBottomSheetRef();
@@ -78,22 +47,6 @@ export function WorkoutHistory() {
     useEffect(() => {
         setSelectedDate(latestWorkoutDate);
     }, [latestWorkoutDate]);
-
-    const calendarTheme = useMemo(
-        () => ({
-            backgroundColor: "transparent",
-            calendarBackground: "transparent",
-            textSectionTitleColor: "transparent",
-            disabledArrowColor: "transparent",
-            todayTextColor: "#00adf5",
-            dayTextColor: mainColor,
-            arrowColor: mainColor,
-            textDisabledColor: textDisabled,
-            textSectionTitleDisabledColor: mainColor,
-            monthTextColor: mainColor,
-        }),
-        [mainColor, textDisabled],
-    );
 
     const handleNavigateBack = useCallback(() => {
         dispatch(saveEditedWorkout());
@@ -133,48 +86,16 @@ export function WorkoutHistory() {
         );
     }, []);
 
-    const dayComponent = useCallback(
-        ({ date }: DayProps & { date?: DateData | undefined }) => {
-            if (!date?.dateString || !date?.day) {
-                return null;
-            }
-
-            const day = date?.day.toString();
-            const isoDate = date?.dateString as IsoDate;
-            const scrollCallback = () => {
-                if ((sectionListRef.current?.props.data as Array<FlatListData>)?.findIndex) {
-                    const possibleIndexToScrollTo = (sectionListRef.current?.props.data as Array<FlatListData>).findIndex(
-                        (data: FlatListData) => data.date === isoDate,
-                    );
-                    const indexToScrollTo =
-                        possibleIndexToScrollTo !== undefined && possibleIndexToScrollTo !== -1 ? possibleIndexToScrollTo : 0;
-                    sectionListRef.current?.scrollToIndex({
-                        index: indexToScrollTo,
-                        viewOffset: Dimensions.get("window").height * 0.28,
-                        animated: true,
-                    });
-                }
+    const dateConfig = useMemo(() => {
+        return doneWorkoutDates?.map((date) => {
+            return {
+                date,
+                marked: true,
+                selectable: true,
+                latest: date === latestWorkoutDate,
             };
-
-            const handleDayPress = () => {
-                handleSelectDate(isoDate);
-                setTimeout(scrollCallback, 200);
-            };
-
-            const selectable = doneWorkoutDates?.find((date) => date === isoDate) !== undefined;
-            const isLatest = isoDate === latestWorkoutDate;
-            return (
-                <RenderedDay
-                    latestDay={isLatest}
-                    selected={selectedDate === isoDate}
-                    handleSelectDate={handleDayPress}
-                    day={day}
-                    selectable={selectable}
-                />
-            );
-        },
-        [doneWorkoutDates, handleSelectDate, latestWorkoutDate, selectedDate],
-    );
+        });
+    }, [doneWorkoutDates, latestWorkoutDate]);
 
     return (
         <ThemedView stretch>
@@ -196,16 +117,7 @@ export function WorkoutHistory() {
                     <Text style={styles.browseButton}>{t("history_browse")}</Text>
                 </ThemedPressable>
                 <ThemedBottomSheetModal ref={ref}>
-                    <CalendarList
-                        onScrollToIndexFailed={noop}
-                        current={selectedDate ?? latestWorkoutDate}
-                        dayComponent={dayComponent}
-                        futureScrollRange={future}
-                        pastScrollRange={past}
-                        showScrollIndicator={false}
-                        theme={calendarTheme}
-                        horizontal
-                    />
+                    <DatePicker selectedDate={selectedDate} handleSelectDate={handleSelectDate} dateConfig={dateConfig} />
                 </ThemedBottomSheetModal>
             </PageContent>
         </ThemedView>
