@@ -210,9 +210,9 @@ export function Workouts() {
             />
             <ThemedBottomSheetModal title={title} ref={ref}>
                 <PageContent paddingTop={20} stretch ghost>
-                    <Text style={trainStyles.button} ghost stretch>
-                        {message}
-                    </Text>
+                    <AnswerText>{message}</AnswerText>
+                </PageContent>
+                <PageContent ghost paddingTop={20}>
                     {isOngoingWorkout && (
                         <ThemedPressable round onPress={handleConfirmResume}>
                             <HStack style={trainStyles.confirmOverwriteWrapper} round center>
@@ -236,6 +236,8 @@ export function Workouts() {
             <ThemedBottomSheetModal title={t("alert_delete_workout_title")} ref={deleteWarningRef}>
                 <PageContent paddingTop={20} stretch ghost>
                     <AnswerText>{t("alert_delete_workout_content")}</AnswerText>
+                </PageContent>
+                <PageContent ghost paddingTop={20}>
                     <ThemedPressable style={trainStyles.deleteButtonWrapper} round onPress={confirmWorkoutDeletion}>
                         <HStack style={trainStyles.confirmOverwriteWrapper} round center>
                             <ThemedMaterialCommunityIcons ghost name="delete" size={24} />

@@ -198,6 +198,7 @@
 
   "measurement_datapoint_edit_title": "Edit measuring point",
   "measurement_datapoint_new_date": "New date of measuring point",
+  "measurement_datapoint_date": "Date of measuring point",
   "measured_value": "Measured value",
 
   "alert_delete_measurement_datapoint_title": "Delete measuring point",

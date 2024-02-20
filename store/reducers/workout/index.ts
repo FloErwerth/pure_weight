@@ -7,6 +7,16 @@ import { getDateTodayIso } from "../../../utils/date";
 import { getMillisecondsFromTimeInput, getMinutesSecondsFromMilliseconds } from "../../../utils/timeDisplay";
 import { generateId } from "../../../utils/generateId";
 
+const combineData = (existingData?: ExerciseData, newData?: ExerciseData): ExerciseData => {
+    if (!existingData) {
+        return {};
+    }
+
+    return {
+        ...existingData,
+        ...newData,
+    };
+};
 export const setWorkoutState = createAction<WorkoutState, "workout_set_state">("workout_set_state");
 export const setWorkouts = createAction<Workout[], "workout_set_workouts">("workout_set_workouts");
 export const mutateEditedExercise = createAction<
@@ -203,21 +213,37 @@ export const workoutReducer = createReducer<WorkoutState>(
                 const trainedWorkout = state.trainedWorkout;
                 if (trainedWorkout) {
                     const exerciseIndex = trainedWorkout.activeExerciseIndex;
-                    const doneSet = trainedWorkout.exerciseData[exerciseIndex].doneSets[action.payload.setIndex];
-                    const exercise = trainedWorkout.exerciseData[exerciseIndex];
-                    if (action.payload.setIndex === exercise.latestSetIndex || action.payload.setIndex === exercise.activeSetIndex) {
-                        exercise.doneSets[action.payload.setIndex] = {
+                    const exerciseData = trainedWorkout.exerciseData[exerciseIndex];
+                    const exercise = trainedWorkout.workout.exercises.find((exercise) => exercise.exerciseId === exerciseData.exerciseId);
+
+                    const doneSet = combineData(exercise, trainedWorkout.exerciseData[exerciseIndex].doneSets[action.payload.setIndex]);
+
+                    if (doneSet.durationSeconds !== undefined) {
+                        const parsedSeconds = parseFloat(doneSet.durationSeconds);
+                        if (parsedSeconds >= 60) {
+                            const minutes = Math.floor(parsedSeconds / 60);
+                            const remainingSeconds = parsedSeconds - minutes * 60;
+                            doneSet.durationMinutes = (parseFloat(doneSet.durationMinutes ?? "0") + minutes).toString();
+                            doneSet.durationSeconds = remainingSeconds.toString();
+                        }
+                    }
+
+                    if (
+                        action.payload.setIndex === exerciseData.latestSetIndex ||
+                        action.payload.setIndex === exerciseData.activeSetIndex
+                    ) {
+                        exerciseData.doneSets[action.payload.setIndex] = {
                             ...doneSet,
                             confirmed: true,
                         };
-                        exercise.setIndex += 1;
-                        if (exercise.activeSetIndex !== exercise.latestSetIndex) {
-                            exercise.activeSetIndex = exercise.latestSetIndex;
+                        exerciseData.setIndex += 1;
+                        if (exerciseData.activeSetIndex !== exerciseData.latestSetIndex) {
+                            exerciseData.activeSetIndex = exerciseData.latestSetIndex;
                         } else {
-                            exercise.activeSetIndex += 1;
-                            exercise.latestSetIndex += 1;
+                            exerciseData.activeSetIndex += 1;
+                            exerciseData.latestSetIndex += 1;
                         }
-                        trainedWorkout.exerciseData[exerciseIndex] = exercise;
+                        trainedWorkout.exerciseData[exerciseIndex] = exerciseData;
                     }
                 }
             })

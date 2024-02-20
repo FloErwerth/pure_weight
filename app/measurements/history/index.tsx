@@ -32,8 +32,8 @@ export const MeasurementHistory = () => {
     const navigate = useNavigate();
     const editedMeasurement = useAppSelector(getEditedMeasurement);
     const { bottom } = useSafeAreaInsets();
-    const { toastRef, closeToast, showToast } = useToast();
-    const { ref, openBottomSheet } = useBottomSheetRef();
+    const { toastRef, openToast, closeToast, showToast } = useToast();
+    const { ref, openBottomSheet, closeBottomSheet } = useBottomSheetRef();
     const dispatch = useAppDispatch();
     const [deletedDatapointIndex, setDeletedDatapointIndex] = useState<number | null>(null);
     const { t } = useTranslation();
@@ -56,7 +56,11 @@ export const MeasurementHistory = () => {
     const confirmDeleteMeasurementDataPoint = useCallback(() => {
         if (deletedDatapointIndex !== null) {
             dispatch(deleteMeasurementDataPoint({ index: deletedDatapointIndex }));
-            closeToast();
+            closeBottomSheet();
+            openToast();
+            setTimeout(() => {
+                toastRef.current.restart();
+            }, 200);
         }
     }, [closeToast, deletedDatapointIndex, dispatch]);
 
@@ -84,7 +88,7 @@ export const MeasurementHistory = () => {
                 );
             }
         },
-        [editedMeasurement?.measurement?.name, editedMeasurement?.measurement?.type, handleEditMeasurementPoint],
+        [editedMeasurement?.measurement?.name, editedMeasurement?.measurement?.type, handleEditMeasurementPoint, openBottomSheet],
     );
 
     const flatlistConfig = useMemo(() => {
@@ -133,16 +137,17 @@ export const MeasurementHistory = () => {
                     data={mappedData}
                     renderItem={renderItem}
                 />
+                <BottomToast
+                    reference={toastRef}
+                    leftCorrection={-20}
+                    bottom={bottom}
+                    onRequestClose={handleToastClosed}
+                    open={showToast}
+                    messageKey={"measurement_deleted_message"}
+                    onRedo={handleRecoverMeasurementDataPoint}
+                />
             </PageContent>
-            <BottomToast
-                reference={toastRef}
-                leftCorrection={-20}
-                bottom={bottom}
-                onRequestClose={handleToastClosed}
-                open={showToast}
-                messageKey={"measurement_deleted_message"}
-                onRedo={handleRecoverMeasurementDataPoint}
-            />
+
             <ThemedBottomSheetModal ref={ref} title={t("alert_delete_measurement_datapoint_title")}>
                 <PageContent stretch ghost paddingTop={20}>
                     <AnswerText>{t("alert_delete_measurement_datapoint_content")}</AnswerText>

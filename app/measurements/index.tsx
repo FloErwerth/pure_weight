@@ -38,7 +38,7 @@ export function Measurements() {
     const navigate = useNavigate();
     const { toastRef, openToast, closeToast, showToast } = useToast();
     const [deletedMeasurementId, setDeletedMeasurementId] = useState<MeasurementId | null>(null);
-    const { ref: deleteWarningRef, openBottomSheet: openDeleteWarning } = useBottomSheetRef();
+    const { ref: deleteWarningRef, openBottomSheet: openDeleteWarning, closeBottomSheet: closeDeleteWarning } = useBottomSheetRef();
     const filteredMeasurements = useMemo(
         () =>
             measurements.filter((measurement) => {
@@ -78,6 +78,7 @@ export function Measurements() {
             if (showToast && toastRef.current) {
                 toastRef.current.restart();
             }
+            closeDeleteWarning();
             openToast();
         }
     }, [deletedMeasurementId, dispatch, openToast, showToast, toastRef]);

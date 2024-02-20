@@ -245,6 +245,7 @@
 
   "measurement_datapoint_edit_title": "Messpunkt bearbeiten",
   "measurement_datapoint_new_date": "Neues Datum des Messpunkts",
+  "measurement_datapoint_date": "Datum des Messpunkts",
   "measured_value": "Gemessener Wert",
 
   "alert_discard_measurement_datapoint_title": "Messpunkt verwerfen",

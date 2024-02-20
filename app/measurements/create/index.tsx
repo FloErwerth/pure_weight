@@ -21,7 +21,7 @@ import { ThemedView } from "../../../components/Themed/ThemedView/View";
 import { SiteNavigationButtons } from "../../../components/SiteNavigationButtons/SiteNavigationButtons";
 import { PageContent } from "../../../components/PageContent/PageContent";
 import { useNavigateBack } from "../../../hooks/navigate";
-import { convertDate, getDateTodayIso } from "../../../utils/date";
+import { getDateTodayIso } from "../../../utils/date";
 import { EditableExerciseInputRow } from "../../../components/EditableExercise/EditableExerciseInputRow";
 import { cleanError, setError } from "../../../store/reducers/errors";
 import { ErrorFields } from "../../../store/reducers/errors/types";
@@ -30,6 +30,7 @@ import { ThemedBottomSheetModal, useBottomSheetRef } from "../../../components/B
 import { AnswerText } from "../../../components/HelpQuestionAnswer/AnswerText";
 import { ThemedPressable } from "../../../components/Themed/Pressable/Pressable";
 import { DateConfig, DatePicker } from "../../../components/DatePicker/DatePicker";
+import { IsoDate } from "../../../types/date";
 
 export const useMeasurementOptions = () => {
     const unitSystem = useAppSelector(getUnitSystem);
@@ -56,7 +57,7 @@ const getTypeByUnit = (unit: string) => {
     return measurementTypes.find((type) => getUnitByType("metric", type) === unit);
 };
 
-const MAX_DATE = new Date(getDateTodayIso());
+const MAX_DATE = getDateTodayIso();
 
 const useIsValidMeasurement = () => {
     const editedMeasurement = useAppSelector(getEditedMeasurement);
@@ -157,9 +158,8 @@ export const CreateMeasurement = () => {
     }, [editedMeasurement?.isEditing, editedMeasurement?.isNew]);
 
     const handleDateChange = useCallback(
-        (_: unknown, selectedDate?: Date) => {
-            const currentDate = selectedDate || date;
-            setDate(currentDate);
+        (selectedDate?: IsoDate) => {
+            setDate(selectedDate ?? date);
         },
         [date],
     );
@@ -175,10 +175,8 @@ export const CreateMeasurement = () => {
     }, [editedMeasurement?.isEditing, isAddingData, t]);
 
     const handleSaveMeasurement = useCallback(() => {
-        const sameDateIndex = dates?.findIndex((searchDate) => searchDate === convertDate.toIsoDate(date));
-        dispatch(
-            saveEditedMeasurement({ isoDate: convertDate.toIsoDate(date), replaceIndex: sameDateIndex !== -1 ? sameDateIndex : undefined }),
-        );
+        const sameDateIndex = dates?.findIndex((searchDate) => searchDate === date);
+        dispatch(saveEditedMeasurement({ isoDate: date, replaceIndex: sameDateIndex !== -1 ? sameDateIndex : undefined }));
         navigateBack();
     }, [date, dates, dispatch, navigateBack]);
 
@@ -186,7 +184,7 @@ export const CreateMeasurement = () => {
         if (!getIsValidMeasurement()) {
             return;
         }
-        const sameDateIndex = dates?.findIndex((searchDate) => searchDate === convertDate.toIsoDate(date));
+        const sameDateIndex = dates?.findIndex((searchDate) => searchDate === date);
         if (!isEditing && sameDateIndex !== -1) {
             openDateWarning();
             return;
@@ -266,26 +264,31 @@ export const CreateMeasurement = () => {
                         </View>
                     )}
                     {!isEditing && (
-                        <HStack ghost style={{ gap: 5 }}>
-                            <EditableExerciseInputRow
-                                placeholder="0"
-                                stretch
-                                errorTextConfig={{ errorKey: "create_measurement_value" }}
-                                suffix={valueSuffix}
-                                setValue={handleSetMeasurementValue}
-                                value={editedMeasurement?.measurement?.value}
-                            />
-                            {!isAddingData && (
-                                <ThemedDropdown
-                                    isSelectable={editedMeasurement?.isNew}
-                                    options={measurementOptions}
-                                    errorKey="create_measurement_type"
-                                    value={dropdownValue}
-                                    placeholder={t("measurement_unit")}
-                                    onSelectItem={handleSetMeasurementType}
+                        <ThemedView ghost>
+                            <Text ghost style={{ fontSize: 20, marginBottom: 5 }}>
+                                {editedMeasurement?.measurement?.name}
+                            </Text>
+                            <HStack ghost style={{ gap: 5 }}>
+                                <EditableExerciseInputRow
+                                    placeholder="0"
+                                    stretch
+                                    errorTextConfig={{ errorKey: "create_measurement_value" }}
+                                    suffix={valueSuffix}
+                                    setValue={handleSetMeasurementValue}
+                                    value={editedMeasurement?.measurement?.value}
                                 />
-                            )}
-                        </HStack>
+                                {!isAddingData && (
+                                    <ThemedDropdown
+                                        isSelectable={editedMeasurement?.isNew}
+                                        options={measurementOptions}
+                                        errorKey="create_measurement_type"
+                                        value={dropdownValue}
+                                        placeholder={t("measurement_unit")}
+                                        onSelectItem={handleSetMeasurementType}
+                                    />
+                                )}
+                            </HStack>
+                        </ThemedView>
                     )}
                     {!isAddingData && (
                         <CheckBox
@@ -296,15 +299,15 @@ export const CreateMeasurement = () => {
                             onChecked={handleSelectHigherIsBetter}
                         />
                     )}
+                    {!isEditing && (
+                        <ThemedView round input padding>
+                            <Text style={{ fontSize: 20 }} ghost>
+                                {t("measurement_datapoint_date")}
+                            </Text>
+                            <DatePicker handleSelectDate={handleDateChange} selectedDate={date} dateConfig={dateConfig} allSelectable />
+                        </ThemedView>
+                    )}
                 </PageContent>
-                {!isEditing && (
-                    <DatePicker
-                        handleSelectDate={handleDateChange}
-                        selectedDate={convertDate.toIsoDate(date)}
-                        dateConfig={dateConfig}
-                        allSelectable
-                    />
-                )}
             </ThemedView>
 
             <PageContent ghost safeBottom>

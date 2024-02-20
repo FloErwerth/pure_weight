@@ -2,7 +2,6 @@ import { setEditedWorkout } from "../../../store/reducers/workout";
 import { HStack } from "../../Stack/HStack/HStack";
 import { styles } from "../index/styles";
 import { Text } from "../../Themed/ThemedText/Text";
-import { ColorIndicator } from "../../ColorIndicator/ColorIndicator";
 import React, { useCallback } from "react";
 import { AppState, useAppDispatch, useAppSelector } from "../../../store";
 import {
@@ -45,22 +44,10 @@ export const RenderedWorkout = ({ workoutId }: RenderedWorkoutProps) => {
 
     return (
         <ThemedView padding ghost style={styles.outerTrainWrapper}>
-            <HStack style={styles.outerTrainWrapper}>
-                <View>
-                    <HStack style={styles.innerTrainWrapper}>
-                        <Text style={styles.title}>{workout?.name}</Text>
-                        <ColorIndicator height={6} width={6} />
-                    </HStack>
-                    {latestWorkoutDate && <Text style={styles.date}>{latestWorkoutDate}</Text>}
-                </View>
-                {isOngoingWorkout && (
-                    <ThemedView style={styles.pausedTrainigWrapper} input round>
-                        <Text style={styles.pausedTrainingHint} ghost>
-                            {t("workout_paused_hint")}
-                        </Text>
-                    </ThemedView>
-                )}
-            </HStack>
+            <View>
+                <Text style={styles.title}>{workout?.name}</Text>
+                {latestWorkoutDate && <Text style={styles.date}>{latestWorkoutDate}</Text>}
+            </View>
 
             {showStats ? (
                 <View style={styles.innerTrainWrapper}>
@@ -74,6 +61,15 @@ export const RenderedWorkout = ({ workoutId }: RenderedWorkoutProps) => {
                     </Text>
                 </ThemedView>
             )}
+            <HStack style={styles.outerTrainWrapper}>
+                {isOngoingWorkout && (
+                    <ThemedView style={styles.pausedTrainigWrapper} input round>
+                        <Text style={styles.pausedTrainingHint} ghost>
+                            {t("workout_paused_hint")}
+                        </Text>
+                    </ThemedView>
+                )}
+            </HStack>
         </ThemedView>
     );
 };

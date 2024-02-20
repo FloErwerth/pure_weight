@@ -26,7 +26,7 @@ export const styles = StyleSheet.create({
     },
     outerTrainWrapper: {
         gap: 15,
-        justifyContent: "space-between",
+        justifyContent: "flex-end",
     },
     innerTrainWrapper: {
         gap: 5,
