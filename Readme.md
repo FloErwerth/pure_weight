@@ -36,3 +36,4 @@ Build Number 27
 + Added a setting to update prefilled workout weight and reps to the weight and reps of the current set
 + Added rewind and fast forward buttons for the stopwatch
 + Simplified time based inputs
++ Changed create exercise to add exercise

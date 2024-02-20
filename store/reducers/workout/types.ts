@@ -63,6 +63,7 @@ export type EditedWorkout = {
 export type EditedExercise = {
     exercise: ExerciseMetaData;
     isTrained?: boolean;
+    isNewExercise?: boolean;
     index?: number;
 };
 

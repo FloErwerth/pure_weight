@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useAppDispatch, useAppSelector } from "../../../../store";
-import { getEditedExercise, getIsExistingEditedExercise } from "../../../../store/reducers/workout/workoutSelectors";
+import { getEditedExercise } from "../../../../store/reducers/workout/workoutSelectors";
 import { useToast } from "../../../../components/BottomToast/useToast";
 import { createNewExercise, saveEditedExercise } from "../../../../store/reducers/workout";
 import { ThemedView } from "../../../../components/Themed/ThemedView/View";
@@ -86,10 +86,10 @@ const useGetHasValuesInExercise = () => {
 
 export const CreateExercise = () => {
     const { t } = useTranslation();
-    const isEditingExercise = useAppSelector(getIsExistingEditedExercise);
+    const editedExercise = useAppSelector(getEditedExercise);
+    const isEditingExercise = !editedExercise?.isNewExercise;
     const title = useMemo(() => t(isEditingExercise ? "exercise_edit_title" : "create_exercise"), [isEditingExercise, t]);
     const dispatch = useAppDispatch();
-    const editedExercise = useAppSelector(getEditedExercise);
     const { showToast: showSavedSuccess, openToast: openSavedSuccess, closeToast: closeSavedSuccess } = useToast();
     const [showCheckboxes, setShowCheckboxes] = useState(true);
     const [addMoreExercises, setAddMoreExercises] = useState(false);

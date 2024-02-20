@@ -40,9 +40,9 @@
   "exercise_lower": "übung",
   "exercise_name": "Name der Übung",
   "add_exercise": "Übung hinzufügen",
-  "create_exercise": "Übung erstellen",
+  "create_exercise": "Übung hinzufügen",
   "edit_exercise": "Änderungen bestätigen",
-  "exercise_edit_title": "Einheit bearbeiten",
+  "exercise_edit_title": "Übung bearbeiten",
   "alert_delete_title": "Übung löschen?",
   "create_missing_data_text": "Es sind keine Übungen zum Anzeigen vorhanden",
   "create_exercise_type_label": "Übungstyp",
@@ -130,7 +130,7 @@
 
   "settings_help_content": "Bedienungshilfe",
   "settings_help_training": "Training",
-  "create_exercise_success_title": "Übung erfolgreich erstellt",
+  "create_exercise_success_title": "Übung erfolgreich hinzugefügt",
   "settings_search_placeholder": "Suche",
 
   "workout_history_empty": "Noch keine Workouts vorhanden",
@@ -215,7 +215,7 @@
   "alert_edit_workout_discard_content": "Wenn Du die Bearbeitung des Workouts abbrichst gehen die bisherigen Änderungen verloren.",
   "alert_create_workout_discard_content": "Wenn Du die Erstellung deines Workouts abbrichst geht der bisherige Fortschritt verloren.",
   "alert_create_exercise_discard_title": "Erstellung abbrechen",
-  "alert_create_exercise_discard_content": "Wenn Du die Erstellung der Übung abbrichst gehen die bisherigen Änderungen verloren.",
+  "alert_create_exercise_discard_content": "Wenn Du das Hinzufügen der Übung abbrichst gehen die bisherigen Änderungen verloren.",
   "alert_edit_exercise_discard_content": "Wenn Du die Bearbeitung der Übung abbrichst gehen die bisherigen Änderungen verloren.",
 
   "progress_placeholder": "Messdaten oder Daten von Einheiten hinzufügen, um Graphen anzeigen zu können",

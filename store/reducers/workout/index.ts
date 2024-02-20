@@ -255,7 +255,7 @@ export const workoutReducer = createReducer<WorkoutState>(
                 state.workouts = action.payload;
             })
             .addCase(createNewExercise, (state) => {
-                state.editedExercise = { exercise: generateNewExercise() };
+                state.editedExercise = { exercise: generateNewExercise(), isNewExercise: true };
             })
             .addCase(setEditedWorkout, (state, action) => {
                 const storedWorkout = state.workouts.find((workout) => workout.workoutId === action.payload?.workoutId);

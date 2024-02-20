@@ -41,12 +41,7 @@ export const getExerciseById = createSelector([getTrainedWorkout, (_, exerciseId
 export const getEditedWorkout = createSelector([getWorkoutState], (state) => state.editedWorkout);
 export const getIsEditedWorkout = createSelector([getEditedWorkout], (editedWorkout) => !editedWorkout?.isNew);
 export const getEditedExercise = createSelector([getWorkoutState], (state) => state.editedExercise);
-export const getIsExistingEditedExercise = createSelector(
-    [getTrainedWorkout, getEditedWorkout, getEditedExercise],
-    (trainedWorkout, editedWorkout, editedExercise) =>
-        Boolean(trainedWorkout) ||
-        Boolean(editedWorkout?.workout?.exercises?.find((exercise) => exercise.exerciseId === editedExercise?.exercise.exerciseId)),
-);
+
 export const getSortedDoneWorkout = createSelector([getWorkouts, (_, workoutId?: WorkoutId) => workoutId], (workouts, workoutId) => {
     return workouts
         .find((workout) => workout.workoutId === workoutId)
