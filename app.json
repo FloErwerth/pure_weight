@@ -2,7 +2,7 @@
   "expo": {
     "name": "Pure Weight",
     "slug": "pureweight",
-    "version": "0.7.8",
+    "version": "0.7.10",
     "scheme": "pureweight",
     "orientation": "portrait",
     "userInterfaceStyle": "automatic",
@@ -27,7 +27,7 @@
       "usesIcloudStorage": false,
       "supportsTablet": false,
       "bundleIdentifier": "com.FlorianErwerth.PureWeight",
-      "buildNumber": "27"
+      "buildNumber": "28"
     },
     "android": {
       "permissions": [
@@ -38,8 +38,7 @@
     "plugins": [
       "expo-router",
       "expo-localization",
-      "expo-screen-orientation",
-      "expo-updates"
+      "expo-screen-orientation"
     ],
     "extra": {
       "router": {
