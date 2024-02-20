@@ -38,7 +38,8 @@
     "plugins": [
       "expo-router",
       "expo-localization",
-      "expo-screen-orientation"
+      "expo-screen-orientation",
+      "expo-updates"
     ],
     "extra": {
       "router": {
@@ -51,6 +52,9 @@
     "owner": "florian_erwerth",
     "runtimeVersion": {
       "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/4dbee4e0-b75b-4eba-8ca6-67098ce6c3b5"
     }
   }
 }

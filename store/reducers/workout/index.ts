@@ -268,21 +268,19 @@ export const workoutReducer = createReducer<WorkoutState>(
                 }
             })
             .addCase(createNewWorkout, (state) => {
+                const workout = { workoutId: generateId("workout"), name: "", exercises: [], doneWorkouts: [] };
                 state.editedWorkout = {
                     isNew: true,
-                    workout: {
-                        workoutId: generateId("workout"),
-                        name: "",
-                        exercises: [],
-                        doneWorkouts: [],
-                    },
+                    stringifiedWorkout: JSON.stringify(workout),
+                    workout,
                 };
             })
             .addCase(setWorkouts, (state, action) => {
                 state.workouts = action.payload;
             })
             .addCase(createNewExercise, (state) => {
-                state.editedExercise = { exercise: generateNewExercise(), isNewExercise: true };
+                const newExercise = generateNewExercise();
+                state.editedExercise = { stringifiedExercise: JSON.stringify(newExercise), exercise: newExercise, isNewExercise: true };
             })
             .addCase(setEditedWorkout, (state, action) => {
                 const storedWorkout = state.workouts.find((workout) => workout.workoutId === action.payload?.workoutId);

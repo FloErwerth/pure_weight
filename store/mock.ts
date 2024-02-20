@@ -6,7 +6,7 @@ export const mockState: AppState = {
         isFirstTimeRendered: false,
     },
     settingsState: {
-        stopwatchSettings: { startOnDoneSet: false, notifications: { allowed: false } },
+        stopwatchSettings: { startOnDoneSet: false },
         keepAwake: true,
         theme: "dark",
         language: "de",
@@ -378,7 +378,7 @@ export const emptyState = {
         errors: [],
     },
     settingsState: {
-        stopwatchSettings: { startOnDoneSet: true, notifications: { allowed: false } },
+        stopwatchSettings: { startOnDoneSet: true },
         keepAwake: true,
         language: "de",
         theme: "system",
