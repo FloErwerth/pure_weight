@@ -57,12 +57,14 @@ export type ExerciseMetaData = {
 
 export type EditedWorkout = {
     workout: Workout;
+    stringifiedWorkout?: string;
     isNew: boolean;
 };
 
 export type EditedExercise = {
     exercise: ExerciseMetaData;
     isTrained?: boolean;
+    stringifiedExercise?: string;
     isNewExercise?: boolean;
     index?: number;
 };

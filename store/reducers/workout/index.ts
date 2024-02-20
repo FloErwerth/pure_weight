@@ -170,6 +170,7 @@ export const workoutReducer = createReducer<WorkoutState>(
                     if (exercise) {
                         state.editedExercise = {
                             exercise,
+                            stringifiedExercise: JSON.stringify(exercise),
                         };
                     }
                 }
@@ -262,6 +263,7 @@ export const workoutReducer = createReducer<WorkoutState>(
                 if (storedWorkout) {
                     state.editedWorkout = {
                         isNew: false,
+                        stringifiedWorkout: JSON.stringify(storedWorkout),
                         workout: storedWorkout,
                     };
                 }
@@ -321,6 +323,7 @@ export const workoutReducer = createReducer<WorkoutState>(
                 state.workoutSorting = payload;
                 state.workouts = sortWorkouts(state.workouts, state.workoutSorting);
             })
+
             .addCase(mutateEditedExercise, (state, action) => {
                 if (state.editedExercise) {
                     state.editedExercise = {

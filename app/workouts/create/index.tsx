@@ -78,6 +78,10 @@ export const Create = () => {
     const { ref: alertRef, openBottomSheet: openAlert, closeBottomSheet: closeAlert } = useBottomSheetRef();
     const { toastRef, openToast, closeToast, showToast } = useToast();
     const getIsValidWorkout = useValidateWorkout();
+    const wasEdited = useMemo(
+        () => editedWorkout?.stringifiedWorkout !== JSON.stringify(editedWorkout?.workout),
+        [editedWorkout?.stringifiedWorkout, editedWorkout?.workout],
+    );
 
     const handleSetWorkoutName = useCallback(
         (value?: string) => {
@@ -154,7 +158,7 @@ export const Create = () => {
     }, [getIsValidWorkout, editedWorkout, handleNavigateHome, dispatch]);
 
     const handleBackButton = useCallback(() => {
-        if (editedWorkout?.workout.exercises.length !== 0 || editedWorkout.workout.name.length !== 0) {
+        if (wasEdited) {
             openAlert();
         } else {
             handleNavigateHome();

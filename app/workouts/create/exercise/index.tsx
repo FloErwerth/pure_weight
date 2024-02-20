@@ -67,21 +67,12 @@ const useValidateExercise = () => {
     }, [dispatch, editedExercise?.exercise]);
 };
 
-const useGetHasValuesInExercise = () => {
+const useWasEdited = () => {
     const editedExercise = useAppSelector(getEditedExercise);
-    return useMemo(() => {
-        if (editedExercise?.exercise.name) {
-            return true;
-        }
-        if (editedExercise?.exercise.type === "TIME_BASED") {
-            return !getIsZeroOrNullish([
-                editedExercise?.exercise.durationMinutes,
-                editedExercise?.exercise.durationSeconds,
-                editedExercise?.exercise.sets,
-            ]);
-        }
-        return !getIsZeroOrNullish([editedExercise?.exercise.sets, editedExercise?.exercise.reps, editedExercise?.exercise.weight]);
-    }, [editedExercise?.exercise]);
+    return useMemo(
+        () => editedExercise?.stringifiedExercise !== JSON.stringify(editedExercise?.exercise),
+        [editedExercise?.exercise, editedExercise?.stringifiedExercise],
+    );
 };
 
 export const CreateExercise = () => {
@@ -96,7 +87,7 @@ export const CreateExercise = () => {
     const { ref, openBottomSheet } = useBottomSheetRef();
     const navigateBack = useNavigateBack();
     const validateExercise = useValidateExercise();
-    const hasValuesInExercise = useGetHasValuesInExercise();
+    const wasEdited = useWasEdited();
 
     useEffect(() => {
         if (isEditingExercise) {
@@ -173,13 +164,13 @@ export const CreateExercise = () => {
     }, [dispatch]);
 
     const handleNavigateBack = useCallback(() => {
-        if (hasValuesInExercise) {
+        if (wasEdited) {
             openBottomSheet();
             return;
         }
         clearExerciseErrors();
         navigateBack();
-    }, [clearExerciseErrors, hasValuesInExercise, navigateBack, openBottomSheet]);
+    }, [clearExerciseErrors, wasEdited, navigateBack, openBottomSheet]);
 
     const handleDiscardExercise = useCallback(() => {
         clearExerciseErrors();
