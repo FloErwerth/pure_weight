@@ -324,12 +324,11 @@ export const workoutReducer = createReducer<WorkoutState>(
             .addCase(mutateEditedExercise, (state, action) => {
                 if (state.editedExercise) {
                     state.editedExercise = {
-                        index: state.editedExercise.index,
+                        ...state.editedExercise,
                         exercise: {
                             ...state.editedExercise.exercise,
                             [action.payload.key]: action.payload.value,
                         },
-                        isTrained: state.editedExercise.isTrained,
                     };
                 }
             })
