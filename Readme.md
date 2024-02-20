@@ -41,3 +41,5 @@ Build Number 27
 + Only show warning for exiting exercise edit if there are unsaved changes
 + Added automatic recalculation for too large time inputs (seconds)
 + Fixed previous workout not displaying data correctly
++ Removed background notification for stopwatch timer
++ Simplified stopwatch

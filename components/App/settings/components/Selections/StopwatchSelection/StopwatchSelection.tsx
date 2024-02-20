@@ -1,14 +1,11 @@
 import { useTranslation } from "react-i18next";
 import { useAppDispatch, useAppSelector } from "../../../../../../store";
 import React, { useCallback, useMemo } from "react";
-import { selectionStyles } from "../../selectionStyles";
 import { mutateStopwatchSettings } from "../../../../../../store/reducers/settings";
 import { getStartStopwatchOnDoneSet } from "../../../../../../store/reducers/settings/settingsSelectors";
 import { CheckBox } from "../../../../../Themed/CheckBox/CheckBox";
-import { ThemedBottomSheetModal, useBottomSheetRef } from "../../../../../BottomSheetModal/ThemedBottomSheetModal";
-import { SettingsNavigator } from "../../../SettingsNavigator/SettingsNavigator";
+import { useBottomSheetRef } from "../../../../../BottomSheetModal/ThemedBottomSheetModal";
 import { ThemedView } from "../../../../../Themed/ThemedView/View";
-import { PageContent } from "../../../../../PageContent/PageContent";
 
 export const StopwatchSelection = () => {
     const { t } = useTranslation();
@@ -31,18 +28,13 @@ export const StopwatchSelection = () => {
 
     return (
         <ThemedView ghost>
-            <SettingsNavigator onPress={openBottomSheet} title={t("settings_stopwatch_title")}></SettingsNavigator>
-            <ThemedBottomSheetModal title={t("settings_stopwatch_title")} ref={ref}>
-                <PageContent paddingTop={20} ghost style={selectionStyles.vStack}>
-                    <CheckBox
-                        helpTextConfig={doneSetHelpText}
-                        label={t("settings_stopwatch_done_set")}
-                        size={26}
-                        checked={startStopwatchOnDoneSet}
-                        onChecked={handleSelectStartStopwatchOnDoneSet}
-                    />
-                </PageContent>
-            </ThemedBottomSheetModal>
+            <CheckBox
+                helpTextConfig={doneSetHelpText}
+                label={t("settings_stopwatch_done_set")}
+                size={26}
+                checked={startStopwatchOnDoneSet}
+                onChecked={handleSelectStartStopwatchOnDoneSet}
+            />
         </ThemedView>
     );
 };
