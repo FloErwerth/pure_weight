@@ -5,7 +5,6 @@ import { activateKeepAwakeAsync, deactivateKeepAwake } from "expo-keep-awake";
 
 export type StopwatchSettings = {
     startOnDoneSet: boolean;
-    notifications: { allowed: false } | { allowed: true; notify: boolean };
 };
 export type SettingsState = {
     language: Language;
@@ -44,7 +43,7 @@ export const settingsRecuder = createReducer<SettingsState>(
         unitSystem: "metric",
         keepAwake: true,
         switchToNextExercise: false,
-        stopwatchSettings: { startOnDoneSet: false, notifications: { allowed: true, notify: true } },
+        stopwatchSettings: { startOnDoneSet: false },
         updatePrefilledWorkoutValues: true,
     },
     (builder) => {

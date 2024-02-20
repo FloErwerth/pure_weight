@@ -3,9 +3,8 @@ import { useAppDispatch, useAppSelector } from "../../../../../../store";
 import React, { useCallback, useMemo } from "react";
 import { selectionStyles } from "../../selectionStyles";
 import { mutateStopwatchSettings } from "../../../../../../store/reducers/settings";
-import { getStartStopwatchOnDoneSet, getStopwatchNotify } from "../../../../../../store/reducers/settings/settingsSelectors";
+import { getStartStopwatchOnDoneSet } from "../../../../../../store/reducers/settings/settingsSelectors";
 import { CheckBox } from "../../../../../Themed/CheckBox/CheckBox";
-import { useRegisterForPushNotifications } from "../../../../../../hooks/useRegisterForPushNotifications";
 import { ThemedBottomSheetModal, useBottomSheetRef } from "../../../../../BottomSheetModal/ThemedBottomSheetModal";
 import { SettingsNavigator } from "../../../SettingsNavigator/SettingsNavigator";
 import { ThemedView } from "../../../../../Themed/ThemedView/View";
@@ -14,45 +13,19 @@ import { PageContent } from "../../../../../PageContent/PageContent";
 export const StopwatchSelection = () => {
     const { t } = useTranslation();
     const startStopwatchOnDoneSet = useAppSelector(getStartStopwatchOnDoneSet);
-    const notify = useAppSelector(getStopwatchNotify);
     const { ref, openBottomSheet } = useBottomSheetRef();
 
     const dispatch = useAppDispatch();
-    const requestPermissions = useRegisterForPushNotifications();
-    const checked = useMemo(() => {
-        if (notify?.allowed) {
-            return notify.notify;
-        }
-        return false;
-    }, [notify]);
 
     const handleSelectStartStopwatchOnDoneSet = useCallback(() => {
         dispatch(mutateStopwatchSettings({ key: "startOnDoneSet", value: !startStopwatchOnDoneSet }));
     }, [dispatch, startStopwatchOnDoneSet]);
-
-    const handleSelectNotification = useCallback(async () => {
-        if (!notify?.allowed) {
-            const hasPermission = await requestPermissions();
-            if (hasPermission) {
-                dispatch(mutateStopwatchSettings({ key: "notifications", value: { allowed: true, notify: true } }));
-            } else {
-                dispatch(mutateStopwatchSettings({ key: "notifications", value: { allowed: false } }));
-            }
-        } else {
-            dispatch(mutateStopwatchSettings({ key: "notifications", value: { allowed: true, notify: !notify.notify } }));
-        }
-    }, [notify, requestPermissions, dispatch]);
 
     const doneSetHelpText = useMemo(
         () => ({
             title: t("settings_stopwatch_done_set"),
             text: t("settings_stopwatch_done_set_helptext_text"),
         }),
-        [t],
-    );
-
-    const notificationHelptext = useMemo(
-        () => ({ title: t("settings_stopwatch_notify"), text: t("settings_notification_help_text") }),
         [t],
     );
 
@@ -67,13 +40,6 @@ export const StopwatchSelection = () => {
                         size={26}
                         checked={startStopwatchOnDoneSet}
                         onChecked={handleSelectStartStopwatchOnDoneSet}
-                    />
-                    <CheckBox
-                        helpTextConfig={notificationHelptext}
-                        label={t("settings_stopwatch_notify")}
-                        size={26}
-                        checked={checked}
-                        onChecked={handleSelectNotification}
                     />
                 </PageContent>
             </ThemedBottomSheetModal>

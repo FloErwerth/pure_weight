@@ -31,7 +31,6 @@ export const getLanguage = createSelector([getSettingsState], (settings) => sett
 export const getUnitSystem = createSelector([getSettingsState], (settings) => settings.unitSystem);
 export const getStopwatchSettings = createSelector([getSettingsState], (settings) => settings.stopwatchSettings);
 export const getStartStopwatchOnDoneSet = createSelector([getStopwatchSettings], (settings) => Boolean(settings?.startOnDoneSet));
-export const getStopwatchNotify = createSelector([getStopwatchSettings], (settings) => settings?.notifications);
 export const getSearchManual = createSelector([getSettingsState], (settings) => settings.searchManual);
 export const getKeepAwake = createSelector([getSettingsState], (settings) => settings.keepAwake);
 export const getSwitchToNextExercise = createSelector([getSettingsState], (settings) => settings.switchToNextExercise);

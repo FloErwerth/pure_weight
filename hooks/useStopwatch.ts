@@ -1,41 +1,72 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { useScheduleNotification } from "./useScheduleNotification";
-import BackgroundTimer from "react-native-background-timer";
+import { useTimer } from "react-use-precision-timer";
+import { AppState, AppStateStatus } from "react-native";
 
-const UPDATE_INTERVAL = 975;
 const TIME_STEP = 1000;
-let id: number = 0;
 
 type StopwatchConfig =
     | {
-          showNotification?: boolean;
           onTimerDone?: (remainingTime?: number) => void;
       }
     | undefined;
-export const useStopwatch = (totalDuration: number, config: StopwatchConfig = { showNotification: true }) => {
+export const useStopwatch = (totalDuration: number, config?: StopwatchConfig) => {
     const [remainingTime, setRemainingTime] = useState<number>(totalDuration);
+
+    const update = useCallback(() => {
+        setRemainingTime((remainingTime) => {
+            console.log(remainingTime);
+            if (remainingTime <= 0) {
+                if (config?.onTimerDone) {
+                    config.onTimerDone(remainingTime);
+                }
+                return 0;
+            }
+            return remainingTime - TIME_STEP;
+        });
+    }, [config]);
+
+    const { start, stop, pause, resume, getElapsedStartedTime } = useTimer({ delay: 1000 }, update);
     const [timerStarted, setTimerStarted] = useState(false);
-    const { t } = useTranslation();
 
-    const showNotification = useScheduleNotification({
-        title: t("stopwatch_pause_notification_title"),
-        body: t("stopwatch_pause_notification_text"),
-    });
+    const handleAppStateChange = useCallback(
+        (nextAppState: AppStateStatus) => {
+            if (nextAppState === "active") {
+                setRemainingTime(totalDuration - getElapsedStartedTime());
+                resume();
+            } else {
+                pause();
+            }
+        },
+        [pause, resume, getElapsedStartedTime],
+    );
 
-    const stopTimer = useCallback(() => {
-        BackgroundTimer.clearInterval(id);
-        setTimerStarted(false);
-    }, []);
+    useEffect(() => {
+        const listener = AppState.addEventListener("change", handleAppStateChange);
+        return () => {
+            listener.remove();
+        };
+    }, [AppState.currentState]);
 
     const pauseTimer = useCallback(() => {
-        BackgroundTimer.clearInterval(id);
+        pause();
+        setTimerStarted(false);
+    }, [pause]);
+
+    const stopTimer = useCallback(() => {
+        stop();
+        setTimerStarted(false);
     }, []);
 
     const reset = useCallback(() => {
         stopTimer();
         setRemainingTime(totalDuration);
     }, [totalDuration, stopTimer]);
+
+    useEffect(() => {
+        if (remainingTime <= 0) {
+            reset();
+        }
+    }, [remainingTime]);
 
     const rewind15Seconds = useCallback(() => {
         setRemainingTime((remainingTime) => {
@@ -55,25 +86,9 @@ export const useStopwatch = (totalDuration: number, config: StopwatchConfig = { 
         });
     }, [totalDuration]);
 
-    const update = useCallback(() => {
-        setRemainingTime((remainingTime) => {
-            if (remainingTime <= 0) {
-                reset();
-                if (config?.onTimerDone) {
-                    config.onTimerDone(remainingTime);
-                }
-                if (config?.showNotification) {
-                    void showNotification();
-                }
-                return 0;
-            }
-            return remainingTime - TIME_STEP;
-        });
-    }, [config, reset, showNotification]);
-
     const startTimer = useCallback(() => {
         setTimerStarted(true);
-        id = BackgroundTimer.setInterval(update, UPDATE_INTERVAL);
+        start();
     }, [update]);
 
     useEffect(() => {
