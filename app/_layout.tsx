@@ -32,6 +32,7 @@ import { MeasurementHistory } from "./measurements/history";
 import { CreateMeasurement } from "./measurements/create";
 import { MeasurementProgress } from "./measurements/progress";
 import { useInitIntl } from "../locales/i18next";
+import { MeasurementHistoryEdit } from "./measurements/history/edit";
 
 const Stack = createNativeStackNavigator<RoutesParamaters>();
 
@@ -83,6 +84,11 @@ const ThemedApp = () => {
                                         component={MeasurementProgress}
                                         options={{ headerShown: false }}
                                         name="measurement/progress/index"
+                                    />
+                                    <Stack.Screen
+                                        component={MeasurementHistoryEdit}
+                                        options={{ headerShown: false }}
+                                        name="measurements/history/edit/index"
                                     />
                                     <Stack.Screen
                                         component={CreateMeasurement}

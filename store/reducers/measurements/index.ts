@@ -9,7 +9,15 @@ import { generateId } from "../../../utils/generateId";
 export type EditedMeasurement =
     | { isNew: boolean; stringifiedMeasurement?: string; isEditing: boolean; measurement?: Measurement }
     | undefined;
-export type EditedMeasurementDataPoint = { indexInData: number; timestamp: number; value: string; editedMeasurement: EditedMeasurement };
+
+export type EditedMeasurementDataPoint = {
+    stringifiedDataPoint: string;
+    indexInData: number;
+    value?: string;
+    measurementId: MeasurementId;
+    oldDate: IsoDate;
+    isoDate: IsoDate;
+};
 
 export type MeasurementState = {
     measurements: Measurement[];
@@ -27,6 +35,12 @@ export const setMeasurements = createAction<Measurement[], "measurement_set_meas
 export const setEditedMeasurement = createAction<EditedMeasurement, "measurement_set_inspected_measurement">(
     "measurement_set_inspected_measurement",
 );
+
+export const mutateEditedDatapoint = createAction<{
+    key: keyof EditedMeasurementDataPoint;
+    value: EditedMeasurementDataPoint[keyof EditedMeasurementDataPoint];
+}>("mutate_edited_measurement_datapoint");
+
 export const addMeasurement = createAction<{ measurement: Measurement; index?: number }, "measurement_add">("measurement_add");
 export const editMeasurement = createAction<{ measurement: Measurement; index: number }, "measurement_edit">("measurement_edit");
 export const deleteMeasurement = createAction<MeasurementId, "measurement_delete">("measurement_delete");
@@ -35,6 +49,7 @@ export const mutateEditedMeasurement = createAction<
     { key: keyof Measurement; value: Measurement[keyof Measurement] },
     "mutate_measurement"
 >("mutate_measurement");
+export const setEditedMeasurementDataPoint = createAction<number, "set_edited_measurement_data_point">("set_edited_measurement_data_point");
 export const saveEditedMeasurement = createAction<
     { isoDate: IsoDate; replaceIndex: number | undefined } | undefined,
     "save_inspected_measurement"
@@ -62,8 +77,29 @@ export const measurementReducer = createReducer<MeasurementState>({ measurements
         .addCase(setMeasurementState, (_, action) => {
             return action.payload;
         })
+        .addCase(setEditedMeasurementDataPoint, (state, action) => {
+            const datapoint = state.editedMeasurement?.measurement?.data[action.payload];
+
+            if (datapoint && state.editedMeasurement?.measurement?.measurementId) {
+                state.editedMeasurementDataPoint = {
+                    indexInData: action.payload,
+                    oldDate: datapoint.isoDate,
+                    measurementId: state.editedMeasurement?.measurement?.measurementId,
+                    stringifiedDataPoint: JSON.stringify({ isoDate: datapoint.isoDate, value: datapoint.value }),
+                    ...datapoint,
+                };
+            }
+        })
         .addCase(setSearchedMeasurements, (state, action) => {
             state.searchedMeasurements = action.payload;
+        })
+        .addCase(mutateEditedDatapoint, (state, action) => {
+            if (state.editedMeasurementDataPoint) {
+                state.editedMeasurementDataPoint = {
+                    ...state.editedMeasurementDataPoint,
+                    [action.payload.key]: action.payload.value,
+                };
+            }
         })
         .addCase(setEditedMeasurement, (state, action) => {
             if (action.payload === undefined) {

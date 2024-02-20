@@ -8,24 +8,27 @@ import { styles } from "./styles";
 import { IsoDate } from "../../../../types/date";
 import { getLocaleDate } from "../../../../utils/date";
 import Animated, { FadeIn, FadeOut, Layout } from "react-native-reanimated";
+import { useTranslation } from "react-i18next";
 
 type EditedMeasurementDataPointProps = {
+    name: string;
     isoDate: IsoDate;
     value: string;
     type?: MeasurementType;
     selectMeasurementPoint: () => void;
 };
 
-export const SelectableMeasurementDataPoint = ({ isoDate, value, type, selectMeasurementPoint }: EditedMeasurementDataPointProps) => {
+export const SelectableMeasurementDataPoint = ({ isoDate, value, type, selectMeasurementPoint, name }: EditedMeasurementDataPointProps) => {
     const unitSystem = useAppSelector(getUnitSystem);
     const language = useAppSelector(getLanguage);
+    const { t } = useTranslation();
     return (
         <Animated.View style={styles.wrapper} entering={FadeIn} exiting={FadeOut} layout={Layout}>
             <ThemedPressable round padding stretch onPress={selectMeasurementPoint}>
-                <Text style={styles.value}>
-                    {value} {getUnitByType(unitSystem, type)}
-                </Text>
                 <Text style={styles.date}>{getLocaleDate(isoDate, language, { dateStyle: "medium" })}</Text>
+                <Text style={styles.value}>
+                    {t("measured_value")}: {value} {getUnitByType(unitSystem, type)} {name}
+                </Text>
             </ThemedPressable>
         </Animated.View>
     );

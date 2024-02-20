@@ -12,7 +12,7 @@ export const getMeasurementsState = (state: AppState) => state.measurementState;
 export const getEditedMeasurement = createSelector([getMeasurementsState], (state) => state.editedMeasurement);
 
 export const getMeasurements = createSelector([getMeasurementsState], (state) => state.measurements);
-
+export const getEditedMeasurementDataPoint = createSelector([getMeasurementsState], (state) => state.editedMeasurementDataPoint);
 export const getLatestMeasurements = createSelector([getMeasurements], (measurements) =>
     measurements.reduce(
         (obj, { measurementId, data }) => {

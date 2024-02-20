@@ -124,7 +124,7 @@ export function Measurements() {
                     </HStack>
                 </PageContent>
             )}
-            <PageContent background ignoreGap scrollable>
+            <PageContent showsVerticalScrollIndicator={false} background ignoreGap scrollable>
                 <View style={styles.wrapper}>{mappedMeasurements}</View>
             </PageContent>
             <BottomToast
@@ -139,7 +139,7 @@ export function Measurements() {
             <ThemedBottomSheetModal title={t("alert_delete_measurement_title")} ref={deleteWarningRef}>
                 <PageContent paddingTop={20} stretch ghost>
                     <AnswerText>{t("alert_delete_measurement_content")}</AnswerText>
-                    <ThemedPressable style={trainStyles.deleteButtonWrapper} round onPress={handleDeleteMeasurement}>
+                    <ThemedPressable style={trainStyles.deleteButtonWrapper} center round onPress={handleDeleteMeasurement}>
                         <HStack style={trainStyles.confirmOverwriteWrapper} round center>
                             <ThemedMaterialCommunityIcons ghost name="delete" size={24} />
                             <Text center ghost style={trainStyles.button}>

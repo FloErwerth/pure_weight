@@ -316,7 +316,7 @@ export const CreateMeasurement = () => {
                     <AnswerText>{dateWarningContent}</AnswerText>
                 </PageContent>
                 <PageContent ghost paddingTop={30}>
-                    <ThemedPressable padding round onPress={handleSaveMeasurement}>
+                    <ThemedPressable center padding round onPress={handleSaveMeasurement}>
                         <HStack style={{ alignItems: "center", gap: 10 }}>
                             <ThemedMaterialCommunityIcons name="table-check" size={24} />
                             <Text>{dateWarniningOverwriteConfirm}</Text>
@@ -331,7 +331,7 @@ export const CreateMeasurement = () => {
                 </PageContent>
                 <PageContent ghost paddingTop={30}>
                     <ThemedView ghost style={{ gap: 10 }}>
-                        <ThemedPressable round padding secondary onPress={handleNavigateBack}>
+                        <ThemedPressable center round padding secondary onPress={handleNavigateBack}>
                             <HStack ghost style={{ alignItems: "center", gap: 10 }}>
                                 <ThemedMaterialCommunityIcons ghost name="check" size={24} />
                                 <Text ghost>{discardWarningConfirm}</Text>

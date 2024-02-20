@@ -220,6 +220,10 @@
   "alert_add_measurement_data_content": "Der hinzugefügte Messpunkt wurde noch nicht gespeichert. Bei Bestätigung wird der Messpunkt verworfen.",
   "alert_add_measurement_data_confirm": "Messpunkt verwerfen",
 
+  "alert_delete_measurement_datapoint_title": "Messpunkt löschen",
+  "alert_delete_measurement_datapoint_content": "Die Löschung des Messpunkts kann nicht rückgängig gemacht werden. Alle anderen Messpunkte bleiben erhalten.",
+  "alert_delete_measurement_datapoint_confirm": "Messpunkt trotzdem löschen",
+
   "alert_delete_measurement_title": "Messung löschen",
   "alert_delete_measurement_content": "Das Löschen der Messung hat zufolge, dass alle Daten zu dieser Messung verloren gehen. Dies betrifft auch die erfassten Messungen zu dieser Messung",
   "alert_delete_measurement_confirm": "Messung trotzdem löschen",
@@ -238,6 +242,14 @@
   "alert_measurement_date_title": "Datum bereits vorhanden",
   "alert_measurement_date_confirm": "Überschreiben bestätigen",
   "alert_measurement_date_content": "Es ist bereits eine Messung am angegebenen Datum vorhanden. \n\nBitte bestätige, dass Du die Messung überschreiben möchtest. Die vorherige Messung wird dabei gelöscht.",
+
+  "measurement_datapoint_edit_title": "Messpunkt bearbeiten",
+  "measurement_datapoint_new_date": "Neues Datum des Messpunkts",
+  "measured_value": "Gemessener Wert",
+
+  "alert_discard_measurement_datapoint_title": "Messpunkt verwerfen",
+    "alert_discard_measurement_datapoint_content": "Der bearbeitete Messpunkt wurde noch nicht gespeichert. \n\nBei Bestätigung werden alle Änderungen verloren gehen.",
+    "alert_discard_measurement_datapoint_confirm": "Verwerfen bestätigen",
 
   "progress_placeholder": "Messdaten oder Daten von Einheiten hinzufügen, um Graphen anzeigen zu können",
   "settings_update_templates_title": "Vorlagen autom. aktualisieren",

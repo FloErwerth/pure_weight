@@ -56,6 +56,7 @@ export const PageContent = (props: PageContentProps) => {
     if (scrollable) {
         return (
             <KeyboardAwareScrollView
+                showsVerticalScrollIndicator={props.showsVerticalScrollIndicator}
                 horizontal={false}
                 keyboardShouldPersistTaps={props.keyboardShouldPersistTaps}
                 style={scrollableWrapperStyles}

@@ -72,12 +72,6 @@ export const createStyles = StyleSheet.create({
         borderColor: "transparent",
         zIndex: -1,
     },
-    warningWrapper: {
-        padding: 10,
-        paddingBottom: 0,
-        alignItems: "center",
-        gap: 5,
-    },
     warningText: {
         fontSize: 16,
     },

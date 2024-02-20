@@ -196,6 +196,19 @@
   "alert_create_exercise_discard_content": "If you cancel the adding the exercise the changes so far will be lost.",
   "alert_edit_exercise_discard_content": "If you cancel the exercise edit the changes so far will be lost.",
 
+  "measurement_datapoint_edit_title": "Edit measuring point",
+  "measurement_datapoint_new_date": "New date of measuring point",
+  "measured_value": "Measured value",
+
+  "alert_delete_measurement_datapoint_title": "Delete measuring point",
+  "alert_delete_measurement_datapoint_content": "Deleting this measuring point will result of losing all data from this measuring point. Other measuring points will not be affected.",
+  "alert_delete_measurement_datapoint_confirm": "Delete measuring point anyway",
+
+  "alert_discard_measurement_datapoint_title": "Discard measuring datapoint",
+  "alert_discard_measurement_datapoint_content": "The measuring point is not saved at the moment. \n\nUpon confirm all changes made will be lost.",
+  "alert_discard_measurement_datapoint_confirm": "Confirm discard",
+
+
   "alert_delete_measurement_title": "Delete measurement",
   "alert_delete_measurement_content": "Deleting this measurement will result of losing all data from this measurement. This also includes all measurement data points of this measusrement",
   "alert_delete_measurement_confirm": "Delete measurement anyway",
