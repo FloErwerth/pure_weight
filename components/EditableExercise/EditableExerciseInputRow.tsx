@@ -67,7 +67,7 @@ export const EditableExerciseInputRow = ({
     }, [textInputRef]);
 
     return (
-        <ThemedPressable reference={containerRef} onPress={handleFocusInput} behind input stretch={stretch}>
+        <ThemedPressable reference={containerRef} onPress={handleFocusInput} behind ghost stretch={stretch}>
             {(Boolean(i18key) || helpTextConfig) && (
                 <HStack ghost style={styles.labelWrapper}>
                     <Text behind style={styles.label} ghost>
@@ -79,7 +79,7 @@ export const EditableExerciseInputRow = ({
             )}
             <HStack round ghost center style={{ justifyContent: "center" }}>
                 <ThemedTextInput
-                    ghost
+                    input
                     bottomSheet={bottomSheet}
                     stretch
                     reference={textInputRef}

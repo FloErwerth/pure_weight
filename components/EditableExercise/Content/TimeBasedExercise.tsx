@@ -89,12 +89,14 @@ export const TimeBasedExercise = () => {
             <EditableExerciseInputRow
                 i18key="sets"
                 suffix="x"
+                stretch
                 setValue={handleSetSets}
                 errorTextConfig={errorTextConfigs.sets}
                 value={editedExercise?.exercise.sets}
             />
             <TimeInputRow
                 i18key="duration"
+                stretch
                 setMinutes={handleSetDurationMinutes}
                 setSeconds={handleSetDurationSeconds}
                 minutes={editedExercise?.exercise?.durationMinutes}
@@ -103,6 +105,7 @@ export const TimeBasedExercise = () => {
             />
             <TimeInputRow
                 i18key="pause"
+                stretch
                 setMinutes={handleSetPauseMinutes}
                 setSeconds={handleSetPauseSeconds}
                 minutes={editedExercise?.exercise?.pauseMinutes}
