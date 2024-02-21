@@ -30,7 +30,6 @@ export const EditableExerciseInputRow = ({
     const { t } = useTranslation();
     const { errorColor } = useTheme();
     const hasError = useAppSelector((state: AppState) => getErrorByKey(state, errorTextConfig?.errorKey));
-    const inputStyles = useMemo(() => [{ borderColor: hasError ? errorColor : "transparent" }, styles.input], [errorColor, hasError]);
     const textInputRef = useRef<TextInput>(null);
     const [containerWidth, setContainerWidth] = useState(0);
     const containerRef = useRef<View>(null);
@@ -54,15 +53,18 @@ export const EditableExerciseInputRow = ({
         }
     }, [containerRef]);
 
+    const inputStyles = useMemo(() => [{ borderColor: hasError ? errorColor : "transparent" }, styles.input], [errorColor, hasError]);
+
     const suffixContainerStyles = useMemo(() => {
         return [
             {
+                textAlign: "left",
                 width: containerWidth,
-                left: Math.min(containerWidth - 20, containerWidth / 2 + ((value?.length ?? 1) * 20) / 4 + 5),
-            },
+                left: Math.min(containerWidth - 20, containerWidth / 2 + ((value?.length >= 2 ? value?.length : 1 ?? 1) * 20) / 4 + 5),
+            } as const,
             styles.suffixContainer,
         ];
-    }, [containerWidth, value]);
+    }, [containerWidth, value?.length]);
 
     const handleFocusInput = useCallback(() => {
         textInputRef.current?.focus();
@@ -92,7 +94,8 @@ export const EditableExerciseInputRow = ({
                     onChangeText={handleSetValue}
                     value={value}
                     maxLength={maxLength}
-                    placeholder={placeholder}></ThemedTextInput>
+                    placeholder={placeholder}
+                />
                 {suffix && (
                     <Text ghost style={suffixContainerStyles}>
                         {suffix}
