@@ -156,7 +156,7 @@ export const SetInput = ({ setIndex, exerciseId }: SetInputRowProps) => {
     const textInputStyles = useMemo(() => [styles.textInput, wrapperStyle, textStyle], [wrapperStyle, textStyle]);
 
     const buttonStyles = useMemo(
-        () => ({ width: 35, height: 35, paddingTop: 4, backgroundColor: computedButtonBackgroundColor }),
+        () => ({ width: 40, height: 40, backgroundColor: computedButtonBackgroundColor, justifyContent: "center" }) as const,
         [computedButtonBackgroundColor],
     );
     const iconStyle = useMemo(
@@ -182,7 +182,7 @@ export const SetInput = ({ setIndex, exerciseId }: SetInputRowProps) => {
     }, [isActiveSet, isConfirmed, isLatestSet]);
 
     return (
-        <HStack style={[styles.vStack, activeStackStyles]}>
+        <HStack noBorder style={[styles.vStack, activeStackStyles]}>
             <View style={{ borderRadius, flex: 0.2, justifyContent: "center", alignItems: "center" }}>
                 {isConfirmed && !isActiveSet ? (
                     <MaterialCommunityIcons size={24} style={iconStyle} name="check-bold" />
@@ -192,9 +192,9 @@ export const SetInput = ({ setIndex, exerciseId }: SetInputRowProps) => {
                     </Text>
                 )}
             </View>
-            <HStack stretch center gap ghost>
+            <HStack stretch noBorder={exercise?.type === "TIME_BASED"} center gap ghost>
                 {exercise?.type === "WEIGHT_BASED" ? (
-                    <HStack stretch ghost gap>
+                    <>
                         <ThemedTextInput
                             editable={isEditable}
                             returnKeyType="done"
@@ -215,7 +215,7 @@ export const SetInput = ({ setIndex, exerciseId }: SetInputRowProps) => {
                             textAlign="center"
                             inputMode="decimal"
                         />
-                    </HStack>
+                    </>
                 ) : (
                     <TimeInputRow
                         wrapperStyle={wrapperStyle}

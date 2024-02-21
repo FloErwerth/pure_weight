@@ -104,7 +104,15 @@ export const TimeInputRow = ({
                     {helpTextConfig && <HelpText helpTextConfig={helpTextConfig} />}
                 </HStack>
             )}
-            <HStack style={wrapperStyle} hasError={hasError} input={input} background={background} stretch={stretch} center round>
+            <HStack
+                noBorder={!hasError}
+                style={wrapperStyle}
+                hasError={hasError}
+                input={input}
+                background={background}
+                stretch={stretch}
+                center
+                round>
                 <ThemedTextInput
                     onChangeText={handleChangeMinutes}
                     style={textInputStyles}
@@ -115,7 +123,8 @@ export const TimeInputRow = ({
                     ghost
                     maxLength={2}
                     textAlign="right"
-                    stretch></ThemedTextInput>
+                    stretch
+                />
                 <Text style={textStyle} ghost>
                     :
                 </Text>
@@ -129,7 +138,8 @@ export const TimeInputRow = ({
                     value={seconds}
                     ghost
                     textAlign="left"
-                    stretch></ThemedTextInput>
+                    stretch
+                />
             </HStack>
             {hasError && <ErrorText errorKey={errorTextConfig?.errorKey}>{errorTextConfig?.errorText}</ErrorText>}
         </ThemedView>
