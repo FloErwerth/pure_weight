@@ -86,7 +86,7 @@ export const WeightBasedExercise = () => {
         (value?: string) => {
             dispatch(
                 mutateEditedExercise({
-                    key: "pauseMinutes",
+                    key: "pauseSeconds",
                     value,
                 }),
             );
