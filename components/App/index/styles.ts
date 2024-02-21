@@ -15,11 +15,10 @@ export const styles = StyleSheet.create({
         paddingLeft: 5,
     },
     pausedTrainingHint: {
-        fontSize: 12,
-    },
-    pausedTrainigWrapper: {
-        paddingVertical: 3,
-        paddingHorizontal: 5,
+        fontSize: 16,
+        padding: 5,
+        alignSelf: "flex-end",
+        borderRadius,
     },
     trainingDayName: {
         fontSize: 24,

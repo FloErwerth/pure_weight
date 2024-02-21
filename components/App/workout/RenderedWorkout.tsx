@@ -11,18 +11,20 @@ import {
     getWorkoutByIndex,
 } from "../../../store/reducers/workout/workoutSelectors";
 import { useNavigate } from "../../../hooks/navigate";
-import { View } from "react-native";
+import { TouchableHighlight, View } from "react-native";
 import { ProgressDisplay } from "../../WorkoutCard/components/ProgressDisplay/ProgressDisplay";
 import { HistoryDisplay } from "../history/HistoryDisplay/HistoryDisplay";
 import { useTranslation } from "react-i18next";
 import { ThemedView } from "../../Themed/ThemedView/View";
 import { WorkoutId } from "../../../store/reducers/workout/types";
+import { useTheme } from "../../../theme/context";
 
 type RenderedWorkoutProps = {
     workoutId: WorkoutId;
 };
 export const RenderedWorkout = ({ workoutId }: RenderedWorkoutProps) => {
     const workout = useAppSelector((state: AppState) => getWorkoutByIndex(state, workoutId));
+    const { secondaryBackgroundColor } = useTheme();
     const dispatch = useAppDispatch();
     const trend = useAppSelector((state: AppState) => getOverallTrainingTrend(state, workoutId));
     const hasHistory = useAppSelector((state: AppState) => getHasHistory(state, workoutId));
@@ -40,6 +42,8 @@ export const RenderedWorkout = ({ workoutId }: RenderedWorkoutProps) => {
         dispatch(setEditedWorkout({ workoutId }));
         navigate("history");
     }, [dispatch, workoutId, navigate]);
+
+    const pausedTrainingHint = isOngoingWorkout ? { backgroundColor: secondaryBackgroundColor, ...styles.pausedTrainingHint } : null;
 
     return (
         <ThemedView padding ghost style={styles.outerTrainWrapper}>
@@ -60,11 +64,9 @@ export const RenderedWorkout = ({ workoutId }: RenderedWorkoutProps) => {
                 </ThemedView>
             )}
             {isOngoingWorkout && (
-                <ThemedView style={styles.pausedTrainigWrapper} input round>
-                    <Text style={styles.pausedTrainingHint} ghost>
-                        {t("workout_paused_hint")}
-                    </Text>
-                </ThemedView>
+                <TouchableHighlight style={pausedTrainingHint}>
+                    <Text ghost>{t("workout_paused_hint")}</Text>
+                </TouchableHighlight>
             )}
         </ThemedView>
     );
