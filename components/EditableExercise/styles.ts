@@ -37,6 +37,7 @@ export const styles = StyleSheet.create({
     input: {
         padding: 10,
         borderRadius,
+        fontSize: 20,
         borderWidth: 1,
     },
     suffixContainer: {

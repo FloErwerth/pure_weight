@@ -57,46 +57,36 @@ export const PreviousWorkout = ({ exerciseId, exerciseType }: PreviousTrainingPr
                 )}
             </HStack>
             <ThemedView padding round>
-                {sets?.length > 0 && (
-                    <>
+                <HStack key={Math.random() * 102} style={styles.innerWrapper}>
+                    <Text stretch ghost style={styles.number}>
+                        {activeSetIndex + 1}
+                    </Text>
+                    <HStack ghost stretch style={styles.setOuterWrapper}>
                         {exerciseType === "TIME_BASED" ? (
-                            <HStack key={Math.random() * 102} style={styles.innerWrapper}>
-                                <Text stretch ghost style={styles.number}>
-                                    {activeSetIndex + 1}
+                            <ThemedView ghost round stretch style={styles.setWrapper}>
+                                <Text ghost style={styles.set}>
+                                    {getTimeDisplayFromMilliseconds(
+                                        getMillisecondsFromTimeInput(currentSet?.durationMinutes, currentSet?.durationSeconds),
+                                    )}
                                 </Text>
-                                <HStack ghost stretch style={styles.setOuterWrapper}>
-                                    <ThemedView ghost round stretch style={styles.setWrapper}>
-                                        <Text ghost style={styles.set}>
-                                            {getTimeDisplayFromMilliseconds(
-                                                getMillisecondsFromTimeInput(currentSet?.durationMinutes, currentSet?.durationSeconds),
-                                            )}
-                                        </Text>
-                                    </ThemedView>
-                                </HStack>
-                                <ThemedView ghost padding style={{ width: 49 }} />
-                            </HStack>
+                            </ThemedView>
                         ) : (
-                            <HStack key={Math.random() * 102} style={styles.innerWrapper}>
-                                <Text stretch style={styles.number}>
-                                    {activeSetIndex + 1}
-                                </Text>
-                                <HStack ghost style={styles.setOuterWrapper}>
-                                    <ThemedView ghost round stretch style={styles.setWrapper}>
-                                        <Text ghost style={styles.set}>
-                                            {currentSet?.weight}
-                                        </Text>
-                                    </ThemedView>
-                                    <ThemedView style={styles.setWrapper} ghost round stretch>
-                                        <Text ghost style={styles.set}>
-                                            {currentSet?.reps}
-                                        </Text>
-                                    </ThemedView>
-                                    <ThemedView ghost padding style={{ flex: 0.25 }} />
-                                </HStack>
-                            </HStack>
+                            <>
+                                <ThemedView ghost round stretch style={styles.setWrapper}>
+                                    <Text ghost style={styles.set}>
+                                        {currentSet?.weight}
+                                    </Text>
+                                </ThemedView>
+                                <ThemedView style={styles.setWrapper} ghost round stretch>
+                                    <Text ghost style={styles.set}>
+                                        {currentSet?.reps}
+                                    </Text>
+                                </ThemedView>
+                            </>
                         )}
-                    </>
-                )}
+                    </HStack>
+                    <ThemedView ghost padding style={{ width: 49 }} />
+                </HStack>
             </ThemedView>
             <ThemedBottomSheetModal title={t("previous_training_note_title").concat(date)} onRequestClose={handleCloseNote} ref={ref}>
                 <ThemedView ghost stretch style={{ margin: 20 }}>

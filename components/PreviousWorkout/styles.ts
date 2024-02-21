@@ -4,7 +4,7 @@ import { borderRadius } from "../../theme/border";
 export const styles = StyleSheet.create({
     set: {
         textAlign: "center",
-        fontSize: 16,
+        fontSize: 20,
         paddingLeft: 8,
     },
     timeBasedSet: {

@@ -59,7 +59,7 @@ export const TimeInputRow = ({
 
     const hasValuesInTopBar = Boolean(i18key || !hideSuffix || helpTextConfig);
 
-    const textInputStyles = useMemo(() => [{ paddingHorizontal: 3, borderRadius }, textStyle], [textStyle]);
+    const textInputStyles = useMemo(() => [{ paddingHorizontal: 3, borderRadius, fontSize: 20 }, textStyle], [textStyle]);
 
     return (
         <ThemedView stretch ghost>

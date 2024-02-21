@@ -23,18 +23,18 @@ export const TrainingHeader = ({ showPlaceholderForDoneButton = true, exerciseTy
             <Text placeholder style={styles.number}>
                 #
             </Text>
-            <HStack stretch ghost gap>
+            <HStack stretch ghost center style={{ gap: 15 }}>
                 {exerciseType === "WEIGHT_BASED" ? (
                     <>
-                        <Text placeholder style={styles.input}>
+                        <Text ghost style={styles.input}>
                             {leftHeader}
                         </Text>
-                        <Text placeholder style={styles.input}>
+                        <Text ghost style={styles.input}>
                             {rightHeader}
                         </Text>
                     </>
                 ) : (
-                    <Text placeholder style={styles.input}>
+                    <Text ghost style={styles.durationInput}>
                         {t("duration")}
                     </Text>
                 )}

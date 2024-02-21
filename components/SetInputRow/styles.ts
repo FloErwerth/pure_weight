@@ -13,6 +13,7 @@ export const styles = StyleSheet.create({
     numberCenter: { flex: 0.2, height: 50 },
     textNumber: { fontSize: 20 },
     textInput: {
+        fontSize: 20,
         borderRadius,
     },
     set: {

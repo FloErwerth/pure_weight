@@ -14,8 +14,9 @@ export const styles = StyleSheet.create({
         fontSize: 16,
     },
     durationInput: {
+        paddingLeft: 10,
         fontSize: 16,
-        flex: 2,
+        flex: 1,
         textAlign: "center",
     },
     input: { flex: 1, textAlign: "center", fontSize: 16 },
