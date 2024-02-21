@@ -9,11 +9,14 @@ import { TimeInputRow } from "../TimeInputRow";
 import { useTranslation } from "react-i18next";
 import { ErrorTextConfig } from "../../../store/reducers/errors/types";
 import { PageContent } from "../../PageContent/PageContent";
+import { getWeightUnit } from "../../../store/reducers/settings/settingsSelectors";
+import { HStack } from "../../Stack/HStack/HStack";
 
 export const TimeBasedExercise = () => {
     const editedExercise = useAppSelector(getEditedExercise);
     const dispatch = useAppDispatch();
     const { t } = useTranslation();
+    const weightUnit = useAppSelector(getWeightUnit);
 
     const handleSetSets = useCallback(
         (value: string | undefined) => {
@@ -70,6 +73,18 @@ export const TimeBasedExercise = () => {
         [dispatch],
     );
 
+    const handleSetWeight = useCallback(
+        (value?: string) => {
+            dispatch(
+                mutateEditedExercise({
+                    key: "weight",
+                    value,
+                }),
+            );
+        },
+        [dispatch],
+    );
+
     const errorTextConfigs: Record<string, ErrorTextConfig> = useMemo(
         () => ({
             sets: {
@@ -86,14 +101,22 @@ export const TimeBasedExercise = () => {
 
     return (
         <PageContent ignorePadding scrollable ghost style={styles.inputWrapper}>
-            <EditableExerciseInputRow
-                i18key="sets"
-                suffix="x"
-                stretch
-                setValue={handleSetSets}
-                errorTextConfig={errorTextConfigs.sets}
-                value={editedExercise?.exercise.sets}
-            />
+            <HStack gap ghost>
+                <EditableExerciseInputRow
+                    i18key="sets"
+                    suffix="x"
+                    stretch
+                    setValue={handleSetSets}
+                    errorTextConfig={errorTextConfigs.sets}
+                    value={editedExercise?.exercise.sets}
+                />
+                <EditableExerciseInputRow
+                    stretch
+                    setValue={handleSetWeight}
+                    i18key="weight"
+                    suffix={weightUnit}
+                    value={editedExercise?.exercise.weight}></EditableExerciseInputRow>
+            </HStack>
             <TimeInputRow
                 i18key="duration"
                 stretch
