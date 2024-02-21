@@ -51,12 +51,14 @@ export const TimeBasedEditedExercise = ({ doneWorkoutId, doneExerciseId }: Weigh
                     </Text>
                     <EditableExerciseInputRow
                         stretch
+                        background
                         suffix={timeUnit.minutesUnit}
                         setValue={(minutes) => handleSetDuration(index, "durationMinutes", minutes)}
                         value={durationMinutes}
                     />
                     <EditableExerciseInputRow
                         stretch
+                        background
                         suffix={timeUnit.secondsUnit}
                         setValue={(seconds) => handleSetDuration(index, "durationSeconds", seconds)}
                         value={durationSeconds}
