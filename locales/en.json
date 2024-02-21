@@ -110,8 +110,8 @@
 
   "workout_paused_hint": "Paused workout",
 
-  "minutes": "min.",
-  "seconds": "sec.",
+  "minutes": "min",
+  "seconds": "sec",
 
   "weight": "Weight",
   "sets": "Sets",
