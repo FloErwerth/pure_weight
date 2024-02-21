@@ -20,7 +20,6 @@ export interface TimeInputRowProps {
     setMinutes: (minutes: string) => void;
     setSeconds: (seconds: string) => void;
     i18key?: string;
-    stretch?: boolean;
     suffix?: string;
     helpTextConfig?: { text: string; title: string };
     errorTextConfig?: ErrorTextConfig;

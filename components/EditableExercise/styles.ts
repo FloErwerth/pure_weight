@@ -21,9 +21,12 @@ export const styles = StyleSheet.create({
         padding: 5,
         fontSize: 20,
     },
-    labelWrapper: {
-        justifyContent: "space-between",
+    suffix: {
+        fontSize: 14,
+        paddingRight: 5,
+        textAlign: "right",
     },
+    labelWrapper: {},
     headerWrapper: {
         margin: 10,
         gap: 10,
@@ -32,8 +35,7 @@ export const styles = StyleSheet.create({
         fontSize: 20,
     },
     input: {
-        paddingVertical: 10,
-        paddingHorizontal: 5,
+        padding: 10,
         borderRadius,
         borderWidth: 1,
     },
@@ -42,7 +44,6 @@ export const styles = StyleSheet.create({
         position: "absolute",
     },
     inputWrapper: {
-        marginTop: 10,
         zIndex: -1,
         gap: 5,
         width: Dimensions.get("screen").width - 40,
@@ -57,7 +58,6 @@ export const styles = StyleSheet.create({
         alignSelf: "stretch",
         justifyContent: "space-around",
     },
-    innerWrapper: {},
     outerWrapper: {
         padding: 10,
         gap: 5,

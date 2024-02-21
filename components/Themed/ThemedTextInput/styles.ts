@@ -18,6 +18,5 @@ export const styles = StyleSheet.create({
         fontSize: 20,
         padding: 10,
         zIndex: 1,
-        borderRadius,
     },
 });

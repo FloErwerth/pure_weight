@@ -8,7 +8,7 @@
   "error_create_exercise_weight_reps_sets": "Gewicht, Wiederholungen und Sätze sind erforderlich",
   "error_create_exercise_duration": "Die Dauer ist erforderlich",
   "error_create_exercise_weight": "Gewicht ist erforderlich",
-  "error_create_exercise_reps": "Wiederholungen sind erforderlich",
+  "error_create_exercise_reps": "Wdh. sind erforderlich",
   "error_create_exercise_sets": "Sätze sind erforderlich",
   "error_create_measurement_name": "Ein Name für die Messung ist erforderlich",
   "error_create_measurement_type": "Eine Einheit ist erforderlich",

@@ -1,5 +1,5 @@
 import { ThemedTextInput } from "../Themed/ThemedTextInput/ThemedTextInput";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useMemo, useRef } from "react";
 import { styles } from "./styles";
 import { useTranslation } from "react-i18next";
 import { AppState, useAppDispatch, useAppSelector } from "../../store";
@@ -11,7 +11,6 @@ import { ThemedPressable } from "../Themed/Pressable/Pressable";
 import { TextInput, View } from "react-native";
 import { EditableExerciseInputRowProps } from "./types";
 import { cleanError } from "../../store/reducers/errors";
-import { HelpText } from "../HelpText/HelpText";
 import { ErrorText } from "../ErrorText/ErrorText";
 
 export const EditableExerciseInputRow = ({
@@ -31,7 +30,6 @@ export const EditableExerciseInputRow = ({
     const { errorColor } = useTheme();
     const hasError = useAppSelector((state: AppState) => getErrorByKey(state, errorTextConfig?.errorKey));
     const textInputRef = useRef<TextInput>(null);
-    const [containerWidth, setContainerWidth] = useState(0);
     const containerRef = useRef<View>(null);
     const dispatch = useAppDispatch();
 
@@ -45,26 +43,7 @@ export const EditableExerciseInputRow = ({
         [dispatch, errorTextConfig?.errorKey, hasError, setValue],
     );
 
-    useEffect(() => {
-        if (containerRef.current) {
-            containerRef.current.measure((_x, _y, width) => {
-                setContainerWidth(width);
-            });
-        }
-    }, [containerRef]);
-
     const inputStyles = useMemo(() => [{ borderColor: hasError ? errorColor : "transparent" }, styles.input], [errorColor, hasError]);
-
-    const suffixContainerStyles = useMemo(() => {
-        return [
-            {
-                textAlign: "left",
-                width: containerWidth,
-                left: Math.min(containerWidth - 20, containerWidth / 2 + ((value?.length >= 2 ? value?.length : 1 ?? 1) * 20) / 4 + 5),
-            } as const,
-            styles.suffixContainer,
-        ];
-    }, [containerWidth, value?.length]);
 
     const handleFocusInput = useCallback(() => {
         textInputRef.current?.focus();
@@ -73,35 +52,30 @@ export const EditableExerciseInputRow = ({
     return (
         <ThemedPressable reference={containerRef} onPress={handleFocusInput} behind ghost stretch={stretch}>
             {(Boolean(i18key) || helpTextConfig) && (
-                <HStack ghost style={styles.labelWrapper}>
+                <HStack ghost center style={styles.labelWrapper}>
                     <Text behind style={styles.label} ghost>
                         {t(i18key ?? " ")}
                     </Text>
-                    <View style={styles.label}></View>
-                    {helpTextConfig && <HelpText helpTextConfig={helpTextConfig} />}
+                    {suffix && (
+                        <Text ghost placeholder style={styles.suffix}>
+                            {suffix}
+                        </Text>
+                    )}
                 </HStack>
             )}
-            <HStack round ghost center style={{ justifyContent: "center" }}>
-                <ThemedTextInput
-                    input={!background}
-                    background={background}
-                    bottomSheet={bottomSheet}
-                    stretch
-                    reference={textInputRef}
-                    inputMode="decimal"
-                    textAlign="center"
-                    style={inputStyles}
-                    onChangeText={handleSetValue}
-                    value={value}
-                    maxLength={maxLength}
-                    placeholder={placeholder}
-                />
-                {suffix && (
-                    <Text ghost style={suffixContainerStyles}>
-                        {suffix}
-                    </Text>
-                )}
-            </HStack>
+            <ThemedTextInput
+                input={!background}
+                background={background}
+                bottomSheet={bottomSheet}
+                reference={textInputRef}
+                inputMode="decimal"
+                textAlign="center"
+                style={inputStyles}
+                onChangeText={handleSetValue}
+                value={value}
+                maxLength={maxLength}
+                placeholder={placeholder}
+            />
             {!errorTextConfig?.hideError && hasError && (
                 <ErrorText errorKey={errorTextConfig?.errorKey}>{errorTextConfig?.errorText}</ErrorText>
             )}

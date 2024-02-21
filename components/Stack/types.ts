@@ -5,4 +5,5 @@ export interface StackProps extends ThemedViewProps {
     center?: boolean;
     padding?: boolean;
     gap?: boolean;
+    hasError?: boolean;
 }

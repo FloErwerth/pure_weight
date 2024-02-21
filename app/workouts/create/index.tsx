@@ -232,6 +232,7 @@ export const Create = () => {
                         style={styles.workoutNameInput}
                         errorKey="create_workout_name"
                         showClear
+                        round
                         value={editedWorkout?.workout.name}
                         onChangeText={handleSetWorkoutName}
                         placeholder={t("workout_name")}

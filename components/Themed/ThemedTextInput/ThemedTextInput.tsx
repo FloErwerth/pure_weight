@@ -10,6 +10,7 @@ import { cleanError } from "../../../store/reducers/errors";
 import { getErrorByKey } from "../../../store/reducers/errors/errorSelectors";
 import { ErrorText } from "../../ErrorText/ErrorText";
 import { ErrorFields } from "../../../store/reducers/errors/types";
+import { borderRadius } from "../../../theme/border";
 
 interface ThemedTextInputProps extends TextInputProps, ComputedBackgroundColorProps {
     reference?: RefObject<TextInput>;
@@ -20,6 +21,7 @@ interface ThemedTextInputProps extends TextInputProps, ComputedBackgroundColorPr
     showClear?: boolean;
     height?: number;
     errorKey?: ErrorFields;
+    round?: boolean;
 }
 
 export const ThemedTextInput = (props: ThemedTextInputProps) => {
@@ -84,6 +86,7 @@ export const ThemedTextInput = (props: ThemedTextInputProps) => {
                 flex: props.stretch ? 1 : 0,
                 backgroundColor,
                 color: editable ? mainColor : textDisabled,
+                borderRadius: props.round ? borderRadius : 0,
             } as const,
             styles.base,
             props.style,
@@ -93,7 +96,18 @@ export const ThemedTextInput = (props: ThemedTextInputProps) => {
         }
         const errorStyle = { color: errorColor, borderWidth: props.hideErrorBorder ? 0 : 1, borderColor: errorColor };
         return [errorStyle, baseStyle];
-    }, [backgroundColor, editable, errorColor, hasError, mainColor, props.hideErrorBorder, props.stretch, props.style, textDisabled]);
+    }, [
+        backgroundColor,
+        editable,
+        errorColor,
+        hasError,
+        mainColor,
+        props.hideErrorBorder,
+        props.round,
+        props.stretch,
+        props.style,
+        textDisabled,
+    ]);
 
     return (
         <>

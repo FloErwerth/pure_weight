@@ -38,7 +38,7 @@ export const Text = (props: ThemedTextProps) => {
             } as const,
             props.style,
         ],
-        [computedBackgroundColor, computedColor, props.behind, props.center, props.stretch, props.style],
+        [computedBackgroundColor, computedColor, props.behind, props.center, props.italic, props.stretch, props.style],
     );
 
     return <_Text {...props} style={styles} />;

@@ -298,17 +298,19 @@ export const workoutReducer = createReducer<WorkoutState>(
                         const trainedWorkoutExerciseIndex = state.trainedWorkout.exerciseData.findIndex(
                             (data) => data.exerciseId === state.editedExercise?.exercise.exerciseId,
                         );
-                        state.trainedWorkout.workout.exercises.splice(trainedWorkoutExerciseIndex, 1, state.editedExercise.exercise);
-                        state.trainedWorkout.exerciseData[trainedWorkoutExerciseIndex].doneSets.map((data) => {
-                            if (!data.confirmed) {
-                                return {
-                                    filled: false,
-                                    reps: state.editedExercise?.exercise.reps,
-                                    weight: state.editedExercise?.exercise.weight,
-                                };
-                            }
-                            return data;
-                        });
+                        if (trainedWorkoutExerciseIndex !== -1) {
+                            state.trainedWorkout.workout.exercises.splice(trainedWorkoutExerciseIndex, 1, state.editedExercise.exercise);
+                            state.trainedWorkout.exerciseData[trainedWorkoutExerciseIndex].doneSets.map((data) => {
+                                if (!data.confirmed) {
+                                    return {
+                                        filled: false,
+                                        reps: state.editedExercise?.exercise.reps,
+                                        weight: state.editedExercise?.exercise.weight,
+                                    };
+                                }
+                                return data;
+                            });
+                        }
                     }
                     if (state.editedWorkout) {
                         const exerciseIndex = state.editedWorkout.workout.exercises.findIndex(

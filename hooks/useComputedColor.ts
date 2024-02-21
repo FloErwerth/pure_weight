@@ -36,5 +36,20 @@ export const useComputedColor = (props: ComputedColorProps) => {
             return secondaryColor;
         }
         return mainColor;
-    }, [backgroundColor, errorColor, mainColor, props.disabled, props.error, props.link, props.placeholder, props.textBackground, props.warning, secondaryColor, textDisabled, warningColor]);
+    }, [
+        backgroundColor,
+        cta,
+        errorColor,
+        mainColor,
+        props.cta,
+        props.disabled,
+        props.error,
+        props.link,
+        props.placeholder,
+        props.textBackground,
+        props.warning,
+        secondaryColor,
+        textDisabled,
+        warningColor,
+    ]);
 };

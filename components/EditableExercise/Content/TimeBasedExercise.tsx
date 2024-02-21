@@ -102,9 +102,25 @@ export const TimeBasedExercise = () => {
     return (
         <PageContent ignorePadding scrollable ghost style={styles.inputWrapper}>
             <HStack gap ghost>
+                <TimeInputRow
+                    i18key="duration"
+                    setMinutes={handleSetDurationMinutes}
+                    setSeconds={handleSetDurationSeconds}
+                    minutes={editedExercise?.exercise?.durationMinutes}
+                    seconds={editedExercise?.exercise?.durationSeconds}
+                    errorTextConfig={errorTextConfigs.duration}
+                />
+                <TimeInputRow
+                    i18key="pause"
+                    setMinutes={handleSetPauseMinutes}
+                    setSeconds={handleSetPauseSeconds}
+                    minutes={editedExercise?.exercise?.pauseMinutes}
+                    seconds={editedExercise?.exercise?.pauseSeconds}
+                />
+            </HStack>
+            <HStack gap ghost>
                 <EditableExerciseInputRow
                     i18key="sets"
-                    suffix="x"
                     stretch
                     setValue={handleSetSets}
                     errorTextConfig={errorTextConfigs.sets}
@@ -117,23 +133,6 @@ export const TimeBasedExercise = () => {
                     suffix={weightUnit}
                     value={editedExercise?.exercise.weight}></EditableExerciseInputRow>
             </HStack>
-            <TimeInputRow
-                i18key="duration"
-                stretch
-                setMinutes={handleSetDurationMinutes}
-                setSeconds={handleSetDurationSeconds}
-                minutes={editedExercise?.exercise?.durationMinutes}
-                seconds={editedExercise?.exercise?.durationSeconds}
-                errorTextConfig={errorTextConfigs.duration}
-            />
-            <TimeInputRow
-                i18key="pause"
-                stretch
-                setMinutes={handleSetPauseMinutes}
-                setSeconds={handleSetPauseSeconds}
-                minutes={editedExercise?.exercise?.pauseMinutes}
-                seconds={editedExercise?.exercise?.pauseSeconds}
-            />
         </PageContent>
     );
 };
