@@ -22,9 +22,10 @@ interface ThemedTextInputProps extends TextInputProps, ComputedBackgroundColorPr
     height?: number;
     errorKey?: ErrorFields;
     round?: boolean;
+    padding?: boolean;
 }
 
-export const ThemedTextInput = (props: ThemedTextInputProps) => {
+export const ThemedTextInput = ({ padding = true, ...props }: ThemedTextInputProps) => {
     const backgroundColor = useComputedBackgroundColor(props);
     const { editable = true } = props;
     const hasError = useAppSelector((state: AppState) => getErrorByKey(state, props?.errorKey));
@@ -83,6 +84,7 @@ export const ThemedTextInput = (props: ThemedTextInputProps) => {
     const textInputStyle = useMemo(() => {
         const baseStyle = [
             {
+                padding: padding ? 10 : 0,
                 flex: props.stretch ? 1 : 0,
                 backgroundColor,
                 color: editable ? mainColor : textDisabled,
@@ -103,6 +105,7 @@ export const ThemedTextInput = (props: ThemedTextInputProps) => {
         hasError,
         mainColor,
         props.hideErrorBorder,
+        padding,
         props.round,
         props.stretch,
         props.style,

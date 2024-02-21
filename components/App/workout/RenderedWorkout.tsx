@@ -1,5 +1,4 @@
 import { setEditedWorkout } from "../../../store/reducers/workout";
-import { HStack } from "../../Stack/HStack/HStack";
 import { styles } from "../index/styles";
 import { Text } from "../../Themed/ThemedText/Text";
 import React, { useCallback } from "react";
@@ -48,7 +47,6 @@ export const RenderedWorkout = ({ workoutId }: RenderedWorkoutProps) => {
                 <Text style={styles.title}>{workout?.name}</Text>
                 {latestWorkoutDate && <Text style={styles.date}>{latestWorkoutDate}</Text>}
             </View>
-
             {showStats ? (
                 <View style={styles.innerTrainWrapper}>
                     <ProgressDisplay type="Workout" trend={trend} onPress={handleNavigateToProgress} />
@@ -61,15 +59,13 @@ export const RenderedWorkout = ({ workoutId }: RenderedWorkoutProps) => {
                     </Text>
                 </ThemedView>
             )}
-            <HStack style={styles.outerTrainWrapper}>
-                {isOngoingWorkout && (
-                    <ThemedView style={styles.pausedTrainigWrapper} input round>
-                        <Text style={styles.pausedTrainingHint} ghost>
-                            {t("workout_paused_hint")}
-                        </Text>
-                    </ThemedView>
-                )}
-            </HStack>
+            {isOngoingWorkout && (
+                <ThemedView style={styles.pausedTrainigWrapper} input round>
+                    <Text style={styles.pausedTrainingHint} ghost>
+                        {t("workout_paused_hint")}
+                    </Text>
+                </ThemedView>
+            )}
         </ThemedView>
     );
 };

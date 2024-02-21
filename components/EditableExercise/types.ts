@@ -15,12 +15,16 @@ export interface EditableExerciseInputRowProps {
 }
 
 export interface TimeInputRowProps {
+    stretch?: boolean;
+    hideSuffix?: boolean;
     seconds?: string;
     minutes?: string;
     setMinutes: (minutes: string) => void;
     setSeconds: (seconds: string) => void;
     i18key?: string;
-    suffix?: string;
     helpTextConfig?: { text: string; title: string };
     errorTextConfig?: ErrorTextConfig;
+    ghost?: boolean;
+    input?: boolean;
+    background?: boolean;
 }

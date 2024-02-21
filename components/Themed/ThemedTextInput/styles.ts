@@ -16,7 +16,6 @@ export const styles = StyleSheet.create({
     },
     base: {
         fontSize: 20,
-        padding: 10,
         zIndex: 1,
     },
 });

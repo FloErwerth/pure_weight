@@ -180,7 +180,7 @@ export const CreateExercise = () => {
     return (
         <ThemedView stretch background>
             <SiteNavigationButtons title={title} backButtonAction={handleNavigateBack} />
-            <PageContent safeBottom stretch ghost paddingTop={20}>
+            <PageContent safeBottom stretch ghost>
                 <EditableExercise />
                 <View style={styles.gap}>
                     {showCheckboxes && (

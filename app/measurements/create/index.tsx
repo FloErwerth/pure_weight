@@ -249,7 +249,7 @@ export const CreateMeasurement = () => {
         <ThemedView background stretch round>
             <SiteNavigationButtons backButtonAction={handleBackButtonPress} title={pageTitle} />
             <ThemedView ghost stretch>
-                <PageContent ghost paddingTop={20}>
+                <PageContent ghost>
                     {!isAddingData && (
                         <View>
                             <ThemedTextInput

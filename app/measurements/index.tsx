@@ -81,7 +81,7 @@ export function Measurements() {
             closeDeleteWarning();
             openToast();
         }
-    }, [deletedMeasurementId, dispatch, openToast, showToast, toastRef]);
+    }, [closeDeleteWarning, deletedMeasurementId, dispatch, openToast, showToast, toastRef]);
 
     const handleRecoverMeasurement = useCallback(() => {
         dispatch(recoverMeasurement());

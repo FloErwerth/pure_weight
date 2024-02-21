@@ -45,13 +45,18 @@ export const RenderedMeasurement = ({ measurement }: MeasurementProps) => {
     );
 
     return (
-        <HStack padding round style={styles.pressableWrapper}>
+        <HStack noBorder padding round>
             <ThemedView style={styles.vStack}>
                 <View style={styles.titleWrapper}>
                     <Text style={styles.text}>{measurement.name}</Text>
                     <Text style={styles.date}>{getSinceDate(latestMeasurements[measurement.measurementId], language)}</Text>
                 </View>
-                <ProgressDisplay type="Measurement" trend={trend} higherIsBetter={measurement.higherIsBetter} onPress={handleNavigateToChart} />
+                <ProgressDisplay
+                    type="Measurement"
+                    trend={trend}
+                    higherIsBetter={measurement.higherIsBetter}
+                    onPress={handleNavigateToChart}
+                />
                 <HistoryDisplay id={measurement.measurementId} type="measurement" handleNavigateToHistory={handleGoToHistory} />
             </ThemedView>
         </HStack>

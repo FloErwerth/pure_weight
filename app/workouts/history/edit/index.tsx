@@ -73,7 +73,7 @@ export const WorkoutHistoryEdit = ({
             />
             <KeyboardAwareScrollView extraScrollHeight={20} keyboardOpeningTime={20}>
                 {doneWorkout?.doneExercises?.map((item) => (
-                    <ThemedView input round style={{ padding: 10, margin: 10 }}>
+                    <ThemedView key={item.doneExerciseId} input round style={{ padding: 10, margin: 10 }}>
                         <Text style={{ fontSize: 20, marginBottom: 10 }} ghost>
                             {item?.name}
                         </Text>

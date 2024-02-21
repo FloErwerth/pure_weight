@@ -3,7 +3,6 @@ import { styles } from "./styles";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useCallback, useMemo } from "react";
 import { HStack } from "../Stack/HStack/HStack";
-import { Center } from "../Center/Center";
 import { Text } from "../Themed/ThemedText/Text";
 import { borderRadius } from "../../theme/border";
 import { ThemedTextInput } from "../Themed/ThemedTextInput/ThemedTextInput";
@@ -15,6 +14,8 @@ import { getExerciseById, getIsActiveSet, getSetData } from "../../store/reducer
 import { ThemedPressable } from "../Themed/Pressable/Pressable";
 import { ExerciseId } from "../../store/reducers/workout/types";
 import { getUpdatePrefilledWorkoutValues } from "../../store/reducers/settings/settingsSelectors";
+import { TimeInputRow } from "../EditableExercise/TimeInputRow";
+import { ThemedMaterialCommunityIcons } from "../Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
 
 interface SetInputRowProps {
     setIndex: number;
@@ -155,7 +156,7 @@ export const SetInput = ({ setIndex, exerciseId }: SetInputRowProps) => {
         [computedTextfieldBackgroundColor, computedColor],
     );
     const buttonStyles = useMemo(
-        () => [styles.button, { backgroundColor: computedButtonBackgroundColor }],
+        () => ({ width: 35, height: 35, paddingTop: 4, backgroundColor: computedButtonBackgroundColor }),
         [computedButtonBackgroundColor],
     );
     const iconStyle = useMemo(
@@ -182,45 +183,52 @@ export const SetInput = ({ setIndex, exerciseId }: SetInputRowProps) => {
 
     return (
         <HStack style={[styles.vStack, activeStackStyles]}>
-            <Center style={styles.numberCenter}>
-                <View style={{ borderRadius }}>
-                    {isConfirmed && !isActiveSet ? (
-                        <MaterialCommunityIcons size={24} style={iconStyle} name="check-bold" />
-                    ) : (
-                        <Text ghost style={textNumberStyles}>
-                            {setIndex + 1}
-                        </Text>
-                    )}
-                </View>
-            </Center>
-            <HStack ghost stretch style={styles.inputStack}>
-                <Center style={styles.center}>
-                    <ThemedTextInput
-                        editable={isEditable}
-                        returnKeyType="done"
-                        style={textInputStyles}
-                        value={exercise?.type === "WEIGHT_BASED" ? weight : durationMinutes}
-                        onChangeText={exercise?.type === "WEIGHT_BASED" ? handleSetWeight : handleSetMinutes}
-                        textAlign="center"
-                        inputMode="decimal"
+            <View style={{ borderRadius, flex: 0.2, justifyContent: "center", alignItems: "center" }}>
+                {isConfirmed && !isActiveSet ? (
+                    <MaterialCommunityIcons size={24} style={iconStyle} name="check-bold" />
+                ) : (
+                    <Text ghost style={textNumberStyles}>
+                        {setIndex + 1}
+                    </Text>
+                )}
+            </View>
+            <HStack stretch center gap ghost>
+                {exercise?.type === "WEIGHT_BASED" ? (
+                    <HStack stretch ghost gap>
+                        <ThemedTextInput
+                            editable={isEditable}
+                            returnKeyType="done"
+                            style={textInputStyles}
+                            stretch
+                            value={exercise?.type === "WEIGHT_BASED" ? weight : durationMinutes}
+                            onChangeText={exercise?.type === "WEIGHT_BASED" ? handleSetWeight : handleSetMinutes}
+                            textAlign="center"
+                            inputMode="decimal"
+                        />
+                        <ThemedTextInput
+                            editable={isEditable}
+                            returnKeyType="done"
+                            style={textInputStyles}
+                            stretch
+                            value={exercise?.type === "WEIGHT_BASED" ? reps : durationSeconds}
+                            onChangeText={exercise?.type === "WEIGHT_BASED" ? handleSetReps : handleSetSeconds}
+                            textAlign="center"
+                            inputMode="decimal"
+                        />
+                    </HStack>
+                ) : (
+                    <TimeInputRow
+                        background
+                        hideSuffix
+                        setMinutes={handleSetMinutes}
+                        setSeconds={handleSetSeconds}
+                        seconds={durationSeconds}
+                        minutes={durationMinutes}
                     />
-                </Center>
-                <Center style={styles.center}>
-                    <ThemedTextInput
-                        editable={isEditable}
-                        returnKeyType="done"
-                        style={textInputStyles}
-                        value={exercise?.type === "WEIGHT_BASED" ? reps : durationSeconds}
-                        onChangeText={exercise?.type === "WEIGHT_BASED" ? handleSetReps : handleSetSeconds}
-                        textAlign="center"
-                        inputMode="decimal"
-                    />
-                </Center>
-                <Center style={styles.center}>
-                    <ThemedPressable style={buttonStyles} onPress={handleSetDone}>
-                        <MaterialCommunityIcons size={24} style={playStyle} name={confirmIcon} />
-                    </ThemedPressable>
-                </Center>
+                )}
+                <ThemedPressable center style={buttonStyles} round onPress={handleSetDone}>
+                    <ThemedMaterialCommunityIcons ghost size={24} style={playStyle} name={confirmIcon} />
+                </ThemedPressable>
             </HStack>
         </HStack>
     );

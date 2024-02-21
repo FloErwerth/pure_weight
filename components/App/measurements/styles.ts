@@ -2,10 +2,6 @@ import { StyleSheet } from "react-native";
 import { borderRadius } from "../../../theme/border";
 
 export const styles = StyleSheet.create({
-    pressableWrapper: {
-        justifyContent: "space-between",
-        alignItems: "flex-start",
-    },
     date: {
         fontStyle: "italic",
     },

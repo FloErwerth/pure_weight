@@ -129,7 +129,7 @@ export const MeasurementHistory = () => {
     return (
         <ThemedView background stretch>
             <SiteNavigationButtons backButtonAction={handleNavigateToMeasurements} title={editedMeasurement.measurement?.name} />
-            <PageContent stretch ghost paddingTop={20}>
+            <PageContent stretch ghost>
                 <FlatList
                     showsVerticalScrollIndicator={false}
                     contentInset={flatlistConfig.contentInset}
