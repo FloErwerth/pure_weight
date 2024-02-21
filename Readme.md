@@ -43,3 +43,4 @@ Build Number 27
 + Fixed previous workout not displaying data correctly
 + Removed background notification for stopwatch timer
 + Simplified stopwatch
++ Moved paused workout on workout card to bottom right

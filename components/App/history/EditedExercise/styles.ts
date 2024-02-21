@@ -5,8 +5,6 @@ export const styles = StyleSheet.create({
     inputStack: {
         gap: 5,
         alignItems: "center",
-        marginBottom: 5,
-        paddingVertical: 3,
     },
     center: {
         flex: 1,

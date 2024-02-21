@@ -58,7 +58,7 @@ export const EditableExerciseInputRow = ({
         return [
             {
                 width: containerWidth,
-                left: Math.min(containerWidth - 20, containerWidth / 2 + (value?.length || 1) * 6.5),
+                left: Math.min(containerWidth - 20, containerWidth / 2 + ((value?.length ?? 1) * 20) / 4 + 5),
             },
             styles.suffixContainer,
         ];

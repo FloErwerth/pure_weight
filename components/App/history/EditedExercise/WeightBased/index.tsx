@@ -68,11 +68,18 @@ export const WeightBasedEditedExercise = ({ doneWorkoutId, doneExerciseId }: Wei
                     </Text>
                     <EditableExerciseInputRow
                         stretch
+                        background
                         suffix={weightUnit}
                         value={weight}
                         setValue={(value) => handleSetWeight(index, value)}
                     />
-                    <EditableExerciseInputRow stretch suffix="x" value={reps} setValue={(value) => handleSetReps(index, value)} />
+                    <EditableExerciseInputRow
+                        background
+                        stretch
+                        suffix="x"
+                        value={reps}
+                        setValue={(value) => handleSetReps(index, value)}
+                    />
                 </HStack>
             ))}
         </View>
