@@ -62,7 +62,7 @@ export const MeasurementHistory = () => {
                 toastRef.current.restart();
             }, 200);
         }
-    }, [closeToast, deletedDatapointIndex, dispatch]);
+    }, [closeBottomSheet, deletedDatapointIndex, dispatch, openToast, toastRef]);
 
     const renderItem: ListRenderItem<MeasurementDataPoint> = useCallback(
         ({ item, index }) => {

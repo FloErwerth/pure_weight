@@ -21,7 +21,7 @@ export function HStack(props: StackProps) {
             } as const,
             props.style,
         ],
-        [backgroundColor, errorColor, props?.center, props.gap, props.hasError, props.padding, props.style],
+        [backgroundColor, errorColor, props?.center, props.gap, props.hasError, props.noBorder, props.padding, props.style],
     );
 
     return (
