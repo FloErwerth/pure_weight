@@ -32,7 +32,7 @@
   "weight_based_label_variant":  "Weight based",
   "time_based_label_variant":  "Time based",
   "history_cta": "Show history",
-  "history_front": "History:",
+  "workout_history": "History",
   "history_latest_workout": "Latest Workout",
   "history_latest_workout_short": "latest",
   "history_browse": "Browse history",

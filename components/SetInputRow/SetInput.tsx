@@ -151,10 +151,10 @@ export const SetInput = ({ setIndex, exerciseId }: SetInputRowProps) => {
     }, [isConfirmed, isEditable, mainColor, secondaryColor, textDisabled]);
 
     const textNumberStyles = useMemo(() => [styles.textNumber, { color: computedColor }], [computedColor]);
-    const textInputStyles = useMemo(
-        () => [styles.textInput, { backgroundColor: computedTextfieldBackgroundColor, color: computedColor }],
-        [computedTextfieldBackgroundColor, computedColor],
-    );
+    const wrapperStyle = useMemo(() => ({ backgroundColor: computedTextfieldBackgroundColor }), [computedTextfieldBackgroundColor]);
+    const textStyle = useMemo(() => ({ color: computedColor }), [computedColor]);
+    const textInputStyles = useMemo(() => [styles.textInput, wrapperStyle, textStyle], [wrapperStyle, textStyle]);
+
     const buttonStyles = useMemo(
         () => ({ width: 35, height: 35, paddingTop: 4, backgroundColor: computedButtonBackgroundColor }),
         [computedButtonBackgroundColor],
@@ -218,6 +218,8 @@ export const SetInput = ({ setIndex, exerciseId }: SetInputRowProps) => {
                     </HStack>
                 ) : (
                     <TimeInputRow
+                        wrapperStyle={wrapperStyle}
+                        textStyle={textStyle}
                         background
                         hideSuffix
                         setMinutes={handleSetMinutes}

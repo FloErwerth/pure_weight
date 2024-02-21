@@ -2,7 +2,7 @@ import { StyleSheet } from "react-native";
 import { borderRadius } from "../../../theme/border";
 
 export const styles = StyleSheet.create({
-    title: { fontSize: 26, padding: 1, flex: 1, borderRadius, marginTop: 20 },
+    title: { fontSize: 26, padding: 1, borderRadius },
     latestWorkoutChip: { paddingTop: 26 },
     titleWrapper: {
         gap: 5,

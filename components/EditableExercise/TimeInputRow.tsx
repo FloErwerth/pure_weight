@@ -25,6 +25,8 @@ export const TimeInputRow = ({
     ghost,
     background,
     input = !ghost && !background,
+    wrapperStyle,
+    textStyle,
 }: TimeInputRowProps) => {
     const { t } = useTranslation();
     const hasError = useAppSelector((state: AppState) => getErrorByKey(state, errorTextConfig?.errorKey));
@@ -81,6 +83,8 @@ export const TimeInputRow = ({
         handleChangeSeconds(removeLeadingZero ?? "");
     }, [handleChangeSeconds, seconds]);
 
+    const textInputStyles = useMemo(() => [{ paddingHorizontal: 3, borderRadius }, textStyle], [textStyle]);
+
     return (
         <ThemedView stretch ghost>
             {hasValuesInTopBar && (
@@ -100,24 +104,28 @@ export const TimeInputRow = ({
                     {helpTextConfig && <HelpText helpTextConfig={helpTextConfig} />}
                 </HStack>
             )}
-            <HStack hasError={hasError} input={input} background={background} stretch={stretch} center round>
+            <HStack style={wrapperStyle} hasError={hasError} input={input} background={background} stretch={stretch} center round>
                 <ThemedTextInput
                     onChangeText={handleChangeMinutes}
-                    style={{ paddingHorizontal: 3, borderRadius }}
+                    style={textInputStyles}
                     placeholder="00"
                     onBlur={handleBlurMinutes}
                     onFocus={handleFocusMinutes}
                     value={minutes}
                     ghost
+                    maxLength={2}
                     textAlign="right"
                     stretch></ThemedTextInput>
-                <Text ghost>:</Text>
+                <Text style={textStyle} ghost>
+                    :
+                </Text>
                 <ThemedTextInput
                     onChangeText={handleChangeSeconds}
-                    style={{ paddingHorizontal: 3, borderRadius }}
+                    style={textInputStyles}
                     placeholder="00"
                     onBlur={handleBlurSeconds}
                     onFocus={handleFocusSeconds}
+                    maxLength={2}
                     value={seconds}
                     ghost
                     textAlign="left"

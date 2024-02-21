@@ -45,3 +45,4 @@ Build Number 27
 + Simplified stopwatch
 + Moved paused workout on workout card to bottom right
 + Changed time input to fit into one input field
++ Adjusted hint for paused workout

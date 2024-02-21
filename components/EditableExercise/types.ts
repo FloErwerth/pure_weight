@@ -1,4 +1,5 @@
 import { ErrorTextConfig } from "../../store/reducers/errors/types";
+import { TextStyle, ViewStyle } from "react-native";
 
 export interface EditableExerciseInputRowProps {
     value?: string;
@@ -27,4 +28,6 @@ export interface TimeInputRowProps {
     ghost?: boolean;
     input?: boolean;
     background?: boolean;
+    wrapperStyle?: ViewStyle;
+    textStyle?: TextStyle;
 }
