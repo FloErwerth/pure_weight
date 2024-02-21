@@ -16,12 +16,12 @@ export function HStack(props: StackProps) {
                 backgroundColor,
                 alignItems: props?.center ? "center" : "flex-start",
                 padding: props.padding ? 10 : 0,
-                borderWidth: !props.noBorder ? 1 : 0,
+                borderWidth: props.hasError !== undefined ? 1 : 0,
                 borderColor: props.hasError ? errorColor : "transparent",
             } as const,
             props.style,
         ],
-        [backgroundColor, errorColor, props?.center, props.gap, props.hasError, props.noBorder, props.padding, props.style],
+        [backgroundColor, errorColor, props?.center, props.gap, props.hasError, props.padding, props.style],
     );
 
     return (

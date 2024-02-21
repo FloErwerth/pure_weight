@@ -59,30 +59,6 @@ export const TimeInputRow = ({
 
     const hasValuesInTopBar = Boolean(i18key || !hideSuffix || helpTextConfig);
 
-    const handleBlurMinutes = useCallback(() => {
-        if (minutes === "") {
-            return;
-        }
-        handleChangeMinutes(minutes?.padStart(2, "0") ?? "");
-    }, [handleChangeMinutes, minutes]);
-
-    const handleFocusMinutes = useCallback(() => {
-        const removeLeadingZero = minutes?.replace(/^0+/, "");
-        handleChangeMinutes(removeLeadingZero ?? "");
-    }, [handleChangeMinutes, minutes]);
-
-    const handleBlurSeconds = useCallback(() => {
-        if (seconds === "") {
-            return;
-        }
-        handleChangeSeconds(seconds?.padStart(2, "0") ?? "");
-    }, [handleChangeSeconds, seconds]);
-
-    const handleFocusSeconds = useCallback(() => {
-        const removeLeadingZero = seconds?.replace(/^0+/, "");
-        handleChangeSeconds(removeLeadingZero ?? "");
-    }, [handleChangeSeconds, seconds]);
-
     const textInputStyles = useMemo(() => [{ paddingHorizontal: 3, borderRadius }, textStyle], [textStyle]);
 
     return (
@@ -104,21 +80,11 @@ export const TimeInputRow = ({
                     {helpTextConfig && <HelpText helpTextConfig={helpTextConfig} />}
                 </HStack>
             )}
-            <HStack
-                noBorder={!hasError}
-                style={wrapperStyle}
-                hasError={hasError}
-                input={input}
-                background={background}
-                stretch={stretch}
-                center
-                round>
+            <HStack style={wrapperStyle} hasError={hasError} input={input} background={background} stretch={stretch} center round>
                 <ThemedTextInput
                     onChangeText={handleChangeMinutes}
                     style={textInputStyles}
                     placeholder="00"
-                    onBlur={handleBlurMinutes}
-                    onFocus={handleFocusMinutes}
                     value={minutes}
                     ghost
                     maxLength={2}
@@ -132,8 +98,6 @@ export const TimeInputRow = ({
                     onChangeText={handleChangeSeconds}
                     style={textInputStyles}
                     placeholder="00"
-                    onBlur={handleBlurSeconds}
-                    onFocus={handleFocusSeconds}
                     maxLength={2}
                     value={seconds}
                     ghost

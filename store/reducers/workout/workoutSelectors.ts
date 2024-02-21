@@ -271,15 +271,21 @@ export const getCanSnap = createSelector([getTrainedWorkout], (trainedWorkout) =
 });
 
 export const getPauseTime = createSelector([getTrainedWorkout], (trainedWorkout) => {
-    const exerciseIndex = trainedWorkout?.activeExerciseIndex;
-    if (exerciseIndex === undefined) {
-        return -404;
+    const exercise = trainedWorkout?.workout?.exercises[trainedWorkout?.activeExerciseIndex ?? -1];
+    if (
+        (exercise?.pauseMinutes !== undefined &&
+            exercise.pauseMinutes !== "" &&
+            exercise.pauseMinutes !== "0" &&
+            exercise.pauseMinutes !== "00") ||
+        (exercise?.pauseSeconds !== undefined &&
+            exercise.pauseSeconds !== "" &&
+            exercise.pauseSeconds !== "0" &&
+            exercise.pauseSeconds !== "00")
+    ) {
+        return (parseFloat(exercise.pauseMinutes || "0") * 60 + parseFloat(exercise.pauseSeconds || "0")) * 1000;
     }
-    const exercise = trainedWorkout?.workout?.exercises[exerciseIndex];
-    if (exercise === undefined || exercise?.pauseMinutes === undefined || exercise?.pauseSeconds === undefined) {
-        return -404;
-    }
-    return (parseFloat(exercise.pauseMinutes || "0") * 60 + parseFloat(exercise.pauseSeconds || "0")) * 1000;
+
+    return -404;
 });
 
 export const getIsDoneWithTraining = createSelector([getTrainedWorkout], (trainedWorkout) => {

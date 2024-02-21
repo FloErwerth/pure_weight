@@ -43,7 +43,7 @@ export const ExerciseMetadataDisplay = ({ exerciseId }: ExerciseMetadataDisplayP
 
     return (
         <>
-            <HStack style={styles.wrapper}>
+            <HStack padding style={styles.wrapper}>
                 <VStack>
                     <Text style={trainStyles.exerciseName}>{exerciseMetaData?.name}</Text>
                     <SmallExerciseDataDisplay exerciseMetaData={exerciseMetaData} />

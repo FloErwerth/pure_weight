@@ -155,7 +155,7 @@ export const Train = () => {
                 <Carousel
                     ref={carouselRef}
                     onSnapToItem={handleSetActiveExerciseIndex}
-                    scrollAnimationDuration={300}
+                    scrollAnimationDuration={0}
                     width={Dimensions.get("screen").width}
                     loop={false}
                     vertical={false}

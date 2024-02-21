@@ -15,10 +15,9 @@ export const styles = StyleSheet.create({
     },
     durationInput: {
         fontSize: 16,
-        flex: 1.9,
+        flex: 2,
         textAlign: "center",
     },
-    inputStack: { flex: 1, gap: 12 },
     input: { flex: 1, textAlign: "center", fontSize: 16 },
-    placeholder: { flex: 1 },
+    placeholder: { marginLeft: 5, width: 35 },
 });

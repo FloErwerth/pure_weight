@@ -54,7 +54,7 @@ export const useStopwatch = (totalDuration: number, config?: StopwatchConfig) =>
     const stopTimer = useCallback(() => {
         stop();
         setTimerStarted(false);
-    }, []);
+    }, [stop]);
 
     const reset = useCallback(() => {
         stopTimer();
@@ -88,7 +88,7 @@ export const useStopwatch = (totalDuration: number, config?: StopwatchConfig) =>
     const startTimer = useCallback(() => {
         setTimerStarted(true);
         start();
-    }, [update]);
+    }, [start]);
 
     useEffect(() => {
         if (!timerStarted) {

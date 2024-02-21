@@ -156,7 +156,7 @@ export const SetInput = ({ setIndex, exerciseId }: SetInputRowProps) => {
     const textInputStyles = useMemo(() => [styles.textInput, wrapperStyle, textStyle], [wrapperStyle, textStyle]);
 
     const buttonStyles = useMemo(
-        () => ({ width: 40, height: 40, backgroundColor: computedButtonBackgroundColor, justifyContent: "center" }) as const,
+        () => ({ flex: 0.18, backgroundColor: computedButtonBackgroundColor, justifyContent: "center" }) as const,
         [computedButtonBackgroundColor],
     );
     const iconStyle = useMemo(
@@ -182,7 +182,7 @@ export const SetInput = ({ setIndex, exerciseId }: SetInputRowProps) => {
     }, [isActiveSet, isConfirmed, isLatestSet]);
 
     return (
-        <HStack noBorder style={[styles.vStack, activeStackStyles]}>
+        <HStack style={[styles.vStack, activeStackStyles]}>
             <View style={{ borderRadius, flex: 0.2, justifyContent: "center", alignItems: "center" }}>
                 {isConfirmed && !isActiveSet ? (
                     <MaterialCommunityIcons size={24} style={iconStyle} name="check-bold" />
@@ -192,9 +192,9 @@ export const SetInput = ({ setIndex, exerciseId }: SetInputRowProps) => {
                     </Text>
                 )}
             </View>
-            <HStack stretch noBorder={exercise?.type === "TIME_BASED"} center gap ghost>
+            <HStack stretch center gap ghost>
                 {exercise?.type === "WEIGHT_BASED" ? (
-                    <>
+                    <HStack hasError={false} gap stretch ghost>
                         <ThemedTextInput
                             editable={isEditable}
                             returnKeyType="done"
@@ -215,7 +215,7 @@ export const SetInput = ({ setIndex, exerciseId }: SetInputRowProps) => {
                             textAlign="center"
                             inputMode="decimal"
                         />
-                    </>
+                    </HStack>
                 ) : (
                     <TimeInputRow
                         wrapperStyle={wrapperStyle}

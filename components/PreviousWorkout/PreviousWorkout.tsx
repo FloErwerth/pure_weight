@@ -1,9 +1,7 @@
 import { AppState, useAppSelector } from "../../store";
 import { Text } from "../Themed/ThemedText/Text";
-import { View } from "react-native";
 import { useTranslation } from "react-i18next";
-import { useTheme } from "../../theme/context";
-import { useCallback, useMemo } from "react";
+import { useCallback } from "react";
 import { HStack } from "../Stack/HStack/HStack";
 import { ThemedView } from "../Themed/ThemedView/View";
 import { ThemedBottomSheetModal, useBottomSheetRef } from "../BottomSheetModal/ThemedBottomSheetModal";
@@ -12,7 +10,6 @@ import { getActiveSetIndex, getPreviousWorkout } from "../../store/reducers/work
 import { ThemedPressable } from "../Themed/Pressable/Pressable";
 import { ExerciseId, ExerciseType } from "../../store/reducers/workout/types";
 import { styles } from "./styles";
-import { PreviousWorkoutHeader } from "./PreviousWorkoutHeader";
 import { getMillisecondsFromTimeInput, getTimeDisplayFromMilliseconds } from "../../utils/timeDisplay";
 
 interface PreviousTrainingProps {
@@ -23,54 +20,9 @@ export const PreviousWorkout = ({ exerciseId, exerciseType }: PreviousTrainingPr
     const previousWorkout = useAppSelector((state: AppState) => getPreviousWorkout(state, state.settingsState.language, exerciseId));
 
     const { t } = useTranslation();
-    const { textDisabled, mainColor, secondaryColor, inputFieldBackgroundColor } = useTheme();
     const { ref } = useBottomSheetRef();
-    const activeSetIndex = useAppSelector((state: AppState) => getActiveSetIndex(state, exerciseId));
-    const mappedData = useMemo(
-        () =>
-            previousWorkout?.sets.map(({ weight, reps, durationMinutes, durationSeconds }, index) => {
-                const highlight = activeSetIndex === index;
-                const filled = activeSetIndex !== undefined && activeSetIndex > index;
-                const highlightWrapperStyles = { backgroundColor: highlight ? inputFieldBackgroundColor : "transparent" };
-                const computedColor = highlight || filled ? mainColor : secondaryColor;
-                if (exerciseType === "TIME_BASED") {
-                    return (
-                        <HStack key={Math.random() * 102} style={[styles.innerWrapper, highlightWrapperStyles]}>
-                            <Text ghost style={[styles.number, { color: computedColor }]}>
-                                {index + 1}
-                            </Text>
-                            <HStack ghost stretch style={styles.setOuterWrapper}>
-                                <ThemedView ghost round stretch style={styles.setWrapper}>
-                                    <Text ghost style={[{ color: computedColor }, styles.set]}>
-                                        {getTimeDisplayFromMilliseconds(getMillisecondsFromTimeInput(durationMinutes, durationSeconds))}
-                                    </Text>
-                                </ThemedView>
-                            </HStack>
-                        </HStack>
-                    );
-                }
-                return (
-                    <HStack stretch key={Math.random() * 102} style={[styles.innerWrapper, highlightWrapperStyles]}>
-                        <Text ghost style={[styles.number, { color: computedColor }]}>
-                            {index + 1}
-                        </Text>
-                        <HStack ghost stretch style={styles.setOuterWrapper}>
-                            <ThemedView ghost round stretch style={styles.setWrapper}>
-                                <Text ghost style={[{ color: computedColor }, styles.set]}>
-                                    {weight}
-                                </Text>
-                            </ThemedView>
-                            <ThemedView style={styles.setWrapper} ghost round stretch>
-                                <Text ghost style={[{ color: computedColor }, styles.set]}>
-                                    {reps}
-                                </Text>
-                            </ThemedView>
-                        </HStack>
-                    </HStack>
-                );
-            }),
-        [activeSetIndex, exerciseType, inputFieldBackgroundColor, mainColor, previousWorkout?.sets, secondaryColor],
-    );
+    const activeSetIndex = useAppSelector((state: AppState) => getActiveSetIndex(state, exerciseId)) ?? -1;
+    const currentSet = previousWorkout?.sets[activeSetIndex ?? 0];
 
     const handleShowEditNoteModal = useCallback(() => {
         ref.current?.present();
@@ -85,14 +37,14 @@ export const PreviousWorkout = ({ exerciseId, exerciseType }: PreviousTrainingPr
     }
 
     const { date, sets, note } = previousWorkout;
-    if (!sets || sets?.length === 0 || sets?.some((val) => val === undefined)) {
+    if (!currentSet || activeSetIndex === -1 || !sets || sets?.length === 0 || sets?.some((val) => val === undefined)) {
         return null;
     }
 
     return (
-        <View>
-            <HStack ghost style={{ flex: 1, justifyContent: "space-between", alignItems: "center" }}>
-                <Text background style={{ fontSize: 16, color: textDisabled, padding: note ? 0 : 10 }}>
+        <ThemedView ghost>
+            <HStack ghost center style={{ justifyContent: "space-between" }}>
+                <Text ghost secondary style={{ fontSize: 16, padding: note ? 0 : 10 }}>
                     {t("previous_training_title_with_date")}
                     {date}
                 </Text>
@@ -107,8 +59,42 @@ export const PreviousWorkout = ({ exerciseId, exerciseType }: PreviousTrainingPr
             <ThemedView padding round>
                 {sets?.length > 0 && (
                     <>
-                        <PreviousWorkoutHeader exerciseType={exerciseType} />
-                        {mappedData}
+                        {exerciseType === "TIME_BASED" ? (
+                            <HStack key={Math.random() * 102} style={styles.innerWrapper}>
+                                <Text stretch ghost style={styles.number}>
+                                    {activeSetIndex + 1}
+                                </Text>
+                                <HStack ghost stretch style={styles.setOuterWrapper}>
+                                    <ThemedView ghost round stretch style={styles.setWrapper}>
+                                        <Text ghost style={styles.set}>
+                                            {getTimeDisplayFromMilliseconds(
+                                                getMillisecondsFromTimeInput(currentSet?.durationMinutes, currentSet?.durationSeconds),
+                                            )}
+                                        </Text>
+                                    </ThemedView>
+                                </HStack>
+                                <ThemedView ghost padding style={{ width: 49 }} />
+                            </HStack>
+                        ) : (
+                            <HStack key={Math.random() * 102} style={styles.innerWrapper}>
+                                <Text stretch style={styles.number}>
+                                    {activeSetIndex + 1}
+                                </Text>
+                                <HStack ghost style={styles.setOuterWrapper}>
+                                    <ThemedView ghost round stretch style={styles.setWrapper}>
+                                        <Text ghost style={styles.set}>
+                                            {currentSet?.weight}
+                                        </Text>
+                                    </ThemedView>
+                                    <ThemedView style={styles.setWrapper} ghost round stretch>
+                                        <Text ghost style={styles.set}>
+                                            {currentSet?.reps}
+                                        </Text>
+                                    </ThemedView>
+                                    <ThemedView ghost padding style={{ flex: 0.25 }} />
+                                </HStack>
+                            </HStack>
+                        )}
                     </>
                 )}
             </ThemedView>
@@ -119,6 +105,6 @@ export const PreviousWorkout = ({ exerciseId, exerciseType }: PreviousTrainingPr
                     </Text>
                 </ThemedView>
             </ThemedBottomSheetModal>
-        </View>
+        </ThemedView>
     );
 };

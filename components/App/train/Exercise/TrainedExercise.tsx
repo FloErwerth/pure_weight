@@ -10,7 +10,7 @@ import { HStack } from "../../../Stack/HStack/HStack";
 import { Pressable } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { ThemedScrollView } from "../../../Themed/ThemedScrollView/ThemedScrollView";
-import { TrainingHeader } from "../TrainingHeader/WeightBased/TrainingHeader";
+import { TrainingHeader } from "../TrainingHeader/TrainingHeader";
 import { SetInput } from "../../../SetInputRow/SetInput";
 import { PreviousWorkout } from "../../../PreviousWorkout/PreviousWorkout";
 import { AddNoteModal } from "../../../AddNoteModal/AddNoteModal";
@@ -59,8 +59,8 @@ export const TrainedExercise = ({ exerciseId }: TrainedExerciseProps) => {
                         );
                     })}
                 </ThemedView>
-                <PreviousWorkout exerciseType={exercise?.type ?? "WEIGHT_BASED"} exerciseId={exerciseId} />
             </ThemedScrollView>
+            <PreviousWorkout exerciseType={exercise?.type ?? "WEIGHT_BASED"} exerciseId={exerciseId} />
             <AddNoteModal reference={editNoteModalRef} onRequestClose={hideNoteModal} />
         </ThemedView>
     );

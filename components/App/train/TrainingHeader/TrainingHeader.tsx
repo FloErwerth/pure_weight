@@ -1,10 +1,10 @@
 import { View } from "react-native";
-import { HStack } from "../../../../Stack/HStack/HStack";
-import { Text } from "../../../../Themed/ThemedText/Text";
+import { HStack } from "../../../Stack/HStack/HStack";
+import { Text } from "../../../Themed/ThemedText/Text";
 import { useTranslation } from "react-i18next";
-import { useAppSelector } from "../../../../../store";
-import { getTimeUnit, getWeightUnit } from "../../../../../store/reducers/settings/settingsSelectors";
-import { styles } from "../styles";
+import { useAppSelector } from "../../../../store";
+import { getTimeUnit, getWeightUnit } from "../../../../store/reducers/settings/settingsSelectors";
+import { styles } from "./styles";
 
 interface TrainingHeaderProps {
     showPlaceholderForDoneButton?: boolean;
@@ -23,13 +23,21 @@ export const TrainingHeader = ({ showPlaceholderForDoneButton = true, exerciseTy
             <Text placeholder style={styles.number}>
                 #
             </Text>
-            <HStack style={styles.inputStack}>
-                <Text placeholder style={styles.input}>
-                    {leftHeader}
-                </Text>
-                <Text placeholder style={styles.input}>
-                    {rightHeader}
-                </Text>
+            <HStack stretch ghost gap>
+                {exerciseType === "WEIGHT_BASED" ? (
+                    <>
+                        <Text placeholder style={styles.input}>
+                            {leftHeader}
+                        </Text>
+                        <Text placeholder style={styles.input}>
+                            {rightHeader}
+                        </Text>
+                    </>
+                ) : (
+                    <Text placeholder style={styles.input}>
+                        {t("duration")}
+                    </Text>
+                )}
                 {showPlaceholderForDoneButton && <View style={styles.placeholder}></View>}
             </HStack>
         </HStack>

@@ -5,6 +5,7 @@ export const styles = StyleSheet.create({
     set: {
         textAlign: "center",
         fontSize: 16,
+        paddingLeft: 8,
     },
     timeBasedSet: {
         textAlign: "center",
@@ -17,18 +18,15 @@ export const styles = StyleSheet.create({
     setOuterWrapper: {
         justifyContent: "space-around",
         gap: 10,
-        paddingHorizontal: 50,
     },
     setOuterWrapperTimeBased: {
         justifyContent: "center",
         gap: 0,
-        paddingHorizontal: 50,
     },
     number: {
-        position: "absolute",
-        left: 5,
+        flex: 0.2,
+        textAlign: "center",
         fontSize: 16,
-        marginLeft: 14,
     },
     numberHeader: {
         position: "absolute",

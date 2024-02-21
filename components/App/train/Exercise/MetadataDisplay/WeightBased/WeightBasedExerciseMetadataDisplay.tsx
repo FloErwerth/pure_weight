@@ -14,8 +14,8 @@ interface SmallMetadataDisplayProps {
 
 export const WeightBasedSmallExerciseMetadataDisplay = ({ exerciseMetaData }: SmallMetadataDisplayProps) => {
     const { t } = useTranslation();
-    const showMinutes = parseFloat(exerciseMetaData?.pauseMinutes ?? "0") !== 0;
-    const showSeconds = parseFloat(exerciseMetaData?.pauseSeconds ?? "0") !== 0;
+    const showMinutes = parseFloat(exerciseMetaData?.pauseMinutes || "0") !== 0;
+    const showSeconds = parseFloat(exerciseMetaData?.pauseSeconds || "0") !== 0;
     const { secondsUnit, minutesUnit } = useAppSelector(getTimeUnit);
     const showPause = showMinutes || showSeconds;
 

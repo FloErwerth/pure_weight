@@ -20,7 +20,7 @@ export const TimeBasedExercise = () => {
 
     const handleSetSets = useCallback(
         (value: string | undefined) => {
-            dispatch(mutateEditedExercise({ key: "sets", value: value ?? "0" }));
+            dispatch(mutateEditedExercise({ key: "sets", value: value }));
         },
         [dispatch],
     );

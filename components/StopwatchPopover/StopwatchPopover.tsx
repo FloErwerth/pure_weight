@@ -55,8 +55,11 @@ export const StopwatchPopover = () => {
     }, [handleDoneSetCallback]);
 
     const togglePopover = useCallback(() => {
+        if (remainingTime === -404) {
+            return;
+        }
         setShowPopover(!showPopover);
-    }, [showPopover]);
+    }, [remainingTime, showPopover]);
 
     const getButtonPos = useCallback(() => {
         buttonRef.current?.measureInWindow((x, y) => {
@@ -126,10 +129,6 @@ export const StopwatchPopover = () => {
         }
     }, [showPopover, togglePopover]);
 
-    if (remainingTime === -404) {
-        return null;
-    }
-
     return (
         <>
             <Pressable
@@ -174,7 +173,7 @@ export const StopwatchPopover = () => {
                     <AnimatedView
                         ghost
                         style={{ opacity: iconOpacity, position: "absolute", left: 10, top: 7, alignItems: "center", width: "100%" }}>
-                        <ThemedMaterialCommunityIcons secondary name="timer-outline" size={35} />
+                        <ThemedMaterialCommunityIcons disabled={remainingTime === -404} secondary name="timer-outline" size={35} />
                     </AnimatedView>
                     <AnimatedView secondary style={{ opacity, width: 100 }}>
                         <StopwatchDisplay textSize={25} remainingTime={remainingTime} />
