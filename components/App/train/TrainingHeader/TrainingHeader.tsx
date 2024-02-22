@@ -3,20 +3,21 @@ import { HStack } from "../../../Stack/HStack/HStack";
 import { Text } from "../../../Themed/ThemedText/Text";
 import { useTranslation } from "react-i18next";
 import { useAppSelector } from "../../../../store";
-import { getTimeUnit, getWeightUnit } from "../../../../store/reducers/settings/settingsSelectors";
+import { getWeightUnit } from "../../../../store/reducers/settings/settingsSelectors";
 import { styles } from "./styles";
 
 interface TrainingHeaderProps {
     showPlaceholderForDoneButton?: boolean;
     exerciseType?: "WEIGHT_BASED" | "TIME_BASED";
+    showWeight?: boolean;
 }
-export const TrainingHeader = ({ showPlaceholderForDoneButton = true, exerciseType = "WEIGHT_BASED" }: TrainingHeaderProps) => {
+export const TrainingHeader = ({ showPlaceholderForDoneButton = true, exerciseType = "WEIGHT_BASED", showWeight }: TrainingHeaderProps) => {
     const { t } = useTranslation();
     const weightUnit = useAppSelector(getWeightUnit);
-    const timeUnit = useAppSelector(getTimeUnit);
 
-    const leftHeader = exerciseType === "WEIGHT_BASED" ? weightUnit : timeUnit.minutesUnit;
-    const rightHeader = exerciseType === "WEIGHT_BASED" ? t("training_header_reps") : timeUnit.secondsUnit;
+    const timeBasedHasWeight = Boolean(exerciseType === "TIME_BASED" && showWeight);
+    const leftHeader = exerciseType === "WEIGHT_BASED" ? t("training_header_reps") : t("duration");
+    const rightHeader = exerciseType === "WEIGHT_BASED" || timeBasedHasWeight ? weightUnit : undefined;
 
     return (
         <HStack style={styles.vStack}>
@@ -24,18 +25,12 @@ export const TrainingHeader = ({ showPlaceholderForDoneButton = true, exerciseTy
                 #
             </Text>
             <HStack stretch ghost center style={{ gap: 15 }}>
-                {exerciseType === "WEIGHT_BASED" ? (
-                    <>
-                        <Text ghost style={styles.input}>
-                            {leftHeader}
-                        </Text>
-                        <Text ghost style={styles.input}>
-                            {rightHeader}
-                        </Text>
-                    </>
-                ) : (
-                    <Text ghost style={styles.durationInput}>
-                        {t("duration")}
+                <Text ghost style={styles.input}>
+                    {leftHeader}
+                </Text>
+                {rightHeader && (
+                    <Text ghost style={styles.input}>
+                        {rightHeader}
                     </Text>
                 )}
                 {showPlaceholderForDoneButton && <View style={styles.placeholder}></View>}

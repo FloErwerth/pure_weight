@@ -150,7 +150,7 @@ export const SetInput = ({ setIndex, exerciseId }: SetInputRowProps) => {
         return mainColor;
     }, [isConfirmed, isEditable, mainColor, secondaryColor, textDisabled]);
 
-    const textNumberStyles = useMemo(() => [styles.textNumber, { color: computedColor }], [computedColor]);
+    const textNumberStyles = useMemo(() => [{ color: computedColor }], [computedColor]);
     const wrapperStyle = useMemo(() => ({ backgroundColor: computedTextfieldBackgroundColor }), [computedTextfieldBackgroundColor]);
     const textStyle = useMemo(() => ({ color: computedColor }), [computedColor]);
     const textInputStyles = useMemo(() => [styles.textInput, wrapperStyle, textStyle], [wrapperStyle, textStyle]);
@@ -194,39 +194,60 @@ export const SetInput = ({ setIndex, exerciseId }: SetInputRowProps) => {
             </View>
             <HStack stretch center gap ghost>
                 {exercise?.type === "WEIGHT_BASED" ? (
-                    <HStack hasError={false} gap stretch ghost>
-                        <ThemedTextInput
-                            editable={isEditable}
-                            returnKeyType="done"
-                            style={textInputStyles}
-                            stretch
-                            value={exercise?.type === "WEIGHT_BASED" ? weight : durationMinutes}
-                            onChangeText={exercise?.type === "WEIGHT_BASED" ? handleSetWeight : handleSetMinutes}
-                            textAlign="center"
-                            inputMode="decimal"
-                        />
-                        <ThemedTextInput
-                            editable={isEditable}
-                            returnKeyType="done"
-                            style={textInputStyles}
-                            stretch
-                            value={exercise?.type === "WEIGHT_BASED" ? reps : durationSeconds}
-                            onChangeText={exercise?.type === "WEIGHT_BASED" ? handleSetReps : handleSetSeconds}
-                            textAlign="center"
-                            inputMode="decimal"
-                        />
+                    <HStack gap stretch ghost>
+                        <HStack stretch round style={wrapperStyle}>
+                            <ThemedTextInput
+                                editable={isEditable}
+                                returnKeyType="done"
+                                style={textInputStyles}
+                                stretch
+                                value={weight}
+                                onChangeText={handleSetWeight}
+                                textAlign="center"
+                                inputMode="decimal"
+                            />
+                        </HStack>
+                        <HStack stretch round style={wrapperStyle}>
+                            <ThemedTextInput
+                                editable={isEditable}
+                                returnKeyType="done"
+                                style={textInputStyles}
+                                stretch
+                                value={reps}
+                                onChangeText={handleSetReps}
+                                textAlign="center"
+                                inputMode="decimal"
+                            />
+                        </HStack>
                     </HStack>
                 ) : (
-                    <TimeInputRow
-                        wrapperStyle={wrapperStyle}
-                        textStyle={textStyle}
-                        background
-                        hideSuffix
-                        setMinutes={handleSetMinutes}
-                        setSeconds={handleSetSeconds}
-                        seconds={durationSeconds}
-                        minutes={durationMinutes}
-                    />
+                    <HStack gap stretch ghost>
+                        <TimeInputRow
+                            wrapperStyle={wrapperStyle}
+                            textStyle={textStyle}
+                            background
+                            stretch
+                            hideSuffix
+                            setMinutes={handleSetMinutes}
+                            setSeconds={handleSetSeconds}
+                            seconds={durationSeconds}
+                            minutes={durationMinutes}
+                        />
+                        {exercise?.weight && (
+                            <HStack stretch style={wrapperStyle} round>
+                                <ThemedTextInput
+                                    editable={isEditable}
+                                    returnKeyType="done"
+                                    style={textInputStyles}
+                                    value={weight}
+                                    stretch
+                                    onChangeText={handleSetWeight}
+                                    textAlign="center"
+                                    inputMode="decimal"
+                                />
+                            </HStack>
+                        )}
+                    </HStack>
                 )}
                 <ThemedPressable center style={buttonStyles} round onPress={handleSetDone}>
                     <ThemedMaterialCommunityIcons ghost size={24} style={playStyle} name={confirmIcon} />

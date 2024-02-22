@@ -16,7 +16,7 @@ interface SlidingSwitchProps {
     value?: string;
     initialIndex?: number;
 }
-const HEIGHT = 37;
+const HEIGHT = 41;
 
 export function SlidingSwitch({ options, onSelectValue, value, disabled, initialIndex }: SlidingSwitchProps) {
     const [selectedValue, setSelectedValue] = useState<string>(value ?? "");
@@ -79,14 +79,29 @@ export function SlidingSwitch({ options, onSelectValue, value, disabled, initial
             <ThemedView onLayout={measureContainer} reference={animatedViewRef} style={styles.wrapper}>
                 <HStack ghost>
                     {options.map(({ label, value }) => (
-                        <ThemedPressable disabled={disabled} key={label + value + Math.random()} ghost style={styles.pressable} stretch onPress={() => handleSelectValue(value)}>
+                        <ThemedPressable
+                            disabled={disabled}
+                            key={label + value + Math.random()}
+                            ghost
+                            style={styles.pressable}
+                            stretch
+                            onPress={() => handleSelectValue(value)}>
                             <Text ghost>{label}</Text>
                         </ThemedPressable>
                     ))}
                 </HStack>
                 <AnimatedView input style={animatedBackgroundStyle} />
             </ThemedView>
-            <FlatList scrollEnabled={false} ref={flatListRef} snapToInterval={200} snapToOffsets={[0]} decelerationRate={0} data={options} renderItem={renderItem} horizontal />
+            <FlatList
+                scrollEnabled={false}
+                ref={flatListRef}
+                snapToInterval={200}
+                snapToOffsets={[0]}
+                decelerationRate={0}
+                data={options}
+                renderItem={renderItem}
+                horizontal
+            />
         </>
     );
 }

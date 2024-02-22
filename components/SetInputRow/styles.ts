@@ -11,9 +11,7 @@ export const styles = StyleSheet.create({
     inputStack: { gap: 10 },
     center: { flex: 1, height: 50 },
     numberCenter: { flex: 0.2, height: 50 },
-    textNumber: { fontSize: 20 },
     textInput: {
-        fontSize: 20,
         borderRadius,
     },
     set: {

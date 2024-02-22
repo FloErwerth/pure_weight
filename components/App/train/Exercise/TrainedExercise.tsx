@@ -35,6 +35,7 @@ export const TrainedExercise = ({ exerciseId }: TrainedExerciseProps) => {
         open();
     }, [open]);
 
+    const hasWeight = exercise?.weight !== undefined && exercise?.weight !== "";
     return (
         <ThemedView stretch ghost key={id} style={trainStyles.carouselWrapper}>
             <HStack background style={trainStyles.headerWrapper}>
@@ -52,7 +53,7 @@ export const TrainedExercise = ({ exerciseId }: TrainedExerciseProps) => {
                 keyboardShouldPersistTaps="handled"
                 contentContainerStyle={trainStyles.innerWrapper}>
                 <ThemedView round padding>
-                    <TrainingHeader exerciseType={exercise?.type} />
+                    <TrainingHeader showWeight={hasWeight} exerciseType={exercise?.type} />
                     {setsArray?.map((_, setIndex) => {
                         return (
                             <SetInput key={exerciseId.toString().concat(setIndex.toString())} exerciseId={exerciseId} setIndex={setIndex} />

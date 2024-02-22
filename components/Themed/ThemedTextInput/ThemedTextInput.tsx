@@ -1,6 +1,6 @@
-import { Animated, NativeSyntheticEvent, TextInput, TextInputFocusEventData, TextInputProps } from "react-native";
+import { TextInput, TextInputProps } from "react-native";
 import * as React from "react";
-import { RefObject, useCallback, useMemo, useRef } from "react";
+import { RefObject, useCallback, useMemo } from "react";
 import { AppState, useAppDispatch, useAppSelector } from "../../../store";
 import { useTheme } from "../../../theme/context";
 import { BottomSheetTextInput } from "@gorhom/bottom-sheet";
@@ -11,6 +11,7 @@ import { getErrorByKey } from "../../../store/reducers/errors/errorSelectors";
 import { ErrorText } from "../../ErrorText/ErrorText";
 import { ErrorFields } from "../../../store/reducers/errors/types";
 import { borderRadius } from "../../../theme/border";
+import { ThemedPressable } from "../Pressable/Pressable";
 
 interface ThemedTextInputProps extends TextInputProps, ComputedBackgroundColorProps {
     reference?: RefObject<TextInput>;
@@ -31,7 +32,6 @@ export const ThemedTextInput = ({ padding = true, ...props }: ThemedTextInputPro
     const hasError = useAppSelector((state: AppState) => getErrorByKey(state, props?.errorKey));
     const { mainColor, textDisabled, errorColor, secondaryColor } = useTheme();
     const dispatch = useAppDispatch();
-    const opacity = useRef(new Animated.Value(0)).current;
 
     const handleTextInput = useCallback(
         (value: string) => {
@@ -41,34 +41,6 @@ export const ThemedTextInput = ({ padding = true, ...props }: ThemedTextInputPro
             props.onChangeText?.(value);
         },
         [hasError, props, dispatch],
-    );
-
-    const handleFocus = useCallback(
-        (e: NativeSyntheticEvent<TextInputFocusEventData>) => {
-            props.onFocus?.(e);
-            if (props.suffix) {
-                Animated.timing(opacity, {
-                    duration: 200,
-                    useNativeDriver: false,
-                    toValue: 0,
-                }).start();
-            }
-        },
-        [opacity, props],
-    );
-
-    const handleBlur = useCallback(
-        (e: NativeSyntheticEvent<TextInputFocusEventData>) => {
-            props.onBlur?.(e);
-            if (props.suffix) {
-                Animated.timing(opacity, {
-                    duration: 200,
-                    useNativeDriver: false,
-                    toValue: 0,
-                }).start();
-            }
-        },
-        [opacity, props],
     );
 
     const placeholderColor = useMemo(() => {
@@ -84,19 +56,16 @@ export const ThemedTextInput = ({ padding = true, ...props }: ThemedTextInputPro
     const textInputStyle = useMemo(() => {
         const baseStyle = [
             {
-                padding: padding ? 10 : 0,
-                flex: props.stretch ? 1 : 0,
+                padding: padding ? 10 : undefined,
+                flex: props.stretch ? 1 : undefined,
                 backgroundColor,
                 color: editable ? mainColor : textDisabled,
-                borderRadius: props.round ? borderRadius : 0,
+                borderRadius: props.round ? borderRadius : undefined,
             } as const,
             styles.base,
             props.style,
         ];
-        if (!hasError) {
-            return baseStyle;
-        }
-        const errorStyle = { color: errorColor, borderWidth: props.hideErrorBorder ? 0 : 1, borderColor: errorColor };
+        const errorStyle = hasError ? { color: errorColor, borderWidth: props.hideErrorBorder ? 0 : 1, borderColor: errorColor } : {};
         return [errorStyle, baseStyle];
     }, [
         backgroundColor,
@@ -113,12 +82,10 @@ export const ThemedTextInput = ({ padding = true, ...props }: ThemedTextInputPro
     ]);
 
     return (
-        <>
+        <ThemedPressable ghost stretch>
             {props.bottomSheet ? (
                 <BottomSheetTextInput
                     {...props}
-                    onBlur={handleBlur}
-                    onFocus={handleFocus}
                     clearButtonMode={props.showClear ? "while-editing" : "never"}
                     onChangeText={handleTextInput}
                     returnKeyType="done"
@@ -128,8 +95,6 @@ export const ThemedTextInput = ({ padding = true, ...props }: ThemedTextInputPro
             ) : (
                 <TextInput
                     {...props}
-                    onBlur={handleBlur}
-                    onFocus={handleFocus}
                     returnKeyType="done"
                     clearButtonMode={props.showClear ? "while-editing" : "never"}
                     ref={props.reference}
@@ -139,6 +104,6 @@ export const ThemedTextInput = ({ padding = true, ...props }: ThemedTextInputPro
                 />
             )}
             {hasError && props?.errorKey && <ErrorText errorKey={props.errorKey} />}
-        </>
+        </ThemedPressable>
     );
 };

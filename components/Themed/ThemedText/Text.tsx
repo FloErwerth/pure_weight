@@ -29,6 +29,7 @@ export const Text = (props: ThemedTextProps) => {
     const styles = useMemo(
         () => [
             {
+                fontSize: 20,
                 zIndex: props.behind ? -1 : 0,
                 flex: props.stretch ? 1 : 0,
                 textAlign: props.center ? "center" : "left",

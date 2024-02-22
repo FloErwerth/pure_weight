@@ -26,6 +26,7 @@ const useMarkedDayStyles = (selected: boolean, selectable?: boolean, marked?: bo
 
     const textStyle = useMemo(() => {
         return {
+            fontSize: 20,
             color: selected ? textDisabled : selectable ? mainColor : textDisabled,
             fontWeight: selected ? "bold" : "normal",
         } as const;

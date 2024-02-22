@@ -9,6 +9,7 @@ export const styles = StyleSheet.create({
         alignSelf: "stretch",
     },
     date: {
+        fontSize: 16,
         fontStyle: "italic",
     },
     noWorkoutsHint: {

@@ -4,6 +4,7 @@ import { borderRadius } from "../../../theme/border";
 export const styles = StyleSheet.create({
     date: {
         fontStyle: "italic",
+        fontSize: 16,
     },
     text: {
         fontSize: 26,

@@ -12,12 +12,12 @@ export function HStack(props: StackProps) {
         () => [
             styles.innerWrapper,
             {
-                gap: props.gap ? 10 : 0,
+                gap: props.gap ? 10 : -1,
                 backgroundColor,
                 alignItems: props?.center ? "center" : "flex-start",
-                padding: props.padding ? 10 : 0,
-                borderWidth: props.hasError !== undefined ? 1 : 0,
-                borderColor: props.hasError ? errorColor : "transparent",
+                padding: props.padding ? 10 : undefined,
+                borderWidth: props.hasError ? 1 : undefined,
+                borderColor: props.hasError ? errorColor : undefined,
             } as const,
             props.style,
         ],
