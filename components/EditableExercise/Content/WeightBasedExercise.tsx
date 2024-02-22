@@ -109,6 +109,7 @@ export const WeightBasedExercise = () => {
                     />
                     <TimeInputRow
                         i18key="pause"
+                        stretch
                         setMinutes={handleSetPauseMinutes}
                         setSeconds={handleSetPauseSeconds}
                         minutes={editedExercise?.exercise?.pauseMinutes}

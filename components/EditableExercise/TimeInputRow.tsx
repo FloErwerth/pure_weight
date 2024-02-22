@@ -27,6 +27,7 @@ export const TimeInputRow = ({
     input = !ghost && !background,
     wrapperStyle,
     textStyle,
+    placeholderColor,
 }: TimeInputRowProps) => {
     const { t } = useTranslation();
     const hasError = useAppSelector((state: AppState) => getErrorByKey(state, errorTextConfig?.errorKey));
@@ -82,6 +83,7 @@ export const TimeInputRow = ({
             )}
             <HStack style={wrapperStyle} hasError={hasError} input={input} background={background} stretch={stretch} center round>
                 <ThemedTextInput
+                    placeholderTextColor={placeholderColor}
                     onChangeText={handleChangeMinutes}
                     style={textInputStyles}
                     placeholder="00"
@@ -95,6 +97,7 @@ export const TimeInputRow = ({
                     :
                 </Text>
                 <ThemedTextInput
+                    placeholderTextColor={placeholderColor}
                     onChangeText={handleChangeSeconds}
                     style={textInputStyles}
                     placeholder="00"

@@ -11,7 +11,6 @@ import { getErrorByKey } from "../../../store/reducers/errors/errorSelectors";
 import { ErrorText } from "../../ErrorText/ErrorText";
 import { ErrorFields } from "../../../store/reducers/errors/types";
 import { borderRadius } from "../../../theme/border";
-import { ThemedPressable } from "../Pressable/Pressable";
 
 interface ThemedTextInputProps extends TextInputProps, ComputedBackgroundColorProps {
     reference?: RefObject<TextInput>;
@@ -50,6 +49,9 @@ export const ThemedTextInput = ({ padding = true, ...props }: ThemedTextInputPro
         if (!editable) {
             return textDisabled;
         }
+        if (props.placeholderTextColor !== undefined) {
+            return props.placeholderTextColor;
+        }
         return secondaryColor;
     }, [editable, errorColor, hasError, secondaryColor, textDisabled]);
 
@@ -82,7 +84,7 @@ export const ThemedTextInput = ({ padding = true, ...props }: ThemedTextInputPro
     ]);
 
     return (
-        <ThemedPressable ghost stretch>
+        <>
             {props.bottomSheet ? (
                 <BottomSheetTextInput
                     {...props}
@@ -104,6 +106,6 @@ export const ThemedTextInput = ({ padding = true, ...props }: ThemedTextInputPro
                 />
             )}
             {hasError && props?.errorKey && <ErrorText errorKey={props.errorKey} />}
-        </ThemedPressable>
+        </>
     );
 };

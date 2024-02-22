@@ -30,4 +30,5 @@ export interface TimeInputRowProps {
     background?: boolean;
     wrapperStyle?: ViewStyle;
     textStyle?: TextStyle;
+    placeholderColor?: string;
 }

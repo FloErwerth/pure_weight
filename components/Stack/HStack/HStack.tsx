@@ -15,7 +15,7 @@ export function HStack(props: StackProps) {
                 gap: props.gap ? 10 : -1,
                 backgroundColor,
                 alignItems: props?.center ? "center" : "flex-start",
-                padding: props.padding ? 10 : undefined,
+                padding: props.padding ? 10 : 0,
                 borderWidth: props.hasError ? 1 : undefined,
                 borderColor: props.hasError ? errorColor : undefined,
             } as const,

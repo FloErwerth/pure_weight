@@ -225,6 +225,7 @@ export const SetInput = ({ setIndex, exerciseId }: SetInputRowProps) => {
                         <TimeInputRow
                             wrapperStyle={wrapperStyle}
                             textStyle={textStyle}
+                            placeholderColor={isActiveSet ? undefined : computedColor}
                             background
                             stretch
                             hideSuffix
