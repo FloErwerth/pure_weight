@@ -1,5 +1,4 @@
 import { useTranslation } from "react-i18next";
-import { useTheme } from "../../../../theme/context";
 import React, { useCallback, useContext, useMemo } from "react";
 import { styles } from "../../styles";
 import { HStack } from "../../../Stack/HStack/HStack";
@@ -33,7 +32,10 @@ const useText = (
 
     const workoutText = useMemo(() => {
         if (even) {
-            return `${t("progress_text_even")}`;
+            if (language === "en") {
+                return `Your performance at ${trend?.name} has not changed`;
+            }
+            return `Deine Leistung bei ${trend?.name} hat sich nicht verändert`;
         }
         if (language === "en") {
             return `Your performance at ${trend?.name} ${t(isPositiveTrend ? "increased" : "decreased")} by ${processedPercent}%`;
@@ -90,7 +92,6 @@ export const ProgressDisplay = ({ trend, onPress, higherIsBetter = true, type }:
     const even = processedPercent === 0;
     const text = useText(type, even, positivePercentage, processedPercent, trend);
     const active = useContext(swipableContext);
-    const { secondaryColor } = useTheme();
 
     const icon = useMemo(() => {
         if (even) {
@@ -107,10 +108,10 @@ export const ProgressDisplay = ({ trend, onPress, higherIsBetter = true, type }:
             return { color: "green" };
         }
         if (even) {
-            return { color: secondaryColor };
+            return { color: "green" };
         }
         return { color: "rgb(255,100,100)" };
-    }, [progressDisplayPositive, even, secondaryColor]);
+    }, [progressDisplayPositive, even]);
 
     const handlePress = useCallback(() => {
         if (active) {

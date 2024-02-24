@@ -113,6 +113,7 @@ export const getTrainingDayData = createSelector([getEditedWorkout], (editedWork
             });
         }
     });
+
     return Array.from(sortedData.values()).filter(({ data }) => data.length > 1);
 });
 
@@ -190,65 +191,68 @@ const getSumOfSets = (type: ExerciseType, sets?: ExerciseSets) => {
     }
     return sets?.reduce((sum, set) => sum + parseFloat(set?.reps ?? "0") * parseFloat(set?.weight ?? "0"), 0);
 };
-export const getOverallTrainingTrend = createSelector(
-    [getWorkouts, (_, workoutId: WorkoutId) => workoutId, getLatestWorkoutDate],
-    (workouts, workoutId, latestWorkoutDate) => {
-        const workout = workouts.find((workout) => workout.workoutId === workoutId);
-        if (
-            !workout?.doneWorkouts ||
-            workout?.doneWorkouts?.length < 2 ||
-            workout?.doneWorkouts.some(({ doneExercises }) => !doneExercises)
-        ) {
-            return undefined;
-        }
+export const getOverallTrainingTrend = createSelector([getWorkouts, (_, workoutId: WorkoutId) => workoutId], (workouts, workoutId) => {
+    const workout = workouts.find((workout) => workout.workoutId === workoutId);
 
-        const foundCompareables: {
-            current: { name?: string; sum: number };
-            before: { name?: string; sum: number };
-        }[] = [];
+    if (!workout?.doneWorkouts || workout?.doneWorkouts?.length < 2 || workout?.doneWorkouts.some(({ doneExercises }) => !doneExercises)) {
+        return undefined;
+    }
 
-        workout?.doneWorkouts.forEach(({ isoDate, doneExercises }, index) => {
-            if (isoDate === latestWorkoutDate && index > 0) {
-                const workoutBefore = workout?.doneWorkouts[index - 1];
+    const foundCompareables: {
+        current: { name?: string; sum: number };
+        before: { name?: string; sum: number };
+    }[] = [];
 
-                doneExercises?.forEach(({ originalExerciseId, sets, type }) => {
-                    const exerciseName = workout.exercises.find(({ exerciseId }) => exerciseId === originalExerciseId)?.name;
-                    const fittingExerciseBefore = workoutBefore?.doneExercises?.find(
-                        ({ originalExerciseId: id }) => originalExerciseId === id,
-                    );
-                    if (fittingExerciseBefore) {
-                        const compareable = {
-                            current: { name: exerciseName, sum: getSumOfSets(type, sets) ?? 0 },
-                            before: {
-                                name: exerciseName,
-                                sum: getSumOfSets(type, fittingExerciseBefore.sets) ?? 0,
-                            },
-                        };
-                        foundCompareables.push(compareable);
+    const latestWorkout = workout?.doneWorkouts[workout?.doneWorkouts.length - 1];
+
+    if (latestWorkout) {
+        latestWorkout.doneExercises?.forEach(({ originalExerciseId, sets, type }) => {
+            const fittingExercisesBefore = workout.doneWorkouts
+                .map(({ doneWorkoutId: searchedWorkoutId, doneExercises }) => {
+                    if (latestWorkout.doneWorkoutId === searchedWorkoutId) {
+                        return undefined;
                     }
-                });
+                    return doneExercises?.findLast((exercise) => exercise.originalExerciseId === originalExerciseId);
+                })
+                .filter((exercise) => exercise !== undefined);
+
+            const fittingExerciseBefore = fittingExercisesBefore?.[fittingExercisesBefore.length - 1];
+
+            if (fittingExerciseBefore) {
+                const compareable = {
+                    current: { name: fittingExerciseBefore.name, sum: getSumOfSets(type, sets) ?? 0 },
+                    before: {
+                        name: fittingExerciseBefore.name,
+                        sum: getSumOfSets(type, fittingExerciseBefore.sets) ?? 0,
+                    },
+                };
+                if (foundCompareables.find((compareable) => compareable.current.name === fittingExerciseBefore.name)) {
+                    return;
+                }
+                foundCompareables.push(compareable);
             }
         });
+    }
 
-        return foundCompareables.reduce(
-            (bestImprovement, { current, before }) => {
-                if (before.sum !== 0) {
-                    const percent = (current.sum / before.sum) * 100;
-                    if (bestImprovement === undefined) {
+    return foundCompareables.reduce(
+        (bestImprovement, { current, before }) => {
+            if (before.sum !== 0) {
+                const percent = (current.sum / before.sum) * 100;
+                console.log(current, before, percent);
+                if (bestImprovement === undefined) {
+                    return { name: current.name, percent, isPositive: percent > 100 };
+                } else {
+                    if (percent > bestImprovement.percent) {
                         return { name: current.name, percent, isPositive: percent > 100 };
                     } else {
-                        if (percent > bestImprovement.percent) {
-                            return { name: current.name, percent, isPositive: percent > 100 };
-                        } else {
-                            return bestImprovement;
-                        }
+                        return bestImprovement;
                     }
                 }
-            },
-            undefined as { name?: string; percent: number; isPositive: boolean } | undefined,
-        );
-    },
-);
+            }
+        },
+        undefined as { name?: string; percent: number; isPositive: boolean } | undefined,
+    );
+});
 
 export const getExerciseDone = createSelector([getTrainedWorkout], (trainedWorkout) => {
     const exerciseIndex = trainedWorkout?.activeExerciseIndex;

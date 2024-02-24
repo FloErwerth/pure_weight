@@ -281,6 +281,7 @@ export const ExerciseChart = ({ exerciseName, data, index }: ExerciseChartProps)
 
 export default function ExerciseCharts() {
     const trainingDayData = useAppSelector(getTrainingDayData);
+
     const navigate = useNavigate();
     if (trainingDayData === undefined) {
         navigate("workouts");

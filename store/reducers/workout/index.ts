@@ -403,21 +403,29 @@ export const workoutReducer = createReducer<WorkoutState>(
                     const endTimestamp = Temporal.Now.instant().epochMilliseconds;
                     const pausedDuration = workout.pauseTimestamps?.reduce((acc, curr) => acc + (curr.end - curr.begin), 0) ?? 0;
                     const duration = endTimestamp - beginTimestamp - pausedDuration;
-                    const doneExercises: DoneExerciseData[] = workout.exerciseData.map((data) => ({
-                        doneExerciseId: generateId("exercise"),
-                        type: data.exerciseType,
-                        name: data.name,
-                        sets: data.doneSets,
-                        note: data.note,
-                        originalExerciseId: data.exerciseId,
-                    }));
+
+                    const doneExercises: (DoneExerciseData | undefined)[] = workout.exerciseData.map((data) => {
+                        if (data.doneSets.length === 0) {
+                            return undefined;
+                        }
+
+                        return {
+                            doneExerciseId: generateId("exercise"),
+                            type: data.exerciseType,
+                            name: data.name,
+                            sets: data.doneSets,
+                            note: data.note,
+                            originalExerciseId: data.exerciseId,
+                        };
+                    });
+
                     state.workouts
                         .find((workout) => workout.workoutId === workoutIndex)
                         ?.doneWorkouts.push({
                             doneWorkoutId: generateId("workout"),
                             isoDate: getDateTodayIso(),
                             duration: duration.toString(),
-                            doneExercises,
+                            doneExercises: doneExercises.filter((exercise) => exercise !== undefined) as DoneExerciseData[],
                         });
                 }
                 state.trainedWorkout = undefined;
