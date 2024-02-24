@@ -175,7 +175,8 @@ export const workoutReducer = createReducer<WorkoutState>(
                 if (action.payload === undefined) {
                     state.editedWorkout = undefined;
                 } else if (action.payload.exerciseId) {
-                    const workout = state.trainedWorkout?.workout ?? state.editedWorkout?.workout;
+                    const workoutId = state.trainedWorkout?.workout.workoutId ?? state.editedWorkout?.workout?.workoutId;
+                    const workout = state.workouts.find((workout) => workout.workoutId === workoutId);
                     const exercise = workout?.exercises?.find((exercise) => exercise.exerciseId === action.payload?.exerciseId);
                     if (exercise) {
                         state.editedExercise = {
