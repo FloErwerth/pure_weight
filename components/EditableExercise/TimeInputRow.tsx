@@ -83,6 +83,7 @@ export const TimeInputRow = ({
             )}
             <HStack style={wrapperStyle} hasError={hasError} input={input} background={background} stretch={stretch} center round>
                 <ThemedTextInput
+                    keyboardType="number-pad"
                     placeholderTextColor={placeholderColor}
                     onChangeText={handleChangeMinutes}
                     style={textInputStyles}
@@ -97,6 +98,7 @@ export const TimeInputRow = ({
                     :
                 </Text>
                 <ThemedTextInput
+                    keyboardType="number-pad"
                     placeholderTextColor={placeholderColor}
                     onChangeText={handleChangeSeconds}
                     style={textInputStyles}

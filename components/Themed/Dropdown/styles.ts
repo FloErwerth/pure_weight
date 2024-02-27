@@ -15,6 +15,7 @@ export const styles = StyleSheet.create({
         width: Dimensions.get("window").width * 2,
         height: Dimensions.get("screen").height * 2,
     },
+
     wrapper: {
         zIndex: 20,
         alignSelf: "stretch",

@@ -34,7 +34,7 @@ import { IsoDate } from "../../../types/date";
 
 export const useMeasurementOptions = () => {
     const unitSystem = useAppSelector(getUnitSystem);
-    return measurementTypes.map((type) => getUnitByType(unitSystem, type));
+    return measurementTypes.map((type) => ({ value: getUnitByType(unitSystem, type), label: getUnitByType(unitSystem, type) }));
 };
 
 export const useMeasurementOptionMap = () => {
@@ -53,6 +53,7 @@ const useDropdownValue = () => {
     const type = useAppSelector(getEditedMeasurement)?.measurement?.type;
     return getUnitByType(unitSystem, type);
 };
+
 const getTypeByUnit = (unit: string) => {
     return measurementTypes.find((type) => getUnitByType("metric", type) === unit);
 };
@@ -245,6 +246,8 @@ export const CreateMeasurement = () => {
         [dates],
     );
 
+    const unitModalTitle = useMemo(() => t("measurement_unit_modal_title"), [t]);
+
     return (
         <ThemedView background stretch round>
             <SiteNavigationButtons backButtonAction={handleBackButtonPress} title={pageTitle} />
@@ -279,6 +282,9 @@ export const CreateMeasurement = () => {
                                 />
                                 {!isAddingData && (
                                     <ThemedDropdown
+                                        hideCheck
+                                        stretch
+                                        modalTitle={unitModalTitle}
                                         isSelectable={editedMeasurement?.isNew}
                                         options={measurementOptions}
                                         errorKey="create_measurement_type"

@@ -1,5 +1,5 @@
 import { createNavigationContainerRef, ParamListBase } from "@react-navigation/native";
-import { WorkoutId } from "../store/reducers/workout/types";
+import { DoneExerciseData, WorkoutId } from "../store/reducers/workout/types";
 import { MeasurementId } from "../components/App/measurements/types";
 
 export type RoutesParamaters = {
@@ -44,11 +44,16 @@ export type RoutesParamaters = {
     ["measurements/history/edit/index"]: {
         name: "measurements/history/edit/index";
     };
-    ["workouts/workoutHistory/index"]: {
-        name: "workouts/workoutHistory/index";
+    ["workouts/history/index"]: {
+        name: "workouts/history/index";
     };
-    "workouts/history/edit/index": {
-        screen: "workouts/history/edit/index";
+    ["workouts/history/exercise_edit/index"]: {
+        name: "workouts/history/exercise_edit/index";
+        doneWorkoutId: WorkoutId;
+        doneExercise: DoneExerciseData;
+    };
+    "workouts/history/workout/index": {
+        screen: "workouts/history/workout/index";
         doneWorkoutId: WorkoutId;
     };
     ["tabs"]: {
@@ -107,10 +112,13 @@ export const Routes = {
         screen: "workouts/create/exercise/index",
     },
     history: {
-        screen: "workouts/workoutHistory/index",
+        screen: "workouts/history/index",
     },
-    "workouts/history/edit/index": {
-        screen: "workouts/history/edit/index",
+    "workouts/history/exercise_edit/index": {
+        screen: "workouts/history/exercise_edit/index",
+    },
+    "workouts/history/workout/index": {
+        screen: "workouts/history/workout/index",
     },
     "settings/manual": {
         screen: "settings/manual/index",

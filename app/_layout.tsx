@@ -25,7 +25,7 @@ import { Manual } from "./settings/manual";
 import { useTranslation } from "react-i18next";
 import { Appearance, NativeModules } from "react-native";
 import { setLanguage, setTheme } from "../store/reducers/settings";
-import { WorkoutHistoryEdit } from "./workouts/history/edit";
+import { WorkoutHistoryOverview } from "./workouts/history/workout";
 import { getReactNativeTheme } from "../store/reducers/settings/settingsSelectors";
 import { CreateExercise } from "./workouts/create/exercise";
 import { MeasurementHistory } from "./measurements/history";
@@ -33,6 +33,7 @@ import { CreateMeasurement } from "./measurements/create";
 import { MeasurementProgress } from "./measurements/progress";
 import { useInitIntl } from "../locales/i18next";
 import { MeasurementHistoryEdit } from "./measurements/history/edit";
+import { WorkoutHistoryEdit } from "./workouts/history/exercise_edit";
 
 const Stack = createNativeStackNavigator<RoutesParamaters>();
 
@@ -113,12 +114,17 @@ const ThemedApp = () => {
                                     <Stack.Screen
                                         component={WorkoutHistory}
                                         options={{ headerShown: false }}
-                                        name="workouts/workoutHistory/index"
+                                        name="workouts/history/index"
+                                    />
+                                    <Stack.Screen
+                                        component={WorkoutHistoryOverview}
+                                        options={{ headerShown: false }}
+                                        name="workouts/history/workout/index"
                                     />
                                     <Stack.Screen
                                         component={WorkoutHistoryEdit}
                                         options={{ headerShown: false }}
-                                        name="workouts/history/edit/index"
+                                        name="workouts/history/exercise_edit/index"
                                     />
                                     <Stack.Screen
                                         component={GeneralSettings}

@@ -24,6 +24,7 @@ export type ExerciseData = {
 };
 
 export type DoneWorkouts = {
+    originalWorkoutId: WorkoutId;
     doneWorkoutId: WorkoutId;
     isoDate: IsoDate;
     duration: string;

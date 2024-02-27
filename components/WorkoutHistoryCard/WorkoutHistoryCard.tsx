@@ -9,7 +9,6 @@ import { getLanguage } from "../../store/reducers/settings/settingsSelectors";
 import { getDoneExercises } from "../../store/reducers/workout/workoutSelectors";
 import { View } from "react-native";
 import { useMemo } from "react";
-import { useTheme } from "../../theme/context";
 import { WorkoutId } from "../../store/reducers/workout/types";
 
 type WorkoutHistoryCardProps = {
@@ -19,21 +18,18 @@ type WorkoutHistoryCardProps = {
     marked: boolean;
 };
 
-export const WorkoutHistoryCard = ({ date, doneWorkoutId, onEdit, marked }: WorkoutHistoryCardProps) => {
-    const { inputFieldBackgroundColor, secondaryInputFieldBackgroundColor } = useTheme();
+export const WorkoutHistoryCard = ({ date, doneWorkoutId, onEdit }: WorkoutHistoryCardProps) => {
     const language = useAppSelector(getLanguage);
     const doneExercises = useAppSelector((state: AppState) => getDoneExercises(state, doneWorkoutId));
-    const filteredExercises = useMemo(() => doneExercises?.filter((exercise) => exercise.sets.length > 0), [doneExercises]);
-
-    const wrapperStyles = useMemo(
-        () => [styles.wrapper, { backgroundColor: marked ? inputFieldBackgroundColor : secondaryInputFieldBackgroundColor }],
-        [marked, inputFieldBackgroundColor, secondaryInputFieldBackgroundColor],
+    const filteredExercises = useMemo(
+        () => doneExercises?.filter((exercise) => exercise.sets.length > 0),
+        [doneExercises],
     );
 
     return (
-        <ThemedPressable style={wrapperStyles} onPress={onEdit} key={doneWorkoutId} round padding>
+        <ThemedPressable style={styles.wrapper} onPress={onEdit} key={doneWorkoutId} round padding>
             <Text style={styles.date} ghost>
-                {getLocaleDate(date, language, { dateStyle: "long" })}
+                {getLocaleDate(date, language, { day: "2-digit", month: "long", year: "numeric" })}
             </Text>
             <View style={styles.doneExercisesWrapper}>
                 <View>

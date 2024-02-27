@@ -10,7 +10,12 @@ import { useTheme } from "../../theme/context";
 import { AppState, useAppDispatch, useAppSelector } from "../../store";
 import * as Haptics from "expo-haptics";
 import { handleMutateSet, markSetAsDone, setIsActiveSet } from "../../store/reducers/workout";
-import { getExerciseById, getIsActiveSet, getSetData } from "../../store/reducers/workout/workoutSelectors";
+import {
+    getExerciseById,
+    getHasWeightInTimeBasedExercise,
+    getIsActiveSet,
+    getSetData,
+} from "../../store/reducers/workout/workoutSelectors";
 import { ThemedPressable } from "../Themed/Pressable/Pressable";
 import { ExerciseId } from "../../store/reducers/workout/types";
 import { getUpdatePrefilledWorkoutValues } from "../../store/reducers/settings/settingsSelectors";
@@ -33,6 +38,7 @@ export const SetInput = ({ setIndex, exerciseId }: SetInputRowProps) => {
         textDisabled,
     } = useTheme();
 
+    const hasWeight = useAppSelector((state: AppState) => getHasWeightInTimeBasedExercise(state, exerciseId));
     const data = useAppSelector((state: AppState) => getSetData(state, setIndex, exerciseId));
 
     const exercise = useAppSelector((state: AppState) => getExerciseById(state, exerciseId));
@@ -234,7 +240,7 @@ export const SetInput = ({ setIndex, exerciseId }: SetInputRowProps) => {
                             seconds={durationSeconds}
                             minutes={durationMinutes}
                         />
-                        {exercise?.weight && (
+                        {hasWeight && (
                             <HStack stretch style={wrapperStyle} round>
                                 <ThemedTextInput
                                     editable={isEditable}

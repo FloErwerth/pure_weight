@@ -11,13 +11,13 @@ interface TrainingHeaderProps {
     exerciseType?: "WEIGHT_BASED" | "TIME_BASED";
     showWeight?: boolean;
 }
+
 export const TrainingHeader = ({ showPlaceholderForDoneButton = true, exerciseType = "WEIGHT_BASED", showWeight }: TrainingHeaderProps) => {
     const { t } = useTranslation();
     const weightUnit = useAppSelector(getWeightUnit);
 
-    const timeBasedHasWeight = Boolean(exerciseType === "TIME_BASED" && showWeight);
-    const leftHeader = exerciseType === "WEIGHT_BASED" ? t("training_header_reps") : t("duration");
-    const rightHeader = exerciseType === "WEIGHT_BASED" || timeBasedHasWeight ? weightUnit : undefined;
+    const leftLabel = exerciseType === "WEIGHT_BASED" ? weightUnit : t("duration");
+    const rightLabel = exerciseType === "WEIGHT_BASED" ? t("training_header_reps") : showWeight ? weightUnit : undefined;
 
     return (
         <HStack style={styles.vStack}>
@@ -26,11 +26,11 @@ export const TrainingHeader = ({ showPlaceholderForDoneButton = true, exerciseTy
             </Text>
             <HStack stretch ghost center style={{ gap: 15 }}>
                 <Text ghost style={styles.input}>
-                    {leftHeader}
+                    {leftLabel}
                 </Text>
-                {rightHeader && (
+                {rightLabel && (
                     <Text ghost style={styles.input}>
-                        {rightHeader}
+                        {rightLabel}
                     </Text>
                 )}
                 {showPlaceholderForDoneButton && <View style={styles.placeholder}></View>}

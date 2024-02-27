@@ -72,6 +72,7 @@ export const ExpandableSearchbar = ({ handleSetSearchManual }: SearchbarProps) =
             <HStack ghost>
                 <Animated.View style={animatedInputStyles}>
                     <ThemedTextInput
+                        round
                         onBlur={handleBlur}
                         reference={ref}
                         showClear

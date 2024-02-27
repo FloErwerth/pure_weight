@@ -65,7 +65,9 @@ export const RenderedWorkout = ({ workoutId }: RenderedWorkoutProps) => {
             )}
             {isOngoingWorkout && (
                 <TouchableHighlight style={pausedTrainingHint}>
-                    <Text ghost>{t("workout_paused_hint")}</Text>
+                    <Text style={styles.ongoingWorkoutHint} ghost>
+                        {t("workout_paused_hint")}
+                    </Text>
                 </TouchableHighlight>
             )}
         </ThemedView>

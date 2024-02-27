@@ -1,5 +1,5 @@
 import { AppState, useAppSelector } from "../../../../store";
-import { getExerciseById, getSetsArray } from "../../../../store/reducers/workout/workoutSelectors";
+import { getExerciseById, getHasWeightInTimeBasedExercise, getSetsArray } from "../../../../store/reducers/workout/workoutSelectors";
 import { ExerciseId } from "../../../../store/reducers/workout/types";
 import { useBottomSheetRef } from "../../../BottomSheetModal/ThemedBottomSheetModal";
 import { useCallback, useId } from "react";
@@ -35,7 +35,8 @@ export const TrainedExercise = ({ exerciseId }: TrainedExerciseProps) => {
         open();
     }, [open]);
 
-    const hasWeight = exercise?.weight !== undefined && exercise?.weight !== "";
+    const hasWeight = useAppSelector((state: AppState) => getHasWeightInTimeBasedExercise(state, exerciseId));
+
     return (
         <ThemedView stretch ghost key={id} style={trainStyles.carouselWrapper}>
             <HStack background style={trainStyles.headerWrapper}>

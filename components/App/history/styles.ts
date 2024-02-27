@@ -13,7 +13,10 @@ export const styles = StyleSheet.create({
         alignItems: "center",
         gap: 5,
     },
-    scrollView: { gap: 10 },
+    scrollView: {
+        marginTop: 10,
+    },
+    scrollViewContainer: { gap: 10 },
     workout: {
         gap: 10,
     },

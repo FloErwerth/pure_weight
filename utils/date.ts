@@ -15,12 +15,16 @@ export function getMonthDiff(d1: Date, d2: Date) {
     months += d2.getMonth();
     return months <= 0 ? 0 : months;
 }
+
 export const getIsoDate = (timestamp: number | string) => {
     const convertedTimestamp = typeof timestamp === "string" ? parseInt(timestamp) : timestamp;
     return Temporal.Instant.fromEpochMilliseconds(convertedTimestamp).toString().split("T")[0] as IsoDate;
 };
 
-export const getLocaleDate = (date: IsoDate, language?: "en" | "de", options?: Intl.DateTimeFormatOptions) => {
+export const getLocaleDate = (date?: IsoDate, language?: "en" | "de", options?: Intl.DateTimeFormatOptions) => {
+    if (!date) {
+        return undefined;
+    }
     return Temporal.PlainDate.from(date).toLocaleString(language ?? Locale.locale, options);
 };
 
@@ -45,6 +49,10 @@ export const getMonth = (date?: IsoDate) => {
     } else {
         return Temporal.PlainDate.from(date).month;
     }
+};
+
+export const getMonthYearLabel = (date: IsoDate) => {
+    return Temporal.PlainDate.from(date).toLocaleString(Locale.locale, { month: "long", year: "numeric" });
 };
 
 export const getEpochMilliseconds = (date: IsoDate) => {

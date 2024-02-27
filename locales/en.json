@@ -32,6 +32,9 @@
   "weight_based_label_variant":  "Weight based",
   "time_based_label_variant":  "Time based",
   "history_cta": "Show history",
+  "history_all_workouts": "All workouts",
+  "history_trained_at": "trained at",
+  "history_modal_title": "Select a month",
   "workout_history": "History",
   "history_latest_workout": "Latest Workout",
   "history_latest_workout_short": "latest",
@@ -59,6 +62,8 @@
   "measurement_history_empty": "No measurements available",
   "measurement_history_single": "One measurement saved",
   "measurement_history_plural": "measurements saved",
+  "measurement_unit_modal_title": "Select a unit",
+
 
   "create_select_type": "Select exercise type",
   "create_exercise_type_label": "Exercise type",
@@ -118,6 +123,7 @@
   "sets_lower": "sets",
   "reps": "Reps",
   "reps_lower": "reps",
+  "set": "Set",
   "pause": "Pause",
   "after": "after",
   "pause_lower": "pause",

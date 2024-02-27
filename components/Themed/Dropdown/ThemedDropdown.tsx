@@ -1,29 +1,30 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, { useCallback, useRef } from "react";
 import { styles } from "./styles";
 import { Keyboard, View } from "react-native";
 import { ThemedPressable } from "../Pressable/Pressable";
 import { ThemedView } from "../ThemedView/View";
 import { Text } from "../ThemedText/Text";
-import Animated, { FadeIn, FadeOut, Layout } from "react-native-reanimated";
 import { useTheme } from "../../../theme/context";
 import { AppState, useAppSelector } from "../../../store";
 import { getErrorByKey } from "../../../store/reducers/errors/errorSelectors";
 import { ErrorFields } from "../../../store/reducers/errors/types";
 import { ErrorText } from "../../ErrorText/ErrorText";
+import { HStack } from "../../Stack/HStack/HStack";
+import { ThemedMaterialCommunityIcons } from "../ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
+import { ThemedBottomSheetModal, useBottomSheetRef } from "../../BottomSheetModal/ThemedBottomSheetModal";
+import { PageContent } from "../../PageContent/PageContent";
 
 interface ThemedDropdownProps<T extends readonly string[]> {
     isSelectable?: boolean;
     onSelectItem?: (value: T[number]) => void;
     placeholder?: string;
     value?: T[number];
-    options?: T;
+    options?: { value: T[number]; label: string }[];
     errorKey?: ErrorFields;
     secondary?: boolean;
-}
-
-interface ItemProps<T extends string> {
-    value: T;
-    onSelectItem: (value: T) => void;
+    modalTitle?: string;
+    stretch?: boolean;
+    hideCheck?: boolean;
 }
 
 function Separator({ show }: { show: boolean }) {
@@ -35,15 +36,6 @@ function Separator({ show }: { show: boolean }) {
 
     return <View style={{ height: 1, backgroundColor: backgroundColor }} />;
 }
-function Item<T extends string>({ value, onSelectItem }: ItemProps<T>) {
-    return (
-        <ThemedPressable ghost key={value} onPress={() => onSelectItem(value)}>
-            <Text ghost style={styles.item}>
-                {value}
-            </Text>
-        </ThemedPressable>
-    );
-}
 
 export function ThemedDropdown<T extends readonly string[]>({
     secondary,
@@ -53,72 +45,72 @@ export function ThemedDropdown<T extends readonly string[]>({
     onSelectItem,
     placeholder,
     value,
+    stretch,
+    modalTitle,
+    hideCheck,
 }: ThemedDropdownProps<T>) {
-    const [open, setOpen] = useState(false);
     const containerRef = useRef<View>(null);
-    const [containerMeasures, setContainerMeasures] = useState<{ width: number; height: number }>({ width: 100, height: 50 });
     const error = useAppSelector((state: AppState) => getErrorByKey(state, errorKey));
+    const { ref: dropdownRef, openBottomSheet: openDropdown, closeBottomSheet: closeDropdown } = useBottomSheetRef();
+
     const togglePicker = useCallback(() => {
-        setOpen((open) => !open);
-    }, []);
-
-    const measureContainer = useCallback(() => {
-        if (containerRef.current) {
-            containerRef.current.measure((x, y, width, height) => {
-                setContainerMeasures({ width, height: height + 5 });
-            });
-        }
-    }, []);
-
-    useEffect(() => {
-        if (open) {
-            Keyboard.dismiss();
-        }
-    }, [open]);
-
-    const dropdownStyles = useMemo(
-        () => [styles.dropdown, { width: containerMeasures.width, top: containerMeasures.height }],
-        [containerMeasures],
-    );
+        Keyboard.dismiss();
+        openDropdown();
+    }, [openDropdown]);
 
     const handleSelectItem = useCallback(
         (value: T[number]) => {
-            setOpen(false);
+            closeDropdown();
             onSelectItem?.(value);
         },
-        [onSelectItem],
+        [closeDropdown, onSelectItem],
     );
+
+    const itemWrapperStyle = [
+        {
+            justifyContent: hideCheck ? "center" : "space-between",
+            paddingLeft: hideCheck ? 0 : 10,
+            paddingRight: hideCheck ? 0 : 15,
+        } as const,
+    ];
 
     return (
         <>
-            <ThemedView style={styles.wrapper} stretch ghost>
+            <ThemedView style={styles.wrapper} stretch={stretch} ghost>
                 <ThemedPressable
                     secondary={secondary}
                     error={error}
                     disabled={!isSelectable}
                     reference={containerRef}
-                    onLayout={measureContainer}
                     style={styles.selectedItemWrapper}
                     onPress={togglePicker}>
                     <Text ghost disabled={!isSelectable} error={error} style={styles.selectedItem}>
                         {value || placeholder}
                     </Text>
                 </ThemedPressable>
+
                 {error && <ErrorText errorKey="create_measurement_type" />}
-                {open && (
-                    <Animated.View style={dropdownStyles} layout={Layout} entering={FadeIn.duration(200)} exiting={FadeOut.duration(200)}>
-                        <ThemedView round input>
-                            {options?.map((value, index) => (
-                                <>
-                                    <Item key={value} onSelectItem={handleSelectItem} value={value} />
-                                    <Separator show={index < options.length - 1} />
-                                </>
-                            ))}
-                        </ThemedView>
-                    </Animated.View>
-                )}
+
+                <ThemedBottomSheetModal ref={dropdownRef} title={modalTitle}>
+                    <PageContent ignorePadding paddingTop={20} stretch input>
+                        {options?.map((option, index) => (
+                            <ThemedView key={option.value} stretch ghost>
+                                <ThemedPressable ghost onPress={() => handleSelectItem(option.value)}>
+                                    <HStack center style={itemWrapperStyle} gap ghost>
+                                        <Text ghost style={styles.item}>
+                                            {option.label}
+                                        </Text>
+                                        {!hideCheck && option.label === value && (
+                                            <ThemedMaterialCommunityIcons name="check" size={20} ghost />
+                                        )}
+                                    </HStack>
+                                </ThemedPressable>
+                                <Separator show={index < options.length - 1} />
+                            </ThemedView>
+                        ))}
+                    </PageContent>
+                </ThemedBottomSheetModal>
             </ThemedView>
-            {open && <ThemedPressable ghost style={styles.hiddenLayer} onPress={togglePicker}></ThemedPressable>}
         </>
     );
 }

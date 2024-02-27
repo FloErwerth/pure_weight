@@ -104,6 +104,7 @@ export const mockState: AppState = {
                 ],
                 doneWorkouts: [
                     {
+                        originalWorkoutId: "workout-128901238901",
                         doneWorkoutId: "workout-1",
                         isoDate: "2023-11-12",
                         duration: "120",
@@ -149,6 +150,7 @@ export const mockState: AppState = {
                         ],
                     },
                     {
+                        originalWorkoutId: "workout-128901238901",
                         doneWorkoutId: "workout-2",
                         isoDate: "2023-11-12",
                         duration: "120",
@@ -164,6 +166,7 @@ export const mockState: AppState = {
                         ],
                     },
                     {
+                        originalWorkoutId: "workout-128901238901",
                         doneWorkoutId: "workout-3",
                         isoDate: "2023-12-01",
                         duration: "120",
@@ -179,6 +182,7 @@ export const mockState: AppState = {
                         ],
                     },
                     {
+                        originalWorkoutId: "workout-128901238901",
                         doneWorkoutId: "workout-4",
                         isoDate: "2023-12-02",
                         duration: "120",
@@ -194,6 +198,7 @@ export const mockState: AppState = {
                         ],
                     },
                     {
+                        originalWorkoutId: "workout-128901238901",
                         doneWorkoutId: "workout-5",
                         isoDate: "2023-12-03",
                         duration: "120",
@@ -208,6 +213,7 @@ export const mockState: AppState = {
                         ],
                     },
                     {
+                        originalWorkoutId: "workout-128901238901",
                         doneWorkoutId: "workout-6",
                         isoDate: "2023-12-04",
                         duration: "120",
@@ -222,6 +228,7 @@ export const mockState: AppState = {
                         ],
                     },
                     {
+                        originalWorkoutId: "workout-128901238901",
                         doneWorkoutId: "workout-7",
                         isoDate: "2023-12-05",
                         duration: "120",
@@ -236,6 +243,7 @@ export const mockState: AppState = {
                         ],
                     },
                     {
+                        originalWorkoutId: "workout-128901238901",
                         doneWorkoutId: "workout-8",
                         isoDate: "2023-12-07",
                         duration: "120",
@@ -261,6 +269,7 @@ export const mockState: AppState = {
                         ],
                     },
                     {
+                        originalWorkoutId: "workout-128901238901",
                         doneWorkoutId: "workout-9",
                         isoDate: "2023-12-31",
                         duration: "120",
@@ -316,6 +325,7 @@ export const mockState: AppState = {
                 ],
                 doneWorkouts: [
                     {
+                        originalWorkoutId: "workout-128901238902",
                         doneWorkoutId: "workout-1",
                         isoDate: "2023-12-01",
                         duration: "120",
@@ -334,6 +344,8 @@ export const mockState: AppState = {
                         ],
                     },
                     {
+                        originalWorkoutId: "workout-128901238902",
+
                         doneWorkoutId: "workout-2",
                         isoDate: "2023-12-01",
                         duration: "120",

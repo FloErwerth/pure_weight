@@ -6,6 +6,7 @@ import { AnimatedView } from "../Themed/AnimatedView/AnimatedView";
 import { ThemedPressable } from "../Themed/Pressable/Pressable";
 import { Text } from "../Themed/ThemedText/Text";
 import { HStack } from "../Stack/HStack/HStack";
+import { PageContent } from "../PageContent/PageContent";
 
 export type SlidingSwitchOption = { value: string; label: string; Component?: ReactElement };
 
@@ -23,9 +24,15 @@ export function SlidingSwitch({ options, onSelectValue, value, disabled, initial
     const backgroundLeft = useRef(new Animated.Value(0)).current;
     const animatedViewRef = useRef<View>(null);
     const [containerSize, setContainerSize] = useState<{ width: number; height: number }>({ width: 0, height: 0 });
-    const selectedValueIndex = useMemo(() => options.findIndex((option) => option.value === selectedValue), [options, selectedValue]);
+    const selectedValueIndex = useMemo(
+        () => options.findIndex((option) => option.value === selectedValue),
+        [options, selectedValue],
+    );
     const animatedBackgroundStyle = useMemo(
-        () => [styles.background, { left: backgroundLeft, width: containerSize.width / options.length - 5, height: HEIGHT } as const],
+        () => [
+            styles.background,
+            { left: backgroundLeft, width: containerSize.width / options.length - 5, height: HEIGHT } as const,
+        ],
         [backgroundLeft, containerSize.width, options.length],
     );
     const flatListRef = useRef<FlatList>(null);
@@ -46,7 +53,8 @@ export function SlidingSwitch({ options, onSelectValue, value, disabled, initial
     useEffect(() => {
         if (selectedValue && containerSize.width !== 0) {
             if (selectedValueIndex !== -1) {
-                const left = selectedValueIndex !== 0 ? (containerSize.width / options.length) * selectedValueIndex - 5 : 0;
+                const left =
+                    selectedValueIndex !== 0 ? (containerSize.width / options.length) * selectedValueIndex - 5 : 0;
                 Animated.timing(backgroundLeft, {
                     useNativeDriver: false,
                     toValue: left,
@@ -71,7 +79,11 @@ export function SlidingSwitch({ options, onSelectValue, value, disabled, initial
         if (!Component) {
             return null;
         }
-        return Component;
+        return (
+            <PageContent scrollable ghost ignorePadding>
+                {Component}
+            </PageContent>
+        );
     }, []);
 
     return (
