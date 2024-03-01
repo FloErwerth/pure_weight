@@ -28,7 +28,15 @@ export const MeasurementProgress = () => {
             return (
                 <ThemedView
                     key={x + y}
-                    style={{ position: "absolute", top: y - 25, left: x - 20, flex: 1, padding: 3, borderRadius, alignItems: "center" }}>
+                    style={{
+                        position: "absolute",
+                        top: y - 25,
+                        left: x - 20,
+                        flex: 1,
+                        padding: 3,
+                        borderRadius,
+                        alignItems: "center",
+                    }}>
                     <Text style={{ fontSize: 12, color: mainColor }}>
                         {trunicateToNthSignificantDigit(indexData, false, 1)} {data?.unit}
                     </Text>
@@ -40,7 +48,7 @@ export const MeasurementProgress = () => {
 
     const getXLabel = useCallback(
         (label: string) => {
-            return getLocaleDate(label as IsoDate, language, { dateStyle: "medium" });
+            return getLocaleDate(label as IsoDate, language, { dateStyle: "medium" }) ?? "";
         },
         [language],
     );

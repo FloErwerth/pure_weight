@@ -3,18 +3,21 @@ import { AppState } from "../../index";
 import { getLanguage } from "../settings/settingsSelectors";
 import { getLocaleDate, getMonthYearLabel } from "../../../utils/date";
 import { IsoDate } from "../../../types/date";
-import { getLastNEntries } from "../../../utils/getLastNEntries";
 import { ExerciseId, ExerciseSets, ExerciseType, WorkoutId } from "./types";
 import { Temporal } from "@js-temporal/polyfill";
 import { getSinceDate } from "../../../utils/timeAgo";
 import { sortWorkouts } from "./sortWorkouts";
 import { getMeasurementSorting } from "../measurements/measurementSelectors";
+import i18next from "i18next";
+import { trunicateToNthSignificantDigit } from "../../../utils/number";
 
 export const getWorkoutState = ({ workoutState }: AppState) => workoutState;
 export const getTrainedWorkout = createSelector([getWorkoutState], (state) => state.trainedWorkout);
 export const getWorkoutSorting = createSelector([getWorkoutState], (state) => state.workoutSorting);
 export const getWorkouts = createSelector([getWorkoutState], (state) => state.workouts);
 export const getSearchedWorkout = createSelector([getWorkoutState], (state) => state.searchedWorkout);
+export const getPostWorkoutWorkoutId = createSelector([getWorkoutState], (state) => state.postWorkoutWorkoutId);
+
 export const getTrainedWorkoutExercises = createSelector(
     [getTrainedWorkout, getWorkouts],
     (trainedWorkout, workouts) => {
@@ -81,13 +84,10 @@ export const getLatestWorkoutDate = createSelector([getSortedDoneWorkout], (isoD
 export const getLatestWorkoutDateDisplay = createSelector([getSortedDoneWorkout, getLanguage], (dates, language) => {
     return getSinceDate(dates?.[dates?.length - 1], language ?? "de") ?? ("1970-01-01" as IsoDate);
 });
-export const getFirstWorkoutDate = createSelector([getSortedDoneWorkout], (dates) => {
-    return dates?.[0] ?? ("1970-01-01" as IsoDate);
-});
+
 export const getWorkoutByIndex = createSelector(
     [getWorkouts, (_, workoutId?: WorkoutId) => workoutId],
     (workouts, workoutId) => {
-        console.log(workouts.map((workout) => workout.workoutId, workoutId));
         return workouts.find((workout) => workout.workoutId === workoutId);
     },
 );
@@ -118,7 +118,7 @@ type SortedData = {
     data: { sets: ExerciseSets; date: IsoDate; type: ExerciseType }[];
 };
 
-export const getTrainingDayData = createSelector([getEditedWorkout], (editedWorkout) => {
+export const getDoneWorkoutData = createSelector([getEditedWorkout], (editedWorkout) => {
     const workout = editedWorkout?.workout;
 
     if (workout?.doneWorkouts === undefined || workout?.doneWorkouts.length === 0) {
@@ -126,7 +126,7 @@ export const getTrainingDayData = createSelector([getEditedWorkout], (editedWork
     }
 
     const sortedData: Map<ExerciseId, SortedData> = new Map();
-    const slicedDoneWorkouts = getLastNEntries(workout?.doneWorkouts, 100);
+    const slicedDoneWorkouts = workout?.doneWorkouts;
 
     slicedDoneWorkouts?.forEach(({ isoDate, doneExercises }) => {
         if (doneExercises) {
@@ -197,9 +197,10 @@ export const getPreviousWorkout = createSelector(
                 if (!foundEntries.get(exercise.originalExerciseId)) {
                     foundEntries.set(exercise.originalExerciseId, {
                         type: exercise.type,
-                        date: getLocaleDate(doneWorkouts?.[workoutIndex].isoDate, language, {
-                            dateStyle: "medium",
-                        }),
+                        date:
+                            getLocaleDate(doneWorkouts?.[workoutIndex].isoDate, language, {
+                                dateStyle: "medium",
+                            }) ?? "",
                         sets: exercise.sets,
                         note: exercise.note,
                         name: exercise.name,
@@ -224,7 +225,7 @@ const getSumOfSets = (type: ExerciseType, sets?: ExerciseSets) => {
     return sets?.reduce((sum, set) => sum + parseFloat(set?.reps ?? "0") * parseFloat(set?.weight ?? "0"), 0);
 };
 export const getOverallTrainingTrend = createSelector(
-    [getWorkouts, (_, workoutId: WorkoutId) => workoutId],
+    [getWorkouts, (_, workoutId?: WorkoutId) => workoutId],
     (workouts, workoutId) => {
         const workout = workouts.find((workout) => workout.workoutId === workoutId);
 
@@ -279,12 +280,14 @@ export const getOverallTrainingTrend = createSelector(
         return foundCompareables.reduce(
             (bestImprovement, { current, before }) => {
                 if (before.sum !== 0) {
-                    const percent = (current.sum / before.sum) * 100;
+                    const percentRaw = (current.sum / before.sum) * 100;
+                    const isPositive = percentRaw > 100;
+                    const percent = isPositive ? percentRaw - 100 : 100 - percentRaw;
                     if (bestImprovement === undefined) {
-                        return { name: current.name, percent, isPositive: percent > 100 };
+                        return { name: current.name, percent, isPositive };
                     } else {
-                        if (percent > bestImprovement.percent) {
-                            return { name: current.name, percent, isPositive: percent > 100 };
+                        if (percentRaw > bestImprovement.percent) {
+                            return { name: current.name, percent, isPositive };
                         } else {
                             return bestImprovement;
                         }
@@ -444,5 +447,101 @@ export const getDoneExerciseById = createSelector(
             (doneWorkout) => doneWorkout.doneWorkoutId === doneWorkoutId,
         );
         return doneWorkout?.doneExercises?.find((doneExercise) => doneExercise.doneExerciseId === doneExerciseId);
+    },
+);
+
+export const getPostWorkoutWorkout = createSelector([getWorkouts, getPostWorkoutWorkoutId], (workouts, postWorkout) => {
+    const doneWorkout = workouts.find((workout) => workout.workoutId === postWorkout);
+
+    if (!doneWorkout || postWorkout === undefined) {
+        return undefined;
+    }
+    return doneWorkout;
+});
+
+export const getPostWorkoutTrend = createSelector(
+    [(state: AppState) => state, getPostWorkoutWorkout],
+    (state, postWorkout) => {
+        return getOverallTrainingTrend(state, postWorkout?.workoutId);
+    },
+);
+
+export const getWorkoutStats = createSelector([getWorkouts], (workouts) => {
+    return workouts.reduce(
+        (stats, currentWorkout) => {
+            if (stats.get(currentWorkout.workoutId) === undefined) {
+                stats.set(currentWorkout.workoutId, {
+                    totalTimes: {
+                        value: 0,
+                        unit: "x",
+                        text: i18next.t("post_workout_times"),
+                    },
+                    totalSets: {
+                        value: 0,
+                        unit: undefined,
+                        text: i18next.t("post_workout_sets"),
+                    },
+                    totalReps: {
+                        value: 0,
+                        unit: undefined,
+                        text: i18next.t("post_workout_reps"),
+                    },
+                    totalDuration: {
+                        value: 0,
+                        unit: "h",
+                        text: i18next.t("post_workout_total_duration"),
+                    },
+                });
+            }
+            stats.get(currentWorkout.workoutId)!.totalTimes.value = currentWorkout.doneWorkouts.length;
+            currentWorkout.doneWorkouts.forEach((doneWorkout) => {
+                stats.get(currentWorkout.workoutId)!.totalDuration.value += trunicateToNthSignificantDigit(
+                    parseFloat(doneWorkout.duration) / 1000 / 60 / 60,
+                    true,
+                    2,
+                );
+                doneWorkout.doneExercises?.forEach((exercise) => {
+                    stats.get(currentWorkout.workoutId)!.totalSets.value += exercise.sets.length;
+                    stats.get(currentWorkout.workoutId)!.totalReps.value += exercise.sets.reduce((sum, set) => {
+                        return sum + parseFloat(set.reps ?? "0");
+                    }, 0);
+                });
+            });
+            return stats;
+        },
+        new Map() as Map<
+            WorkoutId,
+            {
+                totalDuration: {
+                    value: number;
+                    unit: string;
+                    text: string;
+                };
+                totalTimes: {
+                    value: number;
+                    unit: string;
+                    text: string;
+                };
+                totalSets: {
+                    value: number;
+                    unit: undefined;
+                    text: string;
+                };
+                totalReps: {
+                    value: number;
+                    unit: undefined;
+                    text: string;
+                };
+            }
+        >,
+    );
+});
+export const getWorkoutStatsById = createSelector(
+    [getWorkoutStats, (_, workoutId?: WorkoutId) => workoutId],
+    (stats, workoutId) => {
+        if (!workoutId) {
+            return undefined;
+        }
+        return stats.get(workoutId);
     },
 );

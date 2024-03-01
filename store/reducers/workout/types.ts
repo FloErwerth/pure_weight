@@ -1,5 +1,7 @@
 import { SortingType } from "../../types";
 import { IsoDate } from "../../../types/date";
+import { ComponentProps } from "react";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 export type ExerciseIdType = "exercise";
 export type WorkoutIdType = "workout";
@@ -92,7 +94,21 @@ export type TrainedWorkout = {
     }[];
 };
 
+type PostWorkoutStats = {
+    icon: ComponentProps<typeof MaterialCommunityIcons>["name"];
+    iconColor: string;
+    unit: string;
+    value?: string;
+    text: string;
+}[];
+
+export type PostWorkoutScreen = {
+    workoutName: string;
+    stats: PostWorkoutStats;
+};
+
 export type WorkoutState = {
+    postWorkoutWorkoutId?: WorkoutId;
     workouts: Workout[];
     workoutSorting: SortingType;
     templateSorting: SortingType;

@@ -28,6 +28,9 @@ const combineData = (existingData?: ExerciseData, newData?: ExerciseData): Exerc
 };
 export const setWorkoutState = createAction<WorkoutState, "workout_set_state">("workout_set_state");
 export const setWorkouts = createAction<Workout[], "workout_set_workouts">("workout_set_workouts");
+export const setShowPostWorkoutScreen = createAction<WorkoutId | undefined, "workout_show_post_workout_screen">(
+    "workout_show_post_workout_screen",
+);
 export const mutateEditedExercise = createAction<
     {
         key: keyof ExerciseMetaData;
@@ -466,6 +469,7 @@ export const workoutReducer = createReducer<WorkoutState>(
                                 (exercise) => exercise !== undefined,
                             ) as DoneExerciseData[],
                         });
+                    state.postWorkoutWorkoutId = workout?.workout.workoutId;
                 }
                 state.trainedWorkout = undefined;
             })
@@ -615,6 +619,9 @@ export const workoutReducer = createReducer<WorkoutState>(
             })
             .addCase(setSearchedWorkout, (state, action) => {
                 state.searchedWorkout = action.payload;
+            })
+            .addCase(setShowPostWorkoutScreen, (state, action) => {
+                state.postWorkoutWorkoutId = action.payload;
             });
     },
 );

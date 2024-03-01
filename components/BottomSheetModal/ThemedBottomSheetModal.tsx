@@ -1,15 +1,30 @@
-import React, { forwardRef, PropsWithChildren, RefObject, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, {
+    forwardRef,
+    PropsWithChildren,
+    ReactNode,
+    RefObject,
+    useCallback,
+    useEffect,
+    useMemo,
+    useRef,
+    useState,
+} from "react";
 import { Keyboard, ViewStyle } from "react-native";
 import { Text } from "../Themed/ThemedText/Text";
 import { styles } from "./styles";
-import { BottomSheetBackdrop, BottomSheetBackdropProps, BottomSheetModal, BottomSheetScrollView } from "@gorhom/bottom-sheet";
+import {
+    BottomSheetBackdrop,
+    BottomSheetBackdropProps,
+    BottomSheetModal,
+    BottomSheetScrollView,
+} from "@gorhom/bottom-sheet";
 import { useTheme } from "../../theme/context";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ThemedView } from "../Themed/ThemedView/View";
 
 export type SnapPoint = `${number}%`;
 export interface ThemedBottomSheetModalProps extends PropsWithChildren {
-    title?: string;
+    title?: string | ReactNode;
     customContentStyle?: ViewStyle;
     hideIndicator?: boolean;
     style?: ViewStyle;
@@ -17,6 +32,7 @@ export interface ThemedBottomSheetModalProps extends PropsWithChildren {
     allowSwipeDownToClose?: boolean;
     snapPoints?: SnapPoint[];
     animationDuration?: number;
+    titleSize?: number;
 }
 
 const refs: RefObject<BottomSheetModal>[] = [];
@@ -59,7 +75,16 @@ const renderBackdrop = (props: BottomSheetBackdropProps) => (
 // eslint-disable-next-line react/display-name
 export const ThemedBottomSheetModal = forwardRef<BottomSheetModal, ThemedBottomSheetModalProps>(
     (
-        { hideIndicator, customContentStyle, animationDuration, snapPoints, children, title, onRequestClose, allowSwipeDownToClose = true },
+        {
+            hideIndicator,
+            customContentStyle,
+            animationDuration,
+            snapPoints,
+            children,
+            title,
+            onRequestClose,
+            allowSwipeDownToClose = true,
+        },
         ref,
     ) => {
         const { mainColor, inputFieldBackgroundColor } = useTheme();
@@ -76,8 +101,18 @@ export const ThemedBottomSheetModal = forwardRef<BottomSheetModal, ThemedBottomS
             [allowSwipeDownToClose, hideIndicator, mainColor],
         );
         const contentStyle = useMemo(() => ({ paddingBottom: bottom * 2 }), [bottom]);
-        const titleWrapperStyle = useMemo(() => [styles.wrapper, {}], []);
         const contentContainerStyle = useMemo(() => ({ flex: snapPoints ? 1 : 0 }), [snapPoints]);
+
+        const Title = useCallback(() => {
+            if (title) {
+                return (
+                    <Text input style={styles.title}>
+                        {title}
+                    </Text>
+                );
+            }
+            return null;
+        }, [title]);
 
         return (
             <BottomSheetModal
@@ -96,12 +131,8 @@ export const ThemedBottomSheetModal = forwardRef<BottomSheetModal, ThemedBottomS
                 snapPoints={snapPoints}
                 keyboardBehavior="extend">
                 <BottomSheetScrollView contentContainerStyle={contentContainerStyle}>
-                    <ThemedView ghost style={titleWrapperStyle}>
-                        {title && (
-                            <Text input style={styles.title}>
-                                {title}
-                            </Text>
-                        )}
+                    <ThemedView ghost style={styles.wrapper}>
+                        <Title />
                     </ThemedView>
                     <ThemedView ghost stretch style={contentStyle}>
                         {children}

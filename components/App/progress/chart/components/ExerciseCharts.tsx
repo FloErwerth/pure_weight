@@ -14,7 +14,7 @@ import { IsoDate } from "../../../../../types/date";
 import { ThemedPressable } from "../../../../Themed/Pressable/Pressable";
 import { useNavigate } from "../../../../../hooks/navigate";
 
-import { getTrainingDayData } from "../../../../../store/reducers/workout/workoutSelectors";
+import { getDoneWorkoutData } from "../../../../../store/reducers/workout/workoutSelectors";
 import { getLanguage, getTimeUnit, getWeightUnit } from "../../../../../store/reducers/settings/settingsSelectors";
 import { trunicateToNthSignificantDigit } from "../../../../../utils/number";
 import Chart from "../../../../Chart/Chart";
@@ -67,7 +67,11 @@ const getCumulativeExerciseData = (data: { sets: ExerciseSets }[], type: Exercis
             return [
                 ...vals,
                 sets
-                    .map((set) => parseFloat(set?.durationMinutes ?? "0") * 60 * 1000 + parseFloat(set?.durationSeconds ?? "0") * 1000)
+                    .map(
+                        (set) =>
+                            parseFloat(set?.durationMinutes ?? "0") * 60 * 1000 +
+                            parseFloat(set?.durationSeconds ?? "0") * 1000,
+                    )
                     .reduce((cumulative, entry) => cumulative + entry, 0),
             ];
         }
@@ -87,8 +91,9 @@ const getAveragePerDay = (data: { sets: ExerciseSets }[], dataType: "weight" | "
             ...values,
             parseFloat(
                 (
-                    setValues.map((set) => parseFloat(set?.[dataType] ?? "0")).reduce((cumulative, entry) => cumulative + entry, 0) /
-                    setValues.length
+                    setValues
+                        .map((set) => parseFloat(set?.[dataType] ?? "0"))
+                        .reduce((cumulative, entry) => cumulative + entry, 0) / setValues.length
                 ).toFixed(3),
             ),
         ];
@@ -103,7 +108,11 @@ const getAverageDurationPerExercise = (data: { sets: ExerciseSets }[]) => {
             parseFloat(
                 (
                     setValues
-                        .map((set) => parseFloat(set?.durationMinutes ?? "0") * 60 * 1000 + parseFloat(set?.durationSeconds ?? "0") * 1000)
+                        .map(
+                            (set) =>
+                                parseFloat(set?.durationMinutes ?? "0") * 60 * 1000 +
+                                parseFloat(set?.durationSeconds ?? "0") * 1000,
+                        )
                         .reduce((cumulative, entry) => cumulative + entry, 0) / setValues.length
                 ).toString(),
             ),
@@ -179,10 +188,13 @@ export const ExerciseChart = ({ exerciseName, data, index }: ExerciseChartProps)
 
             const getContent = () => {
                 if (exerciseType === "TIME_BASED" && typeof chartTypeLabel === "object") {
-                    const minutesContent = minutesSeconds.minutes > 0 ? `${minutesSeconds.minutes} ${chartTypeLabel.minutesUnit}` : "";
+                    const minutesContent =
+                        minutesSeconds.minutes > 0 ? `${minutesSeconds.minutes} ${chartTypeLabel.minutesUnit}` : "";
                     const secondsContent =
                         minutesSeconds.seconds > 0
-                            ? `${trunicateToNthSignificantDigit(minutesSeconds.seconds, false, 1)} ${chartTypeLabel.secondsUnit}`
+                            ? `${trunicateToNthSignificantDigit(minutesSeconds.seconds, false, 1)} ${
+                                  chartTypeLabel.secondsUnit
+                              }`
                             : "";
 
                     return (
@@ -201,7 +213,15 @@ export const ExerciseChart = ({ exerciseName, data, index }: ExerciseChartProps)
             return (
                 <ThemedView
                     key={x + y}
-                    style={{ position: "absolute", top: y - 25, left, flex: 1, padding: 3, borderRadius, alignItems: "center" }}>
+                    style={{
+                        position: "absolute",
+                        top: y - 25,
+                        left,
+                        flex: 1,
+                        padding: 3,
+                        borderRadius,
+                        alignItems: "center",
+                    }}>
                     <Text style={{ fontSize: 12, color: mainColor }}>{getContent()}</Text>
                 </ThemedView>
             );
@@ -219,7 +239,7 @@ export const ExerciseChart = ({ exerciseName, data, index }: ExerciseChartProps)
 
     const getXLabel = useCallback(
         (xValue: string) => {
-            return getLocaleDate(xValue as IsoDate, language, { dateStyle: "medium" });
+            return getLocaleDate(xValue as IsoDate, language, { dateStyle: "medium" }) ?? "";
         },
         [language],
     );
@@ -258,7 +278,13 @@ export const ExerciseChart = ({ exerciseName, data, index }: ExerciseChartProps)
                 <ThemedView ghost style={styles.selectionModal}>
                     {mappedChartProps.map(({ onPress, title, chartType }) => (
                         <HStack ghost key={`${chartType}${title}`}>
-                            <ThemedPressable stretch round background style={styles.chartTypeSelectionButton} padding onPress={onPress}>
+                            <ThemedPressable
+                                stretch
+                                round
+                                background
+                                style={styles.chartTypeSelectionButton}
+                                padding
+                                onPress={onPress}>
                                 <Text center ghost style={styles.chartTypeSelectonTitle}>
                                     {t(chartTypeMap[chartType].title)}
                                 </Text>
@@ -280,7 +306,7 @@ export const ExerciseChart = ({ exerciseName, data, index }: ExerciseChartProps)
 };
 
 export default function ExerciseCharts() {
-    const trainingDayData = useAppSelector(getTrainingDayData);
+    const trainingDayData = useAppSelector(getDoneWorkoutData);
 
     const navigate = useNavigate();
     if (trainingDayData === undefined) {

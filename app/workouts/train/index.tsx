@@ -1,5 +1,5 @@
 import { useAppDispatch, useAppSelector } from "../../../store";
-import { useCallback, useEffect, useMemo, useRef } from "react";
+import React, { useCallback, useEffect, useMemo, useRef } from "react";
 import { trainStyles } from "../../../components/App/train/trainStyles";
 import { BackButtonModal } from "../../../components/AlertModal/BackButtonModal";
 import { useNavigate } from "../../../hooks/navigate";
@@ -32,7 +32,7 @@ import { TrainedExercise } from "../../../components/App/train/Exercise/TrainedE
 import { ExerciseId } from "../../../store/reducers/workout/types";
 import { CarouselRenderItemInfo, ICarouselInstance } from "react-native-reanimated-carousel/lib/typescript/types";
 import { getSwitchToNextExercise } from "../../../store/reducers/settings/settingsSelectors";
-import { WorkoutSettings } from "../../../components/App/settings/Sections/workout/index";
+import { WorkoutSettings } from "../../../components/App/settings/Sections/workout";
 
 export const Train = () => {
     const { bottom } = useSafeAreaInsets();
@@ -80,7 +80,6 @@ export const Train = () => {
     }, [dispatch, handleNavigateToWorkouts]);
 
     const handleReset = useCallback(() => {
-        handleNavigateToWorkouts();
         dispatch(resetTrainedWorkout());
     }, [dispatch, handleNavigateToWorkouts]);
 
@@ -91,24 +90,30 @@ export const Train = () => {
     const handleDone = useCallback(() => {
         handleSaveTrainingData();
         handleReset();
+        handleNavigateToWorkouts();
     }, [handleReset, handleSaveTrainingData]);
 
     const handleNotDoneConfirm = useCallback(() => {
         handleSaveTrainingData();
         handleReset();
+        handleNavigateToWorkouts();
         closeAlert();
     }, [handleSaveTrainingData, handleReset, closeAlert]);
 
     const handleCloseButton = useCallback(() => {
         if (!hasNoTrainingData) {
             handleReset();
+            handleNavigateToWorkouts();
         } else {
             openAlert();
         }
     }, [hasNoTrainingData, handleReset, openAlert]);
 
     const buttonsStyle = useMemo(() => [trainStyles.buttons, { marginBottom: bottom }], [bottom]);
-    const alertModalConfig = useMemo(() => ({ title: t(isDone ? "workout_quit_title" : "workout_early_quit_title") }), [isDone, t]);
+    const alertModalConfig = useMemo(
+        () => ({ title: t(isDone ? "workout_quit_title" : "workout_early_quit_title") }),
+        [isDone, t],
+    );
 
     const mappedExercises: { exerciseId: ExerciseId }[] = useMemo(() => {
         if (!trainedWorkout) {
@@ -135,6 +140,7 @@ export const Train = () => {
     const handleCancelWorkout = useCallback(() => {
         handleReset();
         closeAlert();
+        handleNavigateToWorkouts();
     }, [handleReset, closeAlert]);
 
     const quickSettingsTitle = useMemo(() => t("workout_quick_settings_title"), [t]);

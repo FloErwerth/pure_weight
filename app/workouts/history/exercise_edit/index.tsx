@@ -18,17 +18,10 @@ import { Text } from "../../../../components/Themed/ThemedText/Text";
 import { ThemedMaterialCommunityIcons } from "../../../../components/Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
 import { AnswerText } from "../../../../components/HelpQuestionAnswer/AnswerText";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { DoneExerciseData, ExerciseId, WorkoutId } from "../../../../store/reducers/workout/types";
+import { ExerciseId, WorkoutId } from "../../../../store/reducers/workout/types";
 import { HistorySetInput } from "../../../../components/App/history/HistorySetInput/HistorySetInput";
 import { HistoryContextProvider } from "../../../../components/App/history/HistoryContext/HistoryContext";
 import { getDoneExerciseById } from "../../../../store/reducers/workout/workoutSelectors";
-
-const getIsZeroOrNullish = (values: Array<string | undefined>) => values.some((value) => !value || value === "0");
-const useValidateExercise = (exercise: DoneExerciseData) => {
-    ///todo
-
-    return () => true;
-};
 
 const useWasEdited = (doneWorkoutId: WorkoutId, doneExerciseId: ExerciseId) => {
     const doneExerciseData = useAppSelector((state: AppState) =>
@@ -55,17 +48,13 @@ export const WorkoutHistoryEdit = ({
     const dispatch = useAppDispatch();
     const { ref, openBottomSheet } = useBottomSheetRef();
     const navigateBack = useNavigateBack();
-    const validateExercise = useValidateExercise(doneExercise);
     const isMutated = useWasEdited(doneWorkoutId, doneExercise.doneExerciseId);
 
     const saveExercise = useCallback(() => {
-        if (!validateExercise()) {
-            return;
-        }
         dispatch(saveEditedExercise());
         void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
         navigateBack();
-    }, [dispatch, navigateBack, validateExercise]);
+    }, [dispatch, navigateBack]);
 
     const warningTitle = useMemo(() => t("workout_history_edit_warning_title"), [t]);
     const warningContent = useMemo(() => t("workout_history_edit_warning_message"), [t]);

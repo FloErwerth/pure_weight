@@ -289,5 +289,18 @@
   "sorting_A_Z": "Alphabetisch aufsteigend",
   "sorting_Z_A": "Alphabetisch absteigend",
   "sorting_LONGEST_AGO": "Am längsten her",
-  "sorting_MOST_RECENT": "Vor kürzester Zeit"
+  "sorting_MOST_RECENT": "Vor kürzester Zeit",
+
+  "post_workout_title_completed": "abgeschlossen",
+  "post_workout_overview_title": "Deine Übersicht",
+  "post_workout_more_performance": "bessere Leistung",
+  "post_workout_weight": "insgesamt bewegt",
+  "post_workout_times": "hast Du dieses Workout bereits absolviert",
+  "post_workout_sets": "Sätze hast Du als abgeschlossen markiert",
+  "post_workout_reps": "Wiederholungen hast Du insgesamt absolviert",
+  "post_workout_total_duration": "Zeit bei diesem Workout verbracht",
+
+  "post_workout_even_performance": "Leistungsveränderung",
+  "post_workout_less_performance": "weniger Leistung",
+  "post_workout_duration": "Zeit verbracht"
 }

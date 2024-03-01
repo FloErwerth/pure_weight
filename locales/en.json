@@ -298,5 +298,18 @@
   "sorting_A_Z": "Alphabetically ascending",
   "sorting_Z_A": "Alphabetically descending",
   "sorting_LONGEST_AGO": "Longest ago",
-  "sorting_MOST_RECENT": "Most recently"
+  "sorting_MOST_RECENT": "Most recently",
+
+  "post_workout_title_completed": "completed",
+  "post_workout_overview_title": "Your overview",
+  "post_workout_duration": "time spent",
+  "post_workout_weight": "total weight moved",
+  "post_workout_times": "times you have completed this workout",
+  "post_workout_sets": "Sets were marked as done",
+  "post_workout_reps": "Reps were done in total",
+  "post_workout_total_duration": "time spent for this workout",
+
+  "post_workout_more_performance": "more performance",
+  "post_workout_even_performance": "performance change",
+  "post_workout_less_performance": "less performance"
 }

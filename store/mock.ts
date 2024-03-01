@@ -58,6 +58,7 @@ export const mockState: AppState = {
         ],
     },
     workoutState: {
+        postWorkoutWorkoutId: "workout-128901238901",
         templateSorting: "A_Z",
         workoutSorting: "A_Z",
         workouts: [
@@ -107,7 +108,7 @@ export const mockState: AppState = {
                         originalWorkoutId: "workout-128901238901",
                         doneWorkoutId: "workout-1",
                         isoDate: "2023-11-12",
-                        duration: "120",
+                        duration: "180000",
                         doneExercises: [
                             {
                                 originalExerciseId: "exercise-1",
@@ -272,7 +273,7 @@ export const mockState: AppState = {
                         originalWorkoutId: "workout-128901238901",
                         doneWorkoutId: "workout-9",
                         isoDate: "2023-12-31",
-                        duration: "120",
+                        duration: "1180000",
                         doneExercises: [
                             {
                                 originalExerciseId: "exercise-1",
@@ -287,9 +288,9 @@ export const mockState: AppState = {
                                 doneExerciseId: "exercise-2",
                                 name: "Rudern Seilzug",
                                 sets: [
-                                    { weight: "50", reps: "5" },
-                                    { weight: "50", reps: "5" },
-                                    { weight: "55", reps: "5" },
+                                    { weight: "505", reps: "5" },
+                                    { weight: "505", reps: "5" },
+                                    { weight: "555", reps: "5" },
                                 ],
                             },
                         ],

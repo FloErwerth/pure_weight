@@ -37,6 +37,7 @@ import { WorkoutId } from "../../store/reducers/workout/types";
 import { View } from "react-native";
 import { ExpandableSearchbar } from "../../components/Searchbar/ExpandableSearchbar";
 import { AnswerText } from "../../components/HelpQuestionAnswer/AnswerText";
+import { WorkoutCompleteModal } from "../../components/WorkoutCompleteModal/WorkoutCompleteModal";
 
 const usePauseWarningContent = () => {
     const language = useAppSelector(getLanguage);
@@ -79,7 +80,11 @@ export function Workouts() {
     const navigate = useNavigate();
     const trainedWorkout = useAppSelector(getTrainedWorkout);
     const { ref, openBottomSheet, closeBottomSheet } = useBottomSheetRef();
-    const { ref: deleteWarningRef, openBottomSheet: openDeleteWarning, closeBottomSheet: closeDeleteWarning } = useBottomSheetRef();
+    const {
+        ref: deleteWarningRef,
+        openBottomSheet: openDeleteWarning,
+        closeBottomSheet: closeDeleteWarning,
+    } = useBottomSheetRef();
     const [newWorkoutIndex, setNewWorkoutIndex] = useState<WorkoutId | undefined>(undefined);
     const isOngoingWorkout = useAppSelector((state: AppState) => getIsOngoingWorkout(state, newWorkoutIndex));
     const { toastRef, openToast, closeToast, showToast } = useToast();
@@ -187,7 +192,11 @@ export function Workouts() {
 
     return (
         <ThemedView stretch background>
-            <SiteNavigationButtons title={t("workouts")} handleConfirmIcon={confirmIcon} handleConfirm={handleCreateWorkout} />
+            <SiteNavigationButtons
+                title={t("workouts")}
+                handleConfirmIcon={confirmIcon}
+                handleConfirm={handleCreateWorkout}
+            />
             {numberOfWorkouts > 1 && (
                 <PageContent ghost>
                     <HStack ghost style={trainStyles.searchAndFilterBar}>
@@ -248,6 +257,7 @@ export function Workouts() {
                     </ThemedPressable>
                 </PageContent>
             </ThemedBottomSheetModal>
+            <WorkoutCompleteModal />
         </ThemedView>
     );
 }

@@ -6,6 +6,7 @@ import { Text } from "../Themed/ThemedText/Text";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ComputedBackgroundColorProps, useComputedBackgroundColor } from "../../hooks/useComputedBackgroundColor";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { borderRadius } from "../../theme/border";
 
 interface BasePageContentProps extends PropsWithChildren, ComputedBackgroundColorProps {
     style?: StyleProp<ViewStyle>;
@@ -15,6 +16,7 @@ interface BasePageContentProps extends PropsWithChildren, ComputedBackgroundColo
     safeBottom?: boolean;
     ignoreGap?: boolean;
     ignorePadding?: boolean;
+    round?: boolean;
 }
 type ScrollablePageContentProps = { scrollable: true } & BasePageContentProps & ScrollViewProps;
 type NonScrollablePageContentProps = { scrollable?: false } & BasePageContentProps & ViewProps;
@@ -22,7 +24,17 @@ type NonScrollablePageContentProps = { scrollable?: false } & BasePageContentPro
 type PageContentProps = ScrollablePageContentProps | NonScrollablePageContentProps;
 export const PageContent = (props: PageContentProps) => {
     const { bottom } = useSafeAreaInsets();
-    const { children, style, scrollable, titleConfig, stretch, paddingTop, safeBottom, ignoreGap = false, ignorePadding = false } = props;
+    const {
+        children,
+        style,
+        scrollable,
+        titleConfig,
+        stretch,
+        paddingTop,
+        safeBottom,
+        ignoreGap = false,
+        ignorePadding = false,
+    } = props;
     const computedBackground = useComputedBackgroundColor(props);
 
     const titleStyles = useMemo(() => {
@@ -36,6 +48,7 @@ export const PageContent = (props: PageContentProps) => {
         () => [
             styles.wrapper,
             {
+                borderRadius: props.round ? borderRadius : 0,
                 gap: ignoreGap ? 0 : styles.wrapper.gap,
                 paddingTop,
                 paddingBottom: safeBottom ? bottom : undefined,

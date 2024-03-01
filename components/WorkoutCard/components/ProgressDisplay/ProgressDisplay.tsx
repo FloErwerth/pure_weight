@@ -38,9 +38,13 @@ const useText = (
             return `Deine Leistung bei ${trend?.name} hat sich nicht verändert`;
         }
         if (language === "en") {
-            return `Your performance at ${trend?.name} ${t(isPositiveTrend ? "increased" : "decreased")} by ${processedPercent}%`;
+            return `Your performance at ${trend?.name} ${t(
+                isPositiveTrend ? "increased" : "decreased",
+            )} by ${processedPercent}%`;
         }
-        return `Deine Leistung bei ${trend?.name} ist um ${processedPercent}% ${t(isPositiveTrend ? "gestiegen" : "gefallen")}`;
+        return `Deine Leistung bei ${trend?.name} ist um ${processedPercent}% ${t(
+            isPositiveTrend ? "gestiegen" : "gefallen",
+        )}`;
     }, [even, language, t, processedPercent, isPositiveTrend, trend?.name]);
 
     const measurementText = useMemo(() => {
@@ -69,7 +73,8 @@ const useText = (
 };
 
 export const ProgressDisplay = ({ trend, onPress, higherIsBetter = true, type }: ProgressDisplayProps) => {
-    const positivePercentage = useMemo(() => Boolean((trend?.percent ?? 100) > 100), [trend?.percent]);
+    const positivePercentage = useMemo(() => Boolean((trend?.percent ?? 0) > 0), [trend?.percent]);
+
     const progressDisplayPositive = useMemo(() => {
         if (higherIsBetter) {
             return positivePercentage;
@@ -77,18 +82,7 @@ export const ProgressDisplay = ({ trend, onPress, higherIsBetter = true, type }:
         return !positivePercentage;
     }, [higherIsBetter, positivePercentage]);
 
-    const percent = useMemo(() => {
-        if (trend?.percent === undefined || trend?.percent === 0) {
-            return 0;
-        }
-        if (positivePercentage) {
-            return trend.percent - 100;
-        }
-        return 100 - trend.percent;
-    }, [positivePercentage, trend?.percent]);
-
-    const processedPercent = trunicateToNthSignificantDigit(percent);
-
+    const processedPercent = trunicateToNthSignificantDigit(trend?.percent ?? 0);
     const even = processedPercent === 0;
     const text = useText(type, even, positivePercentage, processedPercent, trend);
     const active = useContext(swipableContext);

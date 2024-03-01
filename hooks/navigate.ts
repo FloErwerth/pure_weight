@@ -129,6 +129,7 @@ export const Routes = {
 } as const;
 
 export const navigationRef = createNavigationContainerRef<typeof Routes>();
+
 export function useNavigate() {
     function navigate<T extends keyof typeof Routes>(name: T, params?: ParamListBase[T]) {
         if (navigationRef.isReady()) {
