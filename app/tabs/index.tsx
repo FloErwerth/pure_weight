@@ -19,15 +19,21 @@ export function TabsWrapper() {
         return (
             <Tabs.Navigator
                 screenOptions={{
-                    tabBarStyle: { backgroundColor: componentBackgroundColor, borderTopWidth: 0, paddingTop: 5, height: 80, zIndex: 1 },
+                    tabBarStyle: {
+                        backgroundColor: componentBackgroundColor,
+                        borderTopWidth: 0,
+                        paddingTop: 5,
+                        height: 80,
+                        zIndex: 1,
+                    },
                 }}>
                 <Tabs.Screen
                     component={Workouts}
                     options={{
                         headerShown: false,
                         tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} Icon={"weight-lifter"} />,
-                        tabBarLabelStyle: { fontSize: 13 },
                         tabBarButton: TabBarButton,
+                        tabBarLabelPosition: "below-icon",
                         tabBarLabel: ({ focused }) => <TabBarLabel focused={focused} title={t("workouts")} />,
                         tabBarActiveTintColor: mainColor,
                         tabBarInactiveTintColor: secondaryColor,

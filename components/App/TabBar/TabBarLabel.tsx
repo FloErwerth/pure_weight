@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import { Text } from "../../Themed/ThemedText/Text";
 import { useTheme } from "../../../theme/context";
+import DeviceInfo from "react-native-device-info";
 
 export const TabBarLabel = ({ focused, title }: { focused: boolean; title: string }) => {
     const { mainColor, secondaryColor } = useTheme();
@@ -8,5 +9,12 @@ export const TabBarLabel = ({ focused, title }: { focused: boolean; title: strin
         return focused ? mainColor : secondaryColor;
     }, [focused, mainColor, secondaryColor]);
 
-    return <Text style={{ fontSize: 12, color, alignSelf: "center" }}>{title}</Text>;
+    const tabletStyles = useMemo(() => {
+        if (DeviceInfo.isTablet()) {
+            return { transform: [{ translateY: -12 }] };
+        }
+        return {};
+    }, []);
+
+    return <Text style={{ fontSize: 12, color, alignSelf: "center", ...tabletStyles }}>{title}</Text>;
 };

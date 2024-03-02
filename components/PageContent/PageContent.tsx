@@ -7,6 +7,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ComputedBackgroundColorProps, useComputedBackgroundColor } from "../../hooks/useComputedBackgroundColor";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { borderRadius } from "../../theme/border";
+import DeviceInfo from "react-native-device-info";
 
 interface BasePageContentProps extends PropsWithChildren, ComputedBackgroundColorProps {
     style?: StyleProp<ViewStyle>;
@@ -24,6 +25,8 @@ type NonScrollablePageContentProps = { scrollable?: false } & BasePageContentPro
 type PageContentProps = ScrollablePageContentProps | NonScrollablePageContentProps;
 export const PageContent = (props: PageContentProps) => {
     const { bottom } = useSafeAreaInsets();
+    const safeBottomPixels = bottom === 0 && DeviceInfo.isTablet() ? 20 : bottom;
+
     const {
         children,
         style,
@@ -51,14 +54,24 @@ export const PageContent = (props: PageContentProps) => {
                 borderRadius: props.round ? borderRadius : 0,
                 gap: ignoreGap ? 0 : styles.wrapper.gap,
                 paddingTop,
-                paddingBottom: safeBottom ? bottom : undefined,
+                paddingBottom: safeBottom ? safeBottomPixels : undefined,
                 backgroundColor: computedBackground,
                 paddingHorizontal: ignorePadding ? 0 : 20,
                 flex: stretch ? 1 : undefined,
             },
             style,
         ],
-        [bottom, computedBackground, ignoreGap, ignorePadding, paddingTop, props.round, safeBottom, stretch, style],
+        [
+            computedBackground,
+            ignoreGap,
+            ignorePadding,
+            paddingTop,
+            props.round,
+            safeBottom,
+            safeBottomPixels,
+            stretch,
+            style,
+        ],
     );
 
     const scrollableWrapperStyles = useMemo(

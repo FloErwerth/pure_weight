@@ -39,7 +39,6 @@ const Stack = createNativeStackNavigator<RoutesParamaters>();
 
 const ThemedApp = () => {
     useInitIntl();
-
     const dispatch = useAppDispatch();
     const { i18n } = useTranslation();
     const isFirstTimeRendered = useAppSelector(getIsFirstTimeRendered);
@@ -74,8 +73,13 @@ const ThemedApp = () => {
                     <RootSiblingParent>
                         <BottomSheetModalProvider>
                             <SafeAreaView background>
-                                <Stack.Navigator screenOptions={{ headerShown: false, headerBackButtonMenuEnabled: false }}>
-                                    <Stack.Screen component={TabsWrapper} options={{ headerShown: false }} name="tabs" />
+                                <Stack.Navigator
+                                    screenOptions={{ headerShown: false, headerBackButtonMenuEnabled: false }}>
+                                    <Stack.Screen
+                                        component={TabsWrapper}
+                                        options={{ headerShown: false }}
+                                        name="tabs"
+                                    />
                                     <Stack.Screen
                                         component={Train}
                                         options={{ gestureEnabled: false, headerShown: false }}
@@ -131,7 +135,11 @@ const ThemedApp = () => {
                                         options={{ headerShown: false }}
                                         name="settings/workout/index"
                                     />
-                                    <Stack.Screen component={Manual} options={{ headerShown: false }} name="settings/manual/index" />
+                                    <Stack.Screen
+                                        component={Manual}
+                                        options={{ headerShown: false }}
+                                        name="settings/manual/index"
+                                    />
                                     <Stack.Screen
                                         component={CreateExercise}
                                         options={{ headerShown: false }}
