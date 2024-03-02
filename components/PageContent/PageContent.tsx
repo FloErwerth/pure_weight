@@ -58,7 +58,7 @@ export const PageContent = (props: PageContentProps) => {
             },
             style,
         ],
-        [bottom, computedBackground, ignoreGap, ignorePadding, paddingTop, safeBottom, stretch, style],
+        [bottom, computedBackground, ignoreGap, ignorePadding, paddingTop, props.round, safeBottom, stretch, style],
     );
 
     const scrollableWrapperStyles = useMemo(

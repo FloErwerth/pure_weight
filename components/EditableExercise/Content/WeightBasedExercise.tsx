@@ -77,7 +77,7 @@ export const WeightBasedExercise = () => {
     );
 
     return (
-        <PageContent scrollable ignorePadding ghost stretch style={styles.inputWrapper}>
+        <PageContent ignorePadding ghost stretch style={styles.inputWrapper}>
             <ThemedView ghost>
                 <HStack style={styles.inputWrapper} ghost>
                     <EditableExerciseInputRow

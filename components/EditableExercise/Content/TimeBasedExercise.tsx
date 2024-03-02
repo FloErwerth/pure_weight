@@ -100,7 +100,7 @@ export const TimeBasedExercise = () => {
     );
 
     return (
-        <PageContent ignorePadding scrollable ghost style={styles.inputWrapper}>
+        <PageContent ignorePadding ghost style={styles.inputWrapper}>
             <HStack gap ghost>
                 <TimeInputRow
                     i18key="duration"

@@ -81,7 +81,7 @@ export const Train = () => {
 
     const handleReset = useCallback(() => {
         dispatch(resetTrainedWorkout());
-    }, [dispatch, handleNavigateToWorkouts]);
+    }, [dispatch]);
 
     const handleSaveTrainingData = useCallback(() => {
         dispatch(saveCurrentWorkout());
@@ -91,14 +91,14 @@ export const Train = () => {
         handleSaveTrainingData();
         handleReset();
         handleNavigateToWorkouts();
-    }, [handleReset, handleSaveTrainingData]);
+    }, [handleNavigateToWorkouts, handleReset, handleSaveTrainingData]);
 
     const handleNotDoneConfirm = useCallback(() => {
         handleSaveTrainingData();
         handleReset();
         handleNavigateToWorkouts();
         closeAlert();
-    }, [handleSaveTrainingData, handleReset, closeAlert]);
+    }, [handleSaveTrainingData, handleReset, handleNavigateToWorkouts, closeAlert]);
 
     const handleCloseButton = useCallback(() => {
         if (!hasNoTrainingData) {
@@ -107,7 +107,7 @@ export const Train = () => {
         } else {
             openAlert();
         }
-    }, [hasNoTrainingData, handleReset, openAlert]);
+    }, [hasNoTrainingData, handleReset, handleNavigateToWorkouts, openAlert]);
 
     const buttonsStyle = useMemo(() => [trainStyles.buttons, { marginBottom: bottom }], [bottom]);
     const alertModalConfig = useMemo(
@@ -141,7 +141,7 @@ export const Train = () => {
         handleReset();
         closeAlert();
         handleNavigateToWorkouts();
-    }, [handleReset, closeAlert]);
+    }, [handleReset, closeAlert, handleNavigateToWorkouts]);
 
     const quickSettingsTitle = useMemo(() => t("workout_quick_settings_title"), [t]);
 

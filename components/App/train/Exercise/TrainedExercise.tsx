@@ -1,5 +1,9 @@
 import { AppState, useAppSelector } from "../../../../store";
-import { getExerciseById, getHasWeightInTimeBasedExercise, getSetsArray } from "../../../../store/reducers/workout/workoutSelectors";
+import {
+    getExerciseById,
+    getHasWeightInTimeBasedExercise,
+    getSetsArray,
+} from "../../../../store/reducers/workout/workoutSelectors";
 import { ExerciseId } from "../../../../store/reducers/workout/types";
 import { useBottomSheetRef } from "../../../BottomSheetModal/ThemedBottomSheetModal";
 import { useCallback, useId } from "react";
@@ -57,7 +61,11 @@ export const TrainedExercise = ({ exerciseId }: TrainedExerciseProps) => {
                     <TrainingHeader showWeight={hasWeight} exerciseType={exercise?.type} />
                     {setsArray?.map((_, setIndex) => {
                         return (
-                            <SetInput key={exerciseId.toString().concat(setIndex.toString())} exerciseId={exerciseId} setIndex={setIndex} />
+                            <SetInput
+                                key={exerciseId.toString().concat(setIndex.toString())}
+                                exerciseId={exerciseId}
+                                setIndex={setIndex}
+                            />
                         );
                     })}
                 </ThemedView>
