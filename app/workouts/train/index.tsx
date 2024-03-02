@@ -126,9 +126,12 @@ export const Train = () => {
         );
     }, [handleNavigateToWorkouts, trainedWorkout, workoutExercises]);
 
-    const renderItem = useCallback(({ item: { exerciseId } }: CarouselRenderItemInfo<{ exerciseId: ExerciseId }>) => {
-        return <TrainedExercise workoutId={trainedWorkout?.workout.workoutId} exerciseId={exerciseId} />;
-    }, []);
+    const renderItem = useCallback(
+        ({ item: { exerciseId } }: CarouselRenderItemInfo<{ exerciseId: ExerciseId }>) => {
+            return <TrainedExercise workoutId={trainedWorkout?.workout.workoutId} exerciseId={exerciseId} />;
+        },
+        [trainedWorkout?.workout.workoutId],
+    );
 
     const handleSetActiveExerciseIndex = useCallback(
         (exerciseIndex: number) => {
