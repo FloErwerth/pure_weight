@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useAppDispatch, useAppSelector } from "../../../../store";
-import { getEditedExercise, getIsUsedInPausedWorkout } from "../../../../store/reducers/workout/workoutSelectors";
+import { getEditedExercise } from "../../../../store/reducers/workout/workoutSelectors";
 import { useToast } from "../../../../components/BottomToast/useToast";
 import { createNewExercise, saveEditedExercise } from "../../../../store/reducers/workout";
 import { ThemedView } from "../../../../components/Themed/ThemedView/View";
@@ -91,7 +91,6 @@ export const CreateExercise = () => {
     const navigateBack = useNavigateBack();
     const validateExercise = useValidateExercise();
     const wasEdited = useWasEdited();
-    const isUsedInPausedWorkout = useAppSelector(getIsUsedInPausedWorkout);
 
     useEffect(() => {
         if (!isNewExercise) {
