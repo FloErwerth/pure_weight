@@ -14,7 +14,7 @@ export const TabBarLabel = ({ focused, title }: { focused: boolean; title: strin
             return { transform: [{ translateY: -12 }] };
         }
         return {};
-    }, []);
+    }, [DeviceInfo.isTablet()]);
 
     return <Text style={{ fontSize: 12, color, alignSelf: "center", ...tabletStyles }}>{title}</Text>;
 };

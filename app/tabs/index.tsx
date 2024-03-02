@@ -46,6 +46,7 @@ export function TabsWrapper() {
                         headerShown: false,
                         tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} Icon={"ruler"} />,
                         tabBarLabelStyle: { fontSize: 13 },
+                        tabBarLabelPosition: "below-icon",
                         tabBarButton: TabBarButton,
                         tabBarLabel: ({ focused }) => <TabBarLabel focused={focused} title={t("measurements")} />,
                     }}
@@ -62,6 +63,7 @@ export function TabsWrapper() {
                         headerShown: false,
                         tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} Icon={"cog"} />,
                         tabBarLabelStyle: { fontSize: 13 },
+                        tabBarLabelPosition: "below-icon",
                         tabBarButton: TabBarButton,
                         tabBarLabel: ({ focused }) => <TabBarLabel focused={focused} title={t("settings")} />,
                     }}

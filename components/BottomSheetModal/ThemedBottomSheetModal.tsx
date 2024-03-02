@@ -21,6 +21,7 @@ import {
 import { useTheme } from "../../theme/context";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ThemedView } from "../Themed/ThemedView/View";
+import DeviceInfo from "react-native-device-info";
 
 export type SnapPoint = `${number}%`;
 export interface ThemedBottomSheetModalProps extends PropsWithChildren {
@@ -100,7 +101,10 @@ export const ThemedBottomSheetModal = forwardRef<BottomSheetModal, ThemedBottomS
             () => ({ backgroundColor: allowSwipeDownToClose && !hideIndicator ? mainColor : "transparent" }),
             [allowSwipeDownToClose, hideIndicator, mainColor],
         );
-        const contentStyle = useMemo(() => ({ paddingBottom: bottom * 2 }), [bottom]);
+        const contentStyle = useMemo(
+            () => ({ paddingBottom: (DeviceInfo.isTablet() && bottom === 0 ? 20 : bottom) * 2 }),
+            [bottom],
+        );
         const contentContainerStyle = useMemo(() => ({ flex: snapPoints ? 1 : 0 }), [snapPoints]);
 
         const Title = useCallback(() => {
