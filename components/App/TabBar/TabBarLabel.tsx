@@ -1,20 +1,21 @@
 import { useMemo } from "react";
 import { Text } from "../../Themed/ThemedText/Text";
 import { useTheme } from "../../../theme/context";
-import DeviceInfo from "react-native-device-info";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export const TabBarLabel = ({ focused, title }: { focused: boolean; title: string }) => {
     const { mainColor, secondaryColor } = useTheme();
+    const { bottom } = useSafeAreaInsets();
     const color = useMemo(() => {
         return focused ? mainColor : secondaryColor;
     }, [focused, mainColor, secondaryColor]);
 
     const tabletStyles = useMemo(() => {
-        if (DeviceInfo.isTablet()) {
+        if (bottom === 0) {
             return { transform: [{ translateY: -12 }] };
         }
         return {};
-    }, [DeviceInfo.isTablet()]);
+    }, [bottom]);
 
     return <Text style={{ fontSize: 12, color, alignSelf: "center", ...tabletStyles }}>{title}</Text>;
 };
