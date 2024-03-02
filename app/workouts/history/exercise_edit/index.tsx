@@ -23,7 +23,7 @@ import { HistorySetInput } from "../../../../components/App/history/HistorySetIn
 import { HistoryContextProvider } from "../../../../components/App/history/HistoryContext/HistoryContext";
 import { getDoneExerciseById } from "../../../../store/reducers/workout/workoutSelectors";
 
-const useWasEdited = (doneWorkoutId: WorkoutId, doneExerciseId: ExerciseId) => {
+const useGetWasEdited = (doneWorkoutId: WorkoutId, doneExerciseId: ExerciseId) => {
     const doneExerciseData = useAppSelector((state: AppState) =>
         getDoneExerciseById(state, doneWorkoutId, doneExerciseId),
     );
@@ -33,7 +33,7 @@ const useWasEdited = (doneWorkoutId: WorkoutId, doneExerciseId: ExerciseId) => {
         setStringifiedWorkout(JSON.stringify(doneExerciseData?.sets ?? []));
     }, [doneWorkoutId]);
 
-    return useMemo(() => {
+    return useCallback(() => {
         return stringifiedDoneWorkout !== JSON.stringify(doneExerciseData?.sets ?? []);
     }, [doneExerciseData?.sets, stringifiedDoneWorkout]);
 };
@@ -44,11 +44,11 @@ export const WorkoutHistoryEdit = ({
     },
 }: NativeStackScreenProps<RoutesParamaters, "workouts/history/exercise_edit/index">) => {
     const { t } = useTranslation();
-    const title = useMemo(() => t("exercise_edit_title"), [t]);
+    const title = useMemo(() => t("history_exercise_edit_title"), [t]);
     const dispatch = useAppDispatch();
     const { ref, openBottomSheet } = useBottomSheetRef();
     const navigateBack = useNavigateBack();
-    const isMutated = useWasEdited(doneWorkoutId, doneExercise.doneExerciseId);
+    const getWasEdited = useGetWasEdited(doneWorkoutId, doneExercise.doneExerciseId);
 
     const saveExercise = useCallback(() => {
         dispatch(saveEditedExercise());
@@ -60,14 +60,13 @@ export const WorkoutHistoryEdit = ({
     const warningContent = useMemo(() => t("workout_history_edit_warning_message"), [t]);
     const discardActionText = useMemo(() => t("workout_history_edit_discard_action"), [t]);
 
-    const clearExerciseErrors = useCallback(() => {
+    const clearHistoryErrors = useCallback(() => {
         dispatch(
             cleanError([
-                "create_exercise_name",
-                "create_exercise_sets",
-                "create_exercise_reps",
-                "create_exercise_weight",
-                "create_exercise_duration",
+                "edit_history_reps",
+                "edit_history_duration",
+                "edit_history_exercise_weightbased_weight",
+                "edit_history_exercise_weightbased_weight",
             ]),
         );
     }, [dispatch]);
@@ -77,28 +76,28 @@ export const WorkoutHistoryEdit = ({
     }, [dispatch, doneWorkoutId]);
 
     const handleNavigateBack = useCallback(() => {
-        if (isMutated) {
+        if (getWasEdited()) {
             openBottomSheet();
             return;
         }
-        clearExerciseErrors();
+        clearHistoryErrors();
         navigateBack();
-    }, [clearExerciseErrors, isMutated, navigateBack, openBottomSheet]);
+    }, [clearHistoryErrors, getWasEdited, navigateBack, openBottomSheet]);
 
     const handleDiscardExercise = useCallback(() => {
         handleDiscardChanges();
-        clearExerciseErrors();
+        clearHistoryErrors();
         navigateBack();
-    }, [clearExerciseErrors, handleDiscardChanges, navigateBack]);
+    }, [clearHistoryErrors, handleDiscardChanges, navigateBack]);
 
     return (
         <ThemedView stretch background>
             <SiteNavigationButtons title={title} backButtonAction={handleNavigateBack} handleConfirm={saveExercise} />
             <PageContent safeBottom stretch ghost paddingTop={20}>
-                <Text style={{ fontSize: 26, marginBottom: 25 }} ghost>
+                <Text style={{ fontSize: 26, marginBottom: 10 }} ghost>
                     {doneExercise.name}
                 </Text>
-                <ThemedView input padding style={{ gap: 5 }} round>
+                <ThemedView input padding style={{ gap: 5, paddingLeft: 0 }} round>
                     <HistoryContextProvider>
                         {doneExercise.sets.map((_, index) => {
                             return (

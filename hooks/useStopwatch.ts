@@ -36,7 +36,7 @@ export const useStopwatch = (totalDuration: number, config?: StopwatchConfig) =>
                 pause();
             }
         },
-        [pause, resume, getElapsedStartedTime],
+        [totalDuration, getElapsedStartedTime, resume, pause],
     );
 
     useEffect(() => {
@@ -78,12 +78,9 @@ export const useStopwatch = (totalDuration: number, config?: StopwatchConfig) =>
 
     const fastForward15Seconds = useCallback(() => {
         setRemainingTime((remainingTime) => {
-            if (remainingTime >= totalDuration - 15000) {
-                return totalDuration;
-            }
             return remainingTime + 15000;
         });
-    }, [totalDuration]);
+    }, []);
 
     const startTimer = useCallback(() => {
         setTimerStarted(true);

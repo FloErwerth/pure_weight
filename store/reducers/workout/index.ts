@@ -98,6 +98,10 @@ export const setIsActiveSet = createAction<{ setIndex: number }, "set_is_active_
 export const pauseTrainedWorkout = createAction("pause_trained_workout");
 export const resumeTrainedWorkout = createAction("resume_trained_workout");
 export const cleanupDurationValues = createAction("cleanup_duration_values");
+export const replaceDoneExerciseSet = createAction<
+    { workoutId: WorkoutId; exerciseId: ExerciseId; setIndex: number; data?: ExerciseData },
+    "replace_done_exercise"
+>("replace_done_exercise");
 export const mutateDoneExercise = createAction<{
     doneWorkoutId: WorkoutId;
     doneExerciseId: ExerciseId;
@@ -526,6 +530,28 @@ export const workoutReducer = createReducer<WorkoutState>(
                                 return prefilledMetaData;
                             }),
                     };
+                }
+            })
+            .addCase(replaceDoneExerciseSet, (state, action) => {
+                if (state.editedWorkout && state.editedWorkout.workout.doneWorkouts) {
+                    const doneWorkoutIndex = state.editedWorkout.workout.doneWorkouts.findIndex(
+                        (doneWorkout) => doneWorkout.doneWorkoutId === action.payload.workoutId,
+                    );
+                    const doneWorkout = state.editedWorkout.workout.doneWorkouts[doneWorkoutIndex];
+                    if (doneWorkout && doneWorkout.doneExercises) {
+                        const doneExerciseIndex = doneWorkout.doneExercises.findIndex(
+                            (doneExercise) => doneExercise.doneExerciseId === action.payload.exerciseId,
+                        );
+                        const doneExercise = doneWorkout.doneExercises[doneExerciseIndex];
+                        if (doneExercise && action.payload.data) {
+                            if (!doneExercise.fallbackSets) {
+                                doneExercise.fallbackSets = [...doneExercise.sets];
+                            }
+                            doneExercise.sets[action.payload.setIndex] = action.payload.data;
+                        }
+                        doneWorkout.doneExercises[doneExerciseIndex] = doneExercise;
+                    }
+                    state.editedWorkout.workout.doneWorkouts[doneWorkoutIndex] = doneWorkout;
                 }
             })
             .addCase(mutateDoneExercise, (state, action) => {

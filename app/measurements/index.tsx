@@ -38,7 +38,11 @@ export function Measurements() {
     const navigate = useNavigate();
     const { toastRef, openToast, closeToast, showToast } = useToast();
     const [deletedMeasurementId, setDeletedMeasurementId] = useState<MeasurementId | null>(null);
-    const { ref: deleteWarningRef, openBottomSheet: openDeleteWarning, closeBottomSheet: closeDeleteWarning } = useBottomSheetRef();
+    const {
+        ref: deleteWarningRef,
+        openBottomSheet: openDeleteWarning,
+        closeBottomSheet: closeDeleteWarning,
+    } = useBottomSheetRef();
     const filteredMeasurements = useMemo(
         () =>
             measurements.filter((measurement) => {
@@ -116,7 +120,12 @@ export function Measurements() {
 
     return (
         <ThemedView stretch background>
-            <SiteNavigationButtons title={t("measurements")} handleConfirm={handleAddNewMeasurement} handleConfirmIcon={DEFAULT_PLUS} />
+            <SiteNavigationButtons
+                titleFontSize={40}
+                title={t("measurements")}
+                handleConfirm={handleAddNewMeasurement}
+                handleConfirmIcon={DEFAULT_PLUS}
+            />
             {measurements.length > 1 && (
                 <PageContent ghost>
                     <HStack ghost style={trainStyles.searchAndFilterBar}>
@@ -140,7 +149,11 @@ export function Measurements() {
             <ThemedBottomSheetModal title={t("alert_delete_measurement_title")} ref={deleteWarningRef}>
                 <PageContent paddingTop={20} stretch ghost>
                     <AnswerText>{t("alert_delete_measurement_content")}</AnswerText>
-                    <ThemedPressable style={trainStyles.deleteButtonWrapper} center round onPress={handleDeleteMeasurement}>
+                    <ThemedPressable
+                        style={trainStyles.deleteButtonWrapper}
+                        center
+                        round
+                        onPress={handleDeleteMeasurement}>
                         <HStack style={trainStyles.confirmOverwriteWrapper} round center>
                             <ThemedMaterialCommunityIcons ghost name="delete" size={24} />
                             <Text center ghost style={trainStyles.button}>

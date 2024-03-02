@@ -25,7 +25,7 @@ export const DEFAULT_PLUS = { name: "plus", size: 40 } as const;
 export const SiteNavigationButtons = ({
     backButtonAction,
     title,
-    titleFontSize = 30,
+    titleFontSize = 25,
     handleConfirm,
     confirmButtonDisabled = false,
     closeButtonDisabled = false,
@@ -35,11 +35,18 @@ export const SiteNavigationButtons = ({
     handleQuicksettings,
 }: SiteNavigationButtonsProps) => {
     const titleStyles = useMemo(
-        () => ({ ...styles.title, fontSize: titleFontSize, paddingVertical: titleFontSize <= 40 ? (40 - titleFontSize) / 2 : 0 }),
+        () => ({
+            ...styles.title,
+            fontSize: titleFontSize,
+            paddingVertical: titleFontSize <= 40 ? (40 - titleFontSize) / 2 : 0,
+        }),
         [titleFontSize],
     );
 
-    const titleWrapperStyles = useMemo(() => [{ paddingLeft: !backButtonAction ? 20 : 10 }, styles.titleWrapper], [backButtonAction]);
+    const titleWrapperStyles = useMemo(
+        () => [{ paddingLeft: !backButtonAction ? 20 : 10 }, styles.titleWrapper],
+        [backButtonAction],
+    );
 
     const { mainColor } = useTheme();
 
@@ -82,7 +89,10 @@ export const SiteNavigationButtons = ({
                 )}
                 <Animated.View style={{ opacity: handleConfirmOpacity !== undefined ? handleConfirmOpacity : 1 }}>
                     {handleConfirm && (
-                        <Pressable ref={confirmButtonRef} disabled={confirmButtonDisabled} onPress={handleConfirmButton}>
+                        <Pressable
+                            ref={confirmButtonRef}
+                            disabled={confirmButtonDisabled}
+                            onPress={handleConfirmButton}>
                             <ThemedMaterialCommunityIcons
                                 ghost
                                 disabled={confirmButtonDisabled}

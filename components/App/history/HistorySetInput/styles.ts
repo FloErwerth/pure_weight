@@ -4,9 +4,7 @@ import { borderRadius } from "../../../../theme/border";
 export const styles = StyleSheet.create({
     vStack: {
         alignItems: "center",
-        alignSelf: "stretch",
         borderRadius,
-        padding: 5,
     },
     inputStack: { gap: 10 },
     center: { flex: 1, height: 50 },

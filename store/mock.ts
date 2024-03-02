@@ -58,7 +58,6 @@ export const mockState: AppState = {
         ],
     },
     workoutState: {
-        postWorkoutWorkoutId: "workout-128901238901",
         templateSorting: "A_Z",
         workoutSorting: "A_Z",
         workouts: [

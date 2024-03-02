@@ -42,8 +42,8 @@ const useDebouncedShowPostWorkoutScreen = () => {
 
 const getDurationInSecondsMinutesOrHours = (duration: string) => {
     const parsedDurationSeconds = parseFloat(duration) / 1000;
-    const hours = trunicateToNthSignificantDigit(parsedDurationSeconds / 3600, true, 2);
-    const minutes = trunicateToNthSignificantDigit((parsedDurationSeconds / 60) % 60, true, 2);
+    const hours = trunicateToNthSignificantDigit(parsedDurationSeconds / 3600, true, 0);
+    const minutes = trunicateToNthSignificantDigit((parsedDurationSeconds / 60) % 60, true, 0);
 
     if (parsedDurationSeconds < 60) {
         return {

@@ -53,6 +53,8 @@
   "workout_history_single": "One workout completed",
   "workout_history_plural": "workouts completed",
   "workout_history_edit_title": "Edit previous workout",
+  "history_exercise_edit_title": "Edit previous exercise",
+
 
   "workout_history_edit_warning_title": "Changes not saved",
   "workout_history_edit_warning_message": "The changes made to the workout are not saved at the moment",

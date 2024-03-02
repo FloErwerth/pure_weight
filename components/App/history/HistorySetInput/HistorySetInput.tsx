@@ -1,8 +1,8 @@
 import { ExerciseData, ExerciseId, ExerciseType, WorkoutId } from "../../../../store/reducers/workout/types";
 import { useTheme } from "../../../../theme/context";
-import { AppState, useAppSelector } from "../../../../store";
+import { AppState, useAppDispatch, useAppSelector } from "../../../../store";
 import { getDoneExerciseById } from "../../../../store/reducers/workout/workoutSelectors";
-import { Dispatch, SetStateAction, useCallback, useContext, useMemo, useState } from "react";
+import { useCallback, useContext, useMemo, useState } from "react";
 import { Keyboard, View } from "react-native";
 import { styles } from "./styles";
 import { HStack } from "../../../Stack/HStack/HStack";
@@ -14,6 +14,12 @@ import { ThemedPressable } from "../../../Themed/Pressable/Pressable";
 import { ThemedMaterialCommunityIcons } from "../../../Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
 import * as Haptics from "expo-haptics";
 import { HistoryContext } from "../HistoryContext/HistoryContext";
+import { cleanError, setError } from "../../../../store/reducers/errors";
+import { ErrorFields } from "../../../../store/reducers/errors/types";
+import { getErrorByKey } from "../../../../store/reducers/errors/errorSelectors";
+import { getLanguage } from "../../../../store/reducers/settings/settingsSelectors";
+import { ThemedView } from "../../../Themed/ThemedView/View";
+import { replaceDoneExerciseSet } from "../../../../store/reducers/workout";
 
 interface SetInputRowProps {
     setIndex: number;
@@ -21,44 +27,122 @@ interface SetInputRowProps {
     exerciseId: ExerciseId;
 }
 const getIsZeroOrNullish = (values: Array<string | undefined>) => values.some((value) => !value || value === "0");
-const useGetIsValid = (
-    type: ExerciseType,
-    setError: Dispatch<SetStateAction<{ left: boolean; right: boolean }>>,
-    doneExerciseData?: ExerciseData,
-    hasWeight?: boolean,
-) => {
+const useGetIsValid = (type: ExerciseType, doneExerciseData?: ExerciseData, hasWeight?: boolean) => {
+    const dispatch = useAppDispatch();
+
     return useCallback(() => {
-        let isValid = true;
+        const errors: ErrorFields[] = [];
         if (!doneExerciseData) {
-            setError({ left: true, right: true });
+            if (type === "TIME_BASED") {
+                errors.push("edit_history_duration");
+                if (hasWeight) {
+                    errors.push("edit_history_exercise_timebased_weight");
+                }
+            } else {
+                errors.push("edit_history_reps");
+            }
             return false;
         }
 
-        if (type === "TIME_BASED" && hasWeight && getIsZeroOrNullish([doneExerciseData.weight])) {
-            setError((errors) => ({ ...errors, right: true }));
-            isValid = false;
-        }
         if (type === "TIME_BASED") {
+            if (hasWeight && getIsZeroOrNullish([doneExerciseData.weight])) {
+                errors.push("edit_history_exercise_timebased_weight");
+            }
             if (
                 !doneExerciseData.durationMinutes ||
                 !doneExerciseData.durationSeconds ||
                 (doneExerciseData.durationMinutes === "0" && doneExerciseData.durationSeconds === "0")
             ) {
-                setError((errors) => ({ ...errors, left: true }));
-                isValid = false;
+                errors.push("edit_history_duration");
             }
         } else {
             if (getIsZeroOrNullish([doneExerciseData.weight])) {
-                setError((errors) => ({ ...errors, left: true }));
-                isValid = false;
+                errors.push("edit_history_exercise_weightbased_weight");
             }
             if (getIsZeroOrNullish([doneExerciseData.reps])) {
-                setError((errors) => ({ ...errors, right: true }));
-                isValid = false;
+                errors.push("edit_history_reps");
             }
         }
-        return isValid;
-    }, [doneExerciseData, hasWeight, setError, type]);
+        dispatch(setError(errors));
+        return errors.length === 0;
+    }, [dispatch, doneExerciseData, hasWeight, type]);
+};
+
+const useErrors = (type: ExerciseType) => {
+    const language = useAppSelector(getLanguage);
+    const hasTimeBasedWeightError = useAppSelector((state: AppState) =>
+        getErrorByKey(state, "edit_history_exercise_timebased_weight"),
+    );
+    const hasWeightBasedWeightError = useAppSelector((state: AppState) =>
+        getErrorByKey(state, "edit_history_exercise_weightbased_weight"),
+    );
+    const hasRepsError = useAppSelector((state: AppState) => getErrorByKey(state, "edit_history_reps"));
+    const hasDurationError = useAppSelector((state: AppState) => getErrorByKey(state, "edit_history_duration"));
+
+    const text = useMemo(() => {
+        if (type === "TIME_BASED") {
+            if (language === "en") {
+                if (hasDurationError && hasTimeBasedWeightError) {
+                    return "Duration and weight is required";
+                }
+                if (hasDurationError) {
+                    return "Duration is required";
+                }
+                if (hasTimeBasedWeightError) {
+                    return "Weight is required";
+                }
+                return undefined;
+            }
+            if (language === "de") {
+                if (hasDurationError && hasTimeBasedWeightError) {
+                    return "Dauer und Gewicht sind erforderlich";
+                }
+                if (hasDurationError) {
+                    return "Dauer ist erforderlich";
+                }
+                if (hasTimeBasedWeightError) {
+                    return "Gewicht ist erforderlich";
+                }
+                return undefined;
+            }
+        }
+        if (language === "en") {
+            if (hasWeightBasedWeightError && hasRepsError) {
+                return "Weight and reps are required";
+            }
+            if (hasWeightBasedWeightError) {
+                return "Weight is required";
+            }
+            if (hasRepsError) {
+                return "Reps are required";
+            }
+            return undefined;
+        }
+        if (hasWeightBasedWeightError && hasRepsError) {
+            return "Gewicht und Wiederholungen sind erforderlich";
+        }
+        if (hasWeightBasedWeightError) {
+            return "Gewicht ist erforderlich";
+        }
+        if (hasRepsError) {
+            return "Wiederholungen sind erforderlich";
+        }
+    }, [hasDurationError, hasRepsError, hasTimeBasedWeightError, hasWeightBasedWeightError, language, type]);
+
+    return useMemo(() => {
+        if (type === "TIME_BASED") {
+            return {
+                left: hasDurationError,
+                right: hasTimeBasedWeightError,
+                text,
+            };
+        }
+        return {
+            left: hasWeightBasedWeightError,
+            right: hasRepsError,
+            text,
+        };
+    }, [type, hasWeightBasedWeightError, hasRepsError, text, hasDurationError, hasTimeBasedWeightError]);
 };
 
 export const HistorySetInput = ({ doneWorkoutId, setIndex, exerciseId }: SetInputRowProps) => {
@@ -68,39 +152,47 @@ export const HistorySetInput = ({ doneWorkoutId, setIndex, exerciseId }: SetInpu
     const active = activeSet === setIndex;
     const [doneExerciseData, setDoneExerciseData] = useState<ExerciseData | undefined>(set);
     const hasWeight = doneExercise?.type === "TIME_BASED" && !isNaN(parseFloat(set?.weight ?? "0"));
-
-    const [errors, setErrors] = useState<{ left: boolean; right: boolean }>({ left: false, right: false });
-    const getIsValid = useGetIsValid(doneExercise?.type ?? "WEIGHT_BASED", setErrors, doneExerciseData, hasWeight);
-
+    const dispatch = useAppDispatch();
+    const getIsValid = useGetIsValid(doneExercise?.type ?? "WEIGHT_BASED", doneExerciseData, hasWeight);
+    const { left, right, text } = useErrors(doneExercise?.type ?? "WEIGHT_BASED");
     const { secondaryColor, mainColor, secondaryBackgroundColor, componentBackgroundColor, inputFieldBackgroundColor } =
         useTheme();
 
     const handleSetWeight = useCallback(
         (value?: string) => {
             if (doneExercise?.type === "TIME_BASED") {
-                setErrors((prev) => ({ ...prev, right: false }));
+                dispatch(cleanError(["edit_history_exercise_timebased_weight"]));
             } else {
-                setErrors((prev) => ({ ...prev, left: false }));
+                dispatch(cleanError(["edit_history_exercise_weightbased_weight"]));
             }
             setDoneExerciseData((prev) => ({ ...prev, weight: value }));
         },
-        [doneExercise?.type],
+        [dispatch, doneExercise?.type],
     );
 
-    const handleSetReps = useCallback((value?: string) => {
-        setErrors((prev) => ({ ...prev, right: false }));
-        setDoneExerciseData((prev) => ({ ...prev, reps: value }));
-    }, []);
+    const handleSetReps = useCallback(
+        (value?: string) => {
+            dispatch(cleanError(["edit_history_reps"]));
+            setDoneExerciseData((prev) => ({ ...prev, reps: value }));
+        },
+        [dispatch],
+    );
 
-    const handleSetSeconds = useCallback((value?: string) => {
-        setErrors((prev) => ({ ...prev, left: false }));
-        setDoneExerciseData((prev) => ({ ...prev, durationSeconds: value }));
-    }, []);
+    const handleSetSeconds = useCallback(
+        (value?: string) => {
+            dispatch(cleanError(["edit_history_duration"]));
+            setDoneExerciseData((prev) => ({ ...prev, durationSeconds: value }));
+        },
+        [dispatch],
+    );
 
-    const handleSetMinutes = useCallback((value?: string) => {
-        setErrors((prev) => ({ ...prev, left: false }));
-        setDoneExerciseData((prev) => ({ ...prev, durationMinutes: value }));
-    }, []);
+    const handleSetMinutes = useCallback(
+        (value?: string) => {
+            dispatch(cleanError(["edit_history_duration"]));
+            setDoneExerciseData((prev) => ({ ...prev, durationMinutes: value }));
+        },
+        [dispatch],
+    );
 
     const handleSetActive = useCallback(() => {
         if (!active) {
@@ -113,13 +205,26 @@ export const HistorySetInput = ({ doneWorkoutId, setIndex, exerciseId }: SetInpu
             if (!getIsValid()) {
                 return;
             }
+            dispatch(
+                replaceDoneExerciseSet({ workoutId: doneWorkoutId, exerciseId, setIndex, data: doneExerciseData }),
+            );
             Keyboard.dismiss();
             void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
             requestActive(undefined);
         } else {
             handleSetActive();
         }
-    }, [active, getIsValid, handleSetActive, requestActive]);
+    }, [
+        active,
+        dispatch,
+        doneExerciseData,
+        doneWorkoutId,
+        exerciseId,
+        getIsValid,
+        handleSetActive,
+        requestActive,
+        setIndex,
+    ]);
 
     const activeStackStyles = useMemo(() => {
         return { backgroundColor: active ? inputFieldBackgroundColor : "transparent" };
@@ -167,76 +272,83 @@ export const HistorySetInput = ({ doneWorkoutId, setIndex, exerciseId }: SetInpu
     }, [active]);
 
     return (
-        <HStack ghost style={[styles.vStack, activeStackStyles]}>
-            <View style={{ borderRadius, flex: 0.2, justifyContent: "center", alignItems: "center" }}>
-                <Text ghost style={textNumberStyles}>
-                    {setIndex + 1}
-                </Text>
-            </View>
-            <HStack stretch center gap ghost>
-                {doneExercise?.type === "WEIGHT_BASED" ? (
-                    <HStack gap stretch ghost>
-                        <HStack hasError={errors.left} stretch round style={wrapperStyle}>
-                            <ThemedTextInput
-                                editable={active}
-                                returnKeyType="done"
-                                style={textInputStyles}
-                                stretch
-                                value={doneExerciseData?.weight}
-                                onChangeText={handleSetWeight}
-                                textAlign="center"
-                                inputMode="decimal"
-                            />
-                        </HStack>
-                        <HStack stretch hasError={errors.right} round style={wrapperStyle}>
-                            <ThemedTextInput
-                                editable={active}
-                                returnKeyType="done"
-                                style={textInputStyles}
-                                stretch
-                                value={doneExerciseData?.reps}
-                                onChangeText={handleSetReps}
-                                textAlign="center"
-                                inputMode="decimal"
-                            />
-                        </HStack>
-                    </HStack>
-                ) : (
-                    <HStack gap stretch ghost>
-                        <HStack stretch hasError={errors.left} ghost round>
-                            <TimeInputRow
-                                wrapperStyle={wrapperStyle}
-                                textStyle={textStyle}
-                                errorTextConfig={errors.left ? {} : undefined}
-                                placeholderColor={active ? undefined : computedColor}
-                                background
-                                hideSuffix
-                                setMinutes={handleSetMinutes}
-                                setSeconds={handleSetSeconds}
-                                seconds={doneExerciseData?.durationSeconds}
-                                minutes={doneExerciseData?.durationMinutes}
-                            />
-                        </HStack>
-                        {hasWeight && (
-                            <HStack hasError={errors.right} stretch style={wrapperStyle} round>
+        <ThemedView ghost>
+            <HStack ghost style={[styles.vStack, activeStackStyles]}>
+                <View style={{ borderRadius, flex: 0.2, justifyContent: "center", alignItems: "center" }}>
+                    <Text ghost style={textNumberStyles}>
+                        {setIndex + 1}
+                    </Text>
+                </View>
+
+                <HStack stretch center gap ghost>
+                    {doneExercise?.type === "WEIGHT_BASED" ? (
+                        <HStack gap stretch ghost>
+                            <HStack hasError={active && left} stretch round style={wrapperStyle}>
                                 <ThemedTextInput
                                     editable={active}
                                     returnKeyType="done"
                                     style={textInputStyles}
-                                    value={doneExerciseData?.weight}
                                     stretch
+                                    value={doneExerciseData?.weight}
                                     onChangeText={handleSetWeight}
                                     textAlign="center"
                                     inputMode="decimal"
                                 />
                             </HStack>
-                        )}
-                    </HStack>
-                )}
-                <ThemedPressable center style={buttonStyles} round onPress={handleSetDone}>
-                    <ThemedMaterialCommunityIcons ghost size={24} name={confirmIcon} />
-                </ThemedPressable>
+                            <HStack stretch hasError={active && right} round style={wrapperStyle}>
+                                <ThemedTextInput
+                                    editable={active}
+                                    returnKeyType="done"
+                                    style={textInputStyles}
+                                    stretch
+                                    value={doneExerciseData?.reps}
+                                    onChangeText={handleSetReps}
+                                    textAlign="center"
+                                    inputMode="decimal"
+                                />
+                            </HStack>
+                        </HStack>
+                    ) : (
+                        <HStack gap stretch ghost>
+                            <HStack stretch hasError={active && left} ghost round>
+                                <TimeInputRow
+                                    wrapperStyle={wrapperStyle}
+                                    textStyle={textStyle}
+                                    placeholderColor={active ? undefined : computedColor}
+                                    background
+                                    hideSuffix
+                                    setMinutes={handleSetMinutes}
+                                    setSeconds={handleSetSeconds}
+                                    seconds={doneExerciseData?.durationSeconds}
+                                    minutes={doneExerciseData?.durationMinutes}
+                                />
+                            </HStack>
+                            {hasWeight && (
+                                <HStack hasError={active && right} stretch style={wrapperStyle} round>
+                                    <ThemedTextInput
+                                        editable={active}
+                                        returnKeyType="done"
+                                        style={textInputStyles}
+                                        value={doneExerciseData?.weight}
+                                        stretch
+                                        onChangeText={handleSetWeight}
+                                        textAlign="center"
+                                        inputMode="decimal"
+                                    />
+                                </HStack>
+                            )}
+                        </HStack>
+                    )}
+                    <ThemedPressable center style={buttonStyles} round onPress={handleSetDone}>
+                        <ThemedMaterialCommunityIcons ghost size={24} name={confirmIcon} />
+                    </ThemedPressable>
+                </HStack>
             </HStack>
-        </HStack>
+            {active && text && (
+                <Text style={{ paddingLeft: 20, fontSize: 16, marginTop: 3 }} ghost error>
+                    {text}
+                </Text>
+            )}
+        </ThemedView>
     );
 };

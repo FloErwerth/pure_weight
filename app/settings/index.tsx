@@ -59,7 +59,7 @@ export function Settings({ route: { params } }: NativeStackScreenProps<RoutesPar
 
     return (
         <ThemedView stretch background>
-            <SiteNavigationButtons title={t("settings")} />
+            <SiteNavigationButtons titleFontSize={40} title={t("settings")} />
             <FlatList
                 ref={ref}
                 data={settingsPages}

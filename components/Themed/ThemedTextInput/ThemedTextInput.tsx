@@ -53,7 +53,7 @@ export const ThemedTextInput = ({ padding = true, ...props }: ThemedTextInputPro
             return props.placeholderTextColor;
         }
         return secondaryColor;
-    }, [editable, errorColor, hasError, secondaryColor, textDisabled]);
+    }, [editable, errorColor, hasError, props.placeholderTextColor, secondaryColor, textDisabled]);
 
     const textInputStyle = useMemo(() => {
         const baseStyle = [
@@ -67,7 +67,9 @@ export const ThemedTextInput = ({ padding = true, ...props }: ThemedTextInputPro
             styles.base,
             props.style,
         ];
-        const errorStyle = hasError ? { color: errorColor, borderWidth: props.hideErrorBorder ? 0 : 1, borderColor: errorColor } : {};
+        const errorStyle = hasError
+            ? { color: errorColor, borderWidth: props.hideErrorBorder ? 0 : 1, borderColor: errorColor }
+            : {};
         return [errorStyle, baseStyle];
     }, [
         backgroundColor,

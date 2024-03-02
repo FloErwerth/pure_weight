@@ -13,6 +13,8 @@
   "error_create_measurement_name": "Ein Name für die Messung ist erforderlich",
   "error_create_measurement_type": "Eine Einheit ist erforderlich",
   "error_create_measurement_value": "Ein Wert ist erforderlich",
+  "error_edit_history_exercise_weightbased_weight": "Gewicht erforderlich",
+  "error_edit_history_exercise_timebased_weight": "Gewicht erforderlich",
 
   "workouts": "Workouts",
   "workout": "Workout",
@@ -142,6 +144,7 @@
   "workout_history_single": "Ein Workout abgeschlossen",
   "workout_history_plural": "Workouts abgeschlossen",
   "workout_history_edit_title": "Vorher. Workout bearbeiten",
+  "history_exercise_edit_title": "Vorher. Übung bearbeiten",
 
   "template_deleted_success": "Vorlage erfolgreich gelöscht",
   "template_redo": "Vorlage wiederherstellen",

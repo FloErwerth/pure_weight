@@ -21,7 +21,8 @@ export const StopwatchPopover = () => {
     const [showPopover, setShowPopover] = useState(false);
     const [buttonPos, setButtonPos] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
     const top = useRef(new Animated.Value(100)).current;
-    const { timerStarted, reset, remainingTime, stopTimer, startTimer, rewind15Seconds, fastForward15Seconds } = useStopwatch(pauseTime);
+    const { timerStarted, reset, remainingTime, stopTimer, startTimer, rewind15Seconds, fastForward15Seconds } =
+        useStopwatch(pauseTime);
     const buttonRef = useRef<View>(null);
     const { inputFieldBackgroundColor } = useTheme();
     const { startOnDoneSet } = useAppSelector(getStopwatchSettings);
@@ -123,45 +124,36 @@ export const StopwatchPopover = () => {
         [buttonPos.x, inputFieldBackgroundColor, top],
     );
 
-    const handleClickOutside = useCallback(() => {
-        if (showPopover) {
-            togglePopover();
-        }
-    }, [showPopover, togglePopover]);
-
     return (
         <>
-            <Pressable
-                onPress={handleClickOutside}
-                style={{
-                    position: "absolute",
-                    left: -10,
-                    bottom: 0,
-                    width: Dimensions.get("screen").width,
-                    height: Dimensions.get("screen").height / 2,
-                    pointerEvents: showPopover ? "auto" : "none",
-                }}
-            />
-
             <ThemedView ghost>
                 <AnimatedView style={[styles.wrapper, animatedViewStyles]}>
                     <HStack ghost style={styles.hStack}>
-                        <ThemedPressable style={styles.timeButton} disabled={remainingTime <= 15000} ghost center onPress={rewind15Seconds}>
-                            <ThemedMaterialCommunityIcons disabled={remainingTime <= 15000} ghost name="rewind-15" size={40} />
-                        </ThemedPressable>
-                        <StopwatchDisplay textSize={50} remainingTime={remainingTime} />
                         <ThemedPressable
                             style={styles.timeButton}
-                            disabled={remainingTime === pauseTime}
+                            disabled={remainingTime <= 15000}
                             ghost
                             center
-                            onPress={fastForward15Seconds}>
-                            <ThemedMaterialCommunityIcons disabled={remainingTime === pauseTime} ghost name="fast-forward-15" size={40} />
+                            onPress={rewind15Seconds}>
+                            <ThemedMaterialCommunityIcons
+                                disabled={remainingTime <= 15000}
+                                ghost
+                                name="rewind-15"
+                                size={40}
+                            />
+                        </ThemedPressable>
+                        <StopwatchDisplay textSize={50} remainingTime={remainingTime} />
+                        <ThemedPressable style={styles.timeButton} ghost center onPress={fastForward15Seconds}>
+                            <ThemedMaterialCommunityIcons ghost name="fast-forward-15" size={40} />
                         </ThemedPressable>
                     </HStack>
                     <HStack input style={styles.buttons}>
                         <Pressable onPress={toggleTimer}>
-                            <ThemedMaterialCommunityIcons ghost size={40} name={timerStarted ? "pause-circle" : "play-circle"} />
+                            <ThemedMaterialCommunityIcons
+                                ghost
+                                size={40}
+                                name={timerStarted ? "pause-circle" : "play-circle"}
+                            />
                         </Pressable>
                         <Pressable onPress={reset}>
                             <ThemedMaterialCommunityIcons ghost size={40} name="sync-circle" />
@@ -169,11 +161,29 @@ export const StopwatchPopover = () => {
                     </HStack>
                 </AnimatedView>
 
-                <ThemedPressable padding round secondary onLayout={getButtonPos} reference={buttonRef} onPress={togglePopover}>
+                <ThemedPressable
+                    padding
+                    round
+                    secondary
+                    onLayout={getButtonPos}
+                    reference={buttonRef}
+                    onPress={togglePopover}>
                     <AnimatedView
                         ghost
-                        style={{ opacity: iconOpacity, position: "absolute", left: 10, top: 7, alignItems: "center", width: "100%" }}>
-                        <ThemedMaterialCommunityIcons disabled={remainingTime === -404} secondary name="timer-outline" size={35} />
+                        style={{
+                            opacity: iconOpacity,
+                            position: "absolute",
+                            left: 10,
+                            top: 7,
+                            alignItems: "center",
+                            width: "100%",
+                        }}>
+                        <ThemedMaterialCommunityIcons
+                            disabled={remainingTime === -404}
+                            secondary
+                            name="timer-outline"
+                            size={35}
+                        />
                     </AnimatedView>
                     <AnimatedView secondary style={{ opacity, width: 100 }}>
                         <StopwatchDisplay textSize={25} remainingTime={remainingTime} />
