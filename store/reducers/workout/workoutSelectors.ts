@@ -67,6 +67,19 @@ export const getHasWeightInTimeBasedExercise = createSelector(
 export const getEditedWorkout = createSelector([getWorkoutState], (state) => state.editedWorkout);
 export const getIsEditedWorkout = createSelector([getEditedWorkout], (editedWorkout) => !editedWorkout?.isNew);
 export const getEditedExercise = createSelector([getWorkoutState], (state) => state.editedExercise);
+export const getIsUsedInPausedWorkout = createSelector(
+    [getEditedExercise, getTrainedWorkout],
+    (editedExercise, trainedWorkout) => {
+        console.log(editedExercise?.exercise.exerciseId);
+        console.log(trainedWorkout?.workout?.exercises.map((exercise) => exercise.exerciseId));
+
+        return Boolean(
+            trainedWorkout?.workout?.exercises.find(
+                (exercise) => exercise.exerciseId === editedExercise?.exercise.exerciseId,
+            ),
+        );
+    },
+);
 
 export const getSortedDoneWorkout = createSelector(
     [getWorkouts, (_, workoutId?: WorkoutId) => workoutId],
@@ -193,7 +206,7 @@ export const getPreviousWorkout = createSelector(
             { date: string; sets: ExerciseSets; note?: string; type: ExerciseType; name: string }
         >();
         for (let workoutIndex = doneWorkouts?.length - 1; workoutIndex >= 0; workoutIndex--) {
-            doneWorkouts?.[workoutIndex].doneExercises?.forEach((exercise) => {
+            doneWorkouts?.[workoutIndex]?.doneExercises?.forEach((exercise) => {
                 if (!foundEntries.get(exercise.originalExerciseId)) {
                     foundEntries.set(exercise.originalExerciseId, {
                         type: exercise.type,

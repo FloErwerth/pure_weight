@@ -4,7 +4,7 @@ import {
     getHasWeightInTimeBasedExercise,
     getSetsArray,
 } from "../../../../store/reducers/workout/workoutSelectors";
-import { ExerciseId } from "../../../../store/reducers/workout/types";
+import { ExerciseId, WorkoutId } from "../../../../store/reducers/workout/types";
 import { useBottomSheetRef } from "../../../BottomSheetModal/ThemedBottomSheetModal";
 import { useCallback, useId } from "react";
 import { useTheme } from "../../../../theme/context";
@@ -21,10 +21,11 @@ import { AddNoteModal } from "../../../AddNoteModal/AddNoteModal";
 import { ExerciseMetadataDisplay } from "./MetadataDisplay/ExerciseMetadataDisplay";
 
 type TrainedExerciseProps = {
+    workoutId?: WorkoutId;
     exerciseId: ExerciseId;
 };
 
-export const TrainedExercise = ({ exerciseId }: TrainedExerciseProps) => {
+export const TrainedExercise = ({ workoutId, exerciseId }: TrainedExerciseProps) => {
     const { ref: editNoteModalRef, openBottomSheet: open, closeBottomSheet: close } = useBottomSheetRef();
     const exercise = useAppSelector((state: AppState) => getExerciseById(state, exerciseId));
     const { mainColor } = useTheme();
@@ -44,7 +45,7 @@ export const TrainedExercise = ({ exerciseId }: TrainedExerciseProps) => {
     return (
         <ThemedView stretch ghost key={id} style={trainStyles.carouselWrapper}>
             <HStack background style={trainStyles.headerWrapper}>
-                <ExerciseMetadataDisplay exerciseId={exerciseId} />
+                <ExerciseMetadataDisplay exerciseId={exerciseId} workoutId={workoutId} />
                 <ThemedView style={trainStyles.noteButtonWrapper}>
                     <Pressable style={trainStyles.showEditNoteModalStyle} onPress={showNoteModal}>
                         <MaterialCommunityIcons name="note-edit-outline" color={mainColor} size={24} />

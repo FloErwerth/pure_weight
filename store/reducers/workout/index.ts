@@ -8,6 +8,7 @@ import {
     ExerciseId,
     ExerciseMetaData,
     TrainedWorkout,
+    TrainedWorkoutExerciseData,
     Workout,
     WorkoutId,
     WorkoutState,
@@ -15,6 +16,18 @@ import {
 import { getDateTodayIso } from "../../../utils/date";
 import { getMillisecondsFromTimeInput, getMinutesSecondsFromMilliseconds } from "../../../utils/timeDisplay";
 import { generateId } from "../../../utils/generateId";
+
+const generateEmptyMetadata = (metaData: ExerciseMetaData): TrainedWorkoutExerciseData => ({
+    exerciseId: metaData?.exerciseId ?? 0,
+    exerciseType: metaData?.type ?? "WEIGHT_BASED",
+    name: metaData?.name ?? "",
+    activeSetIndex: 0,
+    latestSetIndex: 0,
+    setIndex: 0,
+    doneSets: [],
+    note: "",
+    canSnap: true,
+});
 
 const combineData = (existingData?: ExerciseData, newData?: ExerciseData): ExerciseData => {
     if (!existingData) {
@@ -55,6 +68,7 @@ export const setEditedWorkout = createAction<
 >("workout_set_edited_workout");
 export const setEditedExercise = createAction<
     | {
+          workoutId?: WorkoutId;
           isNewExercise: boolean;
           exerciseId: ExerciseId;
       }
@@ -174,6 +188,23 @@ export const workoutReducer = createReducer<WorkoutState>(
             })
             .addCase(resumeTrainedWorkout, (state) => {
                 if (state.trainedWorkout && state.trainedWorkout.pauseTimestamps) {
+                    //in case the user has created a exercise during the pause
+                    const exerciseData = state.trainedWorkout.exerciseData;
+                    const missingMetadataLength = state.trainedWorkout.workout.exercises.length - exerciseData.length;
+                    if (missingMetadataLength > 0) {
+                        const filledMetadata = Array(missingMetadataLength)
+                            .fill(undefined)
+                            .map((_, index) => {
+                                const exerciseIndex = exerciseData.length + index;
+                                const metaData = state.trainedWorkout?.workout?.exercises[exerciseIndex];
+                                if (metaData) {
+                                    return generateEmptyMetadata(metaData);
+                                }
+                            })
+                            .filter((data) => data !== undefined) as TrainedWorkoutExerciseData[];
+                        state.trainedWorkout.exerciseData = [...exerciseData, ...filledMetadata];
+                    }
+
                     state.trainedWorkout.pauseTimestamps[state.trainedWorkout.pauseTimestamps.length - 1].end =
                         Date.now();
                 }
@@ -197,9 +228,7 @@ export const workoutReducer = createReducer<WorkoutState>(
                 if (action.payload === undefined) {
                     state.editedWorkout = undefined;
                 } else if (action.payload.exerciseId) {
-                    const workoutId =
-                        state.trainedWorkout?.workout.workoutId ?? state.editedWorkout?.workout?.workoutId;
-                    const workout = state.workouts.find((workout) => workout.workoutId === workoutId);
+                    const workout = state.workouts.find((workout) => workout.workoutId === action.payload?.workoutId);
                     const exercise = workout?.exercises?.find(
                         (exercise) => exercise.exerciseId === action.payload?.exerciseId,
                     );
@@ -518,18 +547,7 @@ export const workoutReducer = createReducer<WorkoutState>(
                             .fill(undefined)
                             .map((_, exerciseIndex) => {
                                 const metaData = workout?.exercises[exerciseIndex];
-                                const prefilledMetaData: TrainedWorkout["exerciseData"][number] = {
-                                    exerciseId: metaData?.exerciseId ?? 0,
-                                    exerciseType: metaData?.type ?? "WEIGHT_BASED",
-                                    name: metaData?.name ?? "",
-                                    activeSetIndex: 0,
-                                    latestSetIndex: 0,
-                                    setIndex: 0,
-                                    doneSets: [],
-                                    note: "",
-                                    canSnap: true,
-                                };
-                                return prefilledMetaData;
+                                return generateEmptyMetadata(metaData);
                             }),
                     };
                 }

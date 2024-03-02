@@ -102,7 +102,7 @@ export function SlidingSwitch({ options, onSelectValue, value, disabled, initial
                         </ThemedPressable>
                     ))}
                 </HStack>
-                <AnimatedView input style={animatedBackgroundStyle} />
+                <AnimatedView input={!disabled} background={disabled} style={animatedBackgroundStyle} />
             </ThemedView>
             <FlatList
                 scrollEnabled={false}

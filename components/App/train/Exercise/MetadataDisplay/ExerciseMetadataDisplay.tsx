@@ -13,23 +13,24 @@ import { ThemedMaterialCommunityIcons } from "../../../../Themed/ThemedMaterialC
 import { WeightBasedSmallExerciseMetadataDisplay } from "./WeightBased/WeightBasedExerciseMetadataDisplay";
 import { TimeBasedSmallExerciseDataDisplay } from "./TimeBased/TimeBasedExerciseMetadataDisplay";
 import { useNavigate } from "../../../../../hooks/navigate";
-import { ExerciseId } from "../../../../../store/reducers/workout/types";
+import { ExerciseId, WorkoutId } from "../../../../../store/reducers/workout/types";
 import { useTypeSpecificComponent } from "../../../../../hooks/useTypeSpecificComponent";
 
 interface ExerciseMetadataDisplayProps {
+    workoutId?: WorkoutId;
     exerciseId: ExerciseId;
 }
 
-export const ExerciseMetadataDisplay = ({ exerciseId }: ExerciseMetadataDisplayProps) => {
+export const ExerciseMetadataDisplay = ({ workoutId, exerciseId }: ExerciseMetadataDisplayProps) => {
     const dispatch = useAppDispatch();
     const exerciseMetaData = useAppSelector((state: AppState) => getExerciseMetadataFromWorkoutById(state, exerciseId));
     const navigate = useNavigate();
 
     const handleEditExercise = useCallback(() => {
-        dispatch(setEditedExercise({ exerciseId, isNewExercise: false }));
+        dispatch(setEditedExercise({ workoutId, exerciseId, isNewExercise: false }));
         void Haptics.selectionAsync();
         navigate("workouts/create/exercise");
-    }, [dispatch, exerciseId, navigate]);
+    }, [dispatch, exerciseId, navigate, workoutId]);
 
     const SmallExerciseDataDisplay = useTypeSpecificComponent(
         exerciseMetaData?.type,

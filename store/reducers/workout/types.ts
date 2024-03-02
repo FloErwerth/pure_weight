@@ -72,6 +72,18 @@ export type EditedExercise = {
     index?: number;
 };
 
+export type TrainedWorkoutExerciseData = {
+    exerciseId: ExerciseId;
+    exerciseType: ExerciseType;
+    setIndex: number;
+    latestSetIndex: number;
+    activeSetIndex: number;
+    doneSets: ExerciseSets;
+    name: string;
+    note?: string;
+    canSnap: boolean;
+};
+
 export type TrainedWorkout = {
     workout: Workout;
     activeExerciseIndex: number;
@@ -81,17 +93,7 @@ export type TrainedWorkout = {
         end: number;
     }[];
     paused: boolean;
-    exerciseData: {
-        exerciseId: ExerciseId;
-        exerciseType: ExerciseType;
-        setIndex: number;
-        latestSetIndex: number;
-        activeSetIndex: number;
-        doneSets: ExerciseSets;
-        name: string;
-        note?: string;
-        canSnap: boolean;
-    }[];
+    exerciseData: TrainedWorkoutExerciseData[];
 };
 
 type PostWorkoutStats = {

@@ -85,8 +85,8 @@ export function Workouts() {
         openBottomSheet: openDeleteWarning,
         closeBottomSheet: closeDeleteWarning,
     } = useBottomSheetRef();
-    const [newWorkoutIndex, setNewWorkoutIndex] = useState<WorkoutId | undefined>(undefined);
-    const isOngoingWorkout = useAppSelector((state: AppState) => getIsOngoingWorkout(state, newWorkoutIndex));
+    const [newWorkoutId, setNewWorkoutId] = useState<WorkoutId | undefined>(undefined);
+    const isOngoingWorkout = useAppSelector((state: AppState) => getIsOngoingWorkout(state, newWorkoutId));
     const { toastRef, openToast, closeToast, showToast } = useToast();
     const { resumeTrainingText, title, message, newTrainingText } = usePauseWarningContent();
     const [deletedWorkoutId, setDeletedWorkoutId] = useState<WorkoutId | undefined>(undefined);
@@ -128,8 +128,8 @@ export function Workouts() {
 
     const handleStartWorkout = useCallback(
         (workoutId?: WorkoutId) => {
-            if (workoutId === undefined && newWorkoutIndex !== undefined) {
-                dispatch(startWorkout(newWorkoutIndex));
+            if (workoutId === undefined && newWorkoutId !== undefined) {
+                dispatch(startWorkout(newWorkoutId));
             } else if (workoutId !== undefined) {
                 dispatch(startWorkout(workoutId));
             } else {
@@ -138,14 +138,14 @@ export function Workouts() {
             }
             navigate("train");
         },
-        [dispatch, navigate, newWorkoutIndex],
+        [dispatch, navigate, newWorkoutId],
     );
 
     const handleStartWorkoutCases = useCallback(
         (workoutId: WorkoutId) => {
             if (trainedWorkout) {
                 openBottomSheet();
-                setNewWorkoutIndex(workoutId);
+                setNewWorkoutId(workoutId);
                 return;
             }
             handleStartWorkout(workoutId);

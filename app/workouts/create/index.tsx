@@ -118,6 +118,7 @@ export const Create = () => {
                     void Haptics.selectionAsync();
                     dispatch(
                         setEditedExercise({
+                            workoutId: editedWorkout?.workout.workoutId,
                             isNewExercise: false,
                             exerciseId: exercise.exerciseId,
                         }),
@@ -134,7 +135,6 @@ export const Create = () => {
                     dispatch(saveEditedExercise());
                     dispatch(setEditedExercise(undefined));
                 };
-
                 const handleCancel = () => {
                     closeAlert();
                     dispatch(setEditedExercise(undefined));
@@ -142,7 +142,7 @@ export const Create = () => {
                 return { onDelete: handleDelete, handleCancel, onEdit, exercise, index, handleOnConfirmEdit };
             }) ?? []
         );
-    }, [editedWorkout?.workout.exercises, dispatch, navigate, openDeleteWarning, closeAlert]);
+    }, [editedWorkout, dispatch, navigate, openDeleteWarning, closeAlert]);
 
     const handleNavigateHome = useCallback(() => {
         handleCleanErrors();

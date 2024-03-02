@@ -127,7 +127,7 @@ export const Train = () => {
     }, [handleNavigateToWorkouts, trainedWorkout, workoutExercises]);
 
     const renderItem = useCallback(({ item: { exerciseId } }: CarouselRenderItemInfo<{ exerciseId: ExerciseId }>) => {
-        return <TrainedExercise exerciseId={exerciseId} />;
+        return <TrainedExercise workoutId={trainedWorkout?.workout.workoutId} exerciseId={exerciseId} />;
     }, []);
 
     const handleSetActiveExerciseIndex = useCallback(
