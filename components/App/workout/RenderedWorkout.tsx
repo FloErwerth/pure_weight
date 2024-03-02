@@ -33,6 +33,7 @@ export const RenderedWorkout = ({ workoutId }: RenderedWorkoutProps) => {
     const { t } = useTranslation();
     const isOngoingWorkout = useAppSelector((state: AppState) => getIsOngoingWorkout(state, workoutId));
     const showStats = trend || hasHistory;
+
     const handleNavigateToProgress = useCallback(() => {
         dispatch(setEditedWorkout({ workoutId }));
         navigate("workout/progress");
@@ -43,7 +44,9 @@ export const RenderedWorkout = ({ workoutId }: RenderedWorkoutProps) => {
         navigate("history");
     }, [dispatch, workoutId, navigate]);
 
-    const pausedTrainingHint = isOngoingWorkout ? { backgroundColor: secondaryBackgroundColor, ...styles.pausedTrainingHint } : null;
+    const pausedTrainingHint = isOngoingWorkout
+        ? { backgroundColor: secondaryBackgroundColor, ...styles.pausedTrainingHint }
+        : null;
 
     return (
         <ThemedView padding ghost style={styles.outerTrainWrapper}>

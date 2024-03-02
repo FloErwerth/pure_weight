@@ -8,7 +8,11 @@ import React, { useCallback, useMemo } from "react";
 import { SiteNavigationButtons } from "../../../../components/SiteNavigationButtons/SiteNavigationButtons";
 import { useNavigateBack } from "../../../../hooks/navigate";
 import { IsoDate } from "../../../../types/date";
-import { deleteMeasurementDataPoint, mutateEditedDatapoint, saveMeasurementDataPoint } from "../../../../store/reducers/measurements";
+import {
+    deleteMeasurementDataPoint,
+    mutateEditedDatapoint,
+    saveMeasurementDataPoint,
+} from "../../../../store/reducers/measurements";
 import {
     getDatesFromCurrentMeasurement,
     getEditedMeasurement,
@@ -18,13 +22,17 @@ import {
 import { useAppDispatch, useAppSelector } from "../../../../store";
 import { getUnitSystem } from "../../../../store/reducers/settings/settingsSelectors";
 import { Keyboard, View } from "react-native";
-import { ThemedBottomSheetModal, useBottomSheetRef } from "../../../../components/BottomSheetModal/ThemedBottomSheetModal";
+import {
+    ThemedBottomSheetModal,
+    useBottomSheetRef,
+} from "../../../../components/BottomSheetModal/ThemedBottomSheetModal";
 import { HStack } from "../../../../components/Stack/HStack/HStack";
 import { createStyles } from "../../../../components/App/measurements/styles";
 import { AnswerText } from "../../../../components/HelpQuestionAnswer/AnswerText";
 import { ThemedPressable } from "../../../../components/Themed/Pressable/Pressable";
 import { ThemedMaterialCommunityIcons } from "../../../../components/Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
 import { useTranslation } from "react-i18next";
+import { setError } from "../../../../store/reducers/errors";
 
 export const MeasurementHistoryEdit = () => {
     const navigateBack = useNavigateBack();
@@ -37,7 +45,11 @@ export const MeasurementHistoryEdit = () => {
         isOpen: showDateWarning,
     } = useBottomSheetRef();
 
-    const { ref: discardWarning, openBottomSheet: openDiscardWarning, closeBottomSheet: closeDiscardWarning } = useBottomSheetRef();
+    const {
+        ref: discardWarning,
+        openBottomSheet: openDiscardWarning,
+        closeBottomSheet: closeDiscardWarning,
+    } = useBottomSheetRef();
     const editedDatapoint = useAppSelector(getEditedMeasurementDataPoint);
     const editedMeasurement = useAppSelector(getEditedMeasurement);
     const dispatch = useAppDispatch();
@@ -49,16 +61,29 @@ export const MeasurementHistoryEdit = () => {
     }, [closeDiscardWarning, navigateBack]);
 
     const handleValidateBack = useCallback(() => {
-        const newStringifiedDatapoint = JSON.stringify({ isoDate: editedDatapoint?.isoDate, value: editedDatapoint?.value });
+        const newStringifiedDatapoint = JSON.stringify({
+            isoDate: editedDatapoint?.isoDate,
+            value: editedDatapoint?.value,
+        });
         if (newStringifiedDatapoint !== editedDatapoint?.stringifiedDataPoint) {
             openDiscardWarning();
             return;
         }
         navigateBack();
-    }, [editedDatapoint?.isoDate, editedDatapoint?.stringifiedDataPoint, editedDatapoint?.value, navigateBack, openDiscardWarning]);
+    }, [
+        editedDatapoint?.isoDate,
+        editedDatapoint?.stringifiedDataPoint,
+        editedDatapoint?.value,
+        navigateBack,
+        openDiscardWarning,
+    ]);
 
     const handleSaveEditedDatapoint = useCallback(() => {
         if (editedDatapoint) {
+            if (editedDatapoint?.value === undefined || editedDatapoint?.value === "") {
+                dispatch(setError(["create_measurement_value"]));
+                return;
+            }
             const datapoint = { ...editedDatapoint, value: editedDatapoint?.value ?? "0" };
             if (showDateWarning) {
                 const overwriteIndex = editedMeasurement?.measurement?.data.findIndex(
@@ -73,7 +98,14 @@ export const MeasurementHistoryEdit = () => {
             }
         }
         Keyboard.dismiss();
-    }, [closeDateWarning, dispatch, editedDatapoint, editedMeasurement?.measurement?.data, navigateBack, showDateWarning]);
+    }, [
+        closeDateWarning,
+        dispatch,
+        editedDatapoint,
+        editedMeasurement?.measurement?.data,
+        navigateBack,
+        showDateWarning,
+    ]);
 
     const handleSetDatapointDate = useCallback(
         (selectedDate?: IsoDate) => {
@@ -91,7 +123,7 @@ export const MeasurementHistoryEdit = () => {
         return getUnitByType(unitSystem, editedMeasurement?.measurement?.type);
     }, [editedMeasurement?.measurement?.type, unitSystem]);
 
-    const handleCheckForDates = useCallback(() => {
+    const handleConfirmSave = useCallback(() => {
         if (editedDatapoint?.isoDate === undefined) {
             return;
         }
@@ -125,7 +157,8 @@ export const MeasurementHistoryEdit = () => {
     const dateConfig = useMemo(
         () =>
             measurementDates?.map(
-                (date, index) => ({ date, marked: true, latest: index === measurementDates?.length - 1 }) satisfies DateConfig,
+                (date, index) =>
+                    ({ date, marked: true, latest: index === measurementDates?.length - 1 }) satisfies DateConfig,
             ),
         [measurementDates],
     );
@@ -135,15 +168,16 @@ export const MeasurementHistoryEdit = () => {
                 <SiteNavigationButtons
                     title={t("measurement_datapoint_edit_title")}
                     backButtonAction={handleValidateBack}
-                    handleConfirm={handleCheckForDates}
+                    handleConfirm={handleConfirmSave}
                 />
                 <PageContent scrollable ghost paddingTop={10} style={{ gap: 10 }} stretch>
                     <View style={{ gap: 3 }}>
-                        <Text style={{ fontSize: 20 }} ghost>
+                        <Text style={{ fontSize: 26 }} ghost>
                             {editedMeasurement?.measurement?.name}
                         </Text>
                         <EditableExerciseInputRow
                             placeholder="0"
+                            errorTextConfig={{ errorKey: "create_measurement_value" }}
                             suffix={unit}
                             setValue={handleSetDatapointValue}
                             value={editedDatapoint?.value}

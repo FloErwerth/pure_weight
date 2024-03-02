@@ -26,7 +26,7 @@ export const ExerciseMetadataDisplay = ({ exerciseId }: ExerciseMetadataDisplayP
     const navigate = useNavigate();
 
     const handleEditExercise = useCallback(() => {
-        dispatch(setEditedExercise({ exerciseId }));
+        dispatch(setEditedExercise({ exerciseId, isNewExercise: false }));
         void Haptics.selectionAsync();
         navigate("workouts/create/exercise");
     }, [dispatch, exerciseId, navigate]);

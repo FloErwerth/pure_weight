@@ -11,8 +11,9 @@ import { ThemedPressable } from "../../../Themed/Pressable/Pressable";
 import { ThemedView } from "../../../Themed/ThemedView/View";
 
 import { getLanguage } from "../../../../store/reducers/settings/settingsSelectors";
+import { useTheme } from "../../../../theme/context";
 
-type Trend = { percent: number; name?: string };
+type Trend = { percent: number; name?: string; trendIsPositive?: boolean };
 export interface ProgressDisplayProps {
     onPress: () => void;
     higherIsBetter?: boolean;
@@ -73,8 +74,14 @@ const useText = (
 };
 
 export const ProgressDisplay = ({ trend, onPress, higherIsBetter = true, type }: ProgressDisplayProps) => {
-    const positivePercentage = useMemo(() => Boolean((trend?.percent ?? 0) > 0), [trend?.percent]);
+    const positivePercentage = useMemo(() => {
+        if (trend?.trendIsPositive === undefined) {
+            return Boolean((trend?.percent ?? 0) > 0);
+        }
+        return trend.trendIsPositive;
+    }, [trend?.percent, trend?.trendIsPositive]);
 
+    const { successColor, errorColor } = useTheme();
     const progressDisplayPositive = useMemo(() => {
         if (higherIsBetter) {
             return positivePercentage;
@@ -99,13 +106,13 @@ export const ProgressDisplay = ({ trend, onPress, higherIsBetter = true, type }:
 
     const chartStyle = useMemo(() => {
         if (progressDisplayPositive) {
-            return { color: "green" };
+            return { color: successColor };
         }
         if (even) {
-            return { color: "green" };
+            return { color: successColor };
         }
-        return { color: "rgb(255,100,100)" };
-    }, [progressDisplayPositive, even]);
+        return { color: errorColor };
+    }, [progressDisplayPositive, even, errorColor, successColor]);
 
     const handlePress = useCallback(() => {
         if (active) {

@@ -13,10 +13,21 @@ interface ChartProps {
     getDotContent?: ({ x, y, indexData }: { x: number; y: number; index: number; indexData: number }) => ReactNode;
     getDotColor?: (index: number) => string;
 }
-function Chart({ data, getXLabel, getDotContent, getYLabel, lineChartStyles, transparent = false, getDotColor }: ChartProps) {
+function Chart({
+    data,
+    getXLabel,
+    getDotContent,
+    getYLabel,
+    lineChartStyles,
+    transparent = false,
+    getDotColor,
+}: ChartProps) {
     const { mainColor, componentBackgroundColor, secondaryColor } = useTheme();
     const numberEntries = data.datasets[0].data.length;
-    const width = useMemo(() => Math.max((Dimensions.get("window").width * 3) / numberEntries, numberEntries * 100), [numberEntries]);
+    const width = useMemo(
+        () => Math.max((Dimensions.get("window").width * 3) / numberEntries, numberEntries * 100),
+        [numberEntries],
+    );
 
     const config: LineChartProps["chartConfig"] = useMemo(
         () => ({

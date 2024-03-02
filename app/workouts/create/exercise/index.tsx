@@ -17,7 +17,10 @@ import * as Haptics from "expo-haptics";
 import { SiteNavigationButtons } from "../../../../components/SiteNavigationButtons/SiteNavigationButtons";
 import { PageContent } from "../../../../components/PageContent/PageContent";
 import { useNavigateBack } from "../../../../hooks/navigate";
-import { ThemedBottomSheetModal, useBottomSheetRef } from "../../../../components/BottomSheetModal/ThemedBottomSheetModal";
+import {
+    ThemedBottomSheetModal,
+    useBottomSheetRef,
+} from "../../../../components/BottomSheetModal/ThemedBottomSheetModal";
 import { View } from "react-native";
 import Reanimated, { FadeIn, FadeOut, Layout } from "react-native-reanimated";
 import { cleanError, setError } from "../../../../store/reducers/errors";
@@ -78,8 +81,8 @@ const useWasEdited = () => {
 export const CreateExercise = () => {
     const { t } = useTranslation();
     const editedExercise = useAppSelector(getEditedExercise);
-    const isEditingExercise = !editedExercise?.isNewExercise;
-    const title = useMemo(() => t(isEditingExercise ? "exercise_edit_title" : "create_exercise"), [isEditingExercise, t]);
+    const isNewExercise = Boolean(editedExercise?.isNewExercise);
+    const title = useMemo(() => t(!isNewExercise ? "exercise_edit_title" : "create_exercise"), [isNewExercise, t]);
     const dispatch = useAppDispatch();
     const { showToast: showSavedSuccess, openToast: openSavedSuccess, closeToast: closeSavedSuccess } = useToast();
     const [showCheckboxes, setShowCheckboxes] = useState(true);
@@ -90,10 +93,10 @@ export const CreateExercise = () => {
     const wasEdited = useWasEdited();
 
     useEffect(() => {
-        if (isEditingExercise) {
+        if (!isNewExercise) {
             setAddMoreExercises(false);
         }
-    }, [isEditingExercise]);
+    }, [isNewExercise]);
 
     const openSuccessMessage = useCallback(() => {
         openSavedSuccess();
@@ -134,21 +137,24 @@ export const CreateExercise = () => {
         closeSavedSuccess();
     }, [closeSavedSuccess]);
 
-    const addMoreExercisesHelptextConfig = useMemo(() => ({ title: t("add_more_exercises"), text: t("add_more_exercises_help") }), [t]);
+    const addMoreExercisesHelptextConfig = useMemo(
+        () => ({ title: t("add_more_exercises"), text: t("add_more_exercises_help") }),
+        [t],
+    );
 
     const alertContent = useMemo(
-        () => t(isEditingExercise ? "alert_edit_exercise_discard_content" : "alert_create_exercise_discard_content"),
-        [isEditingExercise, t],
+        () => t(!isNewExercise ? "alert_edit_exercise_discard_content" : "alert_create_exercise_discard_content"),
+        [isNewExercise, t],
     );
 
     const alertTitle = useMemo(
-        () => t(isEditingExercise ? "alert_edit_discard_title" : "alert_create_discard_title"),
-        [isEditingExercise, t],
+        () => t(!isNewExercise ? "alert_edit_discard_title" : "alert_create_discard_title"),
+        [isNewExercise, t],
     );
 
     const discardButtonText = useMemo(
-        () => t(isEditingExercise ? "alert_edit_confirm_cancel" : "alert_create_confirm_cancel"),
-        [isEditingExercise, t],
+        () => t(!isNewExercise ? "alert_edit_confirm_cancel" : "alert_create_confirm_cancel"),
+        [isNewExercise, t],
     );
 
     const clearExerciseErrors = useCallback(() => {
@@ -205,7 +211,7 @@ export const CreateExercise = () => {
                     <ThemedPressable ghost behind onPress={handleConfirm}>
                         <HStack secondary style={styles.button}>
                             <Text secondary style={styles.buttonText}>
-                                {t(isEditingExercise ? "edit_exercise" : "create_exercise")}
+                                {t(!isNewExercise ? "edit_exercise" : "create_exercise")}
                             </Text>
                             <ThemedMaterialCommunityIcons ghost name="pencil-plus-outline" size={20} />
                         </HStack>

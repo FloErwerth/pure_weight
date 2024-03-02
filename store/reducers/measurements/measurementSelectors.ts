@@ -64,13 +64,17 @@ export const getMeasurementData = createSelector(
 );
 export const getMeasurementSorting = createSelector([getMeasurementsState], (state) => state.sorting);
 export const getMeasurmentProgress = createSelector(
-    [getMeasurements, (byIndex, index: MeasurementId) => index],
+    [getMeasurements, (_, index: MeasurementId) => index],
     (measurements, index) => {
         const measurement = measurements.find((measurement) => measurement.measurementId === index);
         const data = measurement?.data.map((data) => data?.value);
+
         if (data && data.length >= 2) {
             const latest = parseFloat(data[data.length - 1] ?? "0");
             const secondLatest = parseFloat(data[data.length - 2] ?? "1");
+            if (measurement?.type === "percent") {
+                return latest - secondLatest;
+            }
             return (latest / secondLatest) * 100;
         }
 

@@ -8,7 +8,10 @@ import { ProgressDisplay } from "../../WorkoutCard/components/ProgressDisplay/Pr
 import { Measurement } from "./types";
 
 import { getLanguage } from "../../../store/reducers/settings/settingsSelectors";
-import { getLatestMeasurements, getMeasurmentProgress } from "../../../store/reducers/measurements/measurementSelectors";
+import {
+    getLatestMeasurements,
+    getMeasurmentProgress,
+} from "../../../store/reducers/measurements/measurementSelectors";
 import { useNavigate } from "../../../hooks/navigate";
 import { setEditedMeasurement } from "../../../store/reducers/measurements";
 import { getSinceDate } from "../../../utils/timeAgo";
@@ -25,7 +28,6 @@ export const RenderedMeasurement = ({ measurement }: MeasurementProps) => {
     const dispatch = useAppDispatch();
     const language = useAppSelector(getLanguage);
     const progress = useAppSelector((state: AppState) => getMeasurmentProgress(state, measurement.measurementId));
-
     const handleNavigateToChart = useCallback(() => {
         dispatch(setEditedMeasurement({ isNew: false, isEditing: false, measurement }));
         navigate("measurement/progress");
@@ -36,28 +38,43 @@ export const RenderedMeasurement = ({ measurement }: MeasurementProps) => {
         navigate("measurement/history");
     }, [dispatch, measurement, navigate]);
 
-    const trend = useMemo(
-        () => ({
+    const trend = useMemo(() => {
+        if (measurement.type === "percent") {
+            return {
+                trendIsPositive: (progress ?? 0) > 0,
+                percent: Math.abs(progress ?? 0),
+                name: measurement.name,
+            };
+        }
+
+        return {
             percent: progress ?? 0,
             name: measurement.name,
-        }),
-        [progress, measurement.name],
-    );
+        };
+    }, [measurement.type, measurement.name, progress]);
 
     return (
         <HStack padding round>
             <ThemedView style={styles.vStack}>
                 <View style={styles.titleWrapper}>
                     <Text style={styles.text}>{measurement.name}</Text>
-                    <Text style={styles.date}>{getSinceDate(latestMeasurements[measurement.measurementId], language)}</Text>
+                    <Text style={styles.date}>
+                        {getSinceDate(latestMeasurements[measurement.measurementId], language)}
+                    </Text>
                 </View>
-                <ProgressDisplay
-                    type="Measurement"
-                    trend={trend}
-                    higherIsBetter={measurement.higherIsBetter}
-                    onPress={handleNavigateToChart}
+                {progress && (
+                    <ProgressDisplay
+                        type="Measurement"
+                        trend={trend}
+                        higherIsBetter={Boolean(measurement.higherIsBetter)}
+                        onPress={handleNavigateToChart}
+                    />
+                )}
+                <HistoryDisplay
+                    id={measurement.measurementId}
+                    type="measurement"
+                    handleNavigateToHistory={handleGoToHistory}
                 />
-                <HistoryDisplay id={measurement.measurementId} type="measurement" handleNavigateToHistory={handleGoToHistory} />
             </ThemedView>
         </HStack>
     );

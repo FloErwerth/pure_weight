@@ -286,7 +286,7 @@ export const getOverallTrainingTrend = createSelector(
                     if (bestImprovement === undefined) {
                         return { name: current.name, percent, isPositive };
                     } else {
-                        if (percentRaw > bestImprovement.percent) {
+                        if (percent > bestImprovement.percent) {
                             return { name: current.name, percent, isPositive };
                         } else {
                             return bestImprovement;

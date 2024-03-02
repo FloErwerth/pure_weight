@@ -48,3 +48,10 @@ Build Number 27
 + Adjusted hint for paused workout
 + Improved editing history of workouts
 + Added post workout screen
+
+`0.7.11`:
++ Fixed excessive scrolling when creating exercises
++ Add workout name on title of training screen
++ Fixed calculating of best improvement
++ Remove duplicate name in measurement
++ Remove progress display for measurements with only one measurement data point

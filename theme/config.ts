@@ -9,7 +9,7 @@ const DarkThemeColors: ThemeColors = {
     textDisabled: "#444",
     errorColor: "rgba(255,0,0,0.5)",
     secondaryErrorColor: "rgba(170,0,0,0.5)",
-    mainColor: "#ddd",
+    mainColor: "#eee",
     secondaryColor: "#888",
     primaryColor: "#222",
     warningColor: "#af7d00",

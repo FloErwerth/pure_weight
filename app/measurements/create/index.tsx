@@ -34,7 +34,10 @@ import { IsoDate } from "../../../types/date";
 
 export const useMeasurementOptions = () => {
     const unitSystem = useAppSelector(getUnitSystem);
-    return measurementTypes.map((type) => ({ value: getUnitByType(unitSystem, type), label: getUnitByType(unitSystem, type) }));
+    return measurementTypes.map((type) => ({
+        value: getUnitByType(unitSystem, type),
+        label: getUnitByType(unitSystem, type),
+    }));
 };
 
 export const useMeasurementOptionMap = () => {
@@ -80,7 +83,12 @@ const useIsValidMeasurement = () => {
             return false;
         }
         return true;
-    }, [dispatch, editedMeasurement?.measurement?.name, editedMeasurement?.measurement?.type, editedMeasurement?.measurement?.value]);
+    }, [
+        dispatch,
+        editedMeasurement?.measurement?.name,
+        editedMeasurement?.measurement?.type,
+        editedMeasurement?.measurement?.value,
+    ]);
 };
 
 export const CreateMeasurement = () => {
@@ -177,7 +185,9 @@ export const CreateMeasurement = () => {
 
     const handleSaveMeasurement = useCallback(() => {
         const sameDateIndex = dates?.findIndex((searchDate) => searchDate === date);
-        dispatch(saveEditedMeasurement({ isoDate: date, replaceIndex: sameDateIndex !== -1 ? sameDateIndex : undefined }));
+        dispatch(
+            saveEditedMeasurement({ isoDate: date, replaceIndex: sameDateIndex !== -1 ? sameDateIndex : undefined }),
+        );
         navigateBack();
     }, [date, dates, dispatch, navigateBack]);
 
@@ -193,7 +203,10 @@ export const CreateMeasurement = () => {
         handleSaveMeasurement();
     }, [getIsValidMeasurement, dates, isEditing, handleSaveMeasurement, date, openDateWarning]);
 
-    const helpText = useMemo(() => ({ title: t("measurement_higher_is_better"), text: t("measurement_higher_is_better_help") }), [t]);
+    const helpText = useMemo(
+        () => ({ title: t("measurement_higher_is_better"), text: t("measurement_higher_is_better_help") }),
+        [t],
+    );
 
     const handleNavigateBack = useCallback(() => {
         navigateBack();
@@ -209,7 +222,14 @@ export const CreateMeasurement = () => {
     }, [handleNavigateBack, openDiscardWarning, wasEdited]);
 
     const discardWarningTitle = useMemo(
-        () => t(isAddingData ? "alert_add_measurement_data_title" : !isEditing ? "alert_create_discard_title" : "alert_edit_discard_title"),
+        () =>
+            t(
+                isAddingData
+                    ? "alert_add_measurement_data_title"
+                    : !isEditing
+                      ? "alert_create_discard_title"
+                      : "alert_edit_discard_title",
+            ),
         [isAddingData, isEditing, t],
     );
 
@@ -242,7 +262,10 @@ export const CreateMeasurement = () => {
     const dateWarniningOverwriteConfirm = useMemo(() => t("alert_measurement_date_confirm"), [t]);
 
     const dateConfig = useMemo(
-        () => dates?.map((date, index) => ({ date, marked: true, latest: index === dates?.length - 1 }) satisfies DateConfig),
+        () =>
+            dates?.map(
+                (date, index) => ({ date, marked: true, latest: index === dates?.length - 1 }) satisfies DateConfig,
+            ),
         [dates],
     );
 
@@ -268,9 +291,6 @@ export const CreateMeasurement = () => {
                     )}
                     {!isEditing && (
                         <ThemedView ghost>
-                            <Text ghost style={{ fontSize: 20, marginBottom: 5 }}>
-                                {editedMeasurement?.measurement?.name}
-                            </Text>
                             <HStack ghost style={{ gap: 5 }}>
                                 <EditableExerciseInputRow
                                     placeholder="0"
@@ -310,7 +330,12 @@ export const CreateMeasurement = () => {
                             <Text style={{ fontSize: 20 }} ghost>
                                 {t("measurement_datapoint_date")}
                             </Text>
-                            <DatePicker handleSelectDate={handleDateChange} selectedDate={date} dateConfig={dateConfig} allSelectable />
+                            <DatePicker
+                                handleSelectDate={handleDateChange}
+                                selectedDate={date}
+                                dateConfig={dateConfig}
+                                allSelectable
+                            />
                         </ThemedView>
                     )}
                 </PageContent>

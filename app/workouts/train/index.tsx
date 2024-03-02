@@ -153,7 +153,7 @@ export const Train = () => {
                     handleConfirmOpacity={confirmButtonOpacity}
                     backButtonAction={handleCloseButton}
                     handleConfirm={handleDone}
-                    title={t("train_title")}
+                    title={trainedWorkout?.workout.name}
                     handleQuicksettings={open}
                 />
             </ThemedView>

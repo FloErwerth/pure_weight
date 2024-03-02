@@ -55,6 +55,7 @@ export const setEditedWorkout = createAction<
 >("workout_set_edited_workout");
 export const setEditedExercise = createAction<
     | {
+          isNewExercise: boolean;
           exerciseId: ExerciseId;
       }
     | undefined,
@@ -205,6 +206,7 @@ export const workoutReducer = createReducer<WorkoutState>(
                     if (exercise) {
                         state.editedExercise = {
                             exercise,
+                            isNewExercise: action.payload.isNewExercise,
                             stringifiedExercise: JSON.stringify(exercise),
                         };
                     }
