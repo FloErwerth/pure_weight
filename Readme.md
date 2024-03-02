@@ -55,3 +55,4 @@ Build Number 27
 + Fixed calculating of best improvement
 + Remove duplicate name in measurement
 + Remove progress display for measurements with only one measurement data point
++ Allow editing paused workouts

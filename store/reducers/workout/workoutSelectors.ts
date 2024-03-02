@@ -70,9 +70,6 @@ export const getEditedExercise = createSelector([getWorkoutState], (state) => st
 export const getIsUsedInPausedWorkout = createSelector(
     [getEditedExercise, getTrainedWorkout],
     (editedExercise, trainedWorkout) => {
-        console.log(editedExercise?.exercise.exerciseId);
-        console.log(trainedWorkout?.workout?.exercises.map((exercise) => exercise.exerciseId));
-
         return Boolean(
             trainedWorkout?.workout?.exercises.find(
                 (exercise) => exercise.exerciseId === editedExercise?.exercise.exerciseId,
