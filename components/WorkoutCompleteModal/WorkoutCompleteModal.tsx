@@ -25,13 +25,7 @@ const useDebouncedShowPostWorkoutScreen = () => {
 
     useEffect(() => {
         if (postWorkoutStats !== undefined && navigationRef.getCurrentRoute()?.name === "tabs/workouts") {
-            const timeout = setTimeout(() => {
-                setDebouncedShowPostWorkoutScreen(true);
-            }, 500);
-
-            return () => {
-                clearTimeout(timeout);
-            };
+            setDebouncedShowPostWorkoutScreen(true);
         } else {
             setDebouncedShowPostWorkoutScreen(false);
         }
