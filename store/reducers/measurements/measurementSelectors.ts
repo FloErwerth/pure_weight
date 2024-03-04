@@ -75,12 +75,19 @@ export const getMeasurmentProgress = createSelector(
             if (measurement?.type === "percent") {
                 return latest - secondLatest;
             }
-            return (latest / secondLatest) * 100;
+
+            const percentRaw = (latest / secondLatest) * 100;
+
+            if (percentRaw > 100) {
+                return percentRaw - 100;
+            }
+            return 100 - percentRaw;
         }
 
         return undefined;
     },
 );
+
 export const getNumberMeasurementEntries = createSelector(
     [getMeasurements, (measurements, measurementId: MeasurementId) => measurementId],
     (measurements, measurementId) => {

@@ -62,7 +62,7 @@ export const RenderedMeasurement = ({ measurement }: MeasurementProps) => {
                         {getSinceDate(latestMeasurements[measurement.measurementId], language)}
                     </Text>
                 </View>
-                {progress && (
+                {progress !== undefined && (
                     <ProgressDisplay
                         type="Measurement"
                         trend={trend}
