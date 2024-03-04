@@ -69,3 +69,7 @@ Build Number 27
 
 -   Fixed Measurement progress display
 -   Fixed text size of inline pressable
+
+`0.8.1`:
+
+-   Fixed starting stopwatch after set
