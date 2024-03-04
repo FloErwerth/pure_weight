@@ -11,7 +11,7 @@ export const Searchbar = ({ handleSetSearchManual }: SearchbarProps) => {
 
     return (
         <HStack style={{ gap: 10, alignItems: "center" }} ghost>
-            <ThemedTextInput showClear onChangeText={handleSetSearchManual} placeholder={placeholder} stretch />
+            <ThemedTextInput round showClear onChangeText={handleSetSearchManual} placeholder={placeholder} stretch />
             <ThemedMaterialCommunityIcons name="magnify" ghost size={30} />
         </HStack>
     );
