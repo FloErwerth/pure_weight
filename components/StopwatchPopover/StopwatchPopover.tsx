@@ -35,18 +35,12 @@ export const StopwatchPopover = () => {
         }
     }, [startTimer, stopTimer, timerStarted]);
 
-    const handleDoneSetCallback = useCallback(
-        (isLatestSet?: boolean) => {
-            if (isLatestSet !== undefined && !isLatestSet) {
-                return;
-            }
-            if (startOnDoneSet) {
-                reset();
-                startTimer();
-            }
-        },
-        [reset, startOnDoneSet, startTimer],
-    );
+    const handleDoneSetCallback = useCallback(() => {
+        if (startOnDoneSet) {
+            reset();
+            startTimer();
+        }
+    }, [reset, startOnDoneSet, startTimer]);
 
     useEffect(() => {
         emitter.addListener("workoutDoneSet", handleDoneSetCallback);

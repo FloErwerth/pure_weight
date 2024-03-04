@@ -21,6 +21,7 @@ import { ExerciseId } from "../../store/reducers/workout/types";
 import { getUpdatePrefilledWorkoutValues } from "../../store/reducers/settings/settingsSelectors";
 import { TimeInputRow } from "../EditableExercise/TimeInputRow";
 import { ThemedMaterialCommunityIcons } from "../Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
+import { emitter } from "../../utils/event";
 
 interface SetInputRowProps {
     setIndex: number;
@@ -117,10 +118,13 @@ export const SetInput = ({ setIndex, exerciseId }: SetInputRowProps) => {
             Keyboard.dismiss();
             void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
             dispatch(markSetAsDone({ setIndex }));
+            if (isLatestSet) {
+                emitter.emit("workoutDoneSet");
+            }
         } else {
             handleSetActive();
         }
-    }, [isActiveSet, dispatch, setIndex, handleSetActive]);
+    }, [isActiveSet, dispatch, setIndex, isLatestSet, handleSetActive]);
 
     const activeStackStyles = useMemo(() => {
         return { backgroundColor: isActiveSet ? inputFieldBackgroundColor : "transparent" };
@@ -157,7 +161,10 @@ export const SetInput = ({ setIndex, exerciseId }: SetInputRowProps) => {
     }, [isConfirmed, isEditable, mainColor, secondaryColor, textDisabled]);
 
     const textNumberStyles = useMemo(() => [{ color: computedColor }], [computedColor]);
-    const wrapperStyle = useMemo(() => ({ backgroundColor: computedTextfieldBackgroundColor }), [computedTextfieldBackgroundColor]);
+    const wrapperStyle = useMemo(
+        () => ({ backgroundColor: computedTextfieldBackgroundColor }),
+        [computedTextfieldBackgroundColor],
+    );
     const textStyle = useMemo(() => ({ color: computedColor }), [computedColor]);
     const textInputStyles = useMemo(() => [styles.textInput, wrapperStyle, textStyle], [wrapperStyle, textStyle]);
 
