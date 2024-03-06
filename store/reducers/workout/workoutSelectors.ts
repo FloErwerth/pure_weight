@@ -140,13 +140,15 @@ export const getDoneWorkoutData = createSelector([getEditedWorkout], (editedWork
 
     slicedDoneWorkouts?.forEach(({ isoDate, doneExercises }) => {
         if (doneExercises) {
-            doneExercises.forEach(({ name, sets, originalExerciseId, type }) => {
+            doneExercises.forEach(({ sets, originalExerciseId, type }) => {
+                const originalName = workout?.exercises.find((exercise) => exercise.exerciseId === originalExerciseId)
+                    ?.name;
                 const foundEntry = sortedData.get(originalExerciseId);
                 if (foundEntry) {
                     foundEntry.data.push({ sets, date: isoDate, type });
                 } else {
                     sortedData.set(originalExerciseId, {
-                        exerciseName: name,
+                        exerciseName: originalName ?? "",
                         data: [{ type, sets, date: isoDate }],
                     });
                 }
