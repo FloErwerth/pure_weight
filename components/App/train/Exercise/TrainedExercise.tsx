@@ -3,7 +3,7 @@ import {
     getExerciseById,
     getHasWeightInTimeBasedExercise,
     getSetsArray,
-} from "../../../../store/reducers/workout/workoutSelectors";
+} from "../../../../store/selectors/workout/workoutSelectors";
 import { ExerciseId, WorkoutId } from "../../../../store/reducers/workout/types";
 import { useBottomSheetRef } from "../../../BottomSheetModal/ThemedBottomSheetModal";
 import { useCallback, useId } from "react";

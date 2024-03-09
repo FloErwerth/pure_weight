@@ -7,7 +7,7 @@ import { useTranslation } from "react-i18next";
 import { Text } from "../Themed/ThemedText/Text";
 import { ThemedTextInput } from "../Themed/ThemedTextInput/ThemedTextInput";
 import { AppState, useAppSelector } from "../../store";
-import { getErrorByKey } from "../../store/reducers/errors/errorSelectors";
+import { getErrorByKey } from "../../store/selectors/errors/errorSelectors";
 import { ErrorText } from "../ErrorText/ErrorText";
 import { HelpText } from "../HelpText/HelpText";
 import { borderRadius } from "../../theme/border";
@@ -60,7 +60,10 @@ export const TimeInputRow = ({
 
     const hasValuesInTopBar = Boolean(i18key || !hideSuffix || helpTextConfig);
 
-    const textInputStyles = useMemo(() => [{ paddingHorizontal: 3, borderRadius, fontSize: 20 }, textStyle], [textStyle]);
+    const textInputStyles = useMemo(
+        () => [{ paddingHorizontal: 3, borderRadius, fontSize: 20 }, textStyle],
+        [textStyle],
+    );
 
     return (
         <ThemedView stretch ghost>
@@ -81,7 +84,14 @@ export const TimeInputRow = ({
                     {helpTextConfig && <HelpText helpTextConfig={helpTextConfig} />}
                 </HStack>
             )}
-            <HStack style={wrapperStyle} hasError={hasError} input={input} background={background} stretch={stretch} center round>
+            <HStack
+                style={wrapperStyle}
+                hasError={hasError}
+                input={input}
+                background={background}
+                stretch={stretch}
+                center
+                round>
                 <ThemedTextInput
                     keyboardType="number-pad"
                     placeholderTextColor={placeholderColor}

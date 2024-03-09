@@ -2,7 +2,11 @@ import { useAppDispatch, useAppSelector } from "../../../store";
 import { useNavigate } from "../../../hooks/navigate";
 import { useCallback, useMemo, useState } from "react";
 import { ThemedBottomSheetModal, useBottomSheetRef } from "../../BottomSheetModal/ThemedBottomSheetModal";
-import { getLanguage, getSearchManual, getThemeKeyFromStore } from "../../../store/reducers/settings/settingsSelectors";
+import {
+    getLanguage,
+    getSearchManual,
+    getThemeKeyFromStore,
+} from "../../../store/selectors/settings/settingsSelectors";
 import { createNewWorkout } from "../../../store/reducers/workout";
 import { HelpQuestion } from "../../HelpQuestionAnswer/HelpQuestion";
 import { ThemedView } from "../../Themed/ThemedView/View";
@@ -83,7 +87,12 @@ export const QuestionsAndAnswers = () => {
         };
 
         return {
-            [SECTIONS.WORKOUTS]: getWorkoutsQuestions(language, handleNavigateToWorkouts, handleSelectFromAnswer, setupNewWorkout),
+            [SECTIONS.WORKOUTS]: getWorkoutsQuestions(
+                language,
+                handleNavigateToWorkouts,
+                handleSelectFromAnswer,
+                setupNewWorkout,
+            ),
             [SECTIONS.EXERCISES]: getExercisesQuestions(language, handleSelectFromAnswer),
             [SECTIONS.TRAININGS]: getTrainingsQuestions(
                 language,

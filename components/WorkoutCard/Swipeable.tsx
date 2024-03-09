@@ -16,7 +16,7 @@ import * as Haptics from "expo-haptics";
 import { useAppSelector } from "../../store";
 import ReAnimated, { FadeIn, FadeOut } from "react-native-reanimated";
 
-import { getThemeKeyFromStore } from "../../store/reducers/settings/settingsSelectors";
+import { getThemeKeyFromStore } from "../../store/selectors/settings/settingsSelectors";
 
 interface SwipeableProps extends PropsWithChildren {
     onClick?: () => void;
@@ -156,7 +156,10 @@ export const Swipeable = ({ onEdit, onDelete, onClick, children }: SwipeableProp
 
     const viewRef = useRef<View>(null);
     const { mainColor } = useTheme();
-    const [containerMeasures, setContainerMeasures] = useState<{ width: number; height: number }>({ width: 200, height: 120 });
+    const [containerMeasures, setContainerMeasures] = useState<{ width: number; height: number }>({
+        width: 200,
+        height: 120,
+    });
     const theme = useAppSelector(getThemeKeyFromStore);
     const computedColor = theme === "dark" ? mainColor : "white";
 
@@ -174,7 +177,10 @@ export const Swipeable = ({ onEdit, onDelete, onClick, children }: SwipeableProp
         });
     }, [offsetX]);
 
-    const animatedWrapperStyles = useMemo(() => [styles.animatedWrapper, { transform: [{ translateX: offsetX }] }], [offsetX]);
+    const animatedWrapperStyles = useMemo(
+        () => [styles.animatedWrapper, { transform: [{ translateX: offsetX }] }],
+        [offsetX],
+    );
     const outerIconOpacity = useMemo(
         () => offsetX.interpolate({ inputRange: [-1, 0, 1], outputRange: [1, 0, 1], extrapolate: "clamp" }),
         [offsetX],
@@ -222,9 +228,21 @@ export const Swipeable = ({ onEdit, onDelete, onClick, children }: SwipeableProp
                         </Animated.View>
                         <Animated.View style={outerIconWrapperStyles}>
                             <Animated.View style={innerIconWrapperStyles}>
-                                {onEdit && <MaterialCommunityIcons style={styles.editIcon} color={computedColor} name="pencil" size={30} />}
+                                {onEdit && (
+                                    <MaterialCommunityIcons
+                                        style={styles.editIcon}
+                                        color={computedColor}
+                                        name="pencil"
+                                        size={30}
+                                    />
+                                )}
                                 {onDelete && (
-                                    <MaterialCommunityIcons style={styles.deleteIcon} color={computedColor} name="delete" size={32} />
+                                    <MaterialCommunityIcons
+                                        style={styles.deleteIcon}
+                                        color={computedColor}
+                                        name="delete"
+                                        size={32}
+                                    />
                                 )}
                             </Animated.View>
                         </Animated.View>

@@ -15,10 +15,10 @@ import {
     getHasWeightInTimeBasedExercise,
     getIsActiveSet,
     getSetData,
-} from "../../store/reducers/workout/workoutSelectors";
+} from "../../store/selectors/workout/workoutSelectors";
 import { ThemedPressable } from "../Themed/Pressable/Pressable";
 import { ExerciseId } from "../../store/reducers/workout/types";
-import { getUpdatePrefilledWorkoutValues } from "../../store/reducers/settings/settingsSelectors";
+import { getUpdatePrefilledWorkoutValues } from "../../store/selectors/settings/settingsSelectors";
 import { TimeInputRow } from "../EditableExercise/TimeInputRow";
 import { ThemedMaterialCommunityIcons } from "../Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
 import { emitter } from "../../utils/event";

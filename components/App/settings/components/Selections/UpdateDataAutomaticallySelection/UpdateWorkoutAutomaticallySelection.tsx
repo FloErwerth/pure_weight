@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { useAppDispatch, useAppSelector } from "../../../../../../store";
 import { useCallback, useMemo } from "react";
-import { getUpdatePrefilledWorkoutValues } from "../../../../../../store/reducers/settings/settingsSelectors";
+import { getUpdatePrefilledWorkoutValues } from "../../../../../../store/selectors/settings/settingsSelectors";
 import { setSwitchToNextExercise } from "../../../../../../store/reducers/settings";
 import { CheckBox } from "../../../../../Themed/CheckBox/CheckBox";
 

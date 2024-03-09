@@ -1,10 +1,10 @@
 import { createSelector } from "@reduxjs/toolkit";
 import { AppState } from "../../index";
 import { getUnitSystem } from "../settings/settingsSelectors";
-import { UnitSystem } from "../settings/types";
+import { UnitSystem } from "../../reducers/settings/types";
 import { MeasurementId, MeasurementType } from "../../../components/App/measurements/types";
 import { measurementUnitMap } from "../../../utils/unitMap";
-import { sortMeasurements } from "./utils/sortMeasurements";
+import { sortMeasurements } from "../../reducers/measurements/utils/sortMeasurements";
 import { IsoDate } from "../../../types/date";
 
 export const getMeasurementsState = (state: AppState) => state.measurementState;

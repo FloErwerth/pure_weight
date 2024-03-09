@@ -2,7 +2,7 @@ import { useTranslation } from "react-i18next";
 import { useAppDispatch, useAppSelector } from "../../../../../../store";
 import React, { useCallback, useMemo } from "react";
 import { mutateStopwatchSettings } from "../../../../../../store/reducers/settings";
-import { getStartStopwatchOnDoneSet } from "../../../../../../store/reducers/settings/settingsSelectors";
+import { getStartStopwatchOnDoneSet } from "../../../../../../store/selectors/settings/settingsSelectors";
 import { CheckBox } from "../../../../../Themed/CheckBox/CheckBox";
 import { useBottomSheetRef } from "../../../../../BottomSheetModal/ThemedBottomSheetModal";
 import { ThemedView } from "../../../../../Themed/ThemedView/View";

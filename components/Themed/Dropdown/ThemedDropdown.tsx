@@ -6,7 +6,7 @@ import { ThemedView } from "../ThemedView/View";
 import { Text } from "../ThemedText/Text";
 import { useTheme } from "../../../theme/context";
 import { AppState, useAppSelector } from "../../../store";
-import { getErrorByKey } from "../../../store/reducers/errors/errorSelectors";
+import { getErrorByKey } from "../../../store/selectors/errors/errorSelectors";
 import { ErrorFields } from "../../../store/reducers/errors/types";
 import { ErrorText } from "../../ErrorText/ErrorText";
 import { HStack } from "../../Stack/HStack/HStack";

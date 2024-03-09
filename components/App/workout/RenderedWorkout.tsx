@@ -9,7 +9,7 @@ import {
     getLatestWorkoutDateDisplay,
     getOverallTrainingTrend,
     getWorkoutByIndex,
-} from "../../../store/reducers/workout/workoutSelectors";
+} from "../../../store/selectors/workout/workoutSelectors";
 import { useNavigate } from "../../../hooks/navigate";
 import { TouchableHighlight, View } from "react-native";
 import { ProgressDisplay } from "../../WorkoutCard/components/ProgressDisplay/ProgressDisplay";

@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { AppState, useAppDispatch, useAppSelector } from "../../store";
 import { ThemedPressable } from "../Themed/Pressable/Pressable";
 import { cleanError } from "../../store/reducers/errors";
-import { getErrorByKey } from "../../store/reducers/errors/errorSelectors";
+import { getErrorByKey } from "../../store/selectors/errors/errorSelectors";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { HStack } from "../Stack/HStack/HStack";
 import { ThemedMaterialCommunityIcons } from "../Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";

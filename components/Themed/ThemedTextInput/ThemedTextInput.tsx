@@ -7,7 +7,7 @@ import { BottomSheetTextInput } from "@gorhom/bottom-sheet";
 import { ComputedBackgroundColorProps, useComputedBackgroundColor } from "../../../hooks/useComputedBackgroundColor";
 import { styles } from "./styles";
 import { cleanError } from "../../../store/reducers/errors";
-import { getErrorByKey } from "../../../store/reducers/errors/errorSelectors";
+import { getErrorByKey } from "../../../store/selectors/errors/errorSelectors";
 import { ErrorText } from "../../ErrorText/ErrorText";
 import { ErrorFields } from "../../../store/reducers/errors/types";
 import { borderRadius } from "../../../theme/border";

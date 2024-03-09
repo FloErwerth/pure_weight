@@ -2,7 +2,7 @@ import { ThemedView } from "../../../../../Themed/ThemedView/View";
 import { selectionStyles } from "../../selectionStyles";
 import { useCallback, useMemo } from "react";
 import { useAppDispatch, useAppSelector } from "../../../../../../store";
-import { getKeepAwake } from "../../../../../../store/reducers/settings/settingsSelectors";
+import { getKeepAwake } from "../../../../../../store/selectors/settings/settingsSelectors";
 import { setKeepAwake } from "../../../../../../store/reducers/settings";
 import { useTranslation } from "react-i18next";
 import { CheckBox } from "../../../../../Themed/CheckBox/CheckBox";

@@ -8,8 +8,8 @@ import { AppState, useAppSelector } from "../../../../store";
 import { useTranslation } from "react-i18next";
 import { WorkoutId, WorkoutIdType } from "../../../../store/reducers/workout/types";
 import { MeasurementId, MeasurementIdType } from "../../measurements/types";
-import { getNumberWorkoutHistoryEntries } from "../../../../store/reducers/workout/workoutSelectors";
-import { getNumberMeasurementEntries } from "../../../../store/reducers/measurements/measurementSelectors";
+import { getNumberWorkoutHistoryEntries } from "../../../../store/selectors/workout/workoutSelectors";
+import { getNumberMeasurementEntries } from "../../../../store/selectors/measurements/measurementSelectors";
 
 interface HistoryDisplayProps {
     type: WorkoutIdType | MeasurementIdType;
@@ -18,8 +18,12 @@ interface HistoryDisplayProps {
 }
 
 const useHistoryEntries = (type: WorkoutIdType | MeasurementIdType, id: WorkoutId | MeasurementId) => {
-    const workoutHistoryEntries = useAppSelector((state: AppState) => getNumberWorkoutHistoryEntries(state, id as WorkoutId));
-    const measurementHistoryEntries = useAppSelector((state: AppState) => getNumberMeasurementEntries(state, id as MeasurementId));
+    const workoutHistoryEntries = useAppSelector((state: AppState) =>
+        getNumberWorkoutHistoryEntries(state, id as WorkoutId),
+    );
+    const measurementHistoryEntries = useAppSelector((state: AppState) =>
+        getNumberMeasurementEntries(state, id as MeasurementId),
+    );
     return type === "workout" ? workoutHistoryEntries : measurementHistoryEntries;
 };
 

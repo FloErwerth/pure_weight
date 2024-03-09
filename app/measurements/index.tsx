@@ -14,7 +14,10 @@ import {
     setSearchedMeasurements,
     setupNewMeasurement,
 } from "../../store/reducers/measurements";
-import { getSearchedMeasurements, getSortedMeasurements } from "../../store/reducers/measurements/measurementSelectors";
+import {
+    getSearchedMeasurements,
+    getSortedMeasurements,
+} from "../../store/selectors/measurements/measurementSelectors";
 import { useNavigate } from "../../hooks/navigate";
 import { useToast } from "../../components/BottomToast/useToast";
 import { MeasurementId } from "../../components/App/measurements/types";

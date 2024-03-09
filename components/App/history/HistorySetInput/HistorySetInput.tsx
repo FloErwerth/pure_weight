@@ -1,7 +1,7 @@
 import { ExerciseData, ExerciseId, ExerciseType, WorkoutId } from "../../../../store/reducers/workout/types";
 import { useTheme } from "../../../../theme/context";
 import { AppState, useAppDispatch, useAppSelector } from "../../../../store";
-import { getDoneExerciseById } from "../../../../store/reducers/workout/workoutSelectors";
+import { getDoneExerciseById } from "../../../../store/selectors/workout/workoutSelectors";
 import { useCallback, useContext, useMemo, useState } from "react";
 import { Keyboard, View } from "react-native";
 import { styles } from "./styles";
@@ -16,8 +16,8 @@ import * as Haptics from "expo-haptics";
 import { HistoryContext } from "../HistoryContext/HistoryContext";
 import { cleanError, setError } from "../../../../store/reducers/errors";
 import { ErrorFields } from "../../../../store/reducers/errors/types";
-import { getErrorByKey } from "../../../../store/reducers/errors/errorSelectors";
-import { getLanguage } from "../../../../store/reducers/settings/settingsSelectors";
+import { getErrorByKey } from "../../../../store/selectors/errors/errorSelectors";
+import { getLanguage } from "../../../../store/selectors/settings/settingsSelectors";
 import { ThemedView } from "../../../Themed/ThemedView/View";
 import { replaceDoneExerciseSet } from "../../../../store/reducers/workout";
 

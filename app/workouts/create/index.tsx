@@ -29,7 +29,7 @@ import {
     sortExercisesOnDragEnd,
 } from "../../../store/reducers/workout";
 
-import { getEditedWorkout, getIsEditedWorkout } from "../../../store/reducers/workout/workoutSelectors";
+import { getEditedWorkout, getIsEditedWorkout } from "../../../store/selectors/workout/workoutSelectors";
 import { ExerciseMetaData } from "../../../store/reducers/workout/types";
 import { BottomToast } from "../../../components/BottomToast/BottomToast";
 import { useSafeAreaInsets } from "react-native-safe-area-context";

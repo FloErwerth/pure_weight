@@ -6,12 +6,12 @@ import { HStack } from "../Stack/HStack/HStack";
 import { styles } from "./styles";
 import { ThemedMaterialCommunityIcons } from "../Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
 import { AnimatedView } from "../Themed/AnimatedView/AnimatedView";
-import { getStopwatchSettings } from "../../store/reducers/settings/settingsSelectors";
+import { getStopwatchSettings } from "../../store/selectors/settings/settingsSelectors";
 import { emitter } from "../../utils/event";
 import { StopwatchDisplay } from "./StopwatchDisplay/StopwatchDisplay";
 import { ThemedPressable } from "../Themed/Pressable/Pressable";
 import { ThemedView } from "../Themed/ThemedView/View";
-import { getPauseTime } from "../../store/reducers/workout/workoutSelectors";
+import { getPauseTime } from "../../store/selectors/workout/workoutSelectors";
 import { useStopwatch } from "../../hooks/useStopwatch";
 
 export const StopwatchPopover = () => {

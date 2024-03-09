@@ -8,7 +8,7 @@ import { styles } from "./styles";
 import { ThemedPressable } from "../Themed/Pressable/Pressable";
 import { Text } from "../Themed/ThemedText/Text";
 import { useAppDispatch, useAppSelector } from "../../store";
-import { getNote } from "../../store/reducers/workout/workoutSelectors";
+import { getNote } from "../../store/selectors/workout/workoutSelectors";
 import { ThemedView } from "../Themed/ThemedView/View";
 import { saveNote } from "../../store/reducers/workout";
 

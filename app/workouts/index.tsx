@@ -10,7 +10,7 @@ import {
     getSortedWorkouts,
     getTrainedWorkout,
     getWorkouts,
-} from "../../store/reducers/workout/workoutSelectors";
+} from "../../store/selectors/workout/workoutSelectors";
 import {
     createNewWorkout,
     recoverWorkout,
@@ -28,7 +28,7 @@ import { BottomToast } from "../../components/BottomToast/BottomToast";
 import { ThemedBottomSheetModal, useBottomSheetRef } from "../../components/BottomSheetModal/ThemedBottomSheetModal";
 import { Text } from "../../components/Themed/ThemedText/Text";
 import { ThemedPressable } from "../../components/Themed/Pressable/Pressable";
-import { getLanguage } from "../../store/reducers/settings/settingsSelectors";
+import { getLanguage } from "../../store/selectors/settings/settingsSelectors";
 import { trainStyles } from "../../components/App/train/trainStyles";
 import { HStack } from "../../components/Stack/HStack/HStack";
 import { ThemedMaterialCommunityIcons } from "../../components/Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";

@@ -1,7 +1,7 @@
 import { Text } from "../../../Themed/ThemedText/Text";
-import { getUnitByType } from "../../../../store/reducers/measurements/measurementSelectors";
+import { getUnitByType } from "../../../../store/selectors/measurements/measurementSelectors";
 import { ThemedPressable } from "../../../Themed/Pressable/Pressable";
-import { getLanguage, getUnitSystem } from "../../../../store/reducers/settings/settingsSelectors";
+import { getLanguage, getUnitSystem } from "../../../../store/selectors/settings/settingsSelectors";
 import { useAppSelector } from "../../../../store";
 import { MeasurementType } from "../types";
 import { styles } from "./styles";
@@ -18,7 +18,13 @@ type EditedMeasurementDataPointProps = {
     selectMeasurementPoint: () => void;
 };
 
-export const SelectableMeasurementDataPoint = ({ isoDate, value, type, selectMeasurementPoint, name }: EditedMeasurementDataPointProps) => {
+export const SelectableMeasurementDataPoint = ({
+    isoDate,
+    value,
+    type,
+    selectMeasurementPoint,
+    name,
+}: EditedMeasurementDataPointProps) => {
     const unitSystem = useAppSelector(getUnitSystem);
     const language = useAppSelector(getLanguage);
     const { t } = useTranslation();

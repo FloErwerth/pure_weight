@@ -3,10 +3,10 @@ import { AppState } from "../../index";
 import { getLanguage } from "../settings/settingsSelectors";
 import { getLocaleDate, getMonthYearLabel } from "../../../utils/date";
 import { IsoDate } from "../../../types/date";
-import { ExerciseId, ExerciseSets, ExerciseType, WorkoutId } from "./types";
+import { ExerciseId, ExerciseSets, ExerciseType, WorkoutId } from "../../reducers/workout/types";
 import { Temporal } from "@js-temporal/polyfill";
 import { getSinceDate } from "../../../utils/timeAgo";
-import { sortWorkouts } from "./sortWorkouts";
+import { sortWorkouts } from "../../reducers/workout/sortWorkouts";
 import { getMeasurementSorting } from "../measurements/measurementSelectors";
 import i18next from "i18next";
 

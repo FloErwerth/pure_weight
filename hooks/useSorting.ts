@@ -5,7 +5,7 @@ import { Sortingtypes } from "../store/types";
 import { useMemo } from "react";
 import { setWorkoutSorting } from "../store/reducers/workout";
 import { setMeasurementSorting } from "../store/reducers/measurements";
-import { getSortingType } from "../store/reducers/workout/workoutSelectors";
+import { getSortingType } from "../store/selectors/workout/workoutSelectors";
 
 const SortIconMap = {
     ["A_Z"]: "sort-alphabetical-ascending",

@@ -27,11 +27,11 @@ import {
     getIsDoneWithTraining,
     getTrainedWorkout,
     getTrainedWorkoutExercises,
-} from "../../../store/reducers/workout/workoutSelectors";
+} from "../../../store/selectors/workout/workoutSelectors";
 import { TrainedExercise } from "../../../components/App/train/Exercise/TrainedExercise";
 import { ExerciseId } from "../../../store/reducers/workout/types";
 import { CarouselRenderItemInfo, ICarouselInstance } from "react-native-reanimated-carousel/lib/typescript/types";
-import { getSwitchToNextExercise } from "../../../store/reducers/settings/settingsSelectors";
+import { getSwitchToNextExercise } from "../../../store/selectors/settings/settingsSelectors";
 import { WorkoutSettings } from "../../../components/App/settings/Sections/workout";
 
 export const Train = () => {

@@ -5,13 +5,13 @@ import { ThemedView } from "../../../components/Themed/ThemedView/View";
 import { borderRadius } from "../../../theme/border";
 import { trunicateToNthSignificantDigit } from "../../../utils/number";
 import { Text } from "../../../components/Themed/ThemedText/Text";
-import { getMeasurementData } from "../../../store/reducers/measurements/measurementSelectors";
+import { getMeasurementData } from "../../../store/selectors/measurements/measurementSelectors";
 import { SiteNavigationButtons } from "../../../components/SiteNavigationButtons/SiteNavigationButtons";
 import { useNavigateBack } from "../../../hooks/navigate";
 import { PageContent } from "../../../components/PageContent/PageContent";
 import { IsoDate } from "../../../types/date";
 import { getLocaleDate } from "../../../utils/date";
-import { getLanguage } from "../../../store/reducers/settings/settingsSelectors";
+import { getLanguage } from "../../../store/selectors/settings/settingsSelectors";
 import Chart from "../../../components/Chart/Chart";
 
 export const MeasurementProgress = () => {

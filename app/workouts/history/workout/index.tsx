@@ -1,4 +1,4 @@
-import { getDoneWorkoutById, getWorkoutByIndex } from "../../../../store/reducers/workout/workoutSelectors";
+import { getDoneWorkoutById, getWorkoutByIndex } from "../../../../store/selectors/workout/workoutSelectors";
 import { AppState, useAppDispatch, useAppSelector } from "../../../../store";
 import { ThemedView } from "../../../../components/Themed/ThemedView/View";
 import { SiteNavigationButtons } from "../../../../components/SiteNavigationButtons/SiteNavigationButtons";
@@ -16,7 +16,7 @@ import { ThemedMaterialCommunityIcons } from "../../../../components/Themed/Them
 import { View } from "react-native";
 import { DoneExerciseData } from "../../../../store/reducers/workout/types";
 import { getLocaleDate } from "../../../../utils/date";
-import { getLanguage } from "../../../../store/reducers/settings/settingsSelectors";
+import { getLanguage } from "../../../../store/selectors/settings/settingsSelectors";
 
 export const WorkoutHistoryOverview = ({
     route: {

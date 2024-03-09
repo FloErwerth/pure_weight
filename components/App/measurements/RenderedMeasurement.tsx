@@ -7,11 +7,11 @@ import { AppState, useAppDispatch, useAppSelector } from "../../../store";
 import { ProgressDisplay } from "../../WorkoutCard/components/ProgressDisplay/ProgressDisplay";
 import { Measurement } from "./types";
 
-import { getLanguage } from "../../../store/reducers/settings/settingsSelectors";
+import { getLanguage } from "../../../store/selectors/settings/settingsSelectors";
 import {
     getLatestMeasurements,
     getMeasurmentProgress,
-} from "../../../store/reducers/measurements/measurementSelectors";
+} from "../../../store/selectors/measurements/measurementSelectors";
 import { useNavigate } from "../../../hooks/navigate";
 import { setEditedMeasurement } from "../../../store/reducers/measurements";
 import { getSinceDate } from "../../../utils/timeAgo";

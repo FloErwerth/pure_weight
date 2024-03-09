@@ -6,7 +6,7 @@ import { ImpactFeedbackStyle } from "expo-haptics";
 import { setLanguage } from "../../../../../../store/reducers/settings";
 import GermanFlag from "../../../../../../media/icons/GermanFlag.svg";
 import AmericanFlag from "../../../../../../media/icons/UsaFlag.svg";
-import { getLanguage } from "../../../../../../store/reducers/settings/settingsSelectors";
+import { getLanguage } from "../../../../../../store/selectors/settings/settingsSelectors";
 import { SelectableSetting, SvgType } from "../../../SelectableSetting/SelectableSetting";
 import { selectionStyles } from "../../selectionStyles";
 import { ThemedBottomSheetModal, useBottomSheetRef } from "../../../../../BottomSheetModal/ThemedBottomSheetModal";
