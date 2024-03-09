@@ -87,10 +87,23 @@ const useHeaderStats = () => {
     const overallWeightMoved = useMemo(() => {
         const weightMoved = postWorkout?.doneWorkouts[postWorkout?.doneWorkouts.length - 1].doneExercises?.reduce(
             (sum, doneExercise) => {
+                if (doneExercise.type === "TIME_BASED") {
+                    return (
+                        sum +
+                        doneExercise.sets.reduce((sum, set) => {
+                            return (
+                                sum +
+                                parseFloat(set?.durationMinutes ?? "0") * 60 * 1000 +
+                                parseFloat(set?.durationSeconds ?? "0") * 1000
+                            );
+                        }, 0)
+                    );
+                }
+
                 return (
                     sum +
                     doneExercise.sets.reduce((sum, set) => {
-                        return sum + parseFloat(set.weight ?? "0");
+                        return sum + parseFloat(set?.weight ?? "0") * parseFloat(set?.reps ?? "0");
                     }, 0)
                 );
             },
@@ -141,18 +154,16 @@ const useHeaderStats = () => {
     }, [postWorkout?.doneWorkouts, t, unitSystem]);
 
     const durationStat = useMemo(() => {
-        const duration = getDurationInSecondsMinutesOrHours(
-            postWorkout?.doneWorkouts?.[postWorkout?.doneWorkouts?.length - 1].duration ?? "0",
-        );
+        const duration = getDurationInSecondsMinutesOrHours("3420000");
 
         return {
-            value: duration?.value,
+            value: duration.value,
             icon: "timer-outline",
             iconColor: mainColor,
             text: t("post_workout_duration"),
             unit: duration?.unit ?? "s",
         } as const;
-    }, [mainColor, postWorkout, t]);
+    }, [mainColor, t]);
 
     return useMemo(() => {
         return [trendStat, overallWeightMoved, durationStat] as const;

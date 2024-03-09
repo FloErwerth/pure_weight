@@ -67,7 +67,7 @@ export const mockState: AppState = {
                 exercises: [
                     {
                         exerciseId: "exercise-3",
-                        name: "Benchpress",
+                        name: "Bankdrücken",
                         sets: "5",
                         reps: "5",
                         weight: "65",
@@ -79,7 +79,43 @@ export const mockState: AppState = {
                     },
                     {
                         exerciseId: "exercise-4",
-                        name: "Military Press",
+                        name: "Überkopfdrücken",
+                        sets: "5",
+                        reps: "5",
+                        weight: "10",
+                        type: "WEIGHT_BASED",
+                        pauseSeconds: "0",
+                        pauseMinutes: "2",
+                        durationSeconds: "",
+                        durationMinutes: "",
+                    },
+                    {
+                        exerciseId: "exercise-10",
+                        name: "Butterfly",
+                        sets: "5",
+                        reps: "5",
+                        weight: "10",
+                        type: "WEIGHT_BASED",
+                        pauseSeconds: "0",
+                        pauseMinutes: "2",
+                        durationSeconds: "",
+                        durationMinutes: "",
+                    },
+                    {
+                        exerciseId: "exercise-11",
+                        name: "Seitheben",
+                        sets: "5",
+                        reps: "5",
+                        weight: "10",
+                        type: "WEIGHT_BASED",
+                        pauseSeconds: "0",
+                        pauseMinutes: "2",
+                        durationSeconds: "",
+                        durationMinutes: "",
+                    },
+                    {
+                        exerciseId: "exercise-12",
+                        name: "Trizeps",
                         sets: "5",
                         reps: "5",
                         weight: "10",
@@ -95,7 +131,7 @@ export const mockState: AppState = {
                         doneWorkoutId: "workout-15",
                         originalWorkoutId: "workout-2",
                         isoDate: "2023-12-01",
-                        duration: (50 / 60 / 60 / 1000).toString(),
+                        duration: (50 * 60 * 1000).toString(),
                         doneExercises: [
                             {
                                 doneExerciseId: "exercise-151",
@@ -178,7 +214,7 @@ export const mockState: AppState = {
                         doneWorkoutId: "workout-15",
                         originalWorkoutId: "workout-2",
                         isoDate: "2023-12-27",
-                        duration: (50 / 60 / 60 / 1000).toString(),
+                        duration: (50 * 60 * 1000).toString(),
                         doneExercises: [
                             {
                                 doneExerciseId: "exercise-151",
@@ -261,7 +297,7 @@ export const mockState: AppState = {
                         doneWorkoutId: "workout-15",
                         originalWorkoutId: "workout-2",
                         isoDate: "2023-12-29",
-                        duration: (50 / 60 / 60 / 1000).toString(),
+                        duration: (50 * 60 * 1000).toString(),
                         doneExercises: [
                             {
                                 doneExerciseId: "exercise-151",
@@ -344,7 +380,7 @@ export const mockState: AppState = {
                         doneWorkoutId: "workout-15",
                         originalWorkoutId: "workout-2",
                         isoDate: "2024-01-02",
-                        duration: (50 / 60 / 60 / 1000).toString(),
+                        duration: (50 * 60 * 1000).toString(),
                         doneExercises: [
                             {
                                 doneExerciseId: "exercise-151",
@@ -427,7 +463,7 @@ export const mockState: AppState = {
                         doneWorkoutId: "workout-15",
                         originalWorkoutId: "workout-2",
                         isoDate: "2024-01-04",
-                        duration: (50 / 60 / 60 / 1000).toString(),
+                        duration: (50 * 60 * 1000).toString(),
                         doneExercises: [
                             {
                                 doneExerciseId: "exercise-151",
@@ -510,7 +546,7 @@ export const mockState: AppState = {
                         doneWorkoutId: "workout-15",
                         originalWorkoutId: "workout-2",
                         isoDate: "2024-01-05",
-                        duration: (50 / 60 / 60 / 1000).toString(),
+                        duration: (50 * 60 * 1000).toString(),
                         doneExercises: [
                             {
                                 doneExerciseId: "exercise-151",
@@ -593,7 +629,7 @@ export const mockState: AppState = {
                         doneWorkoutId: "workout-15",
                         originalWorkoutId: "workout-2",
                         isoDate: "2024-01-08",
-                        duration: (50 / 60 / 60 / 1000).toString(),
+                        duration: (50 * 60 * 1000).toString(),
                         doneExercises: [
                             {
                                 doneExerciseId: "exercise-151",
@@ -676,7 +712,7 @@ export const mockState: AppState = {
                         doneWorkoutId: "workout-15",
                         originalWorkoutId: "workout-2",
                         isoDate: "2024-01-11",
-                        duration: (50 / 60 / 60 / 1000).toString(),
+                        duration: (50 * 60 * 1000).toString(),
                         doneExercises: [
                             {
                                 doneExerciseId: "exercise-151",
@@ -759,7 +795,7 @@ export const mockState: AppState = {
                         doneWorkoutId: "workout-15",
                         originalWorkoutId: "workout-2",
                         isoDate: "2024-01-13",
-                        duration: (50 / 60 / 60 / 1000).toString(),
+                        duration: (50 * 60 * 1000).toString(),
                         doneExercises: [
                             {
                                 doneExerciseId: "exercise-151",
@@ -842,7 +878,7 @@ export const mockState: AppState = {
                         doneWorkoutId: "workout-15",
                         originalWorkoutId: "workout-2",
                         isoDate: "2023-12-01",
-                        duration: (50 / 60 / 60 / 1000).toString(),
+                        duration: (50 * 60 * 1000).toString(),
                         doneExercises: [
                             {
                                 doneExerciseId: "exercise-151",
@@ -925,7 +961,7 @@ export const mockState: AppState = {
                         doneWorkoutId: "workout-15",
                         originalWorkoutId: "workout-2",
                         isoDate: "2023-12-01",
-                        duration: (50 / 60 / 60 / 1000).toString(),
+                        duration: (50 * 60 * 1000).toString(),
                         doneExercises: [
                             {
                                 doneExerciseId: "exercise-151",
@@ -1008,7 +1044,7 @@ export const mockState: AppState = {
                         doneWorkoutId: "workout-25",
                         originalWorkoutId: "workout-2",
                         isoDate: "2023-12-01",
-                        duration: (50 / 60 / 60 / 1000).toString(),
+                        duration: (50 * 60 * 1000).toString(),
                         doneExercises: [
                             {
                                 doneExerciseId: "exercise-152",
@@ -1091,7 +1127,7 @@ export const mockState: AppState = {
                         doneWorkoutId: "workout-26",
                         originalWorkoutId: "workout-2",
                         isoDate: "2023-12-01",
-                        duration: (50 / 60 / 60 / 1000).toString(),
+                        duration: (57 * 60 * 1000).toString(),
                         doneExercises: [
                             {
                                 doneExerciseId: "exercise-153",
@@ -1174,7 +1210,7 @@ export const mockState: AppState = {
                         doneWorkoutId: "workout-124",
                         originalWorkoutId: "workout-2",
                         isoDate: "2024-03-01",
-                        duration: (50 / 60 / 60 / 1000).toString(),
+                        duration: (50 * 60 * 1000).toString(),
                         doneExercises: [
                             {
                                 doneExerciseId: "exercise-137",

@@ -1,6 +1,6 @@
 {
   "cli": {
-    "version": ">= 5.4.0"
+    "version": ">= 7.3.0"
   },
   "build": {
     "development": {
@@ -17,7 +17,11 @@
       "ios": {
         "appleId": "erwerthflorian@outlook.de",
         "ascAppId": "6469710434",
-        "appleTeamId": "4A8D75P83C"
+        "ascApiKeyId": "XPC83BZGJD",
+        "appleTeamId": "4A8D75P83C",
+        "ascApiKeyIssuerId":"56c7e01e-0c9f-472e-82c1-e5e933ff6057",
+        "ascApiKeyPath": "../apikey.p8"
+
       }
     }
   }

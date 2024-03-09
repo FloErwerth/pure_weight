@@ -12,10 +12,14 @@
             "resizeMode": "contain",
             "backgroundColor": "#333333"
         },
-        "assetBundlePatterns": ["**/*"],
+        "assetBundlePatterns": [
+            "**/*"
+        ],
         "ios": {
             "infoPlist": {
-                "UIBackgroundModes": ["fetch"]
+                "UIBackgroundModes": [
+                    "fetch"
+                ]
             },
             "usesAppleSignIn": false,
             "accessesContactNotes": false,
@@ -23,13 +27,19 @@
             "usesIcloudStorage": false,
             "supportsTablet": true,
             "bundleIdentifier": "com.FlorianErwerth.PureWeight",
-            "buildNumber": "33"
+            "buildNumber": "31"
         },
         "android": {
-            "permissions": ["VIBRATE"],
+            "permissions": [
+                "VIBRATE"
+            ],
             "package": "com.FlorianErwerth.PureWeight"
         },
-        "plugins": ["expo-router", "expo-localization", "expo-screen-orientation"],
+        "plugins": [
+            "expo-router",
+            "expo-localization",
+            "expo-screen-orientation"
+        ],
         "extra": {
             "router": {
                 "origin": false

@@ -73,3 +73,4 @@ Build Number 27
 `0.8.1`:
 
 -   Fixed starting stopwatch after set
+-   Fixed workout charts not updating names after editing

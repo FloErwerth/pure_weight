@@ -9,7 +9,6 @@ import { getSinceDate } from "../../../utils/timeAgo";
 import { sortWorkouts } from "./sortWorkouts";
 import { getMeasurementSorting } from "../measurements/measurementSelectors";
 import i18next from "i18next";
-import { trunicateToNthSignificantDigit } from "../../../utils/number";
 
 export const getWorkoutState = ({ workoutState }: AppState) => workoutState;
 export const getTrainedWorkout = createSelector([getWorkoutState], (state) => state.trainedWorkout);
@@ -270,18 +269,19 @@ export const getOverallTrainingTrend = createSelector(
                     .filter((exercise) => exercise !== undefined);
 
                 const fittingExerciseBefore = fittingExercisesBefore?.[fittingExercisesBefore.length - 1];
+                const originalExercise = workout.exercises.find(
+                    (exercise) => exercise.exerciseId === originalExerciseId,
+                );
 
                 if (fittingExerciseBefore) {
                     const compareable = {
-                        current: { name: fittingExerciseBefore.name, sum: getSumOfSets(type, sets) ?? 0 },
+                        current: { name: originalExercise?.name, sum: getSumOfSets(type, sets) ?? 0 },
                         before: {
                             name: fittingExerciseBefore.name,
                             sum: getSumOfSets(type, fittingExerciseBefore.sets) ?? 0,
                         },
                     };
-                    if (
-                        foundCompareables.find((compareable) => compareable.current.name === fittingExerciseBefore.name)
-                    ) {
+                    if (foundCompareables.find((compareable) => compareable.current.name === originalExercise?.name)) {
                         return;
                     }
                     foundCompareables.push(compareable);
@@ -507,11 +507,10 @@ export const getWorkoutStats = createSelector([getWorkouts], (workouts) => {
             }
             stats.get(currentWorkout.workoutId)!.totalTimes.value = currentWorkout.doneWorkouts.length;
             currentWorkout.doneWorkouts.forEach((doneWorkout) => {
-                stats.get(currentWorkout.workoutId)!.totalDuration.value += trunicateToNthSignificantDigit(
-                    parseFloat(doneWorkout.duration) / 1000 / 60 / 60,
-                    true,
-                    2,
+                stats.get(currentWorkout.workoutId)!.totalDuration.value += parseFloat(
+                    (parseFloat(doneWorkout.duration) / 1000 / 60 / 60).toFixed(1),
                 );
+
                 doneWorkout.doneExercises?.forEach((exercise) => {
                     stats.get(currentWorkout.workoutId)!.totalSets.value += exercise.sets.length;
                     stats.get(currentWorkout.workoutId)!.totalReps.value += exercise.sets.reduce((sum, set) => {
