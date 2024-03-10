@@ -9,6 +9,7 @@ import { getSinceDate } from "../../../utils/timeAgo";
 import { sortWorkouts } from "../../reducers/workout/sortWorkouts";
 import { getMeasurementSorting } from "../measurements/measurementSelectors";
 import i18next from "i18next";
+import { getDurationInSecondsMinutesOrHours } from "../../../utils/timeDisplay";
 
 export const getWorkoutState = ({ workoutState }: AppState) => workoutState;
 export const getTrainedWorkout = createSelector([getWorkoutState], (state) => state.trainedWorkout);
@@ -400,16 +401,31 @@ export const getWorkoutStats = createSelector([getWorkouts], (workouts) => {
                 });
             }
             stats.get(currentWorkout.workoutId)!.totalTimes.value = currentWorkout.doneWorkouts.length;
-            currentWorkout.doneWorkouts.forEach((doneWorkout) => {
-                stats.get(currentWorkout.workoutId)!.totalDuration.value += parseFloat((parseFloat(doneWorkout.duration) / 1000 / 60 / 60).toFixed(1));
 
-                doneWorkout.doneExercises?.forEach((exercise) => {
-                    stats.get(currentWorkout.workoutId)!.totalSets.value += exercise.sets.length;
-                    stats.get(currentWorkout.workoutId)!.totalReps.value += exercise.sets.reduce((sum, set) => {
-                        return sum + parseFloat(set.reps ?? "0");
-                    }, 0);
-                });
-            });
+            const values = currentWorkout.doneWorkouts.reduce(
+                (doneWorkoutStats, doneWorkout) => {
+                    doneWorkoutStats.totalDuration += parseFloat(doneWorkout.duration);
+                    doneWorkout.doneExercises?.forEach((exercise) => {
+                        doneWorkoutStats.totalSets += exercise.sets.length;
+                        doneWorkoutStats.totalReps += exercise.sets.reduce((sum, set) => {
+                            return sum + parseFloat(set.reps ?? "0");
+                        }, 0);
+                    });
+
+                    return doneWorkoutStats;
+                },
+                { totalDuration: 0, totalSets: 0, totalReps: 0 } as { totalDuration: number; totalSets: number; totalReps: number; durationUnit?: string },
+            );
+
+            const { value, unit } = getDurationInSecondsMinutesOrHours(values.totalDuration.toString());
+            stats.get(currentWorkout.workoutId)!.totalDuration = {
+                value,
+                unit,
+                text: i18next.t("post_workout_total_duration"),
+            };
+            stats.get(currentWorkout.workoutId)!.totalSets.value = values.totalSets;
+            stats.get(currentWorkout.workoutId)!.totalReps.value = values.totalReps;
+
             return stats;
         },
         new Map() as Map<
@@ -443,5 +459,6 @@ export const getWorkoutStatsById = createSelector([getWorkoutStats, (_, workoutI
     if (!workoutId) {
         return undefined;
     }
+
     return stats.get(workoutId);
 });

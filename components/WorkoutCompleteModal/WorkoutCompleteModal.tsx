@@ -1,16 +1,12 @@
 import { ThemedView } from "../Themed/ThemedView/View";
 import { Text } from "../Themed/ThemedText/Text";
 import { HStack } from "../Stack/HStack/HStack";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { Fragment, useCallback, useEffect, useMemo, useState } from "react";
 import { ThemedBottomSheetModal, useBottomSheetRef } from "../BottomSheetModal/ThemedBottomSheetModal";
 import { PageContent } from "../PageContent/PageContent";
 import { WorkoutCompleteStatTile } from "./WorkoutCompleteStatTile";
 import { AppState, useAppDispatch, useAppSelector } from "../../store";
-import {
-    getPostWorkoutTrend,
-    getPostWorkoutWorkout,
-    getWorkoutStatsById,
-} from "../../store/selectors/workout/workoutSelectors";
+import { getPostWorkoutTrend, getPostWorkoutWorkout, getWorkoutStatsById } from "../../store/selectors/workout/workoutSelectors";
 import { setShowPostWorkoutScreen } from "../../store/reducers/workout";
 import { navigationRef } from "../../hooks/navigate";
 import { useTranslation } from "react-i18next";
@@ -18,6 +14,7 @@ import { useTheme } from "../../theme/context";
 import { PostWorkoutScreen } from "../../store/reducers/workout/types";
 import { getUnitSystem } from "../../store/selectors/settings/settingsSelectors";
 import { trunicateToNthSignificantDigit } from "../../utils/number";
+import { getDurationInSecondsMinutesOrHours } from "../../utils/timeDisplay";
 
 const useDebouncedShowPostWorkoutScreen = () => {
     const postWorkoutStats = useAppSelector(getPostWorkoutWorkout);
@@ -34,31 +31,6 @@ const useDebouncedShowPostWorkoutScreen = () => {
     return debouncedShowPostWorkoutScreen;
 };
 
-const getDurationInSecondsMinutesOrHours = (duration: string) => {
-    const parsedDurationSeconds = parseFloat(duration) / 1000;
-    const hours = trunicateToNthSignificantDigit(parsedDurationSeconds / 3600, true, 0);
-    const minutes = trunicateToNthSignificantDigit((parsedDurationSeconds / 60) % 60, true, 0);
-
-    if (parsedDurationSeconds < 60) {
-        return {
-            value: parsedDurationSeconds.toString(),
-            unit: "s",
-        };
-    }
-
-    if (minutes < 60) {
-        return {
-            value: minutes.toString(),
-            unit: "min",
-        };
-    }
-
-    return {
-        value: hours.toString(),
-        unit: "h",
-    };
-};
-
 const useHeaderStats = () => {
     const postWorkoutTrend = useAppSelector((state: AppState) => getPostWorkoutTrend(state));
     const { t } = useTranslation();
@@ -69,12 +41,15 @@ const useHeaderStats = () => {
     const trendStat = useMemo(() => {
         const isEven = postWorkoutTrend?.percent === 0;
 
-        const trendText = `post_workout_${
-            isEven ? "even" : postWorkoutTrend?.isPositive ? "more" : "less"
-        }_performance`;
+        const trendText = `post_workout_${isEven ? "even" : postWorkoutTrend?.isPositive ? "more" : "less"}_performance`;
 
         const icon = isEven ? "arrow-right" : postWorkoutTrend?.isPositive ? "arrow-up" : "arrow-down";
         const iconColor = isEven ? successColor : postWorkoutTrend?.isPositive ? successColor : errorColor;
+
+        if (!postWorkoutTrend) {
+            return undefined;
+        }
+
         return {
             value: trunicateToNthSignificantDigit(postWorkoutTrend?.percent ?? 0, false, 0),
             unit: "%",
@@ -82,33 +57,26 @@ const useHeaderStats = () => {
             icon,
             iconColor,
         } as const;
-    }, [errorColor, postWorkoutTrend?.isPositive, postWorkoutTrend?.percent, successColor, t]);
+    }, [errorColor, postWorkoutTrend, successColor, t]);
 
     const overallWeightMoved = useMemo(() => {
-        const weightMoved = postWorkout?.doneWorkouts[postWorkout?.doneWorkouts.length - 1].doneExercises?.reduce(
-            (sum, doneExercise) => {
-                if (doneExercise.type === "TIME_BASED") {
-                    return (
-                        sum +
-                        doneExercise.sets.reduce((sum, set) => {
-                            return (
-                                sum +
-                                parseFloat(set?.durationMinutes ?? "0") * 60 * 1000 +
-                                parseFloat(set?.durationSeconds ?? "0") * 1000
-                            );
-                        }, 0)
-                    );
-                }
-
+        const weightMoved = postWorkout?.doneWorkouts[postWorkout?.doneWorkouts.length - 1].doneExercises?.reduce((sum, doneExercise) => {
+            if (doneExercise.type === "TIME_BASED") {
                 return (
                     sum +
                     doneExercise.sets.reduce((sum, set) => {
-                        return sum + parseFloat(set?.weight ?? "0") * parseFloat(set?.reps ?? "0");
+                        return sum + parseFloat(set?.durationMinutes ?? "0") * 60 * 1000 + parseFloat(set?.durationSeconds ?? "0") * 1000;
                     }, 0)
                 );
-            },
-            0,
-        );
+            }
+
+            return (
+                sum +
+                doneExercise.sets.reduce((sum, set) => {
+                    return sum + parseFloat(set?.weight ?? "0") * parseFloat(set?.reps ?? "0");
+                }, 0)
+            );
+        }, 0);
 
         if (weightMoved === undefined) {
             return {} as PostWorkoutScreen["stats"][number];
@@ -154,16 +122,16 @@ const useHeaderStats = () => {
     }, [postWorkout?.doneWorkouts, t, unitSystem]);
 
     const durationStat = useMemo(() => {
-        const duration = getDurationInSecondsMinutesOrHours("3420000");
+        const duration = getDurationInSecondsMinutesOrHours(postWorkout?.doneWorkouts?.[postWorkout?.doneWorkouts?.length - 1].duration ?? "0");
 
         return {
-            value: duration.value,
+            value: duration.value.toString(),
             icon: "timer-outline",
             iconColor: mainColor,
             text: t("post_workout_duration"),
             unit: duration?.unit ?? "s",
         } as const;
-    }, [mainColor, t]);
+    }, [mainColor, postWorkout?.doneWorkouts, t]);
 
     return useMemo(() => {
         return [trendStat, overallWeightMoved, durationStat] as const;
@@ -190,10 +158,7 @@ export const WorkoutCompleteModal = () => {
         }
     }, [isVisible]);
 
-    const title = useMemo(
-        () => `${postWorkout?.name ?? t("workout")} ${t("post_workout_title_completed")}!`,
-        [postWorkout?.name, t],
-    );
+    const title = useMemo(() => `${postWorkout?.name ?? t("workout")} ${t("post_workout_title_completed")}!`, [postWorkout?.name, t]);
 
     return (
         <ThemedBottomSheetModal onRequestClose={handleHideShowModal} title={title} ref={ref}>
@@ -204,22 +169,13 @@ export const WorkoutCompleteModal = () => {
                     </Text>
                     <HStack ghost gap>
                         {headerStats?.map((stat) => {
-                            return (
-                                <WorkoutCompleteStatTile
-                                    key={`${postWorkout?.workoutId} ${stat.value} ${stat.text}`}
-                                    {...stat}
-                                />
-                            );
+                            return stat && <Fragment key={`${postWorkout?.workoutId} ${stat.value} ${stat.text}\`} `}>{<WorkoutCompleteStatTile {...stat} />}</Fragment>;
                         })}
                     </HStack>
                 </ThemedView>
                 {Object.values(workoutStats ?? {})?.map((stat) => {
                     return (
-                        <ThemedView
-                            key={`${postWorkout?.workoutId} ${stat.value} ${stat.text}`}
-                            padding
-                            round
-                            background>
+                        <ThemedView key={`${postWorkout?.workoutId} ${stat.value} ${stat.text}`} padding round background>
                             <HStack center ghost style={{ justifyContent: "space-evenly" }}>
                                 <Text ghost style={{ fontSize: 30, flex: 0.5 }}>
                                     {stat.value} {stat?.unit}
