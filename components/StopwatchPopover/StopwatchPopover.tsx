@@ -57,7 +57,7 @@ export const StopwatchPopover = () => {
         } else {
             openBottomSheet();
         }
-    }, [remainingTime, showPopover]);
+    }, [closeBottomSheet, openBottomSheet, remainingTime, showPopover]);
 
     useEffect(() => {
         if (showPopover) {
