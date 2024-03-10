@@ -4,13 +4,11 @@ import React, { useCallback, useMemo } from "react";
 import { mutateStopwatchSettings } from "../../../../../../store/reducers/settings";
 import { getStartStopwatchOnDoneSet } from "../../../../../../store/selectors/settings/settingsSelectors";
 import { CheckBox } from "../../../../../Themed/CheckBox/CheckBox";
-import { useBottomSheetRef } from "../../../../../BottomSheetModal/ThemedBottomSheetModal";
 import { ThemedView } from "../../../../../Themed/ThemedView/View";
 
 export const StopwatchSelection = () => {
     const { t } = useTranslation();
     const startStopwatchOnDoneSet = useAppSelector(getStartStopwatchOnDoneSet);
-    const { ref, openBottomSheet } = useBottomSheetRef();
 
     const dispatch = useAppDispatch();
 
@@ -28,13 +26,7 @@ export const StopwatchSelection = () => {
 
     return (
         <ThemedView ghost>
-            <CheckBox
-                helpTextConfig={doneSetHelpText}
-                label={t("settings_stopwatch_done_set")}
-                size={26}
-                checked={startStopwatchOnDoneSet}
-                onChecked={handleSelectStartStopwatchOnDoneSet}
-            />
+            <CheckBox helpTextConfig={doneSetHelpText} label={t("settings_stopwatch_done_set")} size={26} checked={startStopwatchOnDoneSet} onChecked={handleSelectStartStopwatchOnDoneSet} />
         </ThemedView>
     );
 };
