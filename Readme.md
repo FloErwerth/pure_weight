@@ -78,3 +78,4 @@ Build Number 27
 - Fixed trend display
 - Adjust added done sets to done workouts
 - Fixed saving history entries
+- Added support for time based exercises in post workout screen
