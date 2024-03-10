@@ -72,7 +72,7 @@ export const WorkoutHistoryOverview = ({
             </PageContent>
             <PageContent scrollable paddingTop={15} ghost>
                 {doneWorkout?.doneExercises?.map((item) => (
-                    <ThemedPressable key={item.doneExerciseId} input padding round style={{ padding: 15 }} onPress={() => handleNavigateToHistoryEdit(item)}>
+                    <ThemedPressable key={item.originalExerciseId} input padding round style={{ padding: 15 }} onPress={() => handleNavigateToHistoryEdit(item)}>
                         <HStack center style={{ justifyContent: "space-between" }} ghost>
                             <Text ghost>{item?.name}</Text>
                             <ThemedMaterialCommunityIcons ghost name="chevron-right" size={26} />
