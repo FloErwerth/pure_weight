@@ -205,7 +205,6 @@ export const WorkoutCompleteModal = () => {
         }
         return 3;
     }, [headerStats.length]);
-    console.log(headerStats.length);
 
     return (
         <ThemedBottomSheetModal onRequestClose={handleHideShowModal} title={title} ref={ref}>

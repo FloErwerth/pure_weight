@@ -2,7 +2,7 @@ import { useTranslation } from "react-i18next";
 import { useAppDispatch, useAppSelector } from "../../../../../../store";
 import { useCallback, useMemo } from "react";
 import { getUpdatePrefilledWorkoutValues } from "../../../../../../store/selectors/settings/settingsSelectors";
-import { setSwitchToNextExercise } from "../../../../../../store/reducers/settings";
+import { setUpdatePrefilledWorkoutValues } from "../../../../../../store/reducers/settings";
 import { CheckBox } from "../../../../../Themed/CheckBox/CheckBox";
 
 export const UpdateWorkoutAutomaticallySelection = () => {
@@ -12,7 +12,7 @@ export const UpdateWorkoutAutomaticallySelection = () => {
 
     const handleSwitchUpdates = useCallback(
         (shouldSwitch: boolean) => {
-            dispatch(setSwitchToNextExercise(shouldSwitch));
+            dispatch(setUpdatePrefilledWorkoutValues(shouldSwitch));
         },
         [dispatch],
     );
@@ -25,13 +25,5 @@ export const UpdateWorkoutAutomaticallySelection = () => {
         [t],
     );
 
-    return (
-        <CheckBox
-            label={t("settings_update_workout_automatically_title")}
-            helpTextConfig={helpText}
-            size={26}
-            checked={updateAutomatically}
-            onChecked={handleSwitchUpdates}
-        />
-    );
+    return <CheckBox label={t("settings_update_workout_automatically_title")} helpTextConfig={helpText} size={26} checked={updateAutomatically} onChecked={handleSwitchUpdates} />;
 };

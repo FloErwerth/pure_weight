@@ -34,7 +34,7 @@ export const ThemedTextInput = ({ padding = true, ...props }: ThemedTextInputPro
 
     const handleTextInput = useCallback(
         (value: string) => {
-            if (hasError && props?.errorKey) {
+            if (props?.errorKey && hasError) {
                 dispatch(cleanError([props?.errorKey]));
             }
             props.onChangeText?.(value);
@@ -67,23 +67,9 @@ export const ThemedTextInput = ({ padding = true, ...props }: ThemedTextInputPro
             styles.base,
             props.style,
         ];
-        const errorStyle = hasError
-            ? { color: errorColor, borderWidth: props.hideErrorBorder ? 0 : 1, borderColor: errorColor }
-            : {};
+        const errorStyle = hasError ? { color: errorColor, borderWidth: props.hideErrorBorder ? 0 : 1, borderColor: errorColor } : {};
         return [errorStyle, baseStyle];
-    }, [
-        backgroundColor,
-        editable,
-        errorColor,
-        hasError,
-        mainColor,
-        props.hideErrorBorder,
-        padding,
-        props.round,
-        props.stretch,
-        props.style,
-        textDisabled,
-    ]);
+    }, [backgroundColor, editable, errorColor, hasError, mainColor, props.hideErrorBorder, padding, props.round, props.stretch, props.style, textDisabled]);
 
     return (
         <>
@@ -107,7 +93,7 @@ export const ThemedTextInput = ({ padding = true, ...props }: ThemedTextInputPro
                     placeholderTextColor={placeholderColor}
                 />
             )}
-            {hasError && props?.errorKey && <ErrorText errorKey={props.errorKey} />}
+            {props?.errorKey && hasError && <ErrorText errorKey={props.errorKey} />}
         </>
     );
 };

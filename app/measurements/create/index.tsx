@@ -1,10 +1,6 @@
 import { useAppDispatch, useAppSelector } from "../../../store";
 import { getUnitSystem } from "../../../store/selectors/settings/settingsSelectors";
-import {
-    getDatesFromCurrentMeasurement,
-    getEditedMeasurement,
-    getUnitByType,
-} from "../../../store/selectors/measurements/measurementSelectors";
+import { getDatesFromCurrentMeasurement, getEditedMeasurement, getUnitByType } from "../../../store/selectors/measurements/measurementSelectors";
 import React, { useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { mutateEditedMeasurement, saveEditedMeasurement } from "../../../store/reducers/measurements";
@@ -63,7 +59,7 @@ const getTypeByUnit = (unit: string) => {
 
 const MAX_DATE = getDateTodayIso();
 
-const useIsValidMeasurement = () => {
+const useIsValidMeasurement = (isEditing?: boolean) => {
     const editedMeasurement = useAppSelector(getEditedMeasurement);
     const dispatch = useAppDispatch();
 
@@ -75,7 +71,7 @@ const useIsValidMeasurement = () => {
         if (!editedMeasurement?.measurement?.type) {
             errors.push("create_measurement_type");
         }
-        if (!editedMeasurement?.measurement?.value || editedMeasurement?.measurement?.value === "0") {
+        if ((!isEditing && !editedMeasurement?.measurement?.value) || editedMeasurement?.measurement?.value === "0") {
             errors.push("create_measurement_value");
         }
         if (errors.length > 0) {
@@ -83,12 +79,7 @@ const useIsValidMeasurement = () => {
             return false;
         }
         return true;
-    }, [
-        dispatch,
-        editedMeasurement?.measurement?.name,
-        editedMeasurement?.measurement?.type,
-        editedMeasurement?.measurement?.value,
-    ]);
+    }, [dispatch, editedMeasurement?.measurement?.name, editedMeasurement?.measurement?.type, editedMeasurement?.measurement?.value, isEditing]);
 };
 
 export const CreateMeasurement = () => {
@@ -103,7 +94,7 @@ export const CreateMeasurement = () => {
     const isEditing = editedMeasurement?.isEditing;
     const isAddingData = !editedMeasurement?.isEditing && !editedMeasurement?.isNew;
     const unitSystem = useAppSelector(getUnitSystem);
-    const getIsValidMeasurement = useIsValidMeasurement();
+    const getIsValidMeasurement = useIsValidMeasurement(isEditing);
     const { ref: discardWarningRef, openBottomSheet: openDiscardWarning } = useBottomSheetRef();
     const { ref: dateWarningRef, openBottomSheet: openDateWarning } = useBottomSheetRef();
 
@@ -186,7 +177,10 @@ export const CreateMeasurement = () => {
     const handleSaveMeasurement = useCallback(() => {
         const sameDateIndex = dates?.findIndex((searchDate) => searchDate === date);
         dispatch(
-            saveEditedMeasurement({ isoDate: date, replaceIndex: sameDateIndex !== -1 ? sameDateIndex : undefined }),
+            saveEditedMeasurement({
+                isoDate: date,
+                replaceIndex: sameDateIndex !== -1 ? sameDateIndex : undefined,
+            }),
         );
         navigateBack();
     }, [date, dates, dispatch, navigateBack]);
@@ -204,7 +198,10 @@ export const CreateMeasurement = () => {
     }, [getIsValidMeasurement, dates, isEditing, handleSaveMeasurement, date, openDateWarning]);
 
     const helpText = useMemo(
-        () => ({ title: t("measurement_higher_is_better"), text: t("measurement_higher_is_better_help") }),
+        () => ({
+            title: t("measurement_higher_is_better"),
+            text: t("measurement_higher_is_better_help"),
+        }),
         [t],
     );
 
@@ -222,38 +219,17 @@ export const CreateMeasurement = () => {
     }, [handleNavigateBack, openDiscardWarning, wasEdited]);
 
     const discardWarningTitle = useMemo(
-        () =>
-            t(
-                isAddingData
-                    ? "alert_add_measurement_data_title"
-                    : !isEditing
-                      ? "alert_create_discard_title"
-                      : "alert_edit_discard_title",
-            ),
+        () => t(isAddingData ? "alert_add_measurement_data_title" : !isEditing ? "alert_create_discard_title" : "alert_edit_discard_title"),
         [isAddingData, isEditing, t],
     );
 
     const discardWarningContent = useMemo(
-        () =>
-            t(
-                isAddingData
-                    ? "alert_add_measurement_data_content"
-                    : !isEditing
-                      ? "alert_create_measurement_discard_content"
-                      : "alert_edit_measurement_discard_content",
-            ),
+        () => t(isAddingData ? "alert_add_measurement_data_content" : !isEditing ? "alert_create_measurement_discard_content" : "alert_edit_measurement_discard_content"),
         [isAddingData, isEditing, t],
     );
 
     const discardWarningConfirm = useMemo(
-        () =>
-            t(
-                isAddingData
-                    ? "alert_add_measurement_data_confirm"
-                    : !isEditing
-                      ? "alert_create_confirm_cancel"
-                      : "alert_edit_confirm_cancel",
-            ),
+        () => t(isAddingData ? "alert_add_measurement_data_confirm" : !isEditing ? "alert_create_confirm_cancel" : "alert_edit_confirm_cancel"),
         [isAddingData, isEditing, t],
     );
 
@@ -264,7 +240,12 @@ export const CreateMeasurement = () => {
     const dateConfig = useMemo(
         () =>
             dates?.map(
-                (date, index) => ({ date, marked: true, latest: index === dates?.length - 1 }) satisfies DateConfig,
+                (date, index) =>
+                    ({
+                        date,
+                        marked: true,
+                        latest: index === dates?.length - 1,
+                    }) satisfies DateConfig,
             ),
         [dates],
     );
@@ -330,12 +311,7 @@ export const CreateMeasurement = () => {
                             <Text style={{ fontSize: 20 }} ghost>
                                 {t("measurement_datapoint_date")}
                             </Text>
-                            <DatePicker
-                                handleSelectDate={handleDateChange}
-                                selectedDate={date}
-                                dateConfig={dateConfig}
-                                allSelectable
-                            />
+                            <DatePicker handleSelectDate={handleDateChange} selectedDate={date} dateConfig={dateConfig} allSelectable />
                         </ThemedView>
                     )}
                 </PageContent>
