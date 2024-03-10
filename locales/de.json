@@ -296,14 +296,15 @@
 
   "post_workout_title_completed": "abgeschlossen",
   "post_workout_overview_title": "Deine Übersicht",
-  "post_workout_more_performance": "bessere Leistung",
-  "post_workout_weight": "insgesamt bewegt",
+  "post_workout_weight": "Insgesamt bewegt",
+  "post_workout_time_in_exercise": "Zeit in zeitbasierten Übungen",
   "post_workout_times": "hast Du dieses Workout bereits absolviert",
   "post_workout_sets": "Sätze hast Du als abgeschlossen markiert",
   "post_workout_reps": "Wiederholungen hast Du insgesamt absolviert",
-  "post_workout_total_duration": "Zeit bei diesem Workout verbracht",
+  "post_workout_total_duration": "hast Du insgesamt in diesem Workout verbracht",
 
+  "post_workout_more_performance": "Leistungssteigerung",
   "post_workout_even_performance": "Leistungsveränderung",
-  "post_workout_less_performance": "weniger Leistung",
-  "post_workout_duration": "Zeit verbracht"
+  "post_workout_less_performance": "Leistungsminderung",
+  "post_workout_duration": "Session-Dauer"
 }

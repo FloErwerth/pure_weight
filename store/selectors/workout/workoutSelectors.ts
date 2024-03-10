@@ -377,7 +377,7 @@ export const getWorkoutStats = createSelector([getWorkouts], (workouts) => {
                 stats.set(currentWorkout.workoutId, {
                     totalTimes: {
                         value: 0,
-                        unit: "x",
+                        unit: undefined,
                         text: i18next.t("post_workout_times"),
                     },
                     totalSets: {
@@ -404,9 +404,12 @@ export const getWorkoutStats = createSelector([getWorkouts], (workouts) => {
                     doneWorkoutStats.totalDuration += parseFloat(doneWorkout.duration);
                     doneWorkout.doneExercises?.forEach((exercise) => {
                         doneWorkoutStats.totalSets += exercise.sets.length;
-                        doneWorkoutStats.totalReps += exercise.sets.reduce((sum, set) => {
-                            return sum + parseFloat(set.reps ?? "0");
-                        }, 0);
+                        doneWorkoutStats.totalReps +=
+                            exercise.type === "WEIGHT_BASED"
+                                ? exercise.sets.reduce((sum, set) => {
+                                      return sum + parseFloat(set.reps ?? "0");
+                                  }, 0)
+                                : 0;
                     });
 
                     return doneWorkoutStats;
@@ -435,7 +438,7 @@ export const getWorkoutStats = createSelector([getWorkouts], (workouts) => {
                 };
                 totalTimes: {
                     value: number;
-                    unit: string;
+                    unit: undefined;
                     text: string;
                 };
                 totalSets: {

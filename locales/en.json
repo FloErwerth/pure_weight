@@ -304,14 +304,15 @@
 
   "post_workout_title_completed": "completed",
   "post_workout_overview_title": "Your overview",
-  "post_workout_duration": "time spent",
+  "post_workout_duration": "session duration",
   "post_workout_weight": "total weight moved",
-  "post_workout_times": "times you have completed this workout",
-  "post_workout_sets": "Sets were marked as done",
-  "post_workout_reps": "Reps were done in total",
-  "post_workout_total_duration": "time spent for this workout",
+  "post_workout_times": "times completed this workout",
+  "post_workout_sets": "sets done in total",
+  "post_workout_reps": "seps done in total",
+  "post_workout_total_duration": "spent in total",
+  "post_workout_time_in_exercise": "spent in time-based exercises",
 
-  "post_workout_more_performance": "more performance",
-  "post_workout_even_performance": "performance change",
-  "post_workout_less_performance": "less performance"
+  "post_workout_more_performance": "Performance gain",
+  "post_workout_even_performance": "Performance change",
+  "post_workout_less_performance": "Performance loss"
 }
