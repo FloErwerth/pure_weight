@@ -24,8 +24,8 @@ export const WorkoutHistoryOverview = ({
     },
 }: NativeStackScreenProps<RoutesParamaters, "workouts/history/workout/index">) => {
     const doneWorkout = useAppSelector((state: AppState) => getDoneWorkoutById(state, doneWorkoutId));
-    const workoutName = useAppSelector((state: AppState) => getWorkoutByIndex(state, doneWorkout?.originalWorkoutId))
-        ?.name;
+    const workoutName = useAppSelector((state: AppState) => getWorkoutByIndex(state, doneWorkout?.originalWorkoutId))?.name;
+
     const language = useAppSelector(getLanguage);
     const { bottom } = useSafeAreaInsets();
     const navigate = useNavigate();
@@ -72,13 +72,7 @@ export const WorkoutHistoryOverview = ({
             </PageContent>
             <PageContent scrollable paddingTop={15} ghost>
                 {doneWorkout?.doneExercises?.map((item) => (
-                    <ThemedPressable
-                        key={item.doneExerciseId}
-                        input
-                        padding
-                        round
-                        style={{ padding: 15 }}
-                        onPress={() => handleNavigateToHistoryEdit(item)}>
+                    <ThemedPressable key={item.doneExerciseId} input padding round style={{ padding: 15 }} onPress={() => handleNavigateToHistoryEdit(item)}>
                         <HStack center style={{ justifyContent: "space-between" }} ghost>
                             <Text ghost>{item?.name}</Text>
                             <ThemedMaterialCommunityIcons ghost name="chevron-right" size={26} />

@@ -62,11 +62,11 @@ export const mockState: AppState = {
         workoutSorting: "A_Z",
         workouts: [
             {
-                workoutId: "workout-2",
+                workoutId: "workout-1",
                 name: "Push Workout 1",
                 exercises: [
                     {
-                        exerciseId: "exercise-3",
+                        exerciseId: "exercise-1",
                         name: "Bankdrücken",
                         sets: "5",
                         reps: "5",
@@ -78,7 +78,7 @@ export const mockState: AppState = {
                         durationMinutes: "",
                     },
                     {
-                        exerciseId: "exercise-4",
+                        exerciseId: "exercise-2",
                         name: "Überkopfdrücken",
                         sets: "5",
                         reps: "5",
@@ -90,7 +90,7 @@ export const mockState: AppState = {
                         durationMinutes: "",
                     },
                     {
-                        exerciseId: "exercise-10",
+                        exerciseId: "exercise-3",
                         name: "Butterfly",
                         sets: "5",
                         reps: "5",
@@ -102,7 +102,7 @@ export const mockState: AppState = {
                         durationMinutes: "",
                     },
                     {
-                        exerciseId: "exercise-11",
+                        exerciseId: "exercise-4",
                         name: "Seitheben",
                         sets: "5",
                         reps: "5",
@@ -114,7 +114,7 @@ export const mockState: AppState = {
                         durationMinutes: "",
                     },
                     {
-                        exerciseId: "exercise-12",
+                        exerciseId: "exercise-5",
                         name: "Trizeps",
                         sets: "5",
                         reps: "5",
@@ -129,7 +129,7 @@ export const mockState: AppState = {
                 doneWorkouts: [
                     {
                         doneWorkoutId: "workout-15",
-                        originalWorkoutId: "workout-2",
+                        originalWorkoutId: "workout-1",
                         isoDate: "2023-12-01",
                         duration: (50 * 60 * 1000).toString(),
                         doneExercises: [
@@ -138,7 +138,7 @@ export const mockState: AppState = {
                                 name: "Benchpress",
                                 note: "Felt really good today",
                                 fallbackSets: [],
-                                originalExerciseId: "exercise-3",
+                                originalExerciseId: "exercise-1",
                                 sets: [
                                     {
                                         reps: "5",
@@ -175,7 +175,7 @@ export const mockState: AppState = {
                                 doneExerciseId: "exercise-122",
                                 name: "Military Press",
                                 fallbackSets: [],
-                                originalExerciseId: "exercise-4",
+                                originalExerciseId: "exercise-2",
                                 sets: [
                                     {
                                         reps: "5",
@@ -212,7 +212,7 @@ export const mockState: AppState = {
                     },
                     {
                         doneWorkoutId: "workout-15",
-                        originalWorkoutId: "workout-2",
+                        originalWorkoutId: "workout-1",
                         isoDate: "2023-12-27",
                         duration: (50 * 60 * 1000).toString(),
                         doneExercises: [
@@ -221,7 +221,7 @@ export const mockState: AppState = {
                                 name: "Benchpress",
                                 note: "Felt really good today",
                                 fallbackSets: [],
-                                originalExerciseId: "exercise-3",
+                                originalExerciseId: "exercise-1",
                                 sets: [
                                     {
                                         reps: "5",
@@ -258,7 +258,7 @@ export const mockState: AppState = {
                                 doneExerciseId: "exercise-122",
                                 name: "Military Press",
                                 fallbackSets: [],
-                                originalExerciseId: "exercise-4",
+                                originalExerciseId: "exercise-2",
                                 sets: [
                                     {
                                         reps: "5",
@@ -295,7 +295,7 @@ export const mockState: AppState = {
                     },
                     {
                         doneWorkoutId: "workout-15",
-                        originalWorkoutId: "workout-2",
+                        originalWorkoutId: "workout-1",
                         isoDate: "2023-12-29",
                         duration: (50 * 60 * 1000).toString(),
                         doneExercises: [
@@ -304,7 +304,7 @@ export const mockState: AppState = {
                                 name: "Benchpress",
                                 note: "Felt really good today",
                                 fallbackSets: [],
-                                originalExerciseId: "exercise-3",
+                                originalExerciseId: "exercise-1",
                                 sets: [
                                     {
                                         reps: "5",
@@ -341,7 +341,7 @@ export const mockState: AppState = {
                                 doneExerciseId: "exercise-122",
                                 name: "Military Press",
                                 fallbackSets: [],
-                                originalExerciseId: "exercise-4",
+                                originalExerciseId: "exercise-2",
                                 sets: [
                                     {
                                         reps: "6",
@@ -378,7 +378,7 @@ export const mockState: AppState = {
                     },
                     {
                         doneWorkoutId: "workout-15",
-                        originalWorkoutId: "workout-2",
+                        originalWorkoutId: "workout-1",
                         isoDate: "2024-01-02",
                         duration: (50 * 60 * 1000).toString(),
                         doneExercises: [
@@ -387,7 +387,7 @@ export const mockState: AppState = {
                                 name: "Benchpress",
                                 note: "Felt really good today",
                                 fallbackSets: [],
-                                originalExerciseId: "exercise-3",
+                                originalExerciseId: "exercise-1",
                                 sets: [
                                     {
                                         reps: "5",
@@ -424,7 +424,7 @@ export const mockState: AppState = {
                                 doneExerciseId: "exercise-122",
                                 name: "Military Press",
                                 fallbackSets: [],
-                                originalExerciseId: "exercise-4",
+                                originalExerciseId: "exercise-2",
                                 sets: [
                                     {
                                         reps: "5",
@@ -461,7 +461,7 @@ export const mockState: AppState = {
                     },
                     {
                         doneWorkoutId: "workout-15",
-                        originalWorkoutId: "workout-2",
+                        originalWorkoutId: "workout-1",
                         isoDate: "2024-01-04",
                         duration: (50 * 60 * 1000).toString(),
                         doneExercises: [
@@ -470,7 +470,7 @@ export const mockState: AppState = {
                                 name: "Benchpress",
                                 note: "Felt really good today",
                                 fallbackSets: [],
-                                originalExerciseId: "exercise-3",
+                                originalExerciseId: "exercise-1",
                                 sets: [
                                     {
                                         reps: "5",
@@ -507,7 +507,7 @@ export const mockState: AppState = {
                                 doneExerciseId: "exercise-122",
                                 name: "Military Press",
                                 fallbackSets: [],
-                                originalExerciseId: "exercise-4",
+                                originalExerciseId: "exercise-2",
                                 sets: [
                                     {
                                         reps: "6",
@@ -544,7 +544,7 @@ export const mockState: AppState = {
                     },
                     {
                         doneWorkoutId: "workout-15",
-                        originalWorkoutId: "workout-2",
+                        originalWorkoutId: "workout-1",
                         isoDate: "2024-01-05",
                         duration: (50 * 60 * 1000).toString(),
                         doneExercises: [
@@ -553,7 +553,7 @@ export const mockState: AppState = {
                                 name: "Benchpress",
                                 note: "Felt really good today",
                                 fallbackSets: [],
-                                originalExerciseId: "exercise-3",
+                                originalExerciseId: "exercise-1",
                                 sets: [
                                     {
                                         reps: "5",
@@ -590,7 +590,7 @@ export const mockState: AppState = {
                                 doneExerciseId: "exercise-122",
                                 name: "Military Press",
                                 fallbackSets: [],
-                                originalExerciseId: "exercise-4",
+                                originalExerciseId: "exercise-2",
                                 sets: [
                                     {
                                         reps: "5",
@@ -627,7 +627,7 @@ export const mockState: AppState = {
                     },
                     {
                         doneWorkoutId: "workout-15",
-                        originalWorkoutId: "workout-2",
+                        originalWorkoutId: "workout-1",
                         isoDate: "2024-01-08",
                         duration: (50 * 60 * 1000).toString(),
                         doneExercises: [
@@ -636,7 +636,7 @@ export const mockState: AppState = {
                                 name: "Benchpress",
                                 note: "Felt really good today",
                                 fallbackSets: [],
-                                originalExerciseId: "exercise-3",
+                                originalExerciseId: "exercise-1",
                                 sets: [
                                     {
                                         reps: "5",
@@ -673,7 +673,7 @@ export const mockState: AppState = {
                                 doneExerciseId: "exercise-122",
                                 name: "Military Press",
                                 fallbackSets: [],
-                                originalExerciseId: "exercise-4",
+                                originalExerciseId: "exercise-2",
                                 sets: [
                                     {
                                         reps: "6",
@@ -710,7 +710,7 @@ export const mockState: AppState = {
                     },
                     {
                         doneWorkoutId: "workout-15",
-                        originalWorkoutId: "workout-2",
+                        originalWorkoutId: "workout-1",
                         isoDate: "2024-01-11",
                         duration: (50 * 60 * 1000).toString(),
                         doneExercises: [
@@ -719,7 +719,7 @@ export const mockState: AppState = {
                                 name: "Benchpress",
                                 note: "Felt really good today",
                                 fallbackSets: [],
-                                originalExerciseId: "exercise-3",
+                                originalExerciseId: "exercise-1",
                                 sets: [
                                     {
                                         reps: "5",
@@ -756,7 +756,7 @@ export const mockState: AppState = {
                                 doneExerciseId: "exercise-122",
                                 name: "Military Press",
                                 fallbackSets: [],
-                                originalExerciseId: "exercise-4",
+                                originalExerciseId: "exercise-2",
                                 sets: [
                                     {
                                         reps: "5",
@@ -793,7 +793,7 @@ export const mockState: AppState = {
                     },
                     {
                         doneWorkoutId: "workout-15",
-                        originalWorkoutId: "workout-2",
+                        originalWorkoutId: "workout-1",
                         isoDate: "2024-01-13",
                         duration: (50 * 60 * 1000).toString(),
                         doneExercises: [
@@ -802,7 +802,7 @@ export const mockState: AppState = {
                                 name: "Benchpress",
                                 note: "Felt really good today",
                                 fallbackSets: [],
-                                originalExerciseId: "exercise-3",
+                                originalExerciseId: "exercise-1",
                                 sets: [
                                     {
                                         reps: "5",
@@ -839,7 +839,7 @@ export const mockState: AppState = {
                                 doneExerciseId: "exercise-122",
                                 name: "Military Press",
                                 fallbackSets: [],
-                                originalExerciseId: "exercise-4",
+                                originalExerciseId: "exercise-2",
                                 sets: [
                                     {
                                         reps: "5",
@@ -876,7 +876,7 @@ export const mockState: AppState = {
                     },
                     {
                         doneWorkoutId: "workout-15",
-                        originalWorkoutId: "workout-2",
+                        originalWorkoutId: "workout-1",
                         isoDate: "2023-12-01",
                         duration: (50 * 60 * 1000).toString(),
                         doneExercises: [
@@ -885,7 +885,7 @@ export const mockState: AppState = {
                                 name: "Benchpress",
                                 note: "Felt really good today",
                                 fallbackSets: [],
-                                originalExerciseId: "exercise-3",
+                                originalExerciseId: "exercise-1",
                                 sets: [
                                     {
                                         reps: "5",
@@ -922,7 +922,7 @@ export const mockState: AppState = {
                                 doneExerciseId: "exercise-122",
                                 name: "Military Press",
                                 fallbackSets: [],
-                                originalExerciseId: "exercise-4",
+                                originalExerciseId: "exercise-2",
                                 sets: [
                                     {
                                         reps: "5",
@@ -959,7 +959,7 @@ export const mockState: AppState = {
                     },
                     {
                         doneWorkoutId: "workout-15",
-                        originalWorkoutId: "workout-2",
+                        originalWorkoutId: "workout-1",
                         isoDate: "2023-12-01",
                         duration: (50 * 60 * 1000).toString(),
                         doneExercises: [
@@ -968,7 +968,7 @@ export const mockState: AppState = {
                                 name: "Benchpress",
                                 note: "Felt really good today",
                                 fallbackSets: [],
-                                originalExerciseId: "exercise-3",
+                                originalExerciseId: "exercise-1",
                                 sets: [
                                     {
                                         reps: "5",
@@ -1005,7 +1005,7 @@ export const mockState: AppState = {
                                 doneExerciseId: "exercise-122",
                                 name: "Military Press",
                                 fallbackSets: [],
-                                originalExerciseId: "exercise-4",
+                                originalExerciseId: "exercise-2",
                                 sets: [
                                     {
                                         reps: "5",
@@ -1041,8 +1041,8 @@ export const mockState: AppState = {
                         ],
                     },
                     {
-                        doneWorkoutId: "workout-25",
-                        originalWorkoutId: "workout-2",
+                        doneWorkoutId: "workout-15",
+                        originalWorkoutId: "workout-1",
                         isoDate: "2023-12-01",
                         duration: (50 * 60 * 1000).toString(),
                         doneExercises: [
@@ -1051,7 +1051,7 @@ export const mockState: AppState = {
                                 name: "Benchpress",
                                 note: "Felt really good today",
                                 fallbackSets: [],
-                                originalExerciseId: "exercise-3",
+                                originalExerciseId: "exercise-1",
                                 sets: [
                                     {
                                         reps: "5",
@@ -1088,7 +1088,7 @@ export const mockState: AppState = {
                                 doneExerciseId: "exercise-222",
                                 name: "Military Press",
                                 fallbackSets: [],
-                                originalExerciseId: "exercise-4",
+                                originalExerciseId: "exercise-2",
                                 sets: [
                                     {
                                         reps: "5",
@@ -1124,8 +1124,8 @@ export const mockState: AppState = {
                         ],
                     },
                     {
-                        doneWorkoutId: "workout-26",
-                        originalWorkoutId: "workout-2",
+                        doneWorkoutId: "workout-16",
+                        originalWorkoutId: "workout-1",
                         isoDate: "2023-12-01",
                         duration: (57 * 60 * 1000).toString(),
                         doneExercises: [
@@ -1134,7 +1134,7 @@ export const mockState: AppState = {
                                 name: "Benchpress",
                                 note: "Felt really good today",
                                 fallbackSets: [],
-                                originalExerciseId: "exercise-3",
+                                originalExerciseId: "exercise-1",
                                 sets: [
                                     {
                                         reps: "5",
@@ -1171,7 +1171,7 @@ export const mockState: AppState = {
                                 doneExerciseId: "exercise-224",
                                 name: "Military Press",
                                 fallbackSets: [],
-                                originalExerciseId: "exercise-4",
+                                originalExerciseId: "exercise-2",
                                 sets: [
                                     {
                                         reps: "5",
@@ -1208,7 +1208,7 @@ export const mockState: AppState = {
                     },
                     {
                         doneWorkoutId: "workout-124",
-                        originalWorkoutId: "workout-2",
+                        originalWorkoutId: "workout-1",
                         isoDate: "2024-03-01",
                         duration: (50 * 60 * 1000).toString(),
                         doneExercises: [
@@ -1217,7 +1217,7 @@ export const mockState: AppState = {
                                 name: "Benchpress",
                                 note: "Maybe bit slower on the end",
                                 fallbackSets: [],
-                                originalExerciseId: "exercise-3",
+                                originalExerciseId: "exercise-1",
                                 sets: [
                                     {
                                         reps: "5",
@@ -1254,230 +1254,32 @@ export const mockState: AppState = {
                                 doneExerciseId: "exercise-14",
                                 name: "Military Press",
                                 fallbackSets: [],
-                                originalExerciseId: "exercise-4",
-                                sets: [
-                                    {
-                                        reps: "5",
-                                        weight: "12.5",
-                                        durationMinutes: "",
-                                        durationSeconds: "",
-                                        confirmed: true,
-                                    },
-                                    {
-                                        reps: "5",
-                                        weight: "12.5",
-                                        durationMinutes: "",
-                                        durationSeconds: "",
-                                        confirmed: true,
-                                    },
-                                    {
-                                        reps: "5",
-                                        weight: "12.5",
-                                        durationMinutes: "",
-                                        durationSeconds: "",
-                                        confirmed: true,
-                                    },
-                                    {
-                                        reps: "5",
-                                        weight: "12.5",
-                                        durationMinutes: "",
-                                        durationSeconds: "",
-                                        confirmed: true,
-                                    },
-                                ],
-                                type: "WEIGHT_BASED",
-                            },
-                        ],
-                    },
-                ],
-            },
-            {
-                workoutId: "workout-1",
-                name: "Pull Workout 1",
-                exercises: [
-                    {
-                        exerciseId: "exercise-1",
-                        name: "Pull Ups",
-                        sets: "5",
-                        reps: "5",
-                        weight: "85",
-                        type: "WEIGHT_BASED",
-                        pauseSeconds: "0",
-                        pauseMinutes: "2",
-                        durationSeconds: "",
-                        durationMinutes: "",
-                    },
-                    {
-                        exerciseId: "exercise-2",
-                        name: "Pull Downs (Machine)",
-                        sets: "4",
-                        reps: "8",
-                        weight: "60",
-                        type: "WEIGHT_BASED",
-                        pauseSeconds: "0",
-                        pauseMinutes: "2",
-                        durationSeconds: "",
-                        durationMinutes: "",
-                    },
-                ],
-                doneWorkouts: [
-                    {
-                        doneWorkoutId: "workout-11",
-                        originalWorkoutId: "workout-1",
-                        isoDate: "2023-12-01",
-                        duration: (50 / 60 / 60 / 1000).toString(),
-                        doneExercises: [
-                            {
-                                doneExerciseId: "exercise-11",
-                                name: "Pull Ups",
-                                note: "Felt really good today",
-                                fallbackSets: [],
-                                originalExerciseId: "exercise-1",
-                                sets: [
-                                    {
-                                        reps: "5",
-                                        weight: "85",
-                                        durationMinutes: "",
-                                        durationSeconds: "",
-                                        confirmed: true,
-                                    },
-                                    {
-                                        reps: "5",
-                                        weight: "85",
-                                        durationMinutes: "",
-                                        durationSeconds: "",
-                                        confirmed: true,
-                                    },
-                                    {
-                                        reps: "5",
-                                        weight: "85",
-                                        durationMinutes: "",
-                                        durationSeconds: "",
-                                        confirmed: true,
-                                    },
-                                    {
-                                        reps: "5",
-                                        weight: "85",
-                                        durationMinutes: "",
-                                        durationSeconds: "",
-                                        confirmed: true,
-                                    },
-                                ],
-                                type: "WEIGHT_BASED",
-                            },
-                            {
-                                doneExerciseId: "exercise-12",
-                                name: "Pull Downs (Machine)",
-                                fallbackSets: [],
                                 originalExerciseId: "exercise-2",
                                 sets: [
                                     {
-                                        reps: "8",
-                                        weight: "60",
-                                        durationMinutes: "",
-                                        durationSeconds: "",
-                                        confirmed: true,
-                                    },
-                                    {
-                                        reps: "8",
-                                        weight: "60",
-                                        durationMinutes: "",
-                                        durationSeconds: "",
-                                        confirmed: true,
-                                    },
-                                    {
-                                        reps: "8",
-                                        weight: "60",
-                                        durationMinutes: "",
-                                        durationSeconds: "",
-                                        confirmed: true,
-                                    },
-                                    {
-                                        reps: "8",
-                                        weight: "60",
-                                        durationMinutes: "",
-                                        durationSeconds: "",
-                                        confirmed: true,
-                                    },
-                                ],
-                                type: "WEIGHT_BASED",
-                            },
-                        ],
-                    },
-                    {
-                        doneWorkoutId: "workout-12",
-                        originalWorkoutId: "workout-1",
-                        isoDate: "2024-03-02",
-                        duration: (50 / 60 / 60 / 1000).toString(),
-                        doneExercises: [
-                            {
-                                doneExerciseId: "exercise-13",
-                                name: "Pull Ups",
-                                note: "Felt really good today",
-                                fallbackSets: [],
-                                originalExerciseId: "exercise-1",
-                                sets: [
-                                    {
                                         reps: "5",
-                                        weight: "90",
+                                        weight: "12.5",
                                         durationMinutes: "",
                                         durationSeconds: "",
                                         confirmed: true,
                                     },
                                     {
                                         reps: "5",
-                                        weight: "90",
+                                        weight: "12.5",
                                         durationMinutes: "",
                                         durationSeconds: "",
                                         confirmed: true,
                                     },
                                     {
                                         reps: "5",
-                                        weight: "90",
+                                        weight: "12.5",
                                         durationMinutes: "",
                                         durationSeconds: "",
                                         confirmed: true,
                                     },
                                     {
                                         reps: "5",
-                                        weight: "90",
-                                        durationMinutes: "",
-                                        durationSeconds: "",
-                                        confirmed: true,
-                                    },
-                                ],
-                                type: "WEIGHT_BASED",
-                            },
-                            {
-                                doneExerciseId: "exercise-14",
-                                name: "Pull Downs (Machine)",
-                                fallbackSets: [],
-                                originalExerciseId: "exercise-2",
-                                sets: [
-                                    {
-                                        reps: "8",
-                                        weight: "60",
-                                        durationMinutes: "",
-                                        durationSeconds: "",
-                                        confirmed: true,
-                                    },
-                                    {
-                                        reps: "8",
-                                        weight: "60",
-                                        durationMinutes: "",
-                                        durationSeconds: "",
-                                        confirmed: true,
-                                    },
-                                    {
-                                        reps: "8",
-                                        weight: "60",
-                                        durationMinutes: "",
-                                        durationSeconds: "",
-                                        confirmed: true,
-                                    },
-                                    {
-                                        reps: "8",
-                                        weight: "60",
+                                        weight: "12.5",
                                         durationMinutes: "",
                                         durationSeconds: "",
                                         confirmed: true,

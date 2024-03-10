@@ -3,13 +3,7 @@ import { styles } from "../index/styles";
 import { Text } from "../../Themed/ThemedText/Text";
 import React, { useCallback } from "react";
 import { AppState, useAppDispatch, useAppSelector } from "../../../store";
-import {
-    getHasHistory,
-    getIsOngoingWorkout,
-    getLatestWorkoutDateDisplay,
-    getOverallTrainingTrend,
-    getWorkoutByIndex,
-} from "../../../store/selectors/workout/workoutSelectors";
+import { getHasHistory, getIsOngoingWorkout, getLatestWorkoutDateDisplay, getOverallTrainingTrend, getWorkoutByIndex } from "../../../store/selectors/workout/workoutSelectors";
 import { useNavigate } from "../../../hooks/navigate";
 import { TouchableHighlight, View } from "react-native";
 import { ProgressDisplay } from "../../WorkoutCard/components/ProgressDisplay/ProgressDisplay";
@@ -24,6 +18,7 @@ type RenderedWorkoutProps = {
 };
 export const RenderedWorkout = ({ workoutId }: RenderedWorkoutProps) => {
     const workout = useAppSelector((state: AppState) => getWorkoutByIndex(state, workoutId));
+
     const { secondaryBackgroundColor } = useTheme();
     const dispatch = useAppDispatch();
     const trend = useAppSelector((state: AppState) => getOverallTrainingTrend(state, workoutId));
@@ -44,9 +39,7 @@ export const RenderedWorkout = ({ workoutId }: RenderedWorkoutProps) => {
         navigate("history");
     }, [dispatch, workoutId, navigate]);
 
-    const pausedTrainingHint = isOngoingWorkout
-        ? { backgroundColor: secondaryBackgroundColor, ...styles.pausedTrainingHint }
-        : null;
+    const pausedTrainingHint = isOngoingWorkout ? { backgroundColor: secondaryBackgroundColor, ...styles.pausedTrainingHint } : null;
 
     return (
         <ThemedView padding ghost style={styles.outerTrainWrapper}>

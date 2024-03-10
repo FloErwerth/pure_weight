@@ -216,6 +216,7 @@ export const workoutReducer = createReducer<WorkoutState>(
                     const exercise = workout?.exercises?.find((exercise) => exercise.exerciseId === action.payload?.exerciseId);
                     if (exercise) {
                         state.editedExercise = {
+                            workoutId: action.payload.workoutId,
                             exercise,
                             isNewExercise: action.payload.isNewExercise,
                             stringifiedExercise: JSON.stringify(exercise),
@@ -327,10 +328,20 @@ export const workoutReducer = createReducer<WorkoutState>(
                     };
                 }
             })
-            .addCase(saveEditedExercise, (state, action) => {
+            .addCase(saveEditedExercise, (state) => {
                 if (state.editedExercise) {
                     if (state.editedWorkout) {
                         const exerciseIndex = state.editedWorkout.workout.exercises.findIndex((exercise) => exercise.exerciseId === state.editedExercise?.exercise.exerciseId);
+                        state.editedWorkout.workout.doneWorkouts = state.editedWorkout.workout.doneWorkouts.map((doneWorkout) => ({
+                            ...doneWorkout,
+                            doneExercises: doneWorkout.doneExercises?.map((doneExercise) => {
+                                if (doneExercise.originalExerciseId === state.editedExercise?.exercise.exerciseId) {
+                                    return { ...doneExercise, name: state.editedExercise?.exercise.name, previousName: doneExercise.name };
+                                }
+                                return doneExercise;
+                            }),
+                        }));
+
                         if (exerciseIndex !== -1) {
                             state.editedWorkout.workout.exercises.splice(exerciseIndex, 1, state.editedExercise.exercise);
                         } else {
@@ -338,11 +349,47 @@ export const workoutReducer = createReducer<WorkoutState>(
                         }
                     }
 
-                    //save in general workouts
-                    const workoutIndex = state.workouts.findIndex((workout) => workout.workoutId === action.payload);
+                    if (state.trainedWorkout) {
+                        state.trainedWorkout = {
+                            ...state.trainedWorkout,
+                            exerciseData: state.trainedWorkout.exerciseData.map((exerciseData) => {
+                                if (exerciseData.exerciseId === state.editedExercise?.exercise.exerciseId) {
+                                    return {
+                                        ...exerciseData,
+                                        sets: exerciseData.sets.map((set) => {
+                                            if (set.confirmed) {
+                                                return set;
+                                            }
+                                            return {
+                                                ...set,
+                                                durationMinutes: state.editedExercise?.exercise.durationMinutes,
+                                                durationSeconds: state.editedExercise?.exercise.durationSeconds,
+                                                reps: state.editedExercise?.exercise.reps,
+                                                weight: state.editedExercise?.exercise.weight,
+                                            };
+                                        }),
+                                    };
+                                }
+                                return exerciseData;
+                            }),
+                        };
+                    }
+
+                    const workoutIndex = state.workouts.findIndex((workout) => workout.workoutId === state.editedExercise?.workoutId);
                     if (workoutIndex !== -1) {
-                        const workoutExerciseIndex = state.workouts[workoutIndex].exercises.findIndex((exercise) => exercise.exerciseId === state.editedExercise?.exercise.exerciseId) ?? -1;
-                        state.workouts[workoutIndex]?.exercises.splice(workoutExerciseIndex, 1, state.editedExercise.exercise);
+                        const workout = state.workouts[workoutIndex];
+                        const workoutExerciseIndex = workout.exercises.findIndex((exercise) => exercise.exerciseId === state.editedExercise?.exercise.exerciseId) ?? -1;
+                        workout?.exercises.splice(workoutExerciseIndex, 1, state.editedExercise.exercise);
+                        workout.doneWorkouts = workout.doneWorkouts.map((doneWorkout) => ({
+                            ...doneWorkout,
+                            doneExercises: doneWorkout.doneExercises?.map((doneExercise) => {
+                                if (doneExercise.originalExerciseId === state.editedExercise?.exercise.exerciseId) {
+                                    return { ...doneExercise, name: state.editedExercise?.exercise.name, previousName: doneExercise.name };
+                                }
+                                return doneExercise;
+                            }),
+                        }));
+                        state.workouts[workoutIndex] = workout;
                     }
                 }
             })

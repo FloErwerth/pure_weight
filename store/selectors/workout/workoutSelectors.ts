@@ -319,13 +319,12 @@ export const getSetData = createSelector(
             const hasData = (currentExerciseData?.sets.length ?? 0) > 0;
             const isConfirmed = Boolean(currentExerciseData?.sets[setIndex]?.confirmed);
             const isLatestSet = setIndex === currentExerciseData?.latestSetIndex;
-            const workoutExercise = workout?.exercises[index];
 
             return {
-                weight: currentExerciseData?.sets[setIndex]?.weight ?? workoutExercise.weight,
-                reps: currentExerciseData?.sets[setIndex]?.reps ?? workoutExercise.reps,
-                durationMinutes: currentExerciseData?.sets[setIndex]?.durationMinutes ?? workoutExercise.durationMinutes,
-                durationSeconds: currentExerciseData?.sets[setIndex]?.durationSeconds ?? workoutExercise.durationSeconds,
+                weight: currentExerciseData?.sets[setIndex]?.weight,
+                reps: currentExerciseData?.sets[setIndex]?.reps,
+                durationMinutes: currentExerciseData?.sets[setIndex]?.durationMinutes,
+                durationSeconds: currentExerciseData?.sets[setIndex]?.durationSeconds,
                 isEditable: setIndex === currentExerciseData?.activeSetIndex,
                 isConfirmed,
                 hasData,
