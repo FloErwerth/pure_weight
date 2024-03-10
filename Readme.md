@@ -65,12 +65,14 @@ Build Number 27
 -   Remove progress display for measurements with only one measurement data point
 -   Allow editing paused workouts
 
-`0.8.0`:
+`0.8.1`:
 
 -   Fixed Measurement progress display
 -   Fixed text size of inline pressable
 
-`0.8.1`:
+`0.8.2`:
 
 -   Fixed starting stopwatch after set
 -   Fixed workout charts not updating names after editing
+-   Fixed trend display
+-   Adjust added done sets to done workouts

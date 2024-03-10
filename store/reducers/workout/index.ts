@@ -462,7 +462,9 @@ export const workoutReducer = createReducer<WorkoutState>(
                     const duration = endTimestamp - beginTimestamp - pausedDuration;
 
                     const doneExercises: (DoneExerciseData | undefined)[] = workout.exerciseData.map((data) => {
-                        if (data.sets.length === 0) {
+                        const filteredSets = data.sets.filter((set) => set.confirmed);
+
+                        if (filteredSets.length === 0) {
                             return undefined;
                         }
 
@@ -470,7 +472,7 @@ export const workoutReducer = createReducer<WorkoutState>(
                             doneExerciseId: generateId("exercise"),
                             type: data.exerciseType,
                             name: data.name,
-                            sets: data.sets,
+                            sets: filteredSets,
                             note: data.note,
                             originalExerciseId: data.exerciseId,
                         };

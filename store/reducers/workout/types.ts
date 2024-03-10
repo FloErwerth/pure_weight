@@ -98,6 +98,12 @@ export type TrainedWorkout = {
     exerciseData: TrainedWorkoutExerciseData[];
 };
 
+export type SortedData = {
+    exerciseName: string;
+    type: ExerciseType;
+    data: { sets: ExerciseSets; date: IsoDate }[];
+};
+
 type PostWorkoutStats = {
     icon: ComponentProps<typeof MaterialCommunityIcons>["name"];
     iconColor: string;

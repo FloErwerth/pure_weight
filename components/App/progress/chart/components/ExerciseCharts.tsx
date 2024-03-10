@@ -18,7 +18,7 @@ import { getDoneWorkoutData } from "../../../../../store/selectors/workout/worko
 import { getLanguage, getTimeUnit, getWeightUnit } from "../../../../../store/selectors/settings/settingsSelectors";
 import { trunicateToNthSignificantDigit } from "../../../../../utils/number";
 import Chart from "../../../../Chart/Chart";
-import { ExerciseSets, ExerciseType } from "../../../../../store/reducers/workout/types";
+import { ExerciseSets, ExerciseType, SortedData } from "../../../../../store/reducers/workout/types";
 import { getLocaleDate } from "../../../../../utils/date";
 import { getMinutesSecondsFromMilliseconds } from "../../../../../utils/timeDisplay";
 import { ThemedMaterialCommunityIcons } from "../../../../Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
@@ -27,7 +27,8 @@ import { AnswerText } from "../../../../HelpQuestionAnswer/AnswerText";
 
 interface ExerciseChartProps {
     exerciseName: string;
-    data: { date: IsoDate; sets: ExerciseSets; type: ExerciseType }[];
+    exerciseType: ExerciseType;
+    data: SortedData["data"];
     index: number;
 }
 
@@ -66,37 +67,17 @@ const getCumulativeExerciseData = (data: { sets: ExerciseSets }[], type: Exercis
         if (type === "TIME_BASED") {
             return [
                 ...vals,
-                sets
-                    .map(
-                        (set) =>
-                            parseFloat(set?.durationMinutes ?? "0") * 60 * 1000 +
-                            parseFloat(set?.durationSeconds ?? "0") * 1000,
-                    )
-                    .reduce((cumulative, entry) => cumulative + entry, 0),
+                sets.map((set) => parseFloat(set?.durationMinutes ?? "0") * 60 * 1000 + parseFloat(set?.durationSeconds ?? "0") * 1000).reduce((cumulative, entry) => cumulative + entry, 0),
             ];
         }
-        return [
-            ...vals,
-            sets
-                .map((set) => parseFloat(set?.weight ?? "0") * parseFloat(set?.reps ?? "0"))
-                .reduce((cumulative, entry) => cumulative + entry, 0),
-        ];
+        return [...vals, sets.map((set) => parseFloat(set?.weight ?? "0") * parseFloat(set?.reps ?? "0")).reduce((cumulative, entry) => cumulative + entry, 0)];
     }, [] as number[]);
 };
 
 const getAveragePerDay = (data: { sets: ExerciseSets }[], dataType: "weight" | "reps") => {
     return data.reduce((values, { sets }) => {
         const setValues = sets;
-        return [
-            ...values,
-            parseFloat(
-                (
-                    setValues
-                        .map((set) => parseFloat(set?.[dataType] ?? "0"))
-                        .reduce((cumulative, entry) => cumulative + entry, 0) / setValues.length
-                ).toFixed(3),
-            ),
-        ];
+        return [...values, parseFloat((setValues.map((set) => parseFloat(set?.[dataType] ?? "0")).reduce((cumulative, entry) => cumulative + entry, 0) / setValues.length).toFixed(3))];
     }, [] as number[]);
 };
 
@@ -107,25 +88,17 @@ const getAverageDurationPerExercise = (data: { sets: ExerciseSets }[]) => {
             ...values,
             parseFloat(
                 (
-                    setValues
-                        .map(
-                            (set) =>
-                                parseFloat(set?.durationMinutes ?? "0") * 60 * 1000 +
-                                parseFloat(set?.durationSeconds ?? "0") * 1000,
-                        )
-                        .reduce((cumulative, entry) => cumulative + entry, 0) / setValues.length
+                    setValues.map((set) => parseFloat(set?.durationMinutes ?? "0") * 60 * 1000 + parseFloat(set?.durationSeconds ?? "0") * 1000).reduce((cumulative, entry) => cumulative + entry, 0) /
+                    setValues.length
                 ).toString(),
             ),
         ];
     }, [] as number[]);
 };
 
-const useExerciseData = (
-    exerciseData: { date: IsoDate; sets: ExerciseSets }[],
-    chartType: ChartType["TIME_BASED" & "WEIGHT_BASED"],
-    type: ExerciseType,
-) => {
+const useExerciseData = (exerciseData: SortedData["data"], chartType: ChartType["TIME_BASED" & "WEIGHT_BASED"], type: ExerciseType) => {
     const { mainColor } = useTheme();
+
     const labels = useMemo(() => {
         return exerciseData.map(({ date }) => date);
     }, [exerciseData]);
@@ -169,8 +142,7 @@ const useChartTypeLabel = (chartType: ChartType["TIME_BASED" & "WEIGHT_BASED"], 
     }[chartType];
 };
 
-export const ExerciseChart = ({ exerciseName, data, index }: ExerciseChartProps) => {
-    const exerciseType = useMemo(() => data[index].type, [data, index]);
+export const ExerciseChart = ({ exerciseName, exerciseType, data }: ExerciseChartProps) => {
     const chartTypeMap = useMemo(() => getChartTypeMap(exerciseType), [exerciseType]);
 
     const [chartType, setChartType] = useState<ChartType>("CUMULATIVE");
@@ -188,14 +160,8 @@ export const ExerciseChart = ({ exerciseName, data, index }: ExerciseChartProps)
 
             const getContent = () => {
                 if (exerciseType === "TIME_BASED" && typeof chartTypeLabel === "object") {
-                    const minutesContent =
-                        minutesSeconds.minutes > 0 ? `${minutesSeconds.minutes} ${chartTypeLabel.minutesUnit}` : "";
-                    const secondsContent =
-                        minutesSeconds.seconds > 0
-                            ? `${trunicateToNthSignificantDigit(minutesSeconds.seconds, false, 1)} ${
-                                  chartTypeLabel.secondsUnit
-                              }`
-                            : "";
+                    const minutesContent = minutesSeconds.minutes > 0 ? `${minutesSeconds.minutes} ${chartTypeLabel.minutesUnit}` : "";
+                    const secondsContent = minutesSeconds.seconds > 0 ? `${trunicateToNthSignificantDigit(minutesSeconds.seconds, false, 1)} ${chartTypeLabel.secondsUnit}` : "";
 
                     return (
                         <>
@@ -267,24 +233,12 @@ export const ExerciseChart = ({ exerciseName, data, index }: ExerciseChartProps)
                     </Text>
                 </ThemedPressable>
             </HStack>
-            <Chart
-                lineChartStyles={styles.lineChart}
-                getYLabel={() => ""}
-                getXLabel={getXLabel}
-                getDotContent={getDotContent}
-                data={lineChartData}
-            />
+            <Chart lineChartStyles={styles.lineChart} getYLabel={() => ""} getXLabel={getXLabel} getDotContent={getDotContent} data={lineChartData} />
             <ThemedBottomSheetModal title={t("progress_modal_title")} ref={ref}>
                 <ThemedView ghost style={styles.selectionModal}>
                     {mappedChartProps.map(({ onPress, title, chartType }) => (
                         <HStack ghost key={`${chartType}${title}`}>
-                            <ThemedPressable
-                                stretch
-                                round
-                                background
-                                style={styles.chartTypeSelectionButton}
-                                padding
-                                onPress={onPress}>
+                            <ThemedPressable stretch round background style={styles.chartTypeSelectionButton} padding onPress={onPress}>
                                 <Text center ghost style={styles.chartTypeSelectonTitle}>
                                     {t(chartTypeMap[chartType].title)}
                                 </Text>
@@ -316,9 +270,7 @@ export default function ExerciseCharts() {
 
     return (
         <ThemedScrollView ghost>
-            {trainingDayData?.map(({ exerciseName, data }, index) => (
-                <ExerciseChart index={index} key={Math.random() * 100} exerciseName={exerciseName} data={data} />
-            ))}
+            {trainingDayData?.map(({ exerciseName, type, data }, index) => <ExerciseChart index={index} key={Math.random() * 100} exerciseName={exerciseName} exerciseType={type} data={data} />)}
         </ThemedScrollView>
     );
 }

@@ -3,7 +3,7 @@ import { AppState } from "../../index";
 import { getLanguage } from "../settings/settingsSelectors";
 import { getLocaleDate, getMonthYearLabel } from "../../../utils/date";
 import { IsoDate } from "../../../types/date";
-import { ExerciseId, ExerciseSets, ExerciseType, WorkoutId } from "../../reducers/workout/types";
+import { ExerciseId, ExerciseSets, ExerciseType, SortedData, WorkoutId } from "../../reducers/workout/types";
 import { Temporal } from "@js-temporal/polyfill";
 import { getSinceDate } from "../../../utils/timeAgo";
 import { sortWorkouts } from "../../reducers/workout/sortWorkouts";
@@ -94,11 +94,6 @@ export const getSetsArray = createSelector([getExercisesFromIndex], (exercise) =
     return Array.from({ length: sets }, (_, i) => i);
 });
 
-type SortedData = {
-    exerciseName: string;
-    data: { sets: ExerciseSets; date: IsoDate; type: ExerciseType }[];
-};
-
 export const getDoneWorkoutData = createSelector([getEditedWorkout], (editedWorkout) => {
     const workout = editedWorkout?.workout;
 
@@ -115,11 +110,12 @@ export const getDoneWorkoutData = createSelector([getEditedWorkout], (editedWork
                 const originalName = workout?.exercises.find((exercise) => exercise.exerciseId === originalExerciseId)?.name;
                 const foundEntry = sortedData.get(originalExerciseId);
                 if (foundEntry) {
-                    foundEntry.data.push({ sets, date: isoDate, type });
+                    foundEntry.data.push({ sets, date: isoDate });
                 } else {
                     sortedData.set(originalExerciseId, {
                         exerciseName: originalName ?? "",
-                        data: [{ type, sets, date: isoDate }],
+                        type: type,
+                        data: [{ sets, date: isoDate }],
                     });
                 }
             });
