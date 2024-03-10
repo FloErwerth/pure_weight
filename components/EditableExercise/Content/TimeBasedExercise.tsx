@@ -4,12 +4,12 @@ import { useAppDispatch, useAppSelector } from "../../../store";
 import { useCallback, useMemo } from "react";
 import { mutateEditedExercise } from "../../../store/reducers/workout";
 
-import { getEditedExercise } from "../../../store/reducers/workout/workoutSelectors";
+import { getEditedExercise } from "../../../store/selectors/workout/workoutSelectors";
 import { TimeInputRow } from "../TimeInputRow";
 import { useTranslation } from "react-i18next";
 import { ErrorTextConfig } from "../../../store/reducers/errors/types";
 import { PageContent } from "../../PageContent/PageContent";
-import { getWeightUnit } from "../../../store/reducers/settings/settingsSelectors";
+import { getWeightUnit } from "../../../store/selectors/settings/settingsSelectors";
 import { HStack } from "../../Stack/HStack/HStack";
 
 export const TimeBasedExercise = () => {

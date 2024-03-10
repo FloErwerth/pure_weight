@@ -4,7 +4,7 @@ import { ThemeConfig } from "./config";
 import { useAppSelector } from "../store";
 import { Appearance } from "react-native";
 
-import { getThemeKeyFromStore } from "../store/reducers/settings/settingsSelectors";
+import { getThemeKeyFromStore } from "../store/selectors/settings/settingsSelectors";
 
 export const themeContext = createContext<ThemeKey>(Appearance.getColorScheme() ?? "dark");
 

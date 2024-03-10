@@ -2,48 +2,14 @@ import { createAction, createReducer } from "@reduxjs/toolkit/src";
 import { SortingType } from "../../types";
 import { Temporal } from "@js-temporal/polyfill";
 import { sortWorkouts } from "./sortWorkouts";
-import {
-    DoneExerciseData,
-    ExerciseData,
-    ExerciseId,
-    ExerciseMetaData,
-    TrainedWorkout,
-    TrainedWorkoutExerciseData,
-    Workout,
-    WorkoutId,
-    WorkoutState,
-} from "./types";
+import { DoneExerciseData, ExerciseData, ExerciseId, ExerciseMetaData, TrainedWorkout, TrainedWorkoutExerciseData, Workout, WorkoutId, WorkoutState } from "./types";
 import { getDateTodayIso } from "../../../utils/date";
 import { getMillisecondsFromTimeInput, getMinutesSecondsFromMilliseconds } from "../../../utils/timeDisplay";
 import { generateId } from "../../../utils/generateId";
 
-const generateEmptyMetadata = (metaData: ExerciseMetaData): TrainedWorkoutExerciseData => ({
-    exerciseId: metaData?.exerciseId ?? 0,
-    exerciseType: metaData?.type ?? "WEIGHT_BASED",
-    name: metaData?.name ?? "",
-    activeSetIndex: 0,
-    latestSetIndex: 0,
-    setIndex: 0,
-    doneSets: [],
-    note: "",
-    canSnap: true,
-});
-
-const combineData = (existingData?: ExerciseData, newData?: ExerciseData): ExerciseData => {
-    if (!existingData) {
-        return {};
-    }
-
-    return {
-        ...existingData,
-        ...newData,
-    };
-};
 export const setWorkoutState = createAction<WorkoutState, "workout_set_state">("workout_set_state");
 export const setWorkouts = createAction<Workout[], "workout_set_workouts">("workout_set_workouts");
-export const setShowPostWorkoutScreen = createAction<WorkoutId | undefined, "workout_show_post_workout_screen">(
-    "workout_show_post_workout_screen",
-);
+export const setShowPostWorkoutScreen = createAction<WorkoutId | undefined, "workout_show_post_workout_screen">("workout_show_post_workout_screen");
 export const mutateEditedExercise = createAction<
     {
         key: keyof ExerciseMetaData;
@@ -75,10 +41,8 @@ export const setEditedExercise = createAction<
     | undefined,
     "workout_set_edited_exercise"
 >("workout_set_edited_exercise");
-export const deleteExerciseFromEditedWorkout = createAction<number, "workout_delete_exercise_from_edited_workout">(
-    "workout_delete_exercise_from_edited_workout",
-);
-export const saveEditedExercise = createAction("storeEditedExerciseInEditedWorkout");
+export const deleteExerciseFromEditedWorkout = createAction<number, "workout_delete_exercise_from_edited_workout">("workout_delete_exercise_from_edited_workout");
+export const saveEditedExercise = createAction<WorkoutId>("storeEditedExerciseInEditedWorkout");
 export const startWorkout = createAction<WorkoutId, "start_training">("start_training");
 export const resetTrainedWorkout = createAction("reset_trained_workout");
 export const saveNote = createAction<string | undefined, "save_note">("save_note");
@@ -91,12 +55,8 @@ export const removeWorkout = createAction<WorkoutId, "workout_remove">("workout_
 export const saveCurrentWorkout = createAction("set_training_data");
 export const createNewExercise = createAction("workout_create_new_exercise");
 export const createNewWorkout = createAction("workout_create_new_workout");
-export const saveEditedWorkout = createAction<boolean | undefined, "workout_save_edited_workout">(
-    "workout_save_edited_workout",
-);
-export const setEditedWorkoutName = createAction<string | undefined, "workout_set_edited_workout_name">(
-    "workout_set_edited_workout_name",
-);
+export const saveEditedWorkout = createAction<boolean | undefined, "workout_save_edited_workout">("workout_save_edited_workout");
+export const setEditedWorkoutName = createAction<string | undefined, "workout_set_edited_workout_name">("workout_set_edited_workout_name");
 export const handleMutateSet = createAction<
     {
         setIndex: number;
@@ -113,10 +73,7 @@ export const setIsActiveSet = createAction<{ setIndex: number }, "set_is_active_
 export const pauseTrainedWorkout = createAction("pause_trained_workout");
 export const resumeTrainedWorkout = createAction("resume_trained_workout");
 export const cleanupDurationValues = createAction("cleanup_duration_values");
-export const replaceDoneExerciseSet = createAction<
-    { workoutId: WorkoutId; exerciseId: ExerciseId; setIndex: number; data?: ExerciseData },
-    "replace_done_exercise"
->("replace_done_exercise");
+export const replaceDoneExerciseSet = createAction<{ workoutId: WorkoutId; exerciseId: ExerciseId; setIndex: number; data?: ExerciseData }, "replace_done_exercise">("replace_done_exercise");
 export const mutateDoneExercise = createAction<{
     doneWorkoutId: WorkoutId;
     doneExerciseId: ExerciseId;
@@ -159,6 +116,32 @@ export const generateNewExercise = (): ExerciseMetaData => ({
     pauseSeconds: "",
 });
 
+const generateMetaData = (metaData: ExerciseMetaData): TrainedWorkoutExerciseData => ({
+    exerciseId: metaData?.exerciseId ?? 0,
+    exerciseType: metaData?.type ?? "WEIGHT_BASED",
+    name: metaData?.name ?? "",
+    activeSetIndex: 0,
+    latestSetIndex: 0,
+    setIndex: 0,
+    sets: Array(parseFloat(metaData.sets))
+        .fill(undefined)
+        .map(
+            () =>
+                ({
+                    confirmed: false,
+                    durationMinutes: metaData.durationMinutes,
+                    durationSeconds: metaData.durationSeconds,
+                    reps: metaData.reps,
+                    weight: metaData.weight,
+                }) satisfies ExerciseData,
+        ),
+    canSnap: true,
+});
+
+const generateExerciseData = (workout: Workout) => {
+    return workout.exercises.map((exercise) => generateMetaData(exercise));
+};
+
 export const workoutReducer = createReducer<WorkoutState>(
     {
         workouts: [],
@@ -190,23 +173,24 @@ export const workoutReducer = createReducer<WorkoutState>(
                 if (state.trainedWorkout && state.trainedWorkout.pauseTimestamps) {
                     //in case the user has created a exercise during the pause
                     const exerciseData = state.trainedWorkout.exerciseData;
-                    const missingMetadataLength = state.trainedWorkout.workout.exercises.length - exerciseData.length;
+                    const workout = state.workouts.find((workout) => workout.workoutId === state.trainedWorkout?.workoutId);
+                    const missingMetadataLength = (workout?.exercises.length ?? 0) - exerciseData.length;
+
                     if (missingMetadataLength > 0) {
                         const filledMetadata = Array(missingMetadataLength)
                             .fill(undefined)
                             .map((_, index) => {
                                 const exerciseIndex = exerciseData.length + index;
-                                const metaData = state.trainedWorkout?.workout?.exercises[exerciseIndex];
+                                const metaData = workout?.exercises[exerciseIndex];
                                 if (metaData) {
-                                    return generateEmptyMetadata(metaData);
+                                    return generateMetaData(metaData);
                                 }
                             })
                             .filter((data) => data !== undefined) as TrainedWorkoutExerciseData[];
                         state.trainedWorkout.exerciseData = [...exerciseData, ...filledMetadata];
                     }
 
-                    state.trainedWorkout.pauseTimestamps[state.trainedWorkout.pauseTimestamps.length - 1].end =
-                        Date.now();
+                    state.trainedWorkout.pauseTimestamps[state.trainedWorkout.pauseTimestamps.length - 1].end = Date.now();
                 }
             })
             .addCase(mutateActiveExerciseInTrainedWorkout, (state, action) => {
@@ -229,11 +213,10 @@ export const workoutReducer = createReducer<WorkoutState>(
                     state.editedWorkout = undefined;
                 } else if (action.payload.exerciseId) {
                     const workout = state.workouts.find((workout) => workout.workoutId === action.payload?.workoutId);
-                    const exercise = workout?.exercises?.find(
-                        (exercise) => exercise.exerciseId === action.payload?.exerciseId,
-                    );
+                    const exercise = workout?.exercises?.find((exercise) => exercise.exerciseId === action.payload?.exerciseId);
                     if (exercise) {
                         state.editedExercise = {
+                            workoutId: action.payload.workoutId,
                             exercise,
                             isNewExercise: action.payload.isNewExercise,
                             stringifiedExercise: JSON.stringify(exercise),
@@ -243,22 +226,23 @@ export const workoutReducer = createReducer<WorkoutState>(
             })
             .addCase(handleMutateSet, (state, action) => {
                 const trainedWorkout = state.trainedWorkout;
+
                 if (trainedWorkout) {
                     const exercise = trainedWorkout.exerciseData[trainedWorkout.activeExerciseIndex];
 
-                    if (
-                        action.payload.updatePrefilledValues &&
-                        (action.payload.key === "weight" ||
-                            action.payload.key === "reps" ||
-                            action.payload.key === "durationMinutes" ||
-                            action.payload.key === "durationSeconds")
-                    ) {
-                        trainedWorkout.workout.exercises[trainedWorkout.activeExerciseIndex][action.payload.key] =
-                            action.payload.value as string;
+                    if (action.payload.updatePrefilledValues) {
+                        const currentSet = exercise.sets[action.payload.setIndex];
+                        const remainingSetsNumber = exercise.sets.length - action.payload.setIndex;
+                        for (let i = 0; i < remainingSetsNumber; i++) {
+                            exercise.sets[action.payload.setIndex + i] = {
+                                ...currentSet,
+                                [action.payload.key]: action.payload.value,
+                            };
+                        }
                     }
 
-                    exercise.doneSets[action.payload.setIndex] = {
-                        ...exercise.doneSets[action.payload.setIndex],
+                    exercise.sets[action.payload.setIndex] = {
+                        ...exercise.sets[action.payload.setIndex],
                         [action.payload.key]: action.payload.value,
                     };
 
@@ -270,14 +254,8 @@ export const workoutReducer = createReducer<WorkoutState>(
                 if (trainedWorkout) {
                     const exerciseIndex = trainedWorkout.activeExerciseIndex;
                     const exerciseData = trainedWorkout.exerciseData[exerciseIndex];
-                    const exercise = trainedWorkout.workout.exercises.find(
-                        (exercise) => exercise.exerciseId === exerciseData.exerciseId,
-                    );
 
-                    const doneSet = combineData(
-                        exercise,
-                        trainedWorkout.exerciseData[exerciseIndex].doneSets[action.payload.setIndex],
-                    );
+                    const doneSet = trainedWorkout.exerciseData[exerciseIndex].sets[action.payload.setIndex];
 
                     if (doneSet.durationMinutes === "") {
                         doneSet.durationMinutes = undefined;
@@ -286,11 +264,8 @@ export const workoutReducer = createReducer<WorkoutState>(
                         doneSet.durationSeconds = undefined;
                     }
 
-                    if (
-                        action.payload.setIndex === exerciseData.latestSetIndex ||
-                        action.payload.setIndex === exerciseData.activeSetIndex
-                    ) {
-                        exerciseData.doneSets[action.payload.setIndex] = {
+                    if (action.payload.setIndex === exerciseData.latestSetIndex || action.payload.setIndex === exerciseData.activeSetIndex) {
+                        exerciseData.sets[action.payload.setIndex] = {
                             ...doneSet,
                             confirmed: true,
                         };
@@ -314,7 +289,6 @@ export const workoutReducer = createReducer<WorkoutState>(
                     trainedWorkout.exerciseData[exerciseIndex] = exercise;
                 }
             })
-
             .addCase(setEditedWorkoutName, (state, action) => {
                 const workout = state.editedWorkout?.workout;
                 if (workout) {
@@ -356,56 +330,66 @@ export const workoutReducer = createReducer<WorkoutState>(
             })
             .addCase(saveEditedExercise, (state) => {
                 if (state.editedExercise) {
-                    if (state.trainedWorkout) {
-                        const trainedWorkoutExerciseIndex = state.trainedWorkout.exerciseData.findIndex(
-                            (data) => data.exerciseId === state.editedExercise?.exercise.exerciseId,
-                        );
-                        if (trainedWorkoutExerciseIndex !== -1) {
-                            state.trainedWorkout.workout.exercises.splice(
-                                trainedWorkoutExerciseIndex,
-                                1,
-                                state.editedExercise.exercise,
-                            );
-                            state.trainedWorkout.exerciseData[trainedWorkoutExerciseIndex].doneSets.map((data) => {
-                                if (!data.confirmed) {
-                                    return {
-                                        filled: false,
-                                        reps: state.editedExercise?.exercise.reps,
-                                        weight: state.editedExercise?.exercise.weight,
-                                    };
-                                }
-                                return data;
-                            });
-                        }
-                    }
                     if (state.editedWorkout) {
-                        const exerciseIndex = state.editedWorkout.workout.exercises.findIndex(
-                            (exercise) => exercise.exerciseId === state.editedExercise?.exercise.exerciseId,
-                        );
+                        const exerciseIndex = state.editedWorkout.workout.exercises.findIndex((exercise) => exercise.exerciseId === state.editedExercise?.exercise.exerciseId);
+                        state.editedWorkout.workout.doneWorkouts = state.editedWorkout.workout.doneWorkouts.map((doneWorkout) => ({
+                            ...doneWorkout,
+                            doneExercises: doneWorkout.doneExercises?.map((doneExercise) => {
+                                if (doneExercise.originalExerciseId === state.editedExercise?.exercise.exerciseId) {
+                                    return { ...doneExercise, name: state.editedExercise?.exercise.name, previousName: doneExercise.name };
+                                }
+                                return doneExercise;
+                            }),
+                        }));
+
                         if (exerciseIndex !== -1) {
-                            state.editedWorkout.workout.exercises.splice(
-                                exerciseIndex,
-                                1,
-                                state.editedExercise.exercise,
-                            );
+                            state.editedWorkout.workout.exercises.splice(exerciseIndex, 1, state.editedExercise.exercise);
                         } else {
                             state.editedWorkout.workout.exercises.push(state.editedExercise.exercise);
                         }
                     }
 
-                    //save in general workouts
-                    const id = state.trainedWorkout?.workout.workoutId ?? state.editedWorkout?.workout.workoutId;
-                    const workoutIndex = state.workouts.findIndex((workout) => workout.workoutId === id);
+                    if (state.trainedWorkout) {
+                        state.trainedWorkout = {
+                            ...state.trainedWorkout,
+                            exerciseData: state.trainedWorkout.exerciseData.map((exerciseData) => {
+                                if (exerciseData.exerciseId === state.editedExercise?.exercise.exerciseId) {
+                                    return {
+                                        ...exerciseData,
+                                        sets: exerciseData.sets.map((set) => {
+                                            if (set.confirmed) {
+                                                return set;
+                                            }
+                                            return {
+                                                ...set,
+                                                durationMinutes: state.editedExercise?.exercise.durationMinutes,
+                                                durationSeconds: state.editedExercise?.exercise.durationSeconds,
+                                                reps: state.editedExercise?.exercise.reps,
+                                                weight: state.editedExercise?.exercise.weight,
+                                            };
+                                        }),
+                                    };
+                                }
+                                return exerciseData;
+                            }),
+                        };
+                    }
+
+                    const workoutIndex = state.workouts.findIndex((workout) => workout.workoutId === state.editedExercise?.workoutId);
                     if (workoutIndex !== -1) {
-                        const workoutExerciseIndex =
-                            state.workouts[workoutIndex].exercises.findIndex(
-                                (exercise) => exercise.exerciseId === state.editedExercise?.exercise.exerciseId,
-                            ) ?? -1;
-                        state.workouts[workoutIndex]?.exercises.splice(
-                            workoutExerciseIndex,
-                            1,
-                            state.editedExercise.exercise,
-                        );
+                        const workout = state.workouts[workoutIndex];
+                        const workoutExerciseIndex = workout.exercises.findIndex((exercise) => exercise.exerciseId === state.editedExercise?.exercise.exerciseId) ?? -1;
+                        workout?.exercises.splice(workoutExerciseIndex, 1, state.editedExercise.exercise);
+                        workout.doneWorkouts = workout.doneWorkouts.map((doneWorkout) => ({
+                            ...doneWorkout,
+                            doneExercises: doneWorkout.doneExercises?.map((doneExercise) => {
+                                if (doneExercise.originalExerciseId === state.editedExercise?.exercise.exerciseId) {
+                                    return { ...doneExercise, name: state.editedExercise?.exercise.name, previousName: doneExercise.name };
+                                }
+                                return doneExercise;
+                            }),
+                        }));
+                        state.workouts[workoutIndex] = workout;
                     }
                 }
             })
@@ -457,7 +441,7 @@ export const workoutReducer = createReducer<WorkoutState>(
                 const deletedWorkout = state.workouts.find((workout) => workout.workoutId === action.payload);
                 const deletedWorkoutIndex = state.workouts.findIndex((workout) => workout.workoutId === action.payload);
                 const deletedTrainingDay = newWorkouts.splice(deletedWorkoutIndex, 1);
-                const wasPaused = state.trainedWorkout?.workout.workoutId === deletedWorkout?.workoutId;
+                const wasPaused = state.trainedWorkout?.workoutId === deletedWorkout?.workoutId;
 
                 state.deletedWorkout = {
                     workout: deletedTrainingDay[0],
@@ -470,16 +454,15 @@ export const workoutReducer = createReducer<WorkoutState>(
             })
             .addCase(saveCurrentWorkout, (state) => {
                 const workout = state.trainedWorkout;
-                const workoutIndex = state.trainedWorkout?.workout.workoutId;
-                if (workout && workoutIndex !== undefined) {
+                const workoutId = state.trainedWorkout?.workoutId;
+                if (workout && workoutId !== undefined) {
                     const beginTimestamp = workout.beginTimestamp;
                     const endTimestamp = Temporal.Now.instant().epochMilliseconds;
-                    const pausedDuration =
-                        workout.pauseTimestamps?.reduce((acc, curr) => acc + (curr.end - curr.begin), 0) ?? 0;
+                    const pausedDuration = workout.pauseTimestamps?.reduce((acc, curr) => acc + (curr.end - curr.begin), 0) ?? 0;
                     const duration = endTimestamp - beginTimestamp - pausedDuration;
 
                     const doneExercises: (DoneExerciseData | undefined)[] = workout.exerciseData.map((data) => {
-                        if (data.doneSets.length === 0) {
+                        if (data.sets.length === 0) {
                             return undefined;
                         }
 
@@ -487,24 +470,22 @@ export const workoutReducer = createReducer<WorkoutState>(
                             doneExerciseId: generateId("exercise"),
                             type: data.exerciseType,
                             name: data.name,
-                            sets: data.doneSets,
+                            sets: data.sets,
                             note: data.note,
                             originalExerciseId: data.exerciseId,
                         };
                     });
 
                     state.workouts
-                        .find((workout) => workout.workoutId === workoutIndex)
+                        .find((workout) => workout.workoutId === workoutId)
                         ?.doneWorkouts.push({
-                            originalWorkoutId: workout.workout.workoutId,
+                            originalWorkoutId: workoutId,
                             doneWorkoutId: generateId("workout"),
                             isoDate: getDateTodayIso(),
                             duration: duration.toString(),
-                            doneExercises: doneExercises.filter(
-                                (exercise) => exercise !== undefined,
-                            ) as DoneExerciseData[],
+                            doneExercises: doneExercises.filter((exercise) => exercise !== undefined) as DoneExerciseData[],
                         });
-                    state.postWorkoutWorkoutId = workout?.workout.workoutId;
+                    state.postWorkoutWorkoutId = workoutId;
                 }
                 state.trainedWorkout = undefined;
             })
@@ -513,13 +494,8 @@ export const workoutReducer = createReducer<WorkoutState>(
                     if (state.editedWorkout.isNew) {
                         state.workouts = [...state.workouts, state.editedWorkout.workout];
                     } else {
-                        if (state.trainedWorkout?.workout.workoutId === state.editedWorkout.workout.workoutId) {
-                            state.trainedWorkout.workout = state.editedWorkout.workout;
-                        }
                         state.workouts.splice(
-                            state.workouts.findIndex(
-                                (workout) => workout.workoutId === state.editedWorkout?.workout?.workoutId,
-                            ),
+                            state.workouts.findIndex((workout) => workout.workoutId === state.editedWorkout?.workout?.workoutId),
                             1,
                             state.editedWorkout.workout,
                         );
@@ -539,29 +515,20 @@ export const workoutReducer = createReducer<WorkoutState>(
                 const workout = state.workouts.find((workout) => workout.workoutId === action.payload);
                 if (workout) {
                     state.trainedWorkout = {
+                        workoutId: workout.workoutId,
                         paused: false,
                         activeExerciseIndex: 0,
-                        workout,
                         beginTimestamp: Temporal.Now.instant().epochMilliseconds,
-                        exerciseData: Array(workout.exercises.length)
-                            .fill(undefined)
-                            .map((_, exerciseIndex) => {
-                                const metaData = workout?.exercises[exerciseIndex];
-                                return generateEmptyMetadata(metaData);
-                            }),
+                        exerciseData: generateExerciseData(workout),
                     };
                 }
             })
             .addCase(replaceDoneExerciseSet, (state, action) => {
                 if (state.editedWorkout && state.editedWorkout.workout.doneWorkouts) {
-                    const doneWorkoutIndex = state.editedWorkout.workout.doneWorkouts.findIndex(
-                        (doneWorkout) => doneWorkout.doneWorkoutId === action.payload.workoutId,
-                    );
+                    const doneWorkoutIndex = state.editedWorkout.workout.doneWorkouts.findIndex((doneWorkout) => doneWorkout.doneWorkoutId === action.payload.workoutId);
                     const doneWorkout = state.editedWorkout.workout.doneWorkouts[doneWorkoutIndex];
                     if (doneWorkout && doneWorkout.doneExercises) {
-                        const doneExerciseIndex = doneWorkout.doneExercises.findIndex(
-                            (doneExercise) => doneExercise.doneExerciseId === action.payload.exerciseId,
-                        );
+                        const doneExerciseIndex = doneWorkout.doneExercises.findIndex((doneExercise) => doneExercise.doneExerciseId === action.payload.exerciseId);
                         const doneExercise = doneWorkout.doneExercises[doneExerciseIndex];
                         if (doneExercise && action.payload.data) {
                             if (!doneExercise.fallbackSets) {
@@ -576,14 +543,10 @@ export const workoutReducer = createReducer<WorkoutState>(
             })
             .addCase(mutateDoneExercise, (state, action) => {
                 if (state.editedWorkout && state.editedWorkout.workout.doneWorkouts) {
-                    const doneWorkoutIndex = state.editedWorkout.workout.doneWorkouts.findIndex(
-                        (doneWorkout) => doneWorkout.doneWorkoutId === action.payload.doneWorkoutId,
-                    );
+                    const doneWorkoutIndex = state.editedWorkout.workout.doneWorkouts.findIndex((doneWorkout) => doneWorkout.doneWorkoutId === action.payload.doneWorkoutId);
                     const doneWorkout = state.editedWorkout.workout.doneWorkouts[doneWorkoutIndex];
                     if (doneWorkout && doneWorkout.doneExercises) {
-                        const doneExerciseIndex = doneWorkout.doneExercises.findIndex(
-                            (doneExercise) => doneExercise.doneExerciseId === action.payload.doneExerciseId,
-                        );
+                        const doneExerciseIndex = doneWorkout.doneExercises.findIndex((doneExercise) => doneExercise.doneExerciseId === action.payload.doneExerciseId);
                         const doneExercise = doneWorkout.doneExercises[doneExerciseIndex];
                         if (doneExercise) {
                             if (!doneExercise.fallbackSets) {
@@ -601,9 +564,7 @@ export const workoutReducer = createReducer<WorkoutState>(
             })
             .addCase(discardChangesToDoneExercises, (state, action) => {
                 if (state.editedWorkout && state.editedWorkout.workout.doneWorkouts) {
-                    const doneWorkoutIndex = state.editedWorkout.workout.doneWorkouts.findIndex(
-                        (doneWorkout) => doneWorkout.doneWorkoutId === action.payload.doneWorkoutId,
-                    );
+                    const doneWorkoutIndex = state.editedWorkout.workout.doneWorkouts.findIndex((doneWorkout) => doneWorkout.doneWorkoutId === action.payload.doneWorkoutId);
                     const doneWorkout = state.editedWorkout.workout.doneWorkouts[doneWorkoutIndex];
                     if (doneWorkout && doneWorkout.doneExercises) {
                         doneWorkout.doneExercises = doneWorkout.doneExercises.map((doneExercise) => {
@@ -619,9 +580,7 @@ export const workoutReducer = createReducer<WorkoutState>(
             })
             .addCase(deleteFallbackSets, (state, action) => {
                 if (state.editedWorkout && state.editedWorkout.workout.doneWorkouts) {
-                    const doneWorkoutIndex = state.editedWorkout.workout.doneWorkouts.findIndex(
-                        (doneWorkout) => doneWorkout.doneWorkoutId === action.payload.doneWorkoutId,
-                    );
+                    const doneWorkoutIndex = state.editedWorkout.workout.doneWorkouts.findIndex((doneWorkout) => doneWorkout.doneWorkoutId === action.payload.doneWorkoutId);
                     const doneWorkout = state.editedWorkout.workout.doneWorkouts[doneWorkoutIndex];
                     if (doneWorkout && doneWorkout.doneExercises) {
                         doneWorkout.doneExercises = doneWorkout.doneExercises.map((doneExercise) => {
@@ -636,31 +595,27 @@ export const workoutReducer = createReducer<WorkoutState>(
             })
             .addCase(cleanupDurationValues, (state) => {
                 if (state.editedWorkout && state.editedWorkout.workout && state.editedWorkout.workout.doneWorkouts) {
-                    state.editedWorkout.workout.doneWorkouts = state.editedWorkout.workout.doneWorkouts.map(
-                        (doneWorkout) => {
-                            return {
-                                ...doneWorkout,
-                                doneExercises: doneWorkout.doneExercises?.map((exercise) => {
-                                    return {
-                                        ...exercise,
-                                        sets: exercise.sets.map((set) => {
-                                            const validatedDuration = getMinutesSecondsFromMilliseconds(
-                                                getMillisecondsFromTimeInput(set.durationMinutes, set.durationSeconds),
-                                            );
-                                            if (set.durationMinutes === "" && set.durationSeconds === "") {
-                                                return {
-                                                    ...set,
-                                                    durationMinutes: validatedDuration.minutes.toString(),
-                                                    durationSeconds: validatedDuration.seconds.toString(),
-                                                } satisfies ExerciseData;
-                                            }
-                                            return set;
-                                        }),
-                                    };
-                                }),
-                            };
-                        },
-                    );
+                    state.editedWorkout.workout.doneWorkouts = state.editedWorkout.workout.doneWorkouts.map((doneWorkout) => {
+                        return {
+                            ...doneWorkout,
+                            doneExercises: doneWorkout.doneExercises?.map((exercise) => {
+                                return {
+                                    ...exercise,
+                                    sets: exercise.sets.map((set) => {
+                                        const validatedDuration = getMinutesSecondsFromMilliseconds(getMillisecondsFromTimeInput(set.durationMinutes, set.durationSeconds));
+                                        if (set.durationMinutes === "" && set.durationSeconds === "") {
+                                            return {
+                                                ...set,
+                                                durationMinutes: validatedDuration.minutes.toString(),
+                                                durationSeconds: validatedDuration.seconds.toString(),
+                                            } satisfies ExerciseData;
+                                        }
+                                        return set;
+                                    }),
+                                };
+                            }),
+                        };
+                    });
                 }
             })
             .addCase(setSearchedWorkout, (state, action) => {

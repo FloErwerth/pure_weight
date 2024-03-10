@@ -6,7 +6,7 @@ import { AppState, useAppDispatch, useAppSelector } from "../../store";
 import { Text } from "../Themed/ThemedText/Text";
 import { useTheme } from "../../theme/context";
 import { HStack } from "../Stack/HStack/HStack";
-import { getErrorByKey } from "../../store/reducers/errors/errorSelectors";
+import { getErrorByKey } from "../../store/selectors/errors/errorSelectors";
 import { ThemedPressable } from "../Themed/Pressable/Pressable";
 import { TextInput, View } from "react-native";
 import { EditableExerciseInputRowProps } from "./types";
@@ -43,7 +43,10 @@ export const EditableExerciseInputRow = ({
         [dispatch, errorTextConfig?.errorKey, hasError, setValue],
     );
 
-    const inputStyles = useMemo(() => [{ borderColor: hasError ? errorColor : "transparent" }, styles.input], [errorColor, hasError]);
+    const inputStyles = useMemo(
+        () => [{ borderColor: hasError ? errorColor : "transparent" }, styles.input],
+        [errorColor, hasError],
+    );
 
     const handleFocusInput = useCallback(() => {
         textInputRef.current?.focus();

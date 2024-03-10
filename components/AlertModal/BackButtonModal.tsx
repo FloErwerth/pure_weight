@@ -9,7 +9,7 @@ import { ThemedMaterialCommunityIcons } from "../Themed/ThemedMaterialCommunityI
 import { HStack } from "../Stack/HStack/HStack";
 import { PageContent } from "../PageContent/PageContent";
 import { useAppSelector } from "../../store";
-import { getLanguage } from "../../store/reducers/settings/settingsSelectors";
+import { getLanguage } from "../../store/selectors/settings/settingsSelectors";
 import { View } from "react-native";
 import { AnswerText } from "../HelpQuestionAnswer/AnswerText";
 
@@ -31,7 +31,9 @@ const useHelpContent = (): Record<"save" | "pause" | "cancel", { title: string; 
         if (language === "de") {
             return (
                 <View>
-                    <AnswerText>Wenn Du dein Workout speicherst wird der aktuelle Fortschritt gespeichert und ausgewertet.</AnswerText>
+                    <AnswerText>
+                        Wenn Du dein Workout speicherst wird der aktuelle Fortschritt gespeichert und ausgewertet.
+                    </AnswerText>
                     <AnswerText>Achtung: Dein Workout kann später nicht fortgesetzt werden.</AnswerText>
                 </View>
             );

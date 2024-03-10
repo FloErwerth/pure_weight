@@ -5,7 +5,7 @@ import { useCallback, useState } from "react";
 import { ThemeKey } from "../../../../../../theme/types";
 import { setTheme } from "../../../../../../store/reducers/settings";
 
-import { getThemeKeyFromStore } from "../../../../../../store/reducers/settings/settingsSelectors";
+import { getThemeKeyFromStore } from "../../../../../../store/selectors/settings/settingsSelectors";
 import { Icon, SelectableSetting } from "../../../SelectableSetting/SelectableSetting";
 import { ThemedView } from "../../../../../Themed/ThemedView/View";
 import { ThemedBottomSheetModal, useBottomSheetRef } from "../../../../../BottomSheetModal/ThemedBottomSheetModal";

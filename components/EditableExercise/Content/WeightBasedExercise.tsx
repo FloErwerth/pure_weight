@@ -5,8 +5,8 @@ import { useAppDispatch, useAppSelector } from "../../../store";
 import { useCallback, useMemo } from "react";
 import { mutateEditedExercise } from "../../../store/reducers/workout";
 
-import { getEditedExercise } from "../../../store/reducers/workout/workoutSelectors";
-import { getWeightUnit } from "../../../store/reducers/settings/settingsSelectors";
+import { getEditedExercise } from "../../../store/selectors/workout/workoutSelectors";
+import { getWeightUnit } from "../../../store/selectors/settings/settingsSelectors";
 import { TimeInputRow } from "../TimeInputRow";
 import { ErrorTextConfig } from "../../../store/reducers/errors/types";
 import { PageContent } from "../../PageContent/PageContent";

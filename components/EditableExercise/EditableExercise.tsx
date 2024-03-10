@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 import { ThemedView } from "../Themed/ThemedView/View";
 import { WeightBasedExercise } from "./Content/WeightBasedExercise";
 import { useAppDispatch, useAppSelector } from "../../store";
-import { getEditedExercise, getIsUsedInPausedWorkout } from "../../store/reducers/workout/workoutSelectors";
+import { getEditedExercise, getIsUsedInPausedWorkout } from "../../store/selectors/workout/workoutSelectors";
 import { mutateEditedExercise } from "../../store/reducers/workout";
 import { ExerciseMetaData } from "../../store/reducers/workout/types";
 import { SlidingSwitch } from "../SlidingSwitch/SlidingSwitch";

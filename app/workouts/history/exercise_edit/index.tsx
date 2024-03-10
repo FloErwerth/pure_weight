@@ -21,7 +21,7 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { ExerciseId, WorkoutId } from "../../../../store/reducers/workout/types";
 import { HistorySetInput } from "../../../../components/App/history/HistorySetInput/HistorySetInput";
 import { HistoryContextProvider } from "../../../../components/App/history/HistoryContext/HistoryContext";
-import { getDoneExerciseById } from "../../../../store/reducers/workout/workoutSelectors";
+import { getDoneExerciseById } from "../../../../store/selectors/workout/workoutSelectors";
 
 const useGetWasEdited = (doneWorkoutId: WorkoutId, doneExerciseId: ExerciseId) => {
     const doneExerciseData = useAppSelector((state: AppState) =>

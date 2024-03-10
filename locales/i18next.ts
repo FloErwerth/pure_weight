@@ -3,7 +3,7 @@ import { initReactI18next } from "react-i18next";
 import en from "./en.json";
 import de from "./de.json";
 import { useAppSelector } from "../store";
-import { getLanguage } from "../store/reducers/settings/settingsSelectors";
+import { getLanguage } from "../store/selectors/settings/settingsSelectors";
 
 let initialized = false;
 export const useInitIntl = () => {

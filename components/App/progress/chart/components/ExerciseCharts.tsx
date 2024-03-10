@@ -14,8 +14,8 @@ import { IsoDate } from "../../../../../types/date";
 import { ThemedPressable } from "../../../../Themed/Pressable/Pressable";
 import { useNavigate } from "../../../../../hooks/navigate";
 
-import { getDoneWorkoutData } from "../../../../../store/reducers/workout/workoutSelectors";
-import { getLanguage, getTimeUnit, getWeightUnit } from "../../../../../store/reducers/settings/settingsSelectors";
+import { getDoneWorkoutData } from "../../../../../store/selectors/workout/workoutSelectors";
+import { getLanguage, getTimeUnit, getWeightUnit } from "../../../../../store/selectors/settings/settingsSelectors";
 import { trunicateToNthSignificantDigit } from "../../../../../utils/number";
 import Chart from "../../../../Chart/Chart";
 import { ExerciseSets, ExerciseType } from "../../../../../store/reducers/workout/types";

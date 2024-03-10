@@ -12,7 +12,7 @@ import {
     getLatestWorkoutDate,
     getSortedDoneWorkout,
     getWorkoutsByMonth,
-} from "../../../store/reducers/workout/workoutSelectors";
+} from "../../../store/selectors/workout/workoutSelectors";
 import { noop } from "lodash";
 import { WorkoutHistoryCard } from "../../../components/WorkoutHistoryCard/WorkoutHistoryCard";
 import { saveEditedWorkout } from "../../../store/reducers/workout";

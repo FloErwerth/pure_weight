@@ -5,7 +5,7 @@ import { useAppSelector } from "../../../store";
 import { ThemedView } from "../../../components/Themed/ThemedView/View";
 import { PageContent } from "../../../components/PageContent/PageContent";
 
-import { getEditedWorkoutName } from "../../../store/reducers/workout/workoutSelectors";
+import { getEditedWorkoutName } from "../../../store/selectors/workout/workoutSelectors";
 import ExerciseCharts from "../../../components/App/progress/chart/components/ExerciseCharts";
 
 export function WorkoutProgress() {

@@ -1,10 +1,10 @@
 import { useAppDispatch, useAppSelector } from "../../../store";
-import { getUnitSystem } from "../../../store/reducers/settings/settingsSelectors";
+import { getUnitSystem } from "../../../store/selectors/settings/settingsSelectors";
 import {
     getDatesFromCurrentMeasurement,
     getEditedMeasurement,
     getUnitByType,
-} from "../../../store/reducers/measurements/measurementSelectors";
+} from "../../../store/selectors/measurements/measurementSelectors";
 import React, { useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { mutateEditedMeasurement, saveEditedMeasurement } from "../../../store/reducers/measurements";

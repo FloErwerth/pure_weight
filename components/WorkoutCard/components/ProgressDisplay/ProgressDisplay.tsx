@@ -10,7 +10,7 @@ import { trunicateToNthSignificantDigit } from "../../../../utils/number";
 import { ThemedPressable } from "../../../Themed/Pressable/Pressable";
 import { ThemedView } from "../../../Themed/ThemedView/View";
 
-import { getLanguage } from "../../../../store/reducers/settings/settingsSelectors";
+import { getLanguage } from "../../../../store/selectors/settings/settingsSelectors";
 import { useTheme } from "../../../../theme/context";
 
 type Trend = { percent: number; name?: string; trendIsPositive?: boolean };

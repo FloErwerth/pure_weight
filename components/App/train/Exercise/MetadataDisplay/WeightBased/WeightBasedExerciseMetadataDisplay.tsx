@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { styles } from "../styles";
 import { useAppSelector } from "../../../../../../store";
 import { ThemedView } from "../../../../../Themed/ThemedView/View";
-import { getTimeUnit } from "../../../../../../store/reducers/settings/settingsSelectors";
+import { getTimeUnit } from "../../../../../../store/selectors/settings/settingsSelectors";
 import { ExerciseMetaData } from "../../../../../../store/reducers/workout/types";
 
 interface SmallMetadataDisplayProps {

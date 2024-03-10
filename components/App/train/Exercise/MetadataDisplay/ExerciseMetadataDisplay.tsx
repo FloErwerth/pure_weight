@@ -2,7 +2,7 @@ import { AppState, useAppDispatch, useAppSelector } from "../../../../../store";
 import { useCallback } from "react";
 import { setEditedExercise } from "../../../../../store/reducers/workout";
 import * as Haptics from "expo-haptics";
-import { getExerciseMetadataFromWorkoutById } from "../../../../../store/reducers/workout/workoutSelectors";
+import { getExerciseMetadataFromWorkoutById } from "../../../../../store/selectors/workout/workoutSelectors";
 import { HStack } from "../../../../Stack/HStack/HStack";
 import { styles } from "./styles";
 import { VStack } from "../../../../Stack/VStack/VStack";

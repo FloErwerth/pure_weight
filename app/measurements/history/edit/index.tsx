@@ -18,9 +18,9 @@ import {
     getEditedMeasurement,
     getEditedMeasurementDataPoint,
     getUnitByType,
-} from "../../../../store/reducers/measurements/measurementSelectors";
+} from "../../../../store/selectors/measurements/measurementSelectors";
 import { useAppDispatch, useAppSelector } from "../../../../store";
-import { getUnitSystem } from "../../../../store/reducers/settings/settingsSelectors";
+import { getUnitSystem } from "../../../../store/selectors/settings/settingsSelectors";
 import { Keyboard, View } from "react-native";
 import {
     ThemedBottomSheetModal,

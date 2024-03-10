@@ -6,7 +6,7 @@ import { HStack } from "../Stack/HStack/HStack";
 import { ThemedView } from "../Themed/ThemedView/View";
 import { ThemedBottomSheetModal, useBottomSheetRef } from "../BottomSheetModal/ThemedBottomSheetModal";
 
-import { getActiveSetIndex, getPreviousWorkout } from "../../store/reducers/workout/workoutSelectors";
+import { getActiveSetIndex, getPreviousWorkout } from "../../store/selectors/workout/workoutSelectors";
 import { ThemedPressable } from "../Themed/Pressable/Pressable";
 import { ExerciseId, ExerciseType } from "../../store/reducers/workout/types";
 import { styles } from "./styles";
@@ -17,7 +17,9 @@ interface PreviousTrainingProps {
     exerciseType: ExerciseType;
 }
 export const PreviousWorkout = ({ exerciseId, exerciseType }: PreviousTrainingProps) => {
-    const previousWorkout = useAppSelector((state: AppState) => getPreviousWorkout(state, state.settingsState.language, exerciseId));
+    const previousWorkout = useAppSelector((state: AppState) =>
+        getPreviousWorkout(state, state.settingsState.language, exerciseId),
+    );
 
     const { t } = useTranslation();
     const { ref } = useBottomSheetRef();
@@ -66,7 +68,10 @@ export const PreviousWorkout = ({ exerciseId, exerciseType }: PreviousTrainingPr
                             <ThemedView ghost round stretch style={styles.setWrapper}>
                                 <Text ghost style={styles.set}>
                                     {getTimeDisplayFromMilliseconds(
-                                        getMillisecondsFromTimeInput(currentSet?.durationMinutes, currentSet?.durationSeconds),
+                                        getMillisecondsFromTimeInput(
+                                            currentSet?.durationMinutes,
+                                            currentSet?.durationSeconds,
+                                        ),
                                     )}
                                 </Text>
                             </ThemedView>
@@ -88,7 +93,10 @@ export const PreviousWorkout = ({ exerciseId, exerciseType }: PreviousTrainingPr
                     <ThemedView ghost padding style={{ width: 49 }} />
                 </HStack>
             </ThemedView>
-            <ThemedBottomSheetModal title={t("previous_training_note_title").concat(date)} onRequestClose={handleCloseNote} ref={ref}>
+            <ThemedBottomSheetModal
+                title={t("previous_training_note_title").concat(date)}
+                onRequestClose={handleCloseNote}
+                ref={ref}>
                 <ThemedView ghost stretch style={{ margin: 20 }}>
                     <Text ghost stretch style={{ fontSize: 20 }}>
                         {note}

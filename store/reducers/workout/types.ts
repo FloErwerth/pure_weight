@@ -38,6 +38,7 @@ export type DoneExerciseData = {
     doneExerciseId: ExerciseId;
     type: ExerciseType;
     name: string;
+    previousName?: string;
     sets: ExerciseSets;
     fallbackSets?: ExerciseSets;
     note?: string;
@@ -70,6 +71,7 @@ export type EditedExercise = {
     stringifiedExercise?: string;
     isNewExercise?: boolean;
     index?: number;
+    workoutId?: WorkoutId;
 };
 
 export type TrainedWorkoutExerciseData = {
@@ -78,14 +80,14 @@ export type TrainedWorkoutExerciseData = {
     setIndex: number;
     latestSetIndex: number;
     activeSetIndex: number;
-    doneSets: ExerciseSets;
+    sets: ExerciseSets;
     name: string;
     note?: string;
     canSnap: boolean;
 };
 
 export type TrainedWorkout = {
-    workout: Workout;
+    workoutId: WorkoutId;
     activeExerciseIndex: number;
     beginTimestamp: number;
     pauseTimestamps?: {

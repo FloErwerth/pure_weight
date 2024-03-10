@@ -10,13 +10,13 @@ import {
     getPostWorkoutTrend,
     getPostWorkoutWorkout,
     getWorkoutStatsById,
-} from "../../store/reducers/workout/workoutSelectors";
+} from "../../store/selectors/workout/workoutSelectors";
 import { setShowPostWorkoutScreen } from "../../store/reducers/workout";
 import { navigationRef } from "../../hooks/navigate";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "../../theme/context";
 import { PostWorkoutScreen } from "../../store/reducers/workout/types";
-import { getUnitSystem } from "../../store/reducers/settings/settingsSelectors";
+import { getUnitSystem } from "../../store/selectors/settings/settingsSelectors";
 import { trunicateToNthSignificantDigit } from "../../utils/number";
 
 const useDebouncedShowPostWorkoutScreen = () => {

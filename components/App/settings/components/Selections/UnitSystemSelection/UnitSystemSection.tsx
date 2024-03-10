@@ -3,7 +3,7 @@ import { useAppDispatch, useAppSelector } from "../../../../../../store";
 import { useCallback } from "react";
 import { setUnitSystem } from "../../../../../../store/reducers/settings";
 
-import { getUnitSystem } from "../../../../../../store/reducers/settings/settingsSelectors";
+import { getUnitSystem } from "../../../../../../store/selectors/settings/settingsSelectors";
 import { Icon, SelectableSetting } from "../../../SelectableSetting/SelectableSetting";
 import { UnitSystem } from "../../../../../../store/reducers/settings/types";
 import { ThemedView } from "../../../../../Themed/ThemedView/View";

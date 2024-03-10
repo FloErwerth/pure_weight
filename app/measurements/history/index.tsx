@@ -3,7 +3,7 @@ import { SiteNavigationButtons } from "../../../components/SiteNavigationButtons
 import React, { useCallback, useMemo, useState } from "react";
 import { useNavigate, useNavigateBack } from "../../../hooks/navigate";
 import { useAppDispatch, useAppSelector } from "../../../store";
-import { getEditedMeasurement } from "../../../store/reducers/measurements/measurementSelectors";
+import { getEditedMeasurement } from "../../../store/selectors/measurements/measurementSelectors";
 import { PageContent } from "../../../components/PageContent/PageContent";
 import { SelectableMeasurementDataPoint } from "../../../components/App/measurements/SelectableMeasurementDataPoint/SelectableMeasurementDataPoint";
 import { FlatList, ListRenderItem } from "react-native";
@@ -88,7 +88,12 @@ export const MeasurementHistory = () => {
                 );
             }
         },
-        [editedMeasurement?.measurement?.name, editedMeasurement?.measurement?.type, handleEditMeasurementPoint, openBottomSheet],
+        [
+            editedMeasurement?.measurement?.name,
+            editedMeasurement?.measurement?.type,
+            handleEditMeasurementPoint,
+            openBottomSheet,
+        ],
     );
 
     const flatlistConfig = useMemo(() => {
@@ -128,7 +133,10 @@ export const MeasurementHistory = () => {
 
     return (
         <ThemedView background stretch>
-            <SiteNavigationButtons backButtonAction={handleNavigateToMeasurements} title={editedMeasurement.measurement?.name} />
+            <SiteNavigationButtons
+                backButtonAction={handleNavigateToMeasurements}
+                title={editedMeasurement.measurement?.name}
+            />
             <PageContent stretch ghost>
                 <FlatList
                     showsVerticalScrollIndicator={false}
