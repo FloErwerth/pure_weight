@@ -13,7 +13,7 @@ import { ThemedView } from "../../../Themed/ThemedView/View";
 import { getLanguage } from "../../../../store/selectors/settings/settingsSelectors";
 import { useTheme } from "../../../../theme/context";
 
-type Trend = { percent: number; name?: string; trendIsPositive?: boolean };
+export type Trend = { percent: number; name?: string; isPositive?: boolean };
 export interface ProgressDisplayProps {
     onPress: () => void;
     higherIsBetter?: boolean;
@@ -21,13 +21,7 @@ export interface ProgressDisplayProps {
     type: "Workout" | "Measurement";
 }
 
-const useText = (
-    type: "Workout" | "Measurement",
-    even: boolean,
-    isPositiveTrend: boolean = true,
-    processedPercent: number,
-    trend?: Trend,
-) => {
+const useText = (type: "Workout" | "Measurement", even: boolean, isPositiveTrend: boolean = true, processedPercent: number, trend?: Trend) => {
     const language = useAppSelector(getLanguage);
     const { t } = useTranslation();
 
@@ -39,13 +33,9 @@ const useText = (
             return `Deine Leistung bei ${trend?.name} hat sich nicht verändert`;
         }
         if (language === "en") {
-            return `Your performance at ${trend?.name} ${t(
-                isPositiveTrend ? "increased" : "decreased",
-            )} by ${processedPercent}%`;
+            return `Your performance at ${trend?.name} ${t(isPositiveTrend ? "increased" : "decreased")} by ${processedPercent}%`;
         }
-        return `Deine Leistung bei ${trend?.name} ist um ${processedPercent}% ${t(
-            isPositiveTrend ? "gestiegen" : "gefallen",
-        )}`;
+        return `Deine Leistung bei ${trend?.name} ist um ${processedPercent}% ${t(isPositiveTrend ? "gestiegen" : "gefallen")}`;
     }, [even, language, t, processedPercent, isPositiveTrend, trend?.name]);
 
     const measurementText = useMemo(() => {
@@ -75,11 +65,11 @@ const useText = (
 
 export const ProgressDisplay = ({ trend, onPress, higherIsBetter = true, type }: ProgressDisplayProps) => {
     const positivePercentage = useMemo(() => {
-        if (trend?.trendIsPositive === undefined) {
+        if (trend?.isPositive === undefined) {
             return Boolean((trend?.percent ?? 0) > 0);
         }
-        return trend.trendIsPositive;
-    }, [trend?.percent, trend?.trendIsPositive]);
+        return trend.isPositive;
+    }, [trend?.isPositive, trend?.percent]);
 
     const { successColor, errorColor } = useTheme();
     const progressDisplayPositive = useMemo(() => {

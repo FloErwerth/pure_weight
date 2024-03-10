@@ -10,6 +10,7 @@ import { sortWorkouts } from "../../reducers/workout/sortWorkouts";
 import { getMeasurementSorting } from "../measurements/measurementSelectors";
 import i18next from "i18next";
 import { getDurationInSecondsMinutesOrHours } from "../../../utils/timeDisplay";
+import { Trend } from "../../../components/WorkoutCard/components/ProgressDisplay/ProgressDisplay";
 
 export const getWorkoutState = ({ workoutState }: AppState) => workoutState;
 export const getTrainedWorkout = createSelector([getWorkoutState], (state) => state.trainedWorkout);
@@ -245,7 +246,7 @@ export const getOverallTrainingTrend = createSelector([getWorkouts, (_, workoutI
                 }
             }
         },
-        undefined as { name?: string; percent: number; isPositive: boolean } | undefined,
+        undefined as Trend | undefined,
     );
 });
 
