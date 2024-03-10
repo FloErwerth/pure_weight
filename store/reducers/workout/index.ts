@@ -43,6 +43,7 @@ export const setEditedExercise = createAction<
 >("workout_set_edited_exercise");
 export const deleteExerciseFromEditedWorkout = createAction<number, "workout_delete_exercise_from_edited_workout">("workout_delete_exercise_from_edited_workout");
 export const saveEditedExercise = createAction<WorkoutId>("storeEditedExerciseInEditedWorkout");
+export const saveEditedHistoryExercise = createAction<WorkoutId>("storeEditedExerciseInHistoryWorkout");
 export const startWorkout = createAction<WorkoutId, "start_training">("start_training");
 export const resetTrainedWorkout = createAction("reset_trained_workout");
 export const saveNote = createAction<string | undefined, "save_note">("save_note");
@@ -332,6 +333,7 @@ export const workoutReducer = createReducer<WorkoutState>(
                 if (state.editedExercise) {
                     if (state.editedWorkout) {
                         const exerciseIndex = state.editedWorkout.workout.exercises.findIndex((exercise) => exercise.exerciseId === state.editedExercise?.exercise.exerciseId);
+
                         state.editedWorkout.workout.doneWorkouts = state.editedWorkout.workout.doneWorkouts.map((doneWorkout) => ({
                             ...doneWorkout,
                             doneExercises: doneWorkout.doneExercises?.map((doneExercise) => {
@@ -390,6 +392,18 @@ export const workoutReducer = createReducer<WorkoutState>(
                             }),
                         }));
                         state.workouts[workoutIndex] = workout;
+                    }
+                }
+            })
+            .addCase(saveEditedHistoryExercise, (state) => {
+                if (state.editedExercise) {
+                    if (state.editedWorkout) {
+                        const exerciseIndex = state.editedWorkout.workout.exercises.findIndex((exercise) => exercise.exerciseId === state.editedExercise?.exercise.exerciseId);
+                        if (exerciseIndex !== -1) {
+                            state.editedWorkout.workout.exercises.splice(exerciseIndex, 1, state.editedExercise.exercise);
+                        } else {
+                            state.editedWorkout.workout.exercises.push(state.editedExercise.exercise);
+                        }
                     }
                 }
             })

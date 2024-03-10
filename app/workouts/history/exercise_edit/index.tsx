@@ -5,11 +5,8 @@ import { PageContent } from "../../../../components/PageContent/PageContent";
 import { useTranslation } from "react-i18next";
 import { AppState, useAppDispatch, useAppSelector } from "../../../../store";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import {
-    ThemedBottomSheetModal,
-    useBottomSheetRef,
-} from "../../../../components/BottomSheetModal/ThemedBottomSheetModal";
-import { discardChangesToDoneExercises, saveEditedExercise } from "../../../../store/reducers/workout";
+import { ThemedBottomSheetModal, useBottomSheetRef } from "../../../../components/BottomSheetModal/ThemedBottomSheetModal";
+import { discardChangesToDoneExercises, saveEditedHistoryExercise } from "../../../../store/reducers/workout";
 import * as Haptics from "expo-haptics";
 import { cleanError } from "../../../../store/reducers/errors";
 import { ThemedPressable } from "../../../../components/Themed/Pressable/Pressable";
@@ -24,9 +21,7 @@ import { HistoryContextProvider } from "../../../../components/App/history/Histo
 import { getDoneExerciseById } from "../../../../store/selectors/workout/workoutSelectors";
 
 const useGetWasEdited = (doneWorkoutId: WorkoutId, doneExerciseId: ExerciseId) => {
-    const doneExerciseData = useAppSelector((state: AppState) =>
-        getDoneExerciseById(state, doneWorkoutId, doneExerciseId),
-    );
+    const doneExerciseData = useAppSelector((state: AppState) => getDoneExerciseById(state, doneWorkoutId, doneExerciseId));
     const [stringifiedDoneWorkout, setStringifiedWorkout] = useState("");
 
     useEffect(() => {
@@ -49,26 +44,18 @@ export const WorkoutHistoryEdit = ({
     const { ref, openBottomSheet } = useBottomSheetRef();
     const navigateBack = useNavigateBack();
     const getWasEdited = useGetWasEdited(doneWorkoutId, doneExercise.doneExerciseId);
-
     const saveExercise = useCallback(() => {
-        dispatch(saveEditedExercise());
+        dispatch(saveEditedHistoryExercise(doneWorkoutId));
         void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
         navigateBack();
-    }, [dispatch, navigateBack]);
+    }, [dispatch, doneWorkoutId, navigateBack]);
 
     const warningTitle = useMemo(() => t("workout_history_edit_warning_title"), [t]);
     const warningContent = useMemo(() => t("workout_history_edit_warning_message"), [t]);
     const discardActionText = useMemo(() => t("workout_history_edit_discard_action"), [t]);
 
     const clearHistoryErrors = useCallback(() => {
-        dispatch(
-            cleanError([
-                "edit_history_reps",
-                "edit_history_duration",
-                "edit_history_exercise_weightbased_weight",
-                "edit_history_exercise_weightbased_weight",
-            ]),
-        );
+        dispatch(cleanError(["edit_history_reps", "edit_history_duration", "edit_history_exercise_weightbased_weight", "edit_history_exercise_weightbased_weight"]));
     }, [dispatch]);
 
     const handleDiscardChanges = useCallback(() => {
@@ -101,12 +88,7 @@ export const WorkoutHistoryEdit = ({
                     <HistoryContextProvider>
                         {doneExercise.sets.map((_, index) => {
                             return (
-                                <HistorySetInput
-                                    key={doneExercise.doneExerciseId.concat(index.toString())}
-                                    doneWorkoutId={doneWorkoutId}
-                                    setIndex={index}
-                                    exerciseId={doneExercise.doneExerciseId}
-                                />
+                                <HistorySetInput key={doneExercise.doneExerciseId.concat(index.toString())} doneWorkoutId={doneWorkoutId} setIndex={index} exerciseId={doneExercise.doneExerciseId} />
                             );
                         })}
                     </HistoryContextProvider>
