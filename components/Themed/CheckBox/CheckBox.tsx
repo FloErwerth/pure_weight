@@ -6,7 +6,7 @@ import { Text } from "../ThemedText/Text";
 import { styles } from "./styles";
 import { ThemedView } from "../ThemedView/View";
 import { borderRadius } from "../../../theme/border";
-import { Animated, Pressable, ViewStyle } from "react-native";
+import { Animated, ViewStyle } from "react-native";
 import { ThemedBottomSheetModal, useBottomSheetRef } from "../../BottomSheetModal/ThemedBottomSheetModal";
 import { HelpAnswer } from "../../HelpQuestionAnswer/HelpQuestion";
 import { AnswerText } from "../../HelpQuestionAnswer/AnswerText";
@@ -24,23 +24,9 @@ interface CheckBoxProps {
     ghost?: boolean;
 }
 
-export const CheckBox = ({
-    checked,
-    onChecked,
-    size = 24,
-    label,
-    helpTextConfig,
-    disabled,
-    customWrapperStyles,
-    input,
-    secondary,
-    ghost,
-}: CheckBoxProps) => {
+export const CheckBox = ({ checked, onChecked, size = 24, label, helpTextConfig, disabled, customWrapperStyles, input, secondary, ghost }: CheckBoxProps) => {
     const opacity = useRef(new Animated.Value(0));
-    const checkBoxWrapperStyle = useMemo(
-        () => ({ borderRadius: borderRadius < size ? size / 4 : borderRadius, width: size + 2, height: size + 2 }),
-        [size],
-    );
+    const checkBoxWrapperStyle = useMemo(() => ({ borderRadius: borderRadius < size ? size / 4 : borderRadius, width: size + 2, height: size + 2 }), [size]);
     const checkStyle = useMemo(() => ({ opacity: opacity.current }), [opacity]);
     const { ref, openBottomSheet } = useBottomSheetRef();
 
@@ -67,9 +53,9 @@ export const CheckBox = ({
                             {label}
                         </Text>
                         {helpTextConfig && (
-                            <Pressable onPress={openBottomSheet}>
+                            <ThemedPressable ghost onPress={openBottomSheet}>
                                 <ThemedMaterialCommunityIcons ghost name="help-circle-outline" size={helpTextConfig.iconSize || 20} />
-                            </Pressable>
+                            </ThemedPressable>
                         )}
                     </HStack>
                     <ThemedPressable disabled={disabled} input={!disabled && !input} style={checkBoxWrapperStyle} onPress={handleCheck}>

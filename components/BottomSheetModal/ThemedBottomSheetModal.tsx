@@ -1,23 +1,8 @@
-import React, {
-    forwardRef,
-    PropsWithChildren,
-    ReactNode,
-    RefObject,
-    useCallback,
-    useEffect,
-    useMemo,
-    useRef,
-    useState,
-} from "react";
+import React, { forwardRef, PropsWithChildren, ReactNode, RefObject, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Keyboard, ViewStyle } from "react-native";
 import { Text } from "../Themed/ThemedText/Text";
 import { styles } from "./styles";
-import {
-    BottomSheetBackdrop,
-    BottomSheetBackdropProps,
-    BottomSheetModal,
-    BottomSheetScrollView,
-} from "@gorhom/bottom-sheet";
+import { BottomSheetBackdrop, BottomSheetBackdropProps, BottomSheetModal, BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import { useTheme } from "../../theme/context";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ThemedView } from "../Themed/ThemedView/View";
@@ -63,48 +48,22 @@ export const useBottomSheetRef = () => {
         };
     }, []);
 
-    return useMemo(
-        () => ({ ref, openBottomSheet, closeBottomSheet, closeAll, isOpen }),
-        [closeAll, closeBottomSheet, isOpen, openBottomSheet],
-    );
+    return useMemo(() => ({ ref, openBottomSheet, closeBottomSheet, closeAll, isOpen }), [closeAll, closeBottomSheet, isOpen, openBottomSheet]);
 };
 
-const renderBackdrop = (props: BottomSheetBackdropProps) => (
-    <BottomSheetBackdrop opacity={0.8} appearsOnIndex={0} disappearsOnIndex={-1} {...props} />
-);
+const renderBackdrop = (props: BottomSheetBackdropProps) => <BottomSheetBackdrop opacity={0.8} appearsOnIndex={0} disappearsOnIndex={-1} {...props} />;
 
 // eslint-disable-next-line react/display-name
 export const ThemedBottomSheetModal = forwardRef<BottomSheetModal, ThemedBottomSheetModalProps>(
-    (
-        {
-            hideIndicator,
-            customContentStyle,
-            animationDuration,
-            snapPoints,
-            children,
-            title,
-            onRequestClose,
-            allowSwipeDownToClose = true,
-        },
-        ref,
-    ) => {
+    ({ hideIndicator, customContentStyle, animationDuration, snapPoints, children, title, onRequestClose, allowSwipeDownToClose = true }, ref) => {
         const { mainColor, inputFieldBackgroundColor } = useTheme();
         const { top, bottom } = useSafeAreaInsets();
-        const defaultStyle = useMemo(
-            () => [customContentStyle, styles.defaultContentStyle, { backgroundColor: inputFieldBackgroundColor }],
-            [customContentStyle, inputFieldBackgroundColor],
-        );
+        const defaultStyle = useMemo(() => [customContentStyle, styles.defaultContentStyle, { backgroundColor: inputFieldBackgroundColor }], [customContentStyle, inputFieldBackgroundColor]);
 
         const animationConfig = useMemo(() => ({ duration: animationDuration || 225 }), [animationDuration]);
 
-        const customIndicator = useMemo(
-            () => ({ backgroundColor: allowSwipeDownToClose && !hideIndicator ? mainColor : "transparent" }),
-            [allowSwipeDownToClose, hideIndicator, mainColor],
-        );
-        const contentStyle = useMemo(
-            () => ({ paddingBottom: (DeviceInfo.isTablet() && bottom === 0 ? 20 : bottom) * 2 }),
-            [bottom],
-        );
+        const customIndicator = useMemo(() => ({ backgroundColor: allowSwipeDownToClose && !hideIndicator ? mainColor : "transparent" }), [allowSwipeDownToClose, hideIndicator, mainColor]);
+        const contentStyle = useMemo(() => ({ paddingBottom: (DeviceInfo.isTablet() && bottom === 0 ? 20 : bottom) * 2 }), [bottom]);
         const contentContainerStyle = useMemo(() => ({ flex: snapPoints ? 1 : 0 }), [snapPoints]);
 
         const Title = useCallback(() => {
