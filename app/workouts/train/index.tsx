@@ -1,4 +1,4 @@
-import { useAppDispatch, useAppSelector } from "../../../store";
+import { AppState, useAppDispatch, useAppSelector } from "../../../store";
 import React, { useCallback, useEffect, useMemo, useRef } from "react";
 import { trainStyles } from "../../../components/App/train/trainStyles";
 import { BackButtonModal } from "../../../components/AlertModal/BackButtonModal";
@@ -12,13 +12,7 @@ import { StopwatchPopover } from "../../../components/StopwatchPopover/Stopwatch
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Carousel from "react-native-reanimated-carousel/src/Carousel";
 import { ThemedBottomSheetModal, useBottomSheetRef } from "../../../components/BottomSheetModal/ThemedBottomSheetModal";
-import {
-    mutateActiveExerciseInTrainedWorkout,
-    pauseTrainedWorkout,
-    resetTrainedWorkout,
-    saveCurrentWorkout,
-    setActiveExerciseIndex,
-} from "../../../store/reducers/workout";
+import { mutateActiveExerciseInTrainedWorkout, pauseTrainedWorkout, resetTrainedWorkout, saveCurrentWorkout, setActiveExerciseIndex } from "../../../store/reducers/workout";
 
 import {
     getCanSnap,
@@ -27,6 +21,7 @@ import {
     getIsDoneWithTraining,
     getTrainedWorkout,
     getTrainedWorkoutExercises,
+    getWorkoutByIndex,
 } from "../../../store/selectors/workout/workoutSelectors";
 import { TrainedExercise } from "../../../components/App/train/Exercise/TrainedExercise";
 import { ExerciseId } from "../../../store/reducers/workout/types";
@@ -50,6 +45,7 @@ export const Train = () => {
     const shouldSwitch = useAppSelector(getSwitchToNextExercise);
     const isExerciseDone = useAppSelector(getExerciseDone);
     const canSnap = useAppSelector(getCanSnap);
+    const workoutName = useAppSelector((state: AppState) => getWorkoutByIndex(state, trainedWorkout?.workoutId))?.name;
 
     useEffect(() => {
         if (isDone) {
@@ -110,10 +106,7 @@ export const Train = () => {
     }, [hasNoTrainingData, handleReset, handleNavigateToWorkouts, openAlert]);
 
     const buttonsStyle = useMemo(() => [trainStyles.buttons, { marginBottom: bottom }], [bottom]);
-    const alertModalConfig = useMemo(
-        () => ({ title: t(isDone ? "workout_quit_title" : "workout_early_quit_title") }),
-        [isDone, t],
-    );
+    const alertModalConfig = useMemo(() => ({ title: t(isDone ? "workout_quit_title" : "workout_early_quit_title") }), [isDone, t]);
 
     const mappedExercises: { exerciseId: ExerciseId }[] = useMemo(() => {
         if (!trainedWorkout) {
@@ -128,9 +121,9 @@ export const Train = () => {
 
     const renderItem = useCallback(
         ({ item: { exerciseId } }: CarouselRenderItemInfo<{ exerciseId: ExerciseId }>) => {
-            return <TrainedExercise workoutId={trainedWorkout?.workout.workoutId} exerciseId={exerciseId} />;
+            return <TrainedExercise workoutId={trainedWorkout?.workoutId} exerciseId={exerciseId} />;
         },
-        [trainedWorkout?.workout.workoutId],
+        [trainedWorkout?.workoutId],
     );
 
     const handleSetActiveExerciseIndex = useCallback(
@@ -156,7 +149,7 @@ export const Train = () => {
                     handleConfirmOpacity={confirmButtonOpacity}
                     backButtonAction={handleCloseButton}
                     handleConfirm={handleDone}
-                    title={trainedWorkout?.workout.name}
+                    title={workoutName}
                     handleQuicksettings={open}
                 />
             </ThemedView>
@@ -175,14 +168,7 @@ export const Train = () => {
             <HStack background style={buttonsStyle}>
                 <StopwatchPopover />
             </HStack>
-            <BackButtonModal
-                workoutDone={isDone}
-                reference={alertRef}
-                title={alertModalConfig.title}
-                onConfirm={handleNotDoneConfirm}
-                onPause={handlePauseWorkout}
-                onCancel={handleCancelWorkout}
-            />
+            <BackButtonModal workoutDone={isDone} reference={alertRef} title={alertModalConfig.title} onConfirm={handleNotDoneConfirm} onPause={handlePauseWorkout} onCancel={handleCancelWorkout} />
             <ThemedBottomSheetModal title={quickSettingsTitle} ref={ref}>
                 <ThemedView style={trainStyles.quickSettingsWrapper} ghost>
                     <WorkoutSettings />

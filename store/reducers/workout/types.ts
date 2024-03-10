@@ -78,14 +78,14 @@ export type TrainedWorkoutExerciseData = {
     setIndex: number;
     latestSetIndex: number;
     activeSetIndex: number;
-    doneSets: ExerciseSets;
+    sets: ExerciseSets;
     name: string;
     note?: string;
     canSnap: boolean;
 };
 
 export type TrainedWorkout = {
-    workout: Workout;
+    workoutId: WorkoutId;
     activeExerciseIndex: number;
     beginTimestamp: number;
     pauseTimestamps?: {
