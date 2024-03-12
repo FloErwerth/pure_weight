@@ -12,13 +12,15 @@ import { useTranslation } from "react-i18next";
 import { ThemedView } from "../../Themed/ThemedView/View";
 import { WorkoutId } from "../../../store/reducers/workout/types";
 import { useTheme } from "../../../theme/context";
+import { ThemedPressable } from "../../Themed/Pressable/Pressable";
+import { getIsPro } from "../../../store/selectors/purchases";
 
 type RenderedWorkoutProps = {
     workoutId: WorkoutId;
 };
 export const RenderedWorkout = ({ workoutId }: RenderedWorkoutProps) => {
     const workout = useAppSelector((state: AppState) => getWorkoutByIndex(state, workoutId));
-
+    const pro = useAppSelector(getIsPro);
     const { secondaryBackgroundColor } = useTheme();
     const dispatch = useAppDispatch();
     const trend = useAppSelector((state: AppState) => getOverallTrainingTrend(state, workoutId));
@@ -49,7 +51,13 @@ export const RenderedWorkout = ({ workoutId }: RenderedWorkoutProps) => {
             </View>
             {showStats ? (
                 <View style={styles.innerTrainWrapper}>
-                    <ProgressDisplay type="Workout" trend={trend} onPress={handleNavigateToProgress} />
+                    {pro ? (
+                        <ProgressDisplay type="Workout" trend={trend} onPress={handleNavigateToProgress} />
+                    ) : (
+                        <ThemedPressable cta padding onPress={() => navigate("purchase")}>
+                            <Text>Purchase Pro</Text>
+                        </ThemedPressable>
+                    )}
                     <HistoryDisplay type="workout" id={workoutId} handleNavigateToHistory={handleNavigateToHistory} />
                 </View>
             ) : (

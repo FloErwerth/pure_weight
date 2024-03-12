@@ -19,6 +19,9 @@ export type RoutesParamaters = {
         name: "tabs/settings";
         scrollIndex?: number;
     };
+    ["purchase"]: {
+        name: "purchase";
+    };
     ["workouts/create/exercise/index"]: {
         name: "workouts/create/exercise/index";
         to?: keyof typeof Routes;
@@ -80,6 +83,9 @@ export const Routes = {
     },
     measurements: {
         screen: "tabs/measurements",
+    },
+    purchase: {
+        screen: "purchase",
     },
     "measurement/progress": {
         screen: "measurement/progress/index",

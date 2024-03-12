@@ -73,7 +73,7 @@ Build Number 27
 
 `0.8.2`:
 
-- [Fixed starting stopwatch after set
+- Fixed starting stopwatch after set
 - Fixed workout charts not updating names after editing
 - Fixed trend display
 - Adjust added done sets to done workouts
@@ -82,3 +82,6 @@ Build Number 27
 - Fixed bug not allowing to save edited measurement
 - Adjusted light theme a bit
 - Fixed bug not allowing turn off and on automatic updating of workout data
+
+`0.8.3`:
+

@@ -34,10 +34,13 @@ import { MeasurementProgress } from "./measurements/progress";
 import { useInitIntl } from "../locales/i18next";
 import { MeasurementHistoryEdit } from "./measurements/history/edit";
 import { WorkoutHistoryEdit } from "./workouts/history/exercise_edit";
+import { Purchase } from "./purchase";
+import { useInitPurchases } from "../hooks/initPurchases";
 
 const Stack = createNativeStackNavigator<RoutesParamaters>();
 
 const ThemedApp = () => {
+    useInitPurchases();
     useInitIntl();
     const dispatch = useAppDispatch();
     const { i18n } = useTranslation();
@@ -73,78 +76,22 @@ const ThemedApp = () => {
                     <RootSiblingParent>
                         <BottomSheetModalProvider>
                             <SafeAreaView background>
-                                <Stack.Navigator
-                                    screenOptions={{ headerShown: false, headerBackButtonMenuEnabled: false }}>
-                                    <Stack.Screen
-                                        component={TabsWrapper}
-                                        options={{ headerShown: false }}
-                                        name="tabs"
-                                    />
-                                    <Stack.Screen
-                                        component={Train}
-                                        options={{ gestureEnabled: false, headerShown: false }}
-                                        name="workouts/train/index"
-                                    />
-                                    <Stack.Screen
-                                        component={MeasurementProgress}
-                                        options={{ headerShown: false }}
-                                        name="measurement/progress/index"
-                                    />
-                                    <Stack.Screen
-                                        component={MeasurementHistoryEdit}
-                                        options={{ headerShown: false }}
-                                        name="measurements/history/edit/index"
-                                    />
-                                    <Stack.Screen
-                                        component={CreateMeasurement}
-                                        options={{ headerShown: false }}
-                                        name="measurement/create/index"
-                                    />
-                                    <Stack.Screen
-                                        component={MeasurementHistory}
-                                        options={{ headerShown: false }}
-                                        name="measurement/history/index"
-                                    />
-                                    <Stack.Screen
-                                        component={Create}
-                                        options={{ gestureEnabled: false, headerShown: false }}
-                                        name="workouts/create/index"
-                                    />
-                                    <Stack.Screen
-                                        component={WorkoutProgress}
-                                        options={{ headerShown: false }}
-                                        name="workouts/progress/index"
-                                    />
-                                    <Stack.Screen
-                                        component={WorkoutHistory}
-                                        options={{ headerShown: false }}
-                                        name="workouts/history/index"
-                                    />
-                                    <Stack.Screen
-                                        component={WorkoutHistoryOverview}
-                                        options={{ headerShown: false }}
-                                        name="workouts/history/workout/index"
-                                    />
-                                    <Stack.Screen
-                                        component={WorkoutHistoryEdit}
-                                        options={{ headerShown: false }}
-                                        name="workouts/history/exercise_edit/index"
-                                    />
-                                    <Stack.Screen
-                                        component={GeneralSettings}
-                                        options={{ headerShown: false }}
-                                        name="settings/workout/index"
-                                    />
-                                    <Stack.Screen
-                                        component={Manual}
-                                        options={{ headerShown: false }}
-                                        name="settings/manual/index"
-                                    />
-                                    <Stack.Screen
-                                        component={CreateExercise}
-                                        options={{ headerShown: false }}
-                                        name="workouts/create/exercise/index"
-                                    />
+                                <Stack.Navigator screenOptions={{ headerShown: false, headerBackButtonMenuEnabled: false }}>
+                                    <Stack.Screen component={TabsWrapper} options={{ headerShown: false }} name="tabs" />
+                                    <Stack.Screen component={Train} options={{ gestureEnabled: false, headerShown: false }} name="workouts/train/index" />
+                                    <Stack.Screen component={MeasurementProgress} options={{ headerShown: false }} name="measurement/progress/index" />
+                                    <Stack.Screen component={MeasurementHistoryEdit} options={{ headerShown: false }} name="measurements/history/edit/index" />
+                                    <Stack.Screen component={CreateMeasurement} options={{ headerShown: false }} name="measurement/create/index" />
+                                    <Stack.Screen component={MeasurementHistory} options={{ headerShown: false }} name="measurement/history/index" />
+                                    <Stack.Screen component={Create} options={{ gestureEnabled: false, headerShown: false }} name="workouts/create/index" />
+                                    <Stack.Screen component={WorkoutProgress} options={{ headerShown: false }} name="workouts/progress/index" />
+                                    <Stack.Screen component={WorkoutHistory} options={{ headerShown: false }} name="workouts/history/index" />
+                                    <Stack.Screen component={WorkoutHistoryOverview} options={{ headerShown: false }} name="workouts/history/workout/index" />
+                                    <Stack.Screen component={WorkoutHistoryEdit} options={{ headerShown: false }} name="workouts/history/exercise_edit/index" />
+                                    <Stack.Screen component={GeneralSettings} options={{ headerShown: false }} name="settings/workout/index" />
+                                    <Stack.Screen component={Manual} options={{ headerShown: false }} name="settings/manual/index" />
+                                    <Stack.Screen component={CreateExercise} options={{ headerShown: false }} name="workouts/create/exercise/index" />
+                                    <Stack.Screen component={Purchase} options={{ headerShown: false }} name="purchase" />
                                 </Stack.Navigator>
                             </SafeAreaView>
                         </BottomSheetModalProvider>
