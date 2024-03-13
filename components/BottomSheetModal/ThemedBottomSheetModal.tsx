@@ -53,6 +53,7 @@ export const useBottomSheetRef = () => {
 
 const renderBackdrop = (props: BottomSheetBackdropProps) => <BottomSheetBackdrop opacity={0.8} appearsOnIndex={0} disappearsOnIndex={-1} {...props} />;
 
+// eslint-disable-next-line react/display-name
 export const ThemedBottomSheetModal = forwardRef<BottomSheetModal, ThemedBottomSheetModalProps>(
     ({ hideIndicator, customContentStyle, animationDuration, snapPoints, children, title, onRequestClose, allowSwipeDownToClose = true }, ref) => {
         const { mainColor, inputFieldBackgroundColor } = useTheme();

@@ -155,7 +155,7 @@ const PurchaseBottomSheet = ({ reference, type }: PurchaseBottomSheetProps) => {
                 </ThemedView>
             );
         }
-    }, [type]);
+    }, [language, t, type]);
 
     return (
         <ThemedBottomSheetModal ref={reference}>
@@ -194,7 +194,7 @@ export const Purchase = () => {
                     };
                 }
             }),
-        [packages, buyPackage],
+        [packages, language, buyPackage],
     );
 
     const buyYearlyPackage = useCallback(() => {
@@ -203,23 +203,29 @@ export const Purchase = () => {
         return yearlyPackage?.purchasePackage();
     }, [mappedPackages]);
 
-    const handleOpenMoreInfo = useCallback((type: PurchaseBottomSheetType) => {
-        setInfoType(type);
-        openMoreInfo();
-    }, []);
+    const handleOpenMoreInfo = useCallback(
+        (type: PurchaseBottomSheetType) => {
+            setInfoType(type);
+            openMoreInfo();
+        },
+        [openMoreInfo],
+    );
 
     const handleOpenGraphsInfo = useCallback(() => {
         handleOpenMoreInfo("graphs");
-    }, []);
+    }, [handleOpenMoreInfo]);
+
     const handleOpenPerformanceInfo = useCallback(() => {
         handleOpenMoreInfo("performance");
-    }, []);
+    }, [handleOpenMoreInfo]);
+
     const handleOpenInfiniteInfo = useCallback(() => {
         handleOpenMoreInfo("infinite");
-    }, []);
+    }, [handleOpenMoreInfo]);
+
     const handleOpenFutureInfo = useCallback(() => {
         handleOpenMoreInfo("future");
-    }, []);
+    }, [handleOpenMoreInfo]);
 
     const lockText = useMemo(() => {
         const yearly = mappedPackages.find((pack) => pack?.identifier === "einjahr");

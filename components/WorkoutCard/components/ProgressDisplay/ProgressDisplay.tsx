@@ -84,7 +84,7 @@ export const ProgressDisplay = ({ trend, onPress, higherIsBetter = true, type }:
             return "Graphs are part of the PRO version";
         }
         return "Graphen sind Teil der PRO-Version";
-    }, [pro]);
+    }, [language]);
 
     const { successColor, errorColor } = useTheme();
     const progressDisplayPositive = useMemo(() => {

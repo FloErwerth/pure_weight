@@ -36,8 +36,10 @@ export const useComputedBackgroundColor = (props: ComputedBackgroundColorProps) 
     }, [
         backgroundColor,
         componentBackgroundColor,
+        cta,
         inputFieldBackgroundColor,
         props.background,
+        props.cta,
         props.ghost,
         props.hint,
         props.input,
