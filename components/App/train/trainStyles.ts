@@ -5,6 +5,10 @@ export const trainStyles = StyleSheet.create({
     buttons: {
         justifyContent: "center",
     },
+    hint: {
+        marginBottom: 10,
+        fontSize: 16,
+    },
     flexOneView: {
         flex: 1,
     },

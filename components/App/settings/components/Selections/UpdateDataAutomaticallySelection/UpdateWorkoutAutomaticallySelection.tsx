@@ -9,7 +9,6 @@ export const UpdateWorkoutAutomaticallySelection = () => {
     const { t } = useTranslation();
     const dispatch = useAppDispatch();
     const updateAutomatically = useAppSelector(getUpdatePrefilledWorkoutValues);
-
     const handleSwitchUpdates = useCallback(
         (shouldSwitch: boolean) => {
             dispatch(setUpdatePrefilledWorkoutValues(shouldSwitch));
@@ -25,5 +24,5 @@ export const UpdateWorkoutAutomaticallySelection = () => {
         [t],
     );
 
-    return <CheckBox label={t("settings_update_workout_automatically_title")} helpTextConfig={helpText} size={26} checked={updateAutomatically} onChecked={handleSwitchUpdates} />;
+    return <CheckBox label={t("settings_update_workout_automatically_title")} helpTextConfig={helpText} checked={updateAutomatically} onChecked={handleSwitchUpdates} />;
 };

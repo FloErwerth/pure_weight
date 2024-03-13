@@ -80,6 +80,7 @@ export const getWorkoutByIndex = createSelector([getWorkouts, (_, workoutId?: Wo
 export const getSortedWorkouts = createSelector([getWorkouts, getWorkoutSorting], (workouts, sorting) => {
     return sortWorkouts(workouts, sorting);
 });
+export const getNumberOfWorkouts = createSelector([getWorkouts], (workouts) => workouts.length);
 export const getEditedWorkoutName = createSelector([getEditedWorkout], (editedWorkout) => editedWorkout?.workout?.name);
 export const getExercisesFromIndex = createSelector([getTrainedWorkout, getWorkouts, (_, exerciseId: ExerciseId) => exerciseId], (trainedWorkout, workouts, exerciseId) => {
     if (trainedWorkout) {

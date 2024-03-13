@@ -306,5 +306,23 @@
   "post_workout_more_performance": "Leistungssteigerung",
   "post_workout_even_performance": "Leistungsveränderung",
   "post_workout_less_performance": "Leistungsminderung",
-  "post_workout_duration": "Session-Dauer"
+  "post_workout_duration": "Session-Dauer",
+
+  "purchase": "Alle features freischalten",
+  "purchase_title": "Pure Weight PRO",
+  "purchase_graphs": "Graphen für Workouts und Messungen",
+  "purchase_graphs_content_1": "Lasse Dir den Verlauf deiner Workouts und deiner Messungen anzeigen und erkenne so deine Fortschritte auf einen Blick!",
+  "purchase_graphs_content_2": "Um mehr Analysemöglichkeiten zu bieten, stehen verschiedene Arten von Graphen zur Verfügung. \n\nDu kannst zum Beispiel das kumulierte Gewicht deiner Workouts oder die durchschnittlichen Wiederholungen pro Workout sehen.",
+  "purchase_performance": "Leistungsindikatoren",
+  "purchase_performance_content_1": "Erhalte den Übersichten deiner gespeicherten Workouts und Messungen einen Vergleich auf den ersten Blick.",
+  "purchase_performance_content_2": "Es wird die aktuelle Leistung oder Messung mit der vorherigen Verglichen und angezeigt, ob sich die Leistung verbessert hat oder nicht.",
+  "purchase_infinite_plans": "Unbegrenzt Workouts und Messungen speichern",
+  "purchase_infinite_plans_content": "Speichere so viele Workouts und Messungen wie Du möchtest. \n\nEs gibt keine Begrenzung mehr, wie viele Workouts oder Messungen Du speichern kannst.",
+  "purchase_future_features": "Alle kommenden Features",
+  "purchase_future_features_content": "Pure Weight befindet sich noch am Anfang der Entwicklung. Es sind noch viele Features geplant. \n\nSei einer der ersten Nutzenden und sichere Dir den Zugang zu allen Features, welche in der Zukunft noch hinzugefügt werden.",
+  "purchase_unlock_now": "Jetzt freischalten",
+  "purchase_show_all": "Alle Optionen anzeigen",
+  "purchase_best_offer": "Bestes Angebot",
+  "purchase_graphs_part_of_pro": "Graphen sind Teil der PRO-Version",
+  "purchase_locked_hint": "Dieses Feature freischalten"
 }

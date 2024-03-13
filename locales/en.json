@@ -314,5 +314,22 @@
 
   "post_workout_more_performance": "Performance gain",
   "post_workout_even_performance": "Performance change",
-  "post_workout_less_performance": "Performance loss"
+  "post_workout_less_performance": "Performance loss",
+
+  "purchase": "Unlock all features",
+  "purchase_title": "Pure Weight PRO",
+  "purchase_graphs": "Graphs for Workouts and Measurements",
+  "purchase_graphs_content_1": "See the progress of your workouts and measurements and recognize your progress at a glance!",
+  "purchase_graphs_content_2": "To give more options to analyze there are different types of graphs available. \n\nFor example, you can see the cumulative weight of your workouts or the average reps per workout.",
+  "purchase_performance": "Progress indicators",
+  "purchase_performance_content_1": "Get a comparison at a glance of your saved workouts and measurements.",
+  "purchase_performance_content_2": "The current performance or measurement is compared with the previous one and it is displayed whether the performance has improved or not.",
+  "purchase_infinite_plans": "Save unlimited workouts and measurements",
+  "purchase_infinite_plans_content": "Save as many workouts and measurements as you want. \n\nThere is no limit anymore how many workouts or measurements you can save.",
+  "purchase_future_features": "All future features",
+  "purchase_future_features_content": "Pure Weight is still at the beginning of development. There are still many features planned. \n\nBe one of the first users and secure access to all features that will be added in the future.",
+  "purchase_unlock_now": "Unlock now",
+  "purchase_show_all": "Show all options",
+  "purchase_best_offer": "Best offer",
+  "purchase_graphs_part_of_pro": "Graphs are part of the PRO version"
 }

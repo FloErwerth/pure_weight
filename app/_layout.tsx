@@ -35,7 +35,7 @@ import { useInitIntl } from "../locales/i18next";
 import { MeasurementHistoryEdit } from "./measurements/history/edit";
 import { WorkoutHistoryEdit } from "./workouts/history/exercise_edit";
 import { Purchase } from "./purchase";
-import { useInitPurchases } from "../hooks/initPurchases";
+import { useInitPurchases } from "../hooks/purchases";
 
 const Stack = createNativeStackNavigator<RoutesParamaters>();
 

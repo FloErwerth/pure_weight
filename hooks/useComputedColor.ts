@@ -8,14 +8,18 @@ interface ComputedColorProps {
     placeholder?: boolean;
     textBackground?: boolean;
     link?: boolean;
+    textCta?: boolean;
     cta?: boolean;
 }
 export const useComputedColor = (props: ComputedColorProps) => {
-    const { cta, errorColor, textDisabled, warningColor, secondaryColor, mainColor, backgroundColor } = useTheme();
+    const { textCta, cta, errorColor, textDisabled, warningColor, secondaryColor, mainColor, backgroundColor } = useTheme();
 
     return useMemo(() => {
         if (props.error) {
             return errorColor;
+        }
+        if (props.textCta) {
+            return textCta;
         }
         if (props.cta) {
             return cta;

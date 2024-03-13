@@ -7,21 +7,11 @@ import { ThemedView } from "../../components/Themed/ThemedView/View";
 import { Swipeable } from "../../components/WorkoutCard/Swipeable";
 import { RenderedMeasurement } from "../../components/App/measurements/RenderedMeasurement";
 import { BottomToast } from "../../components/BottomToast/BottomToast";
-import {
-    deleteMeasurement,
-    recoverMeasurement,
-    setEditedMeasurement,
-    setSearchedMeasurements,
-    setupNewMeasurement,
-} from "../../store/reducers/measurements";
-import {
-    getSearchedMeasurements,
-    getSortedMeasurements,
-} from "../../store/selectors/measurements/measurementSelectors";
+import { deleteMeasurement, recoverMeasurement, setEditedMeasurement, setSearchedMeasurements, setupNewMeasurement } from "../../store/reducers/measurements";
+import { getSearchedMeasurements, getSortedMeasurements } from "../../store/selectors/measurements/measurementSelectors";
 import { useNavigate } from "../../hooks/navigate";
 import { useToast } from "../../components/BottomToast/useToast";
 import { MeasurementId } from "../../components/App/measurements/types";
-import { View } from "react-native";
 import { styles } from "../../components/App/measurements/styles";
 import { HStack } from "../../components/Stack/HStack/HStack";
 import { trainStyles } from "../../components/App/train/trainStyles";
@@ -32,20 +22,21 @@ import { AnswerText } from "../../components/HelpQuestionAnswer/AnswerText";
 import { ThemedPressable } from "../../components/Themed/Pressable/Pressable";
 import { ThemedMaterialCommunityIcons } from "../../components/Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
 import { Text } from "../../components/Themed/ThemedText/Text";
+import { RemainingMeasurementsText } from "../../components/CreationBarrierTexts/RemainingMeasurementsText";
+import { getIsPro } from "../../store/selectors/purchases";
 
 export function Measurements() {
     const { t } = useTranslation();
     const measurements = useAppSelector(getSortedMeasurements);
     const searchedMeasurements = useAppSelector(getSearchedMeasurements);
     const dispatch = useAppDispatch();
+    const isPro = useAppSelector(getIsPro);
     const navigate = useNavigate();
     const { toastRef, openToast, closeToast, showToast } = useToast();
     const [deletedMeasurementId, setDeletedMeasurementId] = useState<MeasurementId | null>(null);
-    const {
-        ref: deleteWarningRef,
-        openBottomSheet: openDeleteWarning,
-        closeBottomSheet: closeDeleteWarning,
-    } = useBottomSheetRef();
+    const { ref: deleteWarningRef, openBottomSheet: openDeleteWarning, closeBottomSheet: closeDeleteWarning } = useBottomSheetRef();
+    const isAllowedToCreateMeasurement = useMemo(() => isPro || measurements.length < 3, [isPro, measurements]);
+
     const filteredMeasurements = useMemo(
         () =>
             measurements.filter((measurement) => {
@@ -124,6 +115,7 @@ export function Measurements() {
     return (
         <ThemedView stretch background>
             <SiteNavigationButtons
+                confirmButtonDisabled={!isAllowedToCreateMeasurement}
                 titleFontSize={40}
                 title={t("measurements")}
                 handleConfirm={handleAddNewMeasurement}
@@ -137,8 +129,11 @@ export function Measurements() {
                     </HStack>
                 </PageContent>
             )}
-            <PageContent showsVerticalScrollIndicator={false} background ignoreGap scrollable>
-                <View style={styles.wrapper}>{mappedMeasurements}</View>
+            <PageContent showsVerticalScrollIndicator={false} stretch background ignoreGap scrollable>
+                <ThemedView ghost stretch style={styles.wrapper}>
+                    {mappedMeasurements}
+                </ThemedView>
+                <RemainingMeasurementsText />
             </PageContent>
             <BottomToast
                 reference={toastRef}
@@ -152,11 +147,7 @@ export function Measurements() {
             <ThemedBottomSheetModal title={t("alert_delete_measurement_title")} ref={deleteWarningRef}>
                 <PageContent paddingTop={20} stretch ghost>
                     <AnswerText>{t("alert_delete_measurement_content")}</AnswerText>
-                    <ThemedPressable
-                        style={trainStyles.deleteButtonWrapper}
-                        center
-                        round
-                        onPress={handleDeleteMeasurement}>
+                    <ThemedPressable style={trainStyles.deleteButtonWrapper} center round onPress={handleDeleteMeasurement}>
                         <HStack style={trainStyles.confirmOverwriteWrapper} round center>
                             <ThemedMaterialCommunityIcons ghost name="delete" size={24} />
                             <Text center ghost style={trainStyles.button}>

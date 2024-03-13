@@ -1296,6 +1296,10 @@ export const mockState: AppState = {
     errorState: {
         errors: [],
     },
+    purchaseState: {
+        pro: false,
+        availablePackages: [],
+    },
 };
 
 export const emptyState = {
@@ -1314,6 +1318,10 @@ export const emptyState = {
     },
     errorState: {
         errors: [],
+    },
+    purchaseState: {
+        pro: false,
+        availablePackages: [],
     },
     settingsState: {
         stopwatchSettings: { startOnDoneSet: true },

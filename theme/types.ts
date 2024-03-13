@@ -13,5 +13,6 @@ export type ThemeColors = {
     warningColor: string;
     successColor: string;
     cta: string;
+    textCta: string;
 };
 export type ThemeKey = "dark" | "light";

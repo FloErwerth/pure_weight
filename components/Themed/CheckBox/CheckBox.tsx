@@ -24,11 +24,11 @@ interface CheckBoxProps {
     ghost?: boolean;
 }
 
-export const CheckBox = ({ checked, onChecked, size = 24, label, helpTextConfig, disabled, customWrapperStyles, input, secondary, ghost }: CheckBoxProps) => {
+export const CheckBox = ({ checked, onChecked, size = 26, label, helpTextConfig, disabled, customWrapperStyles, input, secondary, ghost }: CheckBoxProps) => {
     const opacity = useRef(new Animated.Value(0));
     const checkBoxWrapperStyle = useMemo(() => ({ borderRadius: borderRadius < size ? size / 4 : borderRadius, width: size + 2, height: size + 2 }), [size]);
     const checkStyle = useMemo(() => ({ opacity: opacity.current }), [opacity]);
-    const { ref, openBottomSheet } = useBottomSheetRef();
+    const { ref, openBottomSheet, closeBottomSheet } = useBottomSheetRef();
 
     useEffect(() => {
         Animated.timing(opacity.current, {

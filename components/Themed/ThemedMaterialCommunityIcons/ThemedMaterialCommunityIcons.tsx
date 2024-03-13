@@ -9,14 +9,13 @@ interface ThemedMaterialCommunityIconsProps extends ComponentProps<typeof Materi
     ghost?: boolean;
     background?: boolean;
     round?: boolean;
+    cta?: boolean;
+    textCta?: boolean;
 }
 
 export const ThemedMaterialCommunityIcons = (props: ThemedMaterialCommunityIconsProps) => {
     const computedBackgroundColor = useComputedBackgroundColor(props);
     const color = useComputedColor(props);
-    const style = useMemo(
-        () => [{ backgroundColor: computedBackgroundColor, borderRadius: props.round ? borderRadius : 0 }, props.style],
-        [computedBackgroundColor, props.round, props.style],
-    );
+    const style = useMemo(() => [{ backgroundColor: computedBackgroundColor, borderRadius: props.round ? borderRadius : 0 }, props.style], [computedBackgroundColor, props.round, props.style]);
     return <MaterialCommunityIcons {...props} style={style} color={props.color ?? color} />;
 };

@@ -4,22 +4,8 @@ import { AppState, useAppDispatch, useAppSelector } from "../../store";
 import { SiteNavigationButtons } from "../../components/SiteNavigationButtons/SiteNavigationButtons";
 import { useTranslation } from "react-i18next";
 import { ThemedView } from "../../components/Themed/ThemedView/View";
-import {
-    getIsOngoingWorkout,
-    getSearchedWorkout,
-    getSortedWorkouts,
-    getTrainedWorkout,
-    getWorkouts,
-} from "../../store/selectors/workout/workoutSelectors";
-import {
-    createNewWorkout,
-    recoverWorkout,
-    removeWorkout,
-    resumeTrainedWorkout,
-    setEditedWorkout,
-    setSearchedWorkout,
-    startWorkout,
-} from "../../store/reducers/workout";
+import { getIsOngoingWorkout, getSearchedWorkout, getSortedWorkouts, getTrainedWorkout } from "../../store/selectors/workout/workoutSelectors";
+import { createNewWorkout, recoverWorkout, removeWorkout, resumeTrainedWorkout, setEditedWorkout, setSearchedWorkout, startWorkout } from "../../store/reducers/workout";
 import { Sorting } from "../../components/Sorting/Sorting";
 import { RenderedWorkout } from "../../components/App/workout/RenderedWorkout";
 import { PageContent } from "../../components/PageContent/PageContent";
@@ -34,10 +20,11 @@ import { HStack } from "../../components/Stack/HStack/HStack";
 import { ThemedMaterialCommunityIcons } from "../../components/Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
 import { useToast } from "../../components/BottomToast/useToast";
 import { WorkoutId } from "../../store/reducers/workout/types";
-import { View } from "react-native";
 import { ExpandableSearchbar } from "../../components/Searchbar/ExpandableSearchbar";
 import { AnswerText } from "../../components/HelpQuestionAnswer/AnswerText";
 import { WorkoutCompleteModal } from "../../components/WorkoutCompleteModal/WorkoutCompleteModal";
+import { getIsPro } from "../../store/selectors/purchases";
+import { RemainingWorkoutsText } from "../../components/CreationBarrierTexts/RemainingWorkoutsText";
 
 const usePauseWarningContent = () => {
     const language = useAppSelector(getLanguage);
@@ -63,6 +50,10 @@ export function Workouts() {
     const { t } = useTranslation();
     const savedWorkouts = useAppSelector(getSortedWorkouts);
     const workoutFilter = useAppSelector(getSearchedWorkout);
+    const isPro = useAppSelector(getIsPro);
+    const navigate = useNavigate();
+    const numberOfWorkouts = useMemo(() => savedWorkouts.length, [savedWorkouts]);
+    const isAllowedToCreateWorkout = useMemo(() => isPro || numberOfWorkouts < 3, [isPro, numberOfWorkouts]);
 
     const filteredWorkouts = useMemo(
         () =>
@@ -75,16 +66,10 @@ export function Workouts() {
             }),
         [savedWorkouts, workoutFilter],
     );
-    const numberOfWorkouts = useAppSelector(getWorkouts).length;
 
-    const navigate = useNavigate();
     const trainedWorkout = useAppSelector(getTrainedWorkout);
     const { ref, openBottomSheet, closeBottomSheet } = useBottomSheetRef();
-    const {
-        ref: deleteWarningRef,
-        openBottomSheet: openDeleteWarning,
-        closeBottomSheet: closeDeleteWarning,
-    } = useBottomSheetRef();
+    const { ref: deleteWarningRef, openBottomSheet: openDeleteWarning, closeBottomSheet: closeDeleteWarning } = useBottomSheetRef();
     const [newWorkoutId, setNewWorkoutId] = useState<WorkoutId | undefined>(undefined);
     const isOngoingWorkout = useAppSelector((state: AppState) => getIsOngoingWorkout(state, newWorkoutId));
     const { toastRef, openToast, closeToast, showToast } = useToast();
@@ -172,11 +157,7 @@ export function Workouts() {
     const mappedWorkouts = useMemo(
         () =>
             filteredWorkouts.map(({ name, workoutId }) => (
-                <Swipeable
-                    key={name.concat(workoutId?.toString())}
-                    onClick={() => handleStartWorkoutCases(workoutId)}
-                    onDelete={() => onDelete(workoutId)}
-                    onEdit={() => onEdit(workoutId)}>
+                <Swipeable key={name.concat(workoutId?.toString())} onClick={() => handleStartWorkoutCases(workoutId)} onDelete={() => onDelete(workoutId)} onEdit={() => onEdit(workoutId)}>
                     <RenderedWorkout workoutId={workoutId} />
                 </Swipeable>
             )),
@@ -192,12 +173,7 @@ export function Workouts() {
 
     return (
         <ThemedView stretch background>
-            <SiteNavigationButtons
-                titleFontSize={40}
-                title={t("workouts")}
-                handleConfirmIcon={confirmIcon}
-                handleConfirm={handleCreateWorkout}
-            />
+            <SiteNavigationButtons titleFontSize={40} title={t("workouts")} handleConfirmIcon={confirmIcon} confirmButtonDisabled={!isAllowedToCreateWorkout} handleConfirm={handleCreateWorkout} />
             {numberOfWorkouts > 1 && (
                 <PageContent ghost>
                     <HStack ghost style={trainStyles.searchAndFilterBar}>
@@ -207,17 +183,12 @@ export function Workouts() {
                 </PageContent>
             )}
             <PageContent scrollable background ignoreGap stretch>
-                <View style={trainStyles.workoutWrapper}>{mappedWorkouts}</View>
+                <ThemedView stretch ghost style={trainStyles.workoutWrapper}>
+                    {mappedWorkouts}
+                </ThemedView>
+                <RemainingWorkoutsText />
             </PageContent>
-            <BottomToast
-                reference={toastRef}
-                bottom={5}
-                onRequestClose={closeToast}
-                open={showToast}
-                messageKey={"undo_message"}
-                titleKey={"workout_deleted_title"}
-                onRedo={handleRecoverWorkout}
-            />
+            <BottomToast reference={toastRef} bottom={5} onRequestClose={closeToast} open={showToast} messageKey={"undo_message"} titleKey={"workout_deleted_title"} onRedo={handleRecoverWorkout} />
             <ThemedBottomSheetModal title={title} ref={ref}>
                 <PageContent paddingTop={20} stretch ghost>
                     <AnswerText>{message}</AnswerText>

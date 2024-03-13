@@ -15,4 +15,7 @@ export const styles = StyleSheet.create({
     outerWrapper: {
         zIndex: -1,
     },
+    locked: {
+        marginTop: 20,
+    },
 });

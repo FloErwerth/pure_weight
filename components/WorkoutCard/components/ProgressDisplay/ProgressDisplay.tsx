@@ -12,6 +12,8 @@ import { ThemedView } from "../../../Themed/ThemedView/View";
 
 import { getLanguage } from "../../../../store/selectors/settings/settingsSelectors";
 import { useTheme } from "../../../../theme/context";
+import { getIsPro } from "../../../../store/selectors/purchases";
+import { useNavigate } from "../../../../hooks/navigate";
 
 export type Trend = { percent: number; name?: string; isPositive?: boolean };
 export interface ProgressDisplayProps {
@@ -64,12 +66,25 @@ const useText = (type: "Workout" | "Measurement", even: boolean, isPositiveTrend
 };
 
 export const ProgressDisplay = ({ trend, onPress, higherIsBetter = true, type }: ProgressDisplayProps) => {
+    const pro = useAppSelector(getIsPro);
+    const language = useAppSelector(getLanguage);
     const positivePercentage = useMemo(() => {
         if (trend?.isPositive === undefined) {
             return Boolean((trend?.percent ?? 0) > 0);
         }
         return trend.isPositive;
     }, [trend?.isPositive, trend?.percent]);
+    const navigate = useNavigate();
+    const navigateToPurchase = useCallback(() => {
+        navigate("purchase");
+    }, [navigate]);
+
+    const isPartOfProText = useMemo(() => {
+        if (language === "en") {
+            return "Graphs are part of the PRO version";
+        }
+        return "Graphen sind Teil der PRO-Version";
+    }, [pro]);
 
     const { successColor, errorColor } = useTheme();
     const progressDisplayPositive = useMemo(() => {
@@ -113,6 +128,20 @@ export const ProgressDisplay = ({ trend, onPress, higherIsBetter = true, type }:
 
     if (!trend) {
         return null;
+    }
+
+    if (!pro) {
+        return (
+            <ThemedPressable secondary style={styles.progressWrapper} onPress={navigateToPurchase}>
+                <HStack secondary style={styles.diffWrapper}>
+                    <ThemedView stretch ghost>
+                        <Text cta ghost style={styles.text}>
+                            {isPartOfProText}
+                        </Text>
+                    </ThemedView>
+                </HStack>
+            </ThemedPressable>
+        );
     }
 
     return (

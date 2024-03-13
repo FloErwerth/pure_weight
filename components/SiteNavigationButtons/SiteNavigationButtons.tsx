@@ -13,7 +13,7 @@ interface SiteNavigationButtonsProps {
     backButtonAction?: () => void;
     handleConfirm?: () => void;
     handleConfirmOpacity?: Animated.Value;
-    handleConfirmIcon?: { name: "check" | "plus" | "cog" | "content-save-outline" | "content-copy"; size: number };
+    handleConfirmIcon?: { name: "lock-outline" | "check" | "plus" | "cog" | "content-save-outline" | "content-copy"; size: number };
     title?: string;
     titleFontSize?: number;
     confirmButtonDisabled?: boolean;
@@ -43,10 +43,7 @@ export const SiteNavigationButtons = ({
         [titleFontSize],
     );
 
-    const titleWrapperStyles = useMemo(
-        () => [{ paddingLeft: !backButtonAction ? 20 : 10 }, styles.titleWrapper],
-        [backButtonAction],
-    );
+    const titleWrapperStyles = useMemo(() => [{ paddingLeft: !backButtonAction ? 20 : 10 }, styles.titleWrapper], [backButtonAction]);
 
     const { mainColor } = useTheme();
 
@@ -89,16 +86,8 @@ export const SiteNavigationButtons = ({
                 )}
                 <Animated.View style={{ opacity: handleConfirmOpacity !== undefined ? handleConfirmOpacity : 1 }}>
                     {handleConfirm && (
-                        <Pressable
-                            ref={confirmButtonRef}
-                            disabled={confirmButtonDisabled}
-                            onPress={handleConfirmButton}>
-                            <ThemedMaterialCommunityIcons
-                                ghost
-                                disabled={confirmButtonDisabled}
-                                size={handleConfirmIcon?.size}
-                                name={handleConfirmIcon?.name}
-                            />
+                        <Pressable ref={confirmButtonRef} disabled={confirmButtonDisabled} onPress={handleConfirmButton}>
+                            <ThemedMaterialCommunityIcons ghost disabled={confirmButtonDisabled} size={handleConfirmIcon?.size} name={handleConfirmIcon?.name} />
                         </Pressable>
                     )}
                 </Animated.View>
