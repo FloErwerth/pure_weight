@@ -24,7 +24,7 @@ export const useBuyPackage = () => {
                     dispatch(setPro(false));
                 });
         },
-        [dispatch],
+        [dispatch, navigate],
     );
 };
 
@@ -36,11 +36,11 @@ export const useInitPurchases = () => {
         if (offerings.current) {
             dispatch(setAvailablePackages(offerings.current.availablePackages));
         }
-    }, []);
+    }, [dispatch]);
 
     const initPurchases = useCallback(async () => {
         if (Platform.OS === "ios") {
-            Purchases.configure({ apiKey: apiKeys.ios, appUserID: "2" });
+            Purchases.configure({ apiKey: apiKeys.ios });
         }
         await Purchases.setLogLevel(LOG_LEVEL.DEBUG);
         Purchases.addCustomerInfoUpdateListener((customerInfo) => {
@@ -51,7 +51,7 @@ export const useInitPurchases = () => {
                 dispatch(setPro(false));
             }
         });
-    }, []);
+    }, [dispatch]);
 
     useEffect(() => {
         initPurchases().then(loadOfferings);
