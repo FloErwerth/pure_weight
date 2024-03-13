@@ -35,6 +35,8 @@ export const useInitPurchases = () => {
         const offerings = await Purchases.getOfferings();
         if (offerings.current) {
             dispatch(setAvailablePackages(offerings.current.availablePackages));
+        } else {
+            dispatch(setPro(false));
         }
     }, [dispatch]);
 
@@ -44,7 +46,6 @@ export const useInitPurchases = () => {
         }
         await Purchases.setLogLevel(LOG_LEVEL.DEBUG);
         Purchases.addCustomerInfoUpdateListener((customerInfo) => {
-            console.log("update", customerInfo);
             if (Object.values(customerInfo.entitlements.active).length > 0) {
                 dispatch(setPro(true));
             } else {
@@ -54,6 +55,10 @@ export const useInitPurchases = () => {
     }, [dispatch]);
 
     useEffect(() => {
-        initPurchases().then(loadOfferings);
+        initPurchases()
+            .then(loadOfferings)
+            .catch(() => {
+                dispatch(setPro(false));
+            });
     }, []);
 };
