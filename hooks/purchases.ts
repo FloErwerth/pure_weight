@@ -4,6 +4,8 @@ import { Platform } from "react-native";
 import { useAppDispatch } from "../store";
 import { setAvailablePackages, setPro } from "../store/reducers/purchase";
 import { useNavigate } from "./navigate";
+import uuid from "react-native-uuid";
+import * as SecureStore from "expo-secure-store";
 
 const apiKeys = {
     ios: "appl_sXUKTyeqNMaeBunaBoVeCypTlnV",
@@ -27,7 +29,6 @@ export const useBuyPackage = () => {
         [dispatch, navigate],
     );
 };
-
 export const useInitPurchases = () => {
     const dispatch = useAppDispatch();
 
@@ -41,8 +42,13 @@ export const useInitPurchases = () => {
     }, [dispatch]);
 
     const initPurchases = useCallback(async () => {
+        let appUserID = await SecureStore.getItemAsync("appUserID");
+        if (appUserID === null) {
+            appUserID = uuid.v4() as string;
+            await SecureStore.setItemAsync("appUserID", appUserID);
+        }
         if (Platform.OS === "ios") {
-            Purchases.configure({ apiKey: apiKeys.ios });
+            Purchases.configure({ apiKey: apiKeys.ios, appUserID });
         }
         await Purchases.setLogLevel(LOG_LEVEL.DEBUG);
         Purchases.addCustomerInfoUpdateListener((customerInfo) => {

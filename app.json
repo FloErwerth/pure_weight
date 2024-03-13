@@ -21,6 +21,9 @@
                     "fetch"
                 ]
             },
+            "config": {
+                "usesNonExemptEncryption": false
+            },
             "usesAppleSignIn": false,
             "accessesContactNotes": false,
             "backgroundColor": "#2e2e2e",
