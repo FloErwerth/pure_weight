@@ -85,3 +85,8 @@ Build Number 27
 
 `0.8.3`:
 
+- Renamed the settings to profile and added statistics
+- Created a purchase screen which allows to buy the premium version
+- Enhanced help for purchases
+- Added terms of service and privacy policy
+- Fixed a bug where the expandable searchbar won't reset after navigating away

@@ -331,5 +331,28 @@
   "purchase_unlock_now": "Unlock now",
   "purchase_show_all": "Show all options",
   "purchase_best_offer": "Best offer",
-  "purchase_graphs_part_of_pro": "Graphs are part of the PRO version"
+  "purchase_graphs_part_of_pro": "Graphs are part of the PRO version",
+
+  "contact": "Contact the support",
+  "help": "Help",
+  "restore": "Restore",
+  "agb": "Terms of use",
+  "privacy": "Privacy policy",
+
+  "purchase_restore_title": "Restore purchase",
+  "purchase_restore_loading": "Loading restoration",
+  "purchase_restore_pending": "Searching for purchases",
+  "purchase_restore_success": "Restoration successful",
+  "purchase_restore_failed": "Restoration failed",
+  "purchase_restore_contact": "Contact support",
+
+  "profile_pro": "You unlocked Pure Weight PRO",
+  "profile_standard": "Unlock Pure Weight PRO now",
+  "profile_number_of_workouts": "Number of saved workouts",
+  "profile_duration_in_workouts": "you have spent in total in all workouts",
+  "profile_workout_times": "workouts have you already completed",
+  "profile_sets": "sets have you already completed",
+  "profile_reps": "reps have you already completed",
+  "profile_moved_weight": "moved weight in total"
+
 }

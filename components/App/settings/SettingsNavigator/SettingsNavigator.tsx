@@ -13,9 +13,9 @@ interface SettingsSectionProps extends PropsWithChildren {
     title: string;
     onPress: () => void;
     input?: boolean;
-    helpText?: { title: string; text: string; iconSize?: number };
+    content?: { title: string; text: string; iconSize?: number };
 }
-export const SettingsNavigator = ({ title, input, onPress, helpText }: SettingsSectionProps) => {
+export const SettingsNavigator = ({ title, input, onPress, content }: SettingsSectionProps) => {
     const { ref, openBottomSheet } = useBottomSheetRef();
 
     return (
@@ -27,9 +27,9 @@ export const SettingsNavigator = ({ title, input, onPress, helpText }: SettingsS
                             <Text input={input} style={styles.title}>
                                 {title}
                             </Text>
-                            {helpText && (
+                            {content && (
                                 <Pressable onPress={openBottomSheet}>
-                                    <ThemedMaterialCommunityIcons ghost name="help-circle-outline" size={helpText.iconSize ?? 24} />
+                                    <ThemedMaterialCommunityIcons ghost name="help-circle-outline" size={content.iconSize ?? 24} />
                                 </Pressable>
                             )}
                         </HStack>
@@ -37,9 +37,9 @@ export const SettingsNavigator = ({ title, input, onPress, helpText }: SettingsS
                     </HStack>
                 </ThemedPressable>
             </HStack>
-            <ThemedBottomSheetModal title={helpText?.title} ref={ref}>
+            <ThemedBottomSheetModal title={content?.title} ref={ref}>
                 <HelpAnswer>
-                    <AnswerText>{helpText?.text}</AnswerText>
+                    <AnswerText>{content?.text}</AnswerText>
                 </HelpAnswer>
             </ThemedBottomSheetModal>
         </>

@@ -9,8 +9,8 @@
         "icon": "./media/icons/Logo.png",
         "splash": {
             "image": "./media/icons/SplashLogo.png",
-            "resizeMode": "contain",
-            "backgroundColor": "#333333"
+            "resizeMode": "stretch",
+            "backgroundColor": "#2e2e2e"
         },
         "assetBundlePatterns": [
             "**/*"

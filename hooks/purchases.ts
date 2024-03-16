@@ -6,6 +6,8 @@ import { setAvailablePackages, setPro } from "../store/reducers/purchase";
 import { useNavigate } from "./navigate";
 import uuid from "react-native-uuid";
 import * as SecureStore from "expo-secure-store";
+import { noop } from "lodash";
+import { SplashScreen } from "expo-router";
 
 const apiKeys = {
     ios: "appl_sXUKTyeqNMaeBunaBoVeCypTlnV",
@@ -29,6 +31,37 @@ export const useBuyPackage = () => {
         [dispatch, navigate],
     );
 };
+
+export const useGetRestorePurchase = () => {
+    const dispatch = useAppDispatch();
+
+    return useCallback(
+        async (onEndRestore: (status: "SUCCESS" | "FAILED") => void) => {
+            Purchases.restorePurchases()
+                .then((purchaserInfo) => {
+                    if (Object.values(purchaserInfo.entitlements.active).length > 0) {
+                        SecureStore.getItemAsync("appUserID")
+                            .then((appUserID) => {
+                                if (appUserID === null) {
+                                    SecureStore.setItemAsync("appUserID", uuid.v4() as string);
+                                }
+                            })
+                            .catch(noop);
+                        dispatch(setPro(true));
+                        onEndRestore("SUCCESS");
+                    } else {
+                        dispatch(setPro(false));
+                        onEndRestore("FAILED");
+                    }
+                })
+                .catch(() => {
+                    onEndRestore("FAILED");
+                });
+        },
+        [dispatch],
+    );
+};
+
 export const useInitPurchases = () => {
     const dispatch = useAppDispatch();
 
@@ -58,6 +91,7 @@ export const useInitPurchases = () => {
                 dispatch(setPro(false));
             }
         });
+        SplashScreen.hideAsync();
     }, [dispatch]);
 
     useEffect(() => {

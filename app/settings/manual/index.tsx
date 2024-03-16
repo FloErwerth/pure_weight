@@ -1,6 +1,6 @@
 import { SiteNavigationButtons } from "../../../components/SiteNavigationButtons/SiteNavigationButtons";
 import { PageContent } from "../../../components/PageContent/PageContent";
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import { ThemedView } from "../../../components/Themed/ThemedView/View";
 import { QuestionsAndAnswers } from "../../../components/App/help/QuestionsAndAnswers";
 import { useTranslation } from "react-i18next";
@@ -20,6 +20,12 @@ export const Manual = () => {
         },
         [dispatch],
     );
+
+    useEffect(() => {
+        return () => {
+            dispatch(setSearchManual(""));
+        };
+    }, []);
 
     return (
         <ThemedView background stretch>

@@ -32,6 +32,9 @@ export type RoutesParamaters = {
     ["settings/workout/index"]: {
         name: "settings/workout/index";
     };
+    ["settings/statistics/index"]: {
+        name: "settings/statistics/index";
+    };
     ["settings/manual/index"]: {
         name: "settings/manual/index";
     };
@@ -113,6 +116,9 @@ export const Routes = {
     },
     settings: {
         screen: "tabs/settings",
+    },
+    "settings/statistics": {
+        screen: "settings/statistics/index",
     },
     "workouts/create/exercise": {
         screen: "workouts/create/exercise/index",

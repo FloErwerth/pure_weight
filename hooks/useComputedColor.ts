@@ -10,6 +10,7 @@ interface ComputedColorProps {
     link?: boolean;
     textCta?: boolean;
     cta?: boolean;
+    textSecondary?: boolean;
 }
 export const useComputedColor = (props: ComputedColorProps) => {
     const { textCta, cta, errorColor, textDisabled, warningColor, secondaryColor, mainColor, backgroundColor } = useTheme();
@@ -29,6 +30,9 @@ export const useComputedColor = (props: ComputedColorProps) => {
         }
         if (props.textBackground) {
             return backgroundColor;
+        }
+        if (props.textSecondary) {
+            return secondaryColor;
         }
         if (props.disabled) {
             return textDisabled;
@@ -51,8 +55,10 @@ export const useComputedColor = (props: ComputedColorProps) => {
         props.link,
         props.placeholder,
         props.textBackground,
+        props.textCta,
         props.warning,
         secondaryColor,
+        textCta,
         textDisabled,
         warningColor,
     ]);

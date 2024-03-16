@@ -61,11 +61,11 @@ export function TabsWrapper() {
                     })}
                     options={{
                         headerShown: false,
-                        tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} Icon={"cog"} />,
+                        tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} Icon="account-settings" />,
                         tabBarLabelStyle: { fontSize: 13 },
                         tabBarLabelPosition: "below-icon",
                         tabBarButton: TabBarButton,
-                        tabBarLabel: ({ focused }) => <TabBarLabel focused={focused} title={t("settings")} />,
+                        tabBarLabel: ({ focused }) => <TabBarLabel focused={focused} title={t("profile")} />,
                     }}
                     name="tabs/settings"
                 />

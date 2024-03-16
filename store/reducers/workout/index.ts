@@ -42,7 +42,7 @@ export const setEditedExercise = createAction<
     "workout_set_edited_exercise"
 >("workout_set_edited_exercise");
 export const deleteExerciseFromEditedWorkout = createAction<number, "workout_delete_exercise_from_edited_workout">("workout_delete_exercise_from_edited_workout");
-export const saveEditedExercise = createAction<WorkoutId>("storeEditedExerciseInEditedWorkout");
+export const saveEditedExercise = createAction("storeEditedExerciseInEditedWorkout");
 export const saveEditedHistoryExercise = createAction<WorkoutId>("storeEditedExerciseInHistoryWorkout");
 export const startWorkout = createAction<WorkoutId, "start_training">("start_training");
 export const resetTrainedWorkout = createAction("reset_trained_workout");

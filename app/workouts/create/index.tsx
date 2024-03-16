@@ -78,16 +78,9 @@ export const Create = () => {
     const { ref: alertRef, openBottomSheet: openAlert, closeBottomSheet: closeAlert } = useBottomSheetRef();
     const { toastRef, openToast, closeToast, showToast } = useToast();
     const getIsValidWorkout = useValidateWorkout();
-    const {
-        ref: deleteWarningRef,
-        openBottomSheet: openDeleteWarning,
-        closeBottomSheet: closeDeleteWarning,
-    } = useBottomSheetRef();
+    const { ref: deleteWarningRef, openBottomSheet: openDeleteWarning, closeBottomSheet: closeDeleteWarning } = useBottomSheetRef();
     const [deletedExerciseIndex, setDeletedExerciseIndex] = useState<number | undefined>(undefined);
-    const wasEdited = useMemo(
-        () => editedWorkout?.stringifiedWorkout !== JSON.stringify(editedWorkout?.workout),
-        [editedWorkout?.stringifiedWorkout, editedWorkout?.workout],
-    );
+    const wasEdited = useMemo(() => editedWorkout?.stringifiedWorkout !== JSON.stringify(editedWorkout?.workout), [editedWorkout?.stringifiedWorkout, editedWorkout?.workout]);
 
     const handleSetWorkoutName = useCallback(
         (value?: string) => {
@@ -130,7 +123,6 @@ export const Create = () => {
                     openDeleteWarning();
                     setDeletedExerciseIndex(index);
                 };
-
                 const handleOnConfirmEdit = () => {
                     dispatch(saveEditedExercise());
                     dispatch(setEditedExercise(undefined));
@@ -183,11 +175,7 @@ export const Create = () => {
                         onClick={onEdit}
                         key={exercise.name.concat(index.toString())}
                         Icon1={{ icon: "delete", onPress: onDelete }}
-                        Icon2={
-                            (editedWorkout?.workout.exercises?.length ?? 0) > 1
-                                ? { icon: "drag", onLongPress: drag }
-                                : undefined
-                        }>
+                        Icon2={(editedWorkout?.workout.exercises?.length ?? 0) > 1 ? { icon: "drag", onLongPress: drag } : undefined}>
                         <Text style={styles.text}>{exercise.name}</Text>
                     </PressableRowWithIconSlots>
                 </View>
@@ -209,14 +197,8 @@ export const Create = () => {
         [handleDeleteWorkout, isEditedWorkout],
     );
 
-    const alertContent = useMemo(
-        () => t(isEditedWorkout ? "alert_edit_workout_discard_content" : "alert_create_workout_discard_content"),
-        [t, isEditedWorkout],
-    );
-    const alertTitle = useMemo(
-        () => t(isEditedWorkout ? "alert_edit_discard_title" : "alert_create_discard_title"),
-        [t, isEditedWorkout],
-    );
+    const alertContent = useMemo(() => t(isEditedWorkout ? "alert_edit_workout_discard_content" : "alert_create_workout_discard_content"), [t, isEditedWorkout]);
+    const alertTitle = useMemo(() => t(isEditedWorkout ? "alert_edit_discard_title" : "alert_create_discard_title"), [t, isEditedWorkout]);
 
     const deleteTitle = useMemo(() => t("alert_delete_exercise_title"), [t]);
     const deleteContent = useMemo(() => t("alert_delete_exercise_content"), [t]);
@@ -238,11 +220,7 @@ export const Create = () => {
     return (
         <ThemedView stretch>
             <ThemedView background style={styles.innerWrapper}>
-                <SiteNavigationButtons
-                    backButtonAction={handleBackButton}
-                    handleConfirm={handleSaveWorkout}
-                    title={title}
-                />
+                <SiteNavigationButtons backButtonAction={handleBackButton} handleConfirm={handleSaveWorkout} title={title} />
                 <PageContent ghost safeBottom stretch style={styles.contentWrapper}>
                     <ThemedTextInput
                         style={styles.workoutNameInput}

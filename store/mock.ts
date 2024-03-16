@@ -1299,6 +1299,7 @@ export const mockState: AppState = {
     purchaseState: {
         pro: false,
         availablePackages: [],
+        loaded: false,
     },
 };
 
@@ -1322,6 +1323,7 @@ export const emptyState = {
     purchaseState: {
         pro: false,
         availablePackages: [],
+        loaded: false,
     },
     settingsState: {
         stopwatchSettings: { startOnDoneSet: true },

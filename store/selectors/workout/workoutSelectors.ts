@@ -11,6 +11,7 @@ import { getMeasurementSorting } from "../measurements/measurementSelectors";
 import i18next from "i18next";
 import { getDurationInSecondsMinutesOrHours } from "../../../utils/timeDisplay";
 import { Trend } from "../../../components/WorkoutCard/components/ProgressDisplay/ProgressDisplay";
+import { getConveredWeight } from "../../../hooks/useConvertedWeight";
 
 export const getWorkoutState = ({ workoutState }: AppState) => workoutState;
 export const getTrainedWorkout = createSelector([getWorkoutState], (state) => state.trainedWorkout);
@@ -456,6 +457,114 @@ export const getWorkoutStats = createSelector([getWorkouts], (workouts) => {
         >,
     );
 });
+
+type OverallStats = {
+    totalMovedWeight: {
+        value: number;
+        unit: string;
+        text: string;
+    };
+    totalNumberOfWorkouts: {
+        value: number;
+        unit: undefined;
+        text: string;
+    };
+    totalDuration: {
+        value: number;
+        unit: string;
+        text: string;
+    };
+    totalTimes: {
+        value: number;
+        unit: undefined;
+        text: string;
+    };
+    totalSets: {
+        value: number;
+        unit: undefined;
+        text: string;
+    };
+    totalReps: {
+        value: number;
+        unit: undefined;
+        text: string;
+    };
+};
+export const getOverallStats = createSelector([({ settingsState }: AppState) => settingsState, getWorkouts, getWorkoutStats], ({ unitSystem }, workouts, stats) => {
+    const totalMovedWeight = workouts.reduce((sum, workout) => {
+        return (
+            sum +
+            workout.doneWorkouts.reduce((sum, workout) => {
+                const doneExercises = workout.doneExercises ?? [];
+                return (
+                    sum +
+                        doneExercises.reduce((sum, doneExercise) => {
+                            return (
+                                sum +
+                                    doneExercise.sets.reduce((sum, set) => {
+                                        return sum + parseFloat(set.weight ?? "0") * parseFloat(set.reps ?? "0");
+                                    }, 0) ?? 0
+                            );
+                        }, 0) ?? 0
+                );
+            }, 0)
+        );
+    }, 0);
+
+    const overallStats = Array.from(stats.values()).reduce(
+        (overallStats: OverallStats, currentStats) => {
+            overallStats.totalNumberOfWorkouts.value += 1;
+            overallStats.totalTimes.value += currentStats.totalTimes.value;
+            overallStats.totalSets.value += currentStats.totalSets.value;
+            overallStats.totalReps.value += currentStats.totalReps.value;
+            overallStats.totalDuration.value += currentStats.totalDuration.value;
+            return overallStats;
+        },
+        {
+            totalNumberOfWorkouts: {
+                value: 0,
+                unit: undefined,
+                text: i18next.t("profile_number_of_workouts"),
+            },
+            totalDuration: {
+                value: 0,
+                unit: "h",
+                text: i18next.t("profile_duration_in_workouts"),
+            },
+            totalTimes: {
+                value: 0,
+                unit: undefined,
+                text: i18next.t("profile_workout_times"),
+            },
+            totalMovedWeight: {
+                value: 0,
+                unit: "",
+                text: i18next.t("profile_moved_weight"),
+            },
+            totalSets: {
+                value: 0,
+                unit: undefined,
+                text: i18next.t("profile_sets"),
+            },
+            totalReps: {
+                value: 0,
+                unit: undefined,
+                text: i18next.t("profile_reps"),
+            },
+        } as OverallStats,
+    );
+
+    const { weight, unit } = getConveredWeight(unitSystem, totalMovedWeight);
+
+    overallStats.totalMovedWeight = {
+        value: parseFloat(weight),
+        unit: unit,
+        text: i18next.t("profile_moved_weight"),
+    };
+
+    return overallStats;
+});
+
 export const getWorkoutStatsById = createSelector([getWorkoutStats, (_, workoutId?: WorkoutId) => workoutId], (stats, workoutId) => {
     if (!workoutId) {
         return undefined;

@@ -39,25 +39,15 @@ export const UnitSystemSection = () => {
             <SettingsNavigator
                 onPress={openBottomSheet}
                 title={t("settings_unit_system_title")}
-                helpText={{
+                content={{
                     title: t("settings_unit_system_title"),
                     text: t("settings_unit_system_helptext_text"),
                 }}></SettingsNavigator>
             <ThemedBottomSheetModal title={t("settings_unit_system_title")} ref={ref}>
                 <PageContent ghost paddingTop={20}>
                     <ThemedView ghost style={selectionStyles.vStack}>
-                        <SelectableSetting
-                            prependedExtraContent={kgIcon}
-                            selected={unitSystem === "metric"}
-                            onSelect={() => handleSelectWeightUnit("metric")}
-                            titleKey="unit_system_metric"
-                        />
-                        <SelectableSetting
-                            prependedExtraContent={poundIcon}
-                            selected={unitSystem === "imperial"}
-                            onSelect={() => handleSelectWeightUnit("imperial")}
-                            titleKey="unit_system_imperial"
-                        />
+                        <SelectableSetting prependedExtraContent={kgIcon} selected={unitSystem === "metric"} onSelect={() => handleSelectWeightUnit("metric")} titleKey="unit_system_metric" />
+                        <SelectableSetting prependedExtraContent={poundIcon} selected={unitSystem === "imperial"} onSelect={() => handleSelectWeightUnit("imperial")} titleKey="unit_system_imperial" />
                     </ThemedView>
                 </PageContent>
             </ThemedBottomSheetModal>

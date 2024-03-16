@@ -27,7 +27,6 @@
   "number_entries": "Anzahl der Einträge",
   "workout_no_done_workouts_hint": "Noch keine Workouts abgeschlossen",
 
-
   "preparation": "Vorbereitung",
   "preparation_help_text": "Die Vorbereitung dient als Zeitfenster, um dich auf deine eigentliche Übung vorzubereiten. \n\nDies ist zum Beispiel bei Planks nützlich.",
   "train_title": "Workout",
@@ -324,5 +323,28 @@
   "purchase_show_all": "Alle Optionen anzeigen",
   "purchase_best_offer": "Bestes Angebot",
   "purchase_graphs_part_of_pro": "Graphen sind Teil der PRO-Version",
-  "purchase_locked_hint": "Dieses Feature freischalten"
+  "purchase_locked_hint": "Dieses Feature freischalten",
+
+  "contact": "Kontakt zum Support",
+  "help": "Hilfe",
+  "restore": "Wiederherstellen",
+  "agb": "AGB",
+  "privacy": "Datenschutz",
+
+  "purchase_restore_title": "Käufe wiederherstellen",
+  "purchase_restore_loading": "Lade Wiederherstellung",
+  "purchase_restore_pending": "Wiederherstellung wird versucht",
+  "purchase_restore_success": "Wiederherstellung erfolgreich",
+  "purchase_restore_failed": "Wiederherstellung fehlgeschlagen",
+  "purchase_restore_contact": "Support kontaktieren",
+
+
+  "profile_pro": "Du hast Pure Weight PRO",
+  "profile_standard": "Schalte Pure Weight PRO frei",
+  "profile_number_of_workouts": "Anzahl deiner gespeicherten Workouts",
+  "profile_duration_in_workouts": "hast Du insgesamt in allen Workouts verbracht",
+  "profile_workout_times": "Workouts hast Du bereits abgeschlossen",
+  "profile_reps": "Wiederholungen hast Du insgesamt absolviert",
+  "profile_sets": "Sätze hast Du als abgeschlossen markiert",
+  "profile_moved_weight": "ingesamt bewegt"
 }

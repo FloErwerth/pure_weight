@@ -1,13 +1,13 @@
 import { ThemedView } from "../../components/Themed/ThemedView/View";
 import { SiteNavigationButtons } from "../../components/SiteNavigationButtons/SiteNavigationButtons";
-import { useNavigateBack } from "../../hooks/navigate";
+import { useNavigate, useNavigateBack } from "../../hooks/navigate";
 import { PageContent } from "../../components/PageContent/PageContent";
 import { useAppSelector } from "../../store";
 import { getAvailablePackages } from "../../store/selectors/purchases";
 import { Text } from "../../components/Themed/ThemedText/Text";
 import { ThemedPressable } from "../../components/Themed/Pressable/Pressable";
 import { Fragment, RefObject, useCallback, useMemo, useState } from "react";
-import { useBuyPackage } from "../../hooks/purchases";
+import { useBuyPackage, useGetRestorePurchase } from "../../hooks/purchases";
 import { z } from "zod";
 import { HStack } from "../../components/Stack/HStack/HStack";
 import { ThemedMaterialCommunityIcons } from "../../components/Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
@@ -18,11 +18,12 @@ import { ThemedBottomSheetModal, useBottomSheetRef } from "../../components/Bott
 import { Language } from "../../store/reducers/settings/types";
 import { useTranslation } from "react-i18next";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
-import { Image } from "react-native";
+import { ActivityIndicator, Image, Linking } from "react-native";
 import EN_Graph from "../../media/pictures/en_graph.png";
 import DE_Graph from "../../media/pictures/de_graph.png";
 import EN_Performance from "../../media/pictures/en_workout_progress_display.png";
 import DE_Performance from "../../media/pictures/de_workout_progress_display.png";
+import { noop } from "lodash";
 
 const productIdToDataMap = {
     einmonat: {
@@ -170,6 +171,11 @@ export const Purchase = () => {
     const navigateBack = useNavigateBack();
     const packages = useAppSelector(getAvailablePackages);
     const buyPackage = useBuyPackage();
+    const navigate = useNavigate();
+    const [restoreResult, setRestoreResult] = useState<"LOADING_RESTORE" | "PENDING" | "SUCCESS" | "FAILED" | undefined>(undefined);
+    const restore = useGetRestorePurchase();
+    const { ref: restoreRef, openBottomSheet: openRestoreSheet, closeBottomSheet: closeRestoreSheet } = useBottomSheetRef();
+
     const language = useAppSelector(getLanguage);
     const { ref, openBottomSheet } = useBottomSheetRef();
     const { ref: moreInfoRef, openBottomSheet: openMoreInfo } = useBottomSheetRef();
@@ -227,6 +233,43 @@ export const Purchase = () => {
         handleOpenMoreInfo("future");
     }, [handleOpenMoreInfo]);
 
+    const handleRestoring = useCallback(() => {
+        setRestoreResult("LOADING_RESTORE");
+        openRestoreSheet();
+
+        setTimeout(() => {
+            setRestoreResult("PENDING");
+            setTimeout(() => {
+                void restore((status) => {
+                    setRestoreResult(status);
+                    if (status === "FAILED") {
+                        return;
+                    }
+                    setTimeout(() => {
+                        closeRestoreSheet();
+                        navigate("workouts");
+                    }, 3000);
+                });
+            }, 2000);
+        }, 1500);
+    }, [closeRestoreSheet, navigate, openRestoreSheet, restore]);
+
+    const showIndicator = restoreResult === "LOADING_RESTORE" || restoreResult === "PENDING";
+    const restoreText = useMemo(() => {
+        if (restoreResult === "LOADING_RESTORE") {
+            return t("purchase_restore_loading");
+        }
+        if (restoreResult === "PENDING") {
+            return t("purchase_restore_pending");
+        }
+        if (restoreResult === "SUCCESS") {
+            return t("purchase_restore_success");
+        }
+        if (restoreResult === "FAILED") {
+            return t("purchase_restore_failed");
+        }
+    }, [restoreResult, t]);
+
     const lockText = useMemo(() => {
         const yearly = mappedPackages.find((pack) => pack?.identifier === "einjahr");
         if (yearly) {
@@ -243,6 +286,10 @@ export const Purchase = () => {
         }
         return "Lade...";
     }, [mappedPackages, language]);
+
+    const handleOpenContact = useCallback(() => {
+        Linking.openURL("mailto:pureweight.app@gmail.com").catch(noop);
+    }, []);
 
     return (
         <ThemedView background stretch>
@@ -292,10 +339,58 @@ export const Purchase = () => {
                     </Text>
                 </ThemedView>
                 <ThemedPressable ghost onPress={openBottomSheet}>
-                    <Text ghost center style={{ color: cta, fontSize: 16, marginBottom: 10 }}>
+                    <Text ghost center style={{ color: cta, fontSize: 26, marginBottom: 10 }}>
                         {t("purchase_show_all")}
                     </Text>
                 </ThemedPressable>
+                <HStack ghost style={{ justifyContent: "space-evenly" }}>
+                    <ThemedPressable onPress={handleOpenContact} ghost>
+                        <Text textSecondary ghost>
+                            {t("help")}
+                        </Text>
+                    </ThemedPressable>
+                    <Text ghost textSecondary>
+                        &#x2022;
+                    </Text>
+                    <ThemedPressable ghost onPress={handleRestoring}>
+                        <Text textSecondary ghost>
+                            {t("restore")}
+                        </Text>
+                    </ThemedPressable>
+                    <Text ghost textSecondary>
+                        &#x2022;
+                    </Text>
+                    <ThemedPressable ghost>
+                        <Text textSecondary ghost>
+                            {t("agb")}
+                        </Text>
+                    </ThemedPressable>
+                    <Text ghost textSecondary>
+                        &#x2022;
+                    </Text>
+                    <ThemedPressable ghost>
+                        <Text textSecondary ghost>
+                            {t("privacy")}
+                        </Text>
+                    </ThemedPressable>
+                </HStack>
+                <ThemedBottomSheetModal title={t("purchase_restore_title")} ref={restoreRef}>
+                    <PageContent ghost paddingTop={20}>
+                        <ThemedView round padding>
+                            <Text center style={{ fontSize: 22 }}>
+                                {restoreText}
+                            </Text>
+                        </ThemedView>
+                        {restoreResult === "FAILED" && (
+                            <ThemedPressable onPress={handleOpenContact} ghost padding style={{ marginTop: 15 }}>
+                                <Text ghost center>
+                                    {t("purchase_restore_contact")}
+                                </Text>
+                            </ThemedPressable>
+                        )}
+                        {showIndicator && <ActivityIndicator size="large" style={{ marginTop: 20 }} />}
+                    </PageContent>
+                </ThemedBottomSheetModal>
                 <ThemedBottomSheetModal ref={ref}>
                     <PageContent safeBottom stretch ghost paddingTop={20}>
                         <Text ghost style={{ fontSize: 30, textAlign: "center", marginBottom: 20 }}>

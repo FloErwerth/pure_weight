@@ -16,6 +16,7 @@ import { getUnitSystem } from "../../store/selectors/settings/settingsSelectors"
 import { trunicateToNthSignificantDigit } from "../../utils/number";
 import { getDurationInSecondsMinutesOrHours } from "../../utils/timeDisplay";
 import { FlatList } from "react-native";
+import { useGetConvertedWeight } from "../../hooks/useConvertedWeight";
 
 type Stat = PostWorkoutScreen["stats"][number] | undefined;
 
@@ -40,6 +41,7 @@ const useHeaderStats = (): Stat[] => {
     const { mainColor, successColor, errorColor } = useTheme();
     const postWorkout = useAppSelector(getPostWorkoutWorkout);
     const unitSystem = useAppSelector(getUnitSystem);
+    const getConvertedWeight = useGetConvertedWeight();
 
     const trendStat = useMemo(() => {
         const isEven = postWorkoutTrend?.percent === 0;
@@ -113,44 +115,16 @@ const useHeaderStats = (): Stat[] => {
             return {} as PostWorkoutScreen["stats"][number];
         }
 
-        const isATon = unitSystem === "metric" ? weightMoved > 1000 : weightMoved > 2000;
-
-        const getConvertedUnit = () => {
-            if (unitSystem === "metric") {
-                if (isATon) {
-                    return "t";
-                }
-                return "kg";
-            }
-
-            if (isATon) {
-                return "tons";
-            }
-            return "lbs";
-        };
-
-        const getConvertedKg = () => {
-            if (isATon) {
-                return (weightMoved / 1000).toFixed(2);
-            }
-            return weightMoved.toString();
-        };
-
-        const getConvertedLbs = () => {
-            if (isATon) {
-                return (weightMoved / 2000).toFixed(2);
-            }
-            return weightMoved.toString();
-        };
+        const { unit, weight } = getConvertedWeight(weightMoved);
 
         return {
-            value: unitSystem === "metric" ? getConvertedKg() : getConvertedLbs(),
-            unit: getConvertedUnit(),
+            value: weight,
+            unit: unit,
             text: t("post_workout_weight"),
             icon: "weight",
             iconColor: "white",
         } as const;
-    }, [postWorkout?.doneWorkouts, t, unitSystem]);
+    }, [getConvertedWeight, postWorkout?.doneWorkouts, t]);
 
     const durationStat = useMemo(() => {
         const duration = getDurationInSecondsMinutesOrHours(postWorkout?.doneWorkouts?.[postWorkout?.doneWorkouts?.length - 1].duration ?? "0");

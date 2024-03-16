@@ -6,7 +6,7 @@ import { SearchbarProps } from "./types";
 import { useTranslation } from "react-i18next";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Dimensions, Keyboard, Pressable, TextInput } from "react-native";
-import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
+import Animated, { Easing, useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 
 const screenWidth = Dimensions.get("screen").width;
 const TEXT_INPUT_VALUES = {
@@ -32,15 +32,12 @@ export const ExpandableSearchbar = ({ handleSetSearchManual }: SearchbarProps) =
     const ref = useRef<TextInput>(null);
     useEffect(() => {}, [animatedOpacity, animatedWidth, positionLeft, showInput]);
 
-    const animatedInputStyles = useAnimatedStyle(
-        () => ({ position: "absolute", top: -5, width: animatedWidth.value, left: positionLeft.value, opacity: animatedOpacity.value }),
-        [],
-    );
+    const animatedInputStyles = useAnimatedStyle(() => ({ position: "absolute", top: -5, width: animatedWidth.value, left: positionLeft.value, opacity: animatedOpacity.value }), []);
 
     const handleHideInput = useCallback(() => {
-        positionLeft.value = withTiming(TEXT_INPUT_VALUES.start.left, { duration: 200 });
-        animatedWidth.value = withTiming(TEXT_INPUT_VALUES.start.width, { duration: 200 });
-        animatedOpacity.value = withTiming(TEXT_INPUT_VALUES.start.opacity, { duration: 200 });
+        positionLeft.value = withTiming(TEXT_INPUT_VALUES.start.left, { duration: 200, easing: Easing.out(Easing.ease) });
+        animatedWidth.value = withTiming(TEXT_INPUT_VALUES.start.width, { duration: 200, easing: Easing.out(Easing.ease) });
+        animatedOpacity.value = withTiming(TEXT_INPUT_VALUES.start.opacity, { duration: 200, easing: Easing.out(Easing.ease) });
     }, [animatedOpacity, animatedWidth, positionLeft]);
 
     const handleShowInput = useCallback(() => {
@@ -51,9 +48,11 @@ export const ExpandableSearchbar = ({ handleSetSearchManual }: SearchbarProps) =
 
     const handleToggleSearch = useCallback(() => {
         if (showInput) {
-            handleHideInput();
             Keyboard.dismiss();
             setShowInput(false);
+            setTimeout(() => {
+                handleHideInput();
+            }, 150);
         } else {
             handleShowInput();
             ref.current?.focus();
@@ -71,14 +70,7 @@ export const ExpandableSearchbar = ({ handleSetSearchManual }: SearchbarProps) =
         <ThemedView style={{ paddingVertical: 5 }} ghost round>
             <HStack ghost>
                 <Animated.View style={animatedInputStyles}>
-                    <ThemedTextInput
-                        round
-                        onBlur={handleBlur}
-                        reference={ref}
-                        showClear
-                        onChangeText={handleSetSearchManual}
-                        placeholder={placeholder}
-                    />
+                    <ThemedTextInput round onBlur={handleBlur} reference={ref} showClear onChangeText={handleSetSearchManual} placeholder={placeholder} />
                 </Animated.View>
                 <Pressable onPress={handleToggleSearch}>
                     <ThemedMaterialCommunityIcons name="magnify" ghost size={30} />

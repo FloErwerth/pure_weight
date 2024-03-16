@@ -8,9 +8,14 @@ import { Display } from "../../components/App/settings/Sections/display";
 import { GeneralSettings } from "../../components/App/settings/Sections/generalSettings";
 import { HelpSection } from "../../components/App/settings/Sections/help/HelpSection";
 import { WorkoutSettings } from "../../components/App/settings/Sections/workout";
-import { Fragment, useCallback, useEffect, useMemo, useRef } from "react";
+import React, { Fragment, useCallback, useEffect, useMemo, useRef } from "react";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { RoutesParamaters } from "../../hooks/navigate";
+import { RoutesParamaters, useNavigate } from "../../hooks/navigate";
+import { SettingsNavigator } from "../../components/App/settings/SettingsNavigator/SettingsNavigator";
+import { useAppSelector } from "../../store";
+import { getIsPro } from "../../store/selectors/purchases";
+import { ThemedPressable } from "../../components/Themed/Pressable/Pressable";
+import { Text } from "../../components/Themed/ThemedText/Text";
 
 const styles = StyleSheet.create({
     contentWrapper: {
@@ -23,8 +28,19 @@ const isDev = process.env["EXPO_PUBLIC_APP_VARIANT"] === "development";
 export function Settings({ route: { params } }: NativeStackScreenProps<RoutesParamaters, "tabs/settings">) {
     const { t } = useTranslation();
     const ref = useRef<FlatList>(null);
+    const navigate = useNavigate();
+    const getTitleConfig = useCallback((titleKey: string) => ({ title: t(titleKey), size: 24 }) as const, [t]);
+    const isPro = useAppSelector(getIsPro);
 
-    const getTitleConfig = useCallback((titleKey: string) => ({ title: t(titleKey), size: 30 }) as const, [t]);
+    const navigateToPurchase = useCallback(() => {
+        if (!isPro) {
+            navigate("purchase");
+        }
+    }, [isPro, navigate]);
+
+    const navigateToStatistics = useCallback(() => {
+        navigate("settings/statistics");
+    }, [navigate]);
 
     useEffect(() => {
         setTimeout(() => {
@@ -36,19 +52,19 @@ export function Settings({ route: { params } }: NativeStackScreenProps<RoutesPar
 
     const settingsPages = useMemo(
         () => [
-            <PageContent key="GENERAL SETTINGS" background titleConfig={getTitleConfig("general")}>
+            <PageContent scrollable={false} ignorePadding key="GENERAL SETTINGS" background titleConfig={getTitleConfig("general")}>
                 <GeneralSettings />
             </PageContent>,
-            <PageContent key="WORKOUT SETTINGS" background titleConfig={getTitleConfig("workout")}>
+            <PageContent scrollable={false} ignorePadding key="WORKOUT SETTINGS" background titleConfig={getTitleConfig("workout")}>
                 <WorkoutSettings />
             </PageContent>,
-            <PageContent key="DISPLAY SETTINGS" background titleConfig={getTitleConfig("display")}>
+            <PageContent scrollable={false} ignorePadding key="DISPLAY SETTINGS" background titleConfig={getTitleConfig("display")}>
                 <Display />
             </PageContent>,
             <HelpSection key="HELP SETTINGS" />,
             <Fragment key="DEVELOPMENT">
                 {isDev && (
-                    <PageContent background>
+                    <PageContent ignorePadding background>
                         <DevelopmentSelection />
                     </PageContent>
                 )}
@@ -59,12 +75,20 @@ export function Settings({ route: { params } }: NativeStackScreenProps<RoutesPar
 
     return (
         <ThemedView stretch background>
-            <SiteNavigationButtons titleFontSize={40} title={t("settings")} />
-            <FlatList
-                ref={ref}
-                data={settingsPages}
-                contentContainerStyle={styles.contentWrapper}
-                renderItem={({ item: Item }) => Item}></FlatList>
+            <SiteNavigationButtons titleFontSize={40} title={t("profile")} />
+            <PageContent scrollable ignorePadding ignoreGap ghost>
+                <PageContent scrollable={false} ignoreGap style={{ paddingBottom: 40 }} ghost>
+                    <ThemedPressable onPress={navigateToPurchase} cta={!isPro} style={{ padding: 15, marginBottom: 10 }} round>
+                        <Text textCta={!isPro} cta={isPro} ghost style={{ fontSize: 22 }}>
+                            {isPro ? t("profile_pro") : t("profile_standard")}
+                        </Text>
+                    </ThemedPressable>
+                    <SettingsNavigator title={t("statistics")} onPress={navigateToStatistics} />
+                </PageContent>
+                <PageContent scrollable={false} ignoreGap ghost titleConfig={{ title: t("settings"), size: 30 }}>
+                    <FlatList scrollEnabled={false} ref={ref} data={settingsPages} contentContainerStyle={styles.contentWrapper} renderItem={({ item: Item }) => Item}></FlatList>
+                </PageContent>
+            </PageContent>
         </ThemedView>
     );
 }

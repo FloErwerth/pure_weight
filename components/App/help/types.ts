@@ -4,6 +4,7 @@ export interface HelpQuestionsProps {
 }
 export type QuestionAnswerArray = Array<{ title: string; answer: JSX.Element }>;
 export enum SECTIONS {
+    PRO = "PRO",
     WORKOUTS = "WORKOUTS",
     EXERCISES = "EXERCISES",
     MISCELLANEOUS = "MISCELLANEOUS",
