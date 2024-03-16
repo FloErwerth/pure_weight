@@ -1,12 +1,11 @@
 import { ThemedView } from "../Themed/ThemedView/View";
 import { Text } from "../Themed/ThemedText/Text";
-import { HStack } from "../Stack/HStack/HStack";
 import React, { Fragment, useCallback, useEffect, useMemo, useState } from "react";
 import { ThemedBottomSheetModal, useBottomSheetRef } from "../BottomSheetModal/ThemedBottomSheetModal";
 import { PageContent } from "../PageContent/PageContent";
 import { WorkoutCompleteStatTile } from "./WorkoutCompleteStatTile";
 import { AppState, useAppDispatch, useAppSelector } from "../../store";
-import { getPostWorkoutTrend, getPostWorkoutWorkout, getWorkoutStatsById } from "../../store/selectors/workout/workoutSelectors";
+import { getPostWorkoutTrend, getPostWorkoutWorkout } from "../../store/selectors/workout/workoutSelectors";
 import { setShowPostWorkoutScreen } from "../../store/reducers/workout";
 import { navigationRef } from "../../hooks/navigate";
 import { useTranslation } from "react-i18next";
@@ -153,7 +152,6 @@ export const WorkoutCompleteModal = () => {
     const { ref, openBottomSheet } = useBottomSheetRef();
     const isVisible = useDebouncedShowPostWorkoutScreen();
     const postWorkout = useAppSelector(getPostWorkoutWorkout);
-    const workoutStats = useAppSelector((state: AppState) => getWorkoutStatsById(state, postWorkout?.workoutId));
 
     const { t } = useTranslation();
     const dispatch = useAppDispatch();
@@ -181,7 +179,7 @@ export const WorkoutCompleteModal = () => {
     return (
         <ThemedBottomSheetModal onRequestClose={handleHideShowModal} title={title} ref={ref}>
             <PageContent ghost paddingTop={20}>
-                <ThemedView padding round background style={{ marginBottom: 10 }}>
+                <ThemedView round ghost style={{ marginBottom: 10 }}>
                     <Text style={{ marginBottom: 10 }} ghost>
                         {t("post_workout_overview_title")}
                     </Text>
@@ -195,20 +193,6 @@ export const WorkoutCompleteModal = () => {
                         renderItem={({ item: stat }) => <Fragment key={`${postWorkout?.workoutId} ${stat?.value} ${stat?.text}\`} `}>{stat ? <WorkoutCompleteStatTile {...stat} /> : <></>}</Fragment>}
                     />
                 </ThemedView>
-                {Object.values(workoutStats ?? {})?.map((stat) => {
-                    return (
-                        <ThemedView key={`${postWorkout?.workoutId} ${stat.value} ${stat.text}`} padding round background>
-                            <HStack center ghost style={{ justifyContent: "space-evenly" }}>
-                                <Text ghost style={{ fontSize: 30, flex: 0.5 }}>
-                                    {stat.value} {stat?.unit}
-                                </Text>
-                                <Text stretch ghost>
-                                    {stat.text}
-                                </Text>
-                            </HStack>
-                        </ThemedView>
-                    );
-                })}
             </PageContent>
         </ThemedBottomSheetModal>
     );

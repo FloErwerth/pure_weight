@@ -8,7 +8,7 @@ import { PostWorkoutScreen } from "../../store/reducers/workout/types";
 type WorkoutCompleteStatTileProps = PostWorkoutScreen["stats"][number];
 export const WorkoutCompleteStatTile = ({ icon, unit, value, text, iconColor }: WorkoutCompleteStatTileProps) => {
     return (
-        <ThemedView stretch style={{ alignSelf: "stretch", padding: 5, paddingBottom: 8 }} round input>
+        <ThemedView stretch style={{ alignSelf: "stretch", padding: 5, paddingBottom: 8 }} round background>
             <HStack center style={{ marginBottom: 5, justifyContent: "space-between" }} ghost>
                 <ThemedMaterialCommunityIcons ghost name={icon} size={20} color={iconColor} />
                 <HStack ghost style={{ gap: 3 }}>

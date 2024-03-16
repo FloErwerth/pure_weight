@@ -15,9 +15,8 @@ export type RoutesParamaters = {
     ["progress/chart/index"]: {
         name: "progress/chart/index";
     };
-    ["tabs/settings"]: {
-        name: "tabs/settings";
-        scrollIndex?: number;
+    ["tabs/profile"]: {
+        name: "tabs/profile";
     };
     ["purchase"]: {
         name: "purchase";
@@ -29,17 +28,12 @@ export type RoutesParamaters = {
     ["tabs/workouts"]: {
         name: "tabs/workouts";
     };
-    ["settings/workout/index"]: {
-        name: "settings/workout/index";
+    ["profile/settings/index"]: {
+        name: "profile/settings/index";
+        scrollIndex?: number;
     };
-    ["settings/statistics/index"]: {
-        name: "settings/statistics/index";
-    };
-    ["settings/manual/index"]: {
+    ["profile/settings/manual/index"]: {
         name: "settings/manual/index";
-    };
-    ["settings/statistics/entries/index"]: {
-        name: "settings/statistics/entries/index";
     };
     ["measurement/progress/index"]: {
         name: "measurement/progress/index";
@@ -114,11 +108,8 @@ export const Routes = {
     chart: {
         screen: "progress/chart/index",
     },
-    settings: {
-        screen: "tabs/settings",
-    },
-    "settings/statistics": {
-        screen: "settings/statistics/index",
+    profile: {
+        screen: "tabs/profile",
     },
     "workouts/create/exercise": {
         screen: "workouts/create/exercise/index",
@@ -132,8 +123,11 @@ export const Routes = {
     "workouts/history/workout/index": {
         screen: "workouts/history/workout/index",
     },
-    "settings/manual": {
-        screen: "settings/manual/index",
+    "profile/settings": {
+        screen: "profile/settings/index",
+    },
+    "profile/settings/manual": {
+        screen: "profile/settings/manual/index",
     },
     entries: {
         screen: "settings/statistics/entries/index",

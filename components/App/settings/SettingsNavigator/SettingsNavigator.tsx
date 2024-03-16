@@ -33,7 +33,7 @@ export const SettingsNavigator = ({ title, input, onPress, content }: SettingsSe
                                 </Pressable>
                             )}
                         </HStack>
-                        <ThemedMaterialCommunityIcons ghost name="arrow-right" size={23} />
+                        <ThemedMaterialCommunityIcons ghost name="chevron-right" size={23} />
                     </HStack>
                 </ThemedPressable>
             </HStack>

@@ -12,7 +12,7 @@ export const HelpSection = () => {
     const navigate = useNavigate();
 
     const handleNavigateToManual = useCallback(() => {
-        navigate("settings/manual");
+        navigate("profile/settings/manual");
     }, [navigate]);
 
     const handleOpenContact = useCallback(() => {

@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 import { ThemedView } from "../Themed/ThemedView/View";
 import { WeightBasedExercise } from "./Content/WeightBasedExercise";
 import { useAppDispatch, useAppSelector } from "../../store";
-import { getEditedExercise, getIsUsedInPausedWorkout } from "../../store/selectors/workout/workoutSelectors";
+import { getEditedExercise } from "../../store/selectors/workout/workoutSelectors";
 import { mutateEditedExercise } from "../../store/reducers/workout";
 import { ExerciseMetaData } from "../../store/reducers/workout/types";
 import { SlidingSwitch } from "../SlidingSwitch/SlidingSwitch";
@@ -29,7 +29,6 @@ export const EditableExercise = () => {
     const { t } = useTranslation();
     const inputRef = useRef<TextInput>(null);
     const editedExercise = useAppSelector(getEditedExercise);
-    const isUsedInTraining = useAppSelector(getIsUsedInPausedWorkout);
     const dispatch = useAppDispatch();
     const options = useOptions();
 
@@ -79,12 +78,7 @@ export const EditableExercise = () => {
                     style={styles.title}
                 />
             </View>
-            <SlidingSwitch
-                disabled={isUsedInTraining}
-                initialIndex={initialIndex}
-                options={options}
-                onSelectValue={handleSelectExerciseType}
-            />
+            <SlidingSwitch disabled={!editedExercise?.isNewExercise} initialIndex={initialIndex} options={options} onSelectValue={handleSelectExerciseType} />
         </ThemedView>
     );
 };

@@ -90,3 +90,5 @@ Build Number 27
 - Enhanced help for purchases
 - Added terms of service and privacy policy
 - Fixed a bug where the expandable searchbar won't reset after navigating away
+- Prevent changing the exercise type when editing the exercise after it has been created
+- Moved settings to a new screen and moved statistics to the profile screen

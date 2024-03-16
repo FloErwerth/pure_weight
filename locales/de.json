@@ -23,7 +23,7 @@
   "display": "Anzeige",
   "profile": "Profil",
   "general": "Allgemein",
-  "statistics": "Statistiken",
+  "statistics": "Statistiken seit Beginn",
   "number_entries": "Anzahl der Einträge",
   "workout_no_done_workouts_hint": "Noch keine Workouts abgeschlossen",
 
@@ -338,7 +338,7 @@
   "purchase_restore_failed": "Wiederherstellung fehlgeschlagen",
   "purchase_restore_contact": "Support kontaktieren",
 
-
+  "profile_status": "Account-Status",
   "profile_pro": "Du hast Pure Weight PRO",
   "profile_standard": "Schalte Pure Weight PRO frei",
   "profile_number_of_workouts": "Anzahl deiner gespeicherten Workouts",

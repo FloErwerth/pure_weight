@@ -20,8 +20,7 @@ import DeviceInfo from "react-native-device-info";
 import { IsoDate } from "../types/date";
 import { setAppInstallDate, setEmptyState, setFirstTimeRendered } from "../store/reducers/metadata";
 import { getIsFirstTimeRendered } from "../store/selectors/metadata/metadataSelectors";
-import { GeneralSettings } from "../components/App/settings/Sections/generalSettings";
-import { Manual } from "./settings/manual";
+import { Manual } from "./profile/manual";
 import { useTranslation } from "react-i18next";
 import { Appearance, NativeModules } from "react-native";
 import { setLanguage, setTheme } from "../store/reducers/settings";
@@ -36,8 +35,8 @@ import { MeasurementHistoryEdit } from "./measurements/history/edit";
 import { WorkoutHistoryEdit } from "./workouts/history/exercise_edit";
 import { Purchase } from "./purchase";
 import { useInitPurchases } from "../hooks/purchases";
-import { Statistics } from "./settings/statistics";
 import { SplashScreen } from "expo-router";
+import { Settings } from "./profile/settings";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -92,11 +91,10 @@ const ThemedApp = () => {
                                     <Stack.Screen component={WorkoutHistory} options={{ headerShown: false }} name="workouts/history/index" />
                                     <Stack.Screen component={WorkoutHistoryOverview} options={{ headerShown: false }} name="workouts/history/workout/index" />
                                     <Stack.Screen component={WorkoutHistoryEdit} options={{ headerShown: false }} name="workouts/history/exercise_edit/index" />
-                                    <Stack.Screen component={GeneralSettings} options={{ headerShown: false }} name="settings/workout/index" />
-                                    <Stack.Screen component={Manual} options={{ headerShown: false }} name="settings/manual/index" />
+                                    <Stack.Screen component={Manual} options={{ headerShown: false }} name="profile/settings/manual/index" />
                                     <Stack.Screen component={CreateExercise} options={{ headerShown: false }} name="workouts/create/exercise/index" />
                                     <Stack.Screen component={Purchase} options={{ headerShown: false }} name="purchase" />
-                                    <Stack.Screen component={Statistics} options={{ headerShown: false }} name="settings/statistics/index" />
+                                    <Stack.Screen component={Settings} options={{ headerShown: false }} name="profile/settings/index" />
                                 </Stack.Navigator>
                             </SafeAreaView>
                         </BottomSheetModalProvider>

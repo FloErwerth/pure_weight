@@ -5,7 +5,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Workouts } from "../workouts";
-import { Settings } from "../settings";
+import { Profile } from "../profile";
 import { useTheme } from "../../theme/context";
 import { RoutesParamaters } from "../../hooks/navigate";
 import { Measurements } from "../measurements";
@@ -53,7 +53,7 @@ export function TabsWrapper() {
                     name="tabs/measurements"
                 />
                 <Tabs.Screen
-                    component={Settings}
+                    component={Profile}
                     listeners={({ navigation }) => ({
                         blur: () => {
                             navigation.setParams({ scrollIndex: undefined });
@@ -67,7 +67,7 @@ export function TabsWrapper() {
                         tabBarButton: TabBarButton,
                         tabBarLabel: ({ focused }) => <TabBarLabel focused={focused} title={t("profile")} />,
                     }}
-                    name="tabs/settings"
+                    name="tabs/profile"
                 />
             </Tabs.Navigator>
         );

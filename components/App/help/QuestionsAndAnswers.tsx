@@ -43,7 +43,7 @@ export const QuestionsAndAnswers = () => {
 
     const navigateToSettings = useCallback(
         (scrollIndex?: number) => {
-            navigate("settings", { scrollIndex });
+            navigate("profile/settings", { scrollIndex });
         },
         [navigate],
     );
