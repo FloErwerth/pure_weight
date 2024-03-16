@@ -1175,28 +1175,28 @@ export const mockState: AppState = {
                                 sets: [
                                     {
                                         reps: "5",
-                                        weight: "25",
+                                        weight: "250000",
                                         durationMinutes: "",
                                         durationSeconds: "",
                                         confirmed: true,
                                     },
                                     {
                                         reps: "5",
-                                        weight: "25",
+                                        weight: "250000",
                                         durationMinutes: "",
                                         durationSeconds: "",
                                         confirmed: true,
                                     },
                                     {
                                         reps: "5",
-                                        weight: "25",
+                                        weight: "250000",
                                         durationMinutes: "",
                                         durationSeconds: "",
                                         confirmed: true,
                                     },
                                     {
                                         reps: "5",
-                                        weight: "25",
+                                        weight: "250000000000",
                                         durationMinutes: "",
                                         durationSeconds: "",
                                         confirmed: true,
