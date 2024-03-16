@@ -2,14 +2,14 @@
     "expo": {
         "name": "Pure Weight",
         "slug": "pureweight",
-        "version": "0.8.2",
+        "version": "0.8.3",
         "scheme": "pureweight",
         "orientation": "portrait",
         "userInterfaceStyle": "automatic",
         "icon": "./media/icons/Logo.png",
         "splash": {
             "image": "./media/icons/SplashLogo.png",
-            "resizeMode": "stretch",
+            "resizeMode": "contain",
             "backgroundColor": "#2e2e2e"
         },
         "assetBundlePatterns": [
@@ -30,13 +30,7 @@
             "usesIcloudStorage": false,
             "supportsTablet": true,
             "bundleIdentifier": "com.FlorianErwerth.PureWeight",
-            "buildNumber": "32"
-        },
-        "android": {
-            "permissions": [
-                "VIBRATE"
-            ],
-            "package": "com.FlorianErwerth.PureWeight"
+            "buildNumber": "33"
         },
         "plugins": [
             "expo-router",
