@@ -14,13 +14,14 @@ interface SettingsSectionProps extends PropsWithChildren {
     onPress: () => void;
     input?: boolean;
     content?: { title: string; text: string; iconSize?: number };
+    stretch?: boolean;
 }
-export const SettingsNavigator = ({ title, input, onPress, content }: SettingsSectionProps) => {
+export const SettingsNavigator = ({ title, input, onPress, content, stretch = true }: SettingsSectionProps) => {
     const { ref, openBottomSheet } = useBottomSheetRef();
 
     return (
         <>
-            <HStack ghost stretch>
+            <HStack ghost stretch={stretch}>
                 <ThemedPressable padding onPress={onPress} stretch input={input} style={styles.outerWrapper}>
                     <HStack input={input} style={styles.innerWrapper}>
                         <HStack stretch>

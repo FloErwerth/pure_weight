@@ -11,6 +11,7 @@ import { Display } from "../../../components/App/settings/Sections/display";
 import { HelpSection } from "../../../components/App/settings/Sections/help/HelpSection";
 import { DevelopmentSelection } from "../../../components/App/settings/components/Selections/DevelopmentSelection/DevelopmentSelection";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { Footer } from "../../../components/Footer/Footer";
 
 const styles = StyleSheet.create({
     contentWrapper: {
@@ -62,6 +63,7 @@ export const Settings = ({ route: { params } }: NativeStackScreenProps<RoutesPar
             <SiteNavigationButtons backButtonAction={navigateBack} title={title} />
             <PageContent scrollable safeBottom ignoreGap ghost>
                 <FlatList scrollEnabled={false} ref={ref} data={settingsPages} contentContainerStyle={styles.contentWrapper} renderItem={({ item: Item }) => Item}></FlatList>
+                <Footer showRestore={false} />
             </PageContent>
         </ThemedView>
     );

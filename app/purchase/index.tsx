@@ -23,7 +23,7 @@ import EN_Graph from "../../media/pictures/en_graph.png";
 import DE_Graph from "../../media/pictures/de_graph.png";
 import EN_Performance from "../../media/pictures/en_workout_progress_display.png";
 import DE_Performance from "../../media/pictures/de_workout_progress_display.png";
-import { PurchaseFooter } from "../../components/PurchaseFooter/PurchaseFooter";
+import { Footer } from "../../components/Footer/Footer";
 
 const productIdToDataMap = {
     einmonat: {
@@ -297,7 +297,7 @@ export const Purchase = () => {
                         {t("purchase_show_all")}
                     </Text>
                 </ThemedPressable>
-                <PurchaseFooter />
+                <Footer showRestore={true} />
                 <ThemedBottomSheetModal ref={ref}>
                     <PageContent safeBottom stretch ghost paddingTop={20}>
                         <Text ghost style={{ fontSize: 30, textAlign: "center", marginBottom: 20 }}>

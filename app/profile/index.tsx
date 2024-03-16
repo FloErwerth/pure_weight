@@ -32,8 +32,8 @@ export function Profile() {
     return (
         <ThemedView stretch background>
             <SiteNavigationButtons titleFontSize={40} title={t("profile")} />
-            <PageContent scrollable ignorePadding ghost>
-                <PageContent scrollable={false} ghost>
+            <PageContent stretch scrollable ignorePadding ghost>
+                <PageContent scrollable={false} stretch ghost>
                     <ThemedView round padding style={{ padding: 15 }}>
                         <Text>
                             {t("profile_status")}:{" "}
@@ -55,7 +55,7 @@ export function Profile() {
                             </HStack>
                         </ThemedPressable>
                     )}
-                    <SettingsNavigator title={t("settings")} onPress={navigateToSettings} />
+                    <SettingsNavigator stretch={false} title={t("settings")} onPress={navigateToSettings} />
 
                     <PageContent paddingTop={20} ignorePadding ghost titleConfig={{ title: t("statistics"), size: 24 }}>
                         <ThemedView round input padding>
@@ -75,6 +75,7 @@ export function Profile() {
                             })}
                         </ThemedView>
                     </PageContent>
+                    <ThemedView ghost stretch />
                 </PageContent>
             </PageContent>
         </ThemedView>

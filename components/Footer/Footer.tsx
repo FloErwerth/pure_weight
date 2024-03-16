@@ -10,11 +10,19 @@ import { ThemedView } from "../Themed/ThemedView/View";
 import { ThemedBottomSheetModal, useBottomSheetRef } from "../BottomSheetModal/ThemedBottomSheetModal";
 import { useGetRestorePurchase } from "../../hooks/purchases";
 import { useNavigate } from "../../hooks/navigate";
+import { AGB } from "../AGB/AGB";
+import { Datenschutz } from "../Datenschutz/Datenschutz";
 
-export const PurchaseFooter = () => {
+type FooterProps = {
+    showRestore?: boolean;
+};
+
+export const Footer = ({ showRestore }: FooterProps) => {
     const { t } = useTranslation();
     const [restoreResult, setRestoreResult] = useState<"LOADING_RESTORE" | "PENDING" | "SUCCESS" | "FAILED" | undefined>(undefined);
     const { ref: restoreRef, openBottomSheet: openRestoreSheet, closeBottomSheet: closeRestoreSheet } = useBottomSheetRef();
+    const { ref: agbRef, openBottomSheet: openAgbSheet } = useBottomSheetRef();
+    const { ref: datenschutzRef, openBottomSheet: openDatenschutzSheet } = useBottomSheetRef();
     const restore = useGetRestorePurchase();
     const navigate = useNavigate();
     const handleRestoring = useCallback(() => {
@@ -60,7 +68,7 @@ export const PurchaseFooter = () => {
 
     return (
         <>
-            <HStack ghost style={{ justifyContent: "space-evenly" }}>
+            <HStack ghost style={{ justifyContent: "space-evenly", marginBottom: 10 }}>
                 <ThemedPressable onPress={handleOpenContact} ghost>
                     <Text textSecondary ghost>
                         {t("help")}
@@ -69,15 +77,19 @@ export const PurchaseFooter = () => {
                 <Text ghost textSecondary>
                     &#x2022;
                 </Text>
-                <ThemedPressable ghost onPress={handleRestoring}>
-                    <Text textSecondary ghost>
-                        {t("restore")}
-                    </Text>
-                </ThemedPressable>
-                <Text ghost textSecondary>
-                    &#x2022;
-                </Text>
-                <ThemedPressable ghost>
+                {showRestore && (
+                    <>
+                        <ThemedPressable ghost onPress={handleRestoring}>
+                            <Text textSecondary ghost>
+                                {t("restore")}
+                            </Text>
+                        </ThemedPressable>
+                        <Text ghost textSecondary>
+                            &#x2022;
+                        </Text>
+                    </>
+                )}
+                <ThemedPressable ghost onPress={openAgbSheet}>
                     <Text textSecondary ghost>
                         {t("agb")}
                     </Text>
@@ -85,7 +97,7 @@ export const PurchaseFooter = () => {
                 <Text ghost textSecondary>
                     &#x2022;
                 </Text>
-                <ThemedPressable ghost>
+                <ThemedPressable onPress={openDatenschutzSheet} ghost>
                     <Text textSecondary ghost>
                         {t("privacy")}
                     </Text>
@@ -108,6 +120,8 @@ export const PurchaseFooter = () => {
                     {showIndicator && <ActivityIndicator size="large" style={{ marginTop: 20 }} />}
                 </PageContent>
             </ThemedBottomSheetModal>
+            <AGB reference={agbRef} />
+            <Datenschutz reference={datenschutzRef} />
         </>
     );
 };
