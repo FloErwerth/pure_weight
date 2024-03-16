@@ -36,6 +36,10 @@ import { MeasurementHistoryEdit } from "./measurements/history/edit";
 import { WorkoutHistoryEdit } from "./workouts/history/exercise_edit";
 import { Purchase } from "./purchase";
 import { useInitPurchases } from "../hooks/purchases";
+import { Statistics } from "./settings/statistics";
+import { SplashScreen } from "expo-router";
+
+SplashScreen.preventAutoHideAsync();
 
 const Stack = createNativeStackNavigator<RoutesParamaters>();
 
@@ -92,6 +96,7 @@ const ThemedApp = () => {
                                     <Stack.Screen component={Manual} options={{ headerShown: false }} name="settings/manual/index" />
                                     <Stack.Screen component={CreateExercise} options={{ headerShown: false }} name="workouts/create/exercise/index" />
                                     <Stack.Screen component={Purchase} options={{ headerShown: false }} name="purchase" />
+                                    <Stack.Screen component={Statistics} options={{ headerShown: false }} name="settings/statistics/index" />
                                 </Stack.Navigator>
                             </SafeAreaView>
                         </BottomSheetModalProvider>
