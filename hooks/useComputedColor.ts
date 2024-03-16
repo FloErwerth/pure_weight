@@ -56,6 +56,7 @@ export const useComputedColor = (props: ComputedColorProps) => {
         props.placeholder,
         props.textBackground,
         props.textCta,
+        props.textSecondary,
         props.warning,
         secondaryColor,
         textCta,

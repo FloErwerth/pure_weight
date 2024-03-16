@@ -12,7 +12,6 @@ import { navigationRef } from "../../hooks/navigate";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "../../theme/context";
 import { PostWorkoutScreen } from "../../store/reducers/workout/types";
-import { getUnitSystem } from "../../store/selectors/settings/settingsSelectors";
 import { trunicateToNthSignificantDigit } from "../../utils/number";
 import { getDurationInSecondsMinutesOrHours } from "../../utils/timeDisplay";
 import { FlatList } from "react-native";
@@ -40,7 +39,6 @@ const useHeaderStats = (): Stat[] => {
     const { t } = useTranslation();
     const { mainColor, successColor, errorColor } = useTheme();
     const postWorkout = useAppSelector(getPostWorkoutWorkout);
-    const unitSystem = useAppSelector(getUnitSystem);
     const getConvertedWeight = useGetConvertedWeight();
 
     const trendStat = useMemo(() => {
