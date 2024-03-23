@@ -1,9 +1,5 @@
 import { AppState, useAppSelector } from "../../../../store";
-import {
-    getExerciseById,
-    getHasWeightInTimeBasedExercise,
-    getSetsArray,
-} from "../../../../store/selectors/workout/workoutSelectors";
+import { getExerciseById, getHasWeightInTimeBasedExercise, getSetsArray } from "../../../../store/selectors/workout/workoutSelectors";
 import { ExerciseId, WorkoutId } from "../../../../store/reducers/workout/types";
 import { useBottomSheetRef } from "../../../BottomSheetModal/ThemedBottomSheetModal";
 import { useCallback, useId } from "react";
@@ -52,22 +48,11 @@ export const TrainedExercise = ({ workoutId, exerciseId }: TrainedExerciseProps)
                     </ThemedPressable>
                 </ThemedView>
             </HStack>
-            <ThemedScrollView
-                showsVerticalScrollIndicator={false}
-                bounces={false}
-                ghost
-                keyboardShouldPersistTaps="handled"
-                contentContainerStyle={trainStyles.innerWrapper}>
+            <ThemedScrollView showsVerticalScrollIndicator={false} bounces={false} ghost keyboardShouldPersistTaps="handled" contentContainerStyle={trainStyles.innerWrapper}>
                 <ThemedView round padding>
                     <TrainingHeader showWeight={hasWeight} exerciseType={exercise?.type} />
                     {setsArray?.map((_, setIndex) => {
-                        return (
-                            <SetInput
-                                key={exerciseId.toString().concat(setIndex.toString())}
-                                exerciseId={exerciseId}
-                                setIndex={setIndex}
-                            />
-                        );
+                        return <SetInput key={exerciseId.toString().concat(setIndex.toString())} exerciseId={exerciseId} setIndex={setIndex} />;
                     })}
                 </ThemedView>
             </ThemedScrollView>
