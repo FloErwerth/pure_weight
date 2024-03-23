@@ -11,7 +11,6 @@ import { useTheme } from "../../../../theme/context";
 import { ThemedView } from "../../../Themed/ThemedView/View";
 import { trainStyles } from "../trainStyles";
 import { HStack } from "../../../Stack/HStack/HStack";
-import { Pressable } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { ThemedScrollView } from "../../../Themed/ThemedScrollView/ThemedScrollView";
 import { TrainingHeader } from "../TrainingHeader/TrainingHeader";
