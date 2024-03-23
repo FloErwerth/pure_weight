@@ -462,32 +462,32 @@ type OverallStats = {
     totalMovedWeight: {
         value: number;
         unit: string;
-        text: string;
+        translationKey: string;
     };
     totalNumberOfWorkouts: {
         value: number;
         unit: undefined;
-        text: string;
+        translationKey: string;
     };
     totalDuration: {
         value: number;
         unit: string;
-        text: string;
+        translationKey: string;
     };
     totalTimes: {
         value: number;
         unit: undefined;
-        text: string;
+        translationKey: string;
     };
     totalSets: {
         value: number;
         unit: undefined;
-        text: string;
+        translationKey: string;
     };
     totalReps: {
         value: number;
         unit: undefined;
-        text: string;
+        translationKey: string;
     };
 };
 export const getOverallStats = createSelector([({ settingsState }: AppState) => settingsState, getWorkouts, getWorkoutStats], ({ unitSystem }, workouts, stats) => {
@@ -524,34 +524,34 @@ export const getOverallStats = createSelector([({ settingsState }: AppState) => 
             totalNumberOfWorkouts: {
                 value: 0,
                 unit: undefined,
-                text: i18next.t("profile_number_of_workouts"),
+                translationKey: "profile_number_of_workouts",
             },
             totalDuration: {
                 value: 0,
                 unit: "h",
-                text: i18next.t("profile_duration_in_workouts"),
+                translationKey: "profile_duration_in_workouts",
             },
             totalTimes: {
                 value: 0,
                 unit: undefined,
-                text: i18next.t("profile_workout_times"),
+                translationKey: "profile_workout_times",
             },
             totalMovedWeight: {
                 value: 0,
                 unit: "",
-                text: i18next.t("profile_moved_weight"),
+                translationKey: "profile_moved_weight",
             },
             totalSets: {
                 value: 0,
                 unit: undefined,
-                text: i18next.t("profile_sets"),
+                translationKey: "profile_sets",
             },
             totalReps: {
                 value: 0,
                 unit: undefined,
-                text: i18next.t("profile_reps"),
+                translationKey: "profile_reps",
             },
-        } as OverallStats,
+        } satisfies OverallStats,
     );
 
     const { weight, unit } = getConveredWeight(unitSystem, totalMovedWeight);
@@ -559,7 +559,7 @@ export const getOverallStats = createSelector([({ settingsState }: AppState) => 
     overallStats.totalMovedWeight = {
         value: parseFloat(weight),
         unit: unit,
-        text: i18next.t("profile_moved_weight"),
+        translationKey: "profile_moved_weight",
     };
 
     return overallStats;

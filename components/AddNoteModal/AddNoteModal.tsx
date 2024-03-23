@@ -11,6 +11,7 @@ import { useAppDispatch, useAppSelector } from "../../store";
 import { getNote } from "../../store/selectors/workout/workoutSelectors";
 import { ThemedView } from "../Themed/ThemedView/View";
 import { saveNote } from "../../store/reducers/workout";
+import * as Haptics from "expo-haptics";
 
 interface EditNoteModalProps {
     onRequestClose: () => void;
@@ -36,6 +37,7 @@ export const AddNoteModal = ({ reference, onRequestClose }: EditNoteModalProps) 
     const handleRequestClose = useCallback(() => {
         Keyboard.dismiss();
         onRequestClose();
+        void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     }, [onRequestClose]);
 
     return (

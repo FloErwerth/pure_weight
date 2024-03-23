@@ -2,7 +2,7 @@ import { SiteNavigationButtons } from "../../components/SiteNavigationButtons/Si
 import { useTranslation } from "react-i18next";
 import { PageContent } from "../../components/PageContent/PageContent";
 import { ThemedView } from "../../components/Themed/ThemedView/View";
-import React, { useCallback } from "react";
+import React, { useCallback, useMemo } from "react";
 import { useNavigate } from "../../hooks/navigate";
 import { SettingsNavigator } from "../../components/App/settings/SettingsNavigator/SettingsNavigator";
 import { useAppSelector } from "../../store";
@@ -18,7 +18,6 @@ export function Profile() {
     const navigate = useNavigate();
     const isPro = useAppSelector(getIsPro);
     const overallStats = useAppSelector(getOverallStats);
-
     const navigateToPurchase = useCallback(() => {
         if (!isPro) {
             navigate("purchase");
@@ -28,6 +27,12 @@ export function Profile() {
     const navigateToSettings = useCallback(() => {
         navigate("profile/settings");
     }, [navigate]);
+
+    const mappedStats = useMemo(() => Object.values(overallStats ?? {}).map((stat) => ({
+        value: stat.value,
+        unit: stat.unit,
+        text: t(stat.translationKey),
+    })), [overallStats, t]);
 
     return (
         <ThemedView stretch background>
@@ -59,7 +64,7 @@ export function Profile() {
 
                     <PageContent paddingTop={20} ignorePadding ghost titleConfig={{ title: t("statistics"), size: 24 }}>
                         <ThemedView round input padding>
-                            {Object.values(overallStats ?? {})?.map((stat) => {
+                            {mappedStats.map((stat) => {
                                 return (
                                     <ThemedView key={`${stat.value} ${stat.text}`} padding round ghost>
                                         <HStack center ghost style={{ justifyContent: "space-evenly" }}>

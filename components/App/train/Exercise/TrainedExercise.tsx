@@ -19,6 +19,7 @@ import { SetInput } from "../../../SetInputRow/SetInput";
 import { PreviousWorkout } from "../../../PreviousWorkout/PreviousWorkout";
 import { AddNoteModal } from "../../../AddNoteModal/AddNoteModal";
 import { ExerciseMetadataDisplay } from "./MetadataDisplay/ExerciseMetadataDisplay";
+import { ThemedPressable } from "../../../Themed/Pressable/Pressable";
 
 type TrainedExerciseProps = {
     workoutId?: WorkoutId;
@@ -47,9 +48,9 @@ export const TrainedExercise = ({ workoutId, exerciseId }: TrainedExerciseProps)
             <HStack background style={trainStyles.headerWrapper}>
                 <ExerciseMetadataDisplay exerciseId={exerciseId} workoutId={workoutId} />
                 <ThemedView style={trainStyles.noteButtonWrapper}>
-                    <Pressable style={trainStyles.showEditNoteModalStyle} onPress={showNoteModal}>
+                    <ThemedPressable ghost style={trainStyles.showEditNoteModalStyle} onPress={showNoteModal}>
                         <MaterialCommunityIcons name="note-edit-outline" color={mainColor} size={24} />
-                    </Pressable>
+                    </ThemedPressable>
                 </ThemedView>
             </HStack>
             <ThemedScrollView
