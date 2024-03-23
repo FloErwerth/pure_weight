@@ -8,7 +8,6 @@ import { Temporal } from "@js-temporal/polyfill";
 import { getSinceDate } from "../../../utils/timeAgo";
 import { sortWorkouts } from "../../reducers/workout/sortWorkouts";
 import { getMeasurementSorting } from "../measurements/measurementSelectors";
-import i18next from "i18next";
 import { getDurationInSecondsMinutesOrHours } from "../../../utils/timeDisplay";
 import { Trend } from "../../../components/WorkoutCard/components/ProgressDisplay/ProgressDisplay";
 import { getConveredWeight } from "../../../hooks/useConvertedWeight";
@@ -380,22 +379,18 @@ export const getWorkoutStats = createSelector([getWorkouts], (workouts) => {
                     totalTimes: {
                         value: 0,
                         unit: undefined,
-                        text: i18next.t("post_workout_times"),
                     },
                     totalSets: {
                         value: 0,
                         unit: undefined,
-                        text: i18next.t("post_workout_sets"),
                     },
                     totalReps: {
                         value: 0,
                         unit: undefined,
-                        text: i18next.t("post_workout_reps"),
                     },
                     totalDuration: {
                         value: 0,
                         unit: "h",
-                        text: i18next.t("post_workout_total_duration"),
                     },
                 });
             }
@@ -423,7 +418,6 @@ export const getWorkoutStats = createSelector([getWorkouts], (workouts) => {
             stats.get(currentWorkout.workoutId)!.totalDuration = {
                 value,
                 unit,
-                text: i18next.t("post_workout_total_duration"),
             };
             stats.get(currentWorkout.workoutId)!.totalSets.value = values.totalSets;
             stats.get(currentWorkout.workoutId)!.totalReps.value = values.totalReps;
@@ -436,22 +430,18 @@ export const getWorkoutStats = createSelector([getWorkouts], (workouts) => {
                 totalDuration: {
                     value: number;
                     unit: string;
-                    text: string;
                 };
                 totalTimes: {
                     value: number;
                     unit: undefined;
-                    text: string;
                 };
                 totalSets: {
                     value: number;
                     unit: undefined;
-                    text: string;
                 };
                 totalReps: {
                     value: number;
                     unit: undefined;
-                    text: string;
                 };
             }
         >,
@@ -490,6 +480,7 @@ type OverallStats = {
         translationKey: string;
     };
 };
+
 export const getOverallStats = createSelector([({ settingsState }: AppState) => settingsState, getWorkouts, getWorkoutStats], ({ unitSystem }, workouts, stats) => {
     const totalMovedWeight = workouts.reduce((sum, workout) => {
         return (
@@ -563,12 +554,4 @@ export const getOverallStats = createSelector([({ settingsState }: AppState) => 
     };
 
     return overallStats;
-});
-
-export const getWorkoutStatsById = createSelector([getWorkoutStats, (_, workoutId?: WorkoutId) => workoutId], (stats, workoutId) => {
-    if (!workoutId) {
-        return undefined;
-    }
-
-    return stats.get(workoutId);
 });
