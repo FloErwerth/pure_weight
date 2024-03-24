@@ -11,7 +11,6 @@ import { ThemedPressable } from "../Themed/Pressable/Pressable";
 import { TextInput, View } from "react-native";
 import { EditableExerciseInputRowProps } from "./types";
 import { cleanError } from "../../store/reducers/errors";
-import { ErrorText } from "../ErrorText/ErrorText";
 
 export const EditableExerciseInputRow = ({
     value = "",
@@ -28,7 +27,9 @@ export const EditableExerciseInputRow = ({
 }: EditableExerciseInputRowProps) => {
     const { t } = useTranslation();
     const { errorColor } = useTheme();
-    const hasError = useAppSelector((state: AppState) => getErrorByKey(state, errorTextConfig?.errorKey));
+    const hasError = useAppSelector((state: AppState) =>
+        getErrorByKey(state, errorTextConfig?.errorKey),
+    );
     const textInputRef = useRef<TextInput>(null);
     const containerRef = useRef<View>(null);
     const dispatch = useAppDispatch();
@@ -53,7 +54,12 @@ export const EditableExerciseInputRow = ({
     }, [textInputRef]);
 
     return (
-        <ThemedPressable reference={containerRef} onPress={handleFocusInput} behind ghost stretch={stretch}>
+        <ThemedPressable
+            reference={containerRef}
+            onPress={handleFocusInput}
+            behind
+            ghost
+            stretch={stretch}>
             {(Boolean(i18key) || helpTextConfig) && (
                 <HStack ghost center style={styles.labelWrapper}>
                     <Text behind style={styles.label} ghost>
@@ -68,6 +74,7 @@ export const EditableExerciseInputRow = ({
             )}
             <ThemedTextInput
                 input={!background}
+                errorKey={errorTextConfig?.errorKey}
                 background={background}
                 bottomSheet={bottomSheet}
                 reference={textInputRef}
@@ -79,9 +86,6 @@ export const EditableExerciseInputRow = ({
                 maxLength={maxLength}
                 placeholder={placeholder}
             />
-            {!errorTextConfig?.hideError && hasError && (
-                <ErrorText errorKey={errorTextConfig?.errorKey}>{errorTextConfig?.errorText}</ErrorText>
-            )}
         </ThemedPressable>
     );
 };

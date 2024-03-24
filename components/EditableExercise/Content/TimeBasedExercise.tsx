@@ -1,4 +1,3 @@
-import { styles } from "../styles";
 import { EditableExerciseInputRow } from "../EditableExerciseInputRow";
 import { useAppDispatch, useAppSelector } from "../../../store";
 import { useCallback, useMemo } from "react";
@@ -8,9 +7,10 @@ import { getEditedExercise } from "../../../store/selectors/workout/workoutSelec
 import { TimeInputRow } from "../TimeInputRow";
 import { useTranslation } from "react-i18next";
 import { ErrorTextConfig } from "../../../store/reducers/errors/types";
-import { PageContent } from "../../PageContent/PageContent";
 import { getWeightUnit } from "../../../store/selectors/settings/settingsSelectors";
 import { HStack } from "../../Stack/HStack/HStack";
+import { styles } from "../styles";
+import { PageContent } from "../../PageContent/PageContent";
 
 export const TimeBasedExercise = () => {
     const editedExercise = useAppSelector(getEditedExercise);
@@ -100,9 +100,10 @@ export const TimeBasedExercise = () => {
     );
 
     return (
-        <PageContent ignorePadding ghost style={styles.inputWrapper}>
+        <PageContent ignorePadding ignoreGap ghost style={styles.inputWrapper}>
             <HStack gap ghost>
                 <TimeInputRow
+                    wrapperStyle={styles.input}
                     i18key="duration"
                     setMinutes={handleSetDurationMinutes}
                     setSeconds={handleSetDurationSeconds}
@@ -112,6 +113,7 @@ export const TimeBasedExercise = () => {
                 />
                 <TimeInputRow
                     i18key="pause"
+                    wrapperStyle={styles.input}
                     setMinutes={handleSetPauseMinutes}
                     setSeconds={handleSetPauseSeconds}
                     minutes={editedExercise?.exercise?.pauseMinutes}

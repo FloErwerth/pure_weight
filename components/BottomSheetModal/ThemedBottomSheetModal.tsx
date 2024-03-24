@@ -16,6 +16,7 @@ export interface ThemedBottomSheetModalProps extends PropsWithChildren {
     style?: ViewStyle;
     onRequestClose?: () => void;
     allowSwipeDownToClose?: boolean;
+    dismissOnClose?: boolean;
     snapPoints?: SnapPoint[];
     animationDuration?: number;
     titleSize?: number;
@@ -55,7 +56,7 @@ const renderBackdrop = (props: BottomSheetBackdropProps) => <BottomSheetBackdrop
 
 // eslint-disable-next-line react/display-name
 export const ThemedBottomSheetModal = forwardRef<BottomSheetModal, ThemedBottomSheetModalProps>(
-    ({ hideIndicator, customContentStyle, animationDuration, snapPoints, children, title, onRequestClose, allowSwipeDownToClose = true }, ref) => {
+    ({ dismissOnClose, hideIndicator, customContentStyle, animationDuration, snapPoints, children, title, onRequestClose, allowSwipeDownToClose = true }, ref) => {
         const { mainColor, inputFieldBackgroundColor } = useTheme();
         const { top, bottom } = useSafeAreaInsets();
         const defaultStyle = useMemo(() => [customContentStyle, styles.defaultContentStyle, { backgroundColor: inputFieldBackgroundColor }], [customContentStyle, inputFieldBackgroundColor]);
@@ -85,7 +86,7 @@ export const ThemedBottomSheetModal = forwardRef<BottomSheetModal, ThemedBottomS
                 enableDynamicSizing
                 backdropComponent={renderBackdrop}
                 backgroundStyle={defaultStyle}
-                enableDismissOnClose={allowSwipeDownToClose}
+                enableDismissOnClose={dismissOnClose}
                 onDismiss={onRequestClose}
                 ref={ref}
                 animationConfigs={animationConfig}

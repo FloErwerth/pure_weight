@@ -7,17 +7,30 @@ import { useAppSelector } from "../../../../../../store";
 import { ThemedView } from "../../../../../Themed/ThemedView/View";
 import { getTimeUnit } from "../../../../../../store/selectors/settings/settingsSelectors";
 import { ExerciseMetaData } from "../../../../../../store/reducers/workout/types";
+import { useMemo } from "react";
 
 interface SmallMetadataDisplayProps {
     exerciseMetaData: ExerciseMetaData;
 }
 
-export const TimeBasedSmallExerciseDataDisplay = ({ exerciseMetaData }: SmallMetadataDisplayProps) => {
+export const TimeBasedSmallExerciseDataDisplay = ({
+    exerciseMetaData,
+}: SmallMetadataDisplayProps) => {
     const { t } = useTranslation();
-    const showPauseMinutes = parseFloat(exerciseMetaData?.pauseMinutes ?? "0") !== 0;
-    const showPauseSecnds = parseFloat(exerciseMetaData?.pauseSeconds ?? "0") !== 0;
+
+    const minutes = useMemo(() => {
+        const parsedMinutes = parseInt(exerciseMetaData?.pauseMinutes ?? "0", 10);
+        return parsedMinutes > 0 ? parsedMinutes : undefined;
+    }, [exerciseMetaData?.pauseMinutes]);
+
+    const seconds = useMemo(() => {
+        const parsedSeconds = parseInt(exerciseMetaData?.pauseSeconds ?? "0", 10);
+        return parsedSeconds > 0 ? parsedSeconds : undefined;
+    }, [exerciseMetaData?.pauseSeconds]);
+
     const { secondsUnit, minutesUnit } = useAppSelector(getTimeUnit);
-    const showPause = showPauseMinutes || showPauseSecnds;
+    const showPause = minutes || seconds;
+
     if (!exerciseMetaData) {
         return null;
     }
@@ -28,23 +41,23 @@ export const TimeBasedSmallExerciseDataDisplay = ({ exerciseMetaData }: SmallMet
                 {showPause && (
                     <HStack>
                         <HStack style={styles.timeStack}>
-                            {showPauseMinutes && (
+                            {minutes && (
                                 <ThemedView>
                                     <HStack style={styles.smallGap}>
+                                        <Text style={trainStyles.exerciseMetaText}>{minutes}</Text>
                                         <Text style={trainStyles.exerciseMetaText}>
-                                            {exerciseMetaData?.pauseMinutes}
+                                            {minutesUnit}
                                         </Text>
-                                        <Text style={trainStyles.exerciseMetaText}>{minutesUnit}</Text>
                                     </HStack>
                                 </ThemedView>
                             )}
-                            {showPauseSecnds && (
+                            {seconds && (
                                 <ThemedView>
                                     <HStack style={styles.smallGap}>
+                                        <Text style={trainStyles.exerciseMetaText}>{seconds}</Text>
                                         <Text style={trainStyles.exerciseMetaText}>
-                                            {exerciseMetaData?.pauseSeconds}
+                                            {secondsUnit}
                                         </Text>
-                                        <Text style={trainStyles.exerciseMetaText}>{secondsUnit}</Text>
                                     </HStack>
                                 </ThemedView>
                             )}

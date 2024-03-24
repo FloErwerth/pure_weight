@@ -76,7 +76,11 @@
   "workout_cancel": "Workout abbrechen",
 
   "seconds": "sek",
+  "seconds_long_singular": "Sekunde",
+  "seconds_long": "Sekunden",
   "minutes": "min",
+  "minutes_long_singular": "Minute",
+  "minutes_long": "Minuten",
   "weight": "Gewicht",
   "sets": "Sets",
   "sets_lower": "sets",

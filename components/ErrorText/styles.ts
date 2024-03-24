@@ -4,4 +4,7 @@ export const styles = StyleSheet.create({
     wrapper: {
         position: "absolute",
     },
+    text: {
+        fontSize: 16,
+    },
 });

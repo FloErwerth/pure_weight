@@ -27,7 +27,8 @@ import { cleanError, setError } from "../../../../store/reducers/errors";
 import { ErrorFields } from "../../../../store/reducers/errors/types";
 import { AnswerText } from "../../../../components/HelpQuestionAnswer/AnswerText";
 
-const getIsZeroOrNullish = (values: Array<string | undefined>) => values.some((value) => !value || value === "0");
+const getIsZeroOrNullish = (values: Array<string | undefined>) =>
+    values.some((value) => !value || value === "0" || value === "00");
 
 const useValidateExercise = () => {
     const dispatch = useAppDispatch();
@@ -35,7 +36,13 @@ const useValidateExercise = () => {
 
     useEffect(() => {
         if (editedExercise?.exercise.type === "TIME_BASED") {
-            dispatch(cleanError(["create_exercise_sets", "create_exercise_reps", "create_exercise_weight"]));
+            dispatch(
+                cleanError([
+                    "create_exercise_sets",
+                    "create_exercise_reps",
+                    "create_exercise_weight",
+                ]),
+            );
         } else {
             dispatch(cleanError(["create_exercise_sets", "create_exercise_duration"]));
         }
@@ -82,9 +89,16 @@ export const CreateExercise = () => {
     const { t } = useTranslation();
     const editedExercise = useAppSelector(getEditedExercise);
     const isNewExercise = Boolean(editedExercise?.isNewExercise);
-    const title = useMemo(() => t(!isNewExercise ? "exercise_edit_title" : "create_exercise"), [isNewExercise, t]);
+    const title = useMemo(
+        () => t(!isNewExercise ? "exercise_edit_title" : "create_exercise"),
+        [isNewExercise, t],
+    );
     const dispatch = useAppDispatch();
-    const { showToast: showSavedSuccess, openToast: openSavedSuccess, closeToast: closeSavedSuccess } = useToast();
+    const {
+        showToast: showSavedSuccess,
+        openToast: openSavedSuccess,
+        closeToast: closeSavedSuccess,
+    } = useToast();
     const [showCheckboxes, setShowCheckboxes] = useState(true);
     const [addMoreExercises, setAddMoreExercises] = useState(false);
     const { ref, openBottomSheet } = useBottomSheetRef();
@@ -122,7 +136,14 @@ export const CreateExercise = () => {
         } else {
             navigateBack();
         }
-    }, [addMoreExercises, dispatch, navigateBack, openSuccessMessage, showCheckboxesAfterTimeout, validateExercise]);
+    }, [
+        addMoreExercises,
+        dispatch,
+        navigateBack,
+        openSuccessMessage,
+        showCheckboxesAfterTimeout,
+        validateExercise,
+    ]);
 
     const handleConfirm = useCallback(() => {
         if (showSavedSuccess) {
@@ -143,7 +164,12 @@ export const CreateExercise = () => {
     );
 
     const alertContent = useMemo(
-        () => t(!isNewExercise ? "alert_edit_exercise_discard_content" : "alert_create_exercise_discard_content"),
+        () =>
+            t(
+                !isNewExercise
+                    ? "alert_edit_exercise_discard_content"
+                    : "alert_create_exercise_discard_content",
+            ),
         [isNewExercise, t],
     );
 
@@ -190,7 +216,11 @@ export const CreateExercise = () => {
                 <EditableExercise />
                 <View style={styles.gap}>
                     {showCheckboxes && (
-                        <Reanimated.View style={styles.gap} layout={Layout} entering={FadeIn} exiting={FadeOut}>
+                        <Reanimated.View
+                            style={styles.gap}
+                            layout={Layout}
+                            entering={FadeIn}
+                            exiting={FadeOut}>
                             <CheckBox
                                 secondary
                                 customWrapperStyles={styles.zIndex}
@@ -213,7 +243,11 @@ export const CreateExercise = () => {
                             <Text secondary style={styles.buttonText}>
                                 {t(!isNewExercise ? "edit_exercise" : "create_exercise")}
                             </Text>
-                            <ThemedMaterialCommunityIcons ghost name="pencil-plus-outline" size={20} />
+                            <ThemedMaterialCommunityIcons
+                                ghost
+                                name="pencil-plus-outline"
+                                size={20}
+                            />
                         </HStack>
                     </ThemedPressable>
                 </View>

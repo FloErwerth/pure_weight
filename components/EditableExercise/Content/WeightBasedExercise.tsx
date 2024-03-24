@@ -77,9 +77,9 @@ export const WeightBasedExercise = () => {
     );
 
     return (
-        <PageContent ignorePadding ghost stretch style={styles.inputWrapper}>
+        <PageContent ignoreGap ignorePadding ghost stretch style={styles.inputWrapper}>
             <ThemedView ghost>
-                <HStack style={styles.inputWrapper} ghost>
+                <HStack ghost gap>
                     <EditableExerciseInputRow
                         suffix={weightUnit}
                         i18key="weight"
@@ -98,7 +98,7 @@ export const WeightBasedExercise = () => {
                         maxLength={7}
                     />
                 </HStack>
-                <HStack style={styles.inputWrapper} ghost>
+                <HStack ghost gap>
                     <EditableExerciseInputRow
                         stretch
                         errorTextConfig={errorTextConfigs.reps}
@@ -108,8 +108,8 @@ export const WeightBasedExercise = () => {
                         maxLength={7}
                     />
                     <TimeInputRow
+                        wrapperStyle={styles.input}
                         i18key="pause"
-                        stretch
                         setMinutes={handleSetPauseMinutes}
                         setSeconds={handleSetPauseSeconds}
                         minutes={editedExercise?.exercise?.pauseMinutes}

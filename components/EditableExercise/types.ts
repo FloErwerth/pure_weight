@@ -16,6 +16,7 @@ export interface EditableExerciseInputRowProps {
 }
 
 export interface TimeInputRowProps {
+    editable?: boolean;
     stretch?: boolean;
     hideSuffix?: boolean;
     seconds?: string;

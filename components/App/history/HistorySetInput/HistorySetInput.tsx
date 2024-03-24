@@ -1,4 +1,9 @@
-import { ExerciseData, ExerciseId, ExerciseType, WorkoutId } from "../../../../store/reducers/workout/types";
+import {
+    ExerciseData,
+    ExerciseId,
+    ExerciseType,
+    WorkoutId,
+} from "../../../../store/reducers/workout/types";
 import { useTheme } from "../../../../theme/context";
 import { AppState, useAppDispatch, useAppSelector } from "../../../../store";
 import { getDoneExerciseById } from "../../../../store/selectors/workout/workoutSelectors";
@@ -26,8 +31,13 @@ interface SetInputRowProps {
     doneWorkoutId: WorkoutId;
     exerciseId: ExerciseId;
 }
-const getIsZeroOrNullish = (values: Array<string | undefined>) => values.some((value) => !value || value === "0");
-const useGetIsValid = (type: ExerciseType, doneExerciseData?: ExerciseData, hasWeight?: boolean) => {
+const getIsZeroOrNullish = (values: Array<string | undefined>) =>
+    values.some((value) => !value || value === "0");
+const useGetIsValid = (
+    type: ExerciseType,
+    doneExerciseData?: ExerciseData,
+    hasWeight?: boolean,
+) => {
     const dispatch = useAppDispatch();
 
     return useCallback(() => {
@@ -51,7 +61,8 @@ const useGetIsValid = (type: ExerciseType, doneExerciseData?: ExerciseData, hasW
             if (
                 !doneExerciseData.durationMinutes ||
                 !doneExerciseData.durationSeconds ||
-                (doneExerciseData.durationMinutes === "0" && doneExerciseData.durationSeconds === "0")
+                (doneExerciseData.durationMinutes === "0" &&
+                    doneExerciseData.durationSeconds === "0")
             ) {
                 errors.push("edit_history_duration");
             }
@@ -76,8 +87,12 @@ const useErrors = (type: ExerciseType) => {
     const hasWeightBasedWeightError = useAppSelector((state: AppState) =>
         getErrorByKey(state, "edit_history_exercise_weightbased_weight"),
     );
-    const hasRepsError = useAppSelector((state: AppState) => getErrorByKey(state, "edit_history_reps"));
-    const hasDurationError = useAppSelector((state: AppState) => getErrorByKey(state, "edit_history_duration"));
+    const hasRepsError = useAppSelector((state: AppState) =>
+        getErrorByKey(state, "edit_history_reps"),
+    );
+    const hasDurationError = useAppSelector((state: AppState) =>
+        getErrorByKey(state, "edit_history_duration"),
+    );
 
     const text = useMemo(() => {
         if (type === "TIME_BASED") {
@@ -127,7 +142,14 @@ const useErrors = (type: ExerciseType) => {
         if (hasRepsError) {
             return "Wiederholungen sind erforderlich";
         }
-    }, [hasDurationError, hasRepsError, hasTimeBasedWeightError, hasWeightBasedWeightError, language, type]);
+    }, [
+        hasDurationError,
+        hasRepsError,
+        hasTimeBasedWeightError,
+        hasWeightBasedWeightError,
+        language,
+        type,
+    ]);
 
     return useMemo(() => {
         if (type === "TIME_BASED") {
@@ -142,21 +164,39 @@ const useErrors = (type: ExerciseType) => {
             right: hasRepsError,
             text,
         };
-    }, [type, hasWeightBasedWeightError, hasRepsError, text, hasDurationError, hasTimeBasedWeightError]);
+    }, [
+        type,
+        hasWeightBasedWeightError,
+        hasRepsError,
+        text,
+        hasDurationError,
+        hasTimeBasedWeightError,
+    ]);
 };
 
 export const HistorySetInput = ({ doneWorkoutId, setIndex, exerciseId }: SetInputRowProps) => {
     const { activeSet, requestActive } = useContext(HistoryContext);
-    const doneExercise = useAppSelector((state: AppState) => getDoneExerciseById(state, doneWorkoutId, exerciseId));
+    const doneExercise = useAppSelector((state: AppState) =>
+        getDoneExerciseById(state, doneWorkoutId, exerciseId),
+    );
     const set = useMemo(() => doneExercise?.sets?.[setIndex], [doneExercise?.sets, setIndex]);
     const active = activeSet === setIndex;
     const [doneExerciseData, setDoneExerciseData] = useState<ExerciseData | undefined>(set);
     const hasWeight = doneExercise?.type === "TIME_BASED" && !isNaN(parseFloat(set?.weight ?? "0"));
     const dispatch = useAppDispatch();
-    const getIsValid = useGetIsValid(doneExercise?.type ?? "WEIGHT_BASED", doneExerciseData, hasWeight);
+    const getIsValid = useGetIsValid(
+        doneExercise?.type ?? "WEIGHT_BASED",
+        doneExerciseData,
+        hasWeight,
+    );
     const { left, right, text } = useErrors(doneExercise?.type ?? "WEIGHT_BASED");
-    const { secondaryColor, mainColor, secondaryBackgroundColor, componentBackgroundColor, inputFieldBackgroundColor } =
-        useTheme();
+    const {
+        secondaryColor,
+        mainColor,
+        secondaryBackgroundColor,
+        backgroundColor,
+        inputFieldBackgroundColor,
+    } = useTheme();
 
     const handleSetWeight = useCallback(
         (value?: string) => {
@@ -206,7 +246,12 @@ export const HistorySetInput = ({ doneWorkoutId, setIndex, exerciseId }: SetInpu
                 return;
             }
             dispatch(
-                replaceDoneExerciseSet({ workoutId: doneWorkoutId, exerciseId, setIndex, data: doneExerciseData }),
+                replaceDoneExerciseSet({
+                    workoutId: doneWorkoutId,
+                    exerciseId,
+                    setIndex,
+                    data: doneExerciseData,
+                }),
             );
             Keyboard.dismiss();
             void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
@@ -241,8 +286,8 @@ export const HistorySetInput = ({ doneWorkoutId, setIndex, exerciseId }: SetInpu
         if (!active) {
             return "transparent";
         }
-        return componentBackgroundColor;
-    }, [active, componentBackgroundColor]);
+        return secondaryBackgroundColor;
+    }, [active, secondaryBackgroundColor]);
 
     const computedColor = useMemo(() => {
         if (!active) {
@@ -257,10 +302,18 @@ export const HistorySetInput = ({ doneWorkoutId, setIndex, exerciseId }: SetInpu
         [computedTextfieldBackgroundColor],
     );
     const textStyle = useMemo(() => ({ color: computedColor }), [computedColor]);
-    const textInputStyles = useMemo(() => [styles.textInput, wrapperStyle, textStyle], [wrapperStyle, textStyle]);
+    const textInputStyles = useMemo(
+        () => [styles.textInput, wrapperStyle, textStyle],
+        [wrapperStyle, textStyle],
+    );
 
     const buttonStyles = useMemo(
-        () => ({ flex: 0.18, backgroundColor: computedButtonBackgroundColor, justifyContent: "center" }) as const,
+        () =>
+            ({
+                flex: 0.18,
+                backgroundColor: computedButtonBackgroundColor,
+                justifyContent: "center",
+            }) as const,
         [computedButtonBackgroundColor],
     );
 
@@ -274,7 +327,13 @@ export const HistorySetInput = ({ doneWorkoutId, setIndex, exerciseId }: SetInpu
     return (
         <ThemedView ghost>
             <HStack ghost style={[styles.vStack, activeStackStyles]}>
-                <View style={{ borderRadius, flex: 0.2, justifyContent: "center", alignItems: "center" }}>
+                <View
+                    style={{
+                        borderRadius,
+                        flex: 0.2,
+                        justifyContent: "center",
+                        alignItems: "center",
+                    }}>
                     <Text ghost style={textNumberStyles}>
                         {setIndex + 1}
                     </Text>
@@ -310,7 +369,12 @@ export const HistorySetInput = ({ doneWorkoutId, setIndex, exerciseId }: SetInpu
                         </HStack>
                     ) : (
                         <HStack gap stretch ghost>
-                            <HStack stretch hasError={active && left} ghost round>
+                            <HStack
+                                stretch
+                                hasError={active && left}
+                                ghost
+                                round
+                                style={{ height: 45 }}>
                                 <TimeInputRow
                                     wrapperStyle={wrapperStyle}
                                     textStyle={textStyle}
@@ -324,7 +388,11 @@ export const HistorySetInput = ({ doneWorkoutId, setIndex, exerciseId }: SetInpu
                                 />
                             </HStack>
                             {hasWeight && (
-                                <HStack hasError={active && right} stretch style={wrapperStyle} round>
+                                <HStack
+                                    hasError={active && right}
+                                    stretch
+                                    style={wrapperStyle}
+                                    round>
                                     <ThemedTextInput
                                         editable={active}
                                         returnKeyType="done"

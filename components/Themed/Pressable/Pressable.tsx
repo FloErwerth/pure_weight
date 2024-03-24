@@ -1,12 +1,17 @@
 import { useTheme } from "../../../theme/context";
 import { GestureResponderEvent, Pressable, StyleProp, View, ViewStyle } from "react-native";
 import { ComponentProps, RefObject, useCallback, useMemo } from "react";
-import { ComputedBackgroundColorProps, useComputedBackgroundColor } from "../../../hooks/useComputedBackgroundColor";
+import {
+    ComputedBackgroundColorProps,
+    useComputedBackgroundColor,
+} from "../../../hooks/useComputedBackgroundColor";
 import * as ExpoHaptics from "expo-haptics";
 import { borderRadius } from "../../../theme/border";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-interface ThemedPressableProps extends ComponentProps<typeof Pressable>, ComputedBackgroundColorProps {
+interface ThemedPressableProps
+    extends ComponentProps<typeof Pressable>,
+        ComputedBackgroundColorProps {
     style?: StyleProp<ViewStyle>;
     stretch?: boolean;
     reference?: RefObject<View>;
@@ -47,8 +52,23 @@ export const ThemedPressable = (props: ThemedPressableProps) => {
             } as const,
             props.style,
         ],
-        [bottom, computedBackgroundColor, errorColor, props.behind, props.center, props.error, props.hideBorder, props.padding, props.round, props.safeBottom, props.stretch, props.style],
+        [
+            bottom,
+            computedBackgroundColor,
+            errorColor,
+            props.behind,
+            props.center,
+            props.error,
+            props.hideBorder,
+            props.padding,
+            props.round,
+            props.safeBottom,
+            props.stretch,
+            props.style,
+        ],
     );
 
-    return <Pressable ref={props.reference} {...props} onPress={handlePress} style={style}></Pressable>;
+    return (
+        <Pressable ref={props.reference} {...props} onPress={handlePress} style={style}></Pressable>
+    );
 };

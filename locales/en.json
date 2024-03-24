@@ -6,7 +6,7 @@
   "error_create_exercise_reps_single": "reps",
   "error_create_exercise_sets_single": "sets",
   "error_create_exercise_weight_reps_sets": "Weight, sets and reps are required",
-  "error_create_exercise_duration": "The duration is required",
+  "error_create_exercise_duration": "A duration is required",
   "error_create_exercise_weight": "Weight is required",
   "error_create_exercise_reps": "Reps are required",
   "error_create_exercise_sets": "Sets are required",
@@ -119,6 +119,10 @@
 
   "minutes": "min",
   "seconds": "sec",
+  "seconds_long_singular": "second",
+  "seconds_long": "seconds",
+  "minutes_long_singular": "minute",
+  "minutes_long": "minutes",
 
   "weight": "Weight",
   "sets": "Sets",

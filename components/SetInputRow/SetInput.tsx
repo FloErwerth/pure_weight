@@ -39,12 +39,17 @@ export const SetInput = ({ setIndex, exerciseId }: SetInputRowProps) => {
         textDisabled,
     } = useTheme();
 
-    const hasWeight = useAppSelector((state: AppState) => getHasWeightInTimeBasedExercise(state, exerciseId));
+    const hasWeight = useAppSelector((state: AppState) =>
+        getHasWeightInTimeBasedExercise(state, exerciseId),
+    );
     const data = useAppSelector((state: AppState) => getSetData(state, setIndex, exerciseId));
 
     const exercise = useAppSelector((state: AppState) => getExerciseById(state, exerciseId));
-    const { isLatestSet, weight, reps, isEditable, isConfirmed, durationSeconds, durationMinutes } = data ?? {};
-    const isActiveSet = useAppSelector((state: AppState) => getIsActiveSet(state, exerciseId, setIndex));
+    const { isLatestSet, weight, reps, isEditable, isConfirmed, durationSeconds, durationMinutes } =
+        data ?? {};
+    const isActiveSet = useAppSelector((state: AppState) =>
+        getIsActiveSet(state, exerciseId, setIndex),
+    );
     const wantsUpdatePrefilledValues = useAppSelector(getUpdatePrefilledWorkoutValues);
     const dispatch = useAppDispatch();
 
@@ -162,14 +167,22 @@ export const SetInput = ({ setIndex, exerciseId }: SetInputRowProps) => {
 
     const textNumberStyles = useMemo(() => [{ color: computedColor }], [computedColor]);
     const wrapperStyle = useMemo(
-        () => ({ backgroundColor: computedTextfieldBackgroundColor }),
+        () => ({ backgroundColor: computedTextfieldBackgroundColor, height: 45 }),
         [computedTextfieldBackgroundColor],
     );
     const textStyle = useMemo(() => ({ color: computedColor }), [computedColor]);
-    const textInputStyles = useMemo(() => [styles.textInput, wrapperStyle, textStyle], [wrapperStyle, textStyle]);
+    const textInputStyles = useMemo(
+        () => [styles.textInput, wrapperStyle, textStyle],
+        [wrapperStyle, textStyle],
+    );
 
     const buttonStyles = useMemo(
-        () => ({ flex: 0.18, backgroundColor: computedButtonBackgroundColor, justifyContent: "center" }) as const,
+        () =>
+            ({
+                flex: 0.18,
+                backgroundColor: computedButtonBackgroundColor,
+                justifyContent: "center",
+            }) as const,
         [computedButtonBackgroundColor],
     );
     const iconStyle = useMemo(
@@ -196,7 +209,8 @@ export const SetInput = ({ setIndex, exerciseId }: SetInputRowProps) => {
 
     return (
         <HStack style={[styles.vStack, activeStackStyles]}>
-            <View style={{ borderRadius, flex: 0.2, justifyContent: "center", alignItems: "center" }}>
+            <View
+                style={{ borderRadius, flex: 0.2, justifyContent: "center", alignItems: "center" }}>
                 {isConfirmed && !isActiveSet ? (
                     <MaterialCommunityIcons size={24} style={iconStyle} name="check-bold" />
                 ) : (
@@ -236,6 +250,7 @@ export const SetInput = ({ setIndex, exerciseId }: SetInputRowProps) => {
                 ) : (
                     <HStack gap stretch ghost>
                         <TimeInputRow
+                            editable={isEditable}
                             wrapperStyle={wrapperStyle}
                             textStyle={textStyle}
                             placeholderColor={isActiveSet ? undefined : computedColor}
@@ -264,7 +279,12 @@ export const SetInput = ({ setIndex, exerciseId }: SetInputRowProps) => {
                     </HStack>
                 )}
                 <ThemedPressable center style={buttonStyles} round onPress={handleSetDone}>
-                    <ThemedMaterialCommunityIcons ghost size={24} style={playStyle} name={confirmIcon} />
+                    <ThemedMaterialCommunityIcons
+                        ghost
+                        size={24}
+                        style={playStyle}
+                        name={confirmIcon}
+                    />
                 </ThemedPressable>
             </HStack>
         </HStack>

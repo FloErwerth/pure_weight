@@ -35,10 +35,9 @@ export const styles = StyleSheet.create({
         fontSize: 20,
     },
     input: {
-        padding: 10,
+        height: 45,
         borderRadius,
         fontSize: 20,
-        borderWidth: 1,
     },
     suffixContainer: {
         zIndex: 1,
@@ -46,7 +45,6 @@ export const styles = StyleSheet.create({
     },
     inputWrapper: {
         zIndex: -1,
-        gap: 5,
         width: Dimensions.get("screen").width - 40,
     },
     button: {

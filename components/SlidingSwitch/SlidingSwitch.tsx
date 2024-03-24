@@ -19,11 +19,20 @@ interface SlidingSwitchProps {
 }
 const HEIGHT = 41;
 
-export function SlidingSwitch({ options, onSelectValue, value, disabled, initialIndex }: SlidingSwitchProps) {
+export function SlidingSwitch({
+    options,
+    onSelectValue,
+    value,
+    disabled,
+    initialIndex,
+}: SlidingSwitchProps) {
     const [selectedValue, setSelectedValue] = useState<string>(value ?? "");
     const backgroundLeft = useRef(new Animated.Value(0)).current;
     const animatedViewRef = useRef<View>(null);
-    const [containerSize, setContainerSize] = useState<{ width: number; height: number }>({ width: 0, height: 0 });
+    const [containerSize, setContainerSize] = useState<{ width: number; height: number }>({
+        width: 0,
+        height: 0,
+    });
     const selectedValueIndex = useMemo(
         () => options.findIndex((option) => option.value === selectedValue),
         [options, selectedValue],
@@ -31,7 +40,11 @@ export function SlidingSwitch({ options, onSelectValue, value, disabled, initial
     const animatedBackgroundStyle = useMemo(
         () => [
             styles.background,
-            { left: backgroundLeft, width: containerSize.width / options.length - 5, height: HEIGHT } as const,
+            {
+                left: backgroundLeft,
+                width: containerSize.width / options.length - 5,
+                height: HEIGHT,
+            } as const,
         ],
         [backgroundLeft, containerSize.width, options.length],
     );
@@ -54,7 +67,9 @@ export function SlidingSwitch({ options, onSelectValue, value, disabled, initial
         if (selectedValue && containerSize.width !== 0) {
             if (selectedValueIndex !== -1) {
                 const left =
-                    selectedValueIndex !== 0 ? (containerSize.width / options.length) * selectedValueIndex - 5 : 0;
+                    selectedValueIndex !== 0
+                        ? (containerSize.width / options.length) * selectedValueIndex - 5
+                        : 0;
                 Animated.timing(backgroundLeft, {
                     useNativeDriver: false,
                     toValue: left,
@@ -62,7 +77,10 @@ export function SlidingSwitch({ options, onSelectValue, value, disabled, initial
                 }).start();
             }
             if (flatListRef.current) {
-                flatListRef.current.scrollToIndex({ index: selectedValueIndex, animated: !disabled });
+                flatListRef.current.scrollToIndex({
+                    index: selectedValueIndex,
+                    animated: !disabled,
+                });
             }
         }
     }, [containerSize, selectedValue]);
@@ -75,20 +93,26 @@ export function SlidingSwitch({ options, onSelectValue, value, disabled, initial
         [onSelectValue],
     );
 
-    const renderItem = useCallback(({ item: { Component } }: { item: { Component?: ReactElement } }) => {
-        if (!Component) {
-            return null;
-        }
-        return (
-            <PageContent scrollable ghost ignorePadding>
-                {Component}
-            </PageContent>
-        );
-    }, []);
+    const renderItem = useCallback(
+        ({ item: { Component } }: { item: { Component?: ReactElement } }) => {
+            if (!Component) {
+                return null;
+            }
+            return (
+                <PageContent scrollable ghost ignorePadding>
+                    {Component}
+                </PageContent>
+            );
+        },
+        [],
+    );
 
     return (
         <>
-            <ThemedView onLayout={measureContainer} reference={animatedViewRef} style={styles.wrapper}>
+            <ThemedView
+                onLayout={measureContainer}
+                reference={animatedViewRef}
+                style={styles.wrapper}>
                 <HStack ghost>
                     {options.map(({ label, value }) => (
                         <ThemedPressable
@@ -102,7 +126,11 @@ export function SlidingSwitch({ options, onSelectValue, value, disabled, initial
                         </ThemedPressable>
                     ))}
                 </HStack>
-                <AnimatedView input={!disabled} background={disabled} style={animatedBackgroundStyle} />
+                <AnimatedView
+                    input={!disabled}
+                    background={disabled}
+                    style={animatedBackgroundStyle}
+                />
             </ThemedView>
             <FlatList
                 scrollEnabled={false}
