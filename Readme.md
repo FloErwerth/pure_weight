@@ -94,3 +94,8 @@ Build Number 27
 - Moved settings to a new screen and moved statistics to the profile screen
 - Added Footer in settings and purchase page
 - Handling lots of weight in overall stats
+
+`0.8.4`:
+- Added time picker wheel
+- Resolve issues with metadata display
+- Add translations to profile texts
