@@ -30,7 +30,7 @@ const numberArray = Array.from({ length: 60 }, (_, i) => i.toString().padStart(2
 const isFalsy = (value: string | undefined) => !value || value === "0" || value === "00";
 
 export const TimeInputRow = ({
-    editable,
+    editable = true,
     hideSuffix,
     seconds,
     minutes,
