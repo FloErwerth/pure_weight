@@ -3,14 +3,8 @@
 Pure Weight is a simple weight tracking application. It only supports Ios devices at the moment, but its planed to
 include Android devices aswell.
 
-App Version 0.7.7
-Build Number 27
-
-## Features
-
-## Planned Features
-
-- Support for weight in time based exercises
+App Version 0.8.5
+Build Number 35
 
 ## Change Log
 
@@ -99,3 +93,6 @@ Build Number 27
 - Added time picker wheel
 - Resolve issues with metadata display
 - Add translations to profile texts
+
+`0.8.5`:
+- Resolved bug that prevented the visibilty of the time input
