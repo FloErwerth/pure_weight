@@ -99,3 +99,6 @@ Build Number 27
 - Added time picker wheel
 - Resolve issues with metadata display
 - Add translations to profile texts
+
+`0.8.8`:
+- Added reviews
