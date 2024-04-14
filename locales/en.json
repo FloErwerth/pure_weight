@@ -22,6 +22,7 @@
   "settings": "Settings",
   "profile": "Profile",
   "display": "Display",
+  "rating": "Review Pure Weight",
   "general": "General",
   "statistics": "All time statistics",
   "number_entries": "Number of entries",
@@ -151,6 +152,8 @@
   "settings_entries_title": "Latest entries",
   "settings_workout_history_all": "Show all of my workouts",
   "settings_measurement_history_all": "Show all of my measurements",
+  "settings_rating_title": "Review",
+  "settings_rating_text": "A review helps us to grow. \n\nIt is also a perfect way to tell others what you like about Pure Weight. \n\nYou also can use this to provide more information about things we can improve on.",
 
   "settings_auto_update_linked_exercises": "Auto update exercises",
   "settings_auto_update_linked_exercises_text": "If activated, all exercises created with the same template will be automatically kept on the same level of progress. \n\nFor example, if you used bench press as a template in two different workouts, the progress in both workouts will be updated when you train bench press in one workout.",

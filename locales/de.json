@@ -23,6 +23,7 @@
   "display": "Anzeige",
   "profile": "Profil",
   "general": "Allgemein",
+  "rating": "Bewerte Pure Weight",
   "statistics": "Statistiken seit Beginn",
   "number_entries": "Anzahl der Einträge",
   "workout_no_done_workouts_hint": "Noch keine Workouts abgeschlossen",
@@ -115,6 +116,8 @@
   "settings_unit_system_helptext_text": "Diese Einstellung erlaubt es Dir das Einheiten-System für die App einzustellen. \n\nDas metrische System umfasst Einheiten wie Kilogramm, Zentimeter und Liter. \n\nDas angloamerikanische System umfasst Einheiten wie Pfund, Inch und Gallonen. \n\nWechselst Du zwischen den Einheiten-Systemen, werden alle gespeicherten Werte umgerechnet",
   "settings_update_workout_automatically_title": "Workout autom. aktualisieren",
   "settings_update_workout_automatically_helptext": "Aktiviert die automatische Synchronisierung der voreingetragenene Gewichte und Wiederholungen des nächsten Satzes in deinem Workout. \n\nBeispiel: Du trainierst Bankdrücken und erhöhst dein Gewicht von 50 auf 55kg. Das vorausgefüllte Gewicht beim nächsten Satz wird dann 55kg sein.",
+  "settings_rating_title": "Bewertung",
+  "settings_rating_text": "Eine Bewertung hilft uns dabei im App Store mehr Popularität zu erreichen. \n\nEs ist auch der perfekte Weg, um anderen zu zeigen was du an Pure Weight besonders magst. \n\nZudem kannst Du die Bewertung nutzen, um uns zu zeigen was Du an Pure Weight verbessern würdest.",
 
   "stopwatch_pause_notification_title": "Deine Pause ist vorbei",
   "stopwatch_pause_notification_text": "Es ist Zeit dein Training fortzusetzen",

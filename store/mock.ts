@@ -4,6 +4,8 @@ export const mockState: AppState = {
     metadataState: {
         appInstallDate: "2023-09-01",
         isFirstTimeRendered: false,
+        timesMounted: 9,
+        hasReviewed: false,
     },
     settingsState: {
         stopwatchSettings: { startOnDoneSet: false },
@@ -1316,6 +1318,8 @@ export const emptyState = {
     metadataState: {
         appInstallDate: "2023-11-11",
         isFirstTimeRendered: true,
+        hasReviewed: false,
+        timesMounted: 0,
     },
     errorState: {
         errors: [],

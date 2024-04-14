@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { useAppDispatch, useAppSelector } from "../../../../../../store";
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import { setUnitSystem } from "../../../../../../store/reducers/settings";
 
 import { getUnitSystem } from "../../../../../../store/selectors/settings/settingsSelectors";
@@ -9,7 +9,10 @@ import { UnitSystem } from "../../../../../../store/reducers/settings/types";
 import { ThemedView } from "../../../../../Themed/ThemedView/View";
 import { selectionStyles } from "../../selectionStyles";
 import { SettingsNavigator } from "../../../SettingsNavigator/SettingsNavigator";
-import { ThemedBottomSheetModal, useBottomSheetRef } from "../../../../../BottomSheetModal/ThemedBottomSheetModal";
+import {
+    ThemedBottomSheetModal,
+    useBottomSheetRef,
+} from "../../../../../BottomSheetModal/ThemedBottomSheetModal";
 import { PageContent } from "../../../../../PageContent/PageContent";
 
 const kgIcon: Icon = {
@@ -34,20 +37,35 @@ export const UnitSystemSection = () => {
         [dispatch],
     );
 
+    const unitSystemContent = useMemo(
+        () => ({
+            title: t("settings_unit_system_title"),
+            text: t("settings_unit_system_helptext_text"),
+        }),
+        [t],
+    );
+
     return (
         <>
             <SettingsNavigator
                 onPress={openBottomSheet}
                 title={t("settings_unit_system_title")}
-                content={{
-                    title: t("settings_unit_system_title"),
-                    text: t("settings_unit_system_helptext_text"),
-                }}></SettingsNavigator>
+                content={unitSystemContent}></SettingsNavigator>
             <ThemedBottomSheetModal title={t("settings_unit_system_title")} ref={ref}>
                 <PageContent ghost paddingTop={20}>
                     <ThemedView ghost style={selectionStyles.vStack}>
-                        <SelectableSetting prependedExtraContent={kgIcon} selected={unitSystem === "metric"} onSelect={() => handleSelectWeightUnit("metric")} titleKey="unit_system_metric" />
-                        <SelectableSetting prependedExtraContent={poundIcon} selected={unitSystem === "imperial"} onSelect={() => handleSelectWeightUnit("imperial")} titleKey="unit_system_imperial" />
+                        <SelectableSetting
+                            prependedExtraContent={kgIcon}
+                            selected={unitSystem === "metric"}
+                            onSelect={() => handleSelectWeightUnit("metric")}
+                            titleKey="unit_system_metric"
+                        />
+                        <SelectableSetting
+                            prependedExtraContent={poundIcon}
+                            selected={unitSystem === "imperial"}
+                            onSelect={() => handleSelectWeightUnit("imperial")}
+                            titleKey="unit_system_imperial"
+                        />
                     </ThemedView>
                 </PageContent>
             </ThemedBottomSheetModal>

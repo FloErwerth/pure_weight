@@ -1,5 +1,5 @@
 import { persistor, store, useAppDispatch, useAppSelector } from "../store";
-import React from "react";
+import React, { useEffect } from "react";
 import { PersistGate } from "redux-persist/integration/react";
 import { Provider } from "react-redux";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
@@ -18,8 +18,16 @@ import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { WorkoutHistory } from "./workouts/history";
 import DeviceInfo from "react-native-device-info";
 import { IsoDate } from "../types/date";
-import { setAppInstallDate, setEmptyState, setFirstTimeRendered } from "../store/reducers/metadata";
-import { getIsFirstTimeRendered } from "../store/selectors/metadata/metadataSelectors";
+import {
+    increaseTimesMounted,
+    setAppInstallDate,
+    setEmptyState,
+    setFirstTimeRendered,
+} from "../store/reducers/metadata";
+import {
+    getIsFirstTimeRendered,
+    getShouldAskForReview,
+} from "../store/selectors/metadata/metadataSelectors";
 import { Manual } from "./profile/manual";
 import { useTranslation } from "react-i18next";
 import { Appearance, NativeModules } from "react-native";
@@ -37,6 +45,7 @@ import { Purchase } from "./purchase";
 import { useInitPurchases } from "../hooks/purchases";
 import { SplashScreen } from "expo-router";
 import { Settings } from "./profile/settings";
+import * as StoreReview from "expo-store-review";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -49,28 +58,39 @@ const ThemedApp = () => {
     const { i18n } = useTranslation();
     const isFirstTimeRendered = useAppSelector(getIsFirstTimeRendered);
     const reactNativeTheme = useAppSelector(getReactNativeTheme);
+    const shouldRequestReview = useAppSelector(getShouldAskForReview);
 
-    if (isFirstTimeRendered) {
-        dispatch(setEmptyState());
+    useEffect(() => {
+        if (isFirstTimeRendered) {
+            dispatch(setEmptyState());
 
-        DeviceInfo.getFirstInstallTime().then((installTime) => {
-            const date = new Date(installTime ?? 0).toISOString().split("T")[0];
-            dispatch(setAppInstallDate(date as IsoDate));
-        });
+            DeviceInfo.getFirstInstallTime().then((installTime) => {
+                const date = new Date(installTime ?? 0).toISOString().split("T")[0];
+                dispatch(setAppInstallDate(date as IsoDate));
+            });
 
-        const lang = (NativeModules.SettingsManager.settings.AppleLocale as string).split("_")[0];
-        if (lang === "de" || lang === "en") {
-            void i18n.changeLanguage(lang);
-            dispatch(setLanguage(lang));
-        } else {
-            void i18n.changeLanguage("de");
-            dispatch(setLanguage("de"));
+            const lang = (NativeModules.SettingsManager.settings.AppleLocale as string).split(
+                "_",
+            )[0];
+            if (lang === "de" || lang === "en") {
+                void i18n.changeLanguage(lang);
+                dispatch(setLanguage(lang));
+            } else {
+                void i18n.changeLanguage("de");
+                dispatch(setLanguage("de"));
+            }
+
+            const theme = Appearance.getColorScheme();
+            dispatch(setTheme(theme === "dark" ? "dark" : "light"));
+            dispatch(setFirstTimeRendered(false));
         }
-
-        const theme = Appearance.getColorScheme();
-        dispatch(setTheme(theme === "dark" ? "dark" : "light"));
-        dispatch(setFirstTimeRendered(false));
-    }
+        dispatch(increaseTimesMounted());
+        if (shouldRequestReview) {
+            setTimeout(() => {
+                void StoreReview.requestReview();
+            }, 300);
+        }
+    }, []);
 
     return (
         <NavigationContainer theme={reactNativeTheme} ref={navigationRef} independent={true}>
@@ -79,22 +99,86 @@ const ThemedApp = () => {
                     <RootSiblingParent>
                         <BottomSheetModalProvider>
                             <SafeAreaView background>
-                                <Stack.Navigator screenOptions={{ headerShown: false, headerBackButtonMenuEnabled: false }}>
-                                    <Stack.Screen component={TabsWrapper} options={{ headerShown: false }} name="tabs" />
-                                    <Stack.Screen component={Train} options={{ gestureEnabled: false, headerShown: false }} name="workouts/train/index" />
-                                    <Stack.Screen component={MeasurementProgress} options={{ headerShown: false }} name="measurement/progress/index" />
-                                    <Stack.Screen component={MeasurementHistoryEdit} options={{ headerShown: false }} name="measurements/history/edit/index" />
-                                    <Stack.Screen component={CreateMeasurement} options={{ headerShown: false }} name="measurement/create/index" />
-                                    <Stack.Screen component={MeasurementHistory} options={{ headerShown: false }} name="measurement/history/index" />
-                                    <Stack.Screen component={Create} options={{ gestureEnabled: false, headerShown: false }} name="workouts/create/index" />
-                                    <Stack.Screen component={WorkoutProgress} options={{ headerShown: false }} name="workouts/progress/index" />
-                                    <Stack.Screen component={WorkoutHistory} options={{ headerShown: false }} name="workouts/history/index" />
-                                    <Stack.Screen component={WorkoutHistoryOverview} options={{ headerShown: false }} name="workouts/history/workout/index" />
-                                    <Stack.Screen component={WorkoutHistoryEdit} options={{ headerShown: false }} name="workouts/history/exercise_edit/index" />
-                                    <Stack.Screen component={Manual} options={{ headerShown: false }} name="profile/settings/manual/index" />
-                                    <Stack.Screen component={CreateExercise} options={{ headerShown: false }} name="workouts/create/exercise/index" />
-                                    <Stack.Screen component={Purchase} options={{ headerShown: false }} name="purchase" />
-                                    <Stack.Screen component={Settings} options={{ headerShown: false }} name="profile/settings/index" />
+                                <Stack.Navigator
+                                    screenOptions={{
+                                        headerShown: false,
+                                        headerBackButtonMenuEnabled: false,
+                                    }}>
+                                    <Stack.Screen
+                                        component={TabsWrapper}
+                                        options={{ headerShown: false }}
+                                        name="tabs"
+                                    />
+                                    <Stack.Screen
+                                        component={Train}
+                                        options={{ gestureEnabled: false, headerShown: false }}
+                                        name="workouts/train/index"
+                                    />
+                                    <Stack.Screen
+                                        component={MeasurementProgress}
+                                        options={{ headerShown: false }}
+                                        name="measurement/progress/index"
+                                    />
+                                    <Stack.Screen
+                                        component={MeasurementHistoryEdit}
+                                        options={{ headerShown: false }}
+                                        name="measurements/history/edit/index"
+                                    />
+                                    <Stack.Screen
+                                        component={CreateMeasurement}
+                                        options={{ headerShown: false }}
+                                        name="measurement/create/index"
+                                    />
+                                    <Stack.Screen
+                                        component={MeasurementHistory}
+                                        options={{ headerShown: false }}
+                                        name="measurement/history/index"
+                                    />
+                                    <Stack.Screen
+                                        component={Create}
+                                        options={{ gestureEnabled: false, headerShown: false }}
+                                        name="workouts/create/index"
+                                    />
+                                    <Stack.Screen
+                                        component={WorkoutProgress}
+                                        options={{ headerShown: false }}
+                                        name="workouts/progress/index"
+                                    />
+                                    <Stack.Screen
+                                        component={WorkoutHistory}
+                                        options={{ headerShown: false }}
+                                        name="workouts/history/index"
+                                    />
+                                    <Stack.Screen
+                                        component={WorkoutHistoryOverview}
+                                        options={{ headerShown: false }}
+                                        name="workouts/history/workout/index"
+                                    />
+                                    <Stack.Screen
+                                        component={WorkoutHistoryEdit}
+                                        options={{ headerShown: false }}
+                                        name="workouts/history/exercise_edit/index"
+                                    />
+                                    <Stack.Screen
+                                        component={Manual}
+                                        options={{ headerShown: false }}
+                                        name="profile/settings/manual/index"
+                                    />
+                                    <Stack.Screen
+                                        component={CreateExercise}
+                                        options={{ headerShown: false }}
+                                        name="workouts/create/exercise/index"
+                                    />
+                                    <Stack.Screen
+                                        component={Purchase}
+                                        options={{ headerShown: false }}
+                                        name="purchase"
+                                    />
+                                    <Stack.Screen
+                                        component={Settings}
+                                        options={{ headerShown: false }}
+                                        name="profile/settings/index"
+                                    />
                                 </Stack.Navigator>
                             </SafeAreaView>
                         </BottomSheetModalProvider>
