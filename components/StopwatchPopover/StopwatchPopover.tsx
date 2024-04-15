@@ -66,7 +66,6 @@ export const StopwatchPopover = () => {
                 Animated.timing(iconOpacity, {
                     toValue: 1,
                     useNativeDriver: true,
-
                     duration: 200,
                 }),
                 Animated.timing(opacity, {
@@ -93,8 +92,6 @@ export const StopwatchPopover = () => {
         }
     }, [showPopover, opacity, iconOpacity, timerStarted]);
 
-    const hidePopover = useCallback(() => () => setShowPopover(false), []);
-
     const popoverStyle = useMemo(
         () =>
             ({
@@ -113,7 +110,7 @@ export const StopwatchPopover = () => {
     return (
         <>
             <ThemedView ghost>
-                <ThemedBottomSheetModal snapPoints={SNAP_POINTS["25"]} onRequestClose={hidePopover} ref={stopwatchRef}>
+                <ThemedBottomSheetModal snapPoints={SNAP_POINTS["25"]} onRequestClose={togglePopover} ref={stopwatchRef}>
                     <HStack ghost style={styles.hStack}>
                         <ThemedPressable style={styles.timeButton} disabled={remainingTime <= 15000} ghost center onPress={rewind15Seconds}>
                             <ThemedMaterialCommunityIcons disabled={remainingTime <= 15000} ghost name="rewind-15" size={40} />
