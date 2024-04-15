@@ -77,3 +77,23 @@ export const styles = StyleSheet.create({
         marginBottom: 15,
     },
 });
+
+export const timeInputStyles = StyleSheet.create({
+    wrapper: {
+        position: "absolute",
+        width: "100%",
+        height: 50,
+    },
+    pickerItem: {
+        textAlign: "left",
+        fontSize: 25,
+    },
+    picker: { flex: 1 },
+    text: {
+        position: "absolute",
+        pointerEvents: "none",
+        left: "50%",
+        top: "50%",
+        transform: [{ translateY: -10 }, { translateX: -15 }],
+    },
+});

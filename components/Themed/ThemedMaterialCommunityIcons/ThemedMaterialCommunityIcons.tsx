@@ -17,5 +17,6 @@ export const ThemedMaterialCommunityIcons = (props: ThemedMaterialCommunityIcons
     const computedBackgroundColor = useComputedBackgroundColor(props);
     const color = useComputedColor(props);
     const style = useMemo(() => [{ backgroundColor: computedBackgroundColor, borderRadius: props.round ? borderRadius : 0 }, props.style], [computedBackgroundColor, props.round, props.style]);
-    return <MaterialCommunityIcons {...props} style={style} color={props.color ?? color} />;
+    const selectedColor = useMemo(() => props.color ?? color, [color, props.color]);
+    return <MaterialCommunityIcons {...props} style={style} color={selectedColor} />;
 };

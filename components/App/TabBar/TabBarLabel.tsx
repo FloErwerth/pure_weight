@@ -17,5 +17,7 @@ export const TabBarLabel = ({ focused, title }: { focused: boolean; title: strin
         return {};
     }, [bottom]);
 
-    return <Text style={{ fontSize: 12, color, alignSelf: "center", ...tabletStyles }}>{title}</Text>;
+    const styles = useMemo(() => ({ fontSize: 12, color, alignSelf: "center", ...tabletStyles }) as const, [color, tabletStyles]);
+
+    return <Text style={styles}>{title}</Text>;
 };

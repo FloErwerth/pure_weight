@@ -4,23 +4,24 @@ import { HStack } from "../Stack/HStack/HStack";
 import { ThemedMaterialCommunityIcons } from "../Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
 import { Text } from "../Themed/ThemedText/Text";
 import { PostWorkoutScreen } from "../../store/reducers/workout/types";
+import { styles } from "./styles";
 
 type WorkoutCompleteStatTileProps = PostWorkoutScreen["stats"][number];
 export const WorkoutCompleteStatTile = ({ icon, unit, value, text, iconColor }: WorkoutCompleteStatTileProps) => {
     return (
-        <ThemedView stretch style={{ alignSelf: "stretch", padding: 5, paddingBottom: 8 }} round background>
-            <HStack center style={{ marginBottom: 5, justifyContent: "space-between" }} ghost>
+        <ThemedView stretch style={styles.wrapper} round background>
+            <HStack center style={styles.innerWrapper} ghost>
                 <ThemedMaterialCommunityIcons ghost name={icon} size={20} color={iconColor} />
-                <HStack ghost style={{ gap: 3 }}>
-                    <Text ghost style={{ fontSize: 26 }}>
+                <HStack ghost style={styles.smallGap}>
+                    <Text ghost style={styles.text}>
                         {value}
                     </Text>
-                    <Text ghost style={{ fontSize: 20, alignSelf: "flex-end", marginBottom: 2 }}>
+                    <Text ghost style={styles.unitText}>
                         {unit}
                     </Text>
                 </HStack>
             </HStack>
-            <Text style={{ fontSize: 12 }} ghost>
+            <Text style={styles.smallText} ghost>
                 {text}
             </Text>
         </ThemedView>

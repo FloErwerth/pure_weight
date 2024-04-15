@@ -1,4 +1,4 @@
-import { PropsWithChildren } from "react";
+import { PropsWithChildren, useMemo } from "react";
 import { styles } from "./styles";
 import { Text } from "../../../Themed/ThemedText/Text";
 import { HStack } from "../../../Stack/HStack/HStack";
@@ -18,7 +18,7 @@ interface SettingsSectionProps extends PropsWithChildren {
 }
 export const SettingsNavigator = ({ title, input, onPress, content, stretch = true }: SettingsSectionProps) => {
     const { ref, openBottomSheet } = useBottomSheetRef();
-
+    const size = useMemo(() => content?.iconSize ?? 24, [content]);
     return (
         <>
             <HStack ghost stretch={stretch}>
@@ -30,7 +30,7 @@ export const SettingsNavigator = ({ title, input, onPress, content, stretch = tr
                             </Text>
                             {content && (
                                 <Pressable onPress={openBottomSheet}>
-                                    <ThemedMaterialCommunityIcons ghost name="help-circle-outline" size={content.iconSize ?? 24} />
+                                    <ThemedMaterialCommunityIcons ghost name="help-circle-outline" size={size} />
                                 </Pressable>
                             )}
                         </HStack>

@@ -1,7 +1,7 @@
 import { Appearance } from "react-native";
 import { useTranslation } from "react-i18next";
 import { useAppDispatch, useAppSelector } from "../../../../../../store";
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { ThemeKey } from "../../../../../../theme/types";
 import { setTheme } from "../../../../../../store/reducers/settings";
 
@@ -46,30 +46,20 @@ export const ThemeSelection = () => {
         [dispatch],
     );
 
+    const themeTitle = useMemo(() => t("settings_theme"), [t]);
+    const handleSelectLightTheme = useCallback(() => handleSelectLanguage("light"), [handleSelectLanguage]);
+    const handleSelectDarkTheme = useCallback(() => handleSelectLanguage("dark"), [handleSelectLanguage]);
+    const handleSelectDeviceTheme = useCallback(() => handleSelectLanguage("device"), [handleSelectLanguage]);
+
     return (
         <ThemedView ghost>
-            <SettingsNavigator title={t("settings_theme")} onPress={openBottomSheet} />
+            <SettingsNavigator title={themeTitle} onPress={openBottomSheet} />
 
-            <ThemedBottomSheetModal ref={ref} title={t("settings_theme")}>
+            <ThemedBottomSheetModal ref={ref} title={themeTitle}>
                 <PageContent paddingTop={20} ghost>
-                    <SelectableSetting
-                        prependedExtraContent={light}
-                        selected={!usesDeviceTheme && theme === "light"}
-                        onSelect={() => handleSelectLanguage("light")}
-                        titleKey="theme_light"
-                    />
-                    <SelectableSetting
-                        prependedExtraContent={dark}
-                        selected={!usesDeviceTheme && theme === "dark"}
-                        onSelect={() => handleSelectLanguage("dark")}
-                        titleKey="theme_dark"
-                    />
-                    <SelectableSetting
-                        prependedExtraContent={device}
-                        selected={usesDeviceTheme}
-                        onSelect={() => handleSelectLanguage("device")}
-                        titleKey="theme_device"
-                    />
+                    <SelectableSetting prependedExtraContent={light} selected={!usesDeviceTheme && theme === "light"} onSelect={handleSelectLightTheme} titleKey="theme_light" />
+                    <SelectableSetting prependedExtraContent={dark} selected={!usesDeviceTheme && theme === "dark"} onSelect={handleSelectDarkTheme} titleKey="theme_dark" />
+                    <SelectableSetting prependedExtraContent={device} selected={usesDeviceTheme} onSelect={handleSelectDeviceTheme} titleKey="theme_device" />
                 </PageContent>
             </ThemedBottomSheetModal>
         </ThemedView>

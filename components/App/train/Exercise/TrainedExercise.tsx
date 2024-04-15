@@ -2,7 +2,7 @@ import { AppState, useAppSelector } from "../../../../store";
 import { getExerciseById, getHasWeightInTimeBasedExercise, getSetsArray } from "../../../../store/selectors/workout/workoutSelectors";
 import { ExerciseId, WorkoutId } from "../../../../store/reducers/workout/types";
 import { useBottomSheetRef } from "../../../BottomSheetModal/ThemedBottomSheetModal";
-import { useCallback, useId } from "react";
+import { useCallback, useId, useMemo } from "react";
 import { useTheme } from "../../../../theme/context";
 import { ThemedView } from "../../../Themed/ThemedView/View";
 import { trainStyles } from "../trainStyles";
@@ -37,7 +37,13 @@ export const TrainedExercise = ({ workoutId, exerciseId }: TrainedExerciseProps)
     }, [open]);
 
     const hasWeight = useAppSelector((state: AppState) => getHasWeightInTimeBasedExercise(state, exerciseId));
-
+    const mappedSets = useMemo(
+        () =>
+            setsArray?.map((_, setIndex) => {
+                return <SetInput key={exerciseId.toString().concat(setIndex.toString())} exerciseId={exerciseId} setIndex={setIndex} />;
+            }),
+        [exerciseId, setsArray],
+    );
     return (
         <ThemedView stretch ghost key={id} style={trainStyles.carouselWrapper}>
             <HStack background style={trainStyles.headerWrapper}>
@@ -51,9 +57,7 @@ export const TrainedExercise = ({ workoutId, exerciseId }: TrainedExerciseProps)
             <ThemedScrollView showsVerticalScrollIndicator={false} bounces={false} ghost keyboardShouldPersistTaps="handled" contentContainerStyle={trainStyles.innerWrapper}>
                 <ThemedView round padding>
                     <TrainingHeader showWeight={hasWeight} exerciseType={exercise?.type} />
-                    {setsArray?.map((_, setIndex) => {
-                        return <SetInput key={exerciseId.toString().concat(setIndex.toString())} exerciseId={exerciseId} setIndex={setIndex} />;
-                    })}
+                    {mappedSets}
                 </ThemedView>
             </ThemedScrollView>
             <PreviousWorkout exerciseType={exercise?.type ?? "WEIGHT_BASED"} exerciseId={exerciseId} />

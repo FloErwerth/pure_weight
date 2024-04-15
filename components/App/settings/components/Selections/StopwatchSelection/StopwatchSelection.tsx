@@ -24,9 +24,11 @@ export const StopwatchSelection = () => {
         [t],
     );
 
+    const doneSetLabel = useMemo(() => t("settings_stopwatch_done_set"), [t]);
+
     return (
         <ThemedView ghost>
-            <CheckBox helpTextConfig={doneSetHelpText} label={t("settings_stopwatch_done_set")} size={26} checked={startStopwatchOnDoneSet} onChecked={handleSelectStartStopwatchOnDoneSet} />
+            <CheckBox helpTextConfig={doneSetHelpText} label={doneSetLabel} size={26} checked={startStopwatchOnDoneSet} onChecked={handleSelectStartStopwatchOnDoneSet} />
         </ThemedView>
     );
 };

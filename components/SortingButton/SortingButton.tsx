@@ -2,7 +2,7 @@ import { ThemedBottomSheetModal, useBottomSheetRef } from "../BottomSheetModal/T
 import { ThemedPressable } from "../Themed/Pressable/Pressable";
 import { Text } from "../Themed/ThemedText/Text";
 import { styles } from "./styles";
-import { ComponentProps, useCallback } from "react";
+import { ComponentProps, useCallback, useMemo } from "react";
 import { ThemedView } from "../Themed/ThemedView/View";
 import { HStack } from "../Stack/HStack/HStack";
 import { ThemedMaterialCommunityIcons } from "../Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
@@ -22,7 +22,7 @@ type SortingButtonProps = {
     }>;
 };
 
-export const SortingButton = ({ iconName, title, mappedOptions, hide = false }: SortingButtonProps) => {
+export const SortingButton = ({ iconName, title, mappedOptions: options, hide = false }: SortingButtonProps) => {
     const { t } = useTranslation();
     const { ref, openBottomSheet: open, closeBottomSheet: close } = useBottomSheetRef();
 
@@ -32,6 +32,21 @@ export const SortingButton = ({ iconName, title, mappedOptions, hide = false }: 
             selectCallback();
         },
         [close],
+    );
+
+    const mappedOptions = useMemo(
+        () =>
+            options.map(({ iconName, value, label, selectCallback }) => (
+                <ThemedPressable key={value} onPress={() => handleSelectedValue(selectCallback)} style={styles.option}>
+                    <HStack style={styles.optionStack}>
+                        <ThemedMaterialCommunityIcons name={iconName} size={20} />
+                        <Text ghost style={styles.optionText}>
+                            {label}
+                        </Text>
+                    </HStack>
+                </ThemedPressable>
+            )),
+        [handleSelectedValue, options],
     );
 
     if (hide) {
@@ -50,16 +65,7 @@ export const SortingButton = ({ iconName, title, mappedOptions, hide = false }: 
             </ThemedPressable>
             <ThemedBottomSheetModal title={t("sorting_modal_title")} ref={ref}>
                 <ThemedView ghost style={styles.optionWrapper}>
-                    {mappedOptions.map(({ iconName, value, label, selectCallback }) => (
-                        <ThemedPressable key={value} onPress={() => handleSelectedValue(selectCallback)} style={styles.option}>
-                            <HStack style={styles.optionStack}>
-                                <ThemedMaterialCommunityIcons name={iconName} size={20} />
-                                <Text ghost style={styles.optionText}>
-                                    {label}
-                                </Text>
-                            </HStack>
-                        </ThemedPressable>
-                    ))}
+                    {mappedOptions}
                 </ThemedView>
             </ThemedBottomSheetModal>
         </View>

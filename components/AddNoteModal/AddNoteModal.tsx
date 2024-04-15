@@ -1,4 +1,4 @@
-import { RefObject, useCallback, useRef } from "react";
+import { RefObject, useCallback, useMemo, useRef } from "react";
 import { Keyboard, NativeSyntheticEvent, TextInput, TextInputTextInputEventData } from "react-native";
 import { useTranslation } from "react-i18next";
 import { ThemedBottomSheetModal } from "../BottomSheetModal/ThemedBottomSheetModal";
@@ -12,6 +12,7 @@ import { getNote } from "../../store/selectors/workout/workoutSelectors";
 import { ThemedView } from "../Themed/ThemedView/View";
 import { saveNote } from "../../store/reducers/workout";
 import * as Haptics from "expo-haptics";
+import { SNAP_POINTS } from "../../constants/snapPoints";
 
 interface EditNoteModalProps {
     onRequestClose: () => void;
@@ -26,9 +27,7 @@ export const AddNoteModal = ({ reference, onRequestClose }: EditNoteModalProps) 
 
     const handleInput = useCallback(
         (e: NativeSyntheticEvent<TextInputTextInputEventData>) => {
-            const newText = e.nativeEvent.text
-                ? e.nativeEvent.previousText.concat(e.nativeEvent.text)
-                : e.nativeEvent.previousText.slice(0, -1);
+            const newText = e.nativeEvent.text ? e.nativeEvent.previousText.concat(e.nativeEvent.text) : e.nativeEvent.previousText.slice(0, -1);
             dispatch(saveNote(newText));
         },
         [dispatch],
@@ -40,8 +39,12 @@ export const AddNoteModal = ({ reference, onRequestClose }: EditNoteModalProps) 
         void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     }, [onRequestClose]);
 
+    const addNoteTitle = useMemo(() => t("edit_note_title"), [t]);
+    const addNotePlaceholder = useMemo(() => t("edit_note_placeholder"), [t]);
+    const text = useMemo(() => t("edit_note_done"), [t]);
+
     return (
-        <ThemedBottomSheetModal snapPoints={["100%"]} ref={reference} title={t("edit_note_title")}>
+        <ThemedBottomSheetModal snapPoints={SNAP_POINTS["100"]} ref={reference} title={addNoteTitle}>
             <ThemedView stretch style={styles.wrapper}>
                 <ThemedTextInput
                     ghost
@@ -52,12 +55,12 @@ export const AddNoteModal = ({ reference, onRequestClose }: EditNoteModalProps) 
                     reference={inputRef}
                     onTextInput={handleInput}
                     value={storedNote}
-                    placeholder={t("edit_note_placeholder")}
+                    placeholder={addNotePlaceholder}
                 />
             </ThemedView>
             <ThemedPressable padding round style={styles.button} onPress={handleRequestClose}>
                 <Text style={styles.buttonText} ghost>
-                    {t("edit_note_done")}
+                    {text}
                 </Text>
             </ThemedPressable>
         </ThemedBottomSheetModal>

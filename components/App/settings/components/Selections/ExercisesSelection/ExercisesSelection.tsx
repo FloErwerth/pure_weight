@@ -25,13 +25,7 @@ export const ExercisesSelection = () => {
         [t],
     );
 
-    return (
-        <CheckBox
-            label={t("settings_switch_to_next_exercise_title")}
-            helpTextConfig={helpText}
-            size={26}
-            checked={switchToNextExercise}
-            onChecked={handleSwitchToNextExercise}
-        />
-    );
+    const exercisesLabel = useMemo(() => t("settings_switch_to_next_exercise_title"), [t]);
+
+    return <CheckBox label={exercisesLabel} helpTextConfig={helpText} size={26} checked={switchToNextExercise} onChecked={handleSwitchToNextExercise} />;
 };

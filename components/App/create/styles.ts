@@ -5,6 +5,8 @@ export const styles = StyleSheet.create({
     workoutNameInput: {
         fontSize: 26,
     },
+    gap: { gap: 5 },
+    largeGap: { gap: 10 },
     swatches: { marginTop: 10 },
     padding: {
         padding: 10,
@@ -29,6 +31,10 @@ export const styles = StyleSheet.create({
         marginRight: 10,
         borderRadius: 30,
         alignSelf: "center",
+    },
+    save: { alignItems: "center", gap: 10 },
+    textSize: {
+        fontSize: 20,
     },
     text: {
         paddingLeft: 10,

@@ -18,4 +18,5 @@ export const styles = StyleSheet.create({
     box: {
         width: 40,
     },
+    text: { paddingLeft: 20, fontSize: 16, marginTop: 3 },
 });

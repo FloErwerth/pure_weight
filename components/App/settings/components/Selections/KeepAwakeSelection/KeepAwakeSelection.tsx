@@ -29,16 +29,11 @@ export const KeepAwakeSelection = () => {
         [t],
     );
 
+    const awakeLabel = useMemo(() => t("settings_keep_awake"), [t]);
+
     return (
         <ThemedView round style={selectionStyles.vStack}>
-            <CheckBox
-                ghost
-                helpTextConfig={helpText}
-                label={t("settings_keep_awake")}
-                size={26}
-                checked={awake}
-                onChecked={(awake) => handleSelectAwake(awake)}
-            />
+            <CheckBox ghost helpTextConfig={helpText} label={awakeLabel} size={26} checked={awake} onChecked={(awake) => handleSelectAwake(awake)} />
         </ThemedView>
     );
 };

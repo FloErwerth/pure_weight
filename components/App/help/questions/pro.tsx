@@ -5,6 +5,7 @@ import { ThemedView } from "../../../Themed/ThemedView/View";
 import { AnswerText } from "../../../HelpQuestionAnswer/AnswerText";
 import { NewLine } from "../NewLine";
 import { InlinePressable } from "../../../InlinePressable/InlinePressable";
+import { styles } from "../styles";
 
 export const getProQuestions = (language: Language, handleNavigateToPurchase: () => void): QuestionAnswerArray => {
     return [
@@ -13,7 +14,7 @@ export const getProQuestions = (language: Language, handleNavigateToPurchase: ()
             answer:
                 language === "de" ? (
                     <HelpAnswer>
-                        <ThemedView ghost stretch style={{ gap: 20 }}>
+                        <ThemedView ghost stretch style={styles.bigGap}>
                             <AnswerText>
                                 Ja! Du kannst alle Funktionen der PRO-Versionen für einen Monat kostenlos testen. Dies gilt aber nur für Abos. <NewLine /> Dein Bankkonto wird nur belastet, wenn du
                                 nicht bis 24 Stunden vor Ablauf der Testphase dein Abo im App Store kündigst.
@@ -22,7 +23,7 @@ export const getProQuestions = (language: Language, handleNavigateToPurchase: ()
                     </HelpAnswer>
                 ) : (
                     <HelpAnswer>
-                        <ThemedView ghost stretch style={{ gap: 20 }}>
+                        <ThemedView ghost stretch style={styles.bigGap}>
                             <AnswerText>
                                 Yes! You can try all the features of the PRO version for a month for free. This only applies to subscriptions. <NewLine />
                                 Your bank account will only be charged if you do not cancel your subscription in the App Store 24 hours before the end of the trial period.
@@ -36,7 +37,7 @@ export const getProQuestions = (language: Language, handleNavigateToPurchase: ()
             answer:
                 language === "de" ? (
                     <HelpAnswer>
-                        <ThemedView ghost stretch style={{ gap: 20 }}>
+                        <ThemedView ghost stretch style={styles.bigGap}>
                             <AnswerText>
                                 Öffne im App Store und gehe auf Profil &#8250; Abos &#8250; Pure Weight. Hier kannst du dein Abo kündigen. <NewLine />
                                 Du musst dein Abo mindestens 24 Stunden vor Ablauf des Abrechnungszeitraums kündigen, damit die Kündigung rechtzeitig wirksam wird.
@@ -45,7 +46,7 @@ export const getProQuestions = (language: Language, handleNavigateToPurchase: ()
                     </HelpAnswer>
                 ) : (
                     <HelpAnswer>
-                        <ThemedView ghost stretch style={{ gap: 20 }}>
+                        <ThemedView ghost stretch style={styles.bigGap}>
                             <AnswerText>
                                 Open the App Store and go to Profile &#8250; Subscriptions &#8250; Pure Weight. Here you can cancel your subscription. <NewLine />
                                 You must cancel your subscription at least 24 hours before the end of the billing period for the cancellation to take effect in time.
@@ -59,7 +60,7 @@ export const getProQuestions = (language: Language, handleNavigateToPurchase: ()
             answer:
                 language === "de" ? (
                     <HelpAnswer>
-                        <ThemedView ghost stretch style={{ gap: 20 }}>
+                        <ThemedView ghost stretch style={styles.bigGap}>
                             <AnswerText>
                                 Bitte navigiere auf die <InlinePressable handlePress={handleNavigateToPurchase}>Kaufseite</InlinePressable> und drücke dort auf &quot;Wiederherstellen&quot;.
                                 <NewLine />
@@ -69,7 +70,7 @@ export const getProQuestions = (language: Language, handleNavigateToPurchase: ()
                     </HelpAnswer>
                 ) : (
                     <HelpAnswer>
-                        <ThemedView ghost stretch style={{ gap: 20 }}>
+                        <ThemedView ghost stretch style={styles.bigGap}>
                             <AnswerText>
                                 Please navigate to the <InlinePressable handlePress={handleNavigateToPurchase}>purchase page</InlinePressable> and press &quot;Restore&quot; there.
                                 <NewLine />
@@ -84,7 +85,7 @@ export const getProQuestions = (language: Language, handleNavigateToPurchase: ()
             answer:
                 language === "de" ? (
                     <HelpAnswer>
-                        <ThemedView ghost stretch style={{ gap: 20 }}>
+                        <ThemedView ghost stretch style={styles.bigGap}>
                             <AnswerText>
                                 Ja! All deine Käufe sind im App Store gespeichert. Wechselst Du dein Gerät, kannst Du auf die{" "}
                                 <InlinePressable handlePress={handleNavigateToPurchase}>Kaufseite</InlinePressable> gehen und dort auf &quot;Wiederherstellen&quot; drücken. Nun werden deine Käufe über
@@ -94,7 +95,7 @@ export const getProQuestions = (language: Language, handleNavigateToPurchase: ()
                     </HelpAnswer>
                 ) : (
                     <HelpAnswer>
-                        <ThemedView ghost stretch style={{ gap: 20 }}>
+                        <ThemedView ghost stretch style={styles.bigGap}>
                             <AnswerText>
                                 Yes! All your purchases are stored in the App Store. If you change your device, you can go to the{" "}
                                 <InlinePressable handlePress={handleNavigateToPurchase}>purchase page</InlinePressable> and press &quot;Restore&quot; there. Now your purchases will be checked via the

@@ -18,12 +18,8 @@ interface HistoryDisplayProps {
 }
 
 const useHistoryEntries = (type: WorkoutIdType | MeasurementIdType, id: WorkoutId | MeasurementId) => {
-    const workoutHistoryEntries = useAppSelector((state: AppState) =>
-        getNumberWorkoutHistoryEntries(state, id as WorkoutId),
-    );
-    const measurementHistoryEntries = useAppSelector((state: AppState) =>
-        getNumberMeasurementEntries(state, id as MeasurementId),
-    );
+    const workoutHistoryEntries = useAppSelector((state: AppState) => getNumberWorkoutHistoryEntries(state, id as WorkoutId));
+    const measurementHistoryEntries = useAppSelector((state: AppState) => getNumberMeasurementEntries(state, id as MeasurementId));
     return type === "workout" ? workoutHistoryEntries : measurementHistoryEntries;
 };
 
@@ -34,9 +30,7 @@ const useHistoryText = (numberHistoryEntries?: number, type: WorkoutIdType | Mea
     } else if (numberHistoryEntries === 1) {
         return type === "workout" ? t("workout_history_single") : t("measurement_history_single");
     } else {
-        return type === "workout"
-            ? `${numberHistoryEntries} ${t("workout_history_plural")}`
-            : `${numberHistoryEntries} ${t("measurement_history_plural")}`;
+        return type === "workout" ? `${numberHistoryEntries} ${t("workout_history_plural")}` : `${numberHistoryEntries} ${t("measurement_history_plural")}`;
     }
 };
 
@@ -45,7 +39,7 @@ export const HistoryDisplay = ({ type, id, handleNavigateToHistory }: HistoryDis
     const historyText = useHistoryText(numberOfEntries, type);
     return (
         <ThemedPressable style={styles.wrapper} secondary onPress={handleNavigateToHistory}>
-            <HStack style={{ justifyContent: "space-between", alignItems: "center" }} ghost>
+            <HStack style={styles.hStack} ghost>
                 <Text ghost style={styles.text}>
                     {historyText}
                 </Text>

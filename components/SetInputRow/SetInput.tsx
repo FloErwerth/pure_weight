@@ -4,18 +4,12 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useCallback, useMemo } from "react";
 import { HStack } from "../Stack/HStack/HStack";
 import { Text } from "../Themed/ThemedText/Text";
-import { borderRadius } from "../../theme/border";
 import { ThemedTextInput } from "../Themed/ThemedTextInput/ThemedTextInput";
 import { useTheme } from "../../theme/context";
 import { AppState, useAppDispatch, useAppSelector } from "../../store";
 import * as Haptics from "expo-haptics";
 import { handleMutateSet, markSetAsDone, setIsActiveSet } from "../../store/reducers/workout";
-import {
-    getExerciseById,
-    getHasWeightInTimeBasedExercise,
-    getIsActiveSet,
-    getSetData,
-} from "../../store/selectors/workout/workoutSelectors";
+import { getExerciseById, getHasWeightInTimeBasedExercise, getIsActiveSet, getSetData } from "../../store/selectors/workout/workoutSelectors";
 import { ThemedPressable } from "../Themed/Pressable/Pressable";
 import { ExerciseId } from "../../store/reducers/workout/types";
 import { getUpdatePrefilledWorkoutValues } from "../../store/selectors/settings/settingsSelectors";
@@ -29,27 +23,14 @@ interface SetInputRowProps {
 }
 
 export const SetInput = ({ setIndex, exerciseId }: SetInputRowProps) => {
-    const {
-        primaryColor,
-        secondaryColor,
-        mainColor,
-        secondaryBackgroundColor,
-        componentBackgroundColor,
-        inputFieldBackgroundColor,
-        textDisabled,
-    } = useTheme();
+    const { primaryColor, secondaryColor, mainColor, secondaryBackgroundColor, componentBackgroundColor, inputFieldBackgroundColor, textDisabled } = useTheme();
 
-    const hasWeight = useAppSelector((state: AppState) =>
-        getHasWeightInTimeBasedExercise(state, exerciseId),
-    );
+    const hasWeight = useAppSelector((state: AppState) => getHasWeightInTimeBasedExercise(state, exerciseId));
     const data = useAppSelector((state: AppState) => getSetData(state, setIndex, exerciseId));
 
     const exercise = useAppSelector((state: AppState) => getExerciseById(state, exerciseId));
-    const { isLatestSet, weight, reps, isEditable, isConfirmed, durationSeconds, durationMinutes } =
-        data ?? {};
-    const isActiveSet = useAppSelector((state: AppState) =>
-        getIsActiveSet(state, exerciseId, setIndex),
-    );
+    const { isLatestSet, weight, reps, isEditable, isConfirmed, durationSeconds, durationMinutes } = data ?? {};
+    const isActiveSet = useAppSelector((state: AppState) => getIsActiveSet(state, exerciseId, setIndex));
     const wantsUpdatePrefilledValues = useAppSelector(getUpdatePrefilledWorkoutValues);
     const dispatch = useAppDispatch();
 
@@ -166,15 +147,9 @@ export const SetInput = ({ setIndex, exerciseId }: SetInputRowProps) => {
     }, [isConfirmed, isEditable, mainColor, secondaryColor, textDisabled]);
 
     const textNumberStyles = useMemo(() => [{ color: computedColor }], [computedColor]);
-    const wrapperStyle = useMemo(
-        () => ({ backgroundColor: computedTextfieldBackgroundColor, height: 45 }),
-        [computedTextfieldBackgroundColor],
-    );
+    const wrapperStyle = useMemo(() => ({ backgroundColor: computedTextfieldBackgroundColor, height: 45 }), [computedTextfieldBackgroundColor]);
     const textStyle = useMemo(() => ({ color: computedColor }), [computedColor]);
-    const textInputStyles = useMemo(
-        () => [styles.textInput, wrapperStyle, textStyle],
-        [wrapperStyle, textStyle],
-    );
+    const textInputStyles = useMemo(() => [styles.textInput, wrapperStyle, textStyle], [wrapperStyle, textStyle]);
 
     const buttonStyles = useMemo(
         () =>
@@ -185,14 +160,8 @@ export const SetInput = ({ setIndex, exerciseId }: SetInputRowProps) => {
             }) as const,
         [computedButtonBackgroundColor],
     );
-    const iconStyle = useMemo(
-        () => ({ color: isConfirmed ? "green" : isActiveSet ? primaryColor : textDisabled }),
-        [isConfirmed, isActiveSet, primaryColor, textDisabled],
-    );
-    const playStyle = useMemo(
-        () => ({ color: isConfirmed || isActiveSet || isLatestSet ? mainColor : textDisabled }),
-        [isConfirmed, isActiveSet, isLatestSet, mainColor, textDisabled],
-    );
+    const iconStyle = useMemo(() => ({ color: isConfirmed ? "green" : isActiveSet ? primaryColor : textDisabled }), [isConfirmed, isActiveSet, primaryColor, textDisabled]);
+    const playStyle = useMemo(() => ({ color: isConfirmed || isActiveSet || isLatestSet ? mainColor : textDisabled }), [isConfirmed, isActiveSet, isLatestSet, mainColor, textDisabled]);
 
     const confirmIcon = useMemo(() => {
         if (isActiveSet) {
@@ -207,10 +176,11 @@ export const SetInput = ({ setIndex, exerciseId }: SetInputRowProps) => {
         return "check";
     }, [isActiveSet, isConfirmed, isLatestSet]);
 
+    const wrapperStyles = useMemo(() => [styles.vStack, activeStackStyles], [activeStackStyles]);
+
     return (
-        <HStack style={[styles.vStack, activeStackStyles]}>
-            <View
-                style={{ borderRadius, flex: 0.2, justifyContent: "center", alignItems: "center" }}>
+        <HStack style={wrapperStyles}>
+            <View style={styles.activeSet}>
                 {isConfirmed && !isActiveSet ? (
                     <MaterialCommunityIcons size={24} style={iconStyle} name="check-bold" />
                 ) : (
@@ -279,12 +249,7 @@ export const SetInput = ({ setIndex, exerciseId }: SetInputRowProps) => {
                     </HStack>
                 )}
                 <ThemedPressable center style={buttonStyles} round onPress={handleSetDone}>
-                    <ThemedMaterialCommunityIcons
-                        ghost
-                        size={24}
-                        style={playStyle}
-                        name={confirmIcon}
-                    />
+                    <ThemedMaterialCommunityIcons ghost size={24} style={playStyle} name={confirmIcon} />
                 </ThemedPressable>
             </HStack>
         </HStack>

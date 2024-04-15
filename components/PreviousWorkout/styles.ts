@@ -55,4 +55,6 @@ export const styles = StyleSheet.create({
         paddingVertical: 5,
         marginVertical: 5,
     },
+    modalWrapper: { margin: 20 },
+    modalText: { fontSize: 20 },
 });

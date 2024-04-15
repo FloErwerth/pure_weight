@@ -1,7 +1,7 @@
 import { setEditedWorkout } from "../../../store/reducers/workout";
 import { styles } from "../index/styles";
 import { Text } from "../../Themed/ThemedText/Text";
-import React, { useCallback } from "react";
+import React, { useCallback, useMemo } from "react";
 import { AppState, useAppDispatch, useAppSelector } from "../../../store";
 import { getHasHistory, getIsOngoingWorkout, getLatestWorkoutDateDisplay, getOverallTrainingTrend, getWorkoutByIndex } from "../../../store/selectors/workout/workoutSelectors";
 import { useNavigate } from "../../../hooks/navigate";
@@ -39,7 +39,8 @@ export const RenderedWorkout = ({ workoutId }: RenderedWorkoutProps) => {
     }, [dispatch, workoutId, navigate]);
 
     const pausedTrainingHint = isOngoingWorkout ? { backgroundColor: secondaryBackgroundColor, ...styles.pausedTrainingHint } : null;
-
+    const hintText = useMemo(() => t("workout_paused_hint"), [t]);
+    const notDoneText = useMemo(() => t("workout_no_done_workouts_hint"), [t]);
     return (
         <ThemedView padding ghost style={styles.outerTrainWrapper}>
             <View>
@@ -54,14 +55,14 @@ export const RenderedWorkout = ({ workoutId }: RenderedWorkoutProps) => {
             ) : (
                 <ThemedView ghost>
                     <Text style={styles.noWorkoutsHint} italic>
-                        {t("workout_no_done_workouts_hint")}
+                        {notDoneText}
                     </Text>
                 </ThemedView>
             )}
             {isOngoingWorkout && (
                 <TouchableHighlight style={pausedTrainingHint}>
                     <Text style={styles.ongoingWorkoutHint} ghost>
-                        {t("workout_paused_hint")}
+                        {hintText}
                     </Text>
                 </TouchableHighlight>
             )}

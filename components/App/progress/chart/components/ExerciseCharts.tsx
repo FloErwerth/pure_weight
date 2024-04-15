@@ -221,6 +221,26 @@ export const ExerciseChart = ({ exerciseName, exerciseType, data }: ExerciseChar
         [chartTypeMap, closeSelectionModal],
     );
 
+    const getYLabel = useCallback(() => "", []);
+    const modalTitle = useMemo(() => t("progress_modal_title"), [t]);
+    const mappedModalContent = useMemo(
+        () =>
+            mappedChartProps.map(({ onPress, title, chartType }) => (
+                <HStack ghost key={`${chartType}${title}`}>
+                    <ThemedPressable stretch round background style={styles.chartTypeSelectionButton} padding onPress={onPress}>
+                        <Text center ghost style={styles.chartTypeSelectonTitle}>
+                            {t(chartTypeMap[chartType].title)}
+                        </Text>
+                    </ThemedPressable>
+                    <ThemedPressable onPress={openHelp} padding ghost>
+                        <ThemedMaterialCommunityIcons ghost name="help-circle-outline" size={26} />
+                    </ThemedPressable>
+                </HStack>
+            )),
+        [chartTypeMap, mappedChartProps, openHelp, t],
+    );
+    const answerText = useMemo(() => t(chartTypeMap[chartType].hint), [chartType, chartTypeMap, t]);
+
     return (
         <ThemedView style={styles.wrapper}>
             <HStack ghost style={styles.chartHeader}>
@@ -233,26 +253,15 @@ export const ExerciseChart = ({ exerciseName, exerciseType, data }: ExerciseChar
                     </Text>
                 </ThemedPressable>
             </HStack>
-            <Chart lineChartStyles={styles.lineChart} getYLabel={() => ""} getXLabel={getXLabel} getDotContent={getDotContent} data={lineChartData} />
-            <ThemedBottomSheetModal title={t("progress_modal_title")} ref={ref}>
+            <Chart lineChartStyles={styles.lineChart} getYLabel={getYLabel} getXLabel={getXLabel} getDotContent={getDotContent} data={lineChartData} />
+            <ThemedBottomSheetModal title={modalTitle} ref={ref}>
                 <ThemedView ghost style={styles.selectionModal}>
-                    {mappedChartProps.map(({ onPress, title, chartType }) => (
-                        <HStack ghost key={`${chartType}${title}`}>
-                            <ThemedPressable stretch round background style={styles.chartTypeSelectionButton} padding onPress={onPress}>
-                                <Text center ghost style={styles.chartTypeSelectonTitle}>
-                                    {t(chartTypeMap[chartType].title)}
-                                </Text>
-                            </ThemedPressable>
-                            <ThemedPressable onPress={openHelp} padding ghost>
-                                <ThemedMaterialCommunityIcons ghost name="help-circle-outline" size={26} />
-                            </ThemedPressable>
-                        </HStack>
-                    ))}
+                    {mappedModalContent}
                 </ThemedView>
             </ThemedBottomSheetModal>
             <ThemedBottomSheetModal ref={helpRef} title={t(chartTypeMap[chartType].title)}>
                 <PageContent ghost paddingTop={20}>
-                    <AnswerText>{t(chartTypeMap[chartType].hint)}</AnswerText>
+                    <AnswerText>{answerText}</AnswerText>
                 </PageContent>
             </ThemedBottomSheetModal>
         </ThemedView>
@@ -262,15 +271,16 @@ export const ExerciseChart = ({ exerciseName, exerciseType, data }: ExerciseChar
 export default function ExerciseCharts() {
     const trainingDayData = useAppSelector(getDoneWorkoutData);
 
+    const mappedTrainingsData = useMemo(
+        () => trainingDayData?.map(({ exerciseName, type, data }, index) => <ExerciseChart index={index} key={Math.random() * 100} exerciseName={exerciseName} exerciseType={type} data={data} />),
+        [trainingDayData],
+    );
+
     const navigate = useNavigate();
     if (trainingDayData === undefined) {
         navigate("workouts");
         return null;
     }
 
-    return (
-        <ThemedScrollView ghost>
-            {trainingDayData?.map(({ exerciseName, type, data }, index) => <ExerciseChart index={index} key={Math.random() * 100} exerciseName={exerciseName} exerciseType={type} data={data} />)}
-        </ThemedScrollView>
-    );
+    return <ThemedScrollView ghost>{mappedTrainingsData}</ThemedScrollView>;
 }

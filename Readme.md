@@ -90,7 +90,7 @@ Build Number 38
 - Handling lots of weight in overall stats
 
 `0.8.4`:
-- Added time picker wheel
+- Added time pickerItem wheel
 - Resolve issues with metadata display
 - Add translations to profile texts
 

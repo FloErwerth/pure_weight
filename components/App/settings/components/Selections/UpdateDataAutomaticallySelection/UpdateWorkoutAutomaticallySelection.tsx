@@ -24,5 +24,7 @@ export const UpdateWorkoutAutomaticallySelection = () => {
         [t],
     );
 
-    return <CheckBox label={t("settings_update_workout_automatically_title")} helpTextConfig={helpText} checked={updateAutomatically} onChecked={handleSwitchUpdates} />;
+    const title = useMemo(() => t("settings_update_workout_automatically_title"), [t]);
+
+    return <CheckBox label={title} helpTextConfig={helpText} checked={updateAutomatically} onChecked={handleSwitchUpdates} />;
 };

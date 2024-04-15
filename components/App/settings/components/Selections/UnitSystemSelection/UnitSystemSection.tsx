@@ -9,10 +9,7 @@ import { UnitSystem } from "../../../../../../store/reducers/settings/types";
 import { ThemedView } from "../../../../../Themed/ThemedView/View";
 import { selectionStyles } from "../../selectionStyles";
 import { SettingsNavigator } from "../../../SettingsNavigator/SettingsNavigator";
-import {
-    ThemedBottomSheetModal,
-    useBottomSheetRef,
-} from "../../../../../BottomSheetModal/ThemedBottomSheetModal";
+import { ThemedBottomSheetModal, useBottomSheetRef } from "../../../../../BottomSheetModal/ThemedBottomSheetModal";
 import { PageContent } from "../../../../../PageContent/PageContent";
 
 const kgIcon: Icon = {
@@ -45,27 +42,18 @@ export const UnitSystemSection = () => {
         [t],
     );
 
+    const unitSystemTitle = useMemo(() => t("settings_unit_system_title"), [t]);
+    const handleSelectMetric = useCallback(() => handleSelectWeightUnit("metric"), [handleSelectWeightUnit]);
+    const handleSelectImperial = useCallback(() => handleSelectWeightUnit("imperial"), [handleSelectWeightUnit]);
+
     return (
         <>
-            <SettingsNavigator
-                onPress={openBottomSheet}
-                title={t("settings_unit_system_title")}
-                content={unitSystemContent}></SettingsNavigator>
-            <ThemedBottomSheetModal title={t("settings_unit_system_title")} ref={ref}>
+            <SettingsNavigator onPress={openBottomSheet} title={unitSystemTitle} content={unitSystemContent}></SettingsNavigator>
+            <ThemedBottomSheetModal title={unitSystemTitle} ref={ref}>
                 <PageContent ghost paddingTop={20}>
                     <ThemedView ghost style={selectionStyles.vStack}>
-                        <SelectableSetting
-                            prependedExtraContent={kgIcon}
-                            selected={unitSystem === "metric"}
-                            onSelect={() => handleSelectWeightUnit("metric")}
-                            titleKey="unit_system_metric"
-                        />
-                        <SelectableSetting
-                            prependedExtraContent={poundIcon}
-                            selected={unitSystem === "imperial"}
-                            onSelect={() => handleSelectWeightUnit("imperial")}
-                            titleKey="unit_system_imperial"
-                        />
+                        <SelectableSetting prependedExtraContent={kgIcon} selected={unitSystem === "metric"} onSelect={handleSelectMetric} titleKey="unit_system_metric" />
+                        <SelectableSetting prependedExtraContent={poundIcon} selected={unitSystem === "imperial"} onSelect={handleSelectImperial} titleKey="unit_system_imperial" />
                     </ThemedView>
                 </PageContent>
             </ThemedBottomSheetModal>

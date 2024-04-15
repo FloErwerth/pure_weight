@@ -2,6 +2,7 @@ import { ThemedView } from "../Themed/ThemedView/View";
 import { Text } from "../Themed/ThemedText/Text";
 import { PropsWithChildren } from "react";
 import { NewLine } from "../App/help/NewLine";
+import { styles } from "./styles";
 
 export const Paragraph = ({ children }: PropsWithChildren) => {
     return (
@@ -15,7 +16,7 @@ export const Paragraph = ({ children }: PropsWithChildren) => {
 
 export const Li = ({ children }: PropsWithChildren) => {
     return (
-        <ThemedView ghost style={{ marginBottom: 10 }}>
+        <ThemedView ghost style={styles.marginBottom}>
             <Text ghost>
                 {"\u2022"} {children}
             </Text>
@@ -25,8 +26,8 @@ export const Li = ({ children }: PropsWithChildren) => {
 
 export const HTwo = ({ children }: PropsWithChildren) => {
     return (
-        <ThemedView ghost style={{ marginVertical: 20 }}>
-            <Text ghost style={{ fontSize: 40 }}>
+        <ThemedView ghost style={styles.marginVerticalLarge}>
+            <Text ghost style={styles.title}>
                 {children}
             </Text>
         </ThemedView>
@@ -35,8 +36,8 @@ export const HTwo = ({ children }: PropsWithChildren) => {
 
 export const HThree = ({ children }: PropsWithChildren) => {
     return (
-        <ThemedView ghost style={{ marginVertical: 10 }}>
-            <Text ghost style={{ fontSize: 28 }}>
+        <ThemedView ghost style={styles.marginVertical}>
+            <Text ghost style={styles.text}>
                 {children}
             </Text>
         </ThemedView>

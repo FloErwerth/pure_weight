@@ -64,6 +64,8 @@ export const SiteNavigationButtons = ({
         handleConfirm?.();
     }, [handleConfirm, handleConfirmIcon]);
 
+    const animatedStyle = useMemo(() => ({ opacity: handleConfirmOpacity !== undefined ? handleConfirmOpacity : 1 }), [handleConfirmOpacity]);
+
     return (
         <HStack background style={styles.headerWrapper}>
             <HStack background style={titleWrapperStyles}>
@@ -84,7 +86,7 @@ export const SiteNavigationButtons = ({
                         </ThemedPressable>
                     </HStack>
                 )}
-                <Animated.View style={{ opacity: handleConfirmOpacity !== undefined ? handleConfirmOpacity : 1 }}>
+                <Animated.View style={animatedStyle}>
                     {handleConfirm && (
                         <Pressable ref={confirmButtonRef} disabled={confirmButtonDisabled} onPress={handleConfirmButton}>
                             <ThemedMaterialCommunityIcons ghost disabled={confirmButtonDisabled} size={handleConfirmIcon?.size} name={handleConfirmIcon?.name} />

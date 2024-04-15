@@ -1,5 +1,5 @@
 import { useAppSelector } from "../../store";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Animated, Pressable, View } from "react-native";
 import { HStack } from "../Stack/HStack/HStack";
 import { styles } from "./styles";
@@ -13,6 +13,7 @@ import { ThemedView } from "../Themed/ThemedView/View";
 import { getPauseTime } from "../../store/selectors/workout/workoutSelectors";
 import { useStopwatch } from "../../hooks/useStopwatch";
 import { ThemedBottomSheetModal, useBottomSheetRef } from "../BottomSheetModal/ThemedBottomSheetModal";
+import { SNAP_POINTS } from "../../constants/snapPoints";
 
 export const StopwatchPopover = () => {
     const pauseTime = useAppSelector(getPauseTime);
@@ -92,10 +93,27 @@ export const StopwatchPopover = () => {
         }
     }, [showPopover, opacity, iconOpacity, timerStarted]);
 
+    const hidePopover = useCallback(() => () => setShowPopover(false), []);
+
+    const popoverStyle = useMemo(
+        () =>
+            ({
+                opacity: iconOpacity,
+                position: "absolute",
+                left: 10,
+                top: 7,
+                alignItems: "center",
+                width: "100%",
+            }) as const,
+        [iconOpacity],
+    );
+
+    const displayStyle = useMemo(() => ({ opacity, width: 100 }) as const, [opacity]);
+
     return (
         <>
             <ThemedView ghost>
-                <ThemedBottomSheetModal snapPoints={["25%"]} onRequestClose={() => setShowPopover(false)} ref={stopwatchRef}>
+                <ThemedBottomSheetModal snapPoints={SNAP_POINTS["25"]} onRequestClose={hidePopover} ref={stopwatchRef}>
                     <HStack ghost style={styles.hStack}>
                         <ThemedPressable style={styles.timeButton} disabled={remainingTime <= 15000} ghost center onPress={rewind15Seconds}>
                             <ThemedMaterialCommunityIcons disabled={remainingTime <= 15000} ghost name="rewind-15" size={40} />
@@ -116,19 +134,10 @@ export const StopwatchPopover = () => {
                 </ThemedBottomSheetModal>
 
                 <ThemedPressable padding round secondary reference={buttonRef} onPress={togglePopover}>
-                    <AnimatedView
-                        ghost
-                        style={{
-                            opacity: iconOpacity,
-                            position: "absolute",
-                            left: 10,
-                            top: 7,
-                            alignItems: "center",
-                            width: "100%",
-                        }}>
+                    <AnimatedView ghost style={popoverStyle}>
                         <ThemedMaterialCommunityIcons disabled={remainingTime === -404} secondary name="timer-outline" size={35} />
                     </AnimatedView>
-                    <AnimatedView secondary style={{ opacity, width: 100 }}>
+                    <AnimatedView secondary style={displayStyle}>
                         <StopwatchDisplay textSize={25} remainingTime={remainingTime} />
                     </AnimatedView>
                 </ThemedPressable>

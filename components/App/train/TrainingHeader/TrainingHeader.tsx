@@ -12,24 +12,19 @@ interface TrainingHeaderProps {
     showWeight?: boolean;
 }
 
-export const TrainingHeader = ({
-    showPlaceholderForDoneButton = true,
-    exerciseType = "WEIGHT_BASED",
-    showWeight,
-}: TrainingHeaderProps) => {
+export const TrainingHeader = ({ showPlaceholderForDoneButton = true, exerciseType = "WEIGHT_BASED", showWeight }: TrainingHeaderProps) => {
     const { t } = useTranslation();
     const weightUnit = useAppSelector(getWeightUnit);
 
     const leftLabel = exerciseType === "WEIGHT_BASED" ? weightUnit : t("duration");
-    const rightLabel =
-        exerciseType === "WEIGHT_BASED" ? t("training_header_reps") : showWeight ? weightUnit : undefined;
+    const rightLabel = exerciseType === "WEIGHT_BASED" ? t("training_header_reps") : showWeight ? weightUnit : undefined;
 
     return (
         <HStack style={styles.vStack}>
             <Text placeholder style={styles.number}>
                 #
             </Text>
-            <HStack stretch ghost center style={{ gap: 15 }}>
+            <HStack stretch ghost center style={styles.gap}>
                 <Text ghost style={styles.input}>
                     {leftLabel}
                 </Text>

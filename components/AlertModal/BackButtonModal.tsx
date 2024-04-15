@@ -12,6 +12,7 @@ import { useAppSelector } from "../../store";
 import { getLanguage } from "../../store/selectors/settings/settingsSelectors";
 import { View } from "react-native";
 import { AnswerText } from "../HelpQuestionAnswer/AnswerText";
+import { styles } from "./styles";
 
 interface BackButtonModal {
     onConfirm: () => void;
@@ -31,9 +32,7 @@ const useHelpContent = (): Record<"save" | "pause" | "cancel", { title: string; 
         if (language === "de") {
             return (
                 <View>
-                    <AnswerText>
-                        Wenn Du dein Workout speicherst wird der aktuelle Fortschritt gespeichert und ausgewertet.
-                    </AnswerText>
+                    <AnswerText>Wenn Du dein Workout speicherst wird der aktuelle Fortschritt gespeichert und ausgewertet.</AnswerText>
                     <AnswerText>Achtung: Dein Workout kann später nicht fortgesetzt werden.</AnswerText>
                 </View>
             );
@@ -143,11 +142,11 @@ export const BackButtonModal = ({ title, reference, onPause, onCancel, onConfirm
     return (
         <ThemedBottomSheetModal ref={reference} title={title}>
             <PageContent paddingTop={20} ghost>
-                <HStack style={{ gap: 10 }} ghost>
+                <HStack style={styles.gap} ghost>
                     <ThemedPressable stretch secondary padding round onPress={handleConfirmButton}>
-                        <HStack ghost style={{ gap: 10 }}>
+                        <HStack ghost style={styles.gap}>
                             <ThemedMaterialCommunityIcons ghost name="content-save-outline" size={26} />
-                            <Text style={{ fontSize: 20, alignSelf: "center" }} center ghost>
+                            <Text style={styles.buttonText} center ghost>
                                 {saveText}
                             </Text>
                         </HStack>
@@ -157,30 +156,30 @@ export const BackButtonModal = ({ title, reference, onPause, onCancel, onConfirm
                     </ThemedPressable>
                 </HStack>
                 {!workoutDone && (
-                    <HStack style={{ gap: 10 }} ghost>
+                    <HStack style={styles.gap} ghost>
                         <ThemedPressable stretch secondary padding round onPress={handlePauseButton}>
-                            <HStack ghost style={{ gap: 10 }}>
+                            <HStack ghost style={styles.gap}>
                                 <ThemedMaterialCommunityIcons ghost name="pause" size={26} />
-                                <Text style={{ fontSize: 20, alignSelf: "center" }} center ghost>
+                                <Text style={styles.buttonText} center ghost>
                                     {pauseText}
                                 </Text>
                             </HStack>
                         </ThemedPressable>
-                        <ThemedPressable onPress={handleOpenPause} ghost style={{ justifyContent: "center" }}>
+                        <ThemedPressable onPress={handleOpenPause} ghost style={styles.pressableCenter}>
                             <ThemedMaterialCommunityIcons ghost name="help-circle-outline" size={30} />
                         </ThemedPressable>
                     </HStack>
                 )}
-                <HStack style={{ gap: 10 }} ghost>
+                <HStack style={styles.gap} ghost>
                     <ThemedPressable stretch secondary padding round onPress={handleCancelButton}>
-                        <HStack ghost style={{ gap: 10 }}>
+                        <HStack ghost style={styles.gap}>
                             <ThemedMaterialCommunityIcons ghost name="delete" size={26} />
-                            <Text style={{ fontSize: 20, alignSelf: "center" }} center ghost>
+                            <Text style={styles.buttonText} center ghost>
                                 {cancelText}
                             </Text>
                         </HStack>
                     </ThemedPressable>
-                    <ThemedPressable onPress={handleOpenCancelHelp} ghost style={{ justifyContent: "center" }}>
+                    <ThemedPressable onPress={handleOpenCancelHelp} ghost style={styles.pressableCenter}>
                         <ThemedMaterialCommunityIcons ghost name="help-circle-outline" size={30} />
                     </ThemedPressable>
                 </HStack>

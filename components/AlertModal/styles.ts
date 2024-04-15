@@ -28,4 +28,7 @@ export const styles = StyleSheet.create({
     text: {
         textAlign: "center",
     },
+    buttonText: { fontSize: 20, alignSelf: "center" },
+    gap: { gap: 10 },
+    pressableCenter: { justifyContent: "center" },
 });

@@ -12,6 +12,7 @@ import { useGetRestorePurchase } from "../../hooks/purchases";
 import { useNavigate } from "../../hooks/navigate";
 import { AGB } from "../AGB/AGB";
 import { Datenschutz } from "../Datenschutz/Datenschutz";
+import { styles } from "./styles";
 
 type FooterProps = {
     showRestore?: boolean;
@@ -68,7 +69,7 @@ export const Footer = ({ showRestore }: FooterProps) => {
 
     return (
         <>
-            <HStack ghost style={{ justifyContent: "space-evenly", marginBottom: 10 }}>
+            <HStack ghost style={styles.wrapper}>
                 <ThemedPressable onPress={handleOpenContact} ghost>
                     <Text textSecondary ghost>
                         {t("help")}
@@ -106,18 +107,18 @@ export const Footer = ({ showRestore }: FooterProps) => {
             <ThemedBottomSheetModal title={t("purchase_restore_title")} ref={restoreRef}>
                 <PageContent ghost paddingTop={20}>
                     <ThemedView round padding>
-                        <Text center style={{ fontSize: 22 }}>
+                        <Text center style={styles.restoreText}>
                             {restoreText}
                         </Text>
                     </ThemedView>
                     {restoreResult === "FAILED" && (
-                        <ThemedPressable onPress={handleOpenContact} ghost padding style={{ marginTop: 15 }}>
+                        <ThemedPressable onPress={handleOpenContact} ghost padding style={styles.margin}>
                             <Text ghost center>
                                 {t("purchase_restore_contact")}
                             </Text>
                         </ThemedPressable>
                     )}
-                    {showIndicator && <ActivityIndicator size="large" style={{ marginTop: 20 }} />}
+                    {showIndicator && <ActivityIndicator size="large" style={styles.marginLarge} />}
                 </PageContent>
             </ThemedBottomSheetModal>
             <AGB reference={agbRef} />

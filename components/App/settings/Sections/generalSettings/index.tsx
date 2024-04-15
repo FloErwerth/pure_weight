@@ -23,11 +23,13 @@ export const GeneralSettings = () => {
         [t],
     );
 
+    const ratingTitle = useMemo(() => t("rating"), [t]);
+
     return (
         <>
             <LanguageSelection />
             <UnitSystemSection />
-            <SettingsNavigator title={t("rating")} content={ratingContent} onPress={openReview} />
+            <SettingsNavigator title={ratingTitle} content={ratingContent} onPress={openReview} />
         </>
     );
 };

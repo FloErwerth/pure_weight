@@ -40,25 +40,19 @@ export const LanguageSelection = () => {
         [dispatch, i18n],
     );
 
+    const languageNavigatorTitle = useMemo(() => t("settings_language"), [t]);
+    const modalTitle = useMemo(() => t("settings_language"), [t]);
+    const handleSelectGerman = useCallback(() => handleSelectLanguage("de"), [handleSelectLanguage]);
+    const handleSelectEnglish = useCallback(() => handleSelectLanguage("en"), [handleSelectLanguage]);
     return (
         <>
             <ThemedView round style={selectionStyles.vStack}>
-                <SettingsNavigator title={t("settings_language")} onPress={openBottomSheet} />
+                <SettingsNavigator title={languageNavigatorTitle} onPress={openBottomSheet} />
             </ThemedView>
-            <ThemedBottomSheetModal title={t("settings_language")} ref={ref}>
+            <ThemedBottomSheetModal title={modalTitle} ref={ref}>
                 <PageContent ghost paddingTop={20}>
-                    <SelectableSetting
-                        prependedExtraContent={germanSvg}
-                        selected={isGerman}
-                        onSelect={() => handleSelectLanguage("de")}
-                        titleKey="settings_language_german"
-                    />
-                    <SelectableSetting
-                        prependedExtraContent={americanSvg}
-                        selected={!isGerman}
-                        onSelect={() => handleSelectLanguage("en")}
-                        titleKey="settings_language_english"
-                    />
+                    <SelectableSetting prependedExtraContent={germanSvg} selected={isGerman} onSelect={handleSelectGerman} titleKey="settings_language_german" />
+                    <SelectableSetting prependedExtraContent={americanSvg} selected={!isGerman} onSelect={handleSelectEnglish} titleKey="settings_language_english" />
                 </PageContent>
             </ThemedBottomSheetModal>
         </>

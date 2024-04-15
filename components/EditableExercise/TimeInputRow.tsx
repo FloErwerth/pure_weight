@@ -1,5 +1,6 @@
 import { useCallback, useMemo } from "react";
-import { styles } from "./styles";
+import { styles, timeInputStyles } from "./styles";
+
 import { HStack } from "../Stack/HStack/HStack";
 import { ThemedView } from "../Themed/ThemedView/View";
 import { TimeInputRowProps } from "./types";
@@ -10,22 +11,15 @@ import { getErrorByKey } from "../../store/selectors/errors/errorSelectors";
 import { ErrorText } from "../ErrorText/ErrorText";
 import { HelpText } from "../HelpText/HelpText";
 import { Picker } from "@react-native-picker/picker";
-import {
-    ThemedBottomSheetModal,
-    useBottomSheetRef,
-} from "../BottomSheetModal/ThemedBottomSheetModal";
+import { ThemedBottomSheetModal, useBottomSheetRef } from "../BottomSheetModal/ThemedBottomSheetModal";
 import { PageContent } from "../PageContent/PageContent";
 import { ThemedPressable } from "../Themed/Pressable/Pressable";
 
-const numberSteps5 = Array.from({ length: 13 }, (_, i) => (i * 5).toString().padStart(2, "0")).map(
-    (i) => {
-        const label = i === "60" ? "59" : i;
-        return <Picker.Item color="white" key={`minutes-${i}`} label={label} value={label} />;
-    },
-);
-const numberArray = Array.from({ length: 60 }, (_, i) => i.toString().padStart(2, "0")).map((i) => (
-    <Picker.Item color="white" key={`seconds-${i}`} label={i} value={i} />
-));
+const numberSteps5 = Array.from({ length: 13 }, (_, i) => (i * 5).toString().padStart(2, "0")).map((i) => {
+    const label = i === "60" ? "59" : i;
+    return <Picker.Item color="white" key={`minutes-${i}`} label={label} value={label} />;
+});
+const numberArray = Array.from({ length: 60 }, (_, i) => i.toString().padStart(2, "0")).map((i) => <Picker.Item color="white" key={`seconds-${i}`} label={i} value={i} />);
 
 const isFalsy = (value: string | undefined) => !value || value === "0" || value === "00";
 
@@ -46,9 +40,7 @@ export const TimeInputRow = ({
     textStyle,
 }: TimeInputRowProps) => {
     const { t } = useTranslation();
-    const hasError = useAppSelector((state: AppState) =>
-        getErrorByKey(state, errorTextConfig?.errorKey),
-    );
+    const hasError = useAppSelector((state: AppState) => getErrorByKey(state, errorTextConfig?.errorKey));
     const secondsSuffix = useMemo(() => t("seconds"), [t]);
     const minutesSuffix = useMemo(() => t("minutes"), [t]);
     const { ref, openBottomSheet } = useBottomSheetRef();
@@ -114,6 +106,11 @@ export const TimeInputRow = ({
         return [{ textAlign: "left", marginLeft: 2 } as const, textStyle];
     }, [textStyle]);
 
+    const minutesText = useMemo(() => minutes?.padStart(2, "0") || "00", [minutes]);
+    const secondsText = useMemo(() => seconds?.padStart(2, "0") || "00", [seconds]);
+
+    const selectionColor = useMemo(() => "rgba(1,0,0,0.000001)", []);
+
     return (
         <ThemedView stretch ghost>
             {hasValuesInTopBar && (
@@ -134,106 +131,42 @@ export const TimeInputRow = ({
                 </HStack>
             )}
             <ThemedPressable stretch ghost disabled={!editable} onPress={openBottomSheet}>
-                <HStack
-                    style={wrapperStyle}
-                    hasError={hasError}
-                    input={input}
-                    background={background}
-                    stretch
-                    center
-                    round>
-                    <Text
-                        ghost
-                        stretch
-                        error={hasError}
-                        style={leftTextStyles}
-                        textSecondary={showSecondary}>
-                        {minutes?.padStart(2, "0") || "00"}
+                <HStack style={wrapperStyle} hasError={hasError} input={input} background={background} stretch center round>
+                    <Text ghost stretch error={hasError} style={leftTextStyles} textSecondary={showSecondary}>
+                        {minutesText}
                     </Text>
                     <Text error={hasError} style={textStyle} textSecondary={showSecondary} ghost>
                         :
                     </Text>
-                    <Text
-                        error={hasError}
-                        ghost
-                        textSecondary={showSecondary}
-                        stretch
-                        style={rightTextStyles}>
-                        {seconds?.padStart(2, "0") || "00"}
+                    <Text error={hasError} ghost textSecondary={showSecondary} stretch style={rightTextStyles}>
+                        {secondsText}
                     </Text>
                 </HStack>
             </ThemedPressable>
-            <ThemedBottomSheetModal
-                dismissOnClose
-                allowSwipeDownToClose={false}
-                title={label}
-                ref={ref}>
+            <ThemedBottomSheetModal dismissOnClose allowSwipeDownToClose={false} title={label} ref={ref}>
                 <PageContent ghost>
                     <HStack center ghost>
-                        <ThemedView
-                            round
-                            style={{
-                                position: "absolute",
-                                width: "100%",
-                                height: 50,
-                            }}
-                        />
+                        <ThemedView round style={timeInputStyles.wrapper} />
                         <HStack ghost stretch center>
-                            <Picker
-                                itemStyle={{
-                                    textAlign: "left",
-                                    fontSize: 25,
-                                }}
-                                style={{ flex: 1 }}
-                                selectionColor={"rgba(1,0,0,0.000001)"}
-                                selectedValue={minutes}
-                                onValueChange={handleChangeMinutes}>
+                            <Picker itemStyle={timeInputStyles.pickerItem} style={timeInputStyles.picker} selectionColor={selectionColor} selectedValue={minutes} onValueChange={handleChangeMinutes}>
                                 {numberArray}
                             </Picker>
-                            <Text
-                                style={{
-                                    position: "absolute",
-                                    pointerEvents: "none",
-                                    left: "50%",
-                                    top: "50%",
-                                    transform: [{ translateY: -10 }, { translateX: -15 }],
-                                }}
-                                ghost>
+                            <Text style={timeInputStyles.text} ghost>
                                 {minutesLabel}
                             </Text>
                         </HStack>
                         <HStack ghost stretch center>
-                            <Picker
-                                itemStyle={{
-                                    textAlign: "left",
-                                    fontSize: 25,
-                                }}
-                                style={{ flex: 1 }}
-                                selectionColor={"rgba(1,0,0,0.000001)"}
-                                selectedValue={seconds}
-                                onValueChange={handleChangeSeconds}>
+                            <Picker itemStyle={timeInputStyles.pickerItem} style={timeInputStyles.picker} selectionColor={selectionColor} selectedValue={seconds} onValueChange={handleChangeSeconds}>
                                 {numberSteps5}
                             </Picker>
-                            <Text
-                                style={{
-                                    position: "absolute",
-                                    pointerEvents: "none",
-                                    left: "50%",
-                                    top: "50%",
-                                    transform: [{ translateY: -10 }, { translateX: -15 }],
-                                }}
-                                ghost>
+                            <Text style={timeInputStyles.text} ghost>
                                 {secondsLabel}
                             </Text>
                         </HStack>
                     </HStack>
                 </PageContent>
             </ThemedBottomSheetModal>
-            {hasError && (
-                <ErrorText errorKey={errorTextConfig?.errorKey}>
-                    {errorTextConfig?.errorText}
-                </ErrorText>
-            )}
+            {hasError && <ErrorText errorKey={errorTextConfig?.errorKey}>{errorTextConfig?.errorText}</ErrorText>}
         </ThemedView>
     );
 };

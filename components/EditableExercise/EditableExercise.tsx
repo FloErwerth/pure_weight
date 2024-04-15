@@ -64,6 +64,8 @@ export const EditableExercise = () => {
         [dispatch, handleChange],
     );
 
+    const exercisePlaceholder = useMemo(() => t("exercise_name"), [t]);
+
     return (
         <ThemedView stretch ghost>
             <View style={styles.titleWrapper}>
@@ -71,7 +73,7 @@ export const EditableExercise = () => {
                     ghost
                     showClear
                     errorKey="create_exercise_name"
-                    placeholder={t("exercise_name")}
+                    placeholder={exercisePlaceholder}
                     reference={inputRef}
                     value={editedExercise?.exercise.name}
                     onChangeText={handleChangeName}

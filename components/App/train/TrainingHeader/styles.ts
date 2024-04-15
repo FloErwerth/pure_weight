@@ -21,4 +21,5 @@ export const styles = StyleSheet.create({
     },
     input: { flex: 1, textAlign: "center", fontSize: 16 },
     placeholder: { marginLeft: 5, width: 35 },
+    gap: { gap: 15 },
 });

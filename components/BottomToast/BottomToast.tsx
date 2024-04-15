@@ -27,19 +27,7 @@ const deviceWidth = Dimensions.get("screen").width;
 const TIME_STEP = 10;
 const ANIM_TIME = 300;
 
-export const BottomToast = ({
-    reference,
-    time = 5000,
-    titleKey,
-    messageKey,
-    onRedo,
-    open,
-    onRequestClose,
-    bottom = 0,
-    padding = 20,
-    leftCorrection,
-    topCorrection,
-}: BottomToastProps) => {
+export const BottomToast = ({ reference, time = 5000, titleKey, messageKey, onRedo, open, onRequestClose, bottom = 0, padding = 20, leftCorrection, topCorrection }: BottomToastProps) => {
     const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
     const { t } = useTranslation();
     const [percent, setPercent] = useState(100);
@@ -94,10 +82,7 @@ export const BottomToast = ({
         animatedPercent.value = withTiming(percent, { duration: TIME_STEP });
     }, [animatedPercent, handleRequestClose, percent]);
 
-    const progressBarStyle = useAnimatedStyle(
-        () => ({ backgroundColor: "#666", width: `${animatedPercent.value}%`, height: 5, borderRadius: 5, overflow: "hidden" }) as const,
-        [animatedPercent],
-    );
+    const progressBarStyle = useAnimatedStyle(() => ({ backgroundColor: "#666", width: `${animatedPercent.value}%`, height: 5, borderRadius: 5, overflow: "hidden" }) as const, [animatedPercent]);
 
     const wrapperStyle = useMemo(
         () =>
@@ -116,28 +101,30 @@ export const BottomToast = ({
             }) satisfies ViewStyle,
         [bottom, leftCorrection, padding, topCorrection],
     );
-    const animatedWrapperStyle = useAnimatedStyle(
-        () => ({ opacity: animatedOpacity.value, pointerEvents: open ? "auto" : "none" }),
-        [open, animatedOpacity, wrapperStyle],
-    );
-
+    const animatedWrapperStyle = useAnimatedStyle(() => ({ opacity: animatedOpacity.value, pointerEvents: open ? "auto" : "none" }), [open, animatedOpacity, wrapperStyle]);
+    const titleStyles = useMemo(() => ({ fontSize: 20, textAlign: "center", fontWeight: "bold", marginBottom: messageKey ? 0 : 5 }) as const, [messageKey]);
+    const innerMessageWrapperStyles = useMemo(() => ({ flex: 1, justifyContent: "space-between", paddingHorizontal: 10 }) as const, []);
+    const progressBar = useMemo(() => ({ width: "100%" }) as const, []);
+    const messageWrapperStyles = useMemo(() => ({ padding: 10, borderRadius }) as const, []);
+    const mappedMessage = useMemo(() => messageKey && t(messageKey), [messageKey, t]);
+    const title = useMemo(() => titleKey && t(titleKey), [t, titleKey]);
     return (
         <ReAnimated.View style={animatedWrapperStyle}>
             <ThemedView secondary style={wrapperStyle}>
                 {titleKey && (
-                    <Text ghost style={{ fontSize: 20, textAlign: "center", fontWeight: "bold", marginBottom: messageKey ? 0 : 5 }}>
-                        {t(titleKey)}
+                    <Text ghost style={titleStyles}>
+                        {title}
                     </Text>
                 )}
                 {messageKey && (
-                    <ThemedPressable style={{ padding: 10, borderRadius }} onPress={onRedo}>
-                        <HStack style={{ flex: 1, justifyContent: "space-between", paddingHorizontal: 10 }}>
-                            <Text>{t(messageKey)}</Text>
+                    <ThemedPressable style={messageWrapperStyles} onPress={onRedo}>
+                        <HStack style={innerMessageWrapperStyles}>
+                            <Text>{mappedMessage}</Text>
                             <ThemedMaterialCommunityIcons ghost name="undo" size={16} />
                         </HStack>
                     </ThemedPressable>
                 )}
-                <ThemedView style={{ width: "100%" }}>
+                <ThemedView style={progressBar}>
                     <ReAnimated.View style={progressBarStyle} />
                 </ThemedView>
             </ThemedView>

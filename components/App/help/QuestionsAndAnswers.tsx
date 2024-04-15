@@ -19,6 +19,7 @@ import { getMeasurementQuestions } from "./questions/measurements";
 import { setupNewMeasurement } from "../../../store/reducers/measurements";
 import { useMeasurementOptionMap } from "../../../app/measurements/create";
 import { getProQuestions } from "./questions/pro";
+import { styles } from "./styles";
 
 export const QuestionsAndAnswers = () => {
     const dispatch = useAppDispatch();
@@ -120,30 +121,38 @@ export const QuestionsAndAnswers = () => {
         }));
     }, [data, handleSetSelectedQuestion, searchedManual, sectionTitleMap]);
 
+    const bottomObj = useMemo(() => ({ bottom }), [bottom]);
+
+    const mappedQuestions = useMemo(
+        () =>
+            mappedAndFilteredData.map(({ sectionTitle, handleSelectQuestion, data }) => {
+                if (data.every(({ shown }) => !shown)) {
+                    return null;
+                }
+                return (
+                    <View key={sectionTitle.concat(data.toString())}>
+                        <Text ghost style={{ marginBottom: 10, fontSize: 30 }}>
+                            {sectionTitle}
+                        </Text>
+                        {data.map(({ title, shown }, index) => (
+                            <HelpQuestion key={sectionTitle.concat(index.toString())} shown={shown} question={title} title={title} onPress={() => handleSelectQuestion(index)} />
+                        ))}
+                    </View>
+                );
+            }),
+        [mappedAndFilteredData],
+    );
+
     return (
         <ThemedView ghost stretch>
             <ThemedScrollView
                 alwaysBounceVertical={false}
                 showsHorizontalScrollIndicator={false}
                 showsVerticalScrollIndicator={false}
-                contentInset={{ bottom }}
+                contentInset={bottomObj}
                 ghost
-                contentContainerStyle={{ gap: 20 }}>
-                {mappedAndFilteredData.map(({ sectionTitle, handleSelectQuestion, data }) => {
-                    if (data.every(({ shown }) => !shown)) {
-                        return null;
-                    }
-                    return (
-                        <View key={sectionTitle}>
-                            <Text ghost style={{ marginBottom: 10, fontSize: 30 }}>
-                                {sectionTitle}
-                            </Text>
-                            {data.map(({ title, shown }, index) => (
-                                <HelpQuestion key={title.concat(index.toString())} shown={shown} question={title} title={title} onPress={() => handleSelectQuestion(index)} />
-                            ))}
-                        </View>
-                    );
-                })}
+                contentContainerStyle={styles.bigGap}>
+                {mappedQuestions}
             </ThemedScrollView>
             <ThemedBottomSheetModal ref={ref} title={selectedQuesiton?.title}>
                 {selectedQuesiton?.answer}

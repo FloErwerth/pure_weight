@@ -7,6 +7,7 @@ import { useAppSelector } from "../../../../../../store";
 import { ThemedView } from "../../../../../Themed/ThemedView/View";
 import { getTimeUnit } from "../../../../../../store/selectors/settings/settingsSelectors";
 import { ExerciseMetaData } from "../../../../../../store/reducers/workout/types";
+import { useMemo } from "react";
 
 interface SmallMetadataDisplayProps {
     exerciseMetaData: ExerciseMetaData;
@@ -18,7 +19,7 @@ export const WeightBasedSmallExerciseMetadataDisplay = ({ exerciseMetaData }: Sm
     const showSeconds = parseFloat(exerciseMetaData?.pauseSeconds || "0") !== 0;
     const { secondsUnit, minutesUnit } = useAppSelector(getTimeUnit);
     const showPause = showMinutes || showSeconds;
-
+    const pauseLowerText = useMemo(() => t("pause_lower"), [t]);
     if (!exerciseMetaData) {
         return null;
     }
@@ -45,7 +46,7 @@ export const WeightBasedSmallExerciseMetadataDisplay = ({ exerciseMetaData }: Sm
                             </ThemedView>
                         )}
                     </HStack>
-                    <Text style={trainStyles.exerciseMetaText}> {t("pause_lower")}</Text>
+                    <Text style={trainStyles.exerciseMetaText}>{pauseLowerText}</Text>
                 </HStack>
             )}
         </ThemedView>

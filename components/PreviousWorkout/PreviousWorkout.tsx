@@ -1,7 +1,7 @@
 import { AppState, useAppSelector } from "../../store";
 import { Text } from "../Themed/ThemedText/Text";
 import { useTranslation } from "react-i18next";
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import { HStack } from "../Stack/HStack/HStack";
 import { ThemedView } from "../Themed/ThemedView/View";
 import { ThemedBottomSheetModal, useBottomSheetRef } from "../BottomSheetModal/ThemedBottomSheetModal";
@@ -17,9 +17,7 @@ interface PreviousTrainingProps {
     exerciseType: ExerciseType;
 }
 export const PreviousWorkout = ({ exerciseId, exerciseType }: PreviousTrainingProps) => {
-    const previousWorkout = useAppSelector((state: AppState) =>
-        getPreviousWorkout(state, state.settingsState.language, exerciseId),
-    );
+    const previousWorkout = useAppSelector((state: AppState) => getPreviousWorkout(state, state.settingsState.language, exerciseId));
 
     const { t } = useTranslation();
     const { ref } = useBottomSheetRef();
@@ -34,11 +32,14 @@ export const PreviousWorkout = ({ exerciseId, exerciseType }: PreviousTrainingPr
         ref.current?.dismiss();
     }, [ref]);
 
+    const dateTextStyles = useMemo(() => ({ fontSize: 16, padding: previousWorkout?.note ? 0 : 10 }), [previousWorkout?.note]);
+    const previousTrainingTitle = useMemo(() => previousWorkout?.date && t("previous_training_note_title").concat(previousWorkout.date), [previousWorkout?.date, t]);
     if (!previousWorkout) {
         return null;
     }
 
-    const { date, sets, note } = previousWorkout;
+    const { sets, date, note } = previousWorkout;
+
     if (!currentSet || activeSetIndex === -1 || !sets || sets?.length === 0 || sets?.some((val) => val === undefined)) {
         return null;
     }
@@ -46,7 +47,7 @@ export const PreviousWorkout = ({ exerciseId, exerciseType }: PreviousTrainingPr
     return (
         <ThemedView ghost>
             <HStack ghost center style={{ justifyContent: "space-between" }}>
-                <Text ghost secondary style={{ fontSize: 16, padding: note ? 0 : 10 }}>
+                <Text ghost secondary style={dateTextStyles}>
                     {t("previous_training_title_with_date")}
                     {date}
                 </Text>
@@ -67,12 +68,7 @@ export const PreviousWorkout = ({ exerciseId, exerciseType }: PreviousTrainingPr
                         {exerciseType === "TIME_BASED" ? (
                             <ThemedView ghost round stretch style={styles.setWrapper}>
                                 <Text ghost style={styles.set}>
-                                    {getTimeDisplayFromMilliseconds(
-                                        getMillisecondsFromTimeInput(
-                                            currentSet?.durationMinutes,
-                                            currentSet?.durationSeconds,
-                                        ),
-                                    )}
+                                    {getTimeDisplayFromMilliseconds(getMillisecondsFromTimeInput(currentSet?.durationMinutes, currentSet?.durationSeconds))}
                                 </Text>
                             </ThemedView>
                         ) : (
@@ -93,12 +89,9 @@ export const PreviousWorkout = ({ exerciseId, exerciseType }: PreviousTrainingPr
                     <ThemedView ghost padding style={{ width: 49 }} />
                 </HStack>
             </ThemedView>
-            <ThemedBottomSheetModal
-                title={t("previous_training_note_title").concat(date)}
-                onRequestClose={handleCloseNote}
-                ref={ref}>
-                <ThemedView ghost stretch style={{ margin: 20 }}>
-                    <Text ghost stretch style={{ fontSize: 20 }}>
+            <ThemedBottomSheetModal title={previousTrainingTitle} onRequestClose={handleCloseNote} ref={ref}>
+                <ThemedView ghost stretch style={styles.modalWrapper}>
+                    <Text ghost stretch style={styles.modalText}>
                         {note}
                     </Text>
                 </ThemedView>

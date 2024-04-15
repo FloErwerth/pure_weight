@@ -7,6 +7,7 @@ import { useTranslation } from "react-i18next";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Dimensions, Keyboard, Pressable, TextInput } from "react-native";
 import Animated, { Easing, useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
+import { styles } from "./styles";
 
 const screenWidth = Dimensions.get("screen").width;
 const TEXT_INPUT_VALUES = {
@@ -67,7 +68,7 @@ export const ExpandableSearchbar = ({ handleSetSearchManual }: SearchbarProps) =
     }, [showInput, handleToggleSearch]);
 
     return (
-        <ThemedView style={{ paddingVertical: 5 }} ghost round>
+        <ThemedView style={styles.wrapper} ghost round>
             <HStack ghost>
                 <Animated.View style={animatedInputStyles}>
                     <ThemedTextInput round onBlur={handleBlur} reference={ref} showClear onChangeText={handleSetSearchManual} placeholder={placeholder} />

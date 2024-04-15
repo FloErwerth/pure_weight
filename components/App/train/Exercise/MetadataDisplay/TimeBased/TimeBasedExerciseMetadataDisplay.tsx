@@ -13,9 +13,7 @@ interface SmallMetadataDisplayProps {
     exerciseMetaData: ExerciseMetaData;
 }
 
-export const TimeBasedSmallExerciseDataDisplay = ({
-    exerciseMetaData,
-}: SmallMetadataDisplayProps) => {
+export const TimeBasedSmallExerciseDataDisplay = ({ exerciseMetaData }: SmallMetadataDisplayProps) => {
     const { t } = useTranslation();
 
     const minutes = useMemo(() => {
@@ -30,7 +28,7 @@ export const TimeBasedSmallExerciseDataDisplay = ({
 
     const { secondsUnit, minutesUnit } = useAppSelector(getTimeUnit);
     const showPause = minutes || seconds;
-
+    const metaText = useMemo(() => ` ${t("pause_lower")} `, [t]);
     if (!exerciseMetaData) {
         return null;
     }
@@ -45,9 +43,7 @@ export const TimeBasedSmallExerciseDataDisplay = ({
                                 <ThemedView>
                                     <HStack style={styles.smallGap}>
                                         <Text style={trainStyles.exerciseMetaText}>{minutes}</Text>
-                                        <Text style={trainStyles.exerciseMetaText}>
-                                            {minutesUnit}
-                                        </Text>
+                                        <Text style={trainStyles.exerciseMetaText}>{minutesUnit}</Text>
                                     </HStack>
                                 </ThemedView>
                             )}
@@ -55,14 +51,12 @@ export const TimeBasedSmallExerciseDataDisplay = ({
                                 <ThemedView>
                                     <HStack style={styles.smallGap}>
                                         <Text style={trainStyles.exerciseMetaText}>{seconds}</Text>
-                                        <Text style={trainStyles.exerciseMetaText}>
-                                            {secondsUnit}
-                                        </Text>
+                                        <Text style={trainStyles.exerciseMetaText}>{secondsUnit}</Text>
                                     </HStack>
                                 </ThemedView>
                             )}
                         </HStack>
-                        <Text style={trainStyles.exerciseMetaText}>{` ${t("pause_lower")} `}</Text>
+                        <Text style={trainStyles.exerciseMetaText}>{metaText}</Text>
                     </HStack>
                 )}
             </HStack>

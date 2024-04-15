@@ -10,4 +10,5 @@ export const styles = StyleSheet.create({
     text: {
         fontSize: 16,
     },
+    hStack: { justifyContent: "space-between", alignItems: "center" },
 });

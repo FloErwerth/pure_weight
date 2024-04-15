@@ -15,6 +15,7 @@ import { trunicateToNthSignificantDigit } from "../../utils/number";
 import { getDurationInSecondsMinutesOrHours } from "../../utils/timeDisplay";
 import { FlatList } from "react-native";
 import { useGetConvertedWeight } from "../../hooks/useConvertedWeight";
+import { styles } from "./styles";
 
 type Stat = PostWorkoutScreen["stats"][number] | undefined;
 
@@ -179,16 +180,16 @@ export const WorkoutCompleteModal = () => {
     return (
         <ThemedBottomSheetModal onRequestClose={handleHideShowModal} title={title} ref={ref}>
             <PageContent ghost paddingTop={20}>
-                <ThemedView round ghost style={{ marginBottom: 10 }}>
-                    <Text style={{ marginBottom: 10 }} ghost>
+                <ThemedView round ghost style={styles.margin}>
+                    <Text style={styles.margin} ghost>
                         {t("post_workout_overview_title")}
                     </Text>
                     <FlatList
                         scrollEnabled={false}
                         numColumns={numberColumns}
                         keyExtractor={(item, index) => `${index} ${item?.text}`}
-                        columnWrapperStyle={{ gap: 5 }}
-                        contentContainerStyle={{ gap: 5 }}
+                        columnWrapperStyle={styles.gap}
+                        contentContainerStyle={styles.gap}
                         data={headerStats}
                         renderItem={({ item: stat }) => <Fragment key={`${postWorkout?.workoutId} ${stat?.value} ${stat?.text}\`} `}>{stat ? <WorkoutCompleteStatTile {...stat} /> : <></>}</Fragment>}
                     />

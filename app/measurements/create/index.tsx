@@ -27,6 +27,7 @@ import { AnswerText } from "../../../components/HelpQuestionAnswer/AnswerText";
 import { ThemedPressable } from "../../../components/Themed/Pressable/Pressable";
 import { DateConfig, DatePicker } from "../../../components/DatePicker/DatePicker";
 import { IsoDate } from "../../../types/date";
+import { styles } from "../../../components/App/create/styles";
 
 export const useMeasurementOptions = () => {
     const unitSystem = useAppSelector(getUnitSystem);
@@ -251,7 +252,7 @@ export const CreateMeasurement = () => {
     );
 
     const unitModalTitle = useMemo(() => t("measurement_unit_modal_title"), [t]);
-
+    const errorConfig = useMemo(() => ({ errorKey: "create_measurement_value" }) as const, []);
     return (
         <ThemedView background stretch round>
             <SiteNavigationButtons backButtonAction={handleBackButtonPress} title={pageTitle} />
@@ -272,11 +273,11 @@ export const CreateMeasurement = () => {
                     )}
                     {!isEditing && (
                         <ThemedView ghost>
-                            <HStack ghost style={{ gap: 5 }}>
+                            <HStack ghost style={styles.gap}>
                                 <EditableExerciseInputRow
                                     placeholder="0"
                                     stretch
-                                    errorTextConfig={{ errorKey: "create_measurement_value" }}
+                                    errorTextConfig={errorConfig}
                                     suffix={valueSuffix}
                                     setValue={handleSetMeasurementValue}
                                     value={editedMeasurement?.measurement?.value}
@@ -308,7 +309,7 @@ export const CreateMeasurement = () => {
                     )}
                     {!isEditing && (
                         <ThemedView round input padding>
-                            <Text style={{ fontSize: 20 }} ghost>
+                            <Text style={styles.textSize} ghost>
                                 {t("measurement_datapoint_date")}
                             </Text>
                             <DatePicker handleSelectDate={handleDateChange} selectedDate={date} dateConfig={dateConfig} allSelectable />
@@ -327,7 +328,7 @@ export const CreateMeasurement = () => {
                 </PageContent>
                 <PageContent ghost paddingTop={30}>
                     <ThemedPressable center padding round onPress={handleSaveMeasurement}>
-                        <HStack style={{ alignItems: "center", gap: 10 }}>
+                        <HStack style={styles.save}>
                             <ThemedMaterialCommunityIcons name="table-check" size={24} />
                             <Text>{dateWarniningOverwriteConfirm}</Text>
                         </HStack>
@@ -340,9 +341,9 @@ export const CreateMeasurement = () => {
                     <AnswerText>{discardWarningContent}</AnswerText>
                 </PageContent>
                 <PageContent ghost paddingTop={30}>
-                    <ThemedView ghost style={{ gap: 10 }}>
+                    <ThemedView ghost style={styles.largeGap}>
                         <ThemedPressable center round padding secondary onPress={handleNavigateBack}>
-                            <HStack ghost style={{ alignItems: "center", gap: 10 }}>
+                            <HStack ghost style={styles.save}>
                                 <ThemedMaterialCommunityIcons ghost name="check" size={24} />
                                 <Text ghost>{discardWarningConfirm}</Text>
                             </HStack>

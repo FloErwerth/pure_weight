@@ -20,4 +20,5 @@ export const styles = StyleSheet.create({
     box: {
         width: 40,
     },
+    activeSet: { borderRadius, flex: 0.2, justifyContent: "center", alignItems: "center" },
 });
