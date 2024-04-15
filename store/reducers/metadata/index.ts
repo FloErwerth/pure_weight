@@ -6,8 +6,6 @@ export type MetadataState = {
     appInstallDate?: IsoDate;
     isFirstTimeRendered?: boolean;
     developmentState?: DevelopmentState;
-    timesMounted: number;
-    hasReviewed: boolean;
 };
 
 export const setGenerallAppState = createAction<MetadataState, "metadata_set_metadatastate">(
@@ -30,10 +28,9 @@ export type MetadataAction =
     | typeof setFirstTimeRendered.type
     | typeof setEmptyState.type
     | typeof setAppInstallDate.type;
-export const increaseTimesMounted = createAction("increase_times_mounted");
-export const setHasReviewed = createAction<boolean, "set_has_reviewed">("set_has_reviewed");
+
 export const metadataReducer = createReducer<MetadataState>(
-    { isFirstTimeRendered: false, timesMounted: 0, hasReviewed: false },
+    { isFirstTimeRendered: false },
     (builder) =>
         builder
             .addCase(setGenerallAppState, (_, action) => {
@@ -47,11 +44,5 @@ export const metadataReducer = createReducer<MetadataState>(
             })
             .addCase(setFirstTimeRendered, (state, action) => {
                 state.isFirstTimeRendered = action.payload;
-            })
-            .addCase(increaseTimesMounted, (state) => {
-                state.timesMounted = state.timesMounted + 1;
-            })
-            .addCase(setHasReviewed, (state, action) => {
-                state.hasReviewed = action.payload;
             }),
 );

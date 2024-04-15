@@ -14,6 +14,3 @@ export const getStateType = createSelector(
     [getMetadataState],
     (metadata) => metadata.developmentState,
 );
-export const getShouldAskForReview = createSelector([getMetadataState], (metadata) => {
-    return metadata.timesMounted > 0 && metadata.timesMounted % 10 === 0 && !metadata.hasReviewed;
-});

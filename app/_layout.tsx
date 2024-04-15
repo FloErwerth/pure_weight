@@ -18,16 +18,8 @@ import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { WorkoutHistory } from "./workouts/history";
 import DeviceInfo from "react-native-device-info";
 import { IsoDate } from "../types/date";
-import {
-    increaseTimesMounted,
-    setAppInstallDate,
-    setEmptyState,
-    setFirstTimeRendered,
-} from "../store/reducers/metadata";
-import {
-    getIsFirstTimeRendered,
-    getShouldAskForReview,
-} from "../store/selectors/metadata/metadataSelectors";
+import { setAppInstallDate, setEmptyState, setFirstTimeRendered } from "../store/reducers/metadata";
+import { getIsFirstTimeRendered } from "../store/selectors/metadata/metadataSelectors";
 import { Manual } from "./profile/manual";
 import { useTranslation } from "react-i18next";
 import { Appearance, NativeModules } from "react-native";
@@ -45,7 +37,6 @@ import { Purchase } from "./purchase";
 import { useInitPurchases } from "../hooks/purchases";
 import { SplashScreen } from "expo-router";
 import { Settings } from "./profile/settings";
-import * as StoreReview from "expo-store-review";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -58,7 +49,6 @@ const ThemedApp = () => {
     const { i18n } = useTranslation();
     const isFirstTimeRendered = useAppSelector(getIsFirstTimeRendered);
     const reactNativeTheme = useAppSelector(getReactNativeTheme);
-    const shouldRequestReview = useAppSelector(getShouldAskForReview);
 
     useEffect(() => {
         if (isFirstTimeRendered) {
@@ -83,12 +73,6 @@ const ThemedApp = () => {
             const theme = Appearance.getColorScheme();
             dispatch(setTheme(theme === "dark" ? "dark" : "light"));
             dispatch(setFirstTimeRendered(false));
-        }
-        dispatch(increaseTimesMounted());
-        if (shouldRequestReview) {
-            setTimeout(() => {
-                void StoreReview.requestReview();
-            }, 300);
         }
     }, []);
 
