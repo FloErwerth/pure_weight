@@ -28,11 +28,15 @@ export function Profile() {
         navigate("profile/settings");
     }, [navigate]);
 
-    const mappedStats = useMemo(() => Object.values(overallStats ?? {}).map((stat) => ({
-        value: stat.value,
-        unit: stat.unit,
-        text: t(stat.translationKey),
-    })), [overallStats, t]);
+    const mappedStats = useMemo(
+        () =>
+            Object.values(overallStats ?? {}).map((stat) => ({
+                value: stat.value,
+                unit: stat.unit,
+                text: t(stat.translationKey),
+            })),
+        [overallStats, t],
+    );
 
     return (
         <ThemedView stretch background>

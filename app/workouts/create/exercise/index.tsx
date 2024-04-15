@@ -17,18 +17,14 @@ import * as Haptics from "expo-haptics";
 import { SiteNavigationButtons } from "../../../../components/SiteNavigationButtons/SiteNavigationButtons";
 import { PageContent } from "../../../../components/PageContent/PageContent";
 import { useNavigateBack } from "../../../../hooks/navigate";
-import {
-    ThemedBottomSheetModal,
-    useBottomSheetRef,
-} from "../../../../components/BottomSheetModal/ThemedBottomSheetModal";
+import { ThemedBottomSheetModal, useBottomSheetRef } from "../../../../components/BottomSheetModal/ThemedBottomSheetModal";
 import { View } from "react-native";
 import Reanimated, { FadeIn, FadeOut, Layout } from "react-native-reanimated";
 import { cleanError, setError } from "../../../../store/reducers/errors";
 import { ErrorFields } from "../../../../store/reducers/errors/types";
 import { AnswerText } from "../../../../components/HelpQuestionAnswer/AnswerText";
 
-const getIsZeroOrNullish = (values: Array<string | undefined>) =>
-    values.some((value) => !value || value === "0" || value === "00");
+const getIsZeroOrNullish = (values: Array<string | undefined>) => values.some((value) => !value || value === "0" || value === "00");
 
 const useValidateExercise = () => {
     const dispatch = useAppDispatch();
@@ -36,13 +32,7 @@ const useValidateExercise = () => {
 
     useEffect(() => {
         if (editedExercise?.exercise.type === "TIME_BASED") {
-            dispatch(
-                cleanError([
-                    "create_exercise_sets",
-                    "create_exercise_reps",
-                    "create_exercise_weight",
-                ]),
-            );
+            dispatch(cleanError(["create_exercise_sets", "create_exercise_reps", "create_exercise_weight"]));
         } else {
             dispatch(cleanError(["create_exercise_sets", "create_exercise_duration"]));
         }
@@ -79,26 +69,16 @@ const useValidateExercise = () => {
 
 const useWasEdited = () => {
     const editedExercise = useAppSelector(getEditedExercise);
-    return useMemo(
-        () => editedExercise?.stringifiedExercise !== JSON.stringify(editedExercise?.exercise),
-        [editedExercise?.exercise, editedExercise?.stringifiedExercise],
-    );
+    return useMemo(() => editedExercise?.stringifiedExercise !== JSON.stringify(editedExercise?.exercise), [editedExercise?.exercise, editedExercise?.stringifiedExercise]);
 };
 
 export const CreateExercise = () => {
     const { t } = useTranslation();
     const editedExercise = useAppSelector(getEditedExercise);
     const isNewExercise = Boolean(editedExercise?.isNewExercise);
-    const title = useMemo(
-        () => t(!isNewExercise ? "exercise_edit_title" : "create_exercise"),
-        [isNewExercise, t],
-    );
+    const title = useMemo(() => t(!isNewExercise ? "exercise_edit_title" : "create_exercise"), [isNewExercise, t]);
     const dispatch = useAppDispatch();
-    const {
-        showToast: showSavedSuccess,
-        openToast: openSavedSuccess,
-        closeToast: closeSavedSuccess,
-    } = useToast();
+    const { showToast: showSavedSuccess, openToast: openSavedSuccess, closeToast: closeSavedSuccess } = useToast();
     const [showCheckboxes, setShowCheckboxes] = useState(true);
     const [addMoreExercises, setAddMoreExercises] = useState(false);
     const { ref, openBottomSheet } = useBottomSheetRef();
@@ -136,14 +116,7 @@ export const CreateExercise = () => {
         } else {
             navigateBack();
         }
-    }, [
-        addMoreExercises,
-        dispatch,
-        navigateBack,
-        openSuccessMessage,
-        showCheckboxesAfterTimeout,
-        validateExercise,
-    ]);
+    }, [addMoreExercises, dispatch, navigateBack, openSuccessMessage, showCheckboxesAfterTimeout, validateExercise]);
 
     const handleConfirm = useCallback(() => {
         if (showSavedSuccess) {
@@ -158,41 +131,16 @@ export const CreateExercise = () => {
         closeSavedSuccess();
     }, [closeSavedSuccess]);
 
-    const addMoreExercisesHelptextConfig = useMemo(
-        () => ({ title: t("add_more_exercises"), text: t("add_more_exercises_help") }),
-        [t],
-    );
+    const addMoreExercisesHelptextConfig = useMemo(() => ({ title: t("add_more_exercises"), text: t("add_more_exercises_help") }), [t]);
 
-    const alertContent = useMemo(
-        () =>
-            t(
-                !isNewExercise
-                    ? "alert_edit_exercise_discard_content"
-                    : "alert_create_exercise_discard_content",
-            ),
-        [isNewExercise, t],
-    );
+    const alertContent = useMemo(() => t(!isNewExercise ? "alert_edit_exercise_discard_content" : "alert_create_exercise_discard_content"), [isNewExercise, t]);
 
-    const alertTitle = useMemo(
-        () => t(!isNewExercise ? "alert_edit_discard_title" : "alert_create_discard_title"),
-        [isNewExercise, t],
-    );
+    const alertTitle = useMemo(() => t(!isNewExercise ? "alert_edit_discard_title" : "alert_create_discard_title"), [isNewExercise, t]);
 
-    const discardButtonText = useMemo(
-        () => t(!isNewExercise ? "alert_edit_confirm_cancel" : "alert_create_confirm_cancel"),
-        [isNewExercise, t],
-    );
+    const discardButtonText = useMemo(() => t(!isNewExercise ? "alert_edit_confirm_cancel" : "alert_create_confirm_cancel"), [isNewExercise, t]);
 
     const clearExerciseErrors = useCallback(() => {
-        dispatch(
-            cleanError([
-                "create_exercise_name",
-                "create_exercise_sets",
-                "create_exercise_reps",
-                "create_exercise_weight",
-                "create_exercise_duration",
-            ]),
-        );
+        dispatch(cleanError(["create_exercise_name", "create_exercise_sets", "create_exercise_reps", "create_exercise_weight", "create_exercise_duration"]));
     }, [dispatch]);
 
     const handleNavigateBack = useCallback(() => {
@@ -216,11 +164,7 @@ export const CreateExercise = () => {
                 <EditableExercise />
                 <View style={styles.gap}>
                     {showCheckboxes && (
-                        <Reanimated.View
-                            style={styles.gap}
-                            layout={Layout}
-                            entering={FadeIn}
-                            exiting={FadeOut}>
+                        <Reanimated.View style={styles.gap} layout={Layout} entering={FadeIn} exiting={FadeOut}>
                             <CheckBox
                                 secondary
                                 customWrapperStyles={styles.zIndex}
@@ -231,23 +175,13 @@ export const CreateExercise = () => {
                             />
                         </Reanimated.View>
                     )}
-                    <BottomToast
-                        time={1000}
-                        leftCorrection={-20}
-                        titleKey="create_exercise_success_title"
-                        onRequestClose={closeSavedSuccessMessage}
-                        open={showSavedSuccess}
-                    />
+                    <BottomToast time={1000} leftCorrection={-20} titleKey="create_exercise_success_title" onRequestClose={closeSavedSuccessMessage} open={showSavedSuccess} />
                     <ThemedPressable ghost behind onPress={handleConfirm}>
                         <HStack secondary style={styles.button}>
                             <Text secondary style={styles.buttonText}>
                                 {t(!isNewExercise ? "edit_exercise" : "create_exercise")}
                             </Text>
-                            <ThemedMaterialCommunityIcons
-                                ghost
-                                name="pencil-plus-outline"
-                                size={20}
-                            />
+                            <ThemedMaterialCommunityIcons ghost name="pencil-plus-outline" size={20} />
                         </HStack>
                     </ThemedPressable>
                 </View>

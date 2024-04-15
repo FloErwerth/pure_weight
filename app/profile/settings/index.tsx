@@ -21,16 +21,11 @@ const styles = StyleSheet.create({
 });
 const isDev = process.env["EXPO_PUBLIC_APP_VARIANT"] === "development";
 
-export const Settings = ({
-    route: { params },
-}: NativeStackScreenProps<RoutesParamaters, "profile/settings/index">) => {
+export const Settings = ({ route: { params } }: NativeStackScreenProps<RoutesParamaters, "profile/settings/index">) => {
     const navigateBack = useNavigateBack();
     const { t } = useTranslation();
     const title = useMemo(() => t("settings"), [t]);
-    const getTitleConfig = useCallback(
-        (titleKey: string) => ({ title: t(titleKey), size: 24 }) as const,
-        [t],
-    );
+    const getTitleConfig = useCallback((titleKey: string) => ({ title: t(titleKey), size: 24 }) as const, [t]);
     const ref = useRef<FlatList>(null);
 
     useEffect(() => {
@@ -43,28 +38,13 @@ export const Settings = ({
 
     const settingsPages = useMemo(
         () => [
-            <PageContent
-                scrollable={false}
-                ignorePadding
-                key="GENERAL SETTINGS"
-                background
-                titleConfig={getTitleConfig("general")}>
+            <PageContent scrollable={false} ignorePadding key="GENERAL SETTINGS" background titleConfig={getTitleConfig("general")}>
                 <GeneralSettings />
             </PageContent>,
-            <PageContent
-                scrollable={false}
-                ignorePadding
-                key="WORKOUT SETTINGS"
-                background
-                titleConfig={getTitleConfig("workout")}>
+            <PageContent scrollable={false} ignorePadding key="WORKOUT SETTINGS" background titleConfig={getTitleConfig("workout")}>
                 <WorkoutSettings />
             </PageContent>,
-            <PageContent
-                scrollable={false}
-                ignorePadding
-                key="DISPLAY SETTINGS"
-                background
-                titleConfig={getTitleConfig("display")}>
+            <PageContent scrollable={false} ignorePadding key="DISPLAY SETTINGS" background titleConfig={getTitleConfig("display")}>
                 <Display />
             </PageContent>,
             <HelpSection key="HELP SETTINGS" />,
@@ -82,12 +62,7 @@ export const Settings = ({
         <ThemedView stretch background>
             <SiteNavigationButtons backButtonAction={navigateBack} title={title} />
             <PageContent scrollable safeBottom ignoreGap ghost>
-                <FlatList
-                    scrollEnabled={false}
-                    ref={ref}
-                    data={settingsPages}
-                    contentContainerStyle={styles.contentWrapper}
-                    renderItem={({ item: Item }) => Item}></FlatList>
+                <FlatList scrollEnabled={false} ref={ref} data={settingsPages} contentContainerStyle={styles.contentWrapper} renderItem={({ item: Item }) => Item}></FlatList>
                 <Footer showRestore={false} />
             </PageContent>
         </ThemedView>

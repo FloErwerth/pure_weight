@@ -7,12 +7,7 @@ import { ThemedView } from "../../../components/Themed/ThemedView/View";
 import { styles } from "../../../components/App/history/styles";
 import { IsoDate } from "../../../types/date";
 import { FlatList } from "react-native";
-import {
-    getEditedWorkout,
-    getLatestWorkoutDate,
-    getSortedDoneWorkout,
-    getWorkoutsByMonth,
-} from "../../../store/selectors/workout/workoutSelectors";
+import { getEditedWorkout, getLatestWorkoutDate, getSortedDoneWorkout, getWorkoutsByMonth } from "../../../store/selectors/workout/workoutSelectors";
 import { noop } from "lodash";
 import { WorkoutHistoryCard } from "../../../components/WorkoutHistoryCard/WorkoutHistoryCard";
 import { saveEditedWorkout } from "../../../store/reducers/workout";
@@ -31,14 +26,10 @@ export type FlatListData = {
 
 export function WorkoutHistory() {
     const editedWorkout = useAppSelector(getEditedWorkout);
-    const latestWorkoutDate = useAppSelector((state: AppState) =>
-        getLatestWorkoutDate(state, editedWorkout?.workout.workoutId),
-    );
+    const latestWorkoutDate = useAppSelector((state: AppState) => getLatestWorkoutDate(state, editedWorkout?.workout.workoutId));
     const [selectedDate, setSelectedDate] = useState<IsoDate | undefined>(undefined);
     const [selectedMonth, setSelectedMonth] = useState<string>("ALL_WORKOUTS");
-    const doneWorkoutDates = useAppSelector((state: AppState) =>
-        getSortedDoneWorkout(state, editedWorkout?.workout?.workoutId),
-    );
+    const doneWorkoutDates = useAppSelector((state: AppState) => getSortedDoneWorkout(state, editedWorkout?.workout?.workoutId));
     const workout = useAppSelector(getEditedWorkout);
     const sectionListRef = useRef<FlatList>(null);
     const { t } = useTranslation();
@@ -77,13 +68,7 @@ export function WorkoutHistory() {
         const { handleEdit, doneWorkoutId, date, marked } = item;
         return (
             <ThemedView ghost style={styles.workout}>
-                <WorkoutHistoryCard
-                    key={Math.random()}
-                    marked={marked}
-                    date={date}
-                    doneWorkoutId={doneWorkoutId}
-                    onEdit={handleEdit}
-                />
+                <WorkoutHistoryCard key={Math.random()} marked={marked} date={date} doneWorkoutId={doneWorkoutId} onEdit={handleEdit} />
             </ThemedView>
         );
     }, []);
@@ -133,13 +118,7 @@ export function WorkoutHistory() {
         <ThemedView stretch>
             <SiteNavigationButtons backButtonAction={handleNavigateBack} title={workout?.workout?.name} />
             <PageContent safeBottom background stretch>
-                <ThemedDropdown
-                    modalTitle={modalTitle}
-                    onSelectItem={handleSelectMonth}
-                    value={dropdownValue}
-                    isSelectable
-                    options={dropdownConfig}
-                />
+                <ThemedDropdown modalTitle={modalTitle} onSelectItem={handleSelectMonth} value={dropdownValue} isSelectable options={dropdownConfig} />
                 <FlatList
                     ref={sectionListRef}
                     horizontal={false}

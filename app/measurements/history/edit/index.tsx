@@ -8,24 +8,12 @@ import React, { useCallback, useMemo } from "react";
 import { SiteNavigationButtons } from "../../../../components/SiteNavigationButtons/SiteNavigationButtons";
 import { useNavigateBack } from "../../../../hooks/navigate";
 import { IsoDate } from "../../../../types/date";
-import {
-    deleteMeasurementDataPoint,
-    mutateEditedDatapoint,
-    saveMeasurementDataPoint,
-} from "../../../../store/reducers/measurements";
-import {
-    getDatesFromCurrentMeasurement,
-    getEditedMeasurement,
-    getEditedMeasurementDataPoint,
-    getUnitByType,
-} from "../../../../store/selectors/measurements/measurementSelectors";
+import { deleteMeasurementDataPoint, mutateEditedDatapoint, saveMeasurementDataPoint } from "../../../../store/reducers/measurements";
+import { getDatesFromCurrentMeasurement, getEditedMeasurement, getEditedMeasurementDataPoint, getUnitByType } from "../../../../store/selectors/measurements/measurementSelectors";
 import { useAppDispatch, useAppSelector } from "../../../../store";
 import { getUnitSystem } from "../../../../store/selectors/settings/settingsSelectors";
 import { Keyboard, View } from "react-native";
-import {
-    ThemedBottomSheetModal,
-    useBottomSheetRef,
-} from "../../../../components/BottomSheetModal/ThemedBottomSheetModal";
+import { ThemedBottomSheetModal, useBottomSheetRef } from "../../../../components/BottomSheetModal/ThemedBottomSheetModal";
 import { HStack } from "../../../../components/Stack/HStack/HStack";
 import { createStyles } from "../../../../components/App/measurements/styles";
 import { AnswerText } from "../../../../components/HelpQuestionAnswer/AnswerText";
@@ -38,18 +26,9 @@ export const MeasurementHistoryEdit = () => {
     const navigateBack = useNavigateBack();
     const measurementDates = useAppSelector(getDatesFromCurrentMeasurement);
     const unitSystem = useAppSelector(getUnitSystem);
-    const {
-        ref: dateWarning,
-        openBottomSheet: openDateWarning,
-        closeBottomSheet: closeDateWarning,
-        isOpen: showDateWarning,
-    } = useBottomSheetRef();
+    const { ref: dateWarning, openBottomSheet: openDateWarning, closeBottomSheet: closeDateWarning, isOpen: showDateWarning } = useBottomSheetRef();
 
-    const {
-        ref: discardWarning,
-        openBottomSheet: openDiscardWarning,
-        closeBottomSheet: closeDiscardWarning,
-    } = useBottomSheetRef();
+    const { ref: discardWarning, openBottomSheet: openDiscardWarning, closeBottomSheet: closeDiscardWarning } = useBottomSheetRef();
     const editedDatapoint = useAppSelector(getEditedMeasurementDataPoint);
     const editedMeasurement = useAppSelector(getEditedMeasurement);
     const dispatch = useAppDispatch();
@@ -70,13 +49,7 @@ export const MeasurementHistoryEdit = () => {
             return;
         }
         navigateBack();
-    }, [
-        editedDatapoint?.isoDate,
-        editedDatapoint?.stringifiedDataPoint,
-        editedDatapoint?.value,
-        navigateBack,
-        openDiscardWarning,
-    ]);
+    }, [editedDatapoint?.isoDate, editedDatapoint?.stringifiedDataPoint, editedDatapoint?.value, navigateBack, openDiscardWarning]);
 
     const handleSaveEditedDatapoint = useCallback(() => {
         if (editedDatapoint) {
@@ -86,9 +59,7 @@ export const MeasurementHistoryEdit = () => {
             }
             const datapoint = { ...editedDatapoint, value: editedDatapoint?.value ?? "0" };
             if (showDateWarning) {
-                const overwriteIndex = editedMeasurement?.measurement?.data.findIndex(
-                    (datapoint) => datapoint?.isoDate === editedDatapoint?.isoDate,
-                );
+                const overwriteIndex = editedMeasurement?.measurement?.data.findIndex((datapoint) => datapoint?.isoDate === editedDatapoint?.isoDate);
                 dispatch(saveMeasurementDataPoint({ datapoint, index: overwriteIndex }));
                 dispatch(deleteMeasurementDataPoint({ index: datapoint?.indexInData }));
                 closeDateWarning();
@@ -98,14 +69,7 @@ export const MeasurementHistoryEdit = () => {
             }
         }
         Keyboard.dismiss();
-    }, [
-        closeDateWarning,
-        dispatch,
-        editedDatapoint,
-        editedMeasurement?.measurement?.data,
-        navigateBack,
-        showDateWarning,
-    ]);
+    }, [closeDateWarning, dispatch, editedDatapoint, editedMeasurement?.measurement?.data, navigateBack, showDateWarning]);
 
     const handleSetDatapointDate = useCallback(
         (selectedDate?: IsoDate) => {
@@ -133,14 +97,7 @@ export const MeasurementHistoryEdit = () => {
             return;
         }
         handleSaveEditedDatapoint();
-    }, [
-        editedDatapoint?.isoDate,
-        editedDatapoint?.indexInData,
-        editedMeasurement?.measurement?.data,
-        measurementDates,
-        handleSaveEditedDatapoint,
-        openDateWarning,
-    ]);
+    }, [editedDatapoint?.isoDate, editedDatapoint?.indexInData, editedMeasurement?.measurement?.data, measurementDates, handleSaveEditedDatapoint, openDateWarning]);
 
     const handleSetDatapointValue = useCallback(
         (value?: string) => {
@@ -154,22 +111,11 @@ export const MeasurementHistoryEdit = () => {
         [dispatch],
     );
 
-    const dateConfig = useMemo(
-        () =>
-            measurementDates?.map(
-                (date, index) =>
-                    ({ date, marked: true, latest: index === measurementDates?.length - 1 }) satisfies DateConfig,
-            ),
-        [measurementDates],
-    );
+    const dateConfig = useMemo(() => measurementDates?.map((date, index) => ({ date, marked: true, latest: index === measurementDates?.length - 1 }) satisfies DateConfig), [measurementDates]);
     return (
         <>
             <ThemedView stretch ghost>
-                <SiteNavigationButtons
-                    title={t("measurement_datapoint_edit_title")}
-                    backButtonAction={handleValidateBack}
-                    handleConfirm={handleConfirmSave}
-                />
+                <SiteNavigationButtons title={t("measurement_datapoint_edit_title")} backButtonAction={handleValidateBack} handleConfirm={handleConfirmSave} />
                 <PageContent scrollable ghost paddingTop={10} style={{ gap: 10 }} stretch>
                     <View style={{ gap: 3 }}>
                         <Text style={{ fontSize: 26 }} ghost>
@@ -187,12 +133,7 @@ export const MeasurementHistoryEdit = () => {
                         <Text style={{ fontSize: 20, marginBottom: 20 }} ghost>
                             {t("measurement_datapoint_new_date")}
                         </Text>
-                        <DatePicker
-                            handleSelectDate={handleSetDatapointDate}
-                            selectedDate={editedDatapoint?.isoDate ?? getDateTodayIso()}
-                            dateConfig={dateConfig}
-                            allSelectable
-                        />
+                        <DatePicker handleSelectDate={handleSetDatapointDate} selectedDate={editedDatapoint?.isoDate ?? getDateTodayIso()} dateConfig={dateConfig} allSelectable />
                     </ThemedView>
                 </PageContent>
             </ThemedView>

@@ -63,14 +63,7 @@ export const MeasurementProgress = () => {
             <SiteNavigationButtons backButtonAction={navigateToMeasurement} title={data.name} />
             <PageContent background paddingTop={20}>
                 <ThemedView style={{ padding: 10 }} round>
-                    <Chart
-                        transparent
-                        lineChartStyles={{ left: -30, top: 20, borderRadius }}
-                        getXLabel={getXLabel}
-                        getYLabel={() => ""}
-                        data={data}
-                        getDotContent={getDotContent}
-                    />
+                    <Chart transparent lineChartStyles={{ left: -30, top: 20, borderRadius }} getXLabel={getXLabel} getYLabel={() => ""} data={data} getDotContent={getDotContent} />
                 </ThemedView>
             </PageContent>
         </ThemedView>

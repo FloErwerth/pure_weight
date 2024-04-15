@@ -22,6 +22,7 @@ export const setAppInstallDate = createAction<IsoDate, "set_app_install_date">(
 export const setDevelopmentState = createAction<DevelopmentState, "set_development_state">(
     "set_development_state",
 );
+
 export type MetadataAction =
     | typeof setGenerallAppState.type
     | typeof setMockState.type

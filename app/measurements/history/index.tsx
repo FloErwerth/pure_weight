@@ -9,12 +9,7 @@ import { SelectableMeasurementDataPoint } from "../../../components/App/measurem
 import { FlatList, ListRenderItem } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { MeasurementDataPoint } from "../../../components/App/measurements/types";
-import {
-    deleteMeasurementDataPoint,
-    recoverMeasurementDataPoint,
-    saveEditedMeasurement,
-    setEditedMeasurementDataPoint,
-} from "../../../store/reducers/measurements";
+import { deleteMeasurementDataPoint, recoverMeasurementDataPoint, saveEditedMeasurement, setEditedMeasurementDataPoint } from "../../../store/reducers/measurements";
 import { BottomToast } from "../../../components/BottomToast/BottomToast";
 import { useToast } from "../../../components/BottomToast/useToast";
 import { Swipeable } from "../../../components/WorkoutCard/Swipeable";
@@ -88,12 +83,7 @@ export const MeasurementHistory = () => {
                 );
             }
         },
-        [
-            editedMeasurement?.measurement?.name,
-            editedMeasurement?.measurement?.type,
-            handleEditMeasurementPoint,
-            openBottomSheet,
-        ],
+        [editedMeasurement?.measurement?.name, editedMeasurement?.measurement?.type, handleEditMeasurementPoint, openBottomSheet],
     );
 
     const flatlistConfig = useMemo(() => {
@@ -119,9 +109,7 @@ export const MeasurementHistory = () => {
     const mappedData = useMemo(() => {
         if (editedMeasurement !== undefined && editedMeasurement.measurement && editedMeasurement.measurement?.data) {
             const filledData = 3 - (editedMeasurement.measurement.data.length % 3);
-            return filledData === 0
-                ? editedMeasurement?.measurement?.data
-                : [...editedMeasurement.measurement.data, ...Array(filledData).fill(undefined)];
+            return filledData === 0 ? editedMeasurement?.measurement?.data : [...editedMeasurement.measurement.data, ...Array(filledData).fill(undefined)];
         }
         return undefined;
     }, [editedMeasurement]);
@@ -133,10 +121,7 @@ export const MeasurementHistory = () => {
 
     return (
         <ThemedView background stretch>
-            <SiteNavigationButtons
-                backButtonAction={handleNavigateToMeasurements}
-                title={editedMeasurement.measurement?.name}
-            />
+            <SiteNavigationButtons backButtonAction={handleNavigateToMeasurements} title={editedMeasurement.measurement?.name} />
             <PageContent stretch ghost>
                 <FlatList
                     showsVerticalScrollIndicator={false}
