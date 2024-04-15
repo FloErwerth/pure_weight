@@ -19,7 +19,8 @@ export const WeightBasedSmallExerciseMetadataDisplay = ({ exerciseMetaData }: Sm
     const showSeconds = parseFloat(exerciseMetaData?.pauseSeconds || "0") !== 0;
     const { secondsUnit, minutesUnit } = useAppSelector(getTimeUnit);
     const showPause = showMinutes || showSeconds;
-    const pauseLowerText = useMemo(() => t("pause_lower"), [t]);
+    const pauseLowerText = useMemo(() => " ".concat(t("pause_lower")), [t]);
+
     if (!exerciseMetaData) {
         return null;
     }
