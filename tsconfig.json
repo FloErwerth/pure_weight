@@ -4,10 +4,11 @@
     "strict": true,
     "module": "esnext",
     "alwaysStrict": true,
+    "skipLibCheck": true
   },
   "include": [
     "**/*.ts",
     "**/*.tsx"
   ],
-  "exclude": ["node_modules", ".expo", "./dist"]
+  "exclude": ["node_modules", ".expo", "./dist"],
 }
