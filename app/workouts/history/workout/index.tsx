@@ -2,7 +2,7 @@ import { getDoneWorkoutById, getWorkoutByIndex } from "../../../../store/selecto
 import { AppState, useAppDispatch, useAppSelector } from "../../../../store";
 import { ThemedView } from "../../../../components/Themed/ThemedView/View";
 import { SiteNavigationButtons } from "../../../../components/SiteNavigationButtons/SiteNavigationButtons";
-import { RoutesParamaters, useNavigate } from "../../../../hooks/navigate";
+import { useNavigate } from "../../../../hooks/navigate";
 import { useCallback, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
@@ -17,6 +17,7 @@ import { View } from "react-native";
 import { DoneExerciseData } from "../../../../store/reducers/workout/types";
 import { getLocaleDate } from "../../../../utils/date";
 import { getLanguage } from "../../../../store/selectors/settings/settingsSelectors";
+import { RoutesParamaters } from "../../../../types/navigation";
 
 export const WorkoutHistoryOverview = ({
     route: {

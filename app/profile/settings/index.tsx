@@ -3,7 +3,7 @@ import { PageContent } from "../../../components/PageContent/PageContent";
 import React, { Fragment, useCallback, useEffect, useMemo, useRef } from "react";
 import { ThemedView } from "../../../components/Themed/ThemedView/View";
 import { SiteNavigationButtons } from "../../../components/SiteNavigationButtons/SiteNavigationButtons";
-import { RoutesParamaters, useNavigateBack } from "../../../hooks/navigate";
+import { useNavigateBack } from "../../../hooks/navigate";
 import { useTranslation } from "react-i18next";
 import { GeneralSettings } from "../../../components/App/settings/Sections/generalSettings";
 import { WorkoutSettings } from "../../../components/App/settings/Sections/workout";
@@ -12,6 +12,7 @@ import { HelpSection } from "../../../components/App/settings/Sections/help/Help
 import { DevelopmentSelection } from "../../../components/App/settings/components/Selections/DevelopmentSelection/DevelopmentSelection";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { Footer } from "../../../components/Footer/Footer";
+import { RoutesParamaters } from "../../../types/navigation";
 
 const styles = StyleSheet.create({
     contentWrapper: {

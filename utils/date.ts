@@ -1,7 +1,14 @@
 import { Temporal } from "@js-temporal/polyfill";
-import { isoDateDecoder } from "../decoders/date";
 import { IsoDate } from "../types/date";
 import * as Locale from "expo-localization";
+import { z } from "zod/lib";
+
+const isoDateRegex = new RegExp("^(\\d{4})-(\\d{2})-(\\d{2})");
+
+const isoDateDecoder = z
+    .string()
+    .regex(isoDateRegex)
+    .transform((date) => date as IsoDate);
 
 export const getDateTodayIso = (): IsoDate => {
     const now = Temporal.Now.plainDateISO().toString();

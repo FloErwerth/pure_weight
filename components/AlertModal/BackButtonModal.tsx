@@ -141,7 +141,7 @@ export const BackButtonModal = ({ title, reference, onPause, onCancel, onConfirm
 
     return (
         <ThemedBottomSheetModal ref={reference} title={title}>
-            <PageContent paddingTop={20} ghost>
+            <PageContent scrollable={false} paddingTop={20} ghost>
                 <HStack style={styles.gap} ghost>
                     <ThemedPressable stretch secondary padding round onPress={handleConfirmButton}>
                         <HStack ghost style={styles.gap}>

@@ -7,8 +7,8 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Workouts } from "../workouts";
 import { Profile } from "../profile";
 import { useTheme } from "../../theme/context";
-import { RoutesParamaters } from "../../hooks/navigate";
 import { Measurements } from "../measurements";
+import { RoutesParamaters } from "../../types/navigation";
 
 const Tabs = createBottomTabNavigator<RoutesParamaters>();
 

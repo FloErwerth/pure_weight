@@ -1,5 +1,5 @@
 import { ThemedView } from "../../../../components/Themed/ThemedView/View";
-import { RoutesParamaters, useNavigateBack } from "../../../../hooks/navigate";
+import { useNavigateBack } from "../../../../hooks/navigate";
 import { SiteNavigationButtons } from "../../../../components/SiteNavigationButtons/SiteNavigationButtons";
 import { PageContent } from "../../../../components/PageContent/PageContent";
 import { useTranslation } from "react-i18next";
@@ -19,6 +19,7 @@ import { ExerciseId, WorkoutId } from "../../../../store/reducers/workout/types"
 import { HistorySetInput } from "../../../../components/App/history/HistorySetInput/HistorySetInput";
 import { HistoryContextProvider } from "../../../../components/App/history/HistoryContext/HistoryContext";
 import { getDoneExerciseById } from "../../../../store/selectors/workout/workoutSelectors";
+import { RoutesParamaters } from "../../../../types/navigation";
 
 const useGetWasEdited = (doneWorkoutId: WorkoutId, doneExerciseId: ExerciseId) => {
     const doneExerciseData = useAppSelector((state: AppState) => getDoneExerciseById(state, doneWorkoutId, doneExerciseId));

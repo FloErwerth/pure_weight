@@ -10,7 +10,7 @@ import { Train } from "./workouts/train";
 import { WorkoutProgress } from "./workouts/progress";
 import { Create } from "./workouts/create";
 import { NavigationContainer } from "@react-navigation/native";
-import { navigationRef, RoutesParamaters } from "../hooks/navigate";
+import { navigationRef } from "../hooks/navigate";
 import { SafeAreaView } from "../components/Themed/ThemedSaveAreaView/SafeAreaView";
 import { ThemeProvider } from "../theme/context";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
@@ -37,6 +37,7 @@ import { useInitPurchases } from "../hooks/purchases";
 import { SplashScreen } from "expo-router";
 import { Settings } from "./profile/settings";
 import { layoutStyles } from "../components/App/layout/styles";
+import { RoutesParamaters } from "../types/navigation";
 
 SplashScreen.preventAutoHideAsync();
 
