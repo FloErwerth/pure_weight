@@ -19,7 +19,7 @@ interface BasePageContentProps extends PropsWithChildren, ComputedBackgroundColo
     ignorePadding?: boolean;
     round?: boolean;
 }
-type ScrollablePageContentProps = { scrollable: true } & BasePageContentProps & ScrollViewProps;
+type ScrollablePageContentProps = { scrollable?: true } & BasePageContentProps & ScrollViewProps;
 type NonScrollablePageContentProps = { scrollable?: false } & BasePageContentProps & ViewProps;
 
 type PageContentProps = ScrollablePageContentProps | NonScrollablePageContentProps;
@@ -27,17 +27,7 @@ export const PageContent = (props: PageContentProps) => {
     const { bottom } = useSafeAreaInsets();
     const safeBottomPixels = bottom === 0 && DeviceInfo.isTablet() ? 20 : bottom;
 
-    const {
-        children,
-        style,
-        scrollable,
-        titleConfig,
-        stretch,
-        paddingTop,
-        safeBottom,
-        ignoreGap = false,
-        ignorePadding = false,
-    } = props;
+    const { children, style, scrollable, titleConfig, stretch, paddingTop, safeBottom, ignoreGap = false, ignorePadding = false } = props;
     const computedBackground = useComputedBackgroundColor(props);
 
     const titleStyles = useMemo(() => {
@@ -61,23 +51,10 @@ export const PageContent = (props: PageContentProps) => {
             },
             style,
         ],
-        [
-            computedBackground,
-            ignoreGap,
-            ignorePadding,
-            paddingTop,
-            props.round,
-            safeBottom,
-            safeBottomPixels,
-            stretch,
-            style,
-        ],
+        [computedBackground, ignoreGap, ignorePadding, paddingTop, props.round, safeBottom, safeBottomPixels, stretch, style],
     );
 
-    const scrollableWrapperStyles = useMemo(
-        () => ({ backgroundColor: computedBackground, flex: stretch ? 1 : 0 }),
-        [computedBackground, stretch],
-    );
+    const scrollableWrapperStyles = useMemo(() => ({ backgroundColor: computedBackground, flex: stretch ? 1 : 0 }), [computedBackground, stretch]);
 
     if (scrollable) {
         return (

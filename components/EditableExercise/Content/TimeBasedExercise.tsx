@@ -11,6 +11,7 @@ import { getWeightUnit } from "../../../store/selectors/settings/settingsSelecto
 import { HStack } from "../../Stack/HStack/HStack";
 import { styles } from "../styles";
 import { PageContent } from "../../PageContent/PageContent";
+import { TranslationKeys } from "../../../locales/translationKeys";
 
 export const TimeBasedExercise = () => {
     const editedExercise = useAppSelector(getEditedExercise);
@@ -89,11 +90,11 @@ export const TimeBasedExercise = () => {
         () => ({
             sets: {
                 errorKey: "create_exercise_sets",
-                errorText: t("error_create_exercise_sets"),
+                errorText: t(TranslationKeys.ERROR_CREATE_EXERCISE_SETS),
             },
             duration: {
                 errorKey: "create_exercise_duration",
-                errorText: t("error_create_exercise_duration"),
+                errorText: t(TranslationKeys.ERROR_CREATE_EXERCISE_DURATION),
             },
         }),
         [t],
@@ -121,19 +122,8 @@ export const TimeBasedExercise = () => {
                 />
             </HStack>
             <HStack gap ghost>
-                <EditableExerciseInputRow
-                    i18key="sets"
-                    stretch
-                    setValue={handleSetSets}
-                    errorTextConfig={errorTextConfigs.sets}
-                    value={editedExercise?.exercise.sets}
-                />
-                <EditableExerciseInputRow
-                    stretch
-                    setValue={handleSetWeight}
-                    i18key="weight"
-                    suffix={weightUnit}
-                    value={editedExercise?.exercise.weight}></EditableExerciseInputRow>
+                <EditableExerciseInputRow i18key="sets" stretch setValue={handleSetSets} errorTextConfig={errorTextConfigs.sets} value={editedExercise?.exercise.sets} />
+                <EditableExerciseInputRow stretch setValue={handleSetWeight} i18key="weight" suffix={weightUnit} value={editedExercise?.exercise.weight}></EditableExerciseInputRow>
             </HStack>
         </PageContent>
     );
