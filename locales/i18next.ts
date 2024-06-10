@@ -7,20 +7,18 @@ import { GermanResource } from "./GermanResource";
 import { useCallback } from "react";
 import { TranslationKeys } from "./translationKeys";
 
-let initialized = false;
+const initialized = false;
 export const useInitIntl = () => {
     const language = useAppSelector(getLanguage);
     if (!initialized) {
         void i18n.use(initReactI18next).init({
             lng: language,
             fallbackLng: "de",
-            ns: "1",
             compatibilityJSON: "v3",
+            initImmediate: false,
+            resources: { en: { translation: EnglischResource }, de: { translation: GermanResource } },
         });
-        i18n.addResources("en", "1", EnglischResource);
-        i18n.addResources("de", "1", GermanResource);
     }
-    initialized = true;
 };
 
 export const useTypedTranslation = () => {
