@@ -1,13 +1,14 @@
-import { useTranslation } from "react-i18next";
 import { useAppDispatch, useAppSelector } from "../../../../../../store";
 import React, { useCallback, useMemo } from "react";
 import { mutateStopwatchSettings } from "../../../../../../store/reducers/settings";
 import { getStartStopwatchOnDoneSet } from "../../../../../../store/selectors/settings/settingsSelectors";
 import { CheckBox } from "../../../../../Themed/CheckBox/CheckBox";
 import { ThemedView } from "../../../../../Themed/ThemedView/View";
+import { useTypedTranslation } from "../../../../../../locales/i18next";
+import { TranslationKeys } from "../../../../../../locales/translationKeys";
 
 export const StopwatchSelection = () => {
-    const { t } = useTranslation();
+    const { t } = useTypedTranslation();
     const startStopwatchOnDoneSet = useAppSelector(getStartStopwatchOnDoneSet);
 
     const dispatch = useAppDispatch();
@@ -18,17 +19,15 @@ export const StopwatchSelection = () => {
 
     const doneSetHelpText = useMemo(
         () => ({
-            title: t("settings_stopwatch_done_set"),
-            text: t("settings_stopwatch_done_set_helptext_text"),
+            title: t(TranslationKeys.SETTINGS_STOPWATCH_DONE_SET),
+            text: t(TranslationKeys.SETTINGS_STOPWATCH_DONE_SET_HELPTEXT_TEXT),
         }),
         [t],
     );
 
-    const doneSetLabel = useMemo(() => t("settings_stopwatch_done_set"), [t]);
-
     return (
         <ThemedView ghost>
-            <CheckBox helpTextConfig={doneSetHelpText} label={doneSetLabel} size={26} checked={startStopwatchOnDoneSet} onChecked={handleSelectStartStopwatchOnDoneSet} />
+            <CheckBox helpTextConfig={doneSetHelpText} label={doneSetHelpText.title} size={26} checked={startStopwatchOnDoneSet} onChecked={handleSelectStartStopwatchOnDoneSet} />
         </ThemedView>
     );
 };

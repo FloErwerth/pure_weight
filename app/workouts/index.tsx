@@ -2,7 +2,6 @@ import React, { useCallback, useMemo, useState } from "react";
 import { useNavigate } from "../../hooks/navigate";
 import { AppState, useAppDispatch, useAppSelector } from "../../store";
 import { SiteNavigationButtons } from "../../components/SiteNavigationButtons/SiteNavigationButtons";
-import { useTranslation } from "react-i18next";
 import { ThemedView } from "../../components/Themed/ThemedView/View";
 import { getIsOngoingWorkout, getSearchedWorkout, getSortedWorkouts, getTrainedWorkout } from "../../store/selectors/workout/workoutSelectors";
 import { createNewWorkout, recoverWorkout, removeWorkout, resumeTrainedWorkout, setEditedWorkout, setSearchedWorkout, startWorkout } from "../../store/reducers/workout";
@@ -25,6 +24,8 @@ import { AnswerText } from "../../components/HelpQuestionAnswer/AnswerText";
 import { WorkoutCompleteModal } from "../../components/WorkoutCompleteModal/WorkoutCompleteModal";
 import { getIsPro } from "../../store/selectors/purchases";
 import { RemainingWorkoutsText } from "../../components/CreationBarrierTexts/RemainingWorkoutsText";
+import { TranslationKeys } from "../../locales/translationKeys";
+import { useTypedTranslation } from "../../locales/i18next";
 
 const usePauseWarningContent = () => {
     const language = useAppSelector(getLanguage);
@@ -47,7 +48,7 @@ const usePauseWarningContent = () => {
 
 export function Workouts() {
     const dispatch = useAppDispatch();
-    const { t } = useTranslation();
+    const { t } = useTypedTranslation();
     const savedWorkouts = useAppSelector(getSortedWorkouts);
     const workoutFilter = useAppSelector(getSearchedWorkout);
     const isPro = useAppSelector(getIsPro);
@@ -173,7 +174,13 @@ export function Workouts() {
 
     return (
         <ThemedView stretch background>
-            <SiteNavigationButtons titleFontSize={40} title={t("workouts")} handleConfirmIcon={confirmIcon} confirmButtonDisabled={!isAllowedToCreateWorkout} handleConfirm={handleCreateWorkout} />
+            <SiteNavigationButtons
+                titleFontSize={40}
+                title={t(TranslationKeys.WORKOUTS)}
+                handleConfirmIcon={confirmIcon}
+                confirmButtonDisabled={!isAllowedToCreateWorkout}
+                handleConfirm={handleCreateWorkout}
+            />
             {numberOfWorkouts > 1 && (
                 <PageContent ghost>
                     <HStack ghost style={trainStyles.searchAndFilterBar}>
@@ -188,7 +195,15 @@ export function Workouts() {
                 </ThemedView>
                 <RemainingWorkoutsText />
             </PageContent>
-            <BottomToast reference={toastRef} bottom={5} onRequestClose={closeToast} open={showToast} messageKey={"undo_message"} titleKey={"workout_deleted_title"} onRedo={handleRecoverWorkout} />
+            <BottomToast
+                reference={toastRef}
+                bottom={5}
+                onRequestClose={closeToast}
+                open={showToast}
+                messageKey={TranslationKeys.UNDO_MESSAGE}
+                titleKey={TranslationKeys.WORKOUT_DELETED_TITLE}
+                onRedo={handleRecoverWorkout}
+            />
             <ThemedBottomSheetModal title={title} ref={ref}>
                 <PageContent paddingTop={20} stretch ghost>
                     <AnswerText>{message}</AnswerText>
@@ -214,16 +229,16 @@ export function Workouts() {
                     </ThemedPressable>
                 </PageContent>
             </ThemedBottomSheetModal>
-            <ThemedBottomSheetModal title={t("alert_delete_workout_title")} ref={deleteWarningRef}>
+            <ThemedBottomSheetModal title={t(TranslationKeys.ALERT_DELETE_WORKOUT_TITLE)} ref={deleteWarningRef}>
                 <PageContent paddingTop={20} stretch ghost>
-                    <AnswerText>{t("alert_delete_workout_content")}</AnswerText>
+                    <AnswerText>{t(TranslationKeys.ALERT_DELETE_WORKOUT_CONTENT)}</AnswerText>
                 </PageContent>
                 <PageContent ghost paddingTop={20}>
                     <ThemedPressable style={trainStyles.deleteButtonWrapper} round onPress={confirmWorkoutDeletion}>
                         <HStack style={trainStyles.confirmOverwriteWrapper} round center>
                             <ThemedMaterialCommunityIcons ghost name="delete" size={24} />
                             <Text center ghost style={trainStyles.button}>
-                                {t("alert_workout_delete_confirm")}
+                                {t(TranslationKeys.ALERT_WORKOUT_DELETE_CONFIRM)}
                             </Text>
                         </HStack>
                     </ThemedPressable>

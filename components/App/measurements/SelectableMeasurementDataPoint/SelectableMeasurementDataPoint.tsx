@@ -8,8 +8,9 @@ import { styles } from "./styles";
 import { IsoDate } from "../../../../types/date";
 import { getLocaleDate } from "../../../../utils/date";
 import Animated, { FadeIn, FadeOut, Layout } from "react-native-reanimated";
-import { useTranslation } from "react-i18next";
 import { useMemo } from "react";
+import { useTypedTranslation } from "../../../../locales/i18next";
+import { TranslationKeys } from "../../../../locales/translationKeys";
 
 type EditedMeasurementDataPointProps = {
     name: string;
@@ -22,12 +23,12 @@ type EditedMeasurementDataPointProps = {
 export const SelectableMeasurementDataPoint = ({ isoDate, value, type, selectMeasurementPoint, name }: EditedMeasurementDataPointProps) => {
     const unitSystem = useAppSelector(getUnitSystem);
     const language = useAppSelector(getLanguage);
-    const { t } = useTranslation();
+    const { t } = useTypedTranslation();
 
     const displayedText = useMemo(
         () => (
             <>
-                {t("measured_value")}: {value} {getUnitByType(unitSystem, type)} {name}
+                {t(TranslationKeys.MEASURED_VALUE)}: {value} {getUnitByType(unitSystem, type)} {name}
             </>
         ),
         [name, t, type, unitSystem, value],

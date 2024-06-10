@@ -1,4 +1,3 @@
-import { useTranslation } from "react-i18next";
 import React, { useCallback, useContext, useMemo } from "react";
 import { styles } from "../../styles";
 import { HStack } from "../../../Stack/HStack/HStack";
@@ -25,7 +24,6 @@ export interface ProgressDisplayProps {
 
 const useText = (type: "Workout" | "Measurement", even: boolean, isPositiveTrend: boolean = true, processedPercent: number, trend?: Trend) => {
     const language = useAppSelector(getLanguage);
-    const { t } = useTranslation();
 
     const workoutText = useMemo(() => {
         if (even) {
@@ -35,10 +33,10 @@ const useText = (type: "Workout" | "Measurement", even: boolean, isPositiveTrend
             return `Deine Leistung bei ${trend?.name} hat sich nicht verändert`;
         }
         if (language === "en") {
-            return `Your performance at ${trend?.name} ${t(isPositiveTrend ? "increased" : "decreased")} by ${processedPercent}%`;
+            return `Your performance at ${trend?.name} ${isPositiveTrend ? "increased" : "decreased"} by ${processedPercent}%`;
         }
-        return `Deine Leistung bei ${trend?.name} ist um ${processedPercent}% ${t(isPositiveTrend ? "gestiegen" : "gefallen")}`;
-    }, [even, language, t, processedPercent, isPositiveTrend, trend?.name]);
+        return `Deine Leistung bei ${trend?.name} ist um ${processedPercent}% ${isPositiveTrend ? "gestiegen" : "gefallen"}`;
+    }, [even, language, processedPercent, isPositiveTrend, trend?.name]);
 
     const measurementText = useMemo(() => {
         if (even) {
@@ -49,15 +47,15 @@ const useText = (type: "Workout" | "Measurement", even: boolean, isPositiveTrend
         }
         if (isPositiveTrend) {
             if (language === "en") {
-                return `Your measurement ${trend?.name ?? ""} ${t("progress_increased")} by ${processedPercent} %`;
+                return `Your measurement ${trend?.name ?? ""} increased by ${processedPercent} %`;
             }
-            return `Deine Messung ${trend?.name ?? ""} ist um ${processedPercent} % ${t("progress_increased")}`;
+            return `Deine Messung ${trend?.name ?? ""} ist um ${processedPercent} % gestiegen`;
         }
         if (language === "en") {
-            return `Your measurement ${trend?.name ?? ""} ${t("progress_decreased")} by ${processedPercent} %`;
+            return `Your measurement ${trend?.name ?? ""} decreased by ${processedPercent} %`;
         }
-        return `Deine Messung ${trend?.name ?? ""} ist um ${processedPercent} % ${t("progress_decreased")}`;
-    }, [even, isPositiveTrend, language, trend?.name, processedPercent, t]);
+        return `Deine Messung ${trend?.name ?? ""} ist um ${processedPercent} % gefallen`;
+    }, [even, isPositiveTrend, language, trend?.name, processedPercent]);
 
     if (type === "Measurement") {
         return measurementText;

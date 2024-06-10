@@ -15,11 +15,11 @@ import { ThemedMaterialCommunityIcons } from "../../../Themed/ThemedMaterialComm
 import * as Haptics from "expo-haptics";
 import { HistoryContext } from "../HistoryContext/HistoryContext";
 import { cleanError, setError } from "../../../../store/reducers/errors";
-import { ErrorFields } from "../../../../store/reducers/errors/types";
 import { getErrorByKey } from "../../../../store/selectors/errors/errorSelectors";
 import { getLanguage } from "../../../../store/selectors/settings/settingsSelectors";
 import { ThemedView } from "../../../Themed/ThemedView/View";
 import { replaceDoneExerciseSet } from "../../../../store/reducers/workout";
+import { ErrorFields } from "../../../../store/reducers/errors/types";
 
 interface SetInputRowProps {
     setIndex: number;

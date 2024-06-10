@@ -8,7 +8,8 @@ import { getLanguage } from "../../store/selectors/settings/settingsSelectors";
 import { NewLine } from "../App/help/NewLine";
 import { Text } from "../Themed/ThemedText/Text";
 import { PageContent } from "../PageContent/PageContent";
-import { useTranslation } from "react-i18next";
+import { useTypedTranslation } from "../../locales/i18next";
+import { TranslationKeys } from "../../locales/translationKeys";
 
 type DatenschutzProps = {
     reference: RefObject<BottomSheetModal>;
@@ -16,7 +17,7 @@ type DatenschutzProps = {
 
 export const Datenschutz = ({ reference }: DatenschutzProps) => {
     const language = useAppSelector(getLanguage);
-    const { t } = useTranslation();
+    const { t } = useTypedTranslation();
 
     const EnglischDatenschutz = useCallback(
         () => (
@@ -595,7 +596,7 @@ export const Datenschutz = ({ reference }: DatenschutzProps) => {
     );
 
     return (
-        <ThemedBottomSheetModal title={t("privacy")} ref={reference}>
+        <ThemedBottomSheetModal title={t(TranslationKeys.PRIVACY)} ref={reference}>
             <PageContent ghost>{language === "de" ? DeutscherDatenschutz() : EnglischDatenschutz()}</PageContent>
         </ThemedBottomSheetModal>
     );

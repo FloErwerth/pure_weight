@@ -4,7 +4,6 @@ import { styles, timeInputStyles } from "./styles";
 import { HStack } from "../Stack/HStack/HStack";
 import { ThemedView } from "../Themed/ThemedView/View";
 import { TimeInputRowProps } from "./types";
-import { useTranslation } from "react-i18next";
 import { Text } from "../Themed/ThemedText/Text";
 import { AppState, useAppSelector } from "../../store";
 import { getErrorByKey } from "../../store/selectors/errors/errorSelectors";
@@ -14,6 +13,8 @@ import { Picker } from "@react-native-picker/picker";
 import { ThemedBottomSheetModal, useBottomSheetRef } from "../BottomSheetModal/ThemedBottomSheetModal";
 import { PageContent } from "../PageContent/PageContent";
 import { ThemedPressable } from "../Themed/Pressable/Pressable";
+import { useTypedTranslation } from "../../locales/i18next";
+import { TranslationKeys } from "../../locales/translationKeys";
 
 const numberSteps5 = Array.from({ length: 13 }, (_, i) => (i * 5).toString().padStart(2, "0")).map((i) => {
     const label = i === "60" ? "59" : i;
@@ -39,10 +40,10 @@ export const TimeInputRow = ({
     wrapperStyle,
     textStyle,
 }: TimeInputRowProps) => {
-    const { t } = useTranslation();
+    const { t } = useTypedTranslation();
     const hasError = useAppSelector((state: AppState) => getErrorByKey(state, errorTextConfig?.errorKey));
-    const secondsSuffix = useMemo(() => t("seconds"), [t]);
-    const minutesSuffix = useMemo(() => t("minutes"), [t]);
+    const secondsSuffix = useMemo(() => t(TranslationKeys.SECONDS), [t]);
+    const minutesSuffix = useMemo(() => t(TranslationKeys.MINUTES), [t]);
     const { ref, openBottomSheet } = useBottomSheetRef();
 
     const handleChangeSeconds = useCallback(
@@ -73,15 +74,15 @@ export const TimeInputRow = ({
 
     const secondsLabel = useMemo(() => {
         if (seconds === "01") {
-            return t("seconds_long_singular");
+            return t(TranslationKeys.SECONDS_LONG_SINGULAR);
         }
-        return t("seconds_long");
+        return t(TranslationKeys.SECONDS_LONG);
     }, [seconds, t]);
     const minutesLabel = useMemo(() => {
         if (minutes === "01") {
-            return t("minutes_long_singular");
+            return t(TranslationKeys.MINUTES_LONG_SINGULAR);
         }
-        return t("minutes_long");
+        return t(TranslationKeys.MINUTES_LONG);
     }, [minutes, t]);
 
     const label = useMemo(() => {

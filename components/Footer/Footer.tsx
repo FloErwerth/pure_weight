@@ -1,7 +1,6 @@
 import { ThemedPressable } from "../Themed/Pressable/Pressable";
 import { Text } from "../Themed/ThemedText/Text";
 import { HStack } from "../Stack/HStack/HStack";
-import { useTranslation } from "react-i18next";
 import { useCallback, useMemo, useState } from "react";
 import { ActivityIndicator, Linking } from "react-native";
 import { noop } from "lodash";
@@ -13,13 +12,15 @@ import { useNavigate } from "../../hooks/navigate";
 import { AGB } from "../AGB/AGB";
 import { Datenschutz } from "../Datenschutz/Datenschutz";
 import { styles } from "./styles";
+import { useTypedTranslation } from "../../locales/i18next";
+import { TranslationKeys } from "../../locales/translationKeys";
 
 type FooterProps = {
     showRestore?: boolean;
 };
 
 export const Footer = ({ showRestore }: FooterProps) => {
-    const { t } = useTranslation();
+    const { t } = useTypedTranslation();
     const [restoreResult, setRestoreResult] = useState<"LOADING_RESTORE" | "PENDING" | "SUCCESS" | "FAILED" | undefined>(undefined);
     const { ref: restoreRef, openBottomSheet: openRestoreSheet, closeBottomSheet: closeRestoreSheet } = useBottomSheetRef();
     const { ref: agbRef, openBottomSheet: openAgbSheet } = useBottomSheetRef();
@@ -50,16 +51,16 @@ export const Footer = ({ showRestore }: FooterProps) => {
     const showIndicator = restoreResult === "LOADING_RESTORE" || restoreResult === "PENDING";
     const restoreText = useMemo(() => {
         if (restoreResult === "LOADING_RESTORE") {
-            return t("purchase_restore_loading");
+            return t(TranslationKeys.PURCHASE_RESTORE_LOADING);
         }
         if (restoreResult === "PENDING") {
-            return t("purchase_restore_pending");
+            return t(TranslationKeys.PURCHASE_RESTORE_PENDING);
         }
         if (restoreResult === "SUCCESS") {
-            return t("purchase_restore_success");
+            return t(TranslationKeys.PURCHASE_RESTORE_SUCCESS);
         }
         if (restoreResult === "FAILED") {
-            return t("purchase_restore_failed");
+            return t(TranslationKeys.PURCHASE_RESTORE_FAILED);
         }
     }, [restoreResult, t]);
 
@@ -72,7 +73,7 @@ export const Footer = ({ showRestore }: FooterProps) => {
             <HStack ghost style={styles.wrapper}>
                 <ThemedPressable onPress={handleOpenContact} ghost>
                     <Text textSecondary ghost>
-                        {t("help")}
+                        {t(TranslationKeys.HELP)}
                     </Text>
                 </ThemedPressable>
                 <Text ghost textSecondary>
@@ -82,7 +83,7 @@ export const Footer = ({ showRestore }: FooterProps) => {
                     <>
                         <ThemedPressable ghost onPress={handleRestoring}>
                             <Text textSecondary ghost>
-                                {t("restore")}
+                                {t(TranslationKeys.RESTORE)}
                             </Text>
                         </ThemedPressable>
                         <Text ghost textSecondary>
@@ -92,7 +93,7 @@ export const Footer = ({ showRestore }: FooterProps) => {
                 )}
                 <ThemedPressable ghost onPress={openAgbSheet}>
                     <Text textSecondary ghost>
-                        {t("agb")}
+                        {t(TranslationKeys.AGB)}
                     </Text>
                 </ThemedPressable>
                 <Text ghost textSecondary>
@@ -100,11 +101,11 @@ export const Footer = ({ showRestore }: FooterProps) => {
                 </Text>
                 <ThemedPressable onPress={openDatenschutzSheet} ghost>
                     <Text textSecondary ghost>
-                        {t("privacy")}
+                        {t(TranslationKeys.PRIVACY)}
                     </Text>
                 </ThemedPressable>
             </HStack>
-            <ThemedBottomSheetModal title={t("purchase_restore_title")} ref={restoreRef}>
+            <ThemedBottomSheetModal title={t(TranslationKeys.PURCHASE_RESTORE_TITLE)} ref={restoreRef}>
                 <PageContent ghost paddingTop={20}>
                     <ThemedView round padding>
                         <Text center style={styles.restoreText}>
@@ -114,7 +115,7 @@ export const Footer = ({ showRestore }: FooterProps) => {
                     {restoreResult === "FAILED" && (
                         <ThemedPressable onPress={handleOpenContact} ghost padding style={styles.margin}>
                             <Text ghost center>
-                                {t("purchase_restore_contact")}
+                                {t(TranslationKeys.PURCHASE_RESTORE_CONTACT)}
                             </Text>
                         </ThemedPressable>
                     )}

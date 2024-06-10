@@ -11,7 +11,6 @@ import * as Haptics from "expo-haptics";
 import { NotificationFeedbackType } from "expo-haptics";
 import DraggableFlatList from "react-native-draggable-flatlist/src/components/DraggableFlatList";
 import { RenderItemParams, ScaleDecorator } from "react-native-draggable-flatlist";
-import { useTranslation } from "react-i18next";
 import { PageContent } from "../../../components/PageContent/PageContent";
 import { ThemedView } from "../../../components/Themed/ThemedView/View";
 import { ThemedBottomSheetModal, useBottomSheetRef } from "../../../components/BottomSheetModal/ThemedBottomSheetModal";
@@ -37,6 +36,8 @@ import { ThemedPressable } from "../../../components/Themed/Pressable/Pressable"
 import { ThemedMaterialCommunityIcons } from "../../../components/Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
 import { useToast } from "../../../components/BottomToast/useToast";
 import { AnswerText } from "../../../components/HelpQuestionAnswer/AnswerText";
+import { useTypedTranslation } from "../../../locales/i18next";
+import { TranslationKeys } from "../../../locales/translationKeys";
 
 type MappedExercises = {
     onDelete: () => void;
@@ -70,10 +71,10 @@ const useValidateWorkout = () => {
 export const Create = () => {
     const navigate = useNavigate();
     const { bottom } = useSafeAreaInsets();
-    const { t } = useTranslation();
+    const { t } = useTypedTranslation();
     const editedWorkout = useAppSelector(getEditedWorkout);
     const isEditedWorkout = useAppSelector(getIsEditedWorkout);
-    const title = useMemo(() => (isEditedWorkout ? t("edit_workout") : t("create_workout")), [isEditedWorkout, t]);
+    const title = useMemo(() => t(isEditedWorkout ? TranslationKeys.EDIT_WORKOUT : TranslationKeys.CREATE_WORKOUT), [isEditedWorkout, t]);
     const dispatch = useAppDispatch();
     const { ref: alertRef, openBottomSheet: openAlert, closeBottomSheet: closeAlert } = useBottomSheetRef();
     const { toastRef, openToast, closeToast, showToast } = useToast();
@@ -191,18 +192,18 @@ export const Create = () => {
     const confirmButtonConfig = useMemo(
         () =>
             ({
-                localeKey: isEditedWorkout ? "alert_edit_confirm_cancel" : "alert_create_confirm_cancel",
+                localeKey: isEditedWorkout ? TranslationKeys.ALERT_EDIT_CONFIRM_CANCEL : TranslationKeys.ALERT_CREATE_CONFIRM_CANCEL,
                 onPress: handleDeleteWorkout,
             }) as const,
         [handleDeleteWorkout, isEditedWorkout],
     );
 
-    const alertContent = useMemo(() => t(isEditedWorkout ? "alert_edit_workout_discard_content" : "alert_create_workout_discard_content"), [t, isEditedWorkout]);
-    const alertTitle = useMemo(() => t(isEditedWorkout ? "alert_edit_discard_title" : "alert_create_discard_title"), [t, isEditedWorkout]);
+    const alertContent = useMemo(() => t(isEditedWorkout ? TranslationKeys.ALERT_EDIT_WORKOUT_DISCARD_CONTENT : TranslationKeys.ALERT_CREATE_WORKOUT_DISCARD_CONTENT), [t, isEditedWorkout]);
+    const alertTitle = useMemo(() => t(isEditedWorkout ? TranslationKeys.ALERT_EDIT_DISCARD_TITLE : TranslationKeys.ALERT_CREATE_DISCARD_TITLE), [t, isEditedWorkout]);
 
-    const deleteTitle = useMemo(() => t("alert_delete_exercise_title"), [t]);
-    const deleteContent = useMemo(() => t("alert_delete_exercise_content"), [t]);
-    const deleteConfirm = useMemo(() => t("alert_delete_exercise_confirm"), [t]);
+    const deleteTitle = useMemo(() => t(TranslationKeys.ALERT_DELETE_EXERCISE_TITLE), [t]);
+    const deleteContent = useMemo(() => t(TranslationKeys.ALERT_DELETE_EXERCISE_CONTENT), [t]);
+    const deleteConfirm = useMemo(() => t(TranslationKeys.ALERT_DELETE_EXERCISE_CONFIRM), [t]);
 
     const handleConfirmDeletion = useCallback(() => {
         closeDeleteWarning();
@@ -229,7 +230,7 @@ export const Create = () => {
                         round
                         value={editedWorkout?.workout.name}
                         onChangeText={handleSetWorkoutName}
-                        placeholder={t("workout_name")}
+                        placeholder={t(TranslationKeys.WORKOUT_NAME)}
                     />
                     <View style={styles.listContainer}>
                         {mappedExercises?.length > 0 && (
@@ -252,8 +253,8 @@ export const Create = () => {
                         padding={40}
                         onRequestClose={closeToast}
                         open={showToast}
-                        messageKey={"undo_message"}
-                        titleKey={"exercise_deleted_title"}
+                        messageKey={TranslationKeys.UNDO_MESSAGE}
+                        titleKey={TranslationKeys.EXERCISE_DELETED_TITLE}
                         onRedo={handleRecoverExercise}
                     />
                     <AddButton onPress={handleAddExercise} />

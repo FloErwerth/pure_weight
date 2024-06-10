@@ -1,5 +1,4 @@
 import { DEFAULT_PLUS, SiteNavigationButtons } from "../../components/SiteNavigationButtons/SiteNavigationButtons";
-import { useTranslation } from "react-i18next";
 import React, { useCallback, useMemo, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../store";
 import { PageContent } from "../../components/PageContent/PageContent";
@@ -24,9 +23,11 @@ import { ThemedMaterialCommunityIcons } from "../../components/Themed/ThemedMate
 import { Text } from "../../components/Themed/ThemedText/Text";
 import { RemainingMeasurementsText } from "../../components/CreationBarrierTexts/RemainingMeasurementsText";
 import { getIsPro } from "../../store/selectors/purchases";
+import { useTypedTranslation } from "../../locales/i18next";
+import { TranslationKeys } from "../../locales/translationKeys";
 
 export function Measurements() {
-    const { t } = useTranslation();
+    const { t } = useTypedTranslation();
     const measurements = useAppSelector(getSortedMeasurements);
     const searchedMeasurements = useAppSelector(getSearchedMeasurements);
     const dispatch = useAppDispatch();
@@ -117,7 +118,7 @@ export function Measurements() {
             <SiteNavigationButtons
                 confirmButtonDisabled={!isAllowedToCreateMeasurement}
                 titleFontSize={40}
-                title={t("measurements")}
+                title={t(TranslationKeys.MEASUREMENTS)}
                 handleConfirm={handleAddNewMeasurement}
                 handleConfirmIcon={DEFAULT_PLUS}
             />
@@ -139,19 +140,19 @@ export function Measurements() {
                 reference={toastRef}
                 onRequestClose={closeToast}
                 open={showToast}
-                messageKey={"measurement_deleted_undo"}
-                titleKey={"measurement_deleted_message"}
+                messageKey={TranslationKeys.MEASUREMENT_DELETED_UNDO}
+                titleKey={TranslationKeys.MEASUREMENT_DELETED_MESSAGE}
                 onRedo={handleRecoverMeasurement}
                 bottom={10}
             />
-            <ThemedBottomSheetModal title={t("alert_delete_measurement_title")} ref={deleteWarningRef}>
+            <ThemedBottomSheetModal title={t(TranslationKeys.ALERT_DELETE_MEASUREMENT_TITLE)} ref={deleteWarningRef}>
                 <PageContent paddingTop={20} stretch ghost>
-                    <AnswerText>{t("alert_delete_measurement_content")}</AnswerText>
+                    <AnswerText>{t(TranslationKeys.ALERT_DELETE_MEASUREMENT_CONTENT)}</AnswerText>
                     <ThemedPressable style={trainStyles.deleteButtonWrapper} center round onPress={handleDeleteMeasurement}>
                         <HStack style={trainStyles.confirmOverwriteWrapper} round center>
                             <ThemedMaterialCommunityIcons ghost name="delete" size={24} />
                             <Text center ghost style={trainStyles.button}>
-                                {t("alert_delete_measurement_confirm")}
+                                {t(TranslationKeys.ALERT_DELETE_MEASUREMENT_CONFIRM)}
                             </Text>
                         </HStack>
                     </ThemedPressable>

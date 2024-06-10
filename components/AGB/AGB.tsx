@@ -7,14 +7,15 @@ import { useAppSelector } from "../../store";
 import { getLanguage } from "../../store/selectors/settings/settingsSelectors";
 import { Text } from "../Themed/ThemedText/Text";
 import { PageContent } from "../PageContent/PageContent";
-import { useTranslation } from "react-i18next";
+import { useTypedTranslation } from "../../locales/i18next";
+import { TranslationKeys } from "../../locales/translationKeys";
 
 type AGBProps = {
     reference: RefObject<BottomSheetModal>;
 };
 export const AGB = ({ reference }: AGBProps) => {
     const language = useAppSelector(getLanguage);
-    const { t } = useTranslation();
+    const { t } = useTypedTranslation();
     const EnglischAGB = useCallback(
         () => (
             <ThemedView ghost>
@@ -420,7 +421,7 @@ export const AGB = ({ reference }: AGBProps) => {
     );
 
     return (
-        <ThemedBottomSheetModal ref={reference} title={t("agb")}>
+        <ThemedBottomSheetModal ref={reference} title={t(TranslationKeys.AGB)}>
             <PageContent ghost paddingTop={20}>
                 {language === "de" ? GermanAgb() : EnglischAGB()}
             </PageContent>

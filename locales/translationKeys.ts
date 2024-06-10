@@ -1,4 +1,4 @@
-export enum TranslationKeys {
+export enum ErrorTranslationKeys {
     ERROR_CREATE_WORKOUT_NAME = "error_create_workout_name",
     ERROR_CREATE_EXERCISES_EMPTY = "error_create_exercises_empty",
     ERROR_CREATE_EXERCISE_NAME = "error_create_exercise_name",
@@ -15,6 +15,9 @@ export enum TranslationKeys {
     ERROR_CREATE_MEASUREMENT_VALUE = "error_create_measurement_value",
     ERROR_EDIT_HISTORY_EXERCISE_WEIGHTBASED_WEIGHT = "error_edit_history_exercise_weightbased_weight",
     ERROR_EDIT_HISTORY_EXERCISE_TIMEBASED_WEIGHT = "error_edit_history_exercise_timebased_weight",
+}
+
+export enum TranslationKeys {
     WORKOUTS = "workouts",
     WORKOUT = "workout",
     PROGRESS = "progress",
@@ -77,6 +80,11 @@ export enum TranslationKeys {
     ALERT_DELETE_WORKOUT_TITLE = "alert_delete_workout_title",
     ALERT_DELETE_WORKOUT_CONTENT = "alert_delete_workout_content",
     ALERT_WORKOUT_DELETE_CONFIRM = "alert_workout_delete_confirm",
+    ALERT_ADD_MEASUREMENT_DATA_TITLE = "alert_add_measurement_data_title",
+    ALERT_ADD_MEASUREMENT_DATA_CONTENT = "alert_add_measurement_data_content",
+    ALERT_ADD_MEASUREMENT_DATA_CONFIRM = "alert_add_measurement_data_confirm",
+    ALERT_CREATE_MEASUREMENT_DISCARD_CONTENT = "alert_create_measurement_discard_content",
+    ALERT_EDIT_MEASUREMENT_DISCARD_CONTENT = "alert_edit_measurement_discard_content",
     CREATE_EXERCISE = "create_exercise",
     EDIT_EXERCISE_LONG = "edit_exercise_long",
     EDIT_EXERCISE = "edit_exercise",
@@ -296,6 +304,7 @@ export enum TranslationKeys {
     HELP = "help",
     RESTORE = "restore",
     AGB = "agb",
+
     PRIVACY = "privacy",
     PURCHASE_RESTORE_TITLE = "purchase_restore_title",
     PURCHASE_RESTORE_LOADING = "purchase_restore_loading",

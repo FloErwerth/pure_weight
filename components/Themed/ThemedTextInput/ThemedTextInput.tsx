@@ -9,8 +9,8 @@ import { styles } from "./styles";
 import { cleanError } from "../../../store/reducers/errors";
 import { getErrorByKey } from "../../../store/selectors/errors/errorSelectors";
 import { ErrorText } from "../../ErrorText/ErrorText";
-import { ErrorFields } from "../../../store/reducers/errors/types";
 import { borderRadius } from "../../../theme/border";
+import { ErrorFields } from "../../../store/reducers/errors/types";
 
 interface ThemedTextInputProps extends TextInputProps, ComputedBackgroundColorProps {
     reference?: RefObject<TextInput>;

@@ -8,7 +8,6 @@ import { AppState, useAppDispatch, useAppSelector } from "../../store";
 import { getPostWorkoutTrend, getPostWorkoutWorkout } from "../../store/selectors/workout/workoutSelectors";
 import { setShowPostWorkoutScreen } from "../../store/reducers/workout";
 import { navigationRef } from "../../hooks/navigate";
-import { useTranslation } from "react-i18next";
 import { useTheme } from "../../theme/context";
 import { PostWorkoutScreen } from "../../store/reducers/workout/types";
 import { trunicateToNthSignificantDigit } from "../../utils/number";
@@ -16,6 +15,8 @@ import { getDurationInSecondsMinutesOrHours } from "../../utils/timeDisplay";
 import { FlatList } from "react-native";
 import { useGetConvertedWeight } from "../../hooks/useConvertedWeight";
 import { styles } from "./styles";
+import { useTypedTranslation } from "../../locales/i18next";
+import { TranslationKeys } from "../../locales/translationKeys";
 
 type Stat = PostWorkoutScreen["stats"][number] | undefined;
 
@@ -35,8 +36,8 @@ const useDebouncedShowPostWorkoutScreen = () => {
 };
 
 const useHeaderStats = (): Stat[] => {
+    const { t } = useTypedTranslation();
     const postWorkoutTrend = useAppSelector((state: AppState) => getPostWorkoutTrend(state));
-    const { t } = useTranslation();
     const { mainColor, successColor, errorColor } = useTheme();
     const postWorkout = useAppSelector(getPostWorkoutWorkout);
     const getConvertedWeight = useGetConvertedWeight();
@@ -44,7 +45,12 @@ const useHeaderStats = (): Stat[] => {
     const trendStat = useMemo(() => {
         const isEven = postWorkoutTrend?.percent === 0;
 
-        const trendText = `post_workout_${isEven ? "even" : postWorkoutTrend?.isPositive ? "more" : "less"}_performance`;
+        const getTrendText = () => {
+            if (isEven) {
+                return TranslationKeys.POST_WORKOUT_EVEN_PERFORMANCE;
+            }
+            return postWorkoutTrend?.isPositive ? TranslationKeys.POST_WORKOUT_MORE_PERFORMANCE : TranslationKeys.POST_WORKOUT_LESS_PERFORMANCE;
+        };
 
         const icon = isEven ? "arrow-right" : postWorkoutTrend?.isPositive ? "arrow-up" : "arrow-down";
         const iconColor = isEven ? successColor : postWorkoutTrend?.isPositive ? successColor : errorColor;
@@ -56,7 +62,7 @@ const useHeaderStats = (): Stat[] => {
         return {
             value: trunicateToNthSignificantDigit(postWorkoutTrend?.percent ?? 0, false, 0),
             unit: "%",
-            text: t(trendText),
+            text: t(getTrendText()),
             icon,
             iconColor,
         } as const;
@@ -89,7 +95,7 @@ const useHeaderStats = (): Stat[] => {
             ({
                 value: timeInExerciseValueUnit.value.toString(),
                 unit: timeInExerciseValueUnit.unit,
-                text: t("post_workout_time_in_exercise"),
+                text: t(TranslationKeys.POST_WORKOUT_TIME_IN_EXERCISE),
                 icon: "timer-outline",
                 iconColor: mainColor,
             }) as const,
@@ -118,7 +124,7 @@ const useHeaderStats = (): Stat[] => {
         return {
             value: weight,
             unit: unit,
-            text: t("post_workout_weight"),
+            text: t(TranslationKeys.POST_WORKOUT_WEIGHT),
             icon: "weight",
             iconColor: "white",
         } as const;
@@ -131,7 +137,7 @@ const useHeaderStats = (): Stat[] => {
             value: duration.value.toString(),
             icon: "timer-outline",
             iconColor: mainColor,
-            text: t("post_workout_duration"),
+            text: t(TranslationKeys.POST_WORKOUT_DURATION),
             unit: duration?.unit ?? "s",
         } as const;
     }, [mainColor, postWorkout?.doneWorkouts, t]);
@@ -154,7 +160,7 @@ export const WorkoutCompleteModal = () => {
     const isVisible = useDebouncedShowPostWorkoutScreen();
     const postWorkout = useAppSelector(getPostWorkoutWorkout);
 
-    const { t } = useTranslation();
+    const { t } = useTypedTranslation();
     const dispatch = useAppDispatch();
     const headerStats = useHeaderStats();
 
@@ -168,7 +174,7 @@ export const WorkoutCompleteModal = () => {
         }
     }, [isVisible]);
 
-    const title = useMemo(() => `${postWorkout?.name ?? t("workout")} ${t("post_workout_title_completed")}!`, [postWorkout?.name, t]);
+    const title = useMemo(() => `${postWorkout?.name ?? t(TranslationKeys.WORKOUT)} ${t(TranslationKeys.POST_WORKOUT_EVEN_PERFORMANCE)}!`, [postWorkout?.name, t]);
 
     const numberColumns = useMemo(() => {
         if (headerStats.length % 2 === 0) {
@@ -182,7 +188,7 @@ export const WorkoutCompleteModal = () => {
             <PageContent ghost paddingTop={20}>
                 <ThemedView round ghost style={styles.margin}>
                     <Text style={styles.margin} ghost>
-                        {t("post_workout_overview_title")}
+                        {t(TranslationKeys.POST_WORKOUT_OVERVIEW_TITLE)}
                     </Text>
                     <FlatList
                         scrollEnabled={false}

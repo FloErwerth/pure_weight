@@ -1,10 +1,11 @@
 import { View } from "react-native";
 import { HStack } from "../../../Stack/HStack/HStack";
 import { Text } from "../../../Themed/ThemedText/Text";
-import { useTranslation } from "react-i18next";
 import { useAppSelector } from "../../../../store";
 import { getWeightUnit } from "../../../../store/selectors/settings/settingsSelectors";
 import { styles } from "./styles";
+import { useTypedTranslation } from "../../../../locales/i18next";
+import { TranslationKeys } from "../../../../locales/translationKeys";
 
 interface TrainingHeaderProps {
     showPlaceholderForDoneButton?: boolean;
@@ -13,11 +14,11 @@ interface TrainingHeaderProps {
 }
 
 export const TrainingHeader = ({ showPlaceholderForDoneButton = true, exerciseType = "WEIGHT_BASED", showWeight }: TrainingHeaderProps) => {
-    const { t } = useTranslation();
+    const { t } = useTypedTranslation();
     const weightUnit = useAppSelector(getWeightUnit);
 
-    const leftLabel = exerciseType === "WEIGHT_BASED" ? weightUnit : t("duration");
-    const rightLabel = exerciseType === "WEIGHT_BASED" ? t("training_header_reps") : showWeight ? weightUnit : undefined;
+    const leftLabel = exerciseType === "WEIGHT_BASED" ? weightUnit : t(TranslationKeys.DURATION);
+    const rightLabel = exerciseType === "WEIGHT_BASED" ? t(TranslationKeys.TRAINING_HEADER_REPS) : showWeight ? weightUnit : undefined;
 
     return (
         <HStack style={styles.vStack}>

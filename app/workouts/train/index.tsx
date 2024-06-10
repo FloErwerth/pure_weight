@@ -6,7 +6,6 @@ import { useNavigate } from "../../../hooks/navigate";
 import { SiteNavigationButtons } from "../../../components/SiteNavigationButtons/SiteNavigationButtons";
 import { Animated, Dimensions } from "react-native";
 import { HStack } from "../../../components/Stack/HStack/HStack";
-import { useTranslation } from "react-i18next";
 import { ThemedView } from "../../../components/Themed/ThemedView/View";
 import { StopwatchPopover } from "../../../components/StopwatchPopover/StopwatchPopover";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -28,10 +27,12 @@ import { ExerciseId } from "../../../store/reducers/workout/types";
 import { CarouselRenderItemInfo, ICarouselInstance } from "react-native-reanimated-carousel/lib/typescript/types";
 import { getSwitchToNextExercise } from "../../../store/selectors/settings/settingsSelectors";
 import { WorkoutSettings } from "../../../components/App/settings/Sections/workout";
+import { useTypedTranslation } from "../../../locales/i18next";
+import { TranslationKeys } from "../../../locales/translationKeys";
 
 export const Train = () => {
+    const { t } = useTypedTranslation();
     const { bottom } = useSafeAreaInsets();
-    const { t } = useTranslation();
     const workoutExercises = useAppSelector(getTrainedWorkoutExercises);
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
@@ -106,7 +107,7 @@ export const Train = () => {
     }, [hasNoTrainingData, handleReset, handleNavigateToWorkouts, openAlert]);
 
     const buttonsStyle = useMemo(() => [trainStyles.buttons, { marginBottom: bottom }], [bottom]);
-    const alertModalConfig = useMemo(() => ({ title: t(isDone ? "workout_quit_title" : "workout_early_quit_title") }), [isDone, t]);
+    const alertModalConfig = useMemo(() => ({ title: t(isDone ? TranslationKeys.WORKOUT_QUIT_TITLE : TranslationKeys.WORKOUT_EARLY_QUIT_TITLE) }), [isDone, t]);
 
     const mappedExercises: { exerciseId: ExerciseId }[] = useMemo(() => {
         if (!trainedWorkout) {
@@ -139,7 +140,7 @@ export const Train = () => {
         handleNavigateToWorkouts();
     }, [handleReset, closeAlert, handleNavigateToWorkouts]);
 
-    const quickSettingsTitle = useMemo(() => t("workout_quick_settings_title"), [t]);
+    const quickSettingsTitle = useMemo(() => t(TranslationKeys.WORKOUT_QUICK_SETTINGS_TITLE), [t]);
 
     return (
         <ThemedView background style={trainStyles.wrapper} stretch>

@@ -2,7 +2,6 @@ import { TextInput, View } from "react-native";
 import React, { useCallback, useMemo, useRef } from "react";
 import { styles } from "./styles";
 import { ThemedTextInput } from "../Themed/ThemedTextInput/ThemedTextInput";
-import { useTranslation } from "react-i18next";
 import { ThemedView } from "../Themed/ThemedView/View";
 import { WeightBasedExercise } from "./Content/WeightBasedExercise";
 import { useAppDispatch, useAppSelector } from "../../store";
@@ -12,21 +11,23 @@ import { ExerciseMetaData } from "../../store/reducers/workout/types";
 import { SlidingSwitch } from "../SlidingSwitch/SlidingSwitch";
 import { TimeBasedExercise } from "./Content/TimeBasedExercise";
 import { cleanError } from "../../store/reducers/errors";
+import { useTypedTranslation } from "../../locales/i18next";
+import { TranslationKeys } from "../../locales/translationKeys";
 
 const useOptions = () => {
-    const { t } = useTranslation();
+    const { t } = useTypedTranslation();
 
     return useMemo(
         () => [
-            { value: "WEIGHT_BASED", label: t("weight_based_label"), Component: <WeightBasedExercise /> },
-            { value: "TIME_BASED", label: t("time_based_label"), Component: <TimeBasedExercise /> },
+            { value: "WEIGHT_BASED", label: t(TranslationKeys.WEIGHT_BASED_LABEL), Component: <WeightBasedExercise /> },
+            { value: "TIME_BASED", label: t(TranslationKeys.TIME_BASED_LABEL), Component: <TimeBasedExercise /> },
         ],
         [t],
     );
 };
 
 export const EditableExercise = () => {
-    const { t } = useTranslation();
+    const { t } = useTypedTranslation();
     const inputRef = useRef<TextInput>(null);
     const editedExercise = useAppSelector(getEditedExercise);
     const dispatch = useAppDispatch();
@@ -64,7 +65,7 @@ export const EditableExercise = () => {
         [dispatch, handleChange],
     );
 
-    const exercisePlaceholder = useMemo(() => t("exercise_name"), [t]);
+    const exercisePlaceholder = useMemo(() => t(TranslationKeys.EXERCISE_NAME), [t]);
 
     return (
         <ThemedView stretch ghost>

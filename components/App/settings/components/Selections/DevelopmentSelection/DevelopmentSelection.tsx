@@ -7,6 +7,7 @@ import { setEmptyState, setMockState } from "../../../../../../store/reducers/me
 import { getStateType } from "../../../../../../store/selectors/metadata/metadataSelectors";
 import { selectionStyles } from "../../selectionStyles";
 import { ProfileContent } from "../../ProfileContent/ProfileContent";
+import { TranslationKeys } from "../../../../../../locales/translationKeys";
 
 export const DevelopmentSelection = () => {
     const dispatch = useAppDispatch();
@@ -23,16 +24,8 @@ export const DevelopmentSelection = () => {
     return (
         <ProfileContent title={"Development"}>
             <ThemedView style={selectionStyles.vStack}>
-                <SelectableSetting
-                    selected={stateType === "mock"}
-                    onSelect={handleSelectMockState}
-                    titleKey="Mock state"
-                />
-                <SelectableSetting
-                    selected={stateType === "empty"}
-                    onSelect={handleSelectEmptyState}
-                    titleKey="Empty state"
-                />
+                <SelectableSetting selected={stateType === "mock"} onSelect={handleSelectMockState} titleKey={"Mock state" as TranslationKeys} />
+                <SelectableSetting selected={stateType === "empty"} onSelect={handleSelectEmptyState} titleKey={"Empty state" as TranslationKeys} />
             </ThemedView>
         </ProfileContent>
     );

@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { useTranslation } from "react-i18next";
 import { useAppDispatch, useAppSelector } from "../../../../store";
 import { getEditedExercise } from "../../../../store/selectors/workout/workoutSelectors";
 import { useToast } from "../../../../components/BottomToast/useToast";
@@ -23,6 +22,8 @@ import Reanimated, { FadeIn, FadeOut, Layout } from "react-native-reanimated";
 import { cleanError, setError } from "../../../../store/reducers/errors";
 import { ErrorFields } from "../../../../store/reducers/errors/types";
 import { AnswerText } from "../../../../components/HelpQuestionAnswer/AnswerText";
+import { useTypedTranslation } from "../../../../locales/i18next";
+import { TranslationKeys } from "../../../../locales/translationKeys";
 
 const getIsZeroOrNullish = (values: Array<string | undefined>) => values.some((value) => !value || value === "0" || value === "00");
 
@@ -73,10 +74,10 @@ const useWasEdited = () => {
 };
 
 export const CreateExercise = () => {
-    const { t } = useTranslation();
+    const { t } = useTypedTranslation();
     const editedExercise = useAppSelector(getEditedExercise);
     const isNewExercise = Boolean(editedExercise?.isNewExercise);
-    const title = useMemo(() => t(!isNewExercise ? "exercise_edit_title" : "create_exercise"), [isNewExercise, t]);
+    const title = useMemo(() => t(!isNewExercise ? TranslationKeys.EXERCISE_EDIT_TITLE : TranslationKeys.CREATE_EXERCISE), [isNewExercise, t]);
     const dispatch = useAppDispatch();
     const { showToast: showSavedSuccess, openToast: openSavedSuccess, closeToast: closeSavedSuccess } = useToast();
     const [showCheckboxes, setShowCheckboxes] = useState(true);
@@ -131,13 +132,13 @@ export const CreateExercise = () => {
         closeSavedSuccess();
     }, [closeSavedSuccess]);
 
-    const addMoreExercisesHelptextConfig = useMemo(() => ({ title: t("add_more_exercises"), text: t("add_more_exercises_help") }), [t]);
+    const addMoreExercisesHelptextConfig = useMemo(() => ({ title: t(TranslationKeys.ADD_MORE_EXERCISES), text: t(TranslationKeys.ADD_MORE_EXERCISES_HELP) }), [t]);
 
-    const alertContent = useMemo(() => t(!isNewExercise ? "alert_edit_exercise_discard_content" : "alert_create_exercise_discard_content"), [isNewExercise, t]);
+    const alertContent = useMemo(() => t(!isNewExercise ? TranslationKeys.ALERT_EDIT_EXERCISE_DISCARD_CONTENT : TranslationKeys.ALERT_CREATE_EXERCISE_DISCARD_CONTENT), [isNewExercise, t]);
 
-    const alertTitle = useMemo(() => t(!isNewExercise ? "alert_edit_discard_title" : "alert_create_discard_title"), [isNewExercise, t]);
+    const alertTitle = useMemo(() => t(!isNewExercise ? TranslationKeys.ALERT_EDIT_DISCARD_TITLE : TranslationKeys.ALERT_CREATE_DISCARD_TITLE), [isNewExercise, t]);
 
-    const discardButtonText = useMemo(() => t(!isNewExercise ? "alert_edit_confirm_cancel" : "alert_create_confirm_cancel"), [isNewExercise, t]);
+    const discardButtonText = useMemo(() => t(!isNewExercise ? TranslationKeys.ALERT_EDIT_CONFIRM_CANCEL : TranslationKeys.ALERT_CREATE_CONFIRM_CANCEL), [isNewExercise, t]);
 
     const clearExerciseErrors = useCallback(() => {
         dispatch(cleanError(["create_exercise_name", "create_exercise_sets", "create_exercise_reps", "create_exercise_weight", "create_exercise_duration"]));
@@ -170,16 +171,16 @@ export const CreateExercise = () => {
                                 customWrapperStyles={styles.zIndex}
                                 checked={addMoreExercises}
                                 onChecked={setAddMoreExercises}
-                                label={t("add_more_exercises")}
+                                label={t(TranslationKeys.ADD_MORE_EXERCISES)}
                                 helpTextConfig={addMoreExercisesHelptextConfig}
                             />
                         </Reanimated.View>
                     )}
-                    <BottomToast time={1000} leftCorrection={-20} titleKey="create_exercise_success_title" onRequestClose={closeSavedSuccessMessage} open={showSavedSuccess} />
+                    <BottomToast time={1000} leftCorrection={-20} titleKey={TranslationKeys.CREATE_EXERCISE_SUCCESS_TITLE} onRequestClose={closeSavedSuccessMessage} open={showSavedSuccess} />
                     <ThemedPressable ghost behind onPress={handleConfirm}>
                         <HStack secondary style={styles.button}>
                             <Text secondary style={styles.buttonText}>
-                                {t(!isNewExercise ? "edit_exercise" : "create_exercise")}
+                                {t(!isNewExercise ? TranslationKeys.EDIT_EXERCISE : TranslationKeys.CREATE_EXERCISE)}
                             </Text>
                             <ThemedMaterialCommunityIcons ghost name="pencil-plus-outline" size={20} />
                         </HStack>

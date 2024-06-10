@@ -4,7 +4,6 @@ import { ThemedView } from "../../../../components/Themed/ThemedView/View";
 import { SiteNavigationButtons } from "../../../../components/SiteNavigationButtons/SiteNavigationButtons";
 import { useNavigate } from "../../../../hooks/navigate";
 import { useCallback, useMemo } from "react";
-import { useTranslation } from "react-i18next";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { Text } from "../../../../components/Themed/ThemedText/Text";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -18,6 +17,8 @@ import { DoneExerciseData } from "../../../../store/reducers/workout/types";
 import { getLocaleDate } from "../../../../utils/date";
 import { getLanguage } from "../../../../store/selectors/settings/settingsSelectors";
 import { RoutesParamaters } from "../../../../types/navigation";
+import { useTypedTranslation } from "../../../../locales/i18next";
+import { TranslationKeys } from "../../../../locales/translationKeys";
 
 export const WorkoutHistoryOverview = ({
     route: {
@@ -30,8 +31,8 @@ export const WorkoutHistoryOverview = ({
     const language = useAppSelector(getLanguage);
     const { bottom } = useSafeAreaInsets();
     const navigate = useNavigate();
-    const { t } = useTranslation();
-    const pageTitle = useMemo(() => t("workout_history_edit_title"), [t]);
+    const { t } = useTypedTranslation();
+    const pageTitle = useMemo(() => t(TranslationKeys.WORKOUT_HISTORY_EDIT_TITLE), [t]);
     const dispatch = useAppDispatch();
 
     const handleNavigateToHistory = useCallback(() => {
@@ -52,7 +53,7 @@ export const WorkoutHistoryOverview = ({
 
     const date = useMemo(
         () =>
-            `${t("history_trained_at")} ${getLocaleDate(doneWorkout?.isoDate, language, {
+            `${t(TranslationKeys.HISTORY_TRAINED_AT)} ${getLocaleDate(doneWorkout?.isoDate, language, {
                 day: "2-digit",
                 month: "long",
                 year: "numeric",

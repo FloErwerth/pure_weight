@@ -14,7 +14,8 @@ import { saveEditedWorkout } from "../../../store/reducers/workout";
 import { WorkoutId } from "../../../store/reducers/workout/types";
 import { ThemedDropdown } from "../../../components/Themed/Dropdown/ThemedDropdown";
 import { getMonthYearLabel } from "../../../utils/date";
-import { useTranslation } from "react-i18next";
+import { useTypedTranslation } from "../../../locales/i18next";
+import { TranslationKeys } from "../../../locales/translationKeys";
 
 export type FlatListData = {
     doneWorkoutId: WorkoutId;
@@ -32,7 +33,7 @@ export function WorkoutHistory() {
     const doneWorkoutDates = useAppSelector((state: AppState) => getSortedDoneWorkout(state, editedWorkout?.workout?.workoutId));
     const workout = useAppSelector(getEditedWorkout);
     const sectionListRef = useRef<FlatList>(null);
-    const { t } = useTranslation();
+    const { t } = useTypedTranslation();
     const workoutsInMonth = useAppSelector((state: AppState) => getWorkoutsByMonth(state, selectedMonth));
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
@@ -96,7 +97,7 @@ export function WorkoutHistory() {
         () =>
             Array.from(monthConfig?.keys() ?? []).map((key) => {
                 if (key === "ALL_WORKOUTS") {
-                    return { label: t("history_all_workouts"), value: key };
+                    return { label: t(TranslationKeys.HISTORY_ALL_WORKOUTS), value: key };
                 }
                 return { label: key, value: key };
             }),
@@ -112,7 +113,7 @@ export function WorkoutHistory() {
         setSelectedDate(undefined);
     }, []);
 
-    const modalTitle = useMemo(() => t("history_modal_title"), [t]);
+    const modalTitle = useMemo(() => t(TranslationKeys.HISTORY_MODAL_TITLE), [t]);
 
     return (
         <ThemedView stretch>

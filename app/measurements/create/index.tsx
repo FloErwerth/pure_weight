@@ -2,7 +2,6 @@ import { useAppDispatch, useAppSelector } from "../../../store";
 import { getUnitSystem } from "../../../store/selectors/settings/settingsSelectors";
 import { getDatesFromCurrentMeasurement, getEditedMeasurement, getUnitByType } from "../../../store/selectors/measurements/measurementSelectors";
 import React, { useCallback, useMemo, useState } from "react";
-import { useTranslation } from "react-i18next";
 import { mutateEditedMeasurement, saveEditedMeasurement } from "../../../store/reducers/measurements";
 import { ThemedTextInput } from "../../../components/Themed/ThemedTextInput/ThemedTextInput";
 import { HStack } from "../../../components/Stack/HStack/HStack";
@@ -28,6 +27,8 @@ import { ThemedPressable } from "../../../components/Themed/Pressable/Pressable"
 import { DateConfig, DatePicker } from "../../../components/DatePicker/DatePicker";
 import { IsoDate } from "../../../types/date";
 import { styles } from "../../../components/App/create/styles";
+import { useTypedTranslation } from "../../../locales/i18next";
+import { TranslationKeys } from "../../../locales/translationKeys";
 
 export const useMeasurementOptions = () => {
     const unitSystem = useAppSelector(getUnitSystem);
@@ -87,7 +88,7 @@ export const CreateMeasurement = () => {
     const dates = useAppSelector(getDatesFromCurrentMeasurement);
     const [date, setDate] = useState(MAX_DATE);
     const dispatch = useAppDispatch();
-    const { t } = useTranslation();
+    const { t } = useTypedTranslation();
     const dropdownValue = useDropdownValue();
     const measurementOptions = useMeasurementOptions();
     const editedMeasurement = useAppSelector(getEditedMeasurement);
@@ -140,12 +141,12 @@ export const CreateMeasurement = () => {
 
     const measurementButtonText = useMemo(() => {
         if (editedMeasurement?.isEditing) {
-            return t("measurement_save_edit");
+            return t(TranslationKeys.MEASUREMENT_SAVE_EDIT);
         }
         if (!editedMeasurement?.isNew) {
-            return t("measurement_add");
+            return t(TranslationKeys.MEASUREMENT_ADD);
         }
-        return t("measurement_create");
+        return t(TranslationKeys.MEASUREMENT_CREATE);
     }, [editedMeasurement?.isEditing, editedMeasurement?.isNew, t]);
 
     const buttonIcon = useMemo(() => {
@@ -167,12 +168,12 @@ export const CreateMeasurement = () => {
 
     const pageTitle = useMemo(() => {
         if (isAddingData) {
-            return t("measurement_add_data");
+            return t(TranslationKeys.MEASUREMENT_ADD_DATA);
         }
         if (editedMeasurement?.isEditing) {
-            return t("measurement_edit");
+            return t(TranslationKeys.MEASUREMENT_EDIT);
         }
-        return t("measurement_page_title");
+        return t(TranslationKeys.MEASUREMENT_PAGE_TITLE);
     }, [editedMeasurement?.isEditing, isAddingData, t]);
 
     const handleSaveMeasurement = useCallback(() => {
@@ -200,8 +201,8 @@ export const CreateMeasurement = () => {
 
     const helpText = useMemo(
         () => ({
-            title: t("measurement_higher_is_better"),
-            text: t("measurement_higher_is_better_help"),
+            title: t(TranslationKeys.MEASUREMENT_HIGHER_IS_BETTER),
+            text: t(TranslationKeys.MEASUREMENT_HIGHER_IS_BETTER_HELP),
         }),
         [t],
     );
@@ -220,23 +221,30 @@ export const CreateMeasurement = () => {
     }, [handleNavigateBack, openDiscardWarning, wasEdited]);
 
     const discardWarningTitle = useMemo(
-        () => t(isAddingData ? "alert_add_measurement_data_title" : !isEditing ? "alert_create_discard_title" : "alert_edit_discard_title"),
+        () => t(isAddingData ? TranslationKeys.ALERT_ADD_MEASUREMENT_DATA_TITLE : !isEditing ? TranslationKeys.ALERT_CREATE_DISCARD_TITLE : TranslationKeys.ALERT_EDIT_DISCARD_TITLE),
         [isAddingData, isEditing, t],
     );
 
     const discardWarningContent = useMemo(
-        () => t(isAddingData ? "alert_add_measurement_data_content" : !isEditing ? "alert_create_measurement_discard_content" : "alert_edit_measurement_discard_content"),
+        () =>
+            t(
+                isAddingData
+                    ? TranslationKeys.ALERT_ADD_MEASUREMENT_DATA_CONTENT
+                    : !isEditing
+                      ? TranslationKeys.ALERT_CREATE_MEASUREMENT_DISCARD_CONTENT
+                      : TranslationKeys.ALERT_EDIT_MEASUREMENT_DISCARD_CONTENT,
+            ),
         [isAddingData, isEditing, t],
     );
 
     const discardWarningConfirm = useMemo(
-        () => t(isAddingData ? "alert_add_measurement_data_confirm" : !isEditing ? "alert_create_confirm_cancel" : "alert_edit_confirm_cancel"),
+        () => t(isAddingData ? TranslationKeys.ALERT_ADD_MEASUREMENT_DATA_CONFIRM : !isEditing ? TranslationKeys.ALERT_CREATE_CONFIRM_CANCEL : TranslationKeys.ALERT_EDIT_CONFIRM_CANCEL),
         [isAddingData, isEditing, t],
     );
 
-    const dateWarningTitle = useMemo(() => t("alert_measurement_date_title"), [t]);
-    const dateWarningContent = useMemo(() => t("alert_measurement_date_content"), [t]);
-    const dateWarniningOverwriteConfirm = useMemo(() => t("alert_measurement_date_confirm"), [t]);
+    const dateWarningTitle = useMemo(() => t(TranslationKeys.ALERT_MEASUREMENT_DATE_TITLE), [t]);
+    const dateWarningContent = useMemo(() => t(TranslationKeys.ALERT_MEASUREMENT_DATE_CONTENT), [t]);
+    const dateWarniningOverwriteConfirm = useMemo(() => t(TranslationKeys.ALERT_MEASUREMENT_DATE_CONFIRM), [t]);
 
     const dateConfig = useMemo(
         () =>
@@ -251,7 +259,7 @@ export const CreateMeasurement = () => {
         [dates],
     );
 
-    const unitModalTitle = useMemo(() => t("measurement_unit_modal_title"), [t]);
+    const unitModalTitle = useMemo(() => t(TranslationKeys.MEASUREMENT_UNIT_MODAL_TITLE), [t]);
     const errorConfig = useMemo(() => ({ errorKey: "create_measurement_value" }) as const, []);
     return (
         <ThemedView background stretch round>
@@ -267,7 +275,7 @@ export const CreateMeasurement = () => {
                                 onChangeText={handleSetMeasurementName}
                                 value={editedMeasurement?.measurement?.name}
                                 clearButtonMode="while-editing"
-                                placeholder={t("measurement_placeholder")}
+                                placeholder={t(TranslationKeys.MEASUREMENT_PLACEHOLDER)}
                             />
                         </View>
                     )}
@@ -291,7 +299,7 @@ export const CreateMeasurement = () => {
                                         options={measurementOptions}
                                         errorKey="create_measurement_type"
                                         value={dropdownValue}
-                                        placeholder={t("measurement_unit")}
+                                        placeholder={t(TranslationKeys.MEASUREMENT_UNIT)}
                                         onSelectItem={handleSetMeasurementType}
                                     />
                                 )}
@@ -300,7 +308,7 @@ export const CreateMeasurement = () => {
                     )}
                     {!isAddingData && (
                         <CheckBox
-                            label={t("measurement_higher_is_better")}
+                            label={t(TranslationKeys.MEASUREMENT_HIGHER_IS_BETTER)}
                             helpTextConfig={helpText}
                             checked={Boolean(editedMeasurement?.measurement?.higherIsBetter)}
                             size={20}
@@ -310,7 +318,7 @@ export const CreateMeasurement = () => {
                     {!isEditing && (
                         <ThemedView round input padding>
                             <Text style={styles.textSize} ghost>
-                                {t("measurement_datapoint_date")}
+                                {t(TranslationKeys.MEASUREMENT_DATAPOINT_DATE)}
                             </Text>
                             <DatePicker handleSelectDate={handleDateChange} selectedDate={date} dateConfig={dateConfig} allSelectable />
                         </ThemedView>

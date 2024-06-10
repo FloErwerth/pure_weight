@@ -13,6 +13,7 @@ import { ThemedBottomSheetModal, useBottomSheetRef } from "../../../../../Bottom
 import { SettingsNavigator } from "../../../SettingsNavigator/SettingsNavigator";
 import { ThemedView } from "../../../../../Themed/ThemedView/View";
 import { PageContent } from "../../../../../PageContent/PageContent";
+import { TranslationKeys } from "../../../../../../locales/translationKeys";
 
 const germanSvg: SvgType = {
     Svg: GermanFlag,
@@ -51,8 +52,8 @@ export const LanguageSelection = () => {
             </ThemedView>
             <ThemedBottomSheetModal title={modalTitle} ref={ref}>
                 <PageContent ghost paddingTop={20}>
-                    <SelectableSetting prependedExtraContent={germanSvg} selected={isGerman} onSelect={handleSelectGerman} titleKey="settings_language_german" />
-                    <SelectableSetting prependedExtraContent={americanSvg} selected={!isGerman} onSelect={handleSelectEnglish} titleKey="settings_language_english" />
+                    <SelectableSetting prependedExtraContent={germanSvg} selected={isGerman} onSelect={handleSelectGerman} titleKey={TranslationKeys.SETTINGS_LANGUAGE_GERMAN} />
+                    <SelectableSetting prependedExtraContent={americanSvg} selected={!isGerman} onSelect={handleSelectEnglish} titleKey={TranslationKeys.SETTINGS_LANGUAGE_ENGLISH} />
                 </PageContent>
             </ThemedBottomSheetModal>
         </>

@@ -16,7 +16,6 @@ import { getLanguage } from "../../store/selectors/settings/settingsSelectors";
 import { useTheme } from "../../theme/context";
 import { ThemedBottomSheetModal, useBottomSheetRef } from "../../components/BottomSheetModal/ThemedBottomSheetModal";
 import { Language } from "../../store/reducers/settings/types";
-import { useTranslation } from "react-i18next";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { Image } from "react-native";
 import EN_Graph from "../../media/pictures/en_graph.png";
@@ -24,6 +23,10 @@ import DE_Graph from "../../media/pictures/de_graph.png";
 import EN_Performance from "../../media/pictures/en_workout_progress_display.png";
 import DE_Performance from "../../media/pictures/de_workout_progress_display.png";
 import { Footer } from "../../components/Footer/Footer";
+import { useTypedTranslation } from "../../locales/i18next";
+import { TranslationKeys } from "../../locales/translationKeys";
+
+//TODO: remove inline styles
 
 const productIdToDataMap = {
     einmonat: {
@@ -93,7 +96,7 @@ type PurchaseBottomSheetProps = {
 };
 const PurchaseBottomSheet = ({ reference, type }: PurchaseBottomSheetProps) => {
     const language = useAppSelector(getLanguage);
-    const { t } = useTranslation();
+    const { t } = useTypedTranslation();
 
     const Content = useCallback(() => {
         if (type === "graphs") {
@@ -103,13 +106,13 @@ const PurchaseBottomSheet = ({ reference, type }: PurchaseBottomSheetProps) => {
                         <Image style={{ width: "100%", height: 350 }} source={language === "en" ? EN_Graph : DE_Graph} />
                     </ThemedView>
                     <Text center style={{ fontWeight: "bold", fontSize: 26, marginBottom: 10, marginTop: 20 }} ghost>
-                        {t("purchase_graphs")}
+                        {t(TranslationKeys.PURCHASE_GRAPHS)}
                     </Text>
                     <Text center ghost>
-                        {t("purchase_graphs_content_1")}
+                        {t(TranslationKeys.PURCHASE_GRAPHS_CONTENT_1)}
                     </Text>
                     <Text center ghost>
-                        {t("purchase_graphs_content_2")}
+                        {t(TranslationKeys.PURCHASE_GRAPHS_CONTENT_2)}
                     </Text>
                 </ThemedView>
             );
@@ -121,13 +124,13 @@ const PurchaseBottomSheet = ({ reference, type }: PurchaseBottomSheetProps) => {
                         <Image style={{ width: "100%", height: 70 }} source={language === "en" ? EN_Performance : DE_Performance} />
                     </ThemedView>
                     <Text center style={{ fontWeight: "bold", fontSize: 26, marginBottom: 10, marginTop: 20 }} ghost>
-                        {t("purchase_performance")}
+                        {t(TranslationKeys.PURCHASE_PERFORMANCE)}
                     </Text>
                     <Text center ghost>
-                        {t("purchase_performance_content_1")}
+                        {t(TranslationKeys.PURCHASE_PERFORMANCE_CONTENT_1)}
                     </Text>
                     <Text center ghost>
-                        {t("purchase_performance_content_2")}
+                        {t(TranslationKeys.PURCHASE_PERFORMANCE_CONTENT_2)}
                     </Text>
                 </ThemedView>
             );
@@ -136,10 +139,10 @@ const PurchaseBottomSheet = ({ reference, type }: PurchaseBottomSheetProps) => {
             return (
                 <ThemedView ghost style={{ gap: 10 }}>
                     <Text center style={{ fontWeight: "bold", fontSize: 26, marginBottom: 10 }} ghost>
-                        {t("purchase_infinite_plans")}
+                        {t(TranslationKeys.PURCHASE_INFINITE_PLANS)}
                     </Text>
                     <Text center ghost>
-                        {t("purchase_infinite_plans_content")}
+                        {t(TranslationKeys.PURCHASE_INFINITE_PLANS_CONTENT)}
                     </Text>
                 </ThemedView>
             );
@@ -148,10 +151,10 @@ const PurchaseBottomSheet = ({ reference, type }: PurchaseBottomSheetProps) => {
             return (
                 <ThemedView ghost style={{ gap: 10 }}>
                     <Text style={{ fontWeight: "bold", fontSize: 26, textAlign: "center", marginBottom: 10 }} ghost>
-                        {t("purchase_future_features")}
+                        {t(TranslationKeys.PURCHASE_FUTURE_FEATURES)}
                     </Text>
                     <Text ghost center>
-                        {t("purchase_future_features_content")}
+                        {t(TranslationKeys.PURCHASE_FUTURE_FEATURES_CONTENT)}
                     </Text>
                 </ThemedView>
             );
@@ -177,7 +180,7 @@ export const Purchase = () => {
     const { ref: moreInfoRef, openBottomSheet: openMoreInfo } = useBottomSheetRef();
     const [infoType, setInfoType] = useState<PurchaseBottomSheetType | undefined>(undefined);
     const { cta } = useTheme();
-    const { t } = useTranslation();
+    const { t } = useTypedTranslation();
 
     const mappedPackages = useMemo(
         () =>
@@ -248,34 +251,34 @@ export const Purchase = () => {
 
     return (
         <ThemedView background stretch>
-            <SiteNavigationButtons title={t("purchase")} backButtonAction={navigateBack} />
+            <SiteNavigationButtons title={t(TranslationKeys.PURCHASE)} backButtonAction={navigateBack} />
             <PageContent safeBottom stretch ghost paddingTop={40}>
                 <Text ghost style={{ fontSize: 40, textAlign: "center", marginBottom: 20 }}>
-                    {t("purchase_title")}
+                    {t(TranslationKeys.PURCHASE_TITLE)}
                 </Text>
                 <PageContent stretch ignorePadding ghost style={{ marginBottom: 20 }}>
                     <ThemedPressable onPress={handleOpenGraphsInfo} padding round>
                         <HStack center ghost gap>
                             <ThemedMaterialCommunityIcons name="chart-timeline-variant-shimmer" size={24} ghost />
-                            <Text>{t("purchase_graphs")}</Text>
+                            <Text>{t(TranslationKeys.PURCHASE_GRAPHS)}</Text>
                         </HStack>
                     </ThemedPressable>
                     <ThemedPressable onPress={handleOpenPerformanceInfo} padding round>
                         <HStack center ghost gap>
                             <ThemedMaterialCommunityIcons name="poll" size={24} ghost />
-                            <Text>{t("purchase_performance")}</Text>
+                            <Text>{t(TranslationKeys.PURCHASE_PERFORMANCE)}</Text>
                         </HStack>
                     </ThemedPressable>
                     <ThemedPressable onPress={handleOpenInfiniteInfo} padding round>
                         <HStack center ghost gap style={{ marginRight: 15 }}>
                             <ThemedMaterialCommunityIcons name="infinity" size={24} ghost />
-                            <Text>{t("purchase_infinite_plans")}</Text>
+                            <Text>{t(TranslationKeys.PURCHASE_INFINITE_PLANS)}</Text>
                         </HStack>
                     </ThemedPressable>
                     <ThemedPressable onPress={handleOpenFutureInfo} padding round>
                         <HStack center ghost gap>
                             <ThemedMaterialCommunityIcons name="star-plus-outline" size={24} ghost />
-                            <Text>{t("purchase_future_features")}</Text>
+                            <Text>{t(TranslationKeys.PURCHASE_FUTURE_FEATURES)}</Text>
                         </HStack>
                     </ThemedPressable>
                 </PageContent>
@@ -284,7 +287,7 @@ export const Purchase = () => {
                         <HStack ghost style={{ gap: 10 }} center>
                             <ThemedMaterialCommunityIcons textCta ghost name="lock-open-variant-outline" size={24} />
                             <Text textCta ghost center>
-                                {t("purchase_unlock_now")}
+                                {t(TranslationKeys.PURCHASE_UNLOCK_NOW)}
                             </Text>
                         </HStack>
                     </ThemedPressable>
@@ -294,38 +297,38 @@ export const Purchase = () => {
                 </ThemedView>
                 <ThemedPressable ghost onPress={openBottomSheet}>
                     <Text ghost center style={{ color: cta, fontSize: 26, marginBottom: 10 }}>
-                        {t("purchase_show_all")}
+                        {t(TranslationKeys.PURCHASE_SHOW_ALL)}
                     </Text>
                 </ThemedPressable>
                 <Footer showRestore={true} />
                 <ThemedBottomSheetModal ref={ref}>
                     <PageContent safeBottom stretch ghost paddingTop={20}>
                         <Text ghost style={{ fontSize: 30, textAlign: "center", marginBottom: 20 }}>
-                            {t("purchase_title")}
+                            {t(TranslationKeys.PURCHASE_TITLE)}
                         </Text>
                         <ThemedView stretch secondary round style={{ gap: 10, padding: 10, marginBottom: 20 }}>
                             <ThemedPressable onPress={handleOpenGraphsInfo} ghost round>
                                 <HStack center ghost gap>
                                     <ThemedMaterialCommunityIcons name="chart-timeline-variant-shimmer" size={24} ghost />
-                                    <Text ghost>{t("purchase_graphs")}</Text>
+                                    <Text ghost>{t(TranslationKeys.PURCHASE_GRAPHS)}</Text>
                                 </HStack>
                             </ThemedPressable>
                             <ThemedPressable onPress={handleOpenPerformanceInfo} ghost round>
                                 <HStack center ghost gap>
                                     <ThemedMaterialCommunityIcons name="poll" size={24} ghost />
-                                    <Text ghost>{t("purchase_performance")}</Text>
+                                    <Text ghost>{t(TranslationKeys.PURCHASE_PERFORMANCE)}</Text>
                                 </HStack>
                             </ThemedPressable>
                             <ThemedPressable onPress={handleOpenInfiniteInfo} ghost round>
                                 <HStack center ghost gap style={{ marginRight: 15 }}>
                                     <ThemedMaterialCommunityIcons name="infinity" size={24} ghost />
-                                    <Text ghost>{t("purchase_infinite_plans")}</Text>
+                                    <Text ghost>{t(TranslationKeys.PURCHASE_INFINITE_PLANS)}</Text>
                                 </HStack>
                             </ThemedPressable>
                             <ThemedPressable onPress={handleOpenFutureInfo} ghost round>
                                 <HStack center ghost gap>
                                     <ThemedMaterialCommunityIcons name="star-plus-outline" size={24} ghost />
-                                    <Text ghost>{t("purchase_future_features")}</Text>
+                                    <Text ghost>{t(TranslationKeys.PURCHASE_FUTURE_FEATURES)}</Text>
                                 </HStack>
                             </ThemedPressable>
                         </ThemedView>
@@ -336,7 +339,7 @@ export const Purchase = () => {
                                         <ThemedView ghost round style={{ marginBottom: pack.identifier === "einjahr" ? 10 : 0 }}>
                                             {pack.identifier === "einjahr" && (
                                                 <Text ghost style={{ paddingBottom: 5 }}>
-                                                    {t("purchase_best_offer")}
+                                                    {t(TranslationKeys.PURCHASE_BEST_OFFER)}
                                                 </Text>
                                             )}
                                             <ThemedPressable onPress={pack.purchasePackage} padding round cta={pack.identifier === "einjahr"}>

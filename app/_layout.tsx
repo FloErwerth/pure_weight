@@ -20,7 +20,6 @@ import { IsoDate } from "../types/date";
 import { setAppInstallDate, setEmptyState, setFirstTimeRendered } from "../store/reducers/metadata";
 import { getIsFirstTimeRendered } from "../store/selectors/metadata/metadataSelectors";
 import { Manual } from "./profile/manual";
-import { useTranslation } from "react-i18next";
 import { Appearance, NativeModules } from "react-native";
 import { setLanguage, setTheme } from "../store/reducers/settings";
 import { WorkoutHistoryOverview } from "./workouts/history/workout";
@@ -38,6 +37,7 @@ import { SplashScreen } from "expo-router";
 import { Settings } from "./profile/settings";
 import { layoutStyles } from "../components/App/layout/styles";
 import { RoutesParamaters } from "../types/navigation";
+import { useTranslation } from "react-i18next";
 
 SplashScreen.preventAutoHideAsync();
 

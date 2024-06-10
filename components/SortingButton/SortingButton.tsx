@@ -7,8 +7,9 @@ import { ThemedView } from "../Themed/ThemedView/View";
 import { HStack } from "../Stack/HStack/HStack";
 import { ThemedMaterialCommunityIcons } from "../Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { useTranslation } from "react-i18next";
 import { View } from "react-native";
+import { useTypedTranslation } from "../../locales/i18next";
+import { TranslationKeys } from "../../locales/translationKeys";
 
 type SortingButtonProps = {
     iconName: ComponentProps<typeof MaterialCommunityIcons>["name"];
@@ -23,7 +24,7 @@ type SortingButtonProps = {
 };
 
 export const SortingButton = ({ iconName, title, mappedOptions: options, hide = false }: SortingButtonProps) => {
-    const { t } = useTranslation();
+    const { t } = useTypedTranslation();
     const { ref, openBottomSheet: open, closeBottomSheet: close } = useBottomSheetRef();
 
     const handleSelectedValue = useCallback(
@@ -63,7 +64,7 @@ export const SortingButton = ({ iconName, title, mappedOptions: options, hide = 
                     </Text>
                 </HStack>
             </ThemedPressable>
-            <ThemedBottomSheetModal title={t("sorting_modal_title")} ref={ref}>
+            <ThemedBottomSheetModal title={t(TranslationKeys.SORTING_MODAL_TITLE)} ref={ref}>
                 <ThemedView ghost style={styles.optionWrapper}>
                     {mappedOptions}
                 </ThemedView>

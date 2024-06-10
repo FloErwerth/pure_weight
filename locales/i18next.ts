@@ -5,7 +5,7 @@ import { getLanguage } from "../store/selectors/settings/settingsSelectors";
 import { EnglischResource } from "./EnglischResource";
 import { GermanResource } from "./GermanResource";
 import { useCallback } from "react";
-import { TranslationKeys } from "./translationKeys";
+import { ErrorTranslationKeys, TranslationKeys } from "./translationKeys";
 
 const initialized = false;
 export const useInitIntl = () => {
@@ -25,7 +25,10 @@ export const useTypedTranslation = () => {
     const { t } = useTranslation();
 
     const _t = useCallback(
-        (key: TranslationKeys) => {
+        (key: TranslationKeys | ErrorTranslationKeys | undefined) => {
+            if (!key) {
+                return "";
+            }
             return t(key);
         },
         [t],

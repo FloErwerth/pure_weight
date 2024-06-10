@@ -1,4 +1,3 @@
-import { useTranslation } from "react-i18next";
 import { useAppDispatch, useAppSelector } from "../../../../../../store";
 import { useCallback, useMemo } from "react";
 import { setUnitSystem } from "../../../../../../store/reducers/settings";
@@ -11,6 +10,8 @@ import { selectionStyles } from "../../selectionStyles";
 import { SettingsNavigator } from "../../../SettingsNavigator/SettingsNavigator";
 import { ThemedBottomSheetModal, useBottomSheetRef } from "../../../../../BottomSheetModal/ThemedBottomSheetModal";
 import { PageContent } from "../../../../../PageContent/PageContent";
+import { useTypedTranslation } from "../../../../../../locales/i18next";
+import { TranslationKeys } from "../../../../../../locales/translationKeys";
 
 const kgIcon: Icon = {
     name: "weight-kilogram",
@@ -22,7 +23,7 @@ const poundIcon: Icon = {
 };
 
 export const UnitSystemSection = () => {
-    const { t } = useTranslation();
+    const { t } = useTypedTranslation();
     const dispatch = useAppDispatch();
     const unitSystem = useAppSelector(getUnitSystem);
     const { ref, openBottomSheet } = useBottomSheetRef();
@@ -36,13 +37,13 @@ export const UnitSystemSection = () => {
 
     const unitSystemContent = useMemo(
         () => ({
-            title: t("settings_unit_system_title"),
-            text: t("settings_unit_system_helptext_text"),
+            title: t(TranslationKeys.SETTINGS_UNIT_SYSTEM_TITLE),
+            text: t(TranslationKeys.SETTINGS_UNIT_SYSTEM_HELPTEXT_TEXT),
         }),
         [t],
     );
 
-    const unitSystemTitle = useMemo(() => t("settings_unit_system_title"), [t]);
+    const unitSystemTitle = useMemo(() => t(TranslationKeys.SETTINGS_UNIT_SYSTEM_TITLE), [t]);
     const handleSelectMetric = useCallback(() => handleSelectWeightUnit("metric"), [handleSelectWeightUnit]);
     const handleSelectImperial = useCallback(() => handleSelectWeightUnit("imperial"), [handleSelectWeightUnit]);
 
@@ -52,8 +53,8 @@ export const UnitSystemSection = () => {
             <ThemedBottomSheetModal title={unitSystemTitle} ref={ref}>
                 <PageContent ghost paddingTop={20}>
                     <ThemedView ghost style={selectionStyles.vStack}>
-                        <SelectableSetting prependedExtraContent={kgIcon} selected={unitSystem === "metric"} onSelect={handleSelectMetric} titleKey="unit_system_metric" />
-                        <SelectableSetting prependedExtraContent={poundIcon} selected={unitSystem === "imperial"} onSelect={handleSelectImperial} titleKey="unit_system_imperial" />
+                        <SelectableSetting prependedExtraContent={kgIcon} selected={unitSystem === "metric"} onSelect={handleSelectMetric} titleKey={TranslationKeys.UNIT_SYSTEM_METRIC} />
+                        <SelectableSetting prependedExtraContent={poundIcon} selected={unitSystem === "imperial"} onSelect={handleSelectImperial} titleKey={TranslationKeys.UNIT_SYSTEM_IMPERIAL} />
                     </ThemedView>
                 </PageContent>
             </ThemedBottomSheetModal>

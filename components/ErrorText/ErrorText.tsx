@@ -1,19 +1,20 @@
 import { Text } from "../Themed/ThemedText/Text";
-import { useTranslation } from "react-i18next";
 import { useMemo } from "react";
-import { ErrorFields } from "../../store/reducers/errors/types";
 import { styles } from "./styles";
+import { useTypedTranslation } from "../../locales/i18next";
+import { ErrorFields } from "../../store/reducers/errors/types";
+import { toErrorTranslation } from "../../store/mapper/error";
 
 type ErrorTextProps = {
     errorKey?: ErrorFields;
     children?: string;
 };
+
+//todo: map error field to translation if necessary
+
 export const ErrorText = ({ errorKey, children }: ErrorTextProps) => {
-    const { t } = useTranslation();
-    const internalErrorText = useMemo(
-        () => children || t(`error_${errorKey ?? ""}`),
-        [children, errorKey, t],
-    );
+    const { t } = useTypedTranslation();
+    const internalErrorText = useMemo(() => children || t(toErrorTranslation(errorKey)), [children, errorKey, t]);
 
     return (
         <Text ghost error style={styles.text}>

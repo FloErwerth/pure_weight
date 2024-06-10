@@ -1,7 +1,6 @@
 import { ThemedTextInput } from "../Themed/ThemedTextInput/ThemedTextInput";
 import { useCallback, useMemo, useRef } from "react";
 import { styles } from "./styles";
-import { useTranslation } from "react-i18next";
 import { AppState, useAppDispatch, useAppSelector } from "../../store";
 import { Text } from "../Themed/ThemedText/Text";
 import { useTheme } from "../../theme/context";
@@ -11,6 +10,7 @@ import { ThemedPressable } from "../Themed/Pressable/Pressable";
 import { TextInput, View } from "react-native";
 import { EditableExerciseInputRowProps } from "./types";
 import { cleanError } from "../../store/reducers/errors";
+import { useTypedTranslation } from "../../locales/i18next";
 
 export const EditableExerciseInputRow = ({
     value = "",
@@ -25,11 +25,9 @@ export const EditableExerciseInputRow = ({
     maxLength,
     bottomSheet,
 }: EditableExerciseInputRowProps) => {
-    const { t } = useTranslation();
+    const { t } = useTypedTranslation();
     const { errorColor } = useTheme();
-    const hasError = useAppSelector((state: AppState) =>
-        getErrorByKey(state, errorTextConfig?.errorKey),
-    );
+    const hasError = useAppSelector((state: AppState) => getErrorByKey(state, errorTextConfig?.errorKey));
     const textInputRef = useRef<TextInput>(null);
     const containerRef = useRef<View>(null);
     const dispatch = useAppDispatch();
@@ -44,26 +42,18 @@ export const EditableExerciseInputRow = ({
         [dispatch, errorTextConfig?.errorKey, hasError, setValue],
     );
 
-    const inputStyles = useMemo(
-        () => [{ borderColor: hasError ? errorColor : "transparent" }, styles.input],
-        [errorColor, hasError],
-    );
+    const inputStyles = useMemo(() => [{ borderColor: hasError ? errorColor : "transparent" }, styles.input], [errorColor, hasError]);
 
     const handleFocusInput = useCallback(() => {
         textInputRef.current?.focus();
     }, [textInputRef]);
 
     return (
-        <ThemedPressable
-            reference={containerRef}
-            onPress={handleFocusInput}
-            behind
-            ghost
-            stretch={stretch}>
+        <ThemedPressable reference={containerRef} onPress={handleFocusInput} behind ghost stretch={stretch}>
             {(Boolean(i18key) || helpTextConfig) && (
                 <HStack ghost center style={styles.labelWrapper}>
                     <Text behind style={styles.label} ghost>
-                        {t(i18key ?? " ")}
+                        {t(i18key)}
                     </Text>
                     {suffix && (
                         <Text ghost placeholder style={styles.suffix}>

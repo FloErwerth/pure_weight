@@ -8,10 +8,11 @@ import { useNavigate } from "../../../hooks/navigate";
 import { TouchableHighlight, View } from "react-native";
 import { ProgressDisplay } from "../../WorkoutCard/components/ProgressDisplay/ProgressDisplay";
 import { HistoryDisplay } from "../history/HistoryDisplay/HistoryDisplay";
-import { useTranslation } from "react-i18next";
 import { ThemedView } from "../../Themed/ThemedView/View";
 import { WorkoutId } from "../../../store/reducers/workout/types";
 import { useTheme } from "../../../theme/context";
+import { useTypedTranslation } from "../../../locales/i18next";
+import { TranslationKeys } from "../../../locales/translationKeys";
 
 type RenderedWorkoutProps = {
     workoutId: WorkoutId;
@@ -24,7 +25,7 @@ export const RenderedWorkout = ({ workoutId }: RenderedWorkoutProps) => {
     const hasHistory = useAppSelector((state: AppState) => getHasHistory(state, workoutId));
     const latestWorkoutDate = useAppSelector((state: AppState) => getLatestWorkoutDateDisplay(state, workoutId));
     const navigate = useNavigate();
-    const { t } = useTranslation();
+    const { t } = useTypedTranslation();
     const isOngoingWorkout = useAppSelector((state: AppState) => getIsOngoingWorkout(state, workoutId));
     const showStats = trend || hasHistory;
 
@@ -39,8 +40,8 @@ export const RenderedWorkout = ({ workoutId }: RenderedWorkoutProps) => {
     }, [dispatch, workoutId, navigate]);
 
     const pausedTrainingHint = isOngoingWorkout ? { backgroundColor: secondaryBackgroundColor, ...styles.pausedTrainingHint } : null;
-    const hintText = useMemo(() => t("workout_paused_hint"), [t]);
-    const notDoneText = useMemo(() => t("workout_no_done_workouts_hint"), [t]);
+    const hintText = useMemo(() => t(TranslationKeys.WORKOUT_PAUSED_HINT), [t]);
+    const notDoneText = useMemo(() => t(TranslationKeys.WORKOUT_NO_DONE_WORKOUTS_HINT), [t]);
     return (
         <ThemedView padding ghost style={styles.outerTrainWrapper}>
             <View>

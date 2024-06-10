@@ -1,25 +1,26 @@
 import { trainStyles } from "../../../trainStyles";
 import { HStack } from "../../../../../Stack/HStack/HStack";
 import { Text } from "../../../../../Themed/ThemedText/Text";
-import { useTranslation } from "react-i18next";
 import { styles } from "../styles";
 import { useAppSelector } from "../../../../../../store";
 import { ThemedView } from "../../../../../Themed/ThemedView/View";
 import { getTimeUnit } from "../../../../../../store/selectors/settings/settingsSelectors";
 import { ExerciseMetaData } from "../../../../../../store/reducers/workout/types";
 import { useMemo } from "react";
+import { useTypedTranslation } from "../../../../../../locales/i18next";
+import { TranslationKeys } from "../../../../../../locales/translationKeys";
 
 interface SmallMetadataDisplayProps {
     exerciseMetaData: ExerciseMetaData;
 }
 
 export const WeightBasedSmallExerciseMetadataDisplay = ({ exerciseMetaData }: SmallMetadataDisplayProps) => {
-    const { t } = useTranslation();
+    const { t } = useTypedTranslation();
     const showMinutes = parseFloat(exerciseMetaData?.pauseMinutes || "0") !== 0;
     const showSeconds = parseFloat(exerciseMetaData?.pauseSeconds || "0") !== 0;
     const { secondsUnit, minutesUnit } = useAppSelector(getTimeUnit);
     const showPause = showMinutes || showSeconds;
-    const pauseLowerText = useMemo(() => " ".concat(t("pause_lower")), [t]);
+    const pauseLowerText = useMemo(() => " ".concat(t(TranslationKeys.PAUSE_LOWER)), [t]);
 
     if (!exerciseMetaData) {
         return null;

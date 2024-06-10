@@ -11,6 +11,7 @@ import { TimeInputRow } from "../TimeInputRow";
 import { ErrorTextConfig } from "../../../store/reducers/errors/types";
 import { PageContent } from "../../PageContent/PageContent";
 import { ThemedView } from "../../Themed/ThemedView/View";
+import { TranslationKeys } from "../../../locales/translationKeys";
 
 export const WeightBasedExercise = () => {
     const editedExercise = useAppSelector(getEditedExercise);
@@ -82,7 +83,7 @@ export const WeightBasedExercise = () => {
                 <HStack ghost gap>
                     <EditableExerciseInputRow
                         suffix={weightUnit}
-                        i18key="weight"
+                        i18key={TranslationKeys.WEIGHT}
                         stretch
                         errorTextConfig={errorTextConfigs.weight}
                         setValue={handleSetWeight}
@@ -91,7 +92,7 @@ export const WeightBasedExercise = () => {
                     />
                     <EditableExerciseInputRow
                         errorTextConfig={errorTextConfigs.sets}
-                        i18key="sets"
+                        i18key={TranslationKeys.SETS}
                         stretch
                         setValue={handleSetSets}
                         value={editedExercise?.exercise.sets}
@@ -102,14 +103,14 @@ export const WeightBasedExercise = () => {
                     <EditableExerciseInputRow
                         stretch
                         errorTextConfig={errorTextConfigs.reps}
-                        i18key="reps"
+                        i18key={TranslationKeys.REPS}
                         setValue={handleSetReps}
                         value={editedExercise?.exercise.reps}
                         maxLength={7}
                     />
                     <TimeInputRow
                         wrapperStyle={styles.input}
-                        i18key="pause"
+                        i18key={TranslationKeys.PAUSE}
                         setMinutes={handleSetPauseMinutes}
                         setSeconds={handleSetPauseSeconds}
                         minutes={editedExercise?.exercise?.pauseMinutes}

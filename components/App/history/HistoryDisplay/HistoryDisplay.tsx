@@ -5,11 +5,12 @@ import { styles } from "./styles";
 import { HStack } from "../../../Stack/HStack/HStack";
 import { ThemedMaterialCommunityIcons } from "../../../Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
 import { AppState, useAppSelector } from "../../../../store";
-import { useTranslation } from "react-i18next";
 import { WorkoutId, WorkoutIdType } from "../../../../store/reducers/workout/types";
 import { MeasurementId, MeasurementIdType } from "../../measurements/types";
 import { getNumberWorkoutHistoryEntries } from "../../../../store/selectors/workout/workoutSelectors";
 import { getNumberMeasurementEntries } from "../../../../store/selectors/measurements/measurementSelectors";
+import { useTypedTranslation } from "../../../../locales/i18next";
+import { TranslationKeys } from "../../../../locales/translationKeys";
 
 interface HistoryDisplayProps {
     type: WorkoutIdType | MeasurementIdType;
@@ -24,13 +25,13 @@ const useHistoryEntries = (type: WorkoutIdType | MeasurementIdType, id: WorkoutI
 };
 
 const useHistoryText = (numberHistoryEntries?: number, type: WorkoutIdType | MeasurementIdType = "workout") => {
-    const { t } = useTranslation();
+    const { t } = useTypedTranslation();
     if (!numberHistoryEntries || numberHistoryEntries === 0) {
-        return type === "workout" ? t("workout_history_empty") : t("measurement_history_empty");
+        return t(type === "workout" ? TranslationKeys.WORKOUT_HISTORY_EMPTY : TranslationKeys.MEASUREMENT_HISTORY_EMPTY);
     } else if (numberHistoryEntries === 1) {
-        return type === "workout" ? t("workout_history_single") : t("measurement_history_single");
+        return t(type === "workout" ? TranslationKeys.WORKOUT_HISTORY_SINGLE : TranslationKeys.MEASUREMENT_HISTORY_SINGLE);
     } else {
-        return type === "workout" ? `${numberHistoryEntries} ${t("workout_history_plural")}` : `${numberHistoryEntries} ${t("measurement_history_plural")}`;
+        return type === "workout" ? `${numberHistoryEntries} ${t(TranslationKeys.WORKOUT_HISTORY_PLURAL)}` : `${numberHistoryEntries} ${t(TranslationKeys.MEASUREMENT_HISTORY_PLURAL)}`;
     }
 };
 

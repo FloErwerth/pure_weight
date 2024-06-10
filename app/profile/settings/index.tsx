@@ -4,7 +4,6 @@ import React, { Fragment, useCallback, useEffect, useMemo, useRef } from "react"
 import { ThemedView } from "../../../components/Themed/ThemedView/View";
 import { SiteNavigationButtons } from "../../../components/SiteNavigationButtons/SiteNavigationButtons";
 import { useNavigateBack } from "../../../hooks/navigate";
-import { useTranslation } from "react-i18next";
 import { GeneralSettings } from "../../../components/App/settings/Sections/generalSettings";
 import { WorkoutSettings } from "../../../components/App/settings/Sections/workout";
 import { Display } from "../../../components/App/settings/Sections/display";
@@ -13,6 +12,8 @@ import { DevelopmentSelection } from "../../../components/App/settings/component
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { Footer } from "../../../components/Footer/Footer";
 import { RoutesParamaters } from "../../../types/navigation";
+import { useTypedTranslation } from "../../../locales/i18next";
+import { TranslationKeys } from "../../../locales/translationKeys";
 
 const styles = StyleSheet.create({
     contentWrapper: {
@@ -24,9 +25,9 @@ const isDev = process.env["EXPO_PUBLIC_APP_VARIANT"] === "development";
 
 export const Settings = ({ route: { params } }: NativeStackScreenProps<RoutesParamaters, "profile/settings/index">) => {
     const navigateBack = useNavigateBack();
-    const { t } = useTranslation();
-    const title = useMemo(() => t("settings"), [t]);
-    const getTitleConfig = useCallback((titleKey: string) => ({ title: t(titleKey), size: 24 }) as const, [t]);
+    const { t } = useTypedTranslation();
+    const title = useMemo(() => t(TranslationKeys.SETTINGS), [t]);
+    const getTitleConfig = useCallback((titleKey: TranslationKeys) => ({ title: t(titleKey), size: 24 }) as const, [t]);
     const ref = useRef<FlatList>(null);
 
     useEffect(() => {
@@ -39,13 +40,13 @@ export const Settings = ({ route: { params } }: NativeStackScreenProps<RoutesPar
 
     const settingsPages = useMemo(
         () => [
-            <PageContent scrollable={false} ignorePadding key="GENERAL SETTINGS" background titleConfig={getTitleConfig("general")}>
+            <PageContent scrollable={false} ignorePadding key="GENERAL SETTINGS" background titleConfig={getTitleConfig(TranslationKeys.GENERAL)}>
                 <GeneralSettings />
             </PageContent>,
-            <PageContent scrollable={false} ignorePadding key="WORKOUT SETTINGS" background titleConfig={getTitleConfig("workout")}>
+            <PageContent scrollable={false} ignorePadding key="WORKOUT SETTINGS" background titleConfig={getTitleConfig(TranslationKeys.WORKOUT)}>
                 <WorkoutSettings />
             </PageContent>,
-            <PageContent scrollable={false} ignorePadding key="DISPLAY SETTINGS" background titleConfig={getTitleConfig("display")}>
+            <PageContent scrollable={false} ignorePadding key="DISPLAY SETTINGS" background titleConfig={getTitleConfig(TranslationKeys.DISPLAY)}>
                 <Display />
             </PageContent>,
             <HelpSection key="HELP SETTINGS" />,

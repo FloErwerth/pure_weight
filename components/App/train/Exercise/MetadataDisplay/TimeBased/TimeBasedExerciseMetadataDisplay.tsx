@@ -1,20 +1,21 @@
 import { trainStyles } from "../../../trainStyles";
 import { HStack } from "../../../../../Stack/HStack/HStack";
 import { Text } from "../../../../../Themed/ThemedText/Text";
-import { useTranslation } from "react-i18next";
 import { styles } from "../styles";
 import { useAppSelector } from "../../../../../../store";
 import { ThemedView } from "../../../../../Themed/ThemedView/View";
 import { getTimeUnit } from "../../../../../../store/selectors/settings/settingsSelectors";
 import { ExerciseMetaData } from "../../../../../../store/reducers/workout/types";
 import { useMemo } from "react";
+import { useTypedTranslation } from "../../../../../../locales/i18next";
+import { TranslationKeys } from "../../../../../../locales/translationKeys";
 
 interface SmallMetadataDisplayProps {
     exerciseMetaData: ExerciseMetaData;
 }
 
 export const TimeBasedSmallExerciseDataDisplay = ({ exerciseMetaData }: SmallMetadataDisplayProps) => {
-    const { t } = useTranslation();
+    const { t } = useTypedTranslation();
 
     const minutes = useMemo(() => {
         const parsedMinutes = parseInt(exerciseMetaData?.pauseMinutes ?? "0", 10);
@@ -28,7 +29,7 @@ export const TimeBasedSmallExerciseDataDisplay = ({ exerciseMetaData }: SmallMet
 
     const { secondsUnit, minutesUnit } = useAppSelector(getTimeUnit);
     const showPause = minutes || seconds;
-    const metaText = useMemo(() => ` ${t("pause_lower")} `, [t]);
+    const metaText = useMemo(() => ` ${t(TranslationKeys.PAUSE_LOWER)} `, [t]);
     if (!exerciseMetaData) {
         return null;
     }

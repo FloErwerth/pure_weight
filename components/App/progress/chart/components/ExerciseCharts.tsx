@@ -5,7 +5,6 @@ import { ThemedBottomSheetModal, useBottomSheetRef } from "../../../../BottomShe
 import { useAppSelector } from "../../../../../store";
 import { HStack } from "../../../../Stack/HStack/HStack";
 import { styles } from "./styles";
-import { useTranslation } from "react-i18next";
 import { ThemedView } from "../../../../Themed/ThemedView/View";
 import { Text } from "../../../../Themed/ThemedText/Text";
 import { ThemedScrollView } from "../../../../Themed/ThemedScrollView/ThemedScrollView";
@@ -24,6 +23,8 @@ import { getMinutesSecondsFromMilliseconds } from "../../../../../utils/timeDisp
 import { ThemedMaterialCommunityIcons } from "../../../../Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
 import { PageContent } from "../../../../PageContent/PageContent";
 import { AnswerText } from "../../../../HelpQuestionAnswer/AnswerText";
+import { useTypedTranslation } from "../../../../../locales/i18next";
+import { TranslationKeys } from "../../../../../locales/translationKeys";
 
 interface ExerciseChartProps {
     exerciseName: string;
@@ -32,31 +33,30 @@ interface ExerciseChartProps {
     index: number;
 }
 
-const getChartTypeMap = (exerciseType: ExerciseType): Record<string, { title: string; hint: string }> => {
+const CUMULATIVE = {
+    titleKey: TranslationKeys.PROGRESS_CUMULATIVE,
+    hintKey: TranslationKeys.PROGRESS_CUMULATIVE_HINT,
+};
+
+const getChartTypeMap = (exerciseType: ExerciseType): Record<string, { titleKey: TranslationKeys; hintKey: TranslationKeys }> => {
     if (exerciseType === "TIME_BASED") {
         return {
-            CUMULATIVE: {
-                title: "progress_cumulative",
-                hint: "progress_cumulative_hint",
-            },
+            CUMULATIVE,
             AVG_DUR: {
-                title: "progress_avg_dur",
-                hint: "progress_avg_dur_hint",
+                titleKey: TranslationKeys.PROGRESS_AVG_DUR,
+                hintKey: TranslationKeys.PROGRESS_AVG_DUR_HINT,
             },
         } as const;
     }
     return {
-        CUMULATIVE: {
-            title: "progress_cumulative",
-            hint: "progress_cumulative_hint",
-        },
+        CUMULATIVE,
         AVG_REPS: {
-            title: "progress_avg_reps",
-            hint: "progress_avg_reps_hint",
+            titleKey: TranslationKeys.PROGRESS_AVG_REPS,
+            hintKey: TranslationKeys.PROGRESS_AVG_REPS_HINT,
         },
         AVG_WEIGHT: {
-            title: "progress_avg_weight",
-            hint: "progress_avg_weight_hint",
+            titleKey: TranslationKeys.PROGRESS_AVG_WEIGHT,
+            hintKey: TranslationKeys.PROGRESS_AVG_WEIGHT_HINT,
         },
     } as const;
 };
@@ -148,7 +148,7 @@ export const ExerciseChart = ({ exerciseName, exerciseType, data }: ExerciseChar
     const [chartType, setChartType] = useState<ChartType>("CUMULATIVE");
     const [lineChartData] = useExerciseData(data, chartType, exerciseType);
     const language = useAppSelector(getLanguage);
-    const { t } = useTranslation();
+    const { t } = useTypedTranslation();
     const { mainColor } = useTheme();
     const { ref, openBottomSheet, closeBottomSheet } = useBottomSheetRef();
     const chartTypeLabel = useChartTypeLabel(chartType, exerciseType);
@@ -222,14 +222,14 @@ export const ExerciseChart = ({ exerciseName, exerciseType, data }: ExerciseChar
     );
 
     const getYLabel = useCallback(() => "", []);
-    const modalTitle = useMemo(() => t("progress_modal_title"), [t]);
+    const modalTitle = useMemo(() => t(TranslationKeys.PROGRESS_MODAL_TITLE), [t]);
     const mappedModalContent = useMemo(
         () =>
             mappedChartProps.map(({ onPress, title, chartType }) => (
                 <HStack ghost key={`${chartType}${title}`}>
                     <ThemedPressable stretch round background style={styles.chartTypeSelectionButton} padding onPress={onPress}>
                         <Text center ghost style={styles.chartTypeSelectonTitle}>
-                            {t(chartTypeMap[chartType].title)}
+                            {t(chartTypeMap[chartType].titleKey)}
                         </Text>
                     </ThemedPressable>
                     <ThemedPressable onPress={openHelp} padding ghost>
@@ -239,7 +239,7 @@ export const ExerciseChart = ({ exerciseName, exerciseType, data }: ExerciseChar
             )),
         [chartTypeMap, mappedChartProps, openHelp, t],
     );
-    const answerText = useMemo(() => t(chartTypeMap[chartType].hint), [chartType, chartTypeMap, t]);
+    const answerText = useMemo(() => t(chartTypeMap[chartType].hintKey), [chartType, chartTypeMap, t]);
 
     return (
         <ThemedView style={styles.wrapper}>
@@ -249,7 +249,7 @@ export const ExerciseChart = ({ exerciseName, exerciseType, data }: ExerciseChar
                 </Text>
                 <ThemedPressable input onPress={openSelectionModal} style={styles.selectionButton}>
                     <Text input center style={styles.selectionText}>
-                        {t(chartTypeMap[chartType].title)}
+                        {t(chartTypeMap[chartType].titleKey)}
                     </Text>
                 </ThemedPressable>
             </HStack>
@@ -259,7 +259,7 @@ export const ExerciseChart = ({ exerciseName, exerciseType, data }: ExerciseChar
                     {mappedModalContent}
                 </ThemedView>
             </ThemedBottomSheetModal>
-            <ThemedBottomSheetModal ref={helpRef} title={t(chartTypeMap[chartType].title)}>
+            <ThemedBottomSheetModal ref={helpRef} title={t(chartTypeMap[chartType].titleKey)}>
                 <PageContent ghost paddingTop={20}>
                     <AnswerText>{answerText}</AnswerText>
                 </PageContent>

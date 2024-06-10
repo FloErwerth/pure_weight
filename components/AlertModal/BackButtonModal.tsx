@@ -1,7 +1,6 @@
 import { ReactNode, RefObject, useCallback, useMemo, useState } from "react";
 import { ThemedBottomSheetModal, useBottomSheetRef } from "../BottomSheetModal/ThemedBottomSheetModal";
 import * as Haptics from "expo-haptics";
-import { useTranslation } from "react-i18next";
 import { Text } from "../Themed/ThemedText/Text";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { ThemedPressable } from "../Themed/Pressable/Pressable";
@@ -13,6 +12,8 @@ import { getLanguage } from "../../store/selectors/settings/settingsSelectors";
 import { View } from "react-native";
 import { AnswerText } from "../HelpQuestionAnswer/AnswerText";
 import { styles } from "./styles";
+import { useTypedTranslation } from "../../locales/i18next";
+import { TranslationKeys } from "../../locales/translationKeys";
 
 interface BackButtonModal {
     onConfirm: () => void;
@@ -25,7 +26,7 @@ interface BackButtonModal {
 }
 
 const useHelpContent = (): Record<"save" | "pause" | "cancel", { title: string; content: ReactNode }> => {
-    const { t } = useTranslation();
+    const { t } = useTypedTranslation();
     const language = useAppSelector(getLanguage);
 
     const saveContent = useMemo(() => {
@@ -82,15 +83,15 @@ const useHelpContent = (): Record<"save" | "pause" | "cancel", { title: string; 
     return useMemo(
         () => ({
             save: {
-                title: t("workout_save"),
+                title: t(TranslationKeys.WORKOUT_SAVE),
                 content: saveContent,
             },
             pause: {
-                title: t("workout_pause"),
+                title: t(TranslationKeys.WORKOUT_PAUSE),
                 content: pauseContent,
             },
             cancel: {
-                title: t("workout_cancel"),
+                title: t(TranslationKeys.WORKOUT_CANCEL),
                 content: cancelContent,
             },
         }),
@@ -99,7 +100,7 @@ const useHelpContent = (): Record<"save" | "pause" | "cancel", { title: string; 
 };
 
 export const BackButtonModal = ({ title, reference, onPause, onCancel, onConfirm, workoutDone }: BackButtonModal) => {
-    const { t } = useTranslation();
+    const { t } = useTypedTranslation();
     const { ref, openBottomSheet } = useBottomSheetRef();
     const [helpConfigKey, setHelpConfigKey] = useState<"save" | "pause" | "cancel">("save");
     const helpContent = useHelpContent();
@@ -120,9 +121,9 @@ export const BackButtonModal = ({ title, reference, onPause, onCancel, onConfirm
         onPause();
     }, [onPause]);
 
-    const saveText = useMemo(() => t("workout_save"), [t]);
-    const cancelText = useMemo(() => t("workout_cancel"), [t]);
-    const pauseText = useMemo(() => t("workout_pause"), [t]);
+    const saveText = useMemo(() => t(TranslationKeys.WORKOUT_SAVE), [t]);
+    const cancelText = useMemo(() => t(TranslationKeys.WORKOUT_CANCEL), [t]);
+    const pauseText = useMemo(() => t(TranslationKeys.WORKOUT_PAUSE), [t]);
 
     const handleOpenSaveHelp = useCallback(() => {
         openBottomSheet();

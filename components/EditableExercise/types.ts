@@ -1,11 +1,12 @@
 import { ErrorTextConfig } from "../../store/reducers/errors/types";
 import { TextStyle, ViewStyle } from "react-native";
+import { TranslationKeys } from "../../locales/translationKeys";
 
 export interface EditableExerciseInputRowProps {
     value?: string;
     setValue: (value: string) => void;
     errorTextConfig?: ErrorTextConfig;
-    i18key?: string;
+    i18key?: TranslationKeys;
     background?: boolean;
     stretch?: boolean;
     suffix?: string;
@@ -23,7 +24,7 @@ export interface TimeInputRowProps {
     minutes?: string;
     setMinutes: (minutes: string) => void;
     setSeconds: (seconds: string) => void;
-    i18key?: string;
+    i18key?: TranslationKeys;
     helpTextConfig?: { text: string; title: string };
     errorTextConfig?: ErrorTextConfig;
     ghost?: boolean;

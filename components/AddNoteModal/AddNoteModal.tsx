@@ -1,6 +1,5 @@
 import { RefObject, useCallback, useMemo, useRef } from "react";
 import { Keyboard, NativeSyntheticEvent, TextInput, TextInputTextInputEventData } from "react-native";
-import { useTranslation } from "react-i18next";
 import { ThemedBottomSheetModal } from "../BottomSheetModal/ThemedBottomSheetModal";
 import { ThemedTextInput } from "../Themed/ThemedTextInput/ThemedTextInput";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
@@ -13,6 +12,8 @@ import { ThemedView } from "../Themed/ThemedView/View";
 import { saveNote } from "../../store/reducers/workout";
 import * as Haptics from "expo-haptics";
 import { SNAP_POINTS } from "../../constants/snapPoints";
+import { useTypedTranslation } from "../../locales/i18next";
+import { TranslationKeys } from "../../locales/translationKeys";
 
 interface EditNoteModalProps {
     onRequestClose: () => void;
@@ -21,7 +22,7 @@ interface EditNoteModalProps {
 
 export const AddNoteModal = ({ reference, onRequestClose }: EditNoteModalProps) => {
     const inputRef = useRef<TextInput>(null);
-    const { t } = useTranslation();
+    const { t } = useTypedTranslation();
     const dispatch = useAppDispatch();
     const storedNote = useAppSelector(getNote);
 
@@ -39,9 +40,9 @@ export const AddNoteModal = ({ reference, onRequestClose }: EditNoteModalProps) 
         void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     }, [onRequestClose]);
 
-    const addNoteTitle = useMemo(() => t("edit_note_title"), [t]);
-    const addNotePlaceholder = useMemo(() => t("edit_note_placeholder"), [t]);
-    const text = useMemo(() => t("edit_note_done"), [t]);
+    const addNoteTitle = useMemo(() => t(TranslationKeys.EDIT_NOTE_TITLE), [t]);
+    const addNotePlaceholder = useMemo(() => t(TranslationKeys.EDIT_NOTE_PLACEHOLDER), [t]);
+    const text = useMemo(() => t(TranslationKeys.EDIT_NOTE_DONE), [t]);
 
     return (
         <ThemedBottomSheetModal snapPoints={SNAP_POINTS["100"]} ref={reference} title={addNoteTitle}>

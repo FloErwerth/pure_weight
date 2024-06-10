@@ -20,7 +20,8 @@ import { AnswerText } from "../../../components/HelpQuestionAnswer/AnswerText";
 import { HStack } from "../../../components/Stack/HStack/HStack";
 import { ThemedMaterialCommunityIcons } from "../../../components/Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
 import { createStyles } from "../../../components/App/measurements/styles";
-import { useTranslation } from "react-i18next";
+import { useTypedTranslation } from "../../../locales/i18next";
+import { TranslationKeys } from "../../../locales/translationKeys";
 
 export const MeasurementHistory = () => {
     const navigateBack = useNavigateBack();
@@ -31,7 +32,7 @@ export const MeasurementHistory = () => {
     const { ref, openBottomSheet, closeBottomSheet } = useBottomSheetRef();
     const dispatch = useAppDispatch();
     const [deletedDatapointIndex, setDeletedDatapointIndex] = useState<number | null>(null);
-    const { t } = useTranslation();
+    const { t } = useTypedTranslation();
 
     const handleEditMeasurementPoint = useCallback(
         (index: number) => {
@@ -136,20 +137,20 @@ export const MeasurementHistory = () => {
                     bottom={bottom}
                     onRequestClose={handleToastClosed}
                     open={showToast}
-                    messageKey={"measurement_deleted_message"}
+                    messageKey={TranslationKeys.MEASUREMENT_DELETED_MESSAGE}
                     onRedo={handleRecoverMeasurementDataPoint}
                 />
             </PageContent>
 
-            <ThemedBottomSheetModal ref={ref} title={t("alert_delete_measurement_datapoint_title")}>
+            <ThemedBottomSheetModal ref={ref} title={t(TranslationKeys.ALERT_DELETE_MEASUREMENT_DATAPOINT_TITLE)}>
                 <PageContent stretch ghost paddingTop={20}>
-                    <AnswerText>{t("alert_delete_measurement_datapoint_content")}</AnswerText>
+                    <AnswerText>{t(TranslationKeys.ALERT_DELETE_MEASUREMENT_DATAPOINT_CONTENT)}</AnswerText>
                 </PageContent>
                 <PageContent paddingTop={20} ghost>
                     <ThemedPressable center padding round onPress={confirmDeleteMeasurementDataPoint}>
                         <HStack ghost center style={createStyles.warningConfirmWrapper}>
                             <ThemedMaterialCommunityIcons name="delete" size={24} />
-                            <Text>{t("alert_delete_measurement_datapoint_confirm")}</Text>
+                            <Text>{t(TranslationKeys.ALERT_DELETE_MEASUREMENT_DATAPOINT_CONFIRM)}</Text>
                         </HStack>
                     </ThemedPressable>
                 </PageContent>

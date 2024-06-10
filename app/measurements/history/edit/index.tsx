@@ -19,8 +19,9 @@ import { createStyles } from "../../../../components/App/measurements/styles";
 import { AnswerText } from "../../../../components/HelpQuestionAnswer/AnswerText";
 import { ThemedPressable } from "../../../../components/Themed/Pressable/Pressable";
 import { ThemedMaterialCommunityIcons } from "../../../../components/Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
-import { useTranslation } from "react-i18next";
 import { setError } from "../../../../store/reducers/errors";
+import { useTypedTranslation } from "../../../../locales/i18next";
+import { TranslationKeys } from "../../../../locales/translationKeys";
 
 export const MeasurementHistoryEdit = () => {
     const navigateBack = useNavigateBack();
@@ -32,7 +33,7 @@ export const MeasurementHistoryEdit = () => {
     const editedDatapoint = useAppSelector(getEditedMeasurementDataPoint);
     const editedMeasurement = useAppSelector(getEditedMeasurement);
     const dispatch = useAppDispatch();
-    const { t } = useTranslation();
+    const { t } = useTypedTranslation();
 
     const handleNavigateBack = useCallback(() => {
         closeDiscardWarning();
@@ -115,7 +116,7 @@ export const MeasurementHistoryEdit = () => {
     return (
         <>
             <ThemedView stretch ghost>
-                <SiteNavigationButtons title={t("measurement_datapoint_edit_title")} backButtonAction={handleValidateBack} handleConfirm={handleConfirmSave} />
+                <SiteNavigationButtons title={t(TranslationKeys.MEASUREMENT_DATAPOINT_EDIT_TITLE)} backButtonAction={handleValidateBack} handleConfirm={handleConfirmSave} />
                 <PageContent scrollable ghost paddingTop={10} style={{ gap: 10 }} stretch>
                     <View style={{ gap: 3 }}>
                         <Text style={{ fontSize: 26 }} ghost>
@@ -131,34 +132,34 @@ export const MeasurementHistoryEdit = () => {
                     </View>
                     <ThemedView input round padding>
                         <Text style={{ fontSize: 20, marginBottom: 20 }} ghost>
-                            {t("measurement_datapoint_new_date")}
+                            {t(TranslationKeys.MEASUREMENT_DATAPOINT_NEW_DATE)}
                         </Text>
                         <DatePicker handleSelectDate={handleSetDatapointDate} selectedDate={editedDatapoint?.isoDate ?? getDateTodayIso()} dateConfig={dateConfig} allSelectable />
                     </ThemedView>
                 </PageContent>
             </ThemedView>
-            <ThemedBottomSheetModal ref={dateWarning} title={t("alert_measurement_date_title")}>
+            <ThemedBottomSheetModal ref={dateWarning} title={t(TranslationKeys.ALERT_MEASUREMENT_DATE_TITLE)}>
                 <PageContent paddingTop={20} safeBottom stretch ghost>
-                    <AnswerText>{t(`alert_measurement_date_content`)}</AnswerText>
+                    <AnswerText>{t(TranslationKeys.ALERT_MEASUREMENT_DATE_CONTENT)}</AnswerText>
                 </PageContent>
                 <PageContent ghost>
                     <ThemedPressable center padding round onPress={handleSaveEditedDatapoint}>
                         <HStack ghost center style={createStyles.warningConfirmWrapper}>
                             <ThemedMaterialCommunityIcons name="content-save-outline" size={24} />
-                            <Text>{t("alert_measurement_date_confirm")}</Text>
+                            <Text>{t(TranslationKeys.ALERT_MEASUREMENT_DATE_CONFIRM)}</Text>
                         </HStack>
                     </ThemedPressable>
                 </PageContent>
             </ThemedBottomSheetModal>
-            <ThemedBottomSheetModal ref={discardWarning} title={t("alert_discard_measurement_datapoint_title")}>
+            <ThemedBottomSheetModal ref={discardWarning} title={t(TranslationKeys.ALERT_DISCARD_MEASUREMENT_DATAPOINT_TITLE)}>
                 <PageContent stretch ghost>
-                    <AnswerText>{t(`alert_discard_measurement_datapoint_content`)} </AnswerText>
+                    <AnswerText>{t(TranslationKeys.ALERT_DISCARD_MEASUREMENT_DATAPOINT_CONTENT)}</AnswerText>
                 </PageContent>
                 <PageContent paddingTop={20} ghost>
                     <ThemedPressable center padding round onPress={handleNavigateBack}>
                         <HStack ghost center gap>
                             <ThemedMaterialCommunityIcons name="content-save-outline" size={24} />
-                            <Text>{t("alert_discard_measurement_datapoint_confirm")}</Text>
+                            <Text>{t(TranslationKeys.ALERT_DISCARD_MEASUREMENT_DATAPOINT_CONFIRM)}</Text>
                         </HStack>
                     </ThemedPressable>
                 </PageContent>

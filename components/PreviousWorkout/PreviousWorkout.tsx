@@ -1,6 +1,5 @@
 import { AppState, useAppSelector } from "../../store";
 import { Text } from "../Themed/ThemedText/Text";
-import { useTranslation } from "react-i18next";
 import { useCallback, useMemo } from "react";
 import { HStack } from "../Stack/HStack/HStack";
 import { ThemedView } from "../Themed/ThemedView/View";
@@ -11,6 +10,8 @@ import { ThemedPressable } from "../Themed/Pressable/Pressable";
 import { ExerciseId, ExerciseType } from "../../store/reducers/workout/types";
 import { styles } from "./styles";
 import { getMillisecondsFromTimeInput, getTimeDisplayFromMilliseconds } from "../../utils/timeDisplay";
+import { useTypedTranslation } from "../../locales/i18next";
+import { TranslationKeys } from "../../locales/translationKeys";
 
 interface PreviousTrainingProps {
     exerciseId: ExerciseId;
@@ -19,7 +20,7 @@ interface PreviousTrainingProps {
 export const PreviousWorkout = ({ exerciseId, exerciseType }: PreviousTrainingProps) => {
     const previousWorkout = useAppSelector((state: AppState) => getPreviousWorkout(state, state.settingsState.language, exerciseId));
 
-    const { t } = useTranslation();
+    const { t } = useTypedTranslation();
     const { ref } = useBottomSheetRef();
     const activeSetIndex = useAppSelector((state: AppState) => getActiveSetIndex(state, exerciseId)) ?? -1;
     const currentSet = previousWorkout?.sets[activeSetIndex ?? 0];
@@ -33,7 +34,7 @@ export const PreviousWorkout = ({ exerciseId, exerciseType }: PreviousTrainingPr
     }, [ref]);
 
     const dateTextStyles = useMemo(() => ({ fontSize: 16, padding: previousWorkout?.note ? 0 : 10 }), [previousWorkout?.note]);
-    const previousTrainingTitle = useMemo(() => previousWorkout?.date && t("previous_training_note_title").concat(previousWorkout.date), [previousWorkout?.date, t]);
+    const previousTrainingTitle = useMemo(() => previousWorkout?.date && t(TranslationKeys.PREVIOUS_TRAINING_NOTE_TITLE).concat(previousWorkout.date), [previousWorkout?.date, t]);
     if (!previousWorkout) {
         return null;
     }
@@ -48,13 +49,13 @@ export const PreviousWorkout = ({ exerciseId, exerciseType }: PreviousTrainingPr
         <ThemedView ghost>
             <HStack ghost center style={{ justifyContent: "space-between" }}>
                 <Text ghost secondary style={dateTextStyles}>
-                    {t("previous_training_title_with_date")}
+                    {t(TranslationKeys.PREVIOUS_TRAINING_TITLE_WITH_DATE)}
                     {date}
                 </Text>
                 {note && (
                     <ThemedView ghost>
                         <ThemedPressable padding style={styles.noteButtonWrapper} onPress={handleShowEditNoteModal}>
-                            <Text>{t("training_input_show_note")}</Text>
+                            <Text>{t(TranslationKeys.TRAINING_INPUT_SHOW_NOTE)}</Text>
                         </ThemedPressable>
                     </ThemedView>
                 )}

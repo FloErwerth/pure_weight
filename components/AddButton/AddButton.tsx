@@ -1,7 +1,6 @@
 import { styles } from "./styles";
 import { View } from "react-native";
 import { ComponentProps, useCallback, useMemo } from "react";
-import { useTranslation } from "react-i18next";
 import { AppState, useAppDispatch, useAppSelector } from "../../store";
 import { ThemedPressable } from "../Themed/Pressable/Pressable";
 import { cleanError } from "../../store/reducers/errors";
@@ -11,6 +10,8 @@ import { HStack } from "../Stack/HStack/HStack";
 import { ThemedMaterialCommunityIcons } from "../Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
 import { ErrorText } from "../ErrorText/ErrorText";
 import { Text } from "../Themed/ThemedText/Text";
+import { useTypedTranslation } from "../../locales/i18next";
+import { TranslationKeys } from "../../locales/translationKeys";
 
 interface AddExerciseProps {
     onPress?: () => void;
@@ -20,8 +21,8 @@ interface AddExerciseProps {
 }
 
 export const AddButton = ({ onPress, title, disabled = false, icon }: AddExerciseProps) => {
-    const { t } = useTranslation();
-    const text = useMemo(() => title ?? t("add_exercise"), [title, t]);
+    const { t } = useTypedTranslation();
+    const text = useMemo(() => title ?? t(TranslationKeys.ADD_EXERCISE), [title, t]);
 
     const hasError = useAppSelector((state: AppState) => getErrorByKey(state, "create_exercises_empty"));
     const dispatch = useAppDispatch();
@@ -35,7 +36,7 @@ export const AddButton = ({ onPress, title, disabled = false, icon }: AddExercis
 
     return (
         <View>
-            {hasError && <ErrorText errorKey="create_exercises_empty" />}
+            {hasError && <ErrorText errorKey={"create_exercises_empty"} />}
             <ThemedPressable disabled={disabled} style={styles.add} error={hasError} onPress={handlePress}>
                 <HStack style={styles.stack}>
                     <Text error={hasError} ghost style={styles.text}>

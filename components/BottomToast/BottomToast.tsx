@@ -1,4 +1,3 @@
-import { useTranslation } from "react-i18next";
 import { Text } from "../Themed/ThemedText/Text";
 import { Dimensions, ViewStyle } from "react-native";
 import { ThemedView } from "../Themed/ThemedView/View";
@@ -8,11 +7,13 @@ import { HStack } from "../Stack/HStack/HStack";
 import { ThemedMaterialCommunityIcons } from "../Themed/ThemedMaterialCommunityIcons/ThemedMaterialCommunityIcons";
 import { RefObject, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ThemedPressable } from "../Themed/Pressable/Pressable";
+import { useTypedTranslation } from "../../locales/i18next";
+import { TranslationKeys } from "../../locales/translationKeys";
 
 interface BottomToastProps {
     reference?: RefObject<{ restart: () => void }>;
-    titleKey?: string;
-    messageKey?: string;
+    titleKey?: TranslationKeys;
+    messageKey?: TranslationKeys;
     onRedo?: () => void;
     onRequestClose: () => void;
     open: boolean;
@@ -29,7 +30,7 @@ const ANIM_TIME = 300;
 
 export const BottomToast = ({ reference, time = 5000, titleKey, messageKey, onRedo, open, onRequestClose, bottom = 0, padding = 20, leftCorrection, topCorrection }: BottomToastProps) => {
     const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
-    const { t } = useTranslation();
+    const { t } = useTypedTranslation();
     const [percent, setPercent] = useState(100);
     const animatedPercent = useSharedValue(100);
     const animatedOpacity = useSharedValue(0);

@@ -5,18 +5,19 @@ import { mutateEditedExercise } from "../../../store/reducers/workout";
 
 import { getEditedExercise } from "../../../store/selectors/workout/workoutSelectors";
 import { TimeInputRow } from "../TimeInputRow";
-import { useTranslation } from "react-i18next";
 import { ErrorTextConfig } from "../../../store/reducers/errors/types";
 import { getWeightUnit } from "../../../store/selectors/settings/settingsSelectors";
 import { HStack } from "../../Stack/HStack/HStack";
 import { styles } from "../styles";
 import { PageContent } from "../../PageContent/PageContent";
+import { useTypedTranslation } from "../../../locales/i18next";
 import { TranslationKeys } from "../../../locales/translationKeys";
+import { toErrorTranslation } from "../../../store/mapper/error";
 
 export const TimeBasedExercise = () => {
     const editedExercise = useAppSelector(getEditedExercise);
     const dispatch = useAppDispatch();
-    const { t } = useTranslation();
+    const { t } = useTypedTranslation();
     const weightUnit = useAppSelector(getWeightUnit);
 
     const handleSetSets = useCallback(
@@ -90,11 +91,11 @@ export const TimeBasedExercise = () => {
         () => ({
             sets: {
                 errorKey: "create_exercise_sets",
-                errorText: t(TranslationKeys.ERROR_CREATE_EXERCISE_SETS),
+                errorText: t(toErrorTranslation("create_exercise_sets")),
             },
             duration: {
                 errorKey: "create_exercise_duration",
-                errorText: t(TranslationKeys.ERROR_CREATE_EXERCISE_DURATION),
+                errorText: t(toErrorTranslation("create_exercise_duration")),
             },
         }),
         [t],
@@ -105,7 +106,7 @@ export const TimeBasedExercise = () => {
             <HStack gap ghost>
                 <TimeInputRow
                     wrapperStyle={styles.input}
-                    i18key="duration"
+                    i18key={TranslationKeys.DURATION}
                     setMinutes={handleSetDurationMinutes}
                     setSeconds={handleSetDurationSeconds}
                     minutes={editedExercise?.exercise?.durationMinutes}
@@ -113,7 +114,7 @@ export const TimeBasedExercise = () => {
                     errorTextConfig={errorTextConfigs.duration}
                 />
                 <TimeInputRow
-                    i18key="pause"
+                    i18key={TranslationKeys.PAUSE}
                     wrapperStyle={styles.input}
                     setMinutes={handleSetPauseMinutes}
                     setSeconds={handleSetPauseSeconds}
@@ -122,8 +123,8 @@ export const TimeBasedExercise = () => {
                 />
             </HStack>
             <HStack gap ghost>
-                <EditableExerciseInputRow i18key="sets" stretch setValue={handleSetSets} errorTextConfig={errorTextConfigs.sets} value={editedExercise?.exercise.sets} />
-                <EditableExerciseInputRow stretch setValue={handleSetWeight} i18key="weight" suffix={weightUnit} value={editedExercise?.exercise.weight}></EditableExerciseInputRow>
+                <EditableExerciseInputRow i18key={TranslationKeys.SETS} stretch setValue={handleSetSets} errorTextConfig={errorTextConfigs.sets} value={editedExercise?.exercise.sets} />
+                <EditableExerciseInputRow stretch setValue={handleSetWeight} i18key={TranslationKeys.WEIGHT} suffix={weightUnit} value={editedExercise?.exercise.weight}></EditableExerciseInputRow>
             </HStack>
         </PageContent>
     );

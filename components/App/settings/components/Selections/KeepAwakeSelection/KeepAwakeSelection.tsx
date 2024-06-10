@@ -4,12 +4,13 @@ import { useCallback, useMemo } from "react";
 import { useAppDispatch, useAppSelector } from "../../../../../../store";
 import { getKeepAwake } from "../../../../../../store/selectors/settings/settingsSelectors";
 import { setKeepAwake } from "../../../../../../store/reducers/settings";
-import { useTranslation } from "react-i18next";
 import { CheckBox } from "../../../../../Themed/CheckBox/CheckBox";
 import { SnapPoint } from "../../../../../BottomSheetModal/ThemedBottomSheetModal";
+import { useTypedTranslation } from "../../../../../../locales/i18next";
+import { TranslationKeys } from "../../../../../../locales/translationKeys";
 
 export const KeepAwakeSelection = () => {
-    const { t } = useTranslation();
+    const { t } = useTypedTranslation();
     const dispatch = useAppDispatch();
     const awake = useAppSelector(getKeepAwake);
     const handleSelectAwake = useCallback(
@@ -22,18 +23,16 @@ export const KeepAwakeSelection = () => {
     const helpText = useMemo(
         () =>
             ({
-                title: t("settings_keep_awake"),
-                text: t("settings_keep_awake_helptext_text"),
+                title: t(TranslationKeys.SETTINGS_KEEP_AWAKE),
+                text: t(TranslationKeys.SETTINGS_KEEP_AWAKE_HELPTEXT_TEXT),
                 snapPoints: ["35%"] as SnapPoint[],
             }) as const,
         [t],
     );
 
-    const awakeLabel = useMemo(() => t("settings_keep_awake"), [t]);
-
     return (
         <ThemedView round style={selectionStyles.vStack}>
-            <CheckBox ghost helpTextConfig={helpText} label={awakeLabel} size={26} checked={awake} onChecked={(awake) => handleSelectAwake(awake)} />
+            <CheckBox ghost helpTextConfig={helpText} label={helpText.title} size={26} checked={awake} onChecked={(awake) => handleSelectAwake(awake)} />
         </ThemedView>
     );
 };

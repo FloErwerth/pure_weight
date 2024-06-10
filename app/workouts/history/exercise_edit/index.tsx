@@ -2,7 +2,6 @@ import { ThemedView } from "../../../../components/Themed/ThemedView/View";
 import { useNavigateBack } from "../../../../hooks/navigate";
 import { SiteNavigationButtons } from "../../../../components/SiteNavigationButtons/SiteNavigationButtons";
 import { PageContent } from "../../../../components/PageContent/PageContent";
-import { useTranslation } from "react-i18next";
 import { AppState, useAppDispatch, useAppSelector } from "../../../../store";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { ThemedBottomSheetModal, useBottomSheetRef } from "../../../../components/BottomSheetModal/ThemedBottomSheetModal";
@@ -20,6 +19,8 @@ import { HistorySetInput } from "../../../../components/App/history/HistorySetIn
 import { HistoryContextProvider } from "../../../../components/App/history/HistoryContext/HistoryContext";
 import { getDoneExerciseById } from "../../../../store/selectors/workout/workoutSelectors";
 import { RoutesParamaters } from "../../../../types/navigation";
+import { useTypedTranslation } from "../../../../locales/i18next";
+import { TranslationKeys } from "../../../../locales/translationKeys";
 
 const useGetWasEdited = (doneWorkoutId: WorkoutId, doneExerciseId: ExerciseId) => {
     const doneExerciseData = useAppSelector((state: AppState) => getDoneExerciseById(state, doneWorkoutId, doneExerciseId));
@@ -39,8 +40,8 @@ export const WorkoutHistoryEdit = ({
         params: { doneWorkoutId, doneExercise },
     },
 }: NativeStackScreenProps<RoutesParamaters, "workouts/history/exercise_edit/index">) => {
-    const { t } = useTranslation();
-    const title = useMemo(() => t("history_exercise_edit_title"), [t]);
+    const { t } = useTypedTranslation();
+    const title = useMemo(() => t(TranslationKeys.HISTORY_EXERCISE_EDIT_TITLE), [t]);
     const dispatch = useAppDispatch();
     const { ref, openBottomSheet } = useBottomSheetRef();
     const navigateBack = useNavigateBack();
@@ -51,9 +52,9 @@ export const WorkoutHistoryEdit = ({
         navigateBack();
     }, [dispatch, doneWorkoutId, navigateBack]);
 
-    const warningTitle = useMemo(() => t("workout_history_edit_warning_title"), [t]);
-    const warningContent = useMemo(() => t("workout_history_edit_warning_message"), [t]);
-    const discardActionText = useMemo(() => t("workout_history_edit_discard_action"), [t]);
+    const warningTitle = useMemo(() => t(TranslationKeys.WORKOUT_HISTORY_EDIT_WARNING_TITLE), [t]);
+    const warningContent = useMemo(() => t(TranslationKeys.WORKOUT_HISTORY_EDIT_WARNING_MESSAGE), [t]);
+    const discardActionText = useMemo(() => t(TranslationKeys.WORKOUT_HISTORY_EDIT_DISCARD_ACTION), [t]);
 
     const clearHistoryErrors = useCallback(() => {
         dispatch(cleanError(["edit_history_reps", "edit_history_duration", "edit_history_exercise_weightbased_weight", "edit_history_exercise_weightbased_weight"]));
