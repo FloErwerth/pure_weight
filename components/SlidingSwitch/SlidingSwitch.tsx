@@ -96,7 +96,7 @@ export function SlidingSwitch({ options, onSelectValue, value, disabled, initial
 
 	const mappedOptions = useMemo(
 		() =>
-			options.map(({ label, value }) => (
+			options.map(({ label, value }, index) => (
 				<ThemedPressable
 					disabled={disabled}
 					key={label + value + Math.random()}
@@ -105,7 +105,9 @@ export function SlidingSwitch({ options, onSelectValue, value, disabled, initial
 					stretch
 					onPress={() => handleSelectValue(value)}
 				>
-					<Text ghost>{label}</Text>
+					<Text ghost disabled={index !== selectedValueIndex}>
+						{label}
+					</Text>
 				</ThemedPressable>
 			)),
 		[disabled, handleSelectValue, options],
@@ -115,7 +117,7 @@ export function SlidingSwitch({ options, onSelectValue, value, disabled, initial
 		<>
 			<ThemedView onLayout={measureContainer} reference={animatedViewRef} style={styles.wrapper}>
 				<HStack ghost>{mappedOptions}</HStack>
-				<AnimatedView input={!disabled} background={disabled} style={animatedBackgroundStyle} />
+				<AnimatedView input style={animatedBackgroundStyle} />
 			</ThemedView>
 			<FlatList
 				scrollEnabled={false}
