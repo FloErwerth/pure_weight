@@ -2,7 +2,7 @@ import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { SplashScreen } from "expo-router";
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Appearance, NativeModules } from "react-native";
 import DeviceInfo from "react-native-device-info";
@@ -43,7 +43,13 @@ SplashScreen.preventAutoHideAsync();
 
 const Stack = createNativeStackNavigator<RoutesParamaters>();
 const options = { headerShown: false };
-const gestureOptions = { ...options, gestureEnabled: false }
+const gestureOptions = { ...options, gestureEnabled: false };
+
+const screenOptions = {
+            headerShown: false,
+            headerBackButtonMenuEnabled: false,
+        }
+
 
 const ThemedApp = () => {
     useInitPurchases();
@@ -77,14 +83,6 @@ const ThemedApp = () => {
         }
     }, []);
 
-    const screenOptions = useMemo(
-        () =>
-            ({
-                headerShown: false,
-                headerBackButtonMenuEnabled: false,
-            }) as const,
-        [],
-    );
 
     return (
         <NavigationContainer theme={reactNativeTheme} ref={navigationRef} independent={true}>
