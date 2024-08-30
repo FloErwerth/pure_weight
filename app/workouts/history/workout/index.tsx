@@ -21,68 +21,68 @@ import { useTypedTranslation } from "../../../../locales/i18next";
 import { TranslationKeys } from "../../../../locales/translationKeys";
 
 export const WorkoutHistoryOverview = ({
-    route: {
-        params: { doneWorkoutId },
-    },
+	route: {
+		params: { doneWorkoutId },
+	},
 }: NativeStackScreenProps<RoutesParamaters, "workouts/history/workout/index">) => {
-    const doneWorkout = useAppSelector((state: AppState) => getDoneWorkoutById(state, doneWorkoutId));
-    const workoutName = useAppSelector((state: AppState) => getWorkoutByIndex(state, doneWorkout?.originalWorkoutId))?.name;
+	const doneWorkout = useAppSelector((state: AppState) => getDoneWorkoutById(state, doneWorkoutId));
+	const workoutName = useAppSelector((state: AppState) => getWorkoutByIndex(state, doneWorkout?.originalWorkoutId))?.name;
 
-    const language = useAppSelector(getLanguage);
-    const { bottom } = useSafeAreaInsets();
-    const navigate = useNavigate();
-    const { t } = useTypedTranslation();
-    const pageTitle = useMemo(() => t(TranslationKeys.WORKOUT_HISTORY_EDIT_TITLE), [t]);
-    const dispatch = useAppDispatch();
+	const language = useAppSelector(getLanguage);
+	const { bottom } = useSafeAreaInsets();
+	const navigate = useNavigate();
+	const { t } = useTypedTranslation();
+	const pageTitle = useMemo(() => t(TranslationKeys.WORKOUT_HISTORY_EDIT_TITLE), [t]);
+	const dispatch = useAppDispatch();
 
-    const handleNavigateToHistory = useCallback(() => {
-        navigate("history");
-        dispatch(cleanupDurationValues());
-    }, [dispatch, navigate]);
+	const handleNavigateToHistory = useCallback(() => {
+		navigate("history");
+		dispatch(cleanupDurationValues());
+	}, [dispatch, navigate]);
 
-    const handleBackButton = useCallback(() => {
-        handleNavigateToHistory();
-    }, [handleNavigateToHistory]);
+	const handleBackButton = useCallback(() => {
+		handleNavigateToHistory();
+	}, [handleNavigateToHistory]);
 
-    const handleNavigateToHistoryEdit = useCallback(
-        (data: DoneExerciseData) => {
-            navigate("workouts/history/exercise_edit/index", { doneWorkoutId, doneExercise: data });
-        },
-        [navigate, doneWorkoutId],
-    );
+	const handleNavigateToHistoryEdit = useCallback(
+		(data: DoneExerciseData) => {
+			navigate("workouts/history/exercise_edit/index", { doneWorkoutId, doneExercise: data });
+		},
+		[navigate, doneWorkoutId],
+	);
 
-    const date = useMemo(
-        () =>
-            `${t(TranslationKeys.HISTORY_TRAINED_AT)} ${getLocaleDate(doneWorkout?.isoDate, language, {
-                day: "2-digit",
-                month: "long",
-                year: "numeric",
-            })}`,
-        [t, doneWorkout?.isoDate, language],
-    );
+	const date = useMemo(
+		() =>
+			`${t(TranslationKeys.HISTORY_TRAINED_AT)} ${getLocaleDate(doneWorkout?.isoDate, language, {
+				day: "2-digit",
+				month: "long",
+				year: "numeric",
+			})}`,
+		[t, doneWorkout?.isoDate, language],
+	);
 
-    return (
-        <ThemedView stretch background>
-            <SiteNavigationButtons title={pageTitle} backButtonAction={handleBackButton} />
-            <PageContent ghost ignoreGap paddingTop={20}>
-                <Text style={{ fontSize: 26 }} ghost>
-                    {workoutName}
-                </Text>
-                <Text italic style={{ fontSize: 16 }} ghost>
-                    {date}
-                </Text>
-            </PageContent>
-            <PageContent scrollable paddingTop={15} ghost>
-                {doneWorkout?.doneExercises?.map((item) => (
-                    <ThemedPressable key={item.originalExerciseId} input padding round style={{ padding: 15 }} onPress={() => handleNavigateToHistoryEdit(item)}>
-                        <HStack center style={{ justifyContent: "space-between" }} ghost>
-                            <Text ghost>{item?.name}</Text>
-                            <ThemedMaterialCommunityIcons ghost name="chevron-right" size={26} />
-                        </HStack>
-                    </ThemedPressable>
-                ))}
-                <View style={{ height: bottom }} />
-            </PageContent>
-        </ThemedView>
-    );
+	return (
+		<ThemedView stretch background>
+			<SiteNavigationButtons title={pageTitle} backButtonAction={handleBackButton} />
+			<PageContent ghost ignoreGap paddingTop={20}>
+				<Text style={{ fontSize: 26 }} ghost>
+					{workoutName}
+				</Text>
+				<Text italic style={{ fontSize: 16 }} ghost>
+					{date}
+				</Text>
+			</PageContent>
+			<PageContent scrollable paddingTop={15} ghost>
+				{doneWorkout?.doneExercises?.map((item) => (
+					<ThemedPressable key={item.originalExerciseId} input padding round style={{ padding: 15 }} onPress={() => handleNavigateToHistoryEdit(item)}>
+						<HStack center style={{ justifyContent: "space-between" }} ghost>
+							<Text ghost>{item?.name}</Text>
+							<ThemedMaterialCommunityIcons ghost name="chevron-right" size={26} />
+						</HStack>
+					</ThemedPressable>
+				))}
+				<View style={{ height: bottom }} />
+			</PageContent>
+		</ThemedView>
+	);
 };

@@ -14,64 +14,65 @@ import { TranslationKeys } from "../../locales/translationKeys";
 const Tabs = createBottomTabNavigator<RoutesParamaters>();
 
 export function TabsWrapper() {
-    const App = () => {
-        const { componentBackgroundColor, secondaryColor, mainColor } = useTheme();
-        const { t } = useTypedTranslation();
-        return (
-            <Tabs.Navigator
-                screenOptions={{
-                    tabBarStyle: {
-                        backgroundColor: componentBackgroundColor,
-                        borderTopWidth: 0,
-                        paddingTop: 5,
-                        height: 80,
-                        zIndex: 1,
-                    },
-                }}>
-                <Tabs.Screen
-                    component={Workouts}
-                    options={{
-                        headerShown: false,
-                        tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} Icon={"weight-lifter"} />,
-                        tabBarButton: TabBarButton,
-                        tabBarLabelPosition: "below-icon",
-                        tabBarLabel: ({ focused }) => <TabBarLabel focused={focused} title={t(TranslationKeys.WORKOUTS)} />,
-                        tabBarActiveTintColor: mainColor,
-                        tabBarInactiveTintColor: secondaryColor,
-                    }}
-                    name="tabs/workouts"
-                />
-                <Tabs.Screen
-                    component={Measurements}
-                    options={{
-                        headerShown: false,
-                        tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} Icon={"ruler"} />,
-                        tabBarLabelStyle: { fontSize: 13 },
-                        tabBarLabelPosition: "below-icon",
-                        tabBarButton: TabBarButton,
-                        tabBarLabel: ({ focused }) => <TabBarLabel focused={focused} title={t(TranslationKeys.MEASUREMENTS)} />,
-                    }}
-                    name="tabs/measurements"
-                />
-                <Tabs.Screen
-                    component={Profile}
-                    listeners={({ navigation }) => ({
-                        blur: () => {
-                            navigation.setParams({ scrollIndex: undefined });
-                        },
-                    })}
-                    options={{
-                        headerShown: false,
-                        tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} Icon="account-settings" />,
-                        tabBarLabelStyle: { fontSize: 13 },
-                        tabBarLabelPosition: "below-icon",
-                        tabBarButton: TabBarButton,
-                        tabBarLabel: ({ focused }) => <TabBarLabel focused={focused} title={t(TranslationKeys.PROFILE)} />,
-                    }}
-                    name="tabs/profile"
-                />
-            </Tabs.Navigator>
-        );
-    };
-    return App();
+	const App = () => {
+		const { componentBackgroundColor, secondaryColor, mainColor } = useTheme();
+		const { t } = useTypedTranslation();
+		return (
+			<Tabs.Navigator
+				screenOptions={{
+					tabBarStyle: {
+						backgroundColor: componentBackgroundColor,
+						borderTopWidth: 0,
+						paddingTop: 5,
+						height: 80,
+						zIndex: 1,
+					},
+				}}
+			>
+				<Tabs.Screen
+					component={Workouts}
+					options={{
+						headerShown: false,
+						tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} Icon={"weight-lifter"} />,
+						tabBarButton: TabBarButton,
+						tabBarLabelPosition: "below-icon",
+						tabBarLabel: ({ focused }) => <TabBarLabel focused={focused} title={t(TranslationKeys.WORKOUTS)} />,
+						tabBarActiveTintColor: mainColor,
+						tabBarInactiveTintColor: secondaryColor,
+					}}
+					name="tabs/workouts"
+				/>
+				<Tabs.Screen
+					component={Measurements}
+					options={{
+						headerShown: false,
+						tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} Icon={"ruler"} />,
+						tabBarLabelStyle: { fontSize: 13 },
+						tabBarLabelPosition: "below-icon",
+						tabBarButton: TabBarButton,
+						tabBarLabel: ({ focused }) => <TabBarLabel focused={focused} title={t(TranslationKeys.MEASUREMENTS)} />,
+					}}
+					name="tabs/measurements"
+				/>
+				<Tabs.Screen
+					component={Profile}
+					listeners={({ navigation }) => ({
+						blur: () => {
+							navigation.setParams({ scrollIndex: undefined });
+						},
+					})}
+					options={{
+						headerShown: false,
+						tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} Icon="account-settings" />,
+						tabBarLabelStyle: { fontSize: 13 },
+						tabBarLabelPosition: "below-icon",
+						tabBarButton: TabBarButton,
+						tabBarLabel: ({ focused }) => <TabBarLabel focused={focused} title={t(TranslationKeys.PROFILE)} />,
+					}}
+					name="tabs/profile"
+				/>
+			</Tabs.Navigator>
+		);
+	};
+	return App();
 }

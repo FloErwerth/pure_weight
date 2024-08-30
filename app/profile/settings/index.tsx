@@ -65,13 +65,7 @@ export const Settings = ({ route: { params } }: NativeStackScreenProps<RoutesPar
 		<ThemedView stretch background>
 			<SiteNavigationButtons backButtonAction={navigateBack} title={title} />
 			<PageContent scrollable safeBottom ignoreGap ghost>
-				<FlatList
-					scrollEnabled={false}
-					ref={ref}
-					data={settingsPages}
-					contentContainerStyle={styles.contentWrapper}
-					renderItem={({ item: Item }) => Item}
-				/>
+				<FlatList scrollEnabled={false} ref={ref} data={settingsPages} contentContainerStyle={styles.contentWrapper} renderItem={({ item: Item }) => Item} />
 				<Footer showRestore={false} />
 			</PageContent>
 		</ThemedView>

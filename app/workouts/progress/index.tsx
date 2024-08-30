@@ -9,19 +9,19 @@ import { getEditedWorkoutName } from "../../../store/selectors/workout/workoutSe
 import ExerciseCharts from "../../../components/App/progress/chart/components/ExerciseCharts";
 
 export function WorkoutProgress() {
-    const navigate = useNavigate();
-    const trainingDayName = useAppSelector(getEditedWorkoutName);
+	const navigate = useNavigate();
+	const trainingDayName = useAppSelector(getEditedWorkoutName);
 
-    const handleNavigateToWorkouts = useCallback(() => {
-        navigate("workouts");
-    }, [navigate]);
+	const handleNavigateToWorkouts = useCallback(() => {
+		navigate("workouts");
+	}, [navigate]);
 
-    return (
-        <ThemedView background stretch>
-            <SiteNavigationButtons backButtonAction={handleNavigateToWorkouts} title={trainingDayName} />
-            <PageContent background>
-                <ExerciseCharts />
-            </PageContent>
-        </ThemedView>
-    );
+	return (
+		<ThemedView background stretch>
+			<SiteNavigationButtons backButtonAction={handleNavigateToWorkouts} title={trainingDayName} />
+			<PageContent background>
+				<ExerciseCharts />
+			</PageContent>
+		</ThemedView>
+	);
 }

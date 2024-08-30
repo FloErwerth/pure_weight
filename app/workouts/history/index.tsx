@@ -18,119 +18,119 @@ import { useTypedTranslation } from "../../../locales/i18next";
 import { TranslationKeys } from "../../../locales/translationKeys";
 
 export type FlatListData = {
-    doneWorkoutId: WorkoutId;
-    handleEdit?: () => void;
-    name: string;
-    date: IsoDate;
-    marked: boolean;
+	doneWorkoutId: WorkoutId;
+	handleEdit?: () => void;
+	name: string;
+	date: IsoDate;
+	marked: boolean;
 };
 
 export function WorkoutHistory() {
-    const editedWorkout = useAppSelector(getEditedWorkout);
-    const latestWorkoutDate = useAppSelector((state: AppState) => getLatestWorkoutDate(state, editedWorkout?.workout.workoutId));
-    const [selectedDate, setSelectedDate] = useState<IsoDate | undefined>(undefined);
-    const [selectedMonth, setSelectedMonth] = useState<string>("ALL_WORKOUTS");
-    const doneWorkoutDates = useAppSelector((state: AppState) => getSortedDoneWorkout(state, editedWorkout?.workout?.workoutId));
-    const workout = useAppSelector(getEditedWorkout);
-    const sectionListRef = useRef<FlatList>(null);
-    const { t } = useTypedTranslation();
-    const workoutsInMonth = useAppSelector((state: AppState) => getWorkoutsByMonth(state, selectedMonth));
-    const navigate = useNavigate();
-    const dispatch = useAppDispatch();
+	const editedWorkout = useAppSelector(getEditedWorkout);
+	const latestWorkoutDate = useAppSelector((state: AppState) => getLatestWorkoutDate(state, editedWorkout?.workout.workoutId));
+	const [selectedDate, setSelectedDate] = useState<IsoDate | undefined>(undefined);
+	const [selectedMonth, setSelectedMonth] = useState<string>("ALL_WORKOUTS");
+	const doneWorkoutDates = useAppSelector((state: AppState) => getSortedDoneWorkout(state, editedWorkout?.workout?.workoutId));
+	const workout = useAppSelector(getEditedWorkout);
+	const sectionListRef = useRef<FlatList>(null);
+	const { t } = useTypedTranslation();
+	const workoutsInMonth = useAppSelector((state: AppState) => getWorkoutsByMonth(state, selectedMonth));
+	const navigate = useNavigate();
+	const dispatch = useAppDispatch();
 
-    useEffect(() => {
-        setSelectedDate(latestWorkoutDate);
-    }, [latestWorkoutDate]);
+	useEffect(() => {
+		setSelectedDate(latestWorkoutDate);
+	}, [latestWorkoutDate]);
 
-    const handleNavigateBack = useCallback(() => {
-        dispatch(saveEditedWorkout());
-        navigate("workouts");
-    }, [dispatch, navigate]);
+	const handleNavigateBack = useCallback(() => {
+		dispatch(saveEditedWorkout());
+		navigate("workouts");
+	}, [dispatch, navigate]);
 
-    const mappedDateData = useMemo(() => {
-        return workoutsInMonth
-            ?.map((section) => {
-                const { doneWorkoutId, isoDate } = section;
-                const handleEdit = () => {
-                    setSelectedDate(isoDate);
-                    navigate("workouts/history/workout/index", { doneWorkoutId });
-                };
-                const name = workout?.workout?.name ?? "";
-                const marked = isoDate === selectedDate;
-                return { handleEdit, date: isoDate, name, doneWorkoutId, marked };
-            })
-            .reverse();
-    }, [workoutsInMonth, workout?.workout?.name, selectedDate, navigate]);
+	const mappedDateData = useMemo(() => {
+		return workoutsInMonth
+			?.map((section) => {
+				const { doneWorkoutId, isoDate } = section;
+				const handleEdit = () => {
+					setSelectedDate(isoDate);
+					navigate("workouts/history/workout/index", { doneWorkoutId });
+				};
+				const name = workout?.workout?.name ?? "";
+				const marked = isoDate === selectedDate;
+				return { handleEdit, date: isoDate, name, doneWorkoutId, marked };
+			})
+			.reverse();
+	}, [workoutsInMonth, workout?.workout?.name, selectedDate, navigate]);
 
-    const renderItem = useCallback(({ item }: { item: FlatListData }) => {
-        if (item === undefined) {
-            return <ThemedView key="GHOST" ghost stretch style={styles.workout} />;
-        }
-        const { handleEdit, doneWorkoutId, date, marked } = item;
-        return (
-            <ThemedView ghost style={styles.workout}>
-                <WorkoutHistoryCard key={Math.random()} marked={marked} date={date} doneWorkoutId={doneWorkoutId} onEdit={handleEdit} />
-            </ThemedView>
-        );
-    }, []);
+	const renderItem = useCallback(({ item }: { item: FlatListData }) => {
+		if (item === undefined) {
+			return <ThemedView key="GHOST" ghost stretch style={styles.workout} />;
+		}
+		const { handleEdit, doneWorkoutId, date, marked } = item;
+		return (
+			<ThemedView ghost style={styles.workout}>
+				<WorkoutHistoryCard key={Math.random()} marked={marked} date={date} doneWorkoutId={doneWorkoutId} onEdit={handleEdit} />
+			</ThemedView>
+		);
+	}, []);
 
-    const monthConfig = useMemo(() => {
-        if (!doneWorkoutDates) {
-            return undefined;
-        }
-        const config = new Map<string, { dates: IsoDate[] }>();
-        config.set("ALL_WORKOUTS", { dates: doneWorkoutDates });
-        doneWorkoutDates?.forEach((date) => {
-            const month = getMonthYearLabel(date);
-            if (!config.get(month)) {
-                config.set(month, { dates: [date] });
-            } else {
-                const monthConfig = config.get(month) as { dates: IsoDate[] };
-                monthConfig?.dates.push(date);
-                config.set(month, monthConfig);
-            }
-        });
-        return config;
-    }, [doneWorkoutDates]);
+	const monthConfig = useMemo(() => {
+		if (!doneWorkoutDates) {
+			return undefined;
+		}
+		const config = new Map<string, { dates: IsoDate[] }>();
+		config.set("ALL_WORKOUTS", { dates: doneWorkoutDates });
+		doneWorkoutDates?.forEach((date) => {
+			const month = getMonthYearLabel(date);
+			if (!config.get(month)) {
+				config.set(month, { dates: [date] });
+			} else {
+				const monthConfig = config.get(month) as { dates: IsoDate[] };
+				monthConfig?.dates.push(date);
+				config.set(month, monthConfig);
+			}
+		});
+		return config;
+	}, [doneWorkoutDates]);
 
-    const dropdownConfig = useMemo(
-        () =>
-            Array.from(monthConfig?.keys() ?? []).map((key) => {
-                if (key === "ALL_WORKOUTS") {
-                    return { label: t(TranslationKeys.HISTORY_ALL_WORKOUTS), value: key };
-                }
-                return { label: key, value: key };
-            }),
-        [monthConfig, t],
-    );
+	const dropdownConfig = useMemo(
+		() =>
+			Array.from(monthConfig?.keys() ?? []).map((key) => {
+				if (key === "ALL_WORKOUTS") {
+					return { label: t(TranslationKeys.HISTORY_ALL_WORKOUTS), value: key };
+				}
+				return { label: key, value: key };
+			}),
+		[monthConfig, t],
+	);
 
-    const dropdownValue = useMemo(() => {
-        return dropdownConfig.find((config) => config.value === selectedMonth)?.label;
-    }, [dropdownConfig, selectedMonth]);
+	const dropdownValue = useMemo(() => {
+		return dropdownConfig.find((config) => config.value === selectedMonth)?.label;
+	}, [dropdownConfig, selectedMonth]);
 
-    const handleSelectMonth = useCallback((month: string) => {
-        setSelectedMonth(month);
-        setSelectedDate(undefined);
-    }, []);
+	const handleSelectMonth = useCallback((month: string) => {
+		setSelectedMonth(month);
+		setSelectedDate(undefined);
+	}, []);
 
-    const modalTitle = useMemo(() => t(TranslationKeys.HISTORY_MODAL_TITLE), [t]);
+	const modalTitle = useMemo(() => t(TranslationKeys.HISTORY_MODAL_TITLE), [t]);
 
-    return (
-        <ThemedView stretch>
-            <SiteNavigationButtons backButtonAction={handleNavigateBack} title={workout?.workout?.name} />
-            <PageContent safeBottom background stretch>
-                <ThemedDropdown modalTitle={modalTitle} onSelectItem={handleSelectMonth} value={dropdownValue} isSelectable options={dropdownConfig} />
-                <FlatList
-                    ref={sectionListRef}
-                    horizontal={false}
-                    data={mappedDateData}
-                    style={styles.scrollView}
-                    showsVerticalScrollIndicator={false}
-                    onScrollToIndexFailed={noop}
-                    contentContainerStyle={styles.scrollViewContainer}
-                    renderItem={renderItem}
-                />
-            </PageContent>
-        </ThemedView>
-    );
+	return (
+		<ThemedView stretch>
+			<SiteNavigationButtons backButtonAction={handleNavigateBack} title={workout?.workout?.name} />
+			<PageContent safeBottom background stretch>
+				<ThemedDropdown modalTitle={modalTitle} onSelectItem={handleSelectMonth} value={dropdownValue} isSelectable options={dropdownConfig} />
+				<FlatList
+					ref={sectionListRef}
+					horizontal={false}
+					data={mappedDateData}
+					style={styles.scrollView}
+					showsVerticalScrollIndicator={false}
+					onScrollToIndexFailed={noop}
+					contentContainerStyle={styles.scrollViewContainer}
+					renderItem={renderItem}
+				/>
+			</PageContent>
+		</ThemedView>
+	);
 }

@@ -6,10 +6,7 @@ import Carousel from "react-native-reanimated-carousel/src/Carousel";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { BackButtonModal } from "../../../components/AlertModal/BackButtonModal";
 import { trainStyles } from "../../../components/App/train/trainStyles";
-import {
-	ThemedBottomSheetModal,
-	useBottomSheetRef,
-} from "../../../components/BottomSheetModal/ThemedBottomSheetModal";
+import { ThemedBottomSheetModal, useBottomSheetRef } from "../../../components/BottomSheetModal/ThemedBottomSheetModal";
 import { SiteNavigationButtons } from "../../../components/SiteNavigationButtons/SiteNavigationButtons";
 import { HStack } from "../../../components/Stack/HStack/HStack";
 import { StopwatchPopover } from "../../../components/StopwatchPopover/StopwatchPopover";
@@ -23,10 +20,7 @@ import {
 	setActiveExerciseIndex,
 } from "../../../store/reducers/workout";
 
-import {
-	CarouselRenderItemInfo,
-	ICarouselInstance,
-} from "react-native-reanimated-carousel/lib/typescript/types";
+import { CarouselRenderItemInfo, ICarouselInstance } from "react-native-reanimated-carousel/lib/typescript/types";
 import { WorkoutSettings } from "../../../components/App/settings/Sections/workout";
 import { TrainedExercise } from "../../../components/App/train/Exercise/TrainedExercise";
 import { useTypedTranslation } from "../../../locales/i18next";
@@ -50,11 +44,7 @@ export const Train = () => {
 	const dispatch = useAppDispatch();
 	const navigate = useNavigate();
 	const confirmButtonOpacity = useRef(new Animated.Value(0.3)).current;
-	const {
-		ref: alertRef,
-		openBottomSheet: openAlert,
-		closeBottomSheet: closeAlert,
-	} = useBottomSheetRef();
+	const { ref: alertRef, openBottomSheet: openAlert, closeBottomSheet: closeAlert } = useBottomSheetRef();
 	const isDone = useAppSelector(getIsDoneWithTraining);
 	const hasNoTrainingData = useAppSelector(getHasNoTrainingDataSaved);
 	const { ref, openBottomSheet: open } = useBottomSheetRef();
@@ -63,9 +53,7 @@ export const Train = () => {
 	const shouldSwitch = useAppSelector(getSwitchToNextExercise);
 	const isExerciseDone = useAppSelector(getExerciseDone);
 	const canSnap = useAppSelector(getCanSnap);
-	const workoutName = useAppSelector((state: AppState) =>
-		getWorkoutByIndex(state, trainedWorkout?.workoutId),
-	)?.name;
+	const workoutName = useAppSelector((state: AppState) => getWorkoutByIndex(state, trainedWorkout?.workoutId))?.name;
 
 	useEffect(() => {
 		if (isDone) {
@@ -82,9 +70,7 @@ export const Train = () => {
 			setTimeout(() => {
 				carouselRef.current?.next({ animated: true });
 			}, 100);
-			dispatch(
-				mutateActiveExerciseInTrainedWorkout({ key: "canSnap", value: false }),
-			);
+			dispatch(mutateActiveExerciseInTrainedWorkout({ key: "canSnap", value: false }));
 		}
 	}, [canSnap, dispatch, isExerciseDone, shouldSwitch]);
 
@@ -116,12 +102,7 @@ export const Train = () => {
 		handleReset();
 		handleNavigateToWorkouts();
 		closeAlert();
-	}, [
-		handleSaveTrainingData,
-		handleReset,
-		handleNavigateToWorkouts,
-		closeAlert,
-	]);
+	}, [handleSaveTrainingData, handleReset, handleNavigateToWorkouts, closeAlert]);
 
 	const handleCloseButton = useCallback(() => {
 		if (!hasNoTrainingData) {
@@ -132,17 +113,10 @@ export const Train = () => {
 		}
 	}, [hasNoTrainingData, handleReset, handleNavigateToWorkouts, openAlert]);
 
-	const buttonsStyle = useMemo(
-		() => [trainStyles.buttons, { marginBottom: bottom }],
-		[bottom],
-	);
+	const buttonsStyle = useMemo(() => [trainStyles.buttons, { marginBottom: bottom }], [bottom]);
 	const alertModalConfig = useMemo(
 		() => ({
-			title: t(
-				isDone
-					? TranslationKeys.WORKOUT_QUIT_TITLE
-					: TranslationKeys.WORKOUT_EARLY_QUIT_TITLE,
-			),
+			title: t(isDone ? TranslationKeys.WORKOUT_QUIT_TITLE : TranslationKeys.WORKOUT_EARLY_QUIT_TITLE),
 		}),
 		[isDone, t],
 	);
@@ -159,15 +133,8 @@ export const Train = () => {
 	}, [handleNavigateToWorkouts, trainedWorkout, workoutExercises]);
 
 	const renderItem = useCallback(
-		({
-			item: { exerciseId },
-		}: CarouselRenderItemInfo<{ exerciseId: ExerciseId }>) => {
-			return (
-				<TrainedExercise
-					workoutId={trainedWorkout?.workoutId}
-					exerciseId={exerciseId}
-				/>
-			);
+		({ item: { exerciseId } }: CarouselRenderItemInfo<{ exerciseId: ExerciseId }>) => {
+			return <TrainedExercise workoutId={trainedWorkout?.workoutId} exerciseId={exerciseId} />;
 		},
 		[trainedWorkout?.workoutId],
 	);
@@ -185,10 +152,7 @@ export const Train = () => {
 		handleNavigateToWorkouts();
 	}, [handleReset, closeAlert, handleNavigateToWorkouts]);
 
-	const quickSettingsTitle = useMemo(
-		() => t(TranslationKeys.WORKOUT_QUICK_SETTINGS_TITLE),
-		[t],
-	);
+	const quickSettingsTitle = useMemo(() => t(TranslationKeys.WORKOUT_QUICK_SETTINGS_TITLE), [t]);
 
 	return (
 		<ThemedView background style={trainStyles.wrapper} stretch>

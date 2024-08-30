@@ -16,11 +16,7 @@ import { useInitPurchases } from "../hooks/purchases";
 import "../locales/i18next";
 import { useInitIntl } from "../locales/i18next";
 import { persistor, store, useAppDispatch, useAppSelector } from "../store";
-import {
-	setAppInstallDate,
-	setEmptyState,
-	setFirstTimeRendered,
-} from "../store/reducers/metadata";
+import { setAppInstallDate, setEmptyState, setFirstTimeRendered } from "../store/reducers/metadata";
 import { setLanguage, setTheme } from "../store/reducers/settings";
 import { getIsFirstTimeRendered } from "../store/selectors/metadata/metadataSelectors";
 import { getReactNativeTheme } from "../store/selectors/settings/settingsSelectors";
@@ -71,9 +67,7 @@ const ThemedApp = () => {
 				dispatch(setAppInstallDate(date as IsoDate));
 			});
 
-			const lang = (
-				NativeModules.SettingsManager.settings.AppleLocale as string
-			).split("_")[0];
+			const lang = (NativeModules.SettingsManager.settings.AppleLocale as string).split("_")[0];
 			if (lang === "de" || lang === "en") {
 				void i18n.changeLanguage(lang);
 				dispatch(setLanguage(lang));
@@ -89,91 +83,27 @@ const ThemedApp = () => {
 	}, []);
 
 	return (
-		<NavigationContainer
-			theme={reactNativeTheme}
-			ref={navigationRef}
-			independent={true}
-		>
+		<NavigationContainer theme={reactNativeTheme} ref={navigationRef} independent={true}>
 			<GestureHandlerRootView style={layoutStyles.wrapper}>
 				<ThemeProvider>
 					<BottomSheetModalProvider>
 						<SafeAreaView background>
 							<Stack.Navigator screenOptions={screenOptions}>
-								<Stack.Screen
-									component={TabsWrapper}
-									options={options}
-									name="tabs"
-								/>
-								<Stack.Screen
-									component={Train}
-									options={gestureOptions}
-									name="workouts/train/index"
-								/>
-								<Stack.Screen
-									component={MeasurementProgress}
-									options={options}
-									name="measurement/progress/index"
-								/>
-								<Stack.Screen
-									component={MeasurementHistoryEdit}
-									options={options}
-									name="measurements/history/edit/index"
-								/>
-								<Stack.Screen
-									component={CreateMeasurement}
-									options={options}
-									name="measurement/create/index"
-								/>
-								<Stack.Screen
-									component={MeasurementHistory}
-									options={options}
-									name="measurement/history/index"
-								/>
-								<Stack.Screen
-									component={Create}
-									options={gestureOptions}
-									name="workouts/create/index"
-								/>
-								<Stack.Screen
-									component={WorkoutProgress}
-									options={options}
-									name="workouts/progress/index"
-								/>
-								<Stack.Screen
-									component={WorkoutHistory}
-									options={options}
-									name="workouts/history/index"
-								/>
-								<Stack.Screen
-									component={WorkoutHistoryOverview}
-									options={options}
-									name="workouts/history/workout/index"
-								/>
-								<Stack.Screen
-									component={WorkoutHistoryEdit}
-									options={options}
-									name="workouts/history/exercise_edit/index"
-								/>
-								<Stack.Screen
-									component={Manual}
-									options={options}
-									name="profile/settings/manual/index"
-								/>
-								<Stack.Screen
-									component={CreateExercise}
-									options={options}
-									name="workouts/create/exercise/index"
-								/>
-								<Stack.Screen
-									component={Purchase}
-									options={options}
-									name="purchase"
-								/>
-								<Stack.Screen
-									component={Settings}
-									options={options}
-									name="profile/settings/index"
-								/>
+								<Stack.Screen component={TabsWrapper} options={options} name="tabs" />
+								<Stack.Screen component={Train} options={gestureOptions} name="workouts/train/index" />
+								<Stack.Screen component={MeasurementProgress} options={options} name="measurement/progress/index" />
+								<Stack.Screen component={MeasurementHistoryEdit} options={options} name="measurements/history/edit/index" />
+								<Stack.Screen component={CreateMeasurement} options={options} name="measurement/create/index" />
+								<Stack.Screen component={MeasurementHistory} options={options} name="measurement/history/index" />
+								<Stack.Screen component={Create} options={gestureOptions} name="workouts/create/index" />
+								<Stack.Screen component={WorkoutProgress} options={options} name="workouts/progress/index" />
+								<Stack.Screen component={WorkoutHistory} options={options} name="workouts/history/index" />
+								<Stack.Screen component={WorkoutHistoryOverview} options={options} name="workouts/history/workout/index" />
+								<Stack.Screen component={WorkoutHistoryEdit} options={options} name="workouts/history/exercise_edit/index" />
+								<Stack.Screen component={Manual} options={options} name="profile/settings/manual/index" />
+								<Stack.Screen component={CreateExercise} options={options} name="workouts/create/exercise/index" />
+								<Stack.Screen component={Purchase} options={options} name="purchase" />
+								<Stack.Screen component={Settings} options={options} name="profile/settings/index" />
 							</Stack.Navigator>
 						</SafeAreaView>
 					</BottomSheetModalProvider>
