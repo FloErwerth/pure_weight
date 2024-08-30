@@ -1,3 +1,3 @@
 export type SearchbarProps = {
-    handleSetSearchManual: (search: string) => void;
+	handleSetSearchManual: (search: string) => void;
 };
