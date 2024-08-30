@@ -1,47 +1,49 @@
-import { persistor, store, useAppDispatch, useAppSelector } from "../store";
-import React, { useEffect, useMemo } from "react";
-import { PersistGate } from "redux-persist/integration/react";
-import { Provider } from "react-redux";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
-import "../locales/i18next";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { TabsWrapper } from "./tabs";
-import { Train } from "./workouts/train";
-import { WorkoutProgress } from "./workouts/progress";
-import { Create } from "./workouts/create";
-import { NavigationContainer } from "@react-navigation/native";
-import { navigationRef } from "../hooks/navigate";
-import { SafeAreaView } from "../components/Themed/ThemedSaveAreaView/SafeAreaView";
-import { ThemeProvider } from "../theme/context";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
-import { WorkoutHistory } from "./workouts/history";
-import DeviceInfo from "react-native-device-info";
-import { IsoDate } from "../types/date";
-import { setAppInstallDate, setEmptyState, setFirstTimeRendered } from "../store/reducers/metadata";
-import { getIsFirstTimeRendered } from "../store/selectors/metadata/metadataSelectors";
-import { Manual } from "./profile/manual";
-import { Appearance, NativeModules } from "react-native";
-import { setLanguage, setTheme } from "../store/reducers/settings";
-import { WorkoutHistoryOverview } from "./workouts/history/workout";
-import { getReactNativeTheme } from "../store/selectors/settings/settingsSelectors";
-import { CreateExercise } from "./workouts/create/exercise";
-import { MeasurementHistory } from "./measurements/history";
-import { CreateMeasurement } from "./measurements/create";
-import { MeasurementProgress } from "./measurements/progress";
-import { useInitIntl } from "../locales/i18next";
-import { MeasurementHistoryEdit } from "./measurements/history/edit";
-import { WorkoutHistoryEdit } from "./workouts/history/exercise_edit";
-import { Purchase } from "./purchase";
-import { useInitPurchases } from "../hooks/purchases";
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { SplashScreen } from "expo-router";
-import { Settings } from "./profile/settings";
-import { layoutStyles } from "../components/App/layout/styles";
-import { RoutesParamaters } from "../types/navigation";
+import React, { useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
+import { Appearance, NativeModules } from "react-native";
+import DeviceInfo from "react-native-device-info";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { Provider } from "react-redux";
+import { PersistGate } from "redux-persist/integration/react";
+import { layoutStyles } from "../components/App/layout/styles";
+import { SafeAreaView } from "../components/Themed/ThemedSaveAreaView/SafeAreaView";
+import { navigationRef } from "../hooks/navigate";
+import { useInitPurchases } from "../hooks/purchases";
+import "../locales/i18next";
+import { useInitIntl } from "../locales/i18next";
+import { persistor, store, useAppDispatch, useAppSelector } from "../store";
+import { setAppInstallDate, setEmptyState, setFirstTimeRendered } from "../store/reducers/metadata";
+import { setLanguage, setTheme } from "../store/reducers/settings";
+import { getIsFirstTimeRendered } from "../store/selectors/metadata/metadataSelectors";
+import { getReactNativeTheme } from "../store/selectors/settings/settingsSelectors";
+import { ThemeProvider } from "../theme/context";
+import { IsoDate } from "../types/date";
+import { RoutesParamaters } from "../types/navigation";
+import { CreateMeasurement } from "./measurements/create";
+import { MeasurementHistory } from "./measurements/history";
+import { MeasurementHistoryEdit } from "./measurements/history/edit";
+import { MeasurementProgress } from "./measurements/progress";
+import { Manual } from "./profile/manual";
+import { Settings } from "./profile/settings";
+import { Purchase } from "./purchase";
+import { TabsWrapper } from "./tabs";
+import { Create } from "./workouts/create";
+import { CreateExercise } from "./workouts/create/exercise";
+import { WorkoutHistory } from "./workouts/history";
+import { WorkoutHistoryEdit } from "./workouts/history/exercise_edit";
+import { WorkoutHistoryOverview } from "./workouts/history/workout";
+import { WorkoutProgress } from "./workouts/progress";
+import { Train } from "./workouts/train";
 
 SplashScreen.preventAutoHideAsync();
 
 const Stack = createNativeStackNavigator<RoutesParamaters>();
+const options = { headerShown: false };
+const gestureOptions = { ...options, gestureEnabled: false }
 
 const ThemedApp = () => {
     useInitPurchases();
@@ -84,8 +86,6 @@ const ThemedApp = () => {
         [],
     );
 
-    const options = useMemo(() => ({ headerShown: false }) as const, []);
-    const gestureOptions = useMemo(() => ({ ...options, gestureEnabled: false }) as const, [options]);
     return (
         <NavigationContainer theme={reactNativeTheme} ref={navigationRef} independent={true}>
             <GestureHandlerRootView style={layoutStyles.wrapper}>
